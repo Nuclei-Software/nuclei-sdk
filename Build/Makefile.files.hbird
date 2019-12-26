@@ -1,0 +1,8 @@
+INCDIRS += $(NUCLEI_SDK_BOARD)/Include
+
+C_SRCDIRS += $(NUCLEI_SDK_BOARD)/Source $(NUCLEI_SDK_BOARD)/Source/Drivers \
+			 $(NUCLEI_SDK_BOARD)/Source/Stubs
+
+ASM_SRCS += $(NUCLEI_SDK_BOARD)/Source/GCC/startup_nuclei_soc.S \
+			$(NUCLEI_SDK_BOARD)/Source/GCC/intexc_nuclei_soc.S
+

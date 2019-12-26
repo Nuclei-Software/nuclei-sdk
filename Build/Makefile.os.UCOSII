@@ -1,0 +1,6 @@
+C_SRCDIRS += $(NUCLEI_SDK_OS)/source $(NUCLEI_SDK_OS)/arch
+ASM_SRCDIRS += $(NUCLEI_SDK_OS)/arch
+
+INCDIRS += $(NUCLEI_SDK_OS)/arch \
+			$(NUCLEI_SDK_OS)/cfg \
+			$(NUCLEI_SDK_OS)/source/

@@ -1,0 +1,14 @@
+CORE ?= n307fd
+BOARD ?= hbird
+OS ?=
+DOWNLOAD ?= ilm
+PFLOAT ?= 0
+NEWLIB ?= nano
+
+NUCLEI_SDK_BUILD = $(NUCLEI_SDK_ROOT)/Build
+NUCLEI_SDK_BOARD = $(NUCLEI_SDK_ROOT)/Board/$(BOARD)
+NUCLEI_SDK_OS = $(NUCLEI_SDK_ROOT)/OS/$(OS)
+
+include $(NUCLEI_SDK_BUILD)/Makefile.misc
+include $(NUCLEI_SDK_BUILD)/Makefile.conf
+include $(NUCLEI_SDK_BUILD)/Makefile.rules

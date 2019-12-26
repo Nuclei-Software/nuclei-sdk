@@ -1,0 +1,11 @@
+ifeq ($(DOWNLOAD),ilm)
+OPENOCD_CFG ?= $(NUCLEI_SDK_BOARD)/openocd_hbird_ilm.cfg
+LINKER_SCRIPT = $(NUCLEI_SDK_BOARD)/Source/GCC/gcc_nuclei_soc_ilm.ld
+else
+OPENOCD_CFG ?= $(NUCLEI_SDK_BOARD)/openocd_hbird.cfg
+ifeq ($(DOWNLOAD),flashxip)
+LINKER_SCRIPT = $(NUCLEI_SDK_BOARD)/Source/GCC/gcc_nuclei_soc_flashxip.ld
+else
+LINKER_SCRIPT = $(NUCLEI_SDK_BOARD)/Source/GCC/gcc_nuclei_soc_flash.ld
+endif
+endif

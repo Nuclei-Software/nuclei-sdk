@@ -1,0 +1,82 @@
+TARGET_ELF = $(TARGET).elf
+
+ALL_CSRCS = $(sort $(C_SRCS) $(call get_csrcs, $(SRCDIRS) $(C_SRCDIRS)))
+ALL_CXXSRCS = $(sort $(CXX_SRCS) $(call get_cxxsrcs, $(SRCDIRS) $(CXX_SRCDIRS)))
+ALL_ASMSRCS = $(sort $(ASM_SRCS) $(call get_asmsrcs, $(SRCDIRS) $(ASM_SRCDIRS)))
+
+ALL_ASM_OBJS := $(ALL_ASMSRCS:=.o)
+ALL_C_OBJS := $(ALL_CSRCS:=.o)
+ALL_CXX_OBJS := $(ALL_CXXSRCS:=.o)
+
+ALL_OBJS += $(ALL_ASM_OBJS) $(ALL_C_OBJS) $(ALL_CXX_OBJS)
+
+ALL_DEPS := $(ALL_OBJS:=.d)
+
+CLEAN_OBJS += $(TARGET).elf $(TARGET).map $(TARGET).dump $(TARGET).verilog $(ALL_OBJS) $(ALL_DEPS)
+
+# include dependency files of application
+ifneq ($(MAKECMDGOALS),clean)
+ -include $(ALL_DEPS)
+endif
+
+.PHONY: all
+
+help:
+	@echo "Nuclei N/NX-series RISC-V Embedded Processor Software Development Kit "
+	@echo "== How to Use with Make =="
+	@echo "1. Build Application:"
+	@echo "all [PROGRAM=flash/flashxip/ilm]"
+	@echo "   Build a software program to load with the debugger."
+	@echo "2. Upload Application to Board using OpenOCD:"
+	@echo "upload [PROGRAM=flash/flashxip/ilm]"
+	@echo "   Launch OpenOCD to flash your program to the on-board Flash."
+	@echo "3: Debug Application using OpenOCD"
+	@echo "  3.1: run_openocd"
+	@echo "  3.2: run_gdb [PROGRAM=flash/flashxip/ilm]"
+	@echo "   Step 1: Launch OpenOCD for Debugger connection: make run_openocd"
+	@echo "   Step 2: Launch GDB to connect openocd server, you need to run load"
+	@echo "           your code, and set breakpoints using gdb and debug it."
+	@echo "           Allows Ctrl-C to halt running programs."
+	@echo ""
+	@echo "== Example Usage =="
+	@echo "1. cd $NUCLEI_SDK_ROOT/application/helloworld"
+	@echo "2. Build for ILM download mode: make DOWNLOAD=ilm all"
+	@echo "3. Download application to board: make DOWNLOAD=ilm upload"
+	@echo "4. Debug application using OpenOCD:"
+	@echo "   4.1 Terminal One: make DOWNLOAD=ilm run_openocd"
+	@echo "   4.2 Terminal Two: make DOWNLOAD=ilm run_gdb"
+	@echo ""
+
+all: $(TARGET).elf
+
+$(TARGET).elf: $(ALL_OBJS)
+	$(CC) $(CFLAGS) $(ALL_OBJS) -o $@ $(LDFLAGS)
+	$(SIZE) $@
+
+$(ALL_ASM_OBJS): %.o: % $(COMMON_PREREQS)
+	$(CC) $(ASMFLAGS) -c -o $@ $<
+
+$(ALL_C_OBJS): %.o: % $(COMMON_PREREQS)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(ALL_CXX_OBJS): %.o: % $(COMMON_PREREQS)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+dasm: $(TARGET).elf
+	$(OBJDUMP) -S -D $< > $(TARGET).dump
+	$(OBJCOPY) $< -O verilog $(TARGET).verilog
+	sed -i 's/@800/@000/g' $(TARGET).verilog
+
+upload: $(TARGET).elf
+	$(OPENOCD) $(OPENOCD_ARGS) & \
+	    $(GDB) $< $(GDB_UPLOAD_ARGS) $(GDB_UPLOAD_CMDS) && \
+	echo "Successfully uploaded $< "
+
+run_openocd:
+	$(OPENOCD) $(OPENOCD_ARGS)
+
+run_gdb: $(TARGET).elf
+	$(GDB) $< $(GDB_ARGS) $(GDB_CMDS)
+
+clean:
+	rm -f $(CLEAN_OBJS)

@@ -1,0 +1,67 @@
+before_script:
+    - module load nucleisys/riscv-nuclei-elf-gcc
+    - module load nucleisys/openocd
+    - source .ci/build_sdk.sh
+    - source .ci/build_applications.sh
+
+.build_job_template: &build_job_def
+    script:
+        - nsdk_build_directory    application
+        - nsdk_build_directory    test
+    
+# Build For N307, with Flash, FlashXIP, ILM Mode
+build_ilm_n307:
+    variables:
+        DOWNLOAD: "ilm"
+        CORE: "n307"
+    <<: *build_job_def
+
+build_flash_n307:
+    variables:
+        DOWNLOAD: "flash"
+        CORE: "n307"
+    <<: *build_job_def
+
+build_flashxip_n307:
+    variables:
+        DOWNLOAD: "flashxip"
+        CORE: "n307"
+    <<: *build_job_def
+
+# Build For N205E, with Flash, FlashXIP, ILM Mode
+build_ilm_n205e:
+    variables:
+        DOWNLOAD: "ilm"
+        CORE: "n205e"
+    <<: *build_job_def
+
+build_flash_n205e:
+    variables:
+        DOWNLOAD: "flash"
+        CORE: "n205e"
+    <<: *build_job_def
+
+build_flashxip_n205e:
+    variables:
+        DOWNLOAD: "flashxip"
+        CORE: "n205e"
+    <<: *build_job_def
+
+# Build For NX600, with Flash, FlashXIP, ILM Mode
+build_ilm_nx600:
+    variables:
+        DOWNLOAD: "ilm"
+        CORE: "nx600"
+    <<: *build_job_def
+
+build_flash_nx600:
+    variables:
+        DOWNLOAD: "flash"
+        CORE: "nx600"
+    <<: *build_job_def
+
+build_flashxip_nx600:
+    variables:
+        DOWNLOAD: "flashxip"
+        CORE: "nx600"
+    <<: *build_job_def
