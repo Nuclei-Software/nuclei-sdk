@@ -2,8 +2,11 @@ function nsdk_build_directory() {
     local projroot=$1
     local target=${2:-"clean all"}
     local count=0
+    local ignore_pattern=$FIND_IGNORE
 
-    local makefiles=($(find $projroot -type f -name "Makefile"))
+    FIND_CMD="find $projroot -type f -name "Makefile" $ignore_pattern"
+    echo $FIND_CMD
+    local makefiles=($(eval $FIND_CMD))
     local totalcount=${#makefiles[@]}
     local failed_examples=""
     for makefile in ${makefiles[@]} ; do
