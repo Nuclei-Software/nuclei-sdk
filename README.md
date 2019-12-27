@@ -68,8 +68,10 @@ $NUCLEI_SDK_ROOT
 
 * **NMSIS**
 
-  This directory contains the NMSIS-Core header files, which is widely used in this Nuclei SDK.
-  We will also sync the changes in NMSIS project when it provided a new release.
+  This directory contains the NMSIS-Core header files, which is widely used in this Nuclei SDK,
+  you can check the *[NMSIS_VERSION](NMSIS_VERSION)* file to know the current *NMSIS* version used in **Nuclei-SDK**.
+
+  We will also sync the changes in [NMSIS project](https://github.com/Nuclei-Software/NMSIS) when it provided a new release.
 
 * **OS**
 
