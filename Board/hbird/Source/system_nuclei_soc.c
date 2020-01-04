@@ -261,7 +261,7 @@ void SystemBannerPrint(void)
     const char* download_modes[] = {"FLASHXIP", "FLASH", "ILM"};
     printf("Nuclei SDK Build Time: %s, %s\r\n", __DATE__, __TIME__);
     printf("Download Mode: %s\r\n", download_modes[DOWNLOAD_MODE]);
-    printf("CPU Frequency %d Hz\r\n", SystemCoreClock);
+    printf("CPU Frequency %lu Hz\r\n", SystemCoreClock);
 #endif
 }
 
