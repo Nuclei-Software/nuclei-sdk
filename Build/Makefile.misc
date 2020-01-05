@@ -30,6 +30,12 @@ endif
 nullstring=
 space=$(nullstring) # one space
 
+RM=rm -rf
+RMD=rm -rf
+ECHO=echo
+CP=cp -rf
+MKD = mkdir -p
+
 ## Check OS ##
 ## Check OS == Windows ##
 ifeq "$(HOST_OS)" "Windows"
@@ -40,36 +46,18 @@ ifeq "$(HOST_OS)" "Windows"
     # or if in your evironment path there is
     # a mingw shell, the make process will go wrong
     SHELL:=$(WINCMD)
-
-    RM=$(DOS_CMD) del /Q /F
-    RMD=$(DOS_CMD) rd /S /Q
-    ECHO=$(DOS_CMD) echo
-    CP=copy /Y
-    MKD = $(DOS_CMD) mkdir
 endif
 
 ## Check OS == Cygwin ##
 ifeq "$(HOST_OS)" "Cygwin"
     PS=/$(nullstring)
     NULL=/dev/null
-
-    RM=rm -rf
-    RMD=rm -rf
-    ECHO=echo
-    CP=cp -rf
-    MKD = mkdir -p
 endif
 
 ## Check OS == GNU/Linux ##
 ifeq "$(HOST_OS)" "GNU/Linux"
     PS=/$(nullstring)
     NULL=/dev/null
-
-    RM=rm -rf
-    RMD=rm -rf
-    ECHO=echo
-    CP=cp
-    MKD = mkdir -p
 endif
 
 ## MAKEFILE COMPILE MESSAGE CONTROL ##
