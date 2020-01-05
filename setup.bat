@@ -2,10 +2,10 @@
 set NUCLEI_TOOL_ROOT=C:\Nuclei
 set NMSIS_ROOT=..\NMSIS
 
-# Create your setup_config.bat
-# and define NUCLEI_TOOL_ROOT or NMSIS_ROOT like below
-# set NUCLEI_TOOL_ROOT=D:\Software\Nuclei
-# set NMSIS_ROOT=D:\Source\NMSIS
+REM Create your setup_config.bat
+REM and define NUCLEI_TOOL_ROOT or NMSIS_ROOT like below
+REM set NUCLEI_TOOL_ROOT=D:\Software\Nuclei
+REM set NMSIS_ROOT=D:\Source\NMSIS
 set SETUP_CONFIG=setup_config.bat
 
 if exist %SETUP_CONFIG% call %SETUP_CONFIG%
