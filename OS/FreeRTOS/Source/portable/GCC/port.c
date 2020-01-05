@@ -81,7 +81,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#include "nuclei_hal.h"
 
 /* Each task maintains its own interrupt status in the critical nesting
 variable. */

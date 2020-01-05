@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "ctest.h"
-#include "nuclei_hal.h"
+#include "nuclei_sdk_soc.h"
 
 
 void test_mtip_handler(void)

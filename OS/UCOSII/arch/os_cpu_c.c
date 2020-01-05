@@ -1,5 +1,5 @@
 #include <ucos_ii.h>
-#include "nuclei_hal.h"
+#include "nuclei_sdk_soc.h"
 
 #ifdef __riscv_flen
     unsigned long MSTATUS_INIT = (MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS);
@@ -9,16 +9,16 @@
 
 OS_STK *OSTaskStkInit (void (*task)(void *pd), void *pdata, OS_STK *ptos, INT16U opt)
 {
-    
+
     //pdata should be restore in a0
-    
+
     OS_STK *stk;
-    (void)opt;         
-    
+    (void)opt;
+
     // Force stack 8byte align for double floating point case
     ptos = (OS_STK *)(((unsigned long)ptos) & (~(unsigned long)(0x0007)));
 
-    stk = ptos-32;  
+    stk = ptos-32;
     extern void halt(unsigned long a, unsigned long b);
     stk[0]=(OS_STK)halt; //ra,meaningless ,task shuldn't exit.
     stk[1]=MSTATUS_INIT;//mstatus.set 0x80 ,global interrupt will be set when task begin.
@@ -51,7 +51,7 @@ OS_STK *OSTaskStkInit (void (*task)(void *pd), void *pdata, OS_STK *ptos, INT16U
     stk[28]=0;
     stk[29]=0;
     stk[30]=0;
-    stk[31]=(OS_STK)task;//mepc                      
+    stk[31]=(OS_STK)task;//mepc
     return stk;
 }
 
@@ -333,12 +333,12 @@ void  OSTimeTickHook (void)
 }
 #endif
 
-#if OS_CPU_HOOKS_EN > 0u && OS_VERSION > 290u 
+#if OS_CPU_HOOKS_EN > 0u && OS_VERSION > 290u
 
 void OSTaskReturnHook(OS_TCB *ptcb)
-{ 
-    (void)ptcb; 
-} 
+{
+    (void)ptcb;
+}
 
 #endif
 

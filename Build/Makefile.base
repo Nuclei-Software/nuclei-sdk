@@ -1,13 +1,17 @@
-CORE ?= n307fd
-BOARD ?= hbird
-OS ?=
+# CORE and BOARD are defined in Makefile.soc.$(SOC)
+SOC ?= Nuclei
+RTOS ?=
 DOWNLOAD ?= ilm
 PFLOAT ?= 0
 NEWLIB ?= nano
 
 NUCLEI_SDK_BUILD = $(NUCLEI_SDK_ROOT)/Build
-NUCLEI_SDK_BOARD = $(NUCLEI_SDK_ROOT)/Board/$(BOARD)
-NUCLEI_SDK_OS = $(NUCLEI_SDK_ROOT)/OS/$(OS)
+NUCLEI_SDK_SOC = $(NUCLEI_SDK_ROOT)/SoC/$(SOC)
+NUCLEI_SDK_RTOS = $(NUCLEI_SDK_ROOT)/OS/$(RTOS)
+
+## Include GNU Make Standard Library
+## Website: http://gmsl.sourceforge.net/
+include $(NUCLEI_SDK_BUILD)/gmsl/gmsl
 
 include $(NUCLEI_SDK_BUILD)/Makefile.misc
 include $(NUCLEI_SDK_BUILD)/Makefile.conf

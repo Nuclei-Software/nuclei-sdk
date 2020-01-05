@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <os_cpu.h>
 #include "ucos_ii.h"
-#include "nuclei_hal.h"
+#include "nuclei_sdk_soc.h"
 #include <trap.h>
 
 void syscall_handler(unsigned long sp[])
@@ -15,7 +15,7 @@ extern void task_switch(unsigned long sp[]);
 void time_handler(unsigned long sp[])
 {
     static uint64_t then = 0;
- 
+
     if (then == 0)  {
         then = SysTimer_GetLoadValue();
     }

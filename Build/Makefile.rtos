@@ -1,0 +1,7 @@
+ifneq ($(RTOS),)
+ifneq ($(wildcard $(NUCLEI_SDK_RTOS)),)
+MAKEFILE_PREREQS += $(NUCLEI_SDK_BUILD)/Makefile.rtos
+MAKEFILE_PREREQS += $(NUCLEI_SDK_BUILD)/Makefile.rtos.$(RTOS)
+include $(NUCLEI_SDK_BUILD)/Makefile.rtos.$(RTOS)
+endif
+endif

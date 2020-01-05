@@ -4,6 +4,8 @@
 *.elf
 *.diss
 *.map
+*.log
+.vscode
 
 software/*/*.s
 
@@ -15,8 +17,10 @@ software/*/*.s
 
 prebuilt_tools/
 setup_config.sh
+setup_config.bat
 
 tags
 TAGS
 TAG
 CTAGS
+*_examples

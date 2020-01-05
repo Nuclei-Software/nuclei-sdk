@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "ctest.h"
-#include "nuclei_hal.h"
+#include "nuclei_sdk_soc.h"
 
 #define PMPADDR(x)      _AC(CSR_PMPADDR, x)
 #define PMPCFG(x)       _AC(CSR_PMPCFG, x)

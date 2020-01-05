@@ -1,5 +1,5 @@
 TARGET = demo
-OS = UCOSII
+RTOS = UCOSII
 
 NUCLEI_SDK_ROOT = ../../..
 

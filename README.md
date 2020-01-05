@@ -22,20 +22,22 @@ $NUCLEI_SDK_ROOT
 │   ├── baremetal
 │   ├── freertos
 │   └── ucosii
-├── Board
-│   └── hbird
+├── SoC
+│   └── Nuclei
+|       ├── Common
+|       └── Board
 ├── Build
 │   ├── Makefile.base
-│   ├── Makefile.board
-│   ├── Makefile.board.hbird
+│   ├── Makefile.soc
+│   ├── Makefile.soc.Nuclei
 │   ├── Makefile.conf
 │   ├── Makefile.core
 │   ├── Makefile.files
-│   ├── Makefile.files.hbird
+│   ├── Makefile.files.Nuclei
 │   ├── Makefile.misc
-│   ├── Makefile.os
-│   ├── Makefile.os.FreeRTOS
-│   ├── Makefile.os.UCOSII
+│   ├── Makefile.rtos
+│   ├── Makefile.rtos.FreeRTOS
+│   ├── Makefile.rtos.UCOSII
 │   └── Makefile.rules
 ├── NMSIS
 │   └── Include
@@ -56,11 +58,15 @@ $NUCLEI_SDK_ROOT
   - **FreeRTOS** applications, which will provide FreeRTOS applications using FreeRTOS RTOS, placed in *application/freertos/* folder.
   - **UCOSII** applications, which will provide UCOSII applications using UCOSII RTOS, placed in *application/ucosii/* folder.
 
-* **Board**
+* **SoC**
 
-  This directory contains all the supported boards for this Nuclei SDK.
+  This directory contains all the supported SoCs for this Nuclei SDK.
 
-  Here we mainly support Nuclei Hummingbird FPGA evaluation board, the support package placed in *Board/hbird/*.
+  Here we mainly support Nuclei N200, N300, N600, NX600 cores running in Hummingbird FPGA evaluation board, the support package placed in *SoC/Nuclei/*.
+
+  In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/Nuclei/Common/Include/nuclei_sdk_soc.h*.
+
+  In each SoC Board's include directory, *nuclei_sdk_hal.h* must be provided, and include the board header file, for example, *SoC/Nuclei/Board/hbird/Include/nuclei_sdk_hal.h*.
 
 * **Build**
 
@@ -87,12 +93,13 @@ $NUCLEI_SDK_ROOT
 
 * **setup.sh**
 
-  Nuclei SDK environment setup script. You need to create your own `setup_config.sh`.
+  Nuclei SDK environment setup script for Linux. You need to create your own `setup_config.sh`.
   ~~~
   NUCLEI_TOOL_ROOT=/path/to/your_tool_root
+  NMSIS_ROOT=/path/to/your_nmsis_root
   ~~~
 
-  In the $NUCLEI_TOOL_ROOT, you need to have Nuclei RISC-V GNU GCC toolchain and OpenOCD installed as below.
+  In the **$NUCLEI_TOOL_ROOT**, you need to have Nuclei RISC-V GNU GCC toolchain and OpenOCD installed as below.
   ~~~
   $NUCLEI_TOOL_ROOT
   ├── gcc
@@ -111,9 +118,44 @@ $NUCLEI_SDK_ROOT
       └── share
   ~~~
 
+* **setup.bat**
+
+  Nuclei SDK environment setup script. You need to create your own `setup_config.bat`.
+  ~~~
+  set NUCLEI_TOOL_ROOT=\path\to\your_tool_root
+  set NMSIS_ROOT=\path\to\your_nmsis_root
+  ~~~
+
+  In the **%NUCLEI_TOOL_ROOT%**, you need to have Nuclei RISC-V GNU GCC toolchain, necessary build tools and OpenOCD installed as below.
+  ~~~
+  %NUCLEI_TOOL_ROOT%
+  ├── build-tools
+  │   ├── bin
+  │   ├── gnu-mcu-eclipse
+  │   └── licenses
+  ├── gcc
+  │   ├── bin
+  │   ├── include
+  │   ├── lib
+  │   ├── libexec
+  │   ├── riscv-nuclei-elf
+  │   └── share
+  └── openocd
+      ├── bin
+      ├── contrib
+      ├── distro-info
+      ├── OpenULINK
+      ├── scripts
+      └── share
+  ~~~
+
 ## How to use
-1. Create and modify your own setup config `setup_config.sh` in $NUCLEI_SDK_ROOT.
-2. Source the environment script: `source setup.sh`
+1. Create and modify your own setup config
+   * For linux, create `setup_config.sh` in **$NUCLEI_SDK_ROOT**.
+   * For windows, create `setup_config.bat` in **%NUCLEI_SDK_ROOT%**.
+2. Source the environment script
+   * For linux: `source setup.sh`
+   * For windows: `setup.bat`
 3. Build and run application.
    * Assume that you will run *application/baremetal/helloworld/*.
    * cd *application/baremetal/helloworld/*

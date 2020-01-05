@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "ctest.h"
-#include "nuclei_hal.h"
+#include "nuclei_sdk_soc.h"
 
 CTEST(core, riscv_xlen) {
     ASSERT_EQUAL(__RISCV_XLEN, __riscv_xlen);

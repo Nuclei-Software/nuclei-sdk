@@ -19,4 +19,4 @@ ASM_SRCS +=
 
 LIBDIRS +=
 
-include $(NUCLEI_SDK_BUILD)/Makefile.files.$(BOARD)
+include $(NUCLEI_SDK_BUILD)/Makefile.files.$(SOC)

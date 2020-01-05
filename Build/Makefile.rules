@@ -13,63 +13,74 @@ ALL_OBJS += $(ALL_ASM_OBJS) $(ALL_C_OBJS) $(ALL_CXX_OBJS)
 ALL_DEPS := $(ALL_OBJS:=.d)
 
 CLEAN_OBJS += $(TARGET).elf $(TARGET).map $(TARGET).dump $(TARGET).verilog $(ALL_OBJS) $(ALL_DEPS)
+REAL_CLEAN_OBJS = $(subst /,$(PS), $(CLEAN_OBJS))
 
 # include dependency files of application
 ifneq ($(MAKECMDGOALS),clean)
  -include $(ALL_DEPS)
 endif
 
-.PHONY: all
+.PHONY: all info help dasm upload run_openocd run_gdb clean
+
+info:
+	@$(ECHO) Current Configuration: RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) DOWNLOAD=$(DOWNLOAD)
 
 help:
-	@echo "Nuclei N/NX-series RISC-V Embedded Processor Software Development Kit "
-	@echo "== How to Use with Make =="
-	@echo "1. Build Application:"
-	@echo "all [PROGRAM=flash/flashxip/ilm]"
-	@echo "   Build a software program to load with the debugger."
-	@echo "2. Upload Application to Board using OpenOCD:"
-	@echo "upload [PROGRAM=flash/flashxip/ilm]"
-	@echo "   Launch OpenOCD to flash your program to the on-board Flash."
-	@echo "3: Debug Application using OpenOCD"
-	@echo "  3.1: run_openocd"
-	@echo "  3.2: run_gdb [PROGRAM=flash/flashxip/ilm]"
-	@echo "   Step 1: Launch OpenOCD for Debugger connection: make run_openocd"
-	@echo "   Step 2: Launch GDB to connect openocd server, you need to run load"
-	@echo "           your code, and set breakpoints using gdb and debug it."
-	@echo "           Allows Ctrl-C to halt running programs."
-	@echo ""
-	@echo "== Example Usage =="
-	@echo "1. cd $NUCLEI_SDK_ROOT/application/helloworld"
-	@echo "2. Build for ILM download mode: make DOWNLOAD=ilm all"
-	@echo "3. Download application to board: make DOWNLOAD=ilm upload"
-	@echo "4. Debug application using OpenOCD:"
-	@echo "   4.1 Terminal One: make DOWNLOAD=ilm run_openocd"
-	@echo "   4.2 Terminal Two: make DOWNLOAD=ilm run_gdb"
-	@echo ""
+	@$(ECHO) "Nuclei N/NX-series RISC-V Embedded Processor Software Development Kit "
+	@$(ECHO) "== How to Use with Make =="
+	@$(ECHO) "1. Build Application:"
+	@$(ECHO) "all [PROGRAM=flash/flashxip/ilm]"
+	@$(ECHO) "   Build a software program to load with the debugger."
+	@$(ECHO) "2. Upload Application to Board using OpenOCD:"
+	@$(ECHO) "upload [PROGRAM=flash/flashxip/ilm]"
+	@$(ECHO) "   Launch OpenOCD to flash your program to the on-board Flash."
+	@$(ECHO) "3: Debug Application using OpenOCD"
+	@$(ECHO) "  3.1: run_openocd"
+	@$(ECHO) "  3.2: run_gdb [PROGRAM=flash/flashxip/ilm]"
+	@$(ECHO) "   Step 1: Launch OpenOCD for Debugger connection: make run_openocd"
+	@$(ECHO) "   Step 2: Launch GDB to connect openocd server, you need to run `load` in gdb command terminal"
+	@$(ECHO) "           to load your program, and set breakpoints using gdb and debug it."
+	@$(ECHO) "           Allows Ctrl-C to halt running programs."
+	@$(ECHO) ""
+	@$(ECHO) "== Example Usage =="
+	@$(ECHO) "1. cd $NUCLEI_SDK_ROOT/application/helloworld"
+	@$(ECHO) "2. Build for ILM download mode: make DOWNLOAD=ilm all"
+	@$(ECHO) "3. Download application to board: make DOWNLOAD=ilm upload"
+	@$(ECHO) "4. Debug application using OpenOCD:"
+	@$(ECHO) "   4.1 Terminal One: make DOWNLOAD=ilm run_openocd"
+	@$(ECHO) "   4.2 Terminal Two: make DOWNLOAD=ilm run_gdb"
+	@$(ECHO) ""
 
-all: $(TARGET).elf
+all: info $(TARGET).elf
 
 $(TARGET).elf: $(ALL_OBJS)
-	$(CC) $(CFLAGS) $(ALL_OBJS) -o $@ $(LDFLAGS)
-	$(SIZE) $@
+	$(TRACE_LINK)
+	$(Q)$(CC) $(CFLAGS) $(ALL_OBJS) -o $@ $(LDFLAGS)
+	$(Q)$(SIZE) $@
 
 $(ALL_ASM_OBJS): %.o: % $(COMMON_PREREQS)
-	$(CC) $(ASMFLAGS) -c -o $@ $<
+	$(TRACE_ASSEMBLE)
+	$(Q)$(CC) $(ASMFLAGS) -c -o $@ $<
 
 $(ALL_C_OBJS): %.o: % $(COMMON_PREREQS)
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(TRACE_COMPILE)
+	$(Q)$(CC) $(CFLAGS) -c -o $@ $<
 
 $(ALL_CXX_OBJS): %.o: % $(COMMON_PREREQS)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(TRACE_COMPILE)
+	$(Q)$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 dasm: $(TARGET).elf
 	$(OBJDUMP) -S -D $< > $(TARGET).dump
 	$(OBJCOPY) $< -O verilog $(TARGET).verilog
+ifneq "$(HOST_OS)" "Windows"
 	sed -i 's/@800/@000/g' $(TARGET).verilog
+endif
 
 upload: $(TARGET).elf
-	$(OPENOCD) $(OPENOCD_ARGS) & \
-	    $(GDB) $< $(GDB_UPLOAD_ARGS) $(GDB_UPLOAD_CMDS) && \
+	$(GDB) $< -ex "set remotetimeout 240" \
+        -ex "target remote | $(OPENOCD) --pipe $(OPENOCD_ARGS)" \
+        $(GDB_UPLOAD_ARGS) $(GDB_UPLOAD_CMDS)
 	echo "Successfully uploaded $< "
 
 run_openocd:
@@ -79,4 +90,4 @@ run_gdb: $(TARGET).elf
 	$(GDB) $< $(GDB_ARGS) $(GDB_CMDS)
 
 clean:
-	rm -f $(CLEAN_OBJS)
+	$(RM) $(REAL_CLEAN_OBJS)

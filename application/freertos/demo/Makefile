@@ -1,5 +1,5 @@
 TARGET = demo
-OS = FreeRTOS
+RTOS = FreeRTOS
 
 NUCLEI_SDK_ROOT = ../../..
 

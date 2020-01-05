@@ -1,1 +1,0 @@
-include $(NUCLEI_SDK_BUILD)/Makefile.board.$(BOARD)
