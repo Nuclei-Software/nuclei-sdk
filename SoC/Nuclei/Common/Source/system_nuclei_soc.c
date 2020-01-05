@@ -25,7 +25,7 @@
  ******************************************************************************/
 #include <stdint.h>
 #include <stdio.h>
-#include "nuclei_hal.h"
+#include "nuclei_sdk_hal.h"
 
 /*----------------------------------------------------------------------------
   Define clocks
@@ -74,16 +74,16 @@
 /* ToDo: initialize SystemCoreClock with the system core clock frequency value
          achieved after system intitialization.
          This means system core clock frequency after call to SystemInit() */
-/** 
+/**
  * \brief      Variable to hold the system core clock value
  * \details
- * Holds the system core clock, which is the system clock frequency supplied to the SysTick 
- * timer and the processor core clock. This variable can be used by debuggers to query the 
+ * Holds the system core clock, which is the system clock frequency supplied to the SysTick
+ * timer and the processor core clock. This variable can be used by debuggers to query the
  * frequency of the debug timer or to configure the trace clock speed.
- *                  
+ *
  * \attention
- * Compilers must be configured to avoid removing this variable in case the application 
- * program is not using it. Debugging systems require the variable to be physically 
+ * Compilers must be configured to avoid removing this variable in case the application
+ * program is not using it. Debugging systems require the variable to be physically
  * present in memory so that it can be examined to configure the debugger.
  */
 uint32_t SystemCoreClock = SYSTEM_CLOCK;  /* System Clock Frequency (Core Clock) */
@@ -92,11 +92,11 @@ uint32_t SystemCoreClock = SYSTEM_CLOCK;  /* System Clock Frequency (Core Clock)
   Clock functions
  *----------------------------------------------------------------------------*/
 
-/** 
+/**
  * \brief      Function to update the variable \ref SystemCoreClock
- * \details    
- * Updates the variable \ref SystemCoreClock and must be called whenever the core clock is changed 
- * during program execution. The function evaluates the clock register settings and calculates 
+ * \details
+ * Updates the variable \ref SystemCoreClock and must be called whenever the core clock is changed
+ * during program execution. The function evaluates the clock register settings and calculates
  * the current core clock.
  */
 void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
@@ -109,11 +109,11 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
     SystemCoreClock = SYSTEM_CLOCK;
 }
 
-/** 
+/**
  * \brief      Function to Initialize the system.
- * \details    
- * Initializes the microcontroller system. Typically, this function configures the 
- * oscillator (PLL) that is part of the microcontroller device. For systems 
+ * \details
+ * Initializes the microcontroller system. Typically, this function configures the
+ * oscillator (PLL) that is part of the microcontroller device. For systems
  * with a variable clock speed, it updates the variable \ref SystemCoreClock.
  * SystemInit is called from the file <b>startup<i>_device</i></b>.
  */
@@ -138,13 +138,13 @@ void SystemInit (void)
  */
 /** \brief Max exception handler number, don't include the NMI(0xFFF) one */
 #define MAX_SYSTEM_EXCEPTION_NUM        12
-/** 
+/**
  * \brief      Store the exception handlers for each exception ID
  * \note
  * - This SystemExceptionHandlers are used to store all the handlers for all
  * the exception codes Nuclei N/NX core provided.
  * - Exception code 0 - 11, totally 12 exceptions are mapped to SystemExceptionHandlers[0:11]
- * - Exception for NMI is also re-routed to exception handling(exception code 0xFFF) in startup code configuration, the handler itself is mapped to SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] 
+ * - Exception for NMI is also re-routed to exception handling(exception code 0xFFF) in startup code configuration, the handler itself is mapped to SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM]
  */
 static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM+1];
 
@@ -171,7 +171,7 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
     while(1);
 }
 
-/** 
+/**
  * \brief      Initialize all the default core exception handlers
  * \details
  * The core exception handler for each exception id will be initialized to \ref system_default_exception_handler.
@@ -185,7 +185,7 @@ static void Exception_Init(void)
     }
 }
 
-/** 
+/**
  * \brief       Register an exception handler for exception code EXCn
  * \details
  * * For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers[EXCn-1].
@@ -202,7 +202,7 @@ void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
     }
 }
 
-/** 
+/**
  * \brief       Get current exception handler for exception code EXCn
  * \details
  * * For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers[EXCn-1].
@@ -275,7 +275,7 @@ void SystemBannerPrint(void)
 void ECLIC_Init(void)
 {
     /* Global Configuration about MTH and NLBits.
-     * TODO: Please adapt it according to your system requirement. 
+     * TODO: Please adapt it according to your system requirement.
      * This function is called in _init function */
     ECLIC_SetMth(0);
     ECLIC_SetCfgNlbits(2);
@@ -314,7 +314,7 @@ int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_
     /* set interrupt handler entry to vector table */
     ECLIC_SetVector(IRQn, (rv_csr_t)handler);
     /* enable interrupt */
-    ECLIC_EnableIRQ(IRQn); 
+    ECLIC_EnableIRQ(IRQn);
     return 0;
 }
 

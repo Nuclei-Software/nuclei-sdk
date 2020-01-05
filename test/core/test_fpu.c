@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "ctest.h"
-#include "nuclei_hal.h"
+#include "nuclei_sdk_soc.h"
 
 #if defined(__FPU_PRESENT) && __FPU_PRESENT > 0
 
@@ -49,7 +49,7 @@ CTEST(fpu, flwfsw) {
     __RV_FSW(FREG(0), &regf0, 0);
     CTEST_LOG("Current f0, data0 is 0x%x, 0x%x", regf0, data[0]);
     ASSERT_EQUAL(regf0, data[0]);
-    
+
     __RV_FLW(FREG(0), memory, 0);
     __RV_FSW(FREG(0), &temp, 0);
     ASSERT_EQUAL(memory[0], temp);

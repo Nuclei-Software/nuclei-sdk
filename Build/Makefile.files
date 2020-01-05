@@ -4,7 +4,7 @@ CXX_INCDIRS +=
 ASM_INCDIRS +=
 
 SRCDIRS +=
-C_SRCDIRS +=
+C_SRCDIRS += $(NUCLEI_SDK_ROOT)/SoC/Common/Stubs
 CXX_SRCDIRS +=
 ASM_SRCDIRS +=
 
@@ -19,4 +19,4 @@ ASM_SRCS +=
 
 LIBDIRS +=
 
-include $(NUCLEI_SDK_BUILD)/Makefile.files.$(BOARD)
+include $(NUCLEI_SDK_BUILD)/Makefile.files.$(SOC)

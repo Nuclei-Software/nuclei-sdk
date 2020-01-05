@@ -182,7 +182,7 @@
 
 #include "config.h"
 #include "cpuidh.h"
-#include "nuclei_hal.h"
+#include "nuclei_sdk_hal.h"
 
 /*PRECISION PRECISION PRECISION PRECISION PRECISION PRECISION PRECISION*/
 
@@ -323,7 +323,7 @@ void SOC_BUTTON_2_HANDLER(void)
 
     // Blue LED toggle
     gpio_toggle(GPIO, SOC_LED_BLUE_GPIO_MASK);
-    
+
     // Clear pending interrupt of Button 2
     gpio_clear_interrupt(GPIO, SOC_BUTTON_2_GPIO_OFS, GPIO_INT_RISE);
 
@@ -362,7 +362,7 @@ void config_eclic_irqs()
 {
     // Initialize the button as rising interrupt enabled
     gpio_enable_interrupt(GPIO, SOC_BUTTON_GPIO_MASK, GPIO_INT_RISE);
-    
+
     ECLIC_SetCfgNlbits(3);
     ECLIC_SetLevelIRQ(SOC_BUTTON_2_IRQn, 2);
     ECLIC_SetLevelIRQ(SOC_BUTTON_1_IRQn, 3);
@@ -396,7 +396,7 @@ void board_gpio_init(void)
 {
     gpio_enable_input(GPIO, SOC_BUTTON_GPIO_MASK);
     gpio_set_pue(GPIO, SOC_BUTTON_GPIO_MASK, GPIO_BIT_ALL_ONE);
-    
+
     gpio_enable_output(GPIO, SOC_LED_GPIO_MASK);
     gpio_write(GPIO, SOC_LED_GPIO_MASK, GPIO_BIT_ALL_ZERO);
 }

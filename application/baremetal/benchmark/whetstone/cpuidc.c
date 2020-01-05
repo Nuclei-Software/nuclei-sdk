@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "cpuidh.h"
 #include "config.h"
-#include "nuclei_hal.h"
+#include "nuclei_sdk_soc.h"
 
 volatile SPDP  theseSecs = 0.0;
 volatile SPDP  startSecs = 0.0;

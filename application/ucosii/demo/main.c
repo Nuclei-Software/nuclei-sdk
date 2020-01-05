@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <ucos_ii.h>
 
-#include "nuclei_hal.h"
+#include "nuclei_sdk_hal.h"
 
 #define mainQUEUE_LENGTH (1)
 static void prvSetupHardware(void);
@@ -68,7 +68,7 @@ void board_gpio_init(void)
     gpio_write(GPIO, SOC_LED_GPIO_MASK, GPIO_BIT_ALL_ZERO);
 
     // Initialize the button as rising interrupt enabled
-    gpio_enable_interrupt(GPIO, SOC_BUTTON_GPIO_MASK, GPIO_INT_RISE);    
+    gpio_enable_interrupt(GPIO, SOC_BUTTON_GPIO_MASK, GPIO_INT_RISE);
 }
 
 void prvSetupHardware(void)

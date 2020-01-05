@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "ctest.h"
-#include "nuclei_hal.h"
+#include "nuclei_sdk_soc.h"
 
 
 static volatile uint32_t irqTaken = 0;
@@ -124,7 +124,7 @@ CTEST(eclic, lvl_pri_irq)
     uint8_t lvlnew, prinew;
 
     get_max_lvl_pri(&maxpri, &maxlvl);
-    
+
     if (maxlvl == 0) {
         lvlnew = 0;
     } else {
@@ -144,7 +144,7 @@ CTEST(eclic, lvl_pri_irq)
 
     ECLIC_SetPriorityIRQ(SOC_INT19_IRQn, 255);
     ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SOC_INT19_IRQn), maxpri);
-    
+
     ECLIC_SetLevelIRQ(SOC_INT19_IRQn, 255);
     ASSERT_EQUAL(ECLIC_GetLevelIRQ(SOC_INT19_IRQn), maxlvl);
 

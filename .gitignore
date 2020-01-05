@@ -5,6 +5,7 @@
 *.diss
 *.map
 *.log
+.vscode
 
 software/*/*.s
 

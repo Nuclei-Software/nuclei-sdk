@@ -48,7 +48,7 @@
 
 
 
-#include<stdint.h>
+#include <stdint.h>
 /*
 *********************************************************************************************************
 *                                     EXTERNAL C LANGUAGE LINKAGE
@@ -94,12 +94,12 @@ typedef  double                FP64;             /* Double precision floating po
 typedef  uint64_t         OS_STK;           /* Each stack entry is 64-bit wide                    */
 typedef  uint64_t         OS_CPU_SR;        /* Define size of Machine status register (64 bits)   */
 
-#else 
+#else
 
 typedef  uint32_t         OS_STK;           /* Each stack entry is 32-bit wide                    */
 typedef  uint32_t         OS_CPU_SR;        /* Define size of Machine status register (32 bits)   */
 
-#endif 
+#endif
 
 
 /*

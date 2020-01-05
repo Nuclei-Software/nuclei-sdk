@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include <nuclei_soc.h>
+#include "nuclei_sdk_soc.h"
 
 void print_misa(void)
 {
@@ -85,7 +85,7 @@ int main(void)
     srand(__get_rv_cycle()  | __get_rv_instret() | __RV_CSR_READ(CSR_MCYCLE));
     uint32_t rval = rand();
     rv_csr_t misa = __RV_CSR_READ(CSR_MISA);
-    
+
     printf("MISA: 0x%lx\r\n", misa);
     print_misa();
 

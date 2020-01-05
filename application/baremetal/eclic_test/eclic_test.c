@@ -1,6 +1,6 @@
 // See LICENSE for license details.
 #include <stdio.h>
-#include <nuclei_soc.h>
+#include "nuclei_sdk_hal.h"
 #include "gpio.h"
 
 /* define the interrupt handler name same as vector incase download mode is flashxip */

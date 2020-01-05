@@ -80,7 +80,7 @@ here. */
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "nuclei_hal.h"
+#include "nuclei_sdk_hal.h"
 
 #define mainQUEUE_RECEIVE_TASK_PRIORITY (tskIDLE_PRIORITY + 2)
 #define mainQUEUE_SEND_TASK_PRIORITY (tskIDLE_PRIORITY + 1)
@@ -162,7 +162,7 @@ void board_gpio_init(void)
     gpio_write(GPIO, SOC_LED_GPIO_MASK, GPIO_BIT_ALL_ZERO);
 
     // Initialize the button as rising interrupt enabled
-    gpio_enable_interrupt(GPIO, SOC_BUTTON_GPIO_MASK, GPIO_INT_RISE);    
+    gpio_enable_interrupt(GPIO, SOC_BUTTON_GPIO_MASK, GPIO_INT_RISE);
 }
 
 void prvSetupHardware(void)
@@ -193,7 +193,7 @@ void start_task(void *pvParameters);
 void start_task2(void *pvParameters);
 
 int main(void)
-{	
+{
     TimerHandle_t xExampleSoftwareTimer = NULL;
 
     /* Configure the system ready to run the demo.  The clock configuration

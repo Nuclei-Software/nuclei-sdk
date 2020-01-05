@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "ctest.h"
-#include "nuclei_hal.h"
+#include "nuclei_sdk_soc.h"
 
 #define INIT_VALUE  0x12345678
 #define TEST_VALUE  0xDEADBEEF

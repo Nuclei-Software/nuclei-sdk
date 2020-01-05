@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "ctest.h"
-#include "nuclei_hal.h"
+#include "nuclei_sdk_soc.h"
 
 CTEST(compiler, unaligned_read16) {
     uint32_t data = 0x12345678;
