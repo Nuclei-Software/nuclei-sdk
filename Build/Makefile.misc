@@ -77,9 +77,9 @@ ifeq ($(SILENT), 1)
     ## Overwrite Q Value set by V option ##
     override Q=@
 else
-    TRACE_CREATE_DIR    = @$(ECHO) "Creating Directory    : " $(@D)
-    TRACE_COMPILE       = @$(ECHO) "Compiling             : " $<
-    TRACE_ASSEMBLE      = @$(ECHO) "Assembling            : " $<
-    TRACE_LINK          = @$(ECHO) "Linking               : " $@
-    TRACE_ARCHIVE       = @$(ECHO) "Archiving             : " $@
+    TRACE_CREATE_DIR    = @$(ECHO) Creating Directory    :  $(@D)
+    TRACE_COMPILE       = @$(ECHO) Compiling             :  $<
+    TRACE_ASSEMBLE      = @$(ECHO) Assembling            :  $<
+    TRACE_LINK          = @$(ECHO) Linking               :  $@
+    TRACE_ARCHIVE       = @$(ECHO) Archiving             :  $@
 endif

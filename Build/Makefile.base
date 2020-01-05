@@ -1,4 +1,4 @@
-CORE ?= n307fd
+# CORE and BOARD are defined in Makefile.soc.$(SOC)
 SOC ?= Nuclei
 RTOS ?=
 DOWNLOAD ?= ilm

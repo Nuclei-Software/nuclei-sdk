@@ -20,7 +20,10 @@ ifneq ($(MAKECMDGOALS),clean)
  -include $(ALL_DEPS)
 endif
 
-.PHONY: all
+.PHONY: all info help dasm upload run_openocd run_gdb clean
+
+info:
+	@$(ECHO) Current Configuration: RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) DOWNLOAD=$(DOWNLOAD)
 
 help:
 	@$(ECHO) "Nuclei N/NX-series RISC-V Embedded Processor Software Development Kit "
@@ -48,7 +51,7 @@ help:
 	@$(ECHO) "   4.2 Terminal Two: make DOWNLOAD=ilm run_gdb"
 	@$(ECHO) ""
 
-all: $(TARGET).elf
+all: info $(TARGET).elf
 
 $(TARGET).elf: $(ALL_OBJS)
 	$(TRACE_LINK)
