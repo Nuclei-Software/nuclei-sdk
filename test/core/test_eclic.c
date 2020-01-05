@@ -12,7 +12,7 @@ static volatile uint32_t irqTaken = 0;
  * - ECLIC_EnableIRQ, ECLIC_DisableIRQ,  and ECLIC_GetEnableIRQ
  * - ECLIC_SetPendingIRQ, ECLIC_ClearPendingIRQ, and ECLIC_GetPendingIRQ
  */
-void eclic_irq19_handler() {
+void mtimer_irq_handler() {
     irqTaken++;
 }
 
@@ -21,44 +21,44 @@ CTEST(eclic, en_dis_irq)
     // Globally disable all interrupt servicing
     __disable_irq();
 
-    ECLIC_SetShvIRQ(SOC_INT19_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
-    ASSERT_EQUAL(ECLIC_GetShvIRQ(SOC_INT19_IRQn), ECLIC_NON_VECTOR_INTERRUPT);
+    ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
+    ASSERT_EQUAL(ECLIC_GetShvIRQ(SysTimer_IRQn), ECLIC_NON_VECTOR_INTERRUPT);
 
-    ECLIC_SetTrigIRQ(SOC_INT19_IRQn, ECLIC_POSTIVE_EDGE_TRIGGER);
-    ASSERT_EQUAL(ECLIC_GetTrigIRQ(SOC_INT19_IRQn), ECLIC_POSTIVE_EDGE_TRIGGER);
+    ECLIC_SetTrigIRQ(SysTimer_IRQn, ECLIC_POSTIVE_EDGE_TRIGGER);
+    ASSERT_EQUAL(ECLIC_GetTrigIRQ(SysTimer_IRQn), ECLIC_POSTIVE_EDGE_TRIGGER);
 
-    ECLIC_SetLevelIRQ(SOC_INT19_IRQn, 1);
-    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SOC_INT19_IRQn), 1);
+    ECLIC_SetLevelIRQ(SysTimer_IRQn, 1);
+    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SysTimer_IRQn), 1);
 
-    ECLIC_SetLevelIRQ(SOC_INT19_IRQn, 0);
-    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SOC_INT19_IRQn), 0);
+    ECLIC_SetLevelIRQ(SysTimer_IRQn, 0);
+    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SysTimer_IRQn), 0);
 
-    ECLIC_SetPriorityIRQ(SOC_INT19_IRQn, 0);
-    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SOC_INT19_IRQn), 0);
+    ECLIC_SetPriorityIRQ(SysTimer_IRQn, 0);
+    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SysTimer_IRQn), 0);
 
-    ECLIC_SetPriorityIRQ(SOC_INT19_IRQn, 1);
-    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SOC_INT19_IRQn), 1);
+    ECLIC_SetPriorityIRQ(SysTimer_IRQn, 1);
+    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SysTimer_IRQn), 1);
 
     // Clear its pending state
-    ECLIC_ClearPendingIRQ(SOC_INT19_IRQn);
-    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SOC_INT19_IRQn), 0);
+    ECLIC_ClearPendingIRQ(SysTimer_IRQn);
+    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
 
     // Register test interrupt handler.
-    ECLIC_SetVector(SOC_INT19_IRQn, (rv_csr_t)eclic_irq19_handler);
-    CTEST_LOG("Register irq vector 0x%x vs 0x%x", ECLIC_GetVector(SOC_INT19_IRQn), (rv_csr_t)eclic_irq19_handler);
-    ASSERT_EQUAL(ECLIC_GetVector(SOC_INT19_IRQn), (rv_csr_t)eclic_irq19_handler);
+    ECLIC_SetVector(SysTimer_IRQn, (rv_csr_t)mtimer_irq_handler);
+    CTEST_LOG("Register irq vector 0x%x vs 0x%x", ECLIC_GetVector(SysTimer_IRQn), (rv_csr_t)mtimer_irq_handler);
+    ASSERT_EQUAL(ECLIC_GetVector(SysTimer_IRQn), (rv_csr_t)mtimer_irq_handler);
 
     // Enable the interrupt
-    ECLIC_EnableIRQ(SOC_INT19_IRQn);
-    ASSERT_EQUAL(ECLIC_GetEnableIRQ(SOC_INT19_IRQn), 1);
+    ECLIC_EnableIRQ(SysTimer_IRQn);
+    ASSERT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 1);
 
     // Set the interrupt pending state
-    ECLIC_SetPendingIRQ(SOC_INT19_IRQn);
+    ECLIC_SetPendingIRQ(SysTimer_IRQn);
     for (uint32_t i = 10; i > 0; --i) {}
 
     // Interrupt is not taken
     ASSERT_EQUAL(irqTaken, 0);
-    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SOC_INT19_IRQn), 1);
+    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 1);
 
     // Globally enable interrupt servicing
     __enable_irq();
@@ -69,28 +69,28 @@ CTEST(eclic, en_dis_irq)
     ASSERT_EQUAL(irqTaken, 1);
 
     // Interrupt it not pending anymore.
-    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SOC_INT19_IRQn), 0);
+    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
 
     // Disable interrupt
-    ECLIC_DisableIRQ(SOC_INT19_IRQn);
-    ASSERT_EQUAL(ECLIC_GetEnableIRQ(SOC_INT19_IRQn), 0);
+    ECLIC_DisableIRQ(SysTimer_IRQn);
+    ASSERT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 0);
 
     // Set interrupt pending
-    ECLIC_SetPendingIRQ(SOC_INT19_IRQn);
+    ECLIC_SetPendingIRQ(SysTimer_IRQn);
     for (uint32_t i = 10; i > 0; --i) {
     }
 
     // Interrupt is not taken again
     ASSERT_EQUAL(irqTaken, 1);
-    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SOC_INT19_IRQn), 1);
+    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 1);
 
     // Clear interrupt pending
-    ECLIC_ClearPendingIRQ(SOC_INT19_IRQn);
+    ECLIC_ClearPendingIRQ(SysTimer_IRQn);
     for (uint32_t i = 10; i > 0; --i) {
     }
 
     // Interrupt it not pending anymore.
-    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SOC_INT19_IRQn), 0);
+    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
 
     // Globally disable interrupt servicing
     __disable_irq();
@@ -136,30 +136,30 @@ CTEST(eclic, lvl_pri_irq)
         prinew = rand() % maxpri;
     }
 
-    ECLIC_SetPriorityIRQ(SOC_INT19_IRQn, prinew);
-    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SOC_INT19_IRQn), prinew);
+    ECLIC_SetPriorityIRQ(SysTimer_IRQn, prinew);
+    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SysTimer_IRQn), prinew);
 
-    ECLIC_SetLevelIRQ(SOC_INT19_IRQn, lvlnew);
-    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SOC_INT19_IRQn), lvlnew);
+    ECLIC_SetLevelIRQ(SysTimer_IRQn, lvlnew);
+    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SysTimer_IRQn), lvlnew);
 
-    ECLIC_SetPriorityIRQ(SOC_INT19_IRQn, 255);
-    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SOC_INT19_IRQn), maxpri);
+    ECLIC_SetPriorityIRQ(SysTimer_IRQn, 255);
+    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SysTimer_IRQn), maxpri);
 
-    ECLIC_SetLevelIRQ(SOC_INT19_IRQn, 255);
-    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SOC_INT19_IRQn), maxlvl);
+    ECLIC_SetLevelIRQ(SysTimer_IRQn, 255);
+    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SysTimer_IRQn), maxlvl);
 
     ECLIC_SetCfgNlbits(3);
     get_max_lvl_pri(&maxpri, &maxlvl);
-    ECLIC_SetLevelIRQ(SOC_INT19_IRQn, 15);
-    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SOC_INT19_IRQn), maxlvl);
-    ECLIC_SetPriorityIRQ(SOC_INT19_IRQn, 31);
-    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SOC_INT19_IRQn), maxpri);
+    ECLIC_SetLevelIRQ(SysTimer_IRQn, 15);
+    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SysTimer_IRQn), maxlvl);
+    ECLIC_SetPriorityIRQ(SysTimer_IRQn, 31);
+    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SysTimer_IRQn), maxpri);
     ECLIC_SetCfgNlbits(2);
     get_max_lvl_pri(&maxpri, &maxlvl);
-    ECLIC_SetLevelIRQ(SOC_INT19_IRQn, 2);
-    ECLIC_SetPriorityIRQ(SOC_INT19_IRQn, 5);
-    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SOC_INT19_IRQn) <= maxlvl, 1);
-    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SOC_INT19_IRQn) <= maxpri, 1);
+    ECLIC_SetLevelIRQ(SysTimer_IRQn, 2);
+    ECLIC_SetPriorityIRQ(SysTimer_IRQn, 5);
+    ASSERT_EQUAL(ECLIC_GetLevelIRQ(SysTimer_IRQn) <= maxlvl, 1);
+    ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SysTimer_IRQn) <= maxpri, 1);
 
     ECLIC_SetCfgNlbits(oldnlbits);
     ASSERT_EQUAL(ECLIC_GetCfgNlbits(), oldnlbits);
@@ -184,9 +184,9 @@ CTEST(eclic, reg_read_write)
     ASSERT_EQUAL(ECLIC_GetMth(), orig);
     ECLIC_SetMth(orig);
 
-    ECLIC_GetTrigIRQ(SOC_INT19_IRQn);
-    ECLIC_SetTrigIRQ(SOC_INT19_IRQn, ECLIC_NEGTIVE_EDGE_TRIGGER);
-    ASSERT_EQUAL(ECLIC_GetTrigIRQ(SOC_INT19_IRQn), ECLIC_NEGTIVE_EDGE_TRIGGER);
+    ECLIC_GetTrigIRQ(SysTimer_IRQn);
+    ECLIC_SetTrigIRQ(SysTimer_IRQn, ECLIC_NEGTIVE_EDGE_TRIGGER);
+    ASSERT_EQUAL(ECLIC_GetTrigIRQ(SysTimer_IRQn), ECLIC_NEGTIVE_EDGE_TRIGGER);
 
     CTEST_LOG("CLICINTCTLBITS : %d", ECLIC_GetInfoCtlbits());
     CTEST_LOG("CLIC VERSION : 0x%x", ECLIC_GetInfoVer());
