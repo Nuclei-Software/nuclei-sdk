@@ -6,9 +6,7 @@
  extern "C" {
 #endif
 
-#include "nuclei_soc.h"
-#include "uart.h"
-#include "gpio.h"
+#include "nuclei_sdk_soc.h"
 
 #define SOC_DEBUG_UART      UART0
 
