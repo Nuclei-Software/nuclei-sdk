@@ -234,3 +234,4 @@ CTEST(eclic, exc_entry) {
 
     ASSERT_EQUAL(__get_exc_entry(), entry);
 }
+
