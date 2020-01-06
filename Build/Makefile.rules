@@ -20,7 +20,7 @@ ifneq ($(MAKECMDGOALS),clean)
  -include $(ALL_DEPS)
 endif
 
-.PHONY: all info help dasm upload run_openocd run_gdb clean
+.PHONY: all info help dasm upload run_openocd run_gdb clean debug
 
 info:
 	@$(ECHO) Current Configuration: RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) DOWNLOAD=$(DOWNLOAD)
@@ -78,16 +78,25 @@ ifneq "$(HOST_OS)" "Windows"
 endif
 
 upload: $(TARGET).elf
+	@$(ECHO) "Download and run $<"
 	$(GDB) $< -ex "set remotetimeout 240" \
         -ex "target remote | $(OPENOCD) --pipe $(OPENOCD_ARGS)" \
         $(GDB_UPLOAD_ARGS) $(GDB_UPLOAD_CMDS)
-	echo "Successfully uploaded $< "
+	@$(ECHO) "Successfully uploaded $< "
 
 run_openocd:
+	@$(ECHO) "Start openocd server"
 	$(OPENOCD) $(OPENOCD_ARGS)
 
 run_gdb: $(TARGET).elf
+	@$(ECHO) "Run gdb to connect openocd server and debug"
 	$(GDB) $< $(GDB_ARGS) $(GDB_CMDS)
 
+debug: $(TARGET).elf
+	@$(ECHO) "Download and debug $<"
+	$(GDB) $< -ex "set remotetimeout 240" \
+        -ex "target remote | $(OPENOCD) --pipe $(OPENOCD_ARGS)"
+
 clean:
-	$(RM) $(REAL_CLEAN_OBJS)
+	@$(ECHO) "Clean all build objects"
+	$(Q)$(RM) $(REAL_CLEAN_OBJS)
