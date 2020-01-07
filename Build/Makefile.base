@@ -1,7 +1,7 @@
 # CORE and BOARD are defined in Makefile.soc.$(SOC)
-SOC ?= Nuclei
+SOC ?= gd32vf103
 RTOS ?=
-DOWNLOAD ?= ilm
+DOWNLOAD ?= flashxip
 PFLOAT ?= 0
 NEWLIB ?= nano
 
