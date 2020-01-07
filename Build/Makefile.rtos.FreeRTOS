@@ -6,4 +6,4 @@ C_SRCS += $(NUCLEI_SDK_RTOS)/Source/portable/GCC/port.c
 ASM_SRCDIRS += $(NUCLEI_SDK_RTOS)/Source/portable/GCC
 
 INCDIRS += $(NUCLEI_SDK_RTOS)/Source/include \
-			$(NUCLEI_SDK_RTOS)/Source/portable/GCC
+		$(NUCLEI_SDK_RTOS)/Source/portable/GCC

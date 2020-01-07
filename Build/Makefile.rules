@@ -17,7 +17,7 @@ REAL_CLEAN_OBJS = $(subst /,$(PS), $(CLEAN_OBJS))
 
 # include dependency files of application
 ifneq ($(MAKECMDGOALS),clean)
- -include $(ALL_DEPS)
+-include $(ALL_DEPS)
 endif
 
 .PHONY: all info help dasm upload run_openocd run_gdb clean debug
