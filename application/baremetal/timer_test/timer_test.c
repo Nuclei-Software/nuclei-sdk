@@ -1,6 +1,6 @@
 // See LICENSE for license details.
 #include <stdio.h>
-#include "nuclei_sdk_soc.h"
+#include "nuclei_sdk_hal.h"
 /* Define the interrupt handler name same as vector table in case download mode is flashxip. */
 #define mtimer_irq_handler     eclic_mtip_handler
 #define mtimer_sw_irq_handler  eclic_msip_handler

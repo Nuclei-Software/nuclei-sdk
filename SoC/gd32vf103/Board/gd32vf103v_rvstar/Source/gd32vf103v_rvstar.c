@@ -32,14 +32,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "gd32vf103c_start.h"
+#include "gd32vf103v_rvstart.h"
 
 /* private variables */
-static const uint32_t GPIO_PORT[LEDn]       = {LED1_GPIO_PORT};
+static const uint32_t GPIO_PORT[LEDn]       = {LEDG_GPIO_PORT,LEDB_GPIO_PORT,LEDR_GPIO_PORT};
 
-static const uint32_t GPIO_PIN[LEDn]        = {LED1_PIN};
+static const uint32_t GPIO_PIN[LEDn]        = {LEDG_PIN,LEDB_PIN,LEDR_PIN};
 
-static const rcu_periph_enum GPIO_CLK[LEDn] = {LED1_GPIO_CLK};
+static const rcu_periph_enum GPIO_CLK[LEDn] = {LEDG_GPIO_CLK,LEDB_GPIO_CLK,LEDR_GPIO_CLK};
 
 static const uint32_t KEY_PORT[KEYn]        = {WAKEUP_KEY_GPIO_PORT};
 

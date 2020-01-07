@@ -1,4 +1,4 @@
-BOARD ?= gd32vf103v_eval
+BOARD ?= gd32vf103v_rvstar
 CORE ?= n205
 
 GD32VF103_SDK_SOC_BOARD=$(NUCLEI_SDK_SOC)/Board/$(BOARD)

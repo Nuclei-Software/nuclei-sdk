@@ -40,6 +40,7 @@ OF SUCH DAMAGE.
 #endif
 
 #include "gd32vf103.h"
+#include "gd32vf103_libopt.h"
 
 /* exported types */
 typedef enum 
