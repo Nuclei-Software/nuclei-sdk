@@ -29,11 +29,11 @@ $NUCLEI_SDK_ROOT
 ├── Build
 │   ├── Makefile.base
 │   ├── Makefile.soc
-│   ├── Makefile.soc.Nuclei
+│   ├── Makefile.soc.nuclei
 │   ├── Makefile.conf
 │   ├── Makefile.core
 │   ├── Makefile.files
-│   ├── Makefile.files.Nuclei
+│   ├── Makefile.files.nuclei
 │   ├── Makefile.misc
 │   ├── Makefile.rtos
 │   ├── Makefile.rtos.FreeRTOS
@@ -60,7 +60,7 @@ $NUCLEI_SDK_ROOT
 
 * **SoC**
 
-  This directory contains all the supported SoCs for this Nuclei SDK.
+  This directory contains all the supported SoCs for this Nuclei SDK, the directory name for SoC and its boards should always in lower case.
 
   Here we mainly support Nuclei N200, N300, N600, NX600 cores running in Hummingbird FPGA evaluation board, the support package placed in *SoC/Nuclei/*.
 
