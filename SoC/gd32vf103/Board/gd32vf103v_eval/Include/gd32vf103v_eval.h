@@ -39,7 +39,7 @@ OF SUCH DAMAGE.
  extern "C" {
 #endif
 
-#include "gd32vf103_soc.h"
+#include "gd32vf103.h"
      
 /* exported types */
 typedef enum 

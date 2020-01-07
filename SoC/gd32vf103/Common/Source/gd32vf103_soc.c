@@ -1,4 +1,4 @@
-#include "gd32vf103_soc.h"
+#include "gd32vf103.h"
 #include "gd32vf103_libopt.h"
 
 static uint32_t get_timer_freq()

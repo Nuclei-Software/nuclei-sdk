@@ -6,7 +6,7 @@
  extern "C" {
 #endif
 
-#include "board_hbird.h"
+#include "gd32vf103v_eval.h"
 
 #define NUCLEI_BANNER       1
 

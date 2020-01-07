@@ -35,7 +35,7 @@ OF SUCH DAMAGE.
 #ifndef GD32VF103_I2C_H
 #define GD32VF103_I2C_H
 
-#include "gd32vf103_soc.h"
+#include "gd32vf103.h"
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 

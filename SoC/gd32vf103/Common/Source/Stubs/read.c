@@ -12,7 +12,7 @@ ssize_t _read(int fd, void* ptr, size_t len)
     }
     uint8_t *readbuf = (uint8_t *)ptr;
     for (int i = 0; i < len; i ++) {
-        readbuf[i] = usart_read(USART0);
+        readbuf[i] = usart_read(EVAL_COM0);
     }
     return len;
 }

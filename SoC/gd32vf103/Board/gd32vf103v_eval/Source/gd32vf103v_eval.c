@@ -32,7 +32,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "gd32vf103v_eval.h"
+#include "nuclei_sdk_hal.h"
 #include "gd32vf103_usart.h"
 #include "gd32vf103_gpio.h"
 #include "gd32vf103_exti.h"

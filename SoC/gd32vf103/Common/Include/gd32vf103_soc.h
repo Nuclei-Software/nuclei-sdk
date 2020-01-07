@@ -23,22 +23,21 @@
  * limitations under the License.
  */
 
-#ifndef __NUCLEI_SOC_H__
-#define __NUCLEI_SOC_H__
+#ifndef __GD32VF103_SOC_H__
+#define __GD32VF103_SOC_H__
 
-#include "soc.h"
 #include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/** @addtogroup GD32vf103
+/** @addtogroup gd32vf103
   * @{
   */
 
 
-/** @addtogroup GD32vf103_SoC
+/** @addtogroup gd32vf103_SoC
   * @{
   */
 
@@ -78,7 +77,7 @@ typedef enum IRQn
     HardFault_IRQn            =  17,              /*!<  Hard Fault, storage access error */
     Reserved15_IRQn           =  18,              /*!<  Internal reserved */
 
-/* ===========================================  nuclei_soc Specific Interrupt Numbers  ========================================= */
+/* ===========================================  GD32VF103 Specific Interrupt Numbers  ========================================= */
 /* ToDo: add here your device specific external interrupt numbers. 19~1023 is reserved number for user. Maxmum interrupt supported
          could get from clicinfo.NUM_INTERRUPT. According the interrupt handlers defined in startup_Device.s
          eg.: Interrupt for Timer#1       TIM1_IRQHandler   ->   TIM1_IRQn */
@@ -210,23 +209,6 @@ typedef enum EXCn {
 
 /** @} */ /* End of group Configuration_of_CMSIS */
 
-/* enum definitions */
-typedef enum {
-    DISABLE = 0, 
-    ENABLE = !DISABLE
-    } EventStatus, ControlStatus;
-
-typedef enum {
-    FALSE = 0, 
-    TRUE = !FALSE} bool;
-typedef enum {
-	RESET = 0, 
-	SET = 1,
-	MAX = 0X7FFFFFFF} FlagStatus;
-
-typedef enum {
-	ERROR = 0, 
-	SUCCESS = !ERROR} ErrStatus;
 
 
 /* ToDo: include the correct core_cm#.h file
@@ -237,7 +219,7 @@ typedef enum {
 #include <nmsis_core.h>                         /*!< Nuclei N/NX class processor and core peripherals */
 /* ToDo: include your system_nuclei_soc.h file
          replace 'nuclei_soc' with your device name */
-#include "system_gd32vf103_soc.h"                    /*!< nuclei_soc System */
+#include "system_gd32vf103_soc.h"                    /*!< gd32vf103_soc System */
 
 
 /* ========================================  Start of section using anonymous unions  ======================================== */
@@ -293,11 +275,26 @@ typedef enum {
 
 #define RTC_FREQ LXTAL_VALUE
  // The TIMER frequency is just the RTC frequency
-#define SOC_TIMER_FREQ LXTAL_VALUE//((uint32_t)SystemCoreClock/4)  //units HZ
+#define SOC_TIMER_FREQ LXTAL_VALUE    //((uint32_t)SystemCoreClock/4)  //units HZ
 
 
+/* enum definitions */
+typedef enum {
+    DISABLE = 0, 
+    ENABLE = !DISABLE
+    } EventStatus, ControlStatus;
 
+typedef enum {
+    FALSE = 0, 
+    TRUE = !FALSE} bool;
+typedef enum {
+	RESET = 0, 
+	SET = 1,
+	MAX = 0X7FFFFFFF} FlagStatus;
 
+typedef enum {
+	ERROR = 0, 
+	SUCCESS = !ERROR} ErrStatus;
 
 
 /* =========================================================================================================================== */
@@ -324,89 +321,6 @@ typedef enum {
 /* ================                                            SysTick Timer                                            ================ */
 /* =========================================================================================================================== */
 
-/**
-  * @brief GPIO
-  */
-#if 0
-typedef struct {  /*!< GPIO Structure */
-    __IOM uint32_t INPUT_VAL;
-    __IOM uint32_t INPUT_EN;
-    __IOM uint32_t OUTPUT_EN;
-    __IOM uint32_t OUTPUT_VAL;
-    __IOM uint32_t PULLUP_EN;
-    __IOM uint32_t DRIVE;
-    __IOM uint32_t RISE_IE;
-    __IOM uint32_t RISE_IP;
-    __IOM uint32_t FALL_IE;
-    __IOM uint32_t FALL_IP;
-    __IOM uint32_t HIGH_IE;
-    __IOM uint32_t HIGH_IP;
-    __IOM uint32_t LOW_IE;
-    __IOM uint32_t LOW_IP;
-    __IOM uint32_t IOF_EN;
-    __IOM uint32_t IOF_SEL;
-    __IOM uint32_t OUTPUT_XOR;
-} GPIO_TypeDef;
-
-/**
-  * @brief UART (UART)
-  */
-typedef struct {
-    __IOM uint32_t TXFIFO;
-    __IOM uint32_t RXFIFO;
-    __IOM uint32_t TXCTRL;
-    __IOM uint32_t RXCTRL;
-    __IOM uint32_t IE;
-    __IOM uint32_t IP;
-    __IOM uint32_t DIV;
-} UART_TypeDef;
-
-typedef struct {
-    __IOM uint32_t CFG;
-          uint32_t RESERVED0;
-    __IOM uint32_t COUNT;
-          uint32_t RESERVED1;
-    __IOM uint32_t S;
-          uint32_t RESERVED2[3];
-    __IOM uint32_t CMP0;
-    __IOM uint32_t CMP1;
-    __IOM uint32_t CMP2;
-    __IOM uint32_t CMP3;
-} PWM_TypeDef;
-
-typedef struct {
-    __IOM uint32_t SCKDIV;
-    __IOM uint32_t SCKMODE;
-    __IOM uint32_t RESERVED0[2];
-    __IOM uint32_t CSID;
-    __IOM uint32_t CSDEF;
-    __IOM uint32_t CSMODE;
-    __IOM uint32_t RESERVED1[3];
-    __IOM uint32_t DELAY0;
-    __IOM uint32_t DELAY1;
-    __IOM uint32_t RESERVED2[4];
-    __IOM uint32_t FMT;
-    __IOM uint32_t RESERVED3;
-    __IOM uint32_t TXFIFO;
-    __IOM uint32_t RXFIFO;
-    __IOM uint32_t TXCTRL;
-    __IOM uint32_t RXCTRL;
-    __IOM uint32_t RESERVED4[2];
-    __IOM uint32_t FCTRL;
-    __IOM uint32_t FFMT;
-    __IOM uint32_t RESERVED5[2];
-    __IOM uint32_t IE;
-    __IOM uint32_t IP;
-} QSPI_TypeDef;
-
-typedef struct {
-    __IOM uint8_t PRERlo;
-    __IOM uint8_t PRERhi;
-    __IOM uint8_t CTR;
-    __IOM uint8_t TXRXR; /* TXR and RXR in same address */
-    __IOM uint8_t CSR; /* CR and SR in same address */
-} I2C_TypeDef;
-#endif
 /*@}*/ /* end of group nuclei_soc_Peripherals */
 
 
@@ -503,12 +417,12 @@ typedef struct {
 uint32_t get_cpu_freq();
 
 
-/** @} */ /* End of group nuclei_soc */
+/** @} */ /* End of group gd32vf103_soc */
 
-/** @} */ /* End of group Nuclei */
+/** @} */ /* End of group gd32vf103 */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif  /* __NUCLEI_SOC_H__ */
+#endif  /* __GD32VF103_SOC_H__ */

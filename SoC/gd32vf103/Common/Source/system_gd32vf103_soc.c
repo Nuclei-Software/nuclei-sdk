@@ -25,9 +25,9 @@
  */
 #include <stdint.h>
 #include <stdio.h>
-#include "gd32vf103_soc.h"
+#include "gd32vf103.h"
 #include "gd32vf103_libopt.h"
-#include "gd32vf103v_eval.h"
+#include "nuclei_sdk_hal.h"
 #include "gd32vf103_hal.h"
 
 /*----------------------------------------------------------------------------

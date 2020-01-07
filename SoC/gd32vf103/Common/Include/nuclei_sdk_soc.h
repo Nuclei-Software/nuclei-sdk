@@ -6,7 +6,7 @@
  extern "C" {
 #endif
 
-#include "gd32vf103_soc.h"
+#include "gd32vf103.h"
 #include "gd32vf103_libopt.h"
 
 #ifdef __cplusplus
