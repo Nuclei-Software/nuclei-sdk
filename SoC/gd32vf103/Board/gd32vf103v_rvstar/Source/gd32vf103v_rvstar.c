@@ -130,7 +130,9 @@ void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode)
 
     if (keymode == KEY_MODE_EXTI) {
         /* enable and set key EXTI interrupt to the lowest priority */
-        eclic_irq_enable(KEY_IRQn[keynum],1, 1);
+	ECLIC_EnableIRQ(KEY_IRQn[keynum]);
+        ECLIC_SetLevelIRQ(KEY_IRQn[keynum],1);
+        ECLIC_SetPriorityIRQ(KEY_IRQn[keynum],1);	
 
         /* connect key EXTI line to key GPIO pin */
         gpio_exti_source_select(KEY_PORT_SOURCE[keynum], KEY_PIN_SOURCE[keynum]);
