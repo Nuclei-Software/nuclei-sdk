@@ -24,6 +24,7 @@ ifneq ($(words $(CORE_ARCH_ABI)), 2)
 $(warning Here we only support these cores: $(SUPPORTED_CORES))
 $(error There is no coresponding ARCH_ABI setting for CORE $(CORE), please check Makefile.core)
 endif
-RISCV_ARCH = $(word 1, $(CORE_ARCH_ABI))
-RISCV_ABI = $(word 2, $(CORE_ARCH_ABI))
+
+RISCV_ARCH = rv32imac
+RISCV_ABI = ilp32
 
