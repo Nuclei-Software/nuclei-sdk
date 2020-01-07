@@ -23,17 +23,17 @@ $NUCLEI_SDK_ROOT
 │   ├── freertos
 │   └── ucosii
 ├── SoC
-│   └── Nuclei
+│   └── hbird
 |       ├── Common
 |       └── Board
 ├── Build
 │   ├── Makefile.base
 │   ├── Makefile.soc
-│   ├── Makefile.soc.nuclei
+│   ├── Makefile.soc.hbird
 │   ├── Makefile.conf
 │   ├── Makefile.core
 │   ├── Makefile.files
-│   ├── Makefile.files.nuclei
+│   ├── Makefile.files.hbird
 │   ├── Makefile.misc
 │   ├── Makefile.rtos
 │   ├── Makefile.rtos.FreeRTOS
@@ -62,7 +62,7 @@ $NUCLEI_SDK_ROOT
 
   This directory contains all the supported SoCs for this Nuclei SDK, the directory name for SoC and its boards should always in lower case.
 
-  Here we mainly support Nuclei N200, N300, N600, NX600 cores running in Hummingbird FPGA evaluation board, the support package placed in *SoC/Nuclei/*.
+  Here we mainly support Nuclei N200, N300, N600, NX600 cores running in Hummingbird FPGA evaluation board, the support package placed in *SoC/hbird/*.
 
   In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/Nuclei/Common/Include/nuclei_sdk_soc.h*.
 
