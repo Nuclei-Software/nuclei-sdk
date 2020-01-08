@@ -23,8 +23,8 @@
  * limitations under the License.
  */
 
-#ifndef __GD32VF103_SOC_H__
-#define __GD32VF103_SOC_H__
+#ifndef __GD32VF103_H__
+#define __GD32VF103_H__
 
 #include <stddef.h>
 
@@ -219,7 +219,7 @@ typedef enum EXCn {
 #include <nmsis_core.h>                         /*!< Nuclei N/NX class processor and core peripherals */
 /* ToDo: include your system_nuclei_soc.h file
          replace 'nuclei_soc' with your device name */
-#include "system_gd32vf103_soc.h"                    /*!< gd32vf103_soc System */
+#include "system_gd32vf103.h"                    /*!< gd32vf103_soc System */
 
 
 /* ========================================  Start of section using anonymous unions  ======================================== */

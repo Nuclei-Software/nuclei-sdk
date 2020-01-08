@@ -23,8 +23,8 @@
  * limitations under the License.
  */
 
-#ifndef __SYSTEM_NUCLEI_SOC_H__   /* ToDo: replace '<Device>' with your device name */
-#define __SYSTEM_NUCLEI_SOC_H__
+#ifndef __SYSTEM_GD32VF103_H__   /* ToDo: replace '<Device>' with your device name */
+#define __SYSTEM_GD32VF103_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -85,4 +85,4 @@ extern void delay_1ms(uint32_t count);
 }
 #endif
 
-#endif /* __SYSTEM_NUCLEI_SOC_H__ */
+#endif /* __SYSTEM_GD32VF103_H__ */

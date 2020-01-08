@@ -276,7 +276,6 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
             SystemCoreClock = IRC8M_VALUE;
             break;
     }
-
 }
 
 /** 
@@ -457,7 +456,7 @@ void SystemBannerPrint(void)
 void _init(void)
 {
     /* TODO: Add your own initialization code here, called before main */
-    SystemCoreClock = get_cpu_freq();
+    //SystemCoreClock = get_cpu_freq();
     /* configure USART */
     gd_eval_com_init(EVAL_COM0);
     SystemBannerPrint();
@@ -513,9 +512,9 @@ int ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode
         return -1;
     }
     /* set interrupt vector mode */
-    //ECLIC_SetShvIRQ(IRQn, shv);
+    ECLIC_SetShvIRQ(IRQn, shv);
     /* set interrupt trigger mode and polarity */
-    //ECLIC_SetTrigIRQ(IRQn, trig_mode);
+    ECLIC_SetTrigIRQ(IRQn, trig_mode);
     /* set interrupt level */
     ECLIC_SetLevelIRQ(IRQn, lvl);
     /* set interrupt priority */

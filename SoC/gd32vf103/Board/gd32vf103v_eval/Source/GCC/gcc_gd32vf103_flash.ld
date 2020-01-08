@@ -32,7 +32,7 @@ OUTPUT_ARCH( "riscv" )
  * </h>
  */
 __ROM_BASE = 0x08000000;
-__ROM_SIZE = 0x00010000;
+__ROM_SIZE = 0x00020000;
 
 /*--------------------- ILM RAM Configuration ---------------------------
  * <h> ILM RAM Configuration
@@ -138,15 +138,6 @@ SECTIONS
   .rodata : ALIGN(4)
   {
     . = ALIGN(4);
-    *(.rdata)
-    *(.rodata .rodata.*)
-    *(.gnu.linkonce.r.*)
-    . = ALIGN(8);
-    *(.srodata.cst16)
-    *(.srodata.cst8)
-    *(.srodata.cst4)
-    *(.srodata.cst2)
-    *(.srodata .srodata.*)
   } >ilm AT>flash
 
   .fini           :
@@ -239,7 +230,17 @@ SECTIONS
     PROVIDE( __global_pointer$ = . + 0x800 );
     *(.sdata .sdata.* .sdata*)
     *(.gnu.linkonce.s.*)
-  } >ram AT>flash
+    . = ALIGN(8);
+    *(.srodata.cst16)
+    *(.srodata.cst8)
+    *(.srodata.cst4)
+    *(.srodata.cst2)
+    *(.srodata .srodata.*)
+    . = ALIGN(4);
+    *(.rdata)
+    *(.rodata .rodata.*)
+    *(.gnu.linkonce.r.*)
+  } >ram AT>flash 
 
   . = ALIGN(4);
   PROVIDE( _edata = . );
