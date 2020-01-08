@@ -80,19 +80,22 @@ build_hbird_eval_flashxip_nx600:
         - SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    application
         - SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    test
     
-build_gd32vf103v_eval_ilm:
-    variables:
-        DOWNLOAD: "ilm"
-    <<: *build_gd32vf103v_eval_job_def
-
-build_gd32vf103v_eval_flash:
-    variables:
-        DOWNLOAD: "flash"
-    <<: *build_gd32vf103v_eval_job_def
+#build_gd32vf103v_eval_ilm:
+#    variables:
+#        DOWNLOAD: "ilm"
+#        CORE: "n205"
+#    <<: *build_gd32vf103v_eval_job_def
+#
+#build_gd32vf103v_eval_flash:
+#    variables:
+#        DOWNLOAD: "flash"
+#        CORE: "n205"
+#    <<: *build_gd32vf103v_eval_job_def
 
 build_gd32vf103v_eval_flashxip:
     variables:
         DOWNLOAD: "flashxip"
+        CORE: "n205"
     <<: *build_gd32vf103v_eval_job_def
 
 ## Jobs for board gd32vf103v_rvstar only flashxip mode
@@ -105,15 +108,17 @@ build_gd32vf103v_eval_flashxip:
 #build_gd32vf103v_rvstar_ilm:
 #    variables:
 #        DOWNLOAD: "ilm"
+#        CORE: "n205"
 #    <<: *build_gd32vf103v_rvstar_job_def
 #
 #build_gd32vf103v_rvstar_flash:
 #    variables:
 #        DOWNLOAD: "flash"
+#        CORE: "n205"
 #    <<: *build_gd32vf103v_rvstar_job_def
 
 build_gd32vf103v_rvstar_flashxip:
     variables:
         DOWNLOAD: "flashxip"
-        CORE: n205
+        CORE: "n205"
     <<: *build_gd32vf103v_rvstar_job_def
