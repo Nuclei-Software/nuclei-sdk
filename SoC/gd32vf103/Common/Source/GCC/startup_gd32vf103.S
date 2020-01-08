@@ -188,13 +188,13 @@ vector_base:
 	DECLARE_INT_HANDLER     EXTI10_15_IRQHandler
 	DECLARE_INT_HANDLER     RTC_Alarm_IRQHandler
 	DECLARE_INT_HANDLER     USBFS_WKUP_IRQHandler
-    DECLARE_INT_HANDLER     0
-    DECLARE_INT_HANDLER     0
-    DECLARE_INT_HANDLER     0
-    DECLARE_INT_HANDLER     0
-	DECLARE_INT_HANDLER     0
+    DECLARE_INT_HANDLER     default_intexc_handler
+    DECLARE_INT_HANDLER     default_intexc_handler
+    DECLARE_INT_HANDLER     default_intexc_handler
+    DECLARE_INT_HANDLER     default_intexc_handler
+	DECLARE_INT_HANDLER     default_intexc_handler
 	DECLARE_INT_HANDLER     EXMC_IRQHandler
-	DECLARE_INT_HANDLER     0
+	DECLARE_INT_HANDLER     default_intexc_handler
 	DECLARE_INT_HANDLER     TIMER4_IRQHandler
 	DECLARE_INT_HANDLER     SPI2_IRQHandler
 	DECLARE_INT_HANDLER     UART3_IRQHandler
@@ -206,8 +206,8 @@ vector_base:
 	DECLARE_INT_HANDLER     DMA1_Channel2_IRQHandler
 	DECLARE_INT_HANDLER     DMA1_Channel3_IRQHandler
 	DECLARE_INT_HANDLER     DMA1_Channel4_IRQHandler
-    DECLARE_INT_HANDLER     0
-    DECLARE_INT_HANDLER     0
+    DECLARE_INT_HANDLER     default_intexc_handler
+    DECLARE_INT_HANDLER     default_intexc_handler
 	DECLARE_INT_HANDLER     CAN1_TX_IRQHandler
 	DECLARE_INT_HANDLER     CAN1_RX0_IRQHandler
 	DECLARE_INT_HANDLER     CAN1_RX1_IRQHandler
