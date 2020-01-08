@@ -1,12 +1,25 @@
+NUCLEI_SDK_BUILD = $(NUCLEI_SDK_ROOT)/Build
+# Include your local and global makefile variables
+# SOC, DOWNLOAD, PFLOAT, NEWLIB etc.
+# Makefile.global should be placed in $(NUCLEI_SDK_ROOT)/Build
+# Makefile.local should be placed together with application Makefile in your own application folder
+# Sample content for this Makefile.local or Makefile.global
+# SOC ?= hbird
+# DOWNLOAD ?= ilm
+EXTRA_MKS := $(wildcard Makefile.local $(NUCLEI_SDK_BUILD)/Makefile.global) 
+ifneq ("$(strip $(EXTRA_MKS))", "")
+$(info Obtaining addtional make variables from $(EXTRA_MKS))
+include $(EXTRA_MKS)
+endif
+
 # CORE and BOARD are defined in Makefile.soc.$(SOC)
 # BOARD and SOC name should always be lower-case
 SOC ?= hbird
 RTOS ?=
-DOWNLOAD ?= flashxip
+DOWNLOAD ?= ilm
 PFLOAT ?= 0
 NEWLIB ?= nano
 
-NUCLEI_SDK_BUILD = $(NUCLEI_SDK_ROOT)/Build
 NUCLEI_SDK_SOC = $(NUCLEI_SDK_ROOT)/SoC/$(SOC)
 NUCLEI_SDK_RTOS = $(NUCLEI_SDK_ROOT)/OS/$(RTOS)
 
