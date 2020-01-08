@@ -2,7 +2,7 @@
 # BOARD and SOC name should always be lower-case
 SOC ?= hbird
 RTOS ?=
-DOWNLOAD ?= ilm
+DOWNLOAD ?= flashxip
 PFLOAT ?= 0
 NEWLIB ?= nano
 
