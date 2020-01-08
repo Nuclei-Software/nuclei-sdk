@@ -168,27 +168,27 @@ void gd_eval_led_toggle(led_typedef_enum lednum)
     \retval     none
 */
 
-void gd_eval_key_init(key_typedef_enum key_num, keymode_typedef_enum key_mode)
+void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode)
 {
     /* enable the key clock */
-    rcu_periph_clock_enable(KEY_CLK[key_num]);
+    rcu_periph_clock_enable(KEY_CLK[keynum]);
     rcu_periph_clock_enable(RCU_AF);
 
     /* configure button pin as input */
-    gpio_init(KEY_PORT[key_num], GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, KEY_PIN[key_num]);
+    gpio_init(KEY_PORT[keynum], GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, KEY_PIN[keynum]);
 
     if (key_mode == KEY_MODE_EXTI) {
         /* enable and set key EXTI interrupt to the lowest priority */
-	ECLIC_EnableIRQ(KEY_IRQn[key_num]);
-        ECLIC_SetLevelIRQ(KEY_IRQn[key_num],1);
-        ECLIC_SetPriorityIRQ(KEY_IRQn[key_num],1);	
+	    ECLIC_EnableIRQ(KEY_IRQn[keynum]);
+        ECLIC_SetLevelIRQ(KEY_IRQn[keynum],1);
+        ECLIC_SetPriorityIRQ(KEY_IRQn[keynum],1);	
 
         /* connect key EXTI line to key GPIO pin */
-        gpio_exti_source_select(KEY_PORT_SOURCE[key_num], KEY_PIN_SOURCE[key_num]);
+        gpio_exti_source_select(KEY_PORT_SOURCE[keynum], KEY_PIN_SOURCE[keynum]);
 
         /* configure key EXTI line */
-        exti_init(KEY_EXTI_LINE[key_num], EXTI_INTERRUPT, EXTI_TRIG_FALLING);
-        exti_interrupt_flag_clear(KEY_EXTI_LINE[key_num]);
+        exti_init(KEY_EXTI_LINE[keynum], EXTI_INTERRUPT, EXTI_TRIG_FALLING);
+        exti_interrupt_flag_clear(KEY_EXTI_LINE[keynum]);
     }
 }
 

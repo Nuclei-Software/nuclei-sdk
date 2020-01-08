@@ -155,7 +155,7 @@ void gd_eval_led_off(led_typedef_enum lednum);
 /* toggle the selected led */
 void gd_eval_led_toggle(led_typedef_enum lednum);
 /* configure key */
-void gd_eval_key_init(key_typedef_enum key_num, keymode_typedef_enum key_mode);
+void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode);
 /* return the selected key state */
 uint8_t gd_eval_key_state_get(key_typedef_enum key);
 /* configure COM port */
