@@ -28,7 +28,6 @@
 #include "gd32vf103.h"
 #include "gd32vf103_libopt.h"
 #include "nuclei_sdk_hal.h"
-#include "gd32vf103_hal.h"
 
 /*----------------------------------------------------------------------------
   Define clocks

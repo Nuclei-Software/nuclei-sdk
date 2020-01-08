@@ -18,7 +18,7 @@
 /******************************************************************************
  * \file     intexc_gd32vf103.S
  * \brief    NMSIS Interrupt and Exception Handling Template File
- *           for Nuclei N/NX Class gd32vf103
+ *           for Device gd32vf103
  * \version  V1.00
  * \date     7 Jan 2020
  *
