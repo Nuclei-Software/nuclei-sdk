@@ -23,17 +23,17 @@ $NUCLEI_SDK_ROOT
 │   ├── freertos
 │   └── ucosii
 ├── SoC
-│   └── Nuclei
+│   └── hbird
 |       ├── Common
 |       └── Board
 ├── Build
 │   ├── Makefile.base
 │   ├── Makefile.soc
-│   ├── Makefile.soc.Nuclei
+│   ├── Makefile.soc.hbird
 │   ├── Makefile.conf
 │   ├── Makefile.core
 │   ├── Makefile.files
-│   ├── Makefile.files.Nuclei
+│   ├── Makefile.files.hbird
 │   ├── Makefile.misc
 │   ├── Makefile.rtos
 │   ├── Makefile.rtos.FreeRTOS
@@ -60,9 +60,9 @@ $NUCLEI_SDK_ROOT
 
 * **SoC**
 
-  This directory contains all the supported SoCs for this Nuclei SDK.
+  This directory contains all the supported SoCs for this Nuclei SDK, the directory name for SoC and its boards should always in lower case.
 
-  Here we mainly support Nuclei N200, N300, N600, NX600 cores running in Hummingbird FPGA evaluation board, the support package placed in *SoC/Nuclei/*.
+  Here we mainly support Nuclei N200, N300, N600, NX600 cores running in Hummingbird FPGA evaluation board, the support package placed in *SoC/hbird/*.
 
   In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/Nuclei/Common/Include/nuclei_sdk_soc.h*.
 
@@ -174,10 +174,15 @@ $NUCLEI_SDK_ROOT
      ~~~
      make CORE=n305 DOWNLOAD=ilm upload
      ~~~
-   * If you want to debug your application for *CORE=n305 DOWNLOAD=ilm*:
+   * (Option 1)If you want to debug your application for *CORE=n305 DOWNLOAD=ilm*:
      - First open a new terminal in the same application folder and run: `make CORE=n305 DOWNLOAD=ilm run_openocd`
-     - Then run this command `make CORE=n305 DOWNLOAD=ilm run_gdb` in the existing terminal, you need to type `load` to load the application again, and debug it.
-   * If you want to use UART terminal tool to view the UART message, you can choose `screen` or `minicom`, the default UART baudrate we use is `115200`.
+     - Then run this command `make CORE=n305 DOWNLOAD=ilm run_gdb` in the existing terminal, then you can debug it using gdb,
+       if you want to load your program, you need to type `load` to achieve it.
+   * (Option 2)If you want to debug your application for *CORE=n305 DOWNLOAD=ilm*:
+     ~~~
+     make CORE=n305 DOWNLOAD=ilm debug
+     ~~~
+   * If you want to use UART terminal tool to view the UART message, you can choose `screen` or `minicom` in Linux, `teraterm` in Windows, the default UART baudrate we use is `115200`.
 
 ## Knowledge book
 * If you need to build a new application, or change **CORE** or **DOWNLOAD** option, please make sure that you have clean the project by `make clean`

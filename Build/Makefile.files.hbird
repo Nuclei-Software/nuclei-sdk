@@ -1,0 +1,14 @@
+INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include
+
+C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers \
+		$(NUCLEI_SDK_SOC_COMMON)/Source/Stubs
+
+ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_hbird.S \
+		$(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_hbird.S
+
+# Add extra board related source files and header files
+VALID_NUCLEI_SDK_SOC_BOARD=$(wildcard $(NUCLEI_SDK_SOC_BOARD))
+ifneq ($(VALID_NUCLEI_SDK_SOC_BOARD),)
+INCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Include
+C_SRCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Source
+endif

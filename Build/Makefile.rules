@@ -17,10 +17,10 @@ REAL_CLEAN_OBJS = $(subst /,$(PS), $(CLEAN_OBJS))
 
 # include dependency files of application
 ifneq ($(MAKECMDGOALS),clean)
- -include $(ALL_DEPS)
+-include $(ALL_DEPS)
 endif
 
-.PHONY: all info help dasm upload run_openocd run_gdb clean
+.PHONY: all info help dasm upload run_openocd run_gdb clean debug
 
 info:
 	@$(ECHO) Current Configuration: RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) DOWNLOAD=$(DOWNLOAD)
@@ -31,24 +31,30 @@ help:
 	@$(ECHO) "1. Build Application:"
 	@$(ECHO) "all [PROGRAM=flash/flashxip/ilm]"
 	@$(ECHO) "   Build a software program to load with the debugger."
-	@$(ECHO) "2. Upload Application to Board using OpenOCD:"
+	@$(ECHO) "2. Upload Application to Board using OpenOCD and GDB:"
 	@$(ECHO) "upload [PROGRAM=flash/flashxip/ilm]"
 	@$(ECHO) "   Launch OpenOCD to flash your program to the on-board Flash."
-	@$(ECHO) "3: Debug Application using OpenOCD"
+	@$(ECHO) "3:(Option 1) Debug Application using OpenOCD and GDB"
 	@$(ECHO) "  3.1: run_openocd"
 	@$(ECHO) "  3.2: run_gdb [PROGRAM=flash/flashxip/ilm]"
 	@$(ECHO) "   Step 1: Launch OpenOCD for Debugger connection: make run_openocd"
-	@$(ECHO) "   Step 2: Launch GDB to connect openocd server, you need to run `load` in gdb command terminal"
-	@$(ECHO) "           to load your program, and set breakpoints using gdb and debug it."
-	@$(ECHO) "           Allows Ctrl-C to halt running programs."
+	@$(ECHO) "   Step 2: Launch GDB to connect openocd server,  you can set breakpoints using gdb and debug it."
+	@$(ECHO) "           If you want to load your application, you need to run `load` in gdb command terminal"
+	@$(ECHO) "           to load your program, then use gdb to debug it."
+	@$(ECHO) "3:(Option 2) Debug Application using OpenOCD and GDB"
+	@$(ECHO) "debug [PROGRAM=flash/flashxip/ilm]"
+	@$(ECHO) "   Launch GDB and OpenOCD to debug your application on-board, you can set breakpoints using gdb and debug it."
+	@$(ECHO) "           If you want to load your application, you need to run `load` in gdb command terminal"
+	@$(ECHO) "           to load your program, then use gdb to debug it."
 	@$(ECHO) ""
 	@$(ECHO) "== Example Usage =="
 	@$(ECHO) "1. cd $NUCLEI_SDK_ROOT/application/helloworld"
 	@$(ECHO) "2. Build for ILM download mode: make DOWNLOAD=ilm all"
 	@$(ECHO) "3. Download application to board: make DOWNLOAD=ilm upload"
-	@$(ECHO) "4. Debug application using OpenOCD:"
+	@$(ECHO) "4.(Option 1) Debug application:"
 	@$(ECHO) "   4.1 Terminal One: make DOWNLOAD=ilm run_openocd"
 	@$(ECHO) "   4.2 Terminal Two: make DOWNLOAD=ilm run_gdb"
+	@$(ECHO) "4.(Option 2) Debug application: make DOWNLOAD=ilm debug"
 	@$(ECHO) ""
 
 all: info $(TARGET).elf
@@ -78,16 +84,25 @@ ifneq "$(HOST_OS)" "Windows"
 endif
 
 upload: $(TARGET).elf
+	@$(ECHO) "Download and run $<"
 	$(GDB) $< -ex "set remotetimeout 240" \
         -ex "target remote | $(OPENOCD) --pipe $(OPENOCD_ARGS)" \
         $(GDB_UPLOAD_ARGS) $(GDB_UPLOAD_CMDS)
-	echo "Successfully uploaded $< "
+	@$(ECHO) "Successfully uploaded $< "
 
 run_openocd:
+	@$(ECHO) "Start openocd server"
 	$(OPENOCD) $(OPENOCD_ARGS)
 
 run_gdb: $(TARGET).elf
+	@$(ECHO) "Run gdb to connect openocd server and debug"
 	$(GDB) $< $(GDB_ARGS) $(GDB_CMDS)
 
+debug: $(TARGET).elf
+	@$(ECHO) "Download and debug $<"
+	$(GDB) $< -ex "set remotetimeout 240" \
+        -ex "target remote | $(OPENOCD) --pipe $(OPENOCD_ARGS)"
+
 clean:
-	$(RM) $(REAL_CLEAN_OBJS)
+	@$(ECHO) "Clean all build objects"
+	$(Q)$(RM) $(REAL_CLEAN_OBJS)

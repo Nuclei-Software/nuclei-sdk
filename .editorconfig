@@ -39,7 +39,7 @@ indent_style = space
 indent_size = 4
 
 # Windows Command Script
-[*.cmd, *.bat]
+[{*.cmd,*.bat}]
 end_of_line = crlf
 indent_style = tab
 indent_size = 8
@@ -55,12 +55,12 @@ indent_style = space
 indent_size = 2
 
 # Makefile
-[Makefile, Makefile.*]
-indent_style = space
-indent_size = 4
+[{Makefile,Makefile.*}]
+indent_style = tab
+indent_size = 8
 
 # Markdown
-[*.md, *.MD]
+[{*.md,*.MD}]
 indent_style = space
 indent_size = 2
 trim_trailing_whitespace = false

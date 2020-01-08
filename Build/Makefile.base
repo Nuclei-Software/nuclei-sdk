@@ -1,5 +1,6 @@
 # CORE and BOARD are defined in Makefile.soc.$(SOC)
-SOC ?= gd32vf103
+# BOARD and SOC name should always be lower-case
+SOC ?= hbird
 RTOS ?=
 DOWNLOAD ?= flashxip
 PFLOAT ?= 0
