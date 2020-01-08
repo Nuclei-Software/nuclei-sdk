@@ -11,7 +11,7 @@ void prvSetupHardware(void)
 {
 }
 
-#define STK_LEN 1024
+#define STK_LEN 256
 
 OS_STK task1_stk[STK_LEN];
 OS_STK task2_stk[STK_LEN];
