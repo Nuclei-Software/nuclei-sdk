@@ -1,4 +1,4 @@
-/**************************************************************************//**
+/******************************************************************************
  * @file     hbird.h
  * @brief    NMSIS Core Peripheral Access Layer Header File for
  *           Nuclei HummingBird evaluation SoC which support Nuclei N/NX class cores
@@ -6,7 +6,7 @@
  * @date     22. Nov 2019
  ******************************************************************************/
 /*
- * Copyright (c) 2009-2019 Nuclei Limited. All rights reserved.
+ * Copyright (c) 2019 Nuclei Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
