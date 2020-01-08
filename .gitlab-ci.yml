@@ -78,8 +78,7 @@ build_hbird_eval_flashxip_nx600:
     stage: build_gd32vf103v_eval
     script:
         - SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    application
-        - SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    test
-    
+
 #build_gd32vf103v_eval_ilm:
 #    variables:
 #        DOWNLOAD: "ilm"
@@ -104,7 +103,7 @@ build_gd32vf103v_eval_flashxip:
     script:
         - SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    application
         - SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    test
-    
+ 
 #build_gd32vf103v_rvstar_ilm:
 #    variables:
 #        DOWNLOAD: "ilm"
