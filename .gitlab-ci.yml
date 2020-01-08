@@ -4,64 +4,115 @@ before_script:
     - source .ci/build_sdk.sh
     - source .ci/build_applications.sh
 
-.build_job_template: &build_job_def
+stages:
+    - build_hbird_eval
+    - build_gd32vf103v_eval
+    - build_gd32vf103v_rvstar
+
+## Jobs for board hbird_eval
+.build_hbird_eval_job_template: &build_hbird_eval_job_def
+    stage: build_hbird_eval
     script:
-        - nsdk_build_directory    application
-        - nsdk_build_directory    test
+        - SOC=hbird BOARD=hbird_eval nsdk_build_hbird_eval_directory    application
+        - SOC=hbird BOARD=hbird_eval nsdk_build_hbird_eval_directory    test
     
-# Build For N307, with Flash, FlashXIP, ILM Mode
-build_ilm_n307:
+# Build For HBird Evaluation Board with N307 Core, with Flash, FlashXIP, ILM Mode
+build_hbird_eval_ilm_n307:
     variables:
         DOWNLOAD: "ilm"
         CORE: "n307"
-    <<: *build_job_def
+    <<: *build_hbird_eval_job_def
 
-build_flash_n307:
+build_hbird_eval_flash_n307:
     variables:
         DOWNLOAD: "flash"
         CORE: "n307"
-    <<: *build_job_def
+    <<: *build_hbird_eval_job_def
 
-build_flashxip_n307:
+build_hbird_eval_flashxip_n307:
     variables:
         DOWNLOAD: "flashxip"
         CORE: "n307"
-    <<: *build_job_def
+    <<: *build_hbird_eval_job_def
 
 # Build For N205E, with Flash, FlashXIP, ILM Mode
-build_ilm_n205e:
+build_hbird_eval_ilm_n205e:
     variables:
         DOWNLOAD: "ilm"
         CORE: "n205e"
-    <<: *build_job_def
+    <<: *build_hbird_eval_job_def
 
-build_flash_n205e:
+build_hbird_eval_flash_n205e:
     variables:
         DOWNLOAD: "flash"
         CORE: "n205e"
-    <<: *build_job_def
+    <<: *build_hbird_eval_job_def
 
-build_flashxip_n205e:
+build_hbird_eval_flashxip_n205e:
     variables:
         DOWNLOAD: "flashxip"
         CORE: "n205e"
-    <<: *build_job_def
+    <<: *build_hbird_eval_job_def
 
 # Build For NX600, with Flash, FlashXIP, ILM Mode
-build_ilm_nx600:
+build_hbird_eval_ilm_nx600:
     variables:
         DOWNLOAD: "ilm"
         CORE: "nx600"
-    <<: *build_job_def
+    <<: *build_hbird_eval_job_def
 
-build_flash_nx600:
+build_hbird_eval_flash_nx600:
     variables:
         DOWNLOAD: "flash"
         CORE: "nx600"
-    <<: *build_job_def
+    <<: *build_hbird_eval_job_def
 
-build_flashxip_nx600:
+build_hbird_eval_flashxip_nx600:
     variables:
         DOWNLOAD: "flashxip"
         CORE: "nx600"
-    <<: *build_job_def
+    <<: *build_hbird_eval_job_def
+
+## Jobs for board gd32vf103v_eval
+.build_gd32vf103v_eval_job_template: &build_gd32vf103v_eval_job_def
+    stage: build_gd32vf103v_eval
+    script:
+        - SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_gd32vf103v_eval_directory    application
+        - SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_gd32vf103v_eval_directory    test
+    
+build_gd32vf103v_eval_ilm:
+    variables:
+        DOWNLOAD: "ilm"
+    <<: *build_gd32vf103v_eval_job_def
+
+build_gd32vf103v_eval_flash:
+    variables:
+        DOWNLOAD: "flash"
+    <<: *build_gd32vf103v_eval_job_def
+
+build_gd32vf103v_eval_flashxip:
+    variables:
+        DOWNLOAD: "flashxip"
+    <<: *build_gd32vf103v_eval_job_def
+
+## Jobs for board gd32vf103v_rvstar
+.build_gd32vf103v_rvstar_job_template: &build_gd32vf103v_rvstar_job_def
+    stage: build_gd32vf103v_rvstar
+    script:
+        - SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_gd32vf103v_rvstar_directory    application
+        - SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_gd32vf103v_rvstar_directory    test
+    
+build_gd32vf103v_rvstar_ilm:
+    variables:
+        DOWNLOAD: "ilm"
+    <<: *build_gd32vf103v_rvstar_job_def
+
+build_gd32vf103v_rvstar_flash:
+    variables:
+        DOWNLOAD: "flash"
+    <<: *build_gd32vf103v_rvstar_job_def
+
+build_gd32vf103v_rvstar_flashxip:
+    variables:
+        DOWNLOAD: "flashxip"
+    <<: *build_gd32vf103v_rvstar_job_def
