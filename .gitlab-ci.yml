@@ -95,7 +95,7 @@ build_gd32vf103v_eval_flashxip:
         DOWNLOAD: "flashxip"
     <<: *build_gd32vf103v_eval_job_def
 
-## Jobs for board gd32vf103v_rvstar
+## Jobs for board gd32vf103v_rvstar only flashxip mode
 .build_gd32vf103v_rvstar_job_template: &build_gd32vf103v_rvstar_job_def
     stage: build_gd32vf103v_rvstar
     script:
@@ -115,4 +115,5 @@ build_gd32vf103v_eval_flashxip:
 build_gd32vf103v_rvstar_flashxip:
     variables:
         DOWNLOAD: "flashxip"
+        CORE: n205
     <<: *build_gd32vf103v_rvstar_job_def
