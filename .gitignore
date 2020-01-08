@@ -24,3 +24,5 @@ TAGS
 TAG
 CTAGS
 *_examples
+Makefile.local
+Makefile.global
