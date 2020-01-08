@@ -1,12 +1,12 @@
-/**************************************************************************//**
- * @file     nuclei_soc.h
- * @brief    NMSIS N300 Core Peripheral Access Layer Header File for
- *           Device nuclei_soc
+/******************************************************************************
+ * @file     gd32vf103.h
+ * @brief    NMSIS Core Peripheral Access Layer Header File for GD32VF103 series
+ *            
  * @version  V1.00
- * @date     22. Nov 2019
+ * @date     4. Jan 2020
  ******************************************************************************/
 /*
- * Copyright (c) 2009-2019 Nuclei Limited. All rights reserved.
+ * Copyright (c) 2019 Nuclei Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -32,12 +32,12 @@
 extern "C" {
 #endif
 
-/** @addtogroup gd32vf103
+/** @addtogroup gd32
   * @{
   */
 
 
-/** @addtogroup gd32vf103_SoC
+/** @addtogroup gd32vf103
   * @{
   */
 
@@ -175,33 +175,23 @@ typedef enum EXCn {
 
 /* ToDo: set the defines according your Device */
 /* ToDo: define the correct core revision */
-#if __riscv_xlen == 32
 #define __NUCLEI_N_REV            0x0    /*!< Core Revision r0p0 */
-#elif __riscv_xlen == 64
-#define __NUCLEI_NX_REV           0x0    /*!< Core Revision r0p0 */
-#endif
 
 /* ToDo: define the correct core features for the nuclei_soc */
 #define __ECLIC_PRESENT           1                     /*!< Set to 1 if ECLIC is present */
-#define __ECLIC_BASEADDR          0xd2000000UL          /*!< Set to ECLIC baseaddr of your device */
+#define __ECLIC_BASEADDR          0xD2000000UL          /*!< Set to ECLIC baseaddr of your device */
 
 #define __ECLIC_INTCTLBITS        4                     /*!< Set to 1 - 8, the number of hardware bits are actually implemented in the clicintctl registers. */
 #define __ECLIC_INTNUM            86                    /*!< Set to 1 - 1005, the external interrupt number of ECLIC Unit */
 #define __SYSTIMER_PRESENT        1                     /*!< Set to 1 if System Timer is present */
-#define __SYSTIMER_BASEADDR       0xd1000000UL          /*!< Set to SysTimer baseaddr of your device */
+#define __SYSTIMER_BASEADDR       0xD1000000UL          /*!< Set to SysTimer baseaddr of your device */
 
 /*!< Set to 0, 1, or 2, 0 not present, 1 single floating point unit present, 2 double floating point unit present */
-#if !defined(__riscv_flen)
 #define __FPU_PRESENT             0
-#elif __riscv_flen == 32
-#define __FPU_PRESENT             1
-#else
-#define __FPU_PRESENT             2
-#endif
 
-#define __DSP_PRESENT             1                     /*!< Set to 1 if DSP is present */
+#define __DSP_PRESENT             0                     /*!< Set to 1 if DSP is present */
 #define __PMP_PRESENT             1                     /*!< Set to 1 if PMP is present */
-#define __PMP_ENTRY_NUM           16                    /*!< Set to 8 or 16, the number of PMP entries */
+#define __PMP_ENTRY_NUM           8                     /*!< Set to 8 or 16, the number of PMP entries */
 #define __ICACHE_PRESENT          0                     /*!< Set to 1 if I-Cache is present */
 #define __DCACHE_PRESENT          0                     /*!< Set to 1 if D-Cache is present */
 #define __Vendor_SysTickConfig    0                     /*!< Set to 1 if different SysTick Config is used */
@@ -211,15 +201,10 @@ typedef enum EXCn {
 
 
 
-/* ToDo: include the correct core_cm#.h file
-         __core_n100.h if your device is a Nuclei-N100 device
-         __core_n200.h if your device is a Nuclei-N200 device
-         __core_n300.h if your device is a Nuclei-N300 device
-         __core_n600.h if your device is a Nuclei-N600 device */
 #include <nmsis_core.h>                         /*!< Nuclei N/NX class processor and core peripherals */
 /* ToDo: include your system_nuclei_soc.h file
-         replace 'nuclei_soc' with your device name */
-#include "system_gd32vf103.h"                    /*!< gd32vf103_soc System */
+         replace 'Device' with your device name */
+#include "system_gd32vf103.h"                    /*!< gd32vf103 System */
 
 
 /* ========================================  Start of section using anonymous unions  ======================================== */
@@ -280,22 +265,25 @@ typedef enum EXCn {
 
 /* enum definitions */
 typedef enum {
-    DISABLE = 0, 
+    DISABLE = 0,
     ENABLE = !DISABLE
-    } EventStatus, ControlStatus;
+} EventStatus, ControlStatus;
 
 typedef enum {
-    FALSE = 0, 
-    TRUE = !FALSE} bool;
-typedef enum {
-	RESET = 0, 
-	SET = 1,
-	MAX = 0X7FFFFFFF} FlagStatus;
+    FALSE = 0,
+    TRUE = !FALSE
+} bool;
 
 typedef enum {
-	ERROR = 0, 
-	SUCCESS = !ERROR} ErrStatus;
+    RESET = 0,
+    SET = 1,
+    MAX = 0X7FFFFFFF
+} FlagStatus;
 
+typedef enum {
+    ERROR = 0,
+    SUCCESS = !ERROR
+} ErrStatus;
 
 /* =========================================================================================================================== */
 /* ================                            Device Specific Peripheral Section                             ================ */
@@ -414,7 +402,7 @@ typedef enum {
 
 #define NUM_GPIO 32
 
-uint32_t get_cpu_freq();
+uint32_t get_cpu_freq(void);
 
 
 /** @} */ /* End of group gd32vf103_soc */

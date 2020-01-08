@@ -1,7 +1,7 @@
 /******************************************************************************
- * @file     system_<Device>.c
+ * @file     system_gd32vf103.c
  * @brief    NMSIS Nuclei Core Device Peripheral Access Layer Source File for
- *           Device <Device>
+ *           Device gd32vf103
  * @version  V1.00
  * @date     22. Nov 2019
  ******************************************************************************/
@@ -322,10 +322,10 @@ void SystemInit (void)
 }
 
 /**
- * \defgroup  NMSIS_Core_ExceptionAndNMI   Exception and NMI
- * \brief Functions for exception and nmi handle available in system_<device>.c.
+ * \defgroup  NMSIS_Core_IntExcNMI_Handling   Interrupt and Exception and NMI Handling
+ * \brief Functions for interrupt, exception and nmi handle available in system_<device>.c.
  * \details
- * Nuclei provide a template for exception and NMI handle. Silicon Vendor could adapat according
+ * Nuclei provide a template for interrupt, exception and NMI handling. Silicon Vendor could adapat according
  * to their requirement. Silicon vendor could implement interface for different exception code and
  * replace current implementation.
  *
@@ -333,42 +333,54 @@ void SystemInit (void)
  */
 /** \brief Max exception handler number, don't include the NMI(0xFFF) one */
 #define MAX_SYSTEM_EXCEPTION_NUM        12
-/** 
+/**
  * \brief      Store the exception handlers for each exception ID
+ * \note
+ * - This SystemExceptionHandlers are used to store all the handlers for all
+ * the exception codes Nuclei N/NX core provided.
+ * - Exception code 0 - 11, totally 12 exceptions are mapped to SystemExceptionHandlers[0:11]
+ * - Exception for NMI is also re-routed to exception handling(exception code 0xFFF) in startup code configuration, the handler itself is mapped to SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM]
  */
 static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM+1];
 
 /**
  * \brief      Exception Handler Function Typedef
+ * \note
+ * This typedef is only used internal in this system_gd32vf103.c file.
+ * It is used to do type conversion for registered exception handler before calling it.
  */
 typedef	void (*EXC_HANDLER) (unsigned long mcause, unsigned long sp);
 
 /**
- * \brief      System Default Exception Handler.
+ * \brief      System Default Exception Handler
  * \details
- * This function provided a default exception and NMI handling code, just print some information for debug.
+ * This function provided a default exception and NMI handling code for all exception ids.
+ * By default, It will just print some information for debug, Vendor can customize it according to its requirements.
  */
 static void system_default_exception_handler(unsigned long mcause, unsigned long sp)
 {
+    /* TODO: Uncomment this if you have implement printf function */
     printf("MCAUSE: 0x%lx\r\n", mcause);
     printf("MEPC  : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
     printf("MTVAL : 0x%lx\r\n", __RV_CSR_READ(CSR_MBADADDR));
     while(1);
 }
 
-/** 
+/**
  * \brief      Initialize all the default core exception handlers
  * \details
- * The core exception handler for each exception id will be initialized to system_default_exception_handler.
+ * The core exception handler for each exception id will be initialized to \ref system_default_exception_handler.
+ * \note
+ * Called in \ref _init function, used to initialize default exception handlers for all exception IDs
  */
-static void initialize_core_exception_handlers(void)
+static void Exception_Init(void)
 {
     for (int i = 0; i < MAX_SYSTEM_EXCEPTION_NUM+1; i++) {
         SystemExceptionHandlers[i] = (unsigned long)system_default_exception_handler;
     }
 }
 
-/** 
+/**
  * \brief       Register an exception handler for exception code EXCn
  * \details
  * * For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers[EXCn-1].
@@ -376,7 +388,7 @@ static void initialize_core_exception_handlers(void)
  * \param   EXCn    See \ref EXCn_Type
  * \param   exc_handler     The exception handler for this exception code EXCn
  */
-void register_core_exception_handler(uint32_t EXCn, unsigned long exc_handler)
+void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
 {
     if ((EXCn < MAX_SYSTEM_EXCEPTION_NUM) && (EXCn >= 0)) {
         SystemExceptionHandlers[EXCn] = exc_handler;
@@ -385,7 +397,7 @@ void register_core_exception_handler(uint32_t EXCn, unsigned long exc_handler)
     }
 }
 
-/** 
+/**
  * \brief       Get current exception handler for exception code EXCn
  * \details
  * * For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers[EXCn-1].
@@ -393,7 +405,7 @@ void register_core_exception_handler(uint32_t EXCn, unsigned long exc_handler)
  * \param   EXCn    See \ref EXCn_Type
  * \return  Current exception handler for exception code EXCn, if not found, return 0.
  */
-unsigned long get_core_exception_handler(uint32_t EXCn)
+unsigned long Exception_Get_EXC(uint32_t EXCn)
 {
     if ((EXCn < MAX_SYSTEM_EXCEPTION_NUM) && (EXCn >= 0)) {
         return SystemExceptionHandlers[EXCn];
@@ -405,15 +417,15 @@ unsigned long get_core_exception_handler(uint32_t EXCn)
 }
 
 /**
- * \brief      NMI and Exception handler.
+ * \brief      Common NMI and Exception handler entry
  * \details
  * This function provided a command entry for NMI and exception. Silicon Vendor could modify
- * exc_instruction_unalign, exc_instruction_access_falut etc. according to requirement.
+ * this template implementation according to requirement.
  * \remarks
- * - RISCV provided common entry for all types of exception. Silicon Vendor could modify the implementation
- * - for core_exception_handler. This is proposed template. Silicon Vendor could only modify implementation
- * - like exc_instruction_unalign for different exception code. It's similar with different exception
- * - entry.
+ * - RISCV provided common entry for all types of exception. This is proposed code template
+ *   for exception entry function, Silicon Vendor could modify the implementation.
+ * - For the core_exception_handler template, we provided exception register function \ref Exception_Register_EXC
+ *   which can help developer to register your exception handler for specific exception number.
  */
 uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
 {
@@ -433,6 +445,7 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
 	return 0;
 }
 /** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
+
 void SystemBannerPrint(void)
 {
 #if defined(NUCLEI_BANNER) && (NUCLEI_BANNER == 1)
@@ -459,9 +472,12 @@ void _init(void)
     //SystemCoreClock = get_cpu_freq();
     /* configure USART */
     gd_eval_com_init(EVAL_COM0);
+    /* Display banner after UART initialized */
     SystemBannerPrint();
-    eclic_init();
-    initialize_core_exception_handlers();
+    /* Initialize exception default handlers */
+    Exception_Init();
+    /* ECLIC initilization, mainly MTH and NLBIT */
+    ECLIC_Init();
 }
 
 /**
@@ -482,7 +498,7 @@ void _fini(void)
  * Eclic need initialize after boot up, Vendor could also change the initialization
  * configuration.
  */
-void eclic_init(void)
+void ECLIC_Init(void)
 {
     /* TODO: Add your own initialization code here. This function will be called by main */
     ECLIC_SetMth(0);
@@ -504,8 +520,7 @@ void eclic_init(void)
  * \remarks
  * - This function use to register interrupt.
  */
-
-int ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void *handler)
+int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void *handler)
 {
     if ((IRQn > ECLIC_NUM_INTERRUPTS) || (shv > ECLIC_VECTOR_INTERRUPT) \
         || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER ) || (handler == NULL)) {
@@ -550,7 +565,5 @@ void delay_1ms(uint32_t count)
         delta_mtime = SysTimer_GetLoadValue() - start_mtime;
     }while(delta_mtime <(SystemCoreClock/4000.0 *count));
 }
-
-
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_SystemAndClock */

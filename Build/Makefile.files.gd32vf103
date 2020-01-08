@@ -3,8 +3,8 @@ INCDIRS += $(GD32VF103_SDK_SOC_COMMON)/Include
 C_SRCDIRS += $(GD32VF103_SDK_SOC_COMMON)/Source $(GD32VF103_SDK_SOC_COMMON)/Source/Drivers \
 			 $(GD32VF103_SDK_SOC_COMMON)/Source/Stubs
 
-ASM_SRCS += $(GD32VF103_SDK_SOC_COMMON)/Source/GCC/startup_gd32vf103_soc.S \
-			$(GD32VF103_SDK_SOC_COMMON)/Source/GCC/intexc_gd32vf103_soc.S
+ASM_SRCS += $(GD32VF103_SDK_SOC_COMMON)/Source/GCC/startup_gd32vf103.S \
+			$(GD32VF103_SDK_SOC_COMMON)/Source/GCC/intexc_gd32vf103.S
 
 # Add extra board related source files and header files
 VALID_GD32VF103_SDK_SOC_BOARD=$(wildcard $(GD32VF103_SDK_SOC_BOARD))

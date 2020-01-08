@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 /******************************************************************************
- * \file     startup_Device.s
+ * \file     startup_gd32vf103.S
  * \brief    NMSIS Nuclei N/NX Class Core based Core Device Startup File for 
- *  Device <Device>
+ *  Device gd32vf103
  * \version  V1.00
  * \date     21 Nov 2019
  *
@@ -116,33 +116,33 @@
     .globl vector_base
 vector_base:
 #if defined(DOWNLOAD_MODE) && (DOWNLOAD_MODE != DOWNLOAD_MODE_FLASH)
-     j _start
-     .align LOG_REGBYTES
+    j _start                                                /* 0: Reserved, Jump to _start when reset for ILM/FlashXIP mode.*/
+    .align LOG_REGBYTES                                     /*    Need to align 4 byte for RV32, 8 Byte for RV64 */
 #else
-    DECLARE_INT_HANDLER     default_intexc_handler
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 0: Reserved, default handler for Flash download mode */
 #endif
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     eclic_msip_handler
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 1: Reserved */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 2: Reserved */
+    DECLARE_INT_HANDLER     eclic_msip_handler              /* 3: Machine software interrupt */
 
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     eclic_mtip_handler
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 4: Reserved */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 5: Reserved */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 6: Reserved */
+    DECLARE_INT_HANDLER     eclic_mtip_handler              /* 7: Machine timer interrupt */
 
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     default_intexc_handler
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 8: Reserved */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 9: Reserved */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 10: Reserved */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 11: Reserved */
 
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     default_intexc_handler
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 12: Reserved */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 13: Reserved */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 14: Reserved */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 15: Reserved */
 
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     default_intexc_handler
-    DECLARE_INT_HANDLER     default_intexc_handler
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 16: Reserved */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 17: Reserved */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 18: Reserved */
     DECLARE_INT_HANDLER     eclic_bwei_handler
     DECLARE_INT_HANDLER     eclic_pmovi_handler
     DECLARE_INT_HANDLER     WWDGT_IRQHandler
