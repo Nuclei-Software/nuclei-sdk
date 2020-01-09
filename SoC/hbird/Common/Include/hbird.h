@@ -141,10 +141,22 @@ typedef enum EXCn {
 /* ToDo: set the defines according your Device */
 /* ToDo: define the correct core revision */
 #if __riscv_xlen == 32
-#define __NUCLEI_N_REV            0x0    /*!< Core Revision r0p0 */
-#elif __riscv_xlen == 64
-#define __NUCLEI_NX_REV           0x0    /*!< Core Revision r0p0 */
+
+#ifndef __NUCLEI_CORE_REV
+#define __NUCLEI_N_REV            0x0104    /*!< Core Revision r1p4 */
+#else
+#define __NUCLEI_N_REV            __NUCLEI_CORE_REV
 #endif
+
+#elif __riscv_xlen == 64
+
+#ifndef __NUCLEI_CORE_REV
+#define __NUCLEI_NX_REV           0x0100    /*!< Core Revision r1p0 */
+#else
+#define __NUCLEI_NX_REV           __NUCLEI_CORE_REV
+#endif
+
+#endif /* __riscv_xlen == 64 */
 
 /* ToDo: define the correct core features for the hbird */
 #define __ECLIC_PRESENT           1                     /*!< Set to 1 if ECLIC is present */
