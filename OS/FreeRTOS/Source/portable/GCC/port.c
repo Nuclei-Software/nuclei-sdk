@@ -244,7 +244,7 @@ void prvTaskExitError(void)
 
 /*Entry Point for Machine Timer Interrupt Handler*/
 //Bob: add the function argument int_num
-#define configClockTicks        (configRTC_CLOCK_HZ / configTICK_RATE_HZ)
+#define configClockTicks        (SOC_TIMER_FREQ / configTICK_RATE_HZ)
 uint32_t vPortSysTickHandler(void)
 {
     static uint64_t then = 0;
