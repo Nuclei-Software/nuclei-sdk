@@ -125,13 +125,15 @@ void SOC_MTIMER_HANDLER(void)
 CTEST(core, wfi) {
     __disable_irq();
     SysTick_Config(100);
+    SysTimer_Start();
     __WFI();
     // Should not enter interrupt handler
     ASSERT_NOT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
     ASSERT_NOT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 0);
     ECLIC_DisableIRQ(SysTimer_IRQn);
-    ECLIC_ClearPendingIRQ(SysTimer_IRQn);    
+    ECLIC_ClearPendingIRQ(SysTimer_IRQn);
     SysTick_Config(100);
+    SysTimer_Start();
     __enable_irq();
     __WFI();
     // Should enter interrupt handler first, then do following steps
@@ -171,7 +173,7 @@ CTEST(core, sleepmode) {
     ASSERT_NOT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
     ASSERT_NOT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 0);
     ECLIC_DisableIRQ(SysTimer_IRQn);
-    ECLIC_ClearPendingIRQ(SysTimer_IRQn); 
+    ECLIC_ClearPendingIRQ(SysTimer_IRQn);
     SysTick_Config(100);
     __enable_irq();
     // Uncomment the following line, the CPU will enter to deep sleep

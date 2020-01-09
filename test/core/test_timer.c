@@ -4,11 +4,12 @@
 
 void eclic_msip_handler(void)
 {
-  SysTimer_ClearSWIRQ();
+    ASSERT_NOT_EQUAL(SysTimer_GetMsipValue() & SysTimer_MSIP_MSIP_Msk, 0);
+    SysTimer_ClearSWIRQ();
 }
 
-CTEST(timer, timer_irq){	
-  __disable_irq();	
+CTEST(timer, timer_irq) {
+  __disable_irq();
   ECLIC_ClearPendingIRQ(SysTimerSW_IRQn);
   ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimerSW_IRQn), 0);
 
@@ -25,6 +26,33 @@ CTEST(timer, timer_irq){
   SysTimer_SetControlValue(0);
   ECLIC_DisableIRQ(SysTimerSW_IRQn);
   __disable_irq();
-  
 }
 
+CTEST(timer, timer_start_stop) {
+    SysTimer_Stop();
+    uint64_t cur_value = SysTimer_GetLoadValue();
+    uint32_t cur_ctrl = SysTimer_GetControlValue();
+    ctest_delay(20);
+    ASSERT_EQUAL(cur_value, SysTimer_GetLoadValue());
+    ASSERT_NOT_EQUAL(cur_ctrl & SysTimer_MTIMECTL_TIMESTOP_Msk, 0);
+    SysTimer_Start();
+    cur_ctrl = SysTimer_GetControlValue();
+    ctest_delay(20);
+    ASSERT_EQUAL(cur_ctrl & SysTimer_MTIMECTL_TIMESTOP_Msk, 0);
+    ASSERT_NOT_EQUAL(cur_value, SysTimer_GetLoadValue());
+}
+
+CTEST(timer, timer_set_msip) {
+    __disable_irq();
+    SysTimer_SetMsipValue(SysTimer_MSIP_Msk);
+    ASSERT_NOT_EQUAL(SysTimer_GetMsipValue() & SysTimer_MSIP_MSIP_Msk, 0);
+
+    SysTimer_SetMsipValue(0);
+    ASSERT_EQUAL(SysTimer_GetMsipValue() & SysTimer_MSIP_MSIP_Msk, 0);
+    SysTimer_ClearSWIRQ();
+}
+
+// CTEST(timer, timer_softreset) {
+//     SysTimer_SoftwareReset();
+//     Should reset here
+// }

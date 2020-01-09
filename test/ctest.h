@@ -25,6 +25,8 @@
 #include <inttypes.h> /* intmax_t, uintmax_t, PRI* */
 #include <stddef.h> /* size_t */
 
+void ctest_delay(uint32_t ms);
+
 typedef void (*ctest_setup_func)(void*);
 typedef void (*ctest_teardown_func)(void*);
 
