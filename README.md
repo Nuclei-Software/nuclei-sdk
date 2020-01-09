@@ -195,3 +195,14 @@ $NUCLEI_SDK_ROOT
 * If you want to pass additional linker flags, you can use **LDFLAGS**, and if you have additional library directories, you can use **LIBDIRS** to specify library directories.
 
 * The preprovided applications and its makefile is the best startup examples about how to use Nuclei SDK.
+
+* Pass extra `V=1` to your make command, it will show verbose compiling information, otherwise it will only show basic information. Sample output with extra `V=1`
+~~~
+$ make V=1 all
+Current Configuration: RISCV_ARCH=rv32imafdc RISCV_ABI=ilp32d SOC=hbird BOARD=hbird_eval CORE=n307fd DOWNLOAD=ilm
+"Assembling : " ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S
+riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/portable/GCC -I../../../SoC/hbird/Board/hbird_eval/Include -I../../../SoC/hbird/Common/Include -MMD -MT ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S.o -MF ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S.o.d -c -o ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S.o ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S
+"Assembling : " ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S
+riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/portable/GCC -I../../../SoC/hbird/Board/hbird_eval/Include -I../../../SoC/hbird/Common/Include -MMD -MT ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S.o -MF ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S.o.d -c -o ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S.o ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S
+"Assembling : " ../../../SoC/hbird/Common/Source/GCC/startup_hbird.S
+~~~
