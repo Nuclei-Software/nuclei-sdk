@@ -25,3 +25,6 @@ $(error There is no coresponding ARCH_ABI setting for CORE $(CORE), please check
 endif
 RISCV_ARCH = $(word 1, $(CORE_ARCH_ABI))
 RISCV_ABI = $(word 2, $(CORE_ARCH_ABI))
+
+# Extra openocd and gdb commands
+GDB_UPLOAD_CMDS += -ex "monitor reset halt"
