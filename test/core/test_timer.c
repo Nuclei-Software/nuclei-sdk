@@ -19,10 +19,10 @@ CTEST(timer, timer_irq){
   for(uint32_t i = 10; i > 0; --i) {}
   ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimerSW_IRQn), 0);
 
-  ASSERT_NOT_EQUAL(SysTimer_GetMstopValue(), 1);
-  SysTimer_SetMstopValue(1);
-  ASSERT_EQUAL(SysTimer_GetMstopValue(), 1);
-  SysTimer_SetMstopValue(0);
+  ASSERT_NOT_EQUAL(SysTimer_GetControlValue(), 1);
+  SysTimer_SetControlValue(1);
+  ASSERT_EQUAL(SysTimer_GetControlValue(), 1);
+  SysTimer_SetControlValue(0);
   ECLIC_DisableIRQ(SysTimerSW_IRQn);
   __disable_irq();
   
