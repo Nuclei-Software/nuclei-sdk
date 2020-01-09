@@ -46,7 +46,8 @@
  * Structure definition to access the system timer(SysTimer).
  * \remarks
  * - MSFTRST register is introduced in Nuclei N Core version 1.3(\ref __NUCLEI_N_REV >= 0x0103)
- * - CMPCLREN and CLKSRC bit in MSTOP register is introduced in Nuclei N Core version 1.4(\ref __NUCLEI_N_REV >= 0x0104)
+ * - MSTOP register is renamed to MTIMECTL register in Nuclei N Core version 1.4(\ref __NUCLEI_N_REV >= 0x0104)
+ * - CMPCLREN and CLKSRC bit in MTIMECTL register is introduced in Nuclei N Core version 1.4(\ref __NUCLEI_N_REV >= 0x0104)
  */
 typedef struct {
     __IOM uint64_t MTIMER;                  /*!< Offset: 0x000 (R/W)  System Timer current value 64bits Register */
@@ -54,24 +55,24 @@ typedef struct {
     __IOM uint32_t RESERVED0[0x3F8];        /*!< Offset: 0x010 - 0xFEC Reserved */
     __IOM uint32_t MSFTRST;                 /*!< Offset: 0xFF0 (R/W)  System Timer Software Core Reset Register */
     __IOM uint32_t RESERVED1;               /*!< Offset: 0xFF4 Reserved */
-    __IOM uint32_t MSTOP;                   /*!< Offset: 0xFF8 (R/W)  System Timer Stop Register */
+    __IOM uint32_t MTIMECTL;                /*!< Offset: 0xFF8 (R/W)  System Timer Control Register, previously MSTOP register */
     __IOM uint32_t MSIP;                    /*!< Offset: 0xFFC (R/W)  System Timer SW interrupt Register */
 } SysTimer_Type;
 
 /* Timer Control / Status Register Definitions */
-#define SysTimer_MSTOP_TIMESTOP_Pos         0U                                          /*!< SysTick Timer MSTOP: TIMESTOP bit Position */
-#define SysTimer_MSTOP_TIMESTOP_Msk         (1UL << SysTimer_MSTOP_TIMESTOP_Pos)        /*!< SysTick Timer MSTOP: TIMESTOP Mask */
-#define SysTimer_MSTOP_CMPCLREN_Pos         1U                                          /*!< SysTick Timer MSTOP: CMPCLREN bit Position */
-#define SysTimer_MSTOP_CMPCLREN_Msk         (1UL << SysTimer_MSTOP_CMPCLREN_Pos)        /*!< SysTick Timer MSTOP: CMPCLREN Mask */
-#define SysTimer_MSTOP_CLKSRC_Pos           2U                                          /*!< SysTick Timer MSTOP: CLKSRC bit Position */
-#define SysTimer_MSTOP_CLKSRC_Msk           (1UL << SysTimer_MSTOP_CLKSRC_Pos)          /*!< SysTick Timer MSTOP: CLKSRC Mask */
+#define SysTimer_MTIMECTL_TIMESTOP_Pos      0U                                          /*!< SysTick Timer MTIMECTL: TIMESTOP bit Position */
+#define SysTimer_MTIMECTL_TIMESTOP_Msk      (1UL << SysTimer_MTIMECTL_TIMESTOP_Pos)     /*!< SysTick Timer MTIMECTL: TIMESTOP Mask */
+#define SysTimer_MTIMECTL_CMPCLREN_Pos      1U                                          /*!< SysTick Timer MTIMECTL: CMPCLREN bit Position */
+#define SysTimer_MTIMECTL_CMPCLREN_Msk      (1UL << SysTimer_MTIMECTL_CMPCLREN_Pos)     /*!< SysTick Timer MTIMECTL: CMPCLREN Mask */
+#define SysTimer_MTIMECTL_CLKSRC_Pos        2U                                          /*!< SysTick Timer MTIMECTL: CLKSRC bit Position */
+#define SysTimer_MTIMECTL_CLKSRC_Msk        (1UL << SysTimer_MTIMECTL_CLKSRC_Pos)       /*!< SysTick Timer MTIMECTL: CLKSRC Mask */
 
 #define SysTimer_MSIP_MSIP_Pos              0U                                          /*!< SysTick Timer MSIP: MSIP bit Position */
 #define SysTimer_MSIP_MSIP_Msk              (1UL << SysTimer_MSIP_MSIP_Pos)             /*!< SysTick Timer MSIP: MSIP Mask */
 
 #define SysTimer_MTIMER_Msk                 (0xFFFFFFFFFFFFFFFFULL)                     /*!< SysTick Timer MTIMER value Mask */
 #define SysTimer_MTIMERCMP_Msk              (0xFFFFFFFFFFFFFFFFULL)                     /*!< SysTick Timer MTIMERCMP value Mask */
-#define SysTimer_MSTOP_Msk                  (0xFFFFFFFFUL)                              /*!< SysTick Timer MSTOP  value Mask */
+#define SysTimer_MTIMECTL_Msk               (0xFFFFFFFFUL)                              /*!< SysTick Timer MTIMECTL/MSTOP value Mask */
 #define SysTimer_MSIP_Msk                   (0xFFFFFFFFUL)                              /*!< SysTick Timer MSIP   value Mask */
 #define SysTimer_MSFTRST_Msk                (0xFFFFFFFFUL)                              /*!< SysTick Timer MSFTRST value Mask */
 
@@ -89,14 +90,14 @@ typedef struct {
 /* ##################################    SysTimer function  ############################################ */
 /**
  * \defgroup NMSIS_Core_SysTimer SysTimer Functions
- * \brief    Functions that configure the System Timer.
+ * \brief    Functions that configure the Core System Timer.
  * @{
  */
 /**
- * \brief  Set system Timer load value
+ * \brief  Set system timer load value
  * \details
- * This function set the system Timer load value.
- * \param [in]      value  init value for system timer.
+ * This function set the system timer load value in MTIMER register.
+ * \param [in]  value   value to set system timer MTIMER register.
  * \remarks
  * - Load value is 64bits wide.
  * - \ref SysTimer_GetLoadValue
@@ -107,10 +108,10 @@ __STATIC_FORCEINLINE void SysTimer_SetLoadValue(uint64_t value)
 }
 
 /**
- * \brief  Get system Timer load value
+ * \brief  Get system timer load value
  * \details
- * This function get the system Timer current value.
- * \return       current value for system timer.
+ * This function get the system timer current value in MTIMER register.
+ * \return  current value(64bit) of system timer MTIMER register.
  * \remarks
  * - Load value is 64bits wide.
  * - \ref SysTimer_SetLoadValue
@@ -121,13 +122,13 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetLoadValue(void)
 }
 
 /**
- * \brief  Set system Timer compare value
+ * \brief  Set system timer compare value
  * \details
- * This function set the system Timer compare value.
- * \param [in]      value  compare value for system timer.
+ * This function set the system Timer compare value in MTIMERCMP register.
+ * \param [in]  value   compare value to set system timer MTIMERCMP register.
  * \remarks
  * - Compare value is 64bits wide. 
- * - If compare value is larger than current value Timer interrupt generate.
+ * - If compare value is larger than current value timer interrupt generate.
  * - Modify the load value or compare value less to clear the interrupt.
  * - \ref SysTimer_GetCompareValue
  */
@@ -137,10 +138,10 @@ __STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
 }
 
 /**
- * \brief  Get system Timer compare value
+ * \brief  Get system timer compare value
  * \details
- * This function get the system Timer compare value.
- * \return       compare value for system timer.
+ * This function get the system timer compare value in MTIMERCMP register.
+ * \return  compare value of system timer MTIMERCMP register.
  * \remarks
  * - Compare value is 64bits wide.
  * - \ref SysTimer_SetCompareValue
@@ -151,61 +152,63 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetCompareValue(void)
 }
 
 /**
- * \brief  Enable System Timer Counter Running
+ * \brief  Enable system timer counter running
  * \details
- * Enable system timer counter running.
+ * Enable system timer counter running by clear
+ * TIMESTOP bit in MTIMECTL register.
  */
 __STATIC_FORCEINLINE void SysTimer_Start(void)
 {
-    SysTimer->MSTOP &= ~(SysTimer_MSTOP_TIMESTOP_Msk);
+    SysTimer->MTIMECTL &= ~(SysTimer_MTIMECTL_TIMESTOP_Msk);
 }
 
 /**
- * \brief  Stop System Timer Counter Running
+ * \brief  Stop system timer counter running
  * \details
- * Stop system timer counter running.
+ * Stop system timer counter running by set
+ * TIMESTOP bit in MTIMECTL register.
  */
 __STATIC_FORCEINLINE void SysTimer_Stop(void)
 {
-    SysTimer->MSTOP |= SysTimer_MSTOP_TIMESTOP_Msk;
+    SysTimer->MTIMECTL |= SysTimer_MTIMECTL_TIMESTOP_Msk;
 }
 
 /**
- * \brief  Set system Timer MSTOP value
+ * \brief  Set system timer control value
  * \details
- * This function set the system Timer MSTOP value.
- * \param [in]       mstop   set mstop value to MSTOP value
+ * This function set the system timer MTIMECTL register value.
+ * \param [in]  mctl    value to set MTIMECTL register
  * \remarks
  * - Bit TIMESTOP is used to start and stop timer.
  *   Clear TIMESTOP bit to 0 to start timer, otherwise to stop timer.
  * - Bit CMPCLREN is used to enable auto MTIMER clear to zero when MTIMER >= MTIMERCMP.
  *   Clear CMPCLREN bit to 0 to stop auto clear MTIMER feature, otherwise to enable it.
  * - Bit CLKSRC is used to select timer clock source.
- *   Clear CLKSRC bit to 0 to use mtime_toggle_a, otherwise use core_clk_aon
- * - \ref SysTimer_SetMstopValue
+ *   Clear CLKSRC bit to 0 to use *mtime_toggle_a*, otherwise use *core_clk_aon*
+ * - \ref SysTimer_GetControlValue
  */
-__STATIC_FORCEINLINE void SysTimer_SetMstopValue(uint32_t mstop)
+__STATIC_FORCEINLINE void SysTimer_SetControlValue(uint32_t mctl)
 {
-    SysTimer->MSTOP = (mstop & SysTimer_MSTOP_Msk);
+    SysTimer->MTIMECTL = (mctl & SysTimer_MTIMECTL_Msk);
 }
 
 /**
- * \brief  Get system Timer MSTOP value
+ * \brief  Get system timer control value
  * \details
- * This function get the system Timer MSTOP register value.
- * \return  MSTOP register value
+ * This function get the system timer MTIMECTL register value.
+ * \return  MTIMECTL register value
  * \remarks
- * - \ref SysTimer_SetMstopValue
+ * - \ref SysTimer_SetControlValue
  */
-__STATIC_FORCEINLINE uint32_t SysTimer_GetMstopValue(void)
+__STATIC_FORCEINLINE uint32_t SysTimer_GetControlValue(void)
 {
-    return (SysTimer->MSTOP & SysTimer_MSTOP_Msk);
+    return (SysTimer->MTIMECTL & SysTimer_MTIMECTL_Msk);
 }
 
 /**
- * \brief  Set system Timer MSIP to trigger SW interrupt
+ * \brief  Trigger or set software interrupt via system timer
  * \details
- * This function set the system Timer MSIP bit.
+ * This function set the system timer MSIP bit in MSIP register.
  * \remarks
  * - Set system timer MSIP bit and generate a SW interrupt.
  * - \ref SysTimer_ClearSWIRQ
@@ -217,11 +220,11 @@ __STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
 }
 
 /**
- * \brief  Clear system Timer MSIP to clear SW interrupt
+ * \brief  Clear system timer software interrupt pending request
  * \details
- * This function set the system Timer MSIP bit.
+ * This function clear the system timer MSIP bit in MSIP register.
  * \remarks
- * - Clear system timer MSIP bit and Clear the SW interrupt.
+ * - Clear system timer MSIP bit in MSIP register to clear the software interrupt pending.
  * - \ref SysTimer_SetSWIRQ
  * - \ref SysTimer_GetMsipValue
  */
@@ -231,9 +234,9 @@ __STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
 }
 
 /**
- * \brief  Get system Timer MSIP
+ * \brief  Get system timer MSIP register value
  * \details
- * This function get the system Timer MSIP register value.
+ * This function get the system timer MSIP register value.
  * \return    Value of Timer MSIP register.
  * \remarks
  * - Bit0 is SW interrupt flag.
@@ -247,9 +250,10 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
 }
 
 /**
- * \brief  Set system Timer MSIP
+ * \brief  Set system timer MSIP register value
  * \details
- * This function set the system Timer MSIP register value.
+ * This function set the system timer MSIP register value.
+ * \param [in]  msip   value to set MSIP register
  */
 __STATIC_FORCEINLINE void SysTimer_SetMsipValue(uint32_t msip)
 {
@@ -284,7 +288,7 @@ __STATIC_FORCEINLINE void SysTimer_SoftwareReset(void)
  * \return          0  Function succeeded.
  * \return          1  Function failed.
  * \remarks
- * - For \ref __NUCLEI_N_REV >= 0x0104, the CMPCLREN bit in MSTOP is introduced,
+ * - For \ref __NUCLEI_N_REV >= 0x0104, the CMPCLREN bit in MTIMECTL is introduced,
  *   so we will use this feature to let Nuclei Core automatically reload the MTIMER register value to zero.
  * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
  *   function \ref SysTick_Config is not included.
@@ -300,7 +304,8 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
 {
 #if defined(__NUCLEI_N_REV) && (__NUCLEI_N_REV < 0x0104)
 #else
-    SysTimer_SetMstopValue(SysTimer_GetMstopValue() | SysTimer_MSTOP_CMPCLREN_Msk);
+    // Enable auto clear feature of system timer for Nuclei N >= 1.4
+    SysTimer_SetControlValue(SysTimer_GetControlValue() | SysTimer_MTIMECTL_CMPCLREN_Msk);
 #endif
     SysTimer_SetLoadValue(0);
     SysTimer_SetCompareValue(ticks);
@@ -318,12 +323,12 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
  * \return          0  Function succeeded.
  * \return          1  Function failed.
  * \remarks
- * - For \ref __NUCLEI_N_REV >= 0x0104, the CMPCLREN bit in MSTOP is introduced,
+ * - For \ref __NUCLEI_N_REV >= 0x0104, the CMPCLREN bit in MTIMECTL is introduced,
  *   so we will use this feature to let Nuclei Core automatically reload the MTIMER register value to zero.
  *   Otherwise, we will set the (ticks + MTIMER) value to MTIMERCMP register, and the MTIMER register will not be modified
  * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
  *   function \ref SysTick_Reload is not included.
- * - In this case, the file **<Device>.h** must contain a vendor-specific implementation
+ * - In this case, the file <b><Device>.h<\b> must contain a vendor-specific implementation
  *   of this function.
  * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
  * \sa
