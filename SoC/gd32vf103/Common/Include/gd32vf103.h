@@ -215,38 +215,6 @@ typedef enum EXCn {
 #endif
 
 
-  /* define value of high speed crystal oscillator (HXTAL) in Hz */
- #if !defined  HXTAL_VALUE  
-   #define HXTAL_VALUE    ((uint32_t)8000000) /*!< value of the external oscillator in Hz */
-   #define HXTAL_VALUE_25M  HXTAL_VALUE
- #endif /* high speed crystal oscillator value */
- 
- /* define startup timeout value of high speed crystal oscillator (HXTAL) */
-#if !defined  (HXTAL_STARTUP_TIMEOUT)
-#define HXTAL_STARTUP_TIMEOUT   ((uint16_t)0xFFFF)
-#endif /* high speed crystal oscillator startup timeout */
- 
- /* define value of internal 8MHz RC oscillator (IRC8M) in Hz */
-#if !defined  (IRC8M_VALUE) 
-#define IRC8M_VALUE  ((uint32_t)8000000)
-#endif /* internal 8MHz RC oscillator value */
- 
- /* define startup timeout value of internal 8MHz RC oscillator (IRC8M) */
-#if !defined  (IRC8M_STARTUP_TIMEOUT)
-#define IRC8M_STARTUP_TIMEOUT   ((uint16_t)0x0500)
-#endif /* internal 8MHz RC oscillator startup timeout */
- 
- /* define value of internal 40KHz RC oscillator(IRC40K) in Hz */
-#if !defined  (IRC40K_VALUE) 
-#define IRC40K_VALUE  ((uint32_t)40000)
-#endif /* internal 40KHz RC oscillator value */
- 
- /* define value of low speed crystal oscillator (LXTAL)in Hz */
-#if !defined  (LXTAL_VALUE) 
-#define LXTAL_VALUE  ((uint32_t)32768)
-#endif /* low speed crystal oscillator value */
-
-
 /* system frequency define */
 #define __IRC8M           (IRC8M_VALUE)            /* internal 8 MHz RC oscillator frequency */
 #define __HXTAL           (HXTAL_VALUE)            /* high speed crystal oscillator frequency */
@@ -254,13 +222,10 @@ typedef enum EXCn {
 
 #define __SYSTEM_CLOCK_108M_PLL_HXTAL           (uint32_t)(108000000)
 
-#define SEL_IRC8M       0x00U
-#define SEL_HXTAL       0x01U
-#define SEL_PLL         0x02U
 
 #define RTC_FREQ LXTAL_VALUE
  // The TIMER frequency is just the RTC frequency
-#define SOC_TIMER_FREQ LXTAL_VALUE    //((uint32_t)SystemCoreClock/4)  //units HZ
+#define SOC_TIMER_FREQ     ((uint32_t)SystemCoreClock/4)  //LXTAL_VALUE units HZ
 
 
 /* enum definitions */

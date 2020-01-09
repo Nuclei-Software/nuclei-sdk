@@ -34,14 +34,6 @@ OF SUCH DAMAGE.
 
 #include "gd32vf103_rcu.h"
 
-/* define clock source */
-#define SEL_IRC8M                   ((uint16_t)0U)
-#define SEL_HXTAL                   ((uint16_t)1U)
-#define SEL_PLL                     ((uint16_t)2U)
-
-/* define startup timeout count */
-#define OSC_STARTUP_TIMEOUT         ((uint32_t)0xFFFFFU)
-#define LXTAL_STARTUP_TIMEOUT       ((uint32_t)0x3FFFFFFU)
 
 /*!
     \brief      deinitialize the RCU
