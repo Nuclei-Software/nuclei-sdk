@@ -14,13 +14,7 @@ extern void task_switch(unsigned long sp[]);
 #define configClockTicks        (SOC_TIMER_FREQ / TICK_RATE_HZ)
 void time_handler(unsigned long sp[])
 {
-    static uint64_t then = 0;
-
-    if (then == 0)  {
-        then = SysTimer_GetLoadValue();
-    }
-    then += configClockTicks;
-    SysTimer_SetCompareValue(then);
+    SysTick_Reload(configClockTicks);
 
     OSIntEnter();
     OSTimeTick();

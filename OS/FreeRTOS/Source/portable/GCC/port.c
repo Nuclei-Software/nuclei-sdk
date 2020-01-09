@@ -247,13 +247,7 @@ void prvTaskExitError(void)
 #define configClockTicks        (SOC_TIMER_FREQ / configTICK_RATE_HZ)
 uint32_t vPortSysTickHandler(void)
 {
-    static uint64_t then = 0;
-
-    if (then == 0)  {
-        then = SysTimer_GetLoadValue();
-    }
-    then += configClockTicks;
-    SysTimer_SetCompareValue(then);
+    SysTick_Reload(configClockTicks);
 
     /* Increment the RTOS tick. */
     if (xTaskIncrementTick() != pdFALSE){
