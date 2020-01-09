@@ -3,7 +3,6 @@
 #include "nuclei_sdk_soc.h"
 
 
-static volatile uint32_t irqTaken = 0;
 /**
  * \brief Test case: TC_CoreFunc_EnDisIRQ
  * \details
@@ -12,9 +11,7 @@ static volatile uint32_t irqTaken = 0;
  * - ECLIC_EnableIRQ, ECLIC_DisableIRQ,  and ECLIC_GetEnableIRQ
  * - ECLIC_SetPendingIRQ, ECLIC_ClearPendingIRQ, and ECLIC_GetPendingIRQ
  */
-void mtimer_irq_handler() {
-    irqTaken++;
-}
+extern void eclic_mtip_handler(void);
 
 CTEST(eclic, en_dis_irq)
 {
@@ -44,9 +41,9 @@ CTEST(eclic, en_dis_irq)
     ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
 
     // Register test interrupt handler.
-    ECLIC_SetVector(SysTimer_IRQn, (rv_csr_t)mtimer_irq_handler);
-    CTEST_LOG("Register irq vector 0x%x vs 0x%x", ECLIC_GetVector(SysTimer_IRQn), (rv_csr_t)mtimer_irq_handler);
-    ASSERT_EQUAL(ECLIC_GetVector(SysTimer_IRQn), (rv_csr_t)mtimer_irq_handler);
+    ECLIC_SetVector(SysTimer_IRQn, (rv_csr_t)eclic_mtip_handler);
+    CTEST_LOG("Register irq vector 0x%x vs 0x%x", ECLIC_GetVector(SysTimer_IRQn), (rv_csr_t)eclic_mtip_handler);
+    ASSERT_EQUAL(ECLIC_GetVector(SysTimer_IRQn), (rv_csr_t)eclic_mtip_handler);
 
     // Enable the interrupt
     ECLIC_EnableIRQ(SysTimer_IRQn);
@@ -57,16 +54,12 @@ CTEST(eclic, en_dis_irq)
     for (uint32_t i = 10; i > 0; --i) {}
 
     // Interrupt is not taken
-    ASSERT_EQUAL(irqTaken, 0);
     ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 1);
 
     // Globally enable interrupt servicing
     __enable_irq();
 
     for (uint32_t i = 1000; i > 0; --i) {}
-
-    // Interrupt was taken
-    ASSERT_EQUAL(irqTaken, 1);
 
     // Interrupt it not pending anymore.
     ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
@@ -81,7 +74,6 @@ CTEST(eclic, en_dis_irq)
     }
 
     // Interrupt is not taken again
-    ASSERT_EQUAL(irqTaken, 1);
     ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 1);
 
     // Clear interrupt pending

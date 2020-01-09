@@ -129,6 +129,8 @@ CTEST(core, wfi) {
     // Should not enter interrupt handler
     ASSERT_NOT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
     ASSERT_NOT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 0);
+    ECLIC_DisableIRQ(SysTimer_IRQn);
+    ECLIC_ClearPendingIRQ(SysTimer_IRQn);    
     SysTick_Config(100);
     __enable_irq();
     __WFI();
@@ -168,6 +170,8 @@ CTEST(core, sleepmode) {
     // Should not enter interrupt handler
     ASSERT_NOT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
     ASSERT_NOT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 0);
+    ECLIC_DisableIRQ(SysTimer_IRQn);
+    ECLIC_ClearPendingIRQ(SysTimer_IRQn); 
     SysTick_Config(100);
     __enable_irq();
     // Uncomment the following line, the CPU will enter to deep sleep
