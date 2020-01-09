@@ -175,7 +175,7 @@ typedef enum EXCn {
 
 /* ToDo: set the defines according your Device */
 /* ToDo: define the correct core revision */
-#define __NUCLEI_N_REV            0x0    /*!< Core Revision r0p0 */
+#define __NUCLEI_N_REV            0x0100    /*!< Core Revision r1p0 */
 
 /* ToDo: define the correct core features for the nuclei_soc */
 #define __ECLIC_PRESENT           1                     /*!< Set to 1 if ECLIC is present */
