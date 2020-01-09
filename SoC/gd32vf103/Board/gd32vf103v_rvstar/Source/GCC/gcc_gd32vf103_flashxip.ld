@@ -17,7 +17,7 @@
  */
 /******************************************************************************
  * @file     gcc_Device.ld
- * @brief    GNU Linker Script for Nuclei N/NX based device
+ * @brief    GNU Linker Script for gd32vf103 based device
  * @version  V1.0.0
  * @date     17. Dec 2019
  ******************************************************************************/

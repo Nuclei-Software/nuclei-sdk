@@ -17,7 +17,7 @@
  */
 /******************************************************************************
  * @file     gcc_Device.ld
- * @brief    GNU Linker Script for Nuclei N/NX based device
+ * @brief    GNU Linker Script for gd32vf103 based device
  * @version  V1.0.0
  * @date     17. Dec 2019
  ******************************************************************************/
@@ -32,7 +32,7 @@ OUTPUT_ARCH( "riscv" )
  * </h>
  */
 __ROM_BASE = 0x08000000;
-__ROM_SIZE = 0x00010000;
+__ROM_SIZE = 0x00020000;
 
 /*--------------------- ILM RAM Configuration ---------------------------
  * <h> ILM RAM Configuration

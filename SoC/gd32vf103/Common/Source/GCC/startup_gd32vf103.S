@@ -17,7 +17,7 @@
  */
 /******************************************************************************
  * \file     startup_gd32vf103.S
- * \brief    NMSIS Nuclei N/NX Class Core based Core Device Startup File for 
+ * \brief    NMSIS Nuclei N/NX Class Core based Core Device Startup File for
  *  Device gd32vf103
  * \version  V1.00
  * \date     21 Nov 2019
@@ -40,7 +40,7 @@
      * FlashXIP: .vtable
      * ILM: .vtable
      * Flash: .vtable_ilm
-     */ 
+     */
 #if defined(DOWNLOAD_MODE) && (DOWNLOAD_MODE == DOWNLOAD_MODE_FLASH)
     .section .vtable_ilm
 #else
@@ -141,10 +141,9 @@ vector_base:
     DECLARE_INT_HANDLER     default_intexc_handler          /* 15: Reserved */
 
     DECLARE_INT_HANDLER     default_intexc_handler          /* 16: Reserved */
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 17: Reserved */
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 18: Reserved */
-    DECLARE_INT_HANDLER     eclic_bwei_handler
-    DECLARE_INT_HANDLER     eclic_pmovi_handler
+    DECLARE_INT_HANDLER     eclic_bwei_handler              /* 17: Bus Error interrupt */
+    DECLARE_INT_HANDLER     eclic_pmovi_handler             /* 18: Performance Monitor */
+
     DECLARE_INT_HANDLER     WWDGT_IRQHandler
 	DECLARE_INT_HANDLER     LVD_IRQHandler
 	DECLARE_INT_HANDLER     TAMPER_IRQHandler
@@ -237,7 +236,7 @@ _start:
     add		a0, a0, a1
 	jr      a0
 
-_start0800:    
+_start0800:
     /* Initialize GP and Stack Pointer SP */
     .option push
     .option norelax
@@ -337,19 +336,19 @@ _start0800:
     addi a0, a0, 4
     bltu a0, a1, 1b
 2:
-    
+
     /*
      * Call vendor defined SystemInit to
      * initialize the micro-controller system
      */
     call SystemInit
-    
+
     /* Call global constructors */
     la a0, __libc_fini_array
     call atexit
     /* Call C/C++ constructor start up code */
     call __libc_init_array
-    
+
     /* ===== Call Main Function  ===== */
     /* argc = argv = 0 */
     li a0, 0

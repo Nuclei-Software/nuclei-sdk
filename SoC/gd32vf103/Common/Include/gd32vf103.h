@@ -1,7 +1,7 @@
 /******************************************************************************
  * @file     gd32vf103.h
  * @brief    NMSIS Core Peripheral Access Layer Header File for GD32VF103 series
- *            
+ *
  * @version  V1.00
  * @date     4. Jan 2020
  ******************************************************************************/
@@ -74,8 +74,8 @@ typedef enum IRQn
     Reserved12_IRQn           =  14,              /*!<  Internal reserved */
     Reserved13_IRQn           =  15,              /*!<  Internal reserved */
     Reserved14_IRQn           =  16,              /*!<  Internal reserved */
-    HardFault_IRQn            =  17,              /*!<  Hard Fault, storage access error */
-    Reserved15_IRQn           =  18,              /*!<  Internal reserved */
+    BusError_IRQn             =  17,              /*!<  Bus Error interrupt */
+    PerfMon_IRQn              =  18,              /*!<  Performance Monitor */
 
 /* ===========================================  GD32VF103 Specific Interrupt Numbers  ========================================= */
 /* ToDo: add here your device specific external interrupt numbers. 19~1023 is reserved number for user. Maxmum interrupt supported
@@ -353,7 +353,7 @@ typedef enum {
 #define REG16(addr)                  (*(volatile uint16_t *)(uint32_t)(addr))
 #define REG8(addr)                   (*(volatile uint8_t *)(uint32_t)(addr))
 #define BIT(x)                       ((uint32_t)((uint32_t)0x01U<<(x)))
-#define BITS(start, end)             ((0xFFFFFFFFUL << (start)) & (0xFFFFFFFFUL >> (31U - (uint32_t)(end)))) 
+#define BITS(start, end)             ((0xFFFFFFFFUL << (start)) & (0xFFFFFFFFUL >> (31U - (uint32_t)(end))))
 #define GET_BITS(regval, start, end) (((regval) & BITS((start),(end))) >> (start))
 
 // Interrupt Numbers
@@ -363,7 +363,7 @@ typedef enum {
 
 // Interrupt Handler Definitions
 #define SOC_MTIMER_HANDLER          eclic_mtip_handler
-#define SOC_SOFTINT_HANDLER         eclic_msip_handler 
+#define SOC_SOFTINT_HANDLER         eclic_msip_handler
 
 #define NUM_GPIO 32
 

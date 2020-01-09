@@ -170,6 +170,7 @@ void gd_eval_led_toggle(led_typedef_enum lednum)
 
 void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode)
 {
+    ECLIC_ClearPendingIRQ(KEY_IRQn[keynum]);	
     /* enable the key clock */
     rcu_periph_clock_enable(KEY_CLK[keynum]);
     rcu_periph_clock_enable(RCU_AF);
@@ -179,7 +180,7 @@ void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode)
 
     if (key_mode == KEY_MODE_EXTI) {
         /* enable and set key EXTI interrupt to the lowest priority */
-	    ECLIC_EnableIRQ(KEY_IRQn[keynum]);
+	ECLIC_EnableIRQ(KEY_IRQn[keynum]);
         ECLIC_SetLevelIRQ(KEY_IRQn[keynum],1);
         ECLIC_SetPriorityIRQ(KEY_IRQn[keynum],1);	
 
