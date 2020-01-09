@@ -11,7 +11,7 @@ void syscall_handler(unsigned long sp[])
 }
 
 extern void task_switch(unsigned long sp[]);
-#define configClockTicks        (RTC_CLOCK_HZ / TICK_RATE_HZ)
+#define configClockTicks        (SOC_TIMER_FREQ / TICK_RATE_HZ)
 void time_handler(unsigned long sp[])
 {
     static uint64_t then = 0;
