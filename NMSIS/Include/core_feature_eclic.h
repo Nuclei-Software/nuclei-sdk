@@ -377,7 +377,8 @@ __STATIC_FORCEINLINE void __ECLIC_EnableIRQ(IRQn_Type IRQn)
  * \remarks
  * - IRQn must not be negative.
  * \sa
- * - \ref ECLIC_EnableIRQ; ECLIC_DisableIRQ;
+ * - \ref ECLIC_EnableIRQ
+ * - \ref ECLIC_DisableIRQ
  */
 __STATIC_FORCEINLINE uint32_t __ECLIC_GetEnableIRQ(IRQn_Type IRQn)
 {
@@ -410,7 +411,8 @@ __STATIC_FORCEINLINE void __ECLIC_DisableIRQ(IRQn_Type IRQn)
  * \remarks
  * - IRQn must not be negative.
  * \sa
- * - \ref ECLIC_SetPendingIRQ; ECLIC_ClearPendingIRQ
+ * - \ref ECLIC_SetPendingIRQ
+ * - \ref ECLIC_ClearPendingIRQ
  */
 __STATIC_FORCEINLINE int32_t __ECLIC_GetPendingIRQ(IRQn_Type IRQn)
 {
@@ -425,7 +427,8 @@ __STATIC_FORCEINLINE int32_t __ECLIC_GetPendingIRQ(IRQn_Type IRQn)
  * \remarks
  * - IRQn must not be negative.
  * \sa
- * - \ref ECLIC_GetPendingIRQ; ECLIC_ClearPendingIRQ
+ * - \ref ECLIC_GetPendingIRQ
+ * - \ref ECLIC_ClearPendingIRQ
  */
 __STATIC_FORCEINLINE void __ECLIC_SetPendingIRQ(IRQn_Type IRQn)
 {
@@ -441,7 +444,8 @@ __STATIC_FORCEINLINE void __ECLIC_SetPendingIRQ(IRQn_Type IRQn)
  * \remarks
  * - IRQn must not be negative.
  * \sa
- * - \ref ECLIC_SetPendingIRQ; ECLIC_GetPendingIRQ
+ * - \ref ECLIC_SetPendingIRQ
+ * - \ref ECLIC_GetPendingIRQ
  */
 __STATIC_FORCEINLINE void __ECLIC_ClearPendingIRQ(IRQn_Type IRQn)
 {
@@ -576,7 +580,7 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetCtrlIRQ(IRQn_Type IRQn)
  *   Then we could know the maximum of level. CLICINTCTLBITS is how many total bits are
  *   present in the clicintctl register.
  * \sa
- * - \ref ECLIC_GetLevelIRQ;
+ * - \ref ECLIC_GetLevelIRQ
  */
 __STATIC_FORCEINLINE void __ECLIC_SetLevelIRQ(IRQn_Type IRQn, uint8_t lvl_abs)
 {
@@ -697,6 +701,10 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetPriorityIRQ(IRQn_Type IRQn)
  * \remarks
  * - IRQn must not be negative.
  * - You can set the \ref CSR_CSR_MTVT to set interrupt vector table entry address.
+ * - If your vector table is placed in readonly section, the vector for IRQn will not be modified.
+ *   For this case, you need to use the correct irq handler name defined in your vector table as
+ *   your irq handler function name.
+ * - This function will only work correctly when the vector table is placed in an read-write enabled section.
  * \sa
  * - \ref ECLIC_GetVector
  */

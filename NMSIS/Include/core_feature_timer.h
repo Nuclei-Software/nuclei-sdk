@@ -42,6 +42,11 @@
  */
 /**
  * \brief  Structure type to access the System Timer (SysTimer).
+ * \details
+ * Structure definition to access the system timer(SysTimer).
+ * \remarks
+ * - MSFTRST register is introduced in Nuclei N Core version 1.3(\ref __NUCLEI_N_REV >= 0x0103)
+ * - CMPCLREN and CLKSRC bit in MSTOP register is introduced in Nuclei N Core version 1.4(\ref __NUCLEI_N_REV >= 0x0104)
  */
 typedef struct {
     __IOM uint64_t MTIMER;                  /*!< Offset: 0x000 (R/W)  System Timer current value 64bits Register */
@@ -56,10 +61,10 @@ typedef struct {
 /* Timer Control / Status Register Definitions */
 #define SysTimer_MSTOP_TIMESTOP_Pos         0U                                          /*!< SysTick Timer MSTOP: TIMESTOP bit Position */
 #define SysTimer_MSTOP_TIMESTOP_Msk         (1UL << SysTimer_MSTOP_TIMESTOP_Pos)        /*!< SysTick Timer MSTOP: TIMESTOP Mask */
-#define SysTimer_MSTOP_CMPCLREN_Pos         1U                                          /*!< SysTick Timer MSTOP: CMPCLREN bit Position, introduced in core version 1.4 */
-#define SysTimer_MSTOP_CMPCLREN_Msk         (1UL << SysTimer_MSTOP_CMPCLREN_Pos)        /*!< SysTick Timer MSTOP: CMPCLREN Mask, introduced in core version 1.4 */
-#define SysTimer_MSTOP_CLKSRC_Pos           2U                                          /*!< SysTick Timer MSTOP: CLKSRC bit Position, introduced in core version 1.4 */
-#define SysTimer_MSTOP_CLKSRC_Msk           (1UL << SysTimer_MSTOP_CLKSRC_Pos)          /*!< SysTick Timer MSTOP: CLKSRC Mask, introduced in core version 1.4 */
+#define SysTimer_MSTOP_CMPCLREN_Pos         1U                                          /*!< SysTick Timer MSTOP: CMPCLREN bit Position */
+#define SysTimer_MSTOP_CMPCLREN_Msk         (1UL << SysTimer_MSTOP_CMPCLREN_Pos)        /*!< SysTick Timer MSTOP: CMPCLREN Mask */
+#define SysTimer_MSTOP_CLKSRC_Pos           2U                                          /*!< SysTick Timer MSTOP: CLKSRC bit Position */
+#define SysTimer_MSTOP_CLKSRC_Msk           (1UL << SysTimer_MSTOP_CLKSRC_Pos)          /*!< SysTick Timer MSTOP: CLKSRC Mask */
 
 #define SysTimer_MSIP_MSIP_Pos              0U                                          /*!< SysTick Timer MSIP: MSIP bit Position */
 #define SysTimer_MSIP_MSIP_Msk              (1UL << SysTimer_MSIP_MSIP_Pos)             /*!< SysTick Timer MSIP: MSIP Mask */
