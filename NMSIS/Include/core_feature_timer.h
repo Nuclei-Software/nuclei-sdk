@@ -54,14 +54,23 @@ typedef struct {
 } SysTimer_Type;
 
 /* Timer Control / Status Register Definitions */
-#define SysTimer_TIMER_MSTOP_Pos            0U                                          /*!< SysTick TIMER STOP: MSTOP Position */
-#define SysTimer_TIMER_MSTOP_Msk            (1UL << SysTimer_TIMER_MSTOP_Pos)           /*!< SysTick TIMER STOP: MSTOP Mask */
+#define SysTimer_MSTOP_TIMESTOP_Pos         0U                                          /*!< SysTick Timer MSTOP: TIMESTOP bit Position */
+#define SysTimer_MSTOP_TIMESTOP_Msk         (1UL << SysTimer_MSTOP_TIMESTOP_Pos)        /*!< SysTick Timer MSTOP: TIMESTOP Mask */
+#define SysTimer_MSTOP_CMPCLREN_Pos         1U                                          /*!< SysTick Timer MSTOP: CMPCLREN bit Position, introduced in core version 1.4 */
+#define SysTimer_MSTOP_CMPCLREN_Msk         (1UL << SysTimer_MSTOP_CMPCLREN_Pos)        /*!< SysTick Timer MSTOP: CMPCLREN Mask, introduced in core version 1.4 */
+#define SysTimer_MSTOP_CLKSRC_Pos           2U                                          /*!< SysTick Timer MSTOP: CLKSRC bit Position, introduced in core version 1.4 */
+#define SysTimer_MSTOP_CLKSRC_Msk           (1UL << SysTimer_MSTOP_CLKSRC_Pos)          /*!< SysTick Timer MSTOP: CLKSRC Mask, introduced in core version 1.4 */
 
-#define SysTimer_TIMER_MSIP_Pos             0U                                          /*!< SysTick TIMER MSIP: MSIP Position */
-#define SysTimer_TIMER_MSIP_Msk             (1UL << SysTimer_TIMER_MSIP_Pos)            /*!< SysTick TIMER MSIP: MSIP Mask */
-#define SysTimer_VALUE_Msk                  0xFFFFFFFFFFFFFFFFULL                       /*!< SysTick Timer Value Mask */
+#define SysTimer_MSIP_MSIP_Pos              0U                                          /*!< SysTick Timer MSIP: MSIP bit Position */
+#define SysTimer_MSIP_MSIP_Msk              (1UL << SysTimer_MSIP_MSIP_Pos)             /*!< SysTick Timer MSIP: MSIP Mask */
 
-#define SysTimer_TIMER_MSFRST_KEY           (0x80000A5F)                                /*!< SysTick TIMER Software Reset Request Key */
+#define SysTimer_MTIMER_Msk                 (0xFFFFFFFFFFFFFFFFULL)                     /*!< SysTick Timer MTIMER value Mask */
+#define SysTimer_MTIMERCMP_Msk              (0xFFFFFFFFFFFFFFFFULL)                     /*!< SysTick Timer MTIMERCMP value Mask */
+#define SysTimer_MSTOP_Msk                  (0xFFFFFFFFUL)                              /*!< SysTick Timer MSTOP  value Mask */
+#define SysTimer_MSIP_Msk                   (0xFFFFFFFFUL)                              /*!< SysTick Timer MSIP   value Mask */
+#define SysTimer_MSFTRST_Msk                (0xFFFFFFFFUL)                              /*!< SysTick Timer MSFTRST value Mask */
+
+#define SysTimer_MSFRST_KEY                 (0x80000A5FUL)                              /*!< SysTick Timer Software Reset Request Key */
 
 #ifndef __SYSTIMER_BASEADDR
 /* Base address of SYSTIMER(__SYSTIMER_BASEADDR) should be defined in <Device.h> */
@@ -87,7 +96,7 @@ typedef struct {
  * - Load value is 64bits wide.
  * - \ref SysTimer_GetLoadValue
  */
-__STATIC_INLINE void SysTimer_SetLoadValue(uint64_t value)
+__STATIC_FORCEINLINE void SysTimer_SetLoadValue(uint64_t value)
 {
     SysTimer->MTIMER = value;
 }
@@ -101,7 +110,7 @@ __STATIC_INLINE void SysTimer_SetLoadValue(uint64_t value)
  * - Load value is 64bits wide.
  * - \ref SysTimer_SetLoadValue
  */
-__STATIC_INLINE uint64_t SysTimer_GetLoadValue(void)
+__STATIC_FORCEINLINE uint64_t SysTimer_GetLoadValue(void)
 {
     return SysTimer->MTIMER;
 }
@@ -117,7 +126,7 @@ __STATIC_INLINE uint64_t SysTimer_GetLoadValue(void)
  * - Modify the load value or compare value less to clear the interrupt.
  * - \ref SysTimer_GetCompareValue
  */
-__STATIC_INLINE void SysTimer_SetCompareValue(uint64_t value)
+__STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
 {
     SysTimer->MTIMERCMP = value;
 }
@@ -131,36 +140,61 @@ __STATIC_INLINE void SysTimer_SetCompareValue(uint64_t value)
  * - Compare value is 64bits wide.
  * - \ref SysTimer_SetCompareValue
  */
-__STATIC_INLINE uint64_t SysTimer_GetCompareValue(void)
+__STATIC_FORCEINLINE uint64_t SysTimer_GetCompareValue(void)
 {
     return SysTimer->MTIMERCMP;
 }
 
 /**
- * \brief  Set system Timer MSTOP
+ * \brief  Enable System Timer Counter Running
  * \details
- * This function set the system Timer MSTOP bit.
- * \param [in]       mstop   0 stop timer and 1 start timer.
- * \remarks
- * - Bit0 is used to start and stop. Set bit0 timer start. Clear Bit0 Timer stop.
- * - \ref SysTimer_SetMstopValue
+ * Enable system timer counter running.
  */
-__STATIC_INLINE void SysTimer_SetMstopValue(uint32_t mstop)
+__STATIC_FORCEINLINE void SysTimer_Start(void)
 {
-    SysTimer->MSTOP = (mstop & SysTimer_TIMER_MSTOP_Msk);
+    SysTimer->MSTOP &= ~(SysTimer_MSTOP_TIMESTOP_Msk);
 }
 
 /**
- * \brief  Set system Timer MSTOP
+ * \brief  Stop System Timer Counter Running
  * \details
- * This function set the system Timer MSTOP bit.
- * \return         0  timer stop and  1 timer is running.
+ * Stop system timer counter running.
+ */
+__STATIC_FORCEINLINE void SysTimer_Stop(void)
+{
+    SysTimer->MSTOP |= SysTimer_MSTOP_TIMESTOP_Msk;
+}
+
+/**
+ * \brief  Set system Timer MSTOP value
+ * \details
+ * This function set the system Timer MSTOP value.
+ * \param [in]       mstop   set mstop value to MSTOP value
+ * \remarks
+ * - Bit TIMESTOP is used to start and stop timer.
+ *   Clear TIMESTOP bit to 0 to start timer, otherwise to stop timer.
+ * - Bit CMPCLREN is used to enable auto MTIMER clear to zero when MTIMER >= MTIMERCMP.
+ *   Clear CMPCLREN bit to 0 to stop auto clear MTIMER feature, otherwise to enable it.
+ * - Bit CLKSRC is used to select timer clock source.
+ *   Clear CLKSRC bit to 0 to use mtime_toggle_a, otherwise use core_clk_aon
+ * - \ref SysTimer_SetMstopValue
+ */
+__STATIC_FORCEINLINE void SysTimer_SetMstopValue(uint32_t mstop)
+{
+    SysTimer->MSTOP = (mstop & SysTimer_MSTOP_Msk);
+}
+
+/**
+ * \brief  Get system Timer MSTOP value
+ * \details
+ * This function get the system Timer MSTOP register value.
+ * \return  MSTOP register value
  * \remarks
  * - \ref SysTimer_SetMstopValue
  */
-__STATIC_INLINE uint32_t SysTimer_GetMstopValue(void)
+__STATIC_FORCEINLINE uint32_t SysTimer_GetMstopValue(void)
 {
-    return (SysTimer->MSTOP & SysTimer_TIMER_MSTOP_Msk);
+    return (SysTimer->MSTOP & SysTimer_MSTOP_Msk);
 }
 
 /**
@@ -169,11 +203,12 @@ __STATIC_INLINE uint32_t SysTimer_GetMstopValue(void)
  * This function set the system Timer MSIP bit.
  * \remarks
  * - Set system timer MSIP bit and generate a SW interrupt.
- * - \ref SysTimer_ClearSWIRQ;SysTimer_GetMsipValue;
+ * - \ref SysTimer_ClearSWIRQ
+ * - \ref SysTimer_GetMsipValue
  */
-__STATIC_INLINE void SysTimer_SetSWIRQ(void)
+__STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
 {
-    SysTimer->MSIP |= SysTimer_TIMER_MSIP_Msk;
+    SysTimer->MSIP |= SysTimer_MSIP_MSIP_Msk;
 }
 
 /**
@@ -182,41 +217,53 @@ __STATIC_INLINE void SysTimer_SetSWIRQ(void)
  * This function set the system Timer MSIP bit.
  * \remarks
  * - Clear system timer MSIP bit and Clear the SW interrupt.
- * - \ref SysTimer_SetSWIRQ;SysTimer_GetMsipValue;
+ * - \ref SysTimer_SetSWIRQ
+ * - \ref SysTimer_GetMsipValue
  */
-__STATIC_INLINE void SysTimer_ClearSWIRQ(void)
+__STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
 {
-    SysTimer->MSIP &= ~SysTimer_TIMER_MSIP_Msk;
+    SysTimer->MSIP &= ~SysTimer_MSIP_MSIP_Msk;
 }
 
 /**
  * \brief  Get system Timer MSIP
  * \details
- * This function get the system Timer MSIP bit.
- * \return         0  SW interrupt set and 1 SW interrupt clear.
+ * This function get the system Timer MSIP register value.
+ * \return    Value of Timer MSIP register.
  * \remarks
- * - Bit0 is SW interrupt flag. Bit0 is 1 then SW interrupt set. Bit0 is 0 then SW interrupt clear.
- * - \ref SysTimer_SetSWIRQ; SysTimer_ClearSWIRQ;
- * - \ref Set_MTVEC
+ * - Bit0 is SW interrupt flag.
+ *   Bit0 is 1 then SW interrupt set. Bit0 is 0 then SW interrupt clear.
+ * - \ref SysTimer_SetSWIRQ
+ * - \ref SysTimer_ClearSWIRQ
  */
-__STATIC_INLINE uint32_t SysTimer_GetMsipValue(void)
+__STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
 {
-    return (uint32_t)(SysTimer->MSIP & SysTimer_TIMER_MSIP_Msk);
+    return (uint32_t)(SysTimer->MSIP & SysTimer_MSIP_Msk);
+}
+
+/**
+ * \brief  Set system Timer MSIP
+ * \details
+ * This function set the system Timer MSIP register value.
+ */
+__STATIC_FORCEINLINE void SysTimer_SetMsipValue(uint32_t msip)
+{
+    SysTimer->MSIP = (msip & SysTimer_MSIP_Msk);
 }
 
 /**
  * \brief  Do software reset request
  * \details
- * This function will do software reset request through TIMER/
- * - Software need to write \ref SysTimer_TIMER_MSFRST_KEY to generate software reset request
+ * This function will do software reset request through MTIMER
+ * - Software need to write \ref SysTimer_MSFRST_KEY to generate software reset request
  * - The software request flag can be cleared by reset operation to clear
  * \remarks
  * - The software reset is sent to SoC, SoC need to generate reset signal and send back to Core
  * - This function will not return, it will do while(1) to wait the Core reset happened
  */
-__STATIC_INLINE void SysTimer_SoftwareReset(void)
+__STATIC_FORCEINLINE void SysTimer_SoftwareReset(void)
 {
-    SysTimer->MSFTRST = SysTimer_TIMER_MSFRST_KEY;
+    SysTimer->MSFTRST = SysTimer_MSFRST_KEY;
     while(1);
 }
 
@@ -226,12 +273,14 @@ __STATIC_INLINE void SysTimer_SoftwareReset(void)
  * \details Initializes the System Timer and its non-vector interrupt, and starts the System Tick Timer.
  *
  *  In our default implementation, the timer counter will be set to zero, and it will start a timer compare non-vector interrupt
- *  when it matchs the ticks user set, during the timer interrupt user should reload the timer counter to zero, so it
- *  can produce period timer interrupt.
+ *  when it matchs the ticks user set, during the timer interrupt user should reload the system tick using \ref SysTick_Reload function
+ *  or similar function written by user, so it can produce period timer interrupt.
  * \param [in]  ticks  Number of ticks between two interrupts.
  * \return          0  Function succeeded.
  * \return          1  Function failed.
  * \remarks
+ * - For \ref __NUCLEI_N_REV >= 0x0104, the CMPCLREN bit in MSTOP is introduced,
+ *   so we will use this feature to let Nuclei Core automatically reload the MTIMER register value to zero.
  * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
  *   function \ref SysTick_Config is not included.
  * - In this case, the file **<Device>.h** must contain a vendor-specific implementation
@@ -244,6 +293,10 @@ __STATIC_INLINE void SysTimer_SoftwareReset(void)
  */
 __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
 {
+#if defined(__NUCLEI_N_REV) && (__NUCLEI_N_REV < 0x0104)
+#else
+    SysTimer_SetMstopValue(SysTimer_GetMstopValue() | SysTimer_MSTOP_CMPCLREN_Msk);
+#endif
     SysTimer_SetLoadValue(0);
     SysTimer_SetCompareValue(ticks);
     ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
@@ -251,6 +304,35 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
     ECLIC_EnableIRQ(SysTimer_IRQn);
     return (0UL);
 }
+
+/**
+ * \brief   System Tick Reload
+ * \details Reload the System Timer Tick when the MTIMECMP reached TIME value
+ *
+ * \param [in]  ticks  Number of ticks between two interrupts.
+ * \return          0  Function succeeded.
+ * \return          1  Function failed.
+ * \remarks
+ * - For \ref __NUCLEI_N_REV >= 0x0104, the CMPCLREN bit in MSTOP is introduced,
+ *   so we will use this feature to let Nuclei Core automatically reload the MTIMER register value to zero.
+ *   Otherwise, we will set the (ticks + MTIMER) value to MTIMERCMP register, and the MTIMER register will not be modified
+ * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
+ *   function \ref SysTick_Reload is not included.
+ * - In this case, the file **<Device>.h** must contain a vendor-specific implementation
+ *   of this function.
+ * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
+ * \sa
+ * - \ref SysTimer_SetCompareValue
+ * - \ref SysTimer_SetLoadValue
+ */
+__STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
+{
+#if defined(__NUCLEI_N_REV) && (__NUCLEI_N_REV < 0x0104)
+    SysTimer->MTIMERCMP = ticks + SysTimer->MTIMER;
+#endif
+    return (0UL);
+}
+
 #endif /* defined(__Vendor_SysTickConfig) && (__Vendor_SysTickConfig == 0U) */
 /** @} */ /* End of Doxygen Group NMSIS_Core_SysTimer */
 
