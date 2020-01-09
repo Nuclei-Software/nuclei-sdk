@@ -70,6 +70,8 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+#include "nuclei_sdk_soc.h"
+
 /* Here is a good place to include header files that are required across
 your application. */
 
@@ -78,7 +80,7 @@ your application. */
 #define configUSE_PREEMPTION                    1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
 #define configUSE_TICKLESS_IDLE                 0
-#define configCPU_CLOCK_HZ                      265000000
+#define configCPU_CLOCK_HZ                      SystemCoreClock
 #define configRTC_CLOCK_HZ						32768
 #define configTICK_RATE_HZ                      150
 #define configMAX_PRIORITIES                    4
