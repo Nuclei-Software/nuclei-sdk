@@ -163,7 +163,7 @@
     STORE    x29, 29 * REGBYTES(sp)
     STORE    x30, 30 * REGBYTES(sp)
     STORE    x31, 31 * REGBYTES(sp)
-    #endif
+#endif
 .endm
 
 /* Macro for saving task context */
@@ -213,9 +213,9 @@
     csrr    t0, CSR_MSTATUS    //pointer
     STORE    t0, 32 * REGBYTES(sp)
 
-    csrr t0, CSR_MSUBM  
+    csrr t0, CSR_MSUBM
     STORE t0,  34*REGBYTES(sp)
-    
+
     /* Store current stackpointer in task control block (TCB) */
     LOAD    t0, pxCurrentTCB    //pointer
     STORE    sp, 0x0(t0)
@@ -300,10 +300,8 @@
 #endif
     addi    sp, sp, REGBYTES * 36
 .endm
-###############################################
 
-###############################################
-    
+
  /*restore mstatus/mepc and tcb    */
 .macro portRESTORE_CONTEXT_EXCP
     .global    pxCurrentTCB
@@ -312,26 +310,25 @@
     LOAD    sp, 0x0(sp)
     /* Load task program counter */
     LOAD t0,  34*REGBYTES(sp)
-    csrw CSR_MSUBM, t0   
+    csrw CSR_MSUBM, t0
     LOAD t0,  33*REGBYTES(sp)
-    csrw CSR_MEPC, t0  
+    csrw CSR_MEPC, t0
     LOAD t0,  32*REGBYTES(sp)
-    csrw CSR_MSTATUS, t0 
+    csrw CSR_MSTATUS, t0
 .endm
-
 
 
 /*saves istatus and tcb    */
 .macro portSAVE_CONTEXT_IRQ
     .global    pxCurrentTCB
     /* Store status */
-    csrr t0, CSR_MSTATUS  
+    csrr t0, CSR_MSTATUS
     STORE t0,  32*REGBYTES(sp)
     csrr t0,   CSR_MEPC
     STORE t0,  33*REGBYTES(sp)
     csrr t0,   CSR_MSUBM
     STORE t0,  34*REGBYTES(sp)
-    csrr t0,  CSR_MCAUSE 
+    csrr t0,  CSR_MCAUSE
     STORE t0,  35*REGBYTES(sp)
 
     /* Store current stackpointer in task control block (TCB) */
@@ -347,29 +344,25 @@
     /* Load stack pointer from the current TCB */
 //    LOAD    sp, pxCurrentTCB
 //    LOAD    sp, 0x0(sp)
-    #---- Critical section with interrupts disabled -----------------------
-    # Disable interrupts 
-    
-     
-    LOAD t0,  35*REGBYTES(sp)
-    csrw  CSR_MCAUSE, t0   
-    LOAD t0,  34*REGBYTES(sp)
-    csrw CSR_MSUBM, t0 
-    LOAD t0,  33*REGBYTES(sp)
-    csrw CSR_MEPC, t0  
-    LOAD t0,  32*REGBYTES(sp)
-    csrw CSR_MSTATUS, t0 
-.endm  
+    // ---- Critical section with interrupts disabled -----------------------
+    // Disable interrupts
 
-###############################################
-# Disable Interrupt
-#
-.macro DISABLE_MIE
-    csrc CSR_MSTATUS, MSTATUS_MIE  
+
+    LOAD t0,  35*REGBYTES(sp)
+    csrw  CSR_MCAUSE, t0
+    LOAD t0,  34*REGBYTES(sp)
+    csrw CSR_MSUBM, t0
+    LOAD t0,  33*REGBYTES(sp)
+    csrw CSR_MEPC, t0
+    LOAD t0,  32*REGBYTES(sp)
+    csrw CSR_MSTATUS, t0
 .endm
 
 
-###############################################
+/* Disable Interrupt */
+.macro DISABLE_MIE
+    csrc CSR_MSTATUS, MSTATUS_MIE
+.endm
 
 /* Interrupt entry point */
 .global exc_entry
@@ -389,9 +382,6 @@ exc_entry:
     popREGFILE
     mret
 
-###############################################
-###############################################
-
 /* async interrupt, this function is called */
 //Bob: Rename this to irq_entry to make it override the weak symbol from BSPs entry.S
 //interrupt:
@@ -400,7 +390,7 @@ exc_entry:
 irq_entry: // -------------> This label will be set to MTVT2 register
     // Allocate the stack space
     pushREGFILE
-    csrr t0, CSR_MSTATUS    
+    csrr t0, CSR_MSTATUS
     STORE t0, 32 * REGBYTES(sp)
     csrr t0,   CSR_MEPC
     STORE t0,  33*REGBYTES(sp)
@@ -408,62 +398,62 @@ irq_entry: // -------------> This label will be set to MTVT2 register
     STORE t0,  34*REGBYTES(sp)
     csrr t0,   CSR_MCAUSE
     STORE t0,  35*REGBYTES(sp)
-    
-int_loop:             // 3 instructions in pending-interrupt service loop.
-    csrrw ra, CSR_JALMNXTI, ra    
-      
-    csrrsi a0, CSR_MNXTI, MSTATUS_MIE   // Claim any pending interrupt at level > mcause.pil 
-    bnez a0, int_loop   // Loop to service any interrupt. 
 
-    #---- Critical section with interrupts disabled -----------------------
-    DISABLE_MIE # Disable interrupts
-    
+int_loop:             // 3 instructions in pending-interrupt service loop.
+    csrrw ra, CSR_JALMNXTI, ra
+
+    csrrsi a0, CSR_MNXTI, MSTATUS_MIE   // Claim any pending interrupt at level > mcause.pil
+    bnez a0, int_loop   // Loop to service any interrupt.
+
+    // ---- Critical section with interrupts disabled -----------------------
+    DISABLE_MIE // Disable interrupts
+
     LOAD t0,  35*REGBYTES(sp)
-    csrw CSR_MCAUSE, t0   
+    csrw CSR_MCAUSE, t0
     LOAD t0,  34*REGBYTES(sp)
-    csrw CSR_MSUBM, t0 
+    csrw CSR_MSUBM, t0
     LOAD t0,  33*REGBYTES(sp)
-    csrw CSR_MEPC, t0  
+    csrw CSR_MEPC, t0
     LOAD t0,  32*REGBYTES(sp)
-    csrw CSR_MSTATUS, t0 
+    csrw CSR_MSTATUS, t0
 
     popREGFILE
     mret
 
 .align 3
 .globl MTIME_HANDLER
-MTIME_HANDLER:   
-    pushREGFILE   
-    portSAVE_CONTEXT_IRQ  
-    
-    csrs CSR_MSTATUS, MSTATUS_MIE  
+MTIME_HANDLER:
+    pushREGFILE
+    portSAVE_CONTEXT_IRQ
+
+    csrs CSR_MSTATUS, MSTATUS_MIE
     jal vPortSysTickHandler
-    csrc CSR_MSTATUS, MSTATUS_MIE  
+    csrc CSR_MSTATUS, MSTATUS_MIE
 
     portRESTORE_CONTEXT_IRQ
     popREGFILE
-    
+
     mret
 
 xPortStartScheduler:
     jal vPortSetup
-    portRESTORE_CONTEXT_EXCP 
-    
+    portRESTORE_CONTEXT_EXCP
+
     popREGFILE
-    
+
     mret
 
 .align 6
 vPortYield:
     mv sp,a0
-    
+
     portSAVE_CONTEXT_EXCP
 
     STORE a1, 33 * REGBYTES(sp)
     jal vTaskSwitchContext
 
     portRESTORE_CONTEXT_EXCP
-    popREGFILE  
+    popREGFILE
 
     mret
 
