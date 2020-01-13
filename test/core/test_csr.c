@@ -124,15 +124,19 @@ void SOC_MTIMER_HANDLER(void)
 
 CTEST(core, wfi) {
     __disable_irq();
-    SysTick_Config(100);
+    SysTick_Config(1000);
     SysTimer_Start();
     __WFI();
     // Should not enter interrupt handler
+#if defined(__NUCLEI_N_REV) && (__NUCLEI_N_REV < 0x0104)
+    // For nuclei core version >= 1.4, the pending irq state
+    // will be automatically cleared due to auto clear feature
     ASSERT_NOT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
+#endif
     ASSERT_NOT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 0);
     ECLIC_DisableIRQ(SysTimer_IRQn);
     ECLIC_ClearPendingIRQ(SysTimer_IRQn);
-    SysTick_Config(100);
+    SysTick_Config(1000);
     SysTimer_Start();
     __enable_irq();
     __WFI();
@@ -165,16 +169,20 @@ CTEST(core, ebreak) {
 
 CTEST(core, sleepmode) {
     __disable_irq();
-    SysTick_Config(100);
+    SysTick_Config(1000);
     CTEST_LOG("Enter to Shallow Sleep Mode\r\n");
     __set_wfi_sleepmode(WFI_SHALLOW_SLEEP);
     __WFI();
     // Should not enter interrupt handler
+#if defined(__NUCLEI_N_REV) && (__NUCLEI_N_REV < 0x0104)
+    // For nuclei core version >= 1.4, the pending irq state
+    // will be automatically cleared due to auto clear feature
     ASSERT_NOT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
+#endif
     ASSERT_NOT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 0);
     ECLIC_DisableIRQ(SysTimer_IRQn);
     ECLIC_ClearPendingIRQ(SysTimer_IRQn);
-    SysTick_Config(100);
+    SysTick_Config(1000);
     __enable_irq();
     // Uncomment the following line, the CPU will enter to deep sleep
     //CTEST_LOG("Enter to Deep Sleep Mode\r\n");
