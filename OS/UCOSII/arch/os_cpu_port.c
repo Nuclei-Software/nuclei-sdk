@@ -1,8 +1,7 @@
 #include <stdio.h>
-#include <os_cpu.h>
 #include "ucos_ii.h"
 #include "nuclei_sdk_soc.h"
-#include <trap.h>
+#include "os_cpu_port.h"
 
 void syscall_handler(unsigned long sp[])
 {

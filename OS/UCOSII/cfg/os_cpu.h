@@ -139,12 +139,14 @@ typedef  uint32_t         OS_CPU_SR;        /* Define size of Machine status reg
 *********************************************************************************************************
 */
 
-#define  OS_STK_GROWTH        1u                  /* Stack grows from HIGH to LOW memory               */
+#define  OS_STK_GROWTH          1u          /* Stack grows from HIGH to LOW memory */
 
-#define  OS_TASK_SW()        OSCtxSw()
+#define  OS_TASK_SW()           OSCtxSw()
 
-#define TICK_RATE_HZ                      200
-#define RTC_CLOCK_HZ					  32768
+#ifndef TICK_RATE_HZ
+#warning "Use default TICK_RATE_HZ=100"
+#define TICK_RATE_HZ            100
+#endif
 
 /*
 *********************************************************************************************************

@@ -1,5 +1,5 @@
-#ifndef _TRAP_H
-#define _TRAP_H
+#ifndef _OS_CPU_PORT_H_
+#define _OS_CPU_PORT_H_
 
 #include <stdint.h>
 
