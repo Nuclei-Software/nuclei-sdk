@@ -127,7 +127,7 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetLoadValue(void)
  * This function set the system Timer compare value in MTIMERCMP register.
  * \param [in]  value   compare value to set system timer MTIMERCMP register.
  * \remarks
- * - Compare value is 64bits wide. 
+ * - Compare value is 64bits wide.
  * - If compare value is larger than current value timer interrupt generate.
  * - Modify the load value or compare value less to clear the interrupt.
  * - \ref SysTimer_GetCompareValue
@@ -289,7 +289,8 @@ __STATIC_FORCEINLINE void SysTimer_SoftwareReset(void)
  * \return          1  Function failed.
  * \remarks
  * - For \ref __NUCLEI_N_REV >= 0x0104, the CMPCLREN bit in MTIMECTL is introduced,
- *   so we will use this feature to let Nuclei Core automatically reload the MTIMER register value to zero.
+ *   but we assume that the CMPCLREN bit is set to 0, so MTIMER register will not be
+ *   auto cleared to 0 when MTIMER >= MTIMERCMP.
  * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
  *   function \ref SysTick_Config is not included.
  * - In this case, the file **<Device>.h** must contain a vendor-specific implementation
@@ -302,11 +303,6 @@ __STATIC_FORCEINLINE void SysTimer_SoftwareReset(void)
  */
 __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
 {
-#if defined(__NUCLEI_N_REV) && (__NUCLEI_N_REV < 0x0104)
-#else
-    // Enable auto clear feature of system timer for Nuclei N >= 1.4
-    SysTimer_SetControlValue(SysTimer_GetControlValue() | SysTimer_MTIMECTL_CMPCLREN_Msk);
-#endif
     SysTimer_SetLoadValue(0);
     SysTimer_SetCompareValue(ticks);
     ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
@@ -324,8 +320,10 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
  * \return          1  Function failed.
  * \remarks
  * - For \ref __NUCLEI_N_REV >= 0x0104, the CMPCLREN bit in MTIMECTL is introduced,
- *   so we will use this feature to let Nuclei Core automatically reload the MTIMER register value to zero.
- *   Otherwise, we will set the (ticks + MTIMER) value to MTIMERCMP register, and the MTIMER register will not be modified
+ *   but for this \ref SysTick_Config function, we assume this CMPCLREN bit is set to 0,
+ *   so in interrupt handler function, user still need to set the MTIMERCMP or MTIMER to reload
+ *   the system tick, if vendor want to use this timer's auto clear feature, they can define
+ *   \ref __Vendor_SysTickConfig to 1, and implement \ref SysTick_Config and \ref SysTick_Reload functions.
  * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
  *   function \ref SysTick_Reload is not included.
  * - In this case, the file <b><Device>.h<\b> must contain a vendor-specific implementation
@@ -337,9 +335,7 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
  */
 __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
 {
-#if defined(__NUCLEI_N_REV) && (__NUCLEI_N_REV < 0x0104)
     SysTimer->MTIMERCMP = ticks + SysTimer->MTIMER;
-#endif
     return (0UL);
 }
 
