@@ -293,10 +293,10 @@ __STATIC_FORCEINLINE void SysTimer_SoftwareReset(void)
  *   auto cleared to 0 when MTIMER >= MTIMERCMP.
  * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
  *   function \ref SysTick_Config is not included.
- * - In this case, the file **<Device>.h** must contain a vendor-specific implementation
+ * - In this case, the file <b><Device>.h</b> must contain a vendor-specific implementation
  *   of this function.
  * - If user need this function to start a period timer interrupt, then in timer interrupt handler
- *   routine code, user should call \ref SysTimer_SetLoadValue to set counter as 0 to reload the timer.
+ *   routine code, user should call \ref SysTick_Reload with ticks to reload the timer.
  * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
  * \sa
  * - \ref SysTimer_SetCompareValue; SysTimer_SetLoadValue
@@ -326,7 +326,7 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
  *   \ref __Vendor_SysTickConfig to 1, and implement \ref SysTick_Config and \ref SysTick_Reload functions.
  * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
  *   function \ref SysTick_Reload is not included.
- * - In this case, the file <b><Device>.h<\b> must contain a vendor-specific implementation
+ * - In this case, the file <b><Device>.h</b> must contain a vendor-specific implementation
  *   of this function.
  * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
  * \sa
