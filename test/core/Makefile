@@ -6,6 +6,8 @@ SRCDIRS = .
 
 INCDIRS = .. .
 
+COMMON_FLAGS += -O2
+
 NOGC = 1
 PFLOAT = 0
 

@@ -15,6 +15,7 @@ CTEST(timer, timer_irq) {
 
   ECLIC_Register_IRQ(SysTimerSW_IRQn,ECLIC_NON_VECTOR_INTERRUPT,ECLIC_LEVEL_TRIGGER,1,0,eclic_msip_handler);    /* register system timer SW interrupt */
   SysTimer_SetSWIRQ();
+  __RWMB();
   ASSERT_NOT_EQUAL(ECLIC_GetPendingIRQ(SysTimerSW_IRQn), 0);
   __enable_irq();
   for(uint32_t i = 10; i > 0; --i) {}

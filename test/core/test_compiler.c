@@ -5,8 +5,11 @@
 CTEST(compiler, unaligned_read16) {
     uint32_t data = 0x12345678;
     unsigned long pdata = (unsigned long)(&data);
+    __RWMB();
     ASSERT_EQUAL(__UNALIGNED_UINT16_READ((void *)pdata), 0x5678);
+    __RWMB();
     ASSERT_EQUAL(__UNALIGNED_UINT16_READ((void *)(pdata + 1)), 0x3456);
+    __RWMB();
     ASSERT_EQUAL(__UNALIGNED_UINT16_READ((void *)(pdata + 2)), 0x1234);
 }
 
