@@ -1,8 +1,12 @@
-INCDIRS += $(GD32VF103_SDK_SOC_COMMON)/Include \
-                         $(GD32VF103_SDK_SOC_COMMON)/Include/Usb
+INCDIRS += $(GD32VF103_SDK_SOC_COMMON)/Include                       
 
-C_SRCDIRS += $(GD32VF103_SDK_SOC_COMMON)/Source $(GD32VF103_SDK_SOC_COMMON)/Source/Drivers $(GD32VF103_SDK_SOC_COMMON)/Source/Drivers/Usb \
+C_SRCDIRS += $(GD32VF103_SDK_SOC_COMMON)/Source $(GD32VF103_SDK_SOC_COMMON)/Source/Drivers \
 			 $(GD32VF103_SDK_SOC_COMMON)/Source/Stubs
+
+ifeq ($(USB_DRV_SUPPORT), 1)			 
+INCDIRS += $(GD32VF103_SDK_SOC_COMMON)/Include/Usb
+C_SRCDIRS += $(GD32VF103_SDK_SOC_COMMON)/Source/Drivers/Usb
+endif
 
 ASM_SRCS += $(GD32VF103_SDK_SOC_COMMON)/Source/GCC/startup_gd32vf103.S \
 			$(GD32VF103_SDK_SOC_COMMON)/Source/GCC/intexc_gd32vf103.S
