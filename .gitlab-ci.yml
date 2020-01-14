@@ -15,7 +15,7 @@ stages:
     script:
         - SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
         - SOC=hbird BOARD=hbird_eval nsdk_build_directory    test
-    
+
 # Build For HBird Evaluation Board with N307 Core, with Flash, FlashXIP, ILM Mode
 build_hbird_eval_ilm_n307:
     variables:
@@ -77,7 +77,8 @@ build_hbird_eval_flashxip_nx600:
 .build_gd32vf103v_eval_job_template: &build_gd32vf103v_eval_job_def
     stage: build_gd32vf103v_eval
     script:
-        - SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    application
+        - SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory      application
+        - SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    test
 
 #build_gd32vf103v_eval_ilm:
 #    variables:
@@ -103,7 +104,7 @@ build_gd32vf103v_eval_flashxip:
     script:
         - SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    application
         - SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    test
- 
+
 #build_gd32vf103v_rvstar_ilm:
 #    variables:
 #        DOWNLOAD: "ilm"
