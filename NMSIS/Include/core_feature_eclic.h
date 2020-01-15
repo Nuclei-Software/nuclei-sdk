@@ -464,7 +464,6 @@ __STATIC_FORCEINLINE void __ECLIC_ClearPendingIRQ(IRQn_Type IRQn)
  *                   - 03  negative edge trigger, \ref ECLIC_NEGTIVE_EDGE_TRIGGER
  * \remarks
  * - IRQn must not be negative.
- * - The registers that control the status of interrupts are attribute.
  *
  * \sa
  * - \ref ECLIC_GetTrigIRQ
@@ -487,7 +486,6 @@ __STATIC_FORCEINLINE void __ECLIC_SetTrigIRQ(IRQn_Type IRQn, uint32_t trig)
  *                 - 03  negative edge trigger, \ref ECLIC_NEGTIVE_EDGE_TRIGGER
  * \remarks
  *     - IRQn must not be negative.
- *     - The registers that control the status of interrupts are attribute.
  * \sa
  *     - \ref ECLIC_SetTrigIRQ
  */
@@ -497,16 +495,15 @@ __STATIC_FORCEINLINE uint32_t __ECLIC_GetTrigIRQ(IRQn_Type IRQn)
 }
 
 /**
- * \brief  Set trigger mode and polarity for a specific interrupt
+ * \brief  Set interrupt working mode for a specific interrupt
  * \details
- * This function set selective hardware vector of the specific interrupt \em IRQn.
+ * This function set selective hardware vector or non-vector working mode of the specific interrupt \em IRQn.
  * \param [in]      IRQn  Interrupt number
  * \param [in]      shv
  *                        - 0  non-vector mode, \ref ECLIC_NON_VECTOR_INTERRUPT
  *                        - 1  vector mode, \ref ECLIC_VECTOR_INTERRUPT
  * \remarks
  * - IRQn must not be negative.
- * - The registers that control the status of interrupts are attribute.
  * \sa
  * - \ref ECLIC_GetShvIRQ
  */
@@ -517,16 +514,15 @@ __STATIC_FORCEINLINE void __ECLIC_SetShvIRQ(IRQn_Type IRQn, uint32_t shv)
 }
 
 /**
- * \brief  Get trigger mode and polarity for a specific interrupt
+ * \brief  Get interrupt working mode for a specific interrupt
  * \details
- * This function get selective hardware vector of the specific interrupt \em IRQn.
+ * This function get selective hardware vector or non-vector working mode of the specific interrupt \em IRQn.
  * \param [in]      IRQn  Interrupt number
  * \return       shv
  *                        - 0  non-vector mode, \ref ECLIC_NON_VECTOR_INTERRUPT
  *                        - 1  vector mode, \ref ECLIC_VECTOR_INTERRUPT
  * \remarks
  * - IRQn must not be negative.
- * - The registers that control the status of interrupts are attribute.
  * \sa
  * - \ref ECLIC_SetShvIRQ
  */
@@ -578,7 +574,7 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetCtrlIRQ(IRQn_Type IRQn)
  * - If lvl_abs to be set is larger than the max level allowed, it will be force to be max level.
  * - When you set level value you need use clciinfo.nlbits to get the width of level.
  *   Then we could know the maximum of level. CLICINTCTLBITS is how many total bits are
- *   present in the clicintctl register.
+ *   present in the CLICINTCTL register.
  * \sa
  * - \ref ECLIC_GetLevelIRQ
  */
