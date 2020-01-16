@@ -1,6 +1,9 @@
 BOARD ?= gd32vf103v_eval
-CORE ?= n205
-DOWNLOAD := flashxip
+
+# override DOWNLOAD and CORE variable for GD32VF103 SoC
+# even though it was set with a command argument
+override CORE := n205
+override DOWNLOAD := flashxip
 
 GD32VF103_SDK_SOC_BOARD=$(NUCLEI_SDK_SOC)/Board/$(BOARD)
 GD32VF103_SDK_SOC_COMMON=$(NUCLEI_SDK_SOC)/Common
