@@ -15,6 +15,9 @@ ALL_DEPS := $(ALL_OBJS:=.d)
 CLEAN_OBJS += $(TARGET).elf $(TARGET).map $(TARGET).dump $(TARGET).verilog $(ALL_OBJS) $(ALL_DEPS)
 REAL_CLEAN_OBJS = $(subst /,$(PS), $(CLEAN_OBJS))
 
+# Default goal, placed before dependency includes
+all: info $(TARGET).elf
+
 # include dependency files of application
 ifneq ($(MAKECMDGOALS),clean)
 -include $(ALL_DEPS)
@@ -63,7 +66,6 @@ help:
 	@$(ECHO) "4.(Option 2) Debug application: make DOWNLOAD=ilm debug"
 	@$(ECHO) ""
 
-all: info $(TARGET).elf
 
 $(TARGET).elf: $(ALL_OBJS)
 	$(TRACE_LINK)
