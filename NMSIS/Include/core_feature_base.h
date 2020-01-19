@@ -161,11 +161,11 @@ typedef union {
  */
 typedef union {
     struct {
-        rv_csr_t exccode:2;                     /*!< bit:     11..0  exception or interrupt code */
-        rv_csr_t _reserved0:3;                  /*!< bit:     15..12  Reserved */
-        rv_csr_t mpil:2;                        /*!< bit:     23..16  Previous interrupt level */
+        rv_csr_t exccode:12;                    /*!< bit:     11..0  exception or interrupt code */
+        rv_csr_t _reserved0:4;                  /*!< bit:     15..12  Reserved */
+        rv_csr_t mpil:8;                        /*!< bit:     23..16  Previous interrupt level */
         rv_csr_t _reserved1:3;                  /*!< bit:     26..24  Reserved */
-        rv_csr_t mpie:2;                        /*!< bit:     27  Interrupt enable flag before enter interrupt */
+        rv_csr_t mpie:1;                        /*!< bit:     27  Interrupt enable flag before enter interrupt */
         rv_csr_t mpp:2;                         /*!< bit:     29..28  Privilede mode flag before enter interrupt */
         rv_csr_t minhv:1;                       /*!< bit:     30  Machine interrupt vector table */
 #if defined(__RISCV_XLEN) && __RISCV_XLEN == 64
@@ -952,7 +952,7 @@ __STATIC_FORCEINLINE uint32_t __AMOMAXU_W(volatile uint32_t *addr, uint32_t valu
  * \details Atomically signed max compare 32bit value with value in memory using amomax.d.
  * \param [in]    addr   Address pointer to data, address need to be 4byte aligned
  * \param [in]    value  value to be compared
- * \return the bigger value 
+ * \return the bigger value
  */
 __STATIC_FORCEINLINE int32_t __AMOMAX_W(volatile int32_t *addr, int32_t value)
 {
@@ -968,7 +968,7 @@ __STATIC_FORCEINLINE int32_t __AMOMAX_W(volatile int32_t *addr, int32_t value)
  * \details Atomically unsigned min compare 32bit value with value in memory using amominu.d.
  * \param [in]    addr   Address pointer to data, address need to be 4byte aligned
  * \param [in]    value  value to be compared
- * \return the smaller value 
+ * \return the smaller value
  */
 __STATIC_FORCEINLINE uint32_t __AMOMINU_W(volatile uint32_t *addr, uint32_t value)
 {
@@ -1125,7 +1125,7 @@ __STATIC_FORCEINLINE uint64_t __AMOMAXU_D(volatile uint64_t *addr, uint64_t valu
  * \details Atomically signed max compare 64bit value with value in memory using amomax.d.
  * \param [in]    addr   Address pointer to data, address need to be 8byte aligned
  * \param [in]    value  value to be compared
- * \return the bigger value 
+ * \return the bigger value
  */
 __STATIC_FORCEINLINE int64_t __AMOMAX_D(volatile int64_t *addr, int64_t value)
 {
@@ -1141,7 +1141,7 @@ __STATIC_FORCEINLINE int64_t __AMOMAX_D(volatile int64_t *addr, int64_t value)
  * \details Atomically unsigned min compare 64bit value with value in memory using amominu.d.
  * \param [in]    addr   Address pointer to data, address need to be 8byte aligned
  * \param [in]    value  value to be compared
- * \return the smaller value 
+ * \return the smaller value
  */
 __STATIC_FORCEINLINE uint64_t __AMOMINU_D(volatile uint64_t *addr, uint64_t value)
 {
