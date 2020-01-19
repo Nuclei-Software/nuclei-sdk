@@ -50,6 +50,9 @@
 #define MSTATUS32_SD        0x80000000
 #define MSTATUS64_SD        0x8000000000000000
 
+#define MSTATUS_FS_INITIAL  0x00002000
+#define MSTATUS_FS_CLEAN    0x00004000
+#define MSTATUS_FS_DIRTY    0x00006000
 
 #define SSTATUS_UIE         0x00000001
 #define SSTATUS_SIE         0x00000002
@@ -492,8 +495,8 @@
 #define CSR_MTVT                0x307
 #define CSR_MNXTI               0x345
 #define CSR_MINTSTATUS          0x346
-#define CSR_SCRATCHCSW          0x348
-#define CSR_SCRATCHCSWL         0x349
+#define CSR_MSCRATCHCSW         0x348
+#define CSR_MSCRATCHCSWL        0x349
 #define CSR_MCLICBASE           0x350
 
 /* === Nuclei custom CSR Registers === */
