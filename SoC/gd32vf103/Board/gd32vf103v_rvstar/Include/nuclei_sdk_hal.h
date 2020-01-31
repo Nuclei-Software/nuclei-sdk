@@ -6,7 +6,7 @@
  extern "C" {
 #endif
 
-#include "gd32vf103v_rvstart.h"
+#include "gd32vf103v_rvstar.h"
 
 #define NUCLEI_BANNER       1
 

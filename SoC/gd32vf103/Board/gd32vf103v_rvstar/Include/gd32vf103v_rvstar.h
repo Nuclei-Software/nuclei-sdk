@@ -78,14 +78,14 @@ typedef enum
 #define LEDR_GPIO_CLK                    RCU_GPIOA
 
 /* rvstar board UART com port */
-#define EVAL_COM0                        UART4
-#define EVAL_COM_CLK                     RCU_UART4
-#define EVAL_COM_TX_PIN                  GPIO_PIN_12
-#define EVAL_COM_RX_PIN                  GPIO_PIN_2
-#define EVAL_COM_TX_GPIO_PORT            GPIOC
-#define EVAL_COM_RX_GPIO_PORT            GPIOD
-#define EVAL_COM_TX_GPIO_CLK             RCU_GPIOC
-#define EVAL_COM_RX_GPIO_CLK             RCU_GPIOD
+#define GD32_COM0                        UART4
+#define GD32_COM_CLK                     RCU_UART4
+#define GD32_COM_TX_PIN                  GPIO_PIN_12
+#define GD32_COM_RX_PIN                  GPIO_PIN_2
+#define GD32_COM_TX_GPIO_PORT            GPIOC
+#define GD32_COM_RX_GPIO_PORT            GPIOD
+#define GD32_COM_TX_GPIO_CLK             RCU_GPIOC
+#define GD32_COM_RX_GPIO_CLK             RCU_GPIOD
 
 /* rvstar board low layer button */  
 #define KEYn                             (1U)
@@ -101,19 +101,19 @@ typedef enum
 
 /* function declarations */
 /* configure led GPIO */
-void gd_eval_led_init(led_typedef_enum lednum);
+void gd_led_init(led_typedef_enum lednum);
 /* turn on selected led */
-void gd_eval_led_on(led_typedef_enum lednum);
+void gd_led_on(led_typedef_enum lednum);
 /* turn off selected led */
-void gd_eval_led_off(led_typedef_enum lednum);
+void gd_led_off(led_typedef_enum lednum);
 /* toggle the selected led */
-void gd_eval_led_toggle(led_typedef_enum lednum);
+void gd_led_toggle(led_typedef_enum lednum);
 /* configure key */
-void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode);
+void gd_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode);
 /* return the selected key state */
-uint8_t gd_eval_key_state_get(key_typedef_enum keynum);
+uint8_t gd_key_state_get(key_typedef_enum keynum);
 /* configure COM port */
-void gd_eval_com_init(uint32_t usart_periph);
+void gd_com_init(uint32_t usart_periph);
 #ifdef __cplusplus
 }
 #endif

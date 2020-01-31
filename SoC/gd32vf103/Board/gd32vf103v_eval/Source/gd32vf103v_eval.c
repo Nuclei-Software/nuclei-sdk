@@ -42,11 +42,11 @@ static uint32_t GPIO_PORT[LEDn] = {LED1_GPIO_PORT, LED2_GPIO_PORT,
                                    LED3_GPIO_PORT, LED4_GPIO_PORT};
 static uint32_t GPIO_PIN[LEDn] = {LED1_PIN, LED2_PIN, LED3_PIN, LED4_PIN};
 
-static rcu_periph_enum COM_CLK[COMn] = {EVAL_COM0_CLK, EVAL_COM1_CLK};
-static uint32_t COM_TX_PIN[COMn] = {EVAL_COM0_TX_PIN, EVAL_COM1_TX_PIN};
-static uint32_t COM_RX_PIN[COMn] = {EVAL_COM0_RX_PIN, EVAL_COM1_RX_PIN};
-static uint32_t COM_GPIO_PORT[COMn] = {EVAL_COM0_GPIO_PORT, EVAL_COM1_GPIO_PORT};
-static rcu_periph_enum COM_GPIO_CLK[COMn] = {EVAL_COM0_GPIO_CLK, EVAL_COM1_GPIO_CLK};
+static rcu_periph_enum COM_CLK[COMn] = {GD32_COM0_CLK, GD32_COM1_CLK};
+static uint32_t COM_TX_PIN[COMn] = {GD32_COM0_TX_PIN, GD32_COM1_TX_PIN};
+static uint32_t COM_RX_PIN[COMn] = {GD32_COM0_RX_PIN, GD32_COM1_RX_PIN};
+static uint32_t COM_GPIO_PORT[COMn] = {GD32_COM0_GPIO_PORT, GD32_COM1_GPIO_PORT};
+static rcu_periph_enum COM_GPIO_CLK[COMn] = {GD32_COM0_GPIO_CLK, GD32_COM1_GPIO_CLK};
 
 static rcu_periph_enum GPIO_CLK[LEDn] = {LED1_GPIO_CLK, LED2_GPIO_CLK,
                                          LED3_GPIO_CLK, LED4_GPIO_CLK};
@@ -97,7 +97,7 @@ static uint8_t KEY_IRQn[KEYn] = {KEY_A_EXTI_IRQn,
     \param[out] none
     \retval     none
 */
-void gd_eval_led_init(led_typedef_enum lednum)
+void gd_led_init(led_typedef_enum lednum)
 {
     /* enable the led clock */
     rcu_periph_clock_enable(GPIO_CLK[lednum]);
@@ -117,7 +117,7 @@ void gd_eval_led_init(led_typedef_enum lednum)
     \param[out] none
     \retval     none
 */
-void gd_eval_led_on(led_typedef_enum lednum)
+void gd_led_on(led_typedef_enum lednum)
 {
     GPIO_BOP(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
 }
@@ -132,7 +132,7 @@ void gd_eval_led_on(led_typedef_enum lednum)
     \param[out] none
     \retval     none
 */
-void gd_eval_led_off(led_typedef_enum lednum)
+void gd_led_off(led_typedef_enum lednum)
 {
     GPIO_BC(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
 }
@@ -147,7 +147,7 @@ void gd_eval_led_off(led_typedef_enum lednum)
     \param[out] none
     \retval     none
 */
-void gd_eval_led_toggle(led_typedef_enum lednum)
+void gd_led_toggle(led_typedef_enum lednum)
 {
     gpio_bit_write(GPIO_PORT[lednum], GPIO_PIN[lednum], 
         (bit_status)(1-gpio_input_bit_get(GPIO_PORT[lednum], GPIO_PIN[lednum])));
@@ -168,7 +168,7 @@ void gd_eval_led_toggle(led_typedef_enum lednum)
     \retval     none
 */
 
-void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode)
+void gd_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode)
 {
     ECLIC_ClearPendingIRQ(KEY_IRQn[keynum]);	
     /* enable the key clock */
@@ -204,7 +204,7 @@ void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode)
     \param[out] none
     \retval     the key's GPIO pin value
 */
-uint8_t gd_eval_key_state_get(key_typedef_enum key)
+uint8_t gd_key_state_get(key_typedef_enum key)
 {
     return gpio_input_bit_get(KEY_PORT[key], KEY_PIN[key]);
 }
@@ -212,17 +212,17 @@ uint8_t gd_eval_key_state_get(key_typedef_enum key)
 /*!
     \brief      configure COM port
     \param[in]  com: COM on the board
-      \arg        EVAL_COM0: COM0 on the board
-      \arg        EVAL_COM1: COM1 on the board
+      \arg        GD32_COM0: COM0 on the board
+      \arg        GD32_COM1: COM1 on the board
     \param[out] none
     \retval     none
 */
-void gd_eval_com_init(uint32_t com)
+void gd_com_init(uint32_t com)
 {
     uint32_t com_id = 0U;
-    if(EVAL_COM0 == com){
+    if(GD32_COM0 == com){
         com_id = 0U;
-    }else if(EVAL_COM1 == com){
+    }else if(GD32_COM1 == com){
         com_id = 1U;
     }
     

@@ -470,7 +470,7 @@ void _init(void)
     /* TODO: Add your own initialization code here, called before main */
     SystemCoreClock = get_cpu_freq();
     /* configure USART */
-    gd_eval_com_init(EVAL_COM0);
+    gd_com_init(GD32_COM0);
     /* Display banner after UART initialized */
     SystemBannerPrint();
     /* Initialize exception default handlers */

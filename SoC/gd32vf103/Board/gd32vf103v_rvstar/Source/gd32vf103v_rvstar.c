@@ -32,7 +32,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "gd32vf103v_rvstart.h"
+#include "gd32vf103v_rvstar.h"
 
 /* private variables */
 static const uint32_t GPIO_PORT[LEDn]       = {LEDG_GPIO_PORT,LEDB_GPIO_PORT,LEDR_GPIO_PORT};
@@ -63,7 +63,7 @@ static const uint8_t KEY_IRQn[KEYn]             = {WAKEUP_KEY_EXTI_IRQn};
     \param[out] none
     \retval     none
 */
-void gd_eval_led_init(led_typedef_enum lednum)
+void gd_led_init(led_typedef_enum lednum)
 {
     /* enable the led clock */
     rcu_periph_clock_enable(GPIO_CLK[lednum]);
@@ -79,7 +79,7 @@ void gd_eval_led_init(led_typedef_enum lednum)
     \param[out] none
     \retval     none
 */
-void gd_eval_led_on(led_typedef_enum lednum)
+void gd_led_on(led_typedef_enum lednum)
 {
     GPIO_BOP(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
 }
@@ -91,7 +91,7 @@ void gd_eval_led_on(led_typedef_enum lednum)
     \param[out] none
     \retval     none
 */
-void gd_eval_led_off(led_typedef_enum lednum)
+void gd_led_off(led_typedef_enum lednum)
 {
     GPIO_BC(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
 }
@@ -103,7 +103,7 @@ void gd_eval_led_off(led_typedef_enum lednum)
     \param[out] none
     \retval     none
 */
-void gd_eval_led_toggle(led_typedef_enum lednum)
+void gd_led_toggle(led_typedef_enum lednum)
 {
     gpio_bit_write(GPIO_PORT[lednum], GPIO_PIN[lednum],
         (bit_status)(1-gpio_input_bit_get(GPIO_PORT[lednum], GPIO_PIN[lednum])));
@@ -119,7 +119,7 @@ void gd_eval_led_toggle(led_typedef_enum lednum)
     \param[out] none
     \retval     none
 */
-void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode)
+void gd_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode)
 {
     /* enable the key clock */
     rcu_periph_clock_enable(KEY_CLK[keynum]);
@@ -150,7 +150,7 @@ void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode)
     \param[out] none
     \retval     the key's GPIO pin value
 */
-uint8_t gd_eval_key_state_get(key_typedef_enum keynum)
+uint8_t gd_key_state_get(key_typedef_enum keynum)
 {
     return gpio_input_bit_get(KEY_PORT[keynum], KEY_PIN[keynum]);
 }
@@ -158,24 +158,24 @@ uint8_t gd_eval_key_state_get(key_typedef_enum keynum)
 /*!
     \brief      configure COM port
     \param[in]  com: COM on the board
-      \arg        EVAL_COM0: COM0 on the board
+      \arg        GD32_COM0: COM0 on the board
     \param[out] none
     \retval     none
 */
-void gd_eval_com_init(uint32_t usart_periph)
+void gd_com_init(uint32_t usart_periph)
 {    
     /* enable GPIO TX and RX clock */
-    rcu_periph_clock_enable(EVAL_COM_TX_GPIO_CLK);
-	rcu_periph_clock_enable(EVAL_COM_RX_GPIO_CLK);
+    rcu_periph_clock_enable(GD32_COM_TX_GPIO_CLK);
+	rcu_periph_clock_enable(GD32_COM_RX_GPIO_CLK);
 
     /* enable USART clock */
-    rcu_periph_clock_enable(EVAL_COM_CLK);
+    rcu_periph_clock_enable(GD32_COM_CLK);
 
     /* connect port to USARTx_Tx */
-    gpio_init(EVAL_COM_TX_GPIO_PORT, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, EVAL_COM_TX_PIN);
+    gpio_init(GD32_COM_TX_GPIO_PORT, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GD32_COM_TX_PIN);
 
     /* connect port to USARTx_Rx */
-    gpio_init(EVAL_COM_RX_GPIO_PORT, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, EVAL_COM_RX_PIN);
+    gpio_init(GD32_COM_RX_GPIO_PORT, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, GD32_COM_RX_PIN);
 
     /* USART configure */
     usart_deinit(usart_periph);

@@ -17,9 +17,9 @@ ssize_t _write(int fd, const void* ptr, size_t len)
     const uint8_t * writebuf = (const uint8_t *)ptr;
     for (size_t i = 0; i < len; i ++) {
         if (writebuf[i] == '\n') {
-            usart_write(EVAL_COM0,'\r');
+            usart_write(GD32_COM0,'\r');
         }
-        usart_write(EVAL_COM0,writebuf[i]);
+        usart_write(GD32_COM0,writebuf[i]);
     }
     return len;
 }
