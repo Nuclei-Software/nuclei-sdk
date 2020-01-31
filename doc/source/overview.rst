@@ -1,10 +1,5 @@
-.. _changelog:
+.. _overview:
 
-Changelog
-=========
+Overview
+========
 
-V0.2.0-alpha
-------------
-
-
-.. _Nuclei-SDK: https://github.com/Nuclei-Software/nuclei-sdk

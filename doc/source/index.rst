@@ -9,6 +9,9 @@ Welcome to Nuclei-SDK's documentation!
    :maxdepth: 3
    :caption: Contents:
 
+   overview.rst
+   get_started.rst
+   build_system.rst
    changelog.rst
    glossary.rst
    appendix.rst

@@ -1,10 +1,5 @@
-.. _changelog:
+.. _build_system:
 
-Changelog
-=========
+Build System
+============
 
-V0.2.0-alpha
-------------
-
-
-.. _Nuclei-SDK: https://github.com/Nuclei-Software/nuclei-sdk
