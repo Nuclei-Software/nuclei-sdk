@@ -24,5 +24,6 @@ TAGS
 TAG
 CTAGS
 *_examples
+*_labs
 Makefile.local
 Makefile.global
