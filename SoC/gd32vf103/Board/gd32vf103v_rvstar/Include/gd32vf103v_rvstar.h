@@ -101,17 +101,17 @@ typedef enum
 
 /* function declarations */
 /* configure led GPIO */
-void gd_led_init(led_typedef_enum lednum);
+void gd_rvstar_led_init(led_typedef_enum lednum);
 /* turn on selected led */
-void gd_led_on(led_typedef_enum lednum);
+void gd_rvstar_led_on(led_typedef_enum lednum);
 /* turn off selected led */
-void gd_led_off(led_typedef_enum lednum);
+void gd_rvstar_led_off(led_typedef_enum lednum);
 /* toggle the selected led */
-void gd_led_toggle(led_typedef_enum lednum);
+void gd_rvstar_led_toggle(led_typedef_enum lednum);
 /* configure key */
-void gd_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode);
+void gd_rvstar_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode);
 /* return the selected key state */
-uint8_t gd_key_state_get(key_typedef_enum keynum);
+uint8_t gd_rvstar_key_state_get(key_typedef_enum keynum);
 /* configure COM port */
 void gd_com_init(uint32_t usart_periph);
 #ifdef __cplusplus

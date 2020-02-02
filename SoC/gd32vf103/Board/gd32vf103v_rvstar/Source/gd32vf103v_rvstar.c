@@ -63,7 +63,7 @@ static const uint8_t KEY_IRQn[KEYn]             = {WAKEUP_KEY_EXTI_IRQn};
     \param[out] none
     \retval     none
 */
-void gd_led_init(led_typedef_enum lednum)
+void gd_rvstar_led_init(led_typedef_enum lednum)
 {
     /* enable the led clock */
     rcu_periph_clock_enable(GPIO_CLK[lednum]);
@@ -79,7 +79,7 @@ void gd_led_init(led_typedef_enum lednum)
     \param[out] none
     \retval     none
 */
-void gd_led_on(led_typedef_enum lednum)
+void gd_rvstar_led_on(led_typedef_enum lednum)
 {
     GPIO_BOP(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
 }
@@ -91,7 +91,7 @@ void gd_led_on(led_typedef_enum lednum)
     \param[out] none
     \retval     none
 */
-void gd_led_off(led_typedef_enum lednum)
+void gd_rvstar_led_off(led_typedef_enum lednum)
 {
     GPIO_BC(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
 }
@@ -103,7 +103,7 @@ void gd_led_off(led_typedef_enum lednum)
     \param[out] none
     \retval     none
 */
-void gd_led_toggle(led_typedef_enum lednum)
+void gd_rvstar_led_toggle(led_typedef_enum lednum)
 {
     gpio_bit_write(GPIO_PORT[lednum], GPIO_PIN[lednum],
         (bit_status)(1-gpio_input_bit_get(GPIO_PORT[lednum], GPIO_PIN[lednum])));
@@ -119,7 +119,7 @@ void gd_led_toggle(led_typedef_enum lednum)
     \param[out] none
     \retval     none
 */
-void gd_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode)
+void gd_rvstar_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode)
 {
     /* enable the key clock */
     rcu_periph_clock_enable(KEY_CLK[keynum]);
@@ -150,7 +150,7 @@ void gd_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode)
     \param[out] none
     \retval     the key's GPIO pin value
 */
-uint8_t gd_key_state_get(key_typedef_enum keynum)
+uint8_t gd_rvstar_key_state_get(key_typedef_enum keynum)
 {
     return gpio_input_bit_get(KEY_PORT[keynum], KEY_PIN[keynum]);
 }
