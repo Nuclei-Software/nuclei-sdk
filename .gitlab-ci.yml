@@ -33,8 +33,8 @@ deploy_doc:
           #- make latexpdf
     tags:
         - software-server
-    only:
-        - master
+          #only:
+          #- master
 
 ## Jobs for board hbird_eval
 .build_hbird_eval_job_template: &build_hbird_eval_job_def
