@@ -5,9 +5,36 @@ before_script:
     - source .ci/build_applications.sh
 
 stages:
+    - release
     - build_hbird_eval
     - build_gd32vf103v_eval
     - build_gd32vf103v_rvstar
+
+deploy_doc:
+    stage: release
+    retry: 1
+    artifacts:
+        name: "nuclei_sdk_doc-${CI_COMMIT_SHA::8}"
+        paths:
+            - build
+        expire_in: 2 day
+    script:
+        - cd doc
+        - pip3 install --user -r requirements.txt
+        - export PATH=$HOME/.local/bin:$PATH
+        - make clean
+        - make all
+        - ssh xl01 "rm -rf /home/xl_ci/doc_center/nuclei_sdk/*"
+        - ssh xl01 "mkdir -p /home/xl_ci/doc_center/nuclei_sdk/"
+        - cd build
+        - scp -r html xl01:/home/xl_ci/doc_center/nuclei_sdk
+        - cd ..
+          #- make linkcheck
+          #- make latexpdf
+    tags:
+        - software-server
+    only:
+        - master
 
 ## Jobs for board hbird_eval
 .build_hbird_eval_job_template: &build_hbird_eval_job_def
