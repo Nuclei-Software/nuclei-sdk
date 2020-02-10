@@ -73,6 +73,11 @@ breathe_projects = {
 breathe_default_project = ""
 breathe_show_define_initializer = True
 
+# -- Options for Latex output -------------------------------------------------
+latex_logo = 'asserts/images/nsdk_logo_small.png'
+latex_show_pagerefs = True
+latex_toplevel_sectioning = 'chapter'
+latex_show_urls = 'footnote'
 
 rst_epilog = """
 .. |nuclei_core| replace:: Nuclei N/NX Class Processors

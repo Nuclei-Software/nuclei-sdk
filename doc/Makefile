@@ -26,4 +26,4 @@ firefox:
 	firefox build/html/index.html
 
 firefox_pdf:
-	firefox build/latex/nucleisdk.pdf
+	firefox build/latex/*.pdf
