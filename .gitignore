@@ -30,3 +30,4 @@ Makefile.local
 Makefile.global
 
 doc/build/
+_build
