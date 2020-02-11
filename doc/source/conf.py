@@ -79,6 +79,12 @@ latex_show_pagerefs = True
 latex_toplevel_sectioning = 'chapter'
 latex_show_urls = 'footnote'
 
+rst_prolog = """
+.. |nuclei_contact| replace:: email support@nucleisys.com
+.. |NMSIS| replace:: `NMSIS`_
+.. _NMSIS: https://github.com/Nuclei-Software/NMSIS
+"""
+
 rst_epilog = """
 .. |nuclei_core| replace:: Nuclei N/NX Class Processors
 .. |nuclei_ncore| replace:: Nuclei N Class Processors
