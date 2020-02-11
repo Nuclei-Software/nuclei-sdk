@@ -1,7 +1,7 @@
 .. _design_peripheral:
 
-Nuclei Processor
-================
+Peripheral
+==========
 
 .. _design_peripheral_overview:
 

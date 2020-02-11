@@ -1,7 +1,7 @@
 .. _design_rtos:
 
-Nuclei Processor
-================
+RTOS
+====
 
 .. _design_rtos_overview:
 
