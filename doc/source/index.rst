@@ -11,8 +11,12 @@ Welcome to Nuclei-SDK's documentation!
 
    overview.rst
    quickstart.rst
-   build_system.rst
+   develop/index.rst
+   contribute.rst
+   design/index.rst
    changelog.rst
+   faq.rst
+   license.rst
    glossary.rst
    appendix.rst
 

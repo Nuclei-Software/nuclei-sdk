@@ -1,0 +1,19 @@
+.. _design_soc_gd32vf103:
+
+GD32VF103 SOC
+=============
+
+.. _design_soc_gd32vf103_overview:
+
+Overview
+--------
+
+.. _design_soc_gd32vf103_boards:
+
+Supported Boards
+----------------
+
+.. _design_soc_gd32vf103_usage:
+
+Usage
+-----
