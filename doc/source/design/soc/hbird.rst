@@ -1,6 +1,6 @@
 .. _design_soc_hbird:
 
-HummingBird SOC
+HummingBird SoC
 ===============
 
 .. _design_soc_hbird_overview:

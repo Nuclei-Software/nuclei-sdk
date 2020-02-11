@@ -1,6 +1,6 @@
 .. _design_soc_gd32vf103:
 
-GD32VF103 SOC
+GD32VF103 SoC
 =============
 
 .. _design_soc_gd32vf103_overview:

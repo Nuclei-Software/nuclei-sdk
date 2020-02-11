@@ -83,6 +83,8 @@ rst_prolog = """
 .. |nuclei_contact| replace:: email support@nucleisys.com
 .. |NMSIS| replace:: `NMSIS`_
 .. _NMSIS: https://github.com/Nuclei-Software/NMSIS
+.. |nuclei_sdk| replace:: `Nuclei SDK`_
+.. _Nuclei SDK: https://github.com/Nuclei-Software/Nuclei-SDK
 """
 
 rst_epilog = """
