@@ -10,7 +10,7 @@ Welcome to Nuclei-SDK's documentation!
    :caption: Contents:
 
    overview.rst
-   get_started.rst
+   quickstart.rst
    build_system.rst
    changelog.rst
    glossary.rst
