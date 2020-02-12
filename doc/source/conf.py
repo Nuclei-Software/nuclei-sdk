@@ -85,6 +85,22 @@ rst_prolog = """
 .. _NMSIS: https://github.com/Nuclei-Software/NMSIS
 .. |nuclei_sdk| replace:: `Nuclei SDK`_
 .. _Nuclei SDK: https://github.com/Nuclei-Software/Nuclei-SDK
+.. |nuclei_download_center| replace:: `Nuclei Download Center`_
+.. _Nuclei Download Center: https://nucleisys.com/download.php
+.. |github| replace:: `Github`_
+.. _Github: https://github.com
+.. |gitee| replace:: `Gitee`_
+.. _Gitee: https://gitee.com
+.. |github_nuclei_sdk| replace:: `Nuclei SDK in Github`_
+.. _Nuclei SDK in Github: https://github.com/Nuclei-Software/Nuclei-SDK
+.. |gitee_nuclei_sdk| replace:: `Nuclei SDK in Gitee`_
+.. _Nuclei SDK in Gitee: https://gitee.com/Nuclei-Software/Nuclei-SDK
+.. |github_nuclei_sdk_release| replace:: `Nuclei SDK Release in Github`_
+.. _Nuclei SDK Release in Github: https://github.com/Nuclei-Software/nuclei-sdk/releases
+.. |teraterm| replace:: `TeraTerm in Windows``
+.. _TeraTerm in Windows: http://ttssh2.osdn.jp/
+.. |minicom| replace:: ``Minicom in Linux``
+.. _Minicom in Linux: https://help.ubuntu.com/community/Minicom
 """
 
 rst_epilog = """
