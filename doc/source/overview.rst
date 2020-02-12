@@ -39,6 +39,7 @@ As :ref:`figure_overview_1` shown, The Nuclei SDK provides the following feature
 
 * Nuclei Core API service is built on top of |NMSIS|, so silicon vendors of Nuclei N/NX processors can easily
   port their SoCs to Nuclei SDK, and quickly evaluate software on their SoC.
+* **NMSIS-NN** and **NMSIS-DSP** library can be also used in Nuclei SDK, but the libraries are not included by default.
 * Mainly support two Nuclei Processor based SoCs, :ref:`design_soc_hbird` and :ref:`design_soc_gd32vf103`
 * Provided realtime operation system service via :ref:`design_rtos_freertos` and :ref:`design_rtos_ucosii`
 * Provided bare-metal service for embedded system software beginners and resource-limited use-cases.
