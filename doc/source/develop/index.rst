@@ -7,6 +7,6 @@ Developer Guide
    :maxdepth: 3
 
    codestyle.rst
-   appdev.rst
    buildsystem.rst
+   appdev.rst
    builddoc.rst
