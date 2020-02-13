@@ -1,6 +1,6 @@
-# Nuclei N/NX Embedded Software Development Kit
+# Nuclei Software Development Kit
 
-**Nuclei N/NX Embedded Software Development Kit(Nuclei SDK)** is developed for developing and evaluating software using our FPGA evaluation board.
+**Nuclei Software Development Kit(Nuclei SDK)** is developed for developing and evaluating software using our FPGA evaluation board.
 
 This Nuclei SDK is built based on the **NMSIS** framework, user can access all the APIs provided by **NMSIS** and also the APIs that provided by Nuclei SDK which mainly for on-board peripherals access such as GPIO, UART, SPI and I2C etc.
 
