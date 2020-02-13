@@ -8,8 +8,8 @@ Overview
 Introduction
 ------------
 
-The **Nuclei Software Development Kit (SDK)** is an open-source embedded software platform to
-speed up the software development of SoCs based on Nuclei N/NX Processors(except N100 series).
+The **Nuclei Software Development Kit (SDK)** is an open-source software platform to
+speed up the software development of SoCs based on Nuclei Processor Cores.
 
 This Nuclei SDK is built based on the |NMSIS|, user can access all the APIs provided
 by |NMSIS| and also the APIs that provided by Nuclei SDK which mainly for on-board
@@ -37,7 +37,7 @@ The Nuclei SDK general design and architecture are shown in the block diagram as
 
 As :ref:`figure_overview_1` shown, The Nuclei SDK provides the following features:
 
-* Nuclei Core API service is built on top of |NMSIS|, so silicon vendors of Nuclei N/NX processors can easily
+* Nuclei Core API service is built on top of |NMSIS|, so silicon vendors of Nuclei processors can easily
   port their SoCs to Nuclei SDK, and quickly evaluate software on their SoC.
 * **NMSIS-NN** and **NMSIS-DSP** library can be also used in Nuclei SDK, but the libraries are not included by default.
 * Mainly support two Nuclei Processor based SoCs, :ref:`design_soc_hbird` and :ref:`design_soc_gd32vf103`
