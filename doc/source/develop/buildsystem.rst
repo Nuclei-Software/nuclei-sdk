@@ -351,7 +351,7 @@ Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
    :header-rows: 1
    :align: center
 
-   * - SOC
+   * - **SOC**
      - Reference
    * - gd32vf103
      - :ref:`design_soc_gd32vf103`
@@ -381,7 +381,7 @@ Currently we support the following SoCs.
    :header-rows: 1
    :align: center
 
-   * - Board
+   * - **BOARD**
      - Reference
    * - gd32vf103v_rvstar
      - :ref:`design_board_gd32vf103v_rvstar`
@@ -395,7 +395,7 @@ Currently we support the following SoCs.
    :header-rows: 1
    :align: center
 
-   * - Board
+   * - **BOARD**
      - Reference
    * - hbird_eval
      - :ref:`design_board_hbird_eval`
@@ -406,10 +406,65 @@ Currently we support the following SoCs.
 DOWNLOAD
 ~~~~~~~~
 
+**DOWNLOAD** variable is used to declare the download mode of the application,
+currently it has these modes supported as described in table
+:ref:`table_dev_buildsystem_5`
+
+.. _table_dev_buildsystem_5:
+
+.. list-table:: Supported download modes
+   :widths: 10 70
+   :header-rows: 1
+   :align: center
+
+   * - **DOWNLOAD**
+     - Description
+   * - ilm
+     - | Program will be download into ilm/ram and
+       | run directly in ilm/ram, program lost when poweroff
+   * - flash
+     - | Program will be download into flash, when running,
+       | program will be copied to ilm/ram and run in ilm/ram
+   * - flashxip
+     - Program will to be download into flash and run directly in Flash
+
+.. note::
+
+    * :ref:`design_soc_gd32vf103` only support **DOWNLOAD=flashxip**
+    * :ref:`design_soc_hbird` support all the download modes.
+    * **flashxip** mode in :ref:`design_soc_hbird` is very slow due to
+      the CORE frequency is very slow, and Flash speed is slow
+
 .. _develop_buildsystem_var_core:
 
 CORE
 ~~~~
+
+**CORE** variable is used to declare the Nuclei Processor core of the application.
+
+Currently it has these cores supported as described in table
+:ref:`table_dev_buildsystem_6`.
+
+.. _table_dev_buildsystem_6:
+
+.. table:: Supported Nuclei Processor cores
+   :widths: 20 20 20
+   :align: center
+
+   ========  ========== =======
+   **CORE**  **ARCH**   **ABI**
+   n201      rv32iac    ilp32
+   n201e     rv32eac    ilp32e
+   n203      rv32imac   ilp32
+   n203e     rv32emac   ilp32e
+   n205      rv32imac   ilp32
+   n205e     rv32emac   ilp32e
+   n305      rv32imac   ilp32
+   n307      rv32imafc  ilp32f
+   n307fd    rv32imafdc ilp32d
+   nx600     rv64imac   lp64
+   ========  ========== =======
+
 
 
 .. _develop_buildsystem_app_make_vars:
