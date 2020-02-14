@@ -24,7 +24,7 @@ The directory content list as below:
     Makefile.files
     Makefile.files.gd32vf103
     Makefile.files.hbird
-    Makefile.global
+    Makefile.global  -> Created by user
     Makefile.misc
     Makefile.rtos
     Makefile.rtos.FreeRTOS
@@ -35,6 +35,30 @@ The directory content list as below:
     Makefile.soc.hbird
 
 The file or directory is used explained as below:
+
+.. _develop_buildsystem_makefile_base:
+
+Makefile.base
+~~~~~~~~~~~~~
+
+This **Makefile.base** file is used as Nuclei SDK build system entry file,
+application's Makefile need to include this file to use all the features of
+Nuclei SDK build system.
+
+It will expose Make variables or options such as **BOARD** or **SOC** passed
+by ``make`` command, click :ref:`develop_buildsystem_exposed_make_vars`
+to learn more.
+
+This file will include optional :ref:`develop_buildsystem_makefile_global`
+and :ref:`develop_buildsystem_makefile_local` which allow user to set custom
+global Makefile configurations and local application Makefile configurations.
+
+This file will include the following makefiles:
+
+* :ref:`develop_buildsystem_gmsl`: additional library functions provided via gmsl
+* :ref:`develop_buildsystem_makefile_misc`: misc functions and OS check helpers
+* :ref:`develop_buildsystem_makefile_conf`: main Makefile configuration entry
+* :ref:`develop_buildsystem_makefile_rules`: make rules of this build system
 
 .. _develop_buildsystem_gmsl:
 
@@ -48,23 +72,83 @@ provides functionality not available in standard GNU Make.
 We use this **gmsl** tool to make sure we help us achieve some linux command
 which is only supported in Linux.
 
+.. _develop_buildsystem_makefile_misc:
 
-.. _develop_buildsystem_makefile_base:
-
-Makefile.base
+Makefile.misc
 ~~~~~~~~~~~~~
 
-This **Makefile.base** file is used as Nuclei SDK build system entry file,
-application's Makefile need to include this file to use all the features of
-Nuclei SDK build system.
+This **Makefile.misc** file mainly provide these functions:
 
-It will expose Make variables or options such as **BOARD** or**SOC** passed
-by ``make`` command, click :ref:`develop_buildsystem_exposed_make_vars`
-to learn more.
+* Define **get_csrcs**, **get_asmsrcs**, **get_cxxsrcs** and **check_item_exist** make functions
 
-This file will include optional :ref:`develop_buildsystem_makefile_global`
-and :ref:`develop_buildsystem_makefile_local` which allow user to set custom
-global Makefile configurations and local application Makefile configurations.
+  - **get_csrcs**: Function to get ``*.c or *.C`` source files from a list of directories, no ability to
+    do recursive match. e.g. ``$(call get_csrcs, csrc csrc/abc)`` will return c source files in
+    ``csrc`` and ``csrc/abc`` directories.
+  - **get_asmsrcs**: Function to get ``*.s or *.S`` source files from a list of directories, no ability to
+    do recursive match. e.g. ``$(call get_asmsrcs, asmsrc asmsrc/abc)`` will return asm source files in
+    ``asmsrc`` and ``asmsrc/abc`` directories.
+  - **get_cxxsrcs**: Function to get ``*.cpp or *.CPP`` source files from a list of directories, no ability
+    to do recursive match. e.g. ``$(call get_cxxsrcs, cppsrc cppsrc/abc)`` will return cpp source files in
+    ``cppsrc`` and ``cppsrc/abc`` directories.
+  - **check_item_exist**: Function to check if item existed in a set of items. e.g.
+    ``$(call check_item_exist, flash, flash ilm flashxip)`` will check ``flash`` whether existed in
+    ``flash ilm flashxip``, if existed, return ``flash``, otherwise return empty.
+
+* Check and define OS related functions, and also a set of trace print functions.
+
+.. _develop_buildsystem_makefile_conf:
+
+Makefile.conf
+~~~~~~~~~~~~~
+
+This **Makefile.conf** file will define the following items:
+
+* Toolchain related variables used during compiling
+* Debug related variables
+* Include :ref:`develop_buildsystem_makefile_files` and :ref:`develop_buildsystem_makefile_rtos`
+* Collect all the C/C++/ASM compiling and link options
+
+.. _develop_buildsystem_makefile_rules:
+
+Makefile.rules
+~~~~~~~~~~~~~~
+
+This **Makefile.rules** file will do the following things:
+
+* Collect all the sources during compiling
+* Define all the rules used for building, uploading and debugging
+* Print help message for build system
+
+
+.. _develop_buildsystem_makefile_files:
+
+Makefile.files
+~~~~~~~~~~~~~~
+
+This **Makefile.files** file will do the following things:
+
+* Define common C/C++/ASM source and include directories
+* Define common C/C++/ASM macros
+* Include **Makefile.files.<SOC>** which will include all the source
+  code related to the **SOC** and **BOARD**
+
+  - **Makefile.files.gd32vf103**: Used to include source code for
+    :ref:`design_soc_gd32vf103`
+  - **Makefile.files.hbird**: Used to include source code for
+    :ref:`design_soc_hbird`
+
+
+.. _develop_buildsystem_makefile_soc:
+
+Makefile.soc
+~~~~~~~~~~~~
+
+.. _develop_buildsystem_makefile_rtos:
+
+Makefile.rtos
+~~~~~~~~~~~~~
+
+
 
 .. _develop_buildsystem_makefile_global:
 
