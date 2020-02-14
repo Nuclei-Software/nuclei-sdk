@@ -134,6 +134,75 @@ you can create ``application/baremetal/helloworld/Makefile.local`` as below:
 Makefile variables passed by make command
 -----------------------------------------
 
+In Nuclei SDK build system, we exposed the following Makefile variables
+which can be passed via make command.
+
+.. _develop_buildsystem_var_soc:
+
+SOC
+~~~
+
+**SOC** variable is used to declare which SoC is used in application during compiling.
+
+You can easily find the supported SoCs in the **<NUCLEI_SDK_ROOT>/SoC** directory.
+
+Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
+
+.. _table_dev_buildsystem_1:
+
+.. list-table:: Supported SoCs
+   :widths: 10, 60
+   :header-rows: 1
+   :align: center
+
+   * - SOC
+     - Reference
+   * - gd32vf103
+     - :ref:`design_soc_gd32vf103`
+   * - hbird
+     - :ref:`design_soc_hbird`
+
+BOARD
+~~~~~
+
+**Board** variable is used to declare which Board is used in application during compiling.
+
+The **BOARD** variable should match the supported boards of chosen **SOC**.
+You can easily find the supported Boards in the **<NUCLEI_SDK_ROOT>/<SOC>/Board/** directory.
+
+* :ref:`table_dev_buildsystem_2`
+* :ref:`table_dev_buildsystem_3`
+
+
+Currently we support the following SoCs.
+
+.. _table_dev_buildsystem_2:
+
+.. list-table:: Supported Boards when SOC=gd32vf103
+   :widths: 20, 60
+   :header-rows: 1
+   :align: center
+
+   * - Board
+     - Reference
+   * - gd32vf103v_rvstar
+     - :ref:`design_board_gd32vf103v_rvstar`
+   * - gd32vf103v_eval
+     - :ref:`design_board_gd32vf103v_eval`
+
+.. _table_dev_buildsystem_3:
+
+.. list-table:: Supported Boards when SOC=hbird
+   :widths: 10 60
+   :header-rows: 1
+   :align: center
+
+   * - Board
+     - Reference
+   * - hbird_eval
+     - :ref:`design_board_hbird_eval`
+
+
 
 .. _develop_buildsystem_app_make_vars:
 
