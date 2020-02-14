@@ -11,9 +11,17 @@ run ordebug application in Windows and Linux.
 Makefile Structure
 ------------------
 
-Nuclei SDK's Makefiles mainly placed in **<NUCLEI_SDK_ROOT>/Build** directory.
+Nuclei SDK's Makefiles mainly placed in **<NUCLEI_SDK_ROOT>/Build** directory and
+an extra *Makefile* located in **<NUCLEI_SDK_ROOT>/Makefile**.
 
-The directory content list as below:
+This extra **<NUCLEI_SDK_ROOT>/Makefile** introduce a new Make variable called
+**PROGRAM** to provide the ability to build or run application in **<NUCLEI_SDK_ROOT>**.
+
+For example, if you want to *rebuild and upload* application **application/baremetal/timer_test**,
+you can run ``make PROGRAM=application/baremetal/timer_test clean upload`` to achieve it.
+
+
+The **<NUCLEI_SDK_ROOT>/Build** directory content list as below:
 
 .. code-block:: text
 
@@ -130,7 +138,8 @@ This **Makefile.files** file will do the following things:
 * Define common C/C++/ASM source and include directories
 * Define common C/C++/ASM macros
 * Include **Makefile.files.<SOC>** which will include all the source
-  code related to the **SOC** and **BOARD**
+  code related to the :ref:`develop_buildsystem_var_soc` and
+  :ref:`develop_buildsystem_var_board`
 
   - **Makefile.files.gd32vf103**: Used to include source code for
     :ref:`design_soc_gd32vf103`
@@ -143,11 +152,64 @@ This **Makefile.files** file will do the following things:
 Makefile.soc
 ~~~~~~~~~~~~
 
+This **Makefile.soc** will just include **Makefile.soc.<SOC>** according
+to the :ref:`develop_buildsystem_var_soc` makefile variable setting.
+
+It will define the following items:
+
+* **DOWNLOAD** and **CORE** variables
+
+  - For :ref:`design_soc_hbird`, we can support all the modes defined in
+    :ref:`develop_buildsystem_var_download`, and **CORE** list defined in
+    :ref:`develop_buildsystem_makefile_core`
+  - For :ref:`design_soc_gd32vf103`, The **CORE** is fixed to N205, since
+    it is a real SoC chip, and only **FlashXIP** download mode is supported
+
+* Linker script used according to the **DOWNLOAD** mode settings
+* OpenOCD debug configuration file used for the SoC and Board
+* Some extra compiling or debugging options
+
 .. _develop_buildsystem_makefile_rtos:
 
 Makefile.rtos
 ~~~~~~~~~~~~~
 
+This **Makefile.rtos** will include **Makefile.rtos.<RTOS>** file
+according to our :ref:`develop_buildsystem_var_rtos` variable.
+
+If no :ref:`develop_buildsystem_var_rtos` is chosen, then RTOS
+code will not be included during compiling, user will develop
+baremetal application.
+
+If **FreeRTOS** or **UCOSII** RTOS is chosen, then FreeRTOS or UCOSII
+source code will be included during compiling, and user can develop
+RTOS application.
+
+* **Makefile.rtos.FreeRTOS**: Include FreeRTOS related source code and header
+  directories
+* **Makefile.rtos.UCOSII**: Include UCOSII related source code and header
+  directories
+
+.. _develop_buildsystem_makefile_core:
+
+Makefile.core
+~~~~~~~~~~~~~
+
+This **Makefile.core** is used to define the RISC-V ARCH and ABI used during
+compiling of the CORE list supported.
+
+If you want to add a new **CORE**, you need to add a new line before **SUPPORTED_CORES**,
+and append the new **CORE** to **SUPPORTED_CORES**.
+
+For example, if you want to add a new **CORE** called **n308**, and the **n308**'s
+**ARCH** and **ABI** are ``rv32imafdc`` and ``ilp32d``, then you can add a new line
+like this ``N308_CORE_ARCH_ABI = rv32imafdc ilp32d``, and append **n308** to **SUPPORTED_CORES**
+like this ``SUPPORTED_CORES = n201 n201e n203 n203e n205 n205e n305 n307 n307fd n308 nx600``
+
+.. note::
+
+   * The appended new **CORE** need to lower-case, e.g. *n308*
+   * The new defined variable **N308_CORE_ARCH_ABI** need to be all upper-case.
 
 
 .. _develop_buildsystem_makefile_global:
@@ -213,6 +275,48 @@ you can create ``application/baremetal/helloworld/Makefile.local`` as below:
     * If you just want to change only some applications' makefile configuration, you can
       add and update ``Makefile.local`` for those applications.
 
+
+.. _develop_buildsystem_make_targets:
+
+Makefile targets of make command
+--------------------------------
+
+Here is a list of the :ref:.
+
+.. _table_dev_buildsystem_4:
+
+.. list-table:: Make targets supported by Nuclei SDK Build System
+   :widths: 10 90
+   :header-rows: 1
+   :align: center
+
+   * - target
+     - description
+   * - help
+     - display help message of Nuclei SDK build system
+   * - info
+     - display selected configuration information
+   * - all
+     - build application with selected configuration
+   * - clean
+     - clean application with selected configuration
+   * - dasm
+     - build and dissemble appication with selected configuration
+   * - upload
+     - build and upload application with selected configuration
+   * - run_openocd
+     - run openocd server with selected configuration
+   * - run_gdb
+     - build and start gdb process with selected configuration
+   * - debug
+     - build and debug application with selected configuration
+
+.. note::
+
+   * The selected configuration is controlled by
+     :ref:`develop_buildsystem_exposed_make_vars`
+
+
 .. _develop_buildsystem_exposed_make_vars:
 
 Makefile variables passed by make command
@@ -220,6 +324,14 @@ Makefile variables passed by make command
 
 In Nuclei SDK build system, we exposed the following Makefile variables
 which can be passed via make command.
+
+.. note::
+
+   * These variables can also be used and defined in application Makefile
+   * If you just want to fix your running board of your application, you can
+     just define these variables in application Makefile, if defined, then
+     you can simply use ``make clean``, ``make upload`` or ``make debug``, etc.
+
 
 .. _develop_buildsystem_var_soc:
 
@@ -245,6 +357,8 @@ Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
      - :ref:`design_soc_gd32vf103`
    * - hbird
      - :ref:`design_soc_hbird`
+
+.. _develop_buildsystem_var_board:
 
 BOARD
 ~~~~~
@@ -287,11 +401,36 @@ Currently we support the following SoCs.
      - :ref:`design_board_hbird_eval`
 
 
+.. _develop_buildsystem_var_download:
+
+DOWNLOAD
+~~~~~~~~
+
+.. _develop_buildsystem_var_core:
+
+CORE
+~~~~
+
 
 .. _develop_buildsystem_app_make_vars:
 
 Makefile variables used only in Application Makefile
 ----------------------------------------------------
+
+.. _develop_buildsystem_var_rtos:
+
+RTOS
+~~~~
+
+.. _develop_buildsystem_var_pfloat:
+
+PFLOAT
+~~~~~~
+
+.. _develop_buildsystem_var_newlib:
+
+NEWLIB
+~~~~~~
 
 
 .. _GNU Make Standard Library (GMSL): http://sourceforge.net/projects/gmsl/
