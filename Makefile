@@ -5,7 +5,7 @@ __help:
 	@echo "Help about Build/Run/Debug an Nuclei SDK Application"
 	@echo "make [PROGRAM=$(PROGRAM)]  help"
 	@echo "Example:"
-	@echo "make PROGRAM=application/baremetal/helloworld"
+	@echo "make PROGRAM=application/baremetal/helloworld all"
 
 VALID_PROGRAM=$(wildcard $(PROGRAM))
 VALID_PROGRAM_MAKEFILE=$(wildcard $(PROGRAM)/Makefile)
