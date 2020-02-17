@@ -4,6 +4,7 @@
 *.elf
 *.diss
 *.map
+*.bin
 *.log
 .vscode
 
