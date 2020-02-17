@@ -12,7 +12,7 @@ ALL_OBJS += $(ALL_ASM_OBJS) $(ALL_C_OBJS) $(ALL_CXX_OBJS)
 
 ALL_DEPS := $(ALL_OBJS:=.d)
 
-CLEAN_OBJS += $(TARGET).elf $(TARGET).map $(TARGET).dump $(TARGET).verilog $(ALL_OBJS) $(ALL_DEPS)
+CLEAN_OBJS += $(TARGET).elf $(TARGET).map $(TARGET).bin $(TARGET).dump $(TARGET).verilog $(ALL_OBJS) $(ALL_DEPS)
 REAL_CLEAN_OBJS = $(subst /,$(PS), $(CLEAN_OBJS))
 
 # Default goal, placed before dependency includes
@@ -23,7 +23,7 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(ALL_DEPS)
 endif
 
-.PHONY: all info help dasm upload run_openocd run_gdb clean debug
+.PHONY: all info help bin dasm upload run_openocd run_gdb clean debug
 
 info:
 	@$(ECHO) Current Configuration: RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) DOWNLOAD=$(DOWNLOAD)
@@ -90,6 +90,9 @@ dasm: $(TARGET).elf
 ifneq "$(HOST_OS)" "Windows"
 	sed -i 's/@800/@000/g' $(TARGET).verilog
 endif
+
+bin: $(TARGET).elf
+	$(OBJCOPY) $< -O binary $(TARGET).bin
 
 upload: $(TARGET).elf
 	@$(ECHO) "Download and run $<"
