@@ -6,6 +6,7 @@ before_script:
 
 stages:
     - release
+    - deploy
     - build_hbird_eval
     - build_gd32vf103v_eval
     - build_gd32vf103v_rvstar
@@ -31,10 +32,23 @@ deploy_doc:
         - cd ..
           #- make linkcheck
           #- make latexpdf
+          #- cp build/latex/*.pdf build/html/
     tags:
         - software-server
           #only:
           #- master
+
+deploy_website:
+    stage: deploy
+    retry: 1
+    script:
+        - ./.ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html nuclei_sdk
+    tags:
+        - software-server
+          #only:
+          #- master
+    dependencies:
+        - deploy_doc
 
 ## Jobs for board hbird_eval
 .build_hbird_eval_job_template: &build_hbird_eval_job_def
