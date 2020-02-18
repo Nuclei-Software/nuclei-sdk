@@ -12,15 +12,36 @@ $(info Obtaining addtional make variables from $(EXTRA_MKS))
 include $(EXTRA_MKS)
 endif
 
-# CORE and BOARD are defined in Makefile.soc.$(SOC)
+# Variables could be passed in make command
+# NOTE: CORE and BOARD are defined in Makefile.soc.$(SOC)
 # BOARD and SOC name should always be lower-case
+## Available choices:
+## The name of sub directories in $(NUCLEI_SDK_ROOT)/SoC/
 SOC ?= hbird
-RTOS ?=
+## Available choices:
+## ilm: Program will be download into ilm/ram and run directly in ilm/ram, program lost when poweroff
+## flash: Program will be download into flash, when running, program will be copied to ilm/ram and run in ilm/ram
+## flashxip: Program will to be download into flash and run directly in Flash
 DOWNLOAD ?= ilm
-PFLOAT ?= 0
-NEWLIB ?= nano
+## If SIMULATION=1, it means the program is optimized for hardware simulation environment
 SIMULATION ?= 0
+## If V=1, it will display compiling message in verbose including compiling options
+V ?=
+## If SILENT=1, it will not display any compiling messsage
+SILENT ?=
 
+# Variables should be defined in Application Makefile
+## Available choices:
+## The name of sub directories in $(NUCLEI_SDK_ROOT)/OS/
+RTOS ?=
+## If PFLOAT=1, it will enable float point print when using nano newlib
+PFLOAT ?= 0
+## If NEWLIB=nano, it will use nano newlib, otherwise it will use normal newlib
+NEWLIB ?= nano
+## If NOGC=1, it will not gc any sections during compiling to save code size
+NOGC ?=
+
+# Directories for SoC and RTOS chosen
 NUCLEI_SDK_SOC = $(NUCLEI_SDK_ROOT)/SoC/$(SOC)
 NUCLEI_SDK_RTOS = $(NUCLEI_SDK_ROOT)/OS/$(RTOS)
 
