@@ -301,7 +301,9 @@ Here is a list of the :ref:.
    * - clean
      - clean application with selected configuration
    * - dasm
-     - build and dissemble appication with selected configuration
+     - build and dissemble application with selected configuration
+   * - bin
+     - build and generate application binary with selected configuration
    * - upload
      - build and upload application with selected configuration
    * - run_openocd
@@ -400,6 +402,10 @@ Currently we support the following SoCs.
    * - hbird_eval
      - :ref:`design_board_hbird_eval`
 
+.. note::
+
+    * If you only specify **SOC** variable in make command, it will use default **BOARD**
+      and **CORE** option defined in Makefile.soc.<SOC>
 
 .. _develop_buildsystem_var_download:
 
@@ -465,27 +471,89 @@ Currently it has these cores supported as described in table
    nx600     rv64imac   lp64
    ========  ========== =======
 
+.. _develop_buildsystem_var_simulation:
 
+SIMULATION
+~~~~~~~~~~
+
+If **SIMULATION=1**, it means the program is optimized for hardware simulation environment.
+
+Currently if **SIMULATION=1**, it will pass compile option **-DCFG_SIMULATION**,
+application can use this **CFG_SIMULATION** to optimize program for hardware
+simulation environment.
+
+.. note::
+
+   * Currently the benchmark applications in **application/baremetal/benchmark** used this optimization
+
+.. _develop_buildsystem_var_v:
+
+V
+~
+
+If **V=1**, it will display compiling message in verbose including compiling options.
+
+By default, no compiling options will be displayed in make console message just to print
+less message and make the console message cleaner. If you want to see what compiling option
+is used, please pass **V=1** in your make command.
+
+.. _develop_buildsystem_var_silent:
+
+SILENT
+~~~~~~
+
+If **SILENT=1**, it will not display any compiling messsage.
+
+If you don't want to see any compiling message, you can pass **SILENT=1** in your make command.
 
 .. _develop_buildsystem_app_make_vars:
 
 Makefile variables used only in Application Makefile
 ----------------------------------------------------
 
+The following variables should be used in application Makefile at your demand,
+e.g. ``application/baremetal/timer_test/Makefile``.
+
 .. _develop_buildsystem_var_rtos:
 
 RTOS
 ~~~~
+
+**RTOS** variable is used to choose which RTOS will be used in this application.
+
+You can easily find the supported RTOSes in the **<NUCLEI_SDK_ROOT>/OS** directory.
+
+* If **RTOS** is not defined, then baremetal service will be enabled with this application.
+  See examples in ``application/baremetal``.
+* If **RTOS** is set the the following values, RTOS service will be enabled with this application.
+
+  - ``FreeRTOS``: FreeRTOS service will be enabled, you can include FreeRTOS header files now, and
+    use FreeRTOS API, for ``FreeRTOS`` application, you need to have an ``FreeRTOSConfig.h`` header file
+    prepared in you application. See examples in ``application/freertos``.
+  - ``UCOSII``: UCOSII service will be enabled, you can include UCOSII header files now, and
+    use UCOSII API, for ``UCOSII`` application, you need to have an ``app_cfg.h`` header file
+    prepared in you application. See examples in ``application/ucosii``.
 
 .. _develop_buildsystem_var_pfloat:
 
 PFLOAT
 ~~~~~~
 
+**PFLOAT** variable is used to enable floating point value print when using the nano-newlib(**NEWLIB=nano**).
+
+If you don't use nano-newlib, this variable will have no affect.
+
 .. _develop_buildsystem_var_newlib:
 
 NEWLIB
 ~~~~~~
+
+
+
+.. _develop_buildsystem_var_nogc:
+
+NOGC
+~~~~
 
 
 .. _GNU Make Standard Library (GMSL): http://sourceforge.net/projects/gmsl/
