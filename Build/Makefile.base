@@ -6,7 +6,7 @@ NUCLEI_SDK_BUILD = $(NUCLEI_SDK_ROOT)/Build
 # Sample content for this Makefile.local or Makefile.global
 # SOC ?= hbird
 # DOWNLOAD ?= ilm
-EXTRA_MKS := $(wildcard Makefile.local $(NUCLEI_SDK_BUILD)/Makefile.global) 
+EXTRA_MKS := $(wildcard Makefile.local $(NUCLEI_SDK_BUILD)/Makefile.global)
 ifneq ("$(strip $(EXTRA_MKS))", "")
 $(info Obtaining addtional make variables from $(EXTRA_MKS))
 include $(EXTRA_MKS)
@@ -19,6 +19,7 @@ RTOS ?=
 DOWNLOAD ?= ilm
 PFLOAT ?= 0
 NEWLIB ?= nano
+SIMULATION ?= 0
 
 NUCLEI_SDK_SOC = $(NUCLEI_SDK_ROOT)/SoC/$(SOC)
 NUCLEI_SDK_RTOS = $(NUCLEI_SDK_ROOT)/OS/$(RTOS)
