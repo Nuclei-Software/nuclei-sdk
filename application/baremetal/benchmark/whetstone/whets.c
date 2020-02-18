@@ -209,7 +209,7 @@ int main()
     long xtra = 1;
     long x100 = 100;
 
-#if CFG_SIMU
+#if CFG_SIMULATION
     int duration = 1;
 #else
     int duration = 10;
