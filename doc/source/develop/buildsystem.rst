@@ -327,6 +327,14 @@ Makefile variables passed by make command
 In Nuclei SDK build system, we exposed the following Makefile variables
 which can be passed via make command.
 
+* :ref:`develop_buildsystem_var_soc`
+* :ref:`develop_buildsystem_var_board`
+* :ref:`develop_buildsystem_var_download`
+* :ref:`develop_buildsystem_var_core`
+* :ref:`develop_buildsystem_var_simulation`
+* :ref:`develop_buildsystem_var_v`
+* :ref:`develop_buildsystem_var_silent`
+
 .. note::
 
    * These variables can also be used and defined in application Makefile
@@ -514,6 +522,33 @@ Makefile variables used only in Application Makefile
 The following variables should be used in application Makefile at your demand,
 e.g. ``application/baremetal/timer_test/Makefile``.
 
+* :ref:`develop_buildsystem_var_target`
+* :ref:`develop_buildsystem_var_nuclei_sdk_root`
+* :ref:`develop_buildsystem_var_rtos`
+* :ref:`develop_buildsystem_var_pfloat`
+* :ref:`develop_buildsystem_var_newlib`
+* :ref:`develop_buildsystem_var_nogc`
+
+.. _develop_buildsystem_var_target:
+
+TARGET
+~~~~~~
+
+This is a necessary variable which must be defined in application Makefile.
+
+It is used to set the name of the application, it will affect the generated
+target filenames.
+
+.. _develop_buildsystem_var_nuclei_sdk_root:
+
+NUCLEI_SDK_ROOT
+~~~~~~~~~~~~~~~
+
+This is a necessary variable which must be defined in application Makefile.
+
+It is used to set the path of Nuclei SDK Root, usually it should be set as
+relative path, but you can also set absolute path to point to Nuclei SDK.
+
 .. _develop_buildsystem_var_rtos:
 
 RTOS
@@ -539,21 +574,321 @@ You can easily find the supported RTOSes in the **<NUCLEI_SDK_ROOT>/OS** directo
 PFLOAT
 ~~~~~~
 
-**PFLOAT** variable is used to enable floating point value print when using the nano-newlib(**NEWLIB=nano**).
+**PFLOAT** variable is used to enable floating point value print when using the newlib nano(**NEWLIB=nano**).
 
-If you don't use nano-newlib, this variable will have no affect.
+If you don't use newlib nano, this variable will have no affect.
 
 .. _develop_buildsystem_var_newlib:
 
 NEWLIB
 ~~~~~~
 
+**NEWLIB** variable is used to select which newlib version will be chosen.
+
+If **NEWLIB=nano**, then newlib nano will be selected. About newlib, please
+visit https://sourceware.org/newlib/README.
+
+If **NEWLIB=**, then normal newlib will be used.
 
 
 .. _develop_buildsystem_var_nogc:
 
 NOGC
 ~~~~
+
+**NOGC** variable is used to control whether to enable gc sections to reduce program
+code size or not, by default GC is enabled to reduce code size.
+
+When GC is enabled, these options will be added:
+
+* Adding to compiler options: ``-ffunction-sections -fdata-sections``
+* Adding to linker options: ``-Wl,--gc-sections -Wl,--check-sections``
+
+If you don't want disable this GC feature, you can set **NOGC=1**, GC feature will
+remove sections for you, but sometimes it might remove sections that are useful,
+e.g. For Nuclei SDK test cases, we use ctest framework, and we need to set **NOGC=1**
+to disable GC feature.
+
+.. _develop_buildsystem_app_build_vars:
+
+Build Related Makefile variables used only in Application Makefile
+------------------------------------------------------------------
+
+If you want to specify additional compiler flags, please follow this guidance
+to modify your application Makefile.
+
+Nuclei SDK build system defined the following variables to control the
+build options or flags.
+
+* :ref:`develop_buildsystem_var_incdirs`
+* :ref:`develop_buildsystem_var_c_incdirs`
+* :ref:`develop_buildsystem_var_cxx_incdirs`
+* :ref:`develop_buildsystem_var_asm_incdirs`
+* :ref:`develop_buildsystem_var_srcdirs`
+* :ref:`develop_buildsystem_var_c_srcdirs`
+* :ref:`develop_buildsystem_var_cxx_srcdirs`
+* :ref:`develop_buildsystem_var_asm_srcdirs`
+* :ref:`develop_buildsystem_var_c_srcs`
+* :ref:`develop_buildsystem_var_cxx_srcs`
+* :ref:`develop_buildsystem_var_asm_srcs`
+* :ref:`develop_buildsystem_var_common_flags`
+* :ref:`develop_buildsystem_var_cflags`
+* :ref:`develop_buildsystem_var_cxxflags`
+* :ref:`develop_buildsystem_var_asmflags`
+* :ref:`develop_buildsystem_var_ldflags`
+* :ref:`develop_buildsystem_var_ldlibs`
+* :ref:`develop_buildsystem_var_libdirs`
+* :ref:`develop_buildsystem_var_linker_script`
+
+.. _develop_buildsystem_var_incdirs:
+
+INCDIRS
+~~~~~~~
+
+This **INCDIRS** is used to pass C/CPP/ASM include directories.
+
+e.g. To include current directory ``.`` and ``inc`` for C/CPP/ASM
+
+.. code-block:: makefile
+
+    INCDIRS = . inc
+
+
+.. _develop_buildsystem_var_c_incdirs:
+
+C_INCDIRS
+~~~~~~~~~
+
+This **C_INCDIRS** is used to pass C only include directories.
+
+e.g. To include current directory ``.`` and ``cinc`` for C only
+
+.. code-block:: makefile
+
+    C_INCDIRS = . cinc
+
+
+.. _develop_buildsystem_var_cxx_incdirs:
+
+CXX_INCDIRS
+~~~~~~~~~~~
+
+This **CXX_INCDIRS** is used to pass CPP only include directories.
+
+e.g. To include current directory ``.`` and ``cppinc`` for CPP only
+
+.. code-block:: makefile
+
+    CXX_INCDIRS = . cppinc
+
+
+.. _develop_buildsystem_var_asm_incdirs:
+
+ASM_INCDIRS
+~~~~~~~~~~~
+
+This **ASM_INCDIRS** is used to pass ASM only include directories.
+
+e.g. To include current directory ``.`` and ``asminc`` for ASM only
+
+.. code-block:: makefile
+
+    ASM_INCDIRS = . asminc
+
+
+.. _develop_buildsystem_var_srcdirs:
+
+SRCDIRS
+~~~~~~~
+
+This **SRCDIRS** is used to set the source directories used to search
+the C/CPP/ASM source code files, it will not do recursively.
+
+e.g. To search C/CPP/ASM source files in directory ``.`` and ``src``
+
+.. code-block:: makefile
+
+    SRCDIRS = . src
+
+
+.. _develop_buildsystem_var_c_srcdirs:
+
+C_SRCDIRS
+~~~~~~~~~
+
+This **C_SRCDIRS** is used to set the source directories used to search
+the C only source code files(*.c, *.C), it will not do recursively.
+
+e.g. To search C only source files in directory ``.`` and ``csrc``
+
+.. code-block:: makefile
+
+    C_SRCDIRS = . csrc
+
+
+.. _develop_buildsystem_var_cxx_srcdirs:
+
+CXX_SRCDIRS
+~~~~~~~~~~~
+
+This **CXX_SRCDIRS** is used to set the source directories used to search
+the CPP only source code files(*.cpp, *.CPP), it will not do recursively.
+
+e.g. To search CPP only source files in directory ``.`` and ``cppsrc``
+
+.. code-block:: makefile
+
+    CXX_SRCDIRS = . cppsrc
+
+
+.. _develop_buildsystem_var_asm_srcdirs:
+
+ASM_SRCDIRS
+~~~~~~~~~~~
+
+This **ASM_SRCDIRS** is used to set the source directories used to search
+the ASM only source code files(*.s, *.S), it will not do recursively.
+
+e.g. To search ASM only source files in directory ``.`` and ``asmsrc``
+
+.. code-block:: makefile
+
+    ASM_SRCDIRS = . asmsrc
+
+
+.. _develop_buildsystem_var_c_srcs:
+
+C_SRCS
+~~~~~~
+
+If you just want to include a few of C source files in directories, you can use this
+**C_SRCS** variable.
+
+e.g. To include ``main.c`` and ``src/hello.c``
+
+.. code-block:: makefile
+
+    C_SRCS = main.c src/hello.c
+
+.. _develop_buildsystem_var_cxx_srcs:
+
+CXX_SRCS
+~~~~~~~~
+
+If you just want to include a few of CPP source files in directories, you can use this
+**CXX_SRCS** variable.
+
+e.g. To include ``main.cpp`` and ``src/hello.cpp``
+
+.. code-block:: makefile
+
+    CXX_SRCS = main.cpp src/hello.cpp
+
+
+.. _develop_buildsystem_var_asm_srcs:
+
+ASM_SRCS
+~~~~~~~~
+
+If you just want to include a few of ASM source files in directories, you can use this
+**ASM_SRCS** variable.
+
+e.g. To include ``asm.s`` and ``src/test.s``
+
+.. code-block:: makefile
+
+    ASM_SRCS = asm.s src/test.s
+
+.. _develop_buildsystem_var_common_flags:
+
+COMMON_FLAGS
+~~~~~~~~~~~~
+
+This **COMMON_FLAGS** variable is used to define common compiler flags to all c/asm/cpp compiler.
+
+For example, you can add a newline ``COMMON_FLAGS += -O3 -funroll-loops -fpeel-loops``
+in your application Makefile and these options will be passed to C/ASM/CPP compiler.
+
+
+.. _develop_buildsystem_var_cflags:
+
+CFLAGS
+~~~~~~
+
+Different to **COMMON_FLAGS**, this **CFLAGS** variable is used to define common compiler flags to C compiler only.
+
+For example, you can add a newline ``CFLAGS += -O3 -funroll-loops -fpeel-loops``
+in your application Makefile and these options will be passed to C compiler.
+
+.. _develop_buildsystem_var_cxxflags:
+
+CXXFLAGS
+~~~~~~~~
+
+Different to **COMMON_FLAGS**, this **CXXFLAGS** variable is used to define common compiler flags to cpp compiler only.
+
+For example, you can add a newline ``CXXFLAGS += -O3 -funroll-loops -fpeel-loops``
+in your application Makefile and these options will be passed to cpp compiler.
+
+.. _develop_buildsystem_var_asmflags:
+
+ASMFLAGS
+~~~~~~~~
+
+Different to **COMMON_FLAGS**, this **ASMFLAGS** variable is used to define common compiler flags to asm compiler only.
+
+For example, you can add a newline ``ASMFLAGS += -O3 -funroll-loops -fpeel-loops``
+in your application Makefile and these options will be passed to asm compiler.
+
+.. _develop_buildsystem_var_ldflags:
+
+LDFLAGS
+~~~~~~~
+
+This **LDFLAGS** is used to pass extra linker flags, for example,
+if you want to link extra math library, you can add a newline
+``LDFLAGS += -lm`` in you application Makefile.
+
+Libraries (-lfoo) could also be added to the LDLIBS variable instead.
+
+.. _develop_buildsystem_var_ldlibs:
+
+LDLIBS
+~~~~~~
+
+This **LDLIBS** variable is library flags or names given to compilers
+when they are supposed to invoke the linker.
+
+Non-library linker flags, such as -L, should go in the **LDFLAGS** variable.
+
+.. _develop_buildsystem_var_libdirs:
+
+LIBDIRS
+~~~~~~~
+
+This **LIBDIRS** variable is used to store the library directories, which could
+be used together with **LDLIBS**.
+
+For example, if you have a library located in **$(NUCLEI_SDK_ROOT)/Library/DSP/libdsp.a**,
+and you want to link it, then you can define these lines:
+
+.. code-block:: makefile
+
+   LDLIBS = -ldsp
+   LIBDIRS = $(NUCLEI_SDK_ROOT)/Library/DSP
+
+.. _develop_buildsystem_var_linker_script:
+
+LINKER_SCRIPT
+~~~~~~~~~~~~~
+
+This **LINKER_SCRIPT** variable could be used to set the link script of the application.
+
+By default, there is no need to set this variable, since the build system will define
+a default linker script for application according to the build configuration. If you want
+to define your own linker script, you can set this variable.
+
+For example, ``LINKER_SCRIPT := gcc.ld``.
 
 
 .. _GNU Make Standard Library (GMSL): http://sourceforge.net/projects/gmsl/
