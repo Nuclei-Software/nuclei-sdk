@@ -13,6 +13,9 @@ stages:
 
 deploy_doc:
     stage: release
+    only:
+        changes:
+          - doc/source
     retry: 1
     artifacts:
         name: "nuclei_sdk_doc-${CI_COMMIT_SHA::8}"
