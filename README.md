@@ -7,8 +7,9 @@ This Nuclei SDK is built based on the **NMSIS** framework, user can access all t
 We also intergated two RTOSes into Nuclei SDK, which are **FreeRTOS** and **UCOSII**, you can easily find it in the *OS* folder.
 
 ## Requirements
-* Ubuntu Linux 18.04 LTS
-* GNU Make
+* Ubuntu Linux >=16.04 LTS or Windows >=7
+  - **Linux**: GNU Make >= 3.82
+  - **Windows**: [Windows Build Tools](https://nucleisys.com/download.php)
 * [Nuclei RISCV GNU GCC Toolchain](https://nucleisys.com/download.php)
 * [Nuclei OpenOCD](https://nucleisys.com/download.php)
 
@@ -16,7 +17,7 @@ We also intergated two RTOSes into Nuclei SDK, which are **FreeRTOS** and **UCOS
 
 Here is the directory structure for this Nuclei SDK.
 
-~~~
+~~~console
 $NUCLEI_SDK_ROOT
 ├── application
 │   ├── baremetal
@@ -93,13 +94,13 @@ $NUCLEI_SDK_ROOT
 
 * **setup.sh**
 
-  Nuclei SDK environment setup script for Linux. You need to create your own `setup_config.sh`.
-  ~~~
+  Nuclei SDK environment setup script for **Linux**. You need to create your own `setup_config.sh`.
+  ~~~shell
   NUCLEI_TOOL_ROOT=/path/to/your_tool_root
   NMSIS_ROOT=/path/to/your_nmsis_root
   ~~~
 
-  In the **$NUCLEI_TOOL_ROOT**, you need to have Nuclei RISC-V GNU GCC toolchain and OpenOCD installed as below.
+  In the **$NUCLEI_TOOL_ROOT** for **Linux**, you need to have Nuclei RISC-V GNU GCC toolchain and OpenOCD installed as below.
   ~~~
   $NUCLEI_TOOL_ROOT
   ├── gcc
@@ -120,14 +121,14 @@ $NUCLEI_SDK_ROOT
 
 * **setup.bat**
 
-  Nuclei SDK environment setup script. You need to create your own `setup_config.bat`.
-  ~~~
+  Nuclei SDK environment setup bat script for **Windows**. You need to create your own `setup_config.bat`.
+  ~~~bat
   set NUCLEI_TOOL_ROOT=\path\to\your_tool_root
   set NMSIS_ROOT=\path\to\your_nmsis_root
   ~~~
 
-  In the **%NUCLEI_TOOL_ROOT%**, you need to have Nuclei RISC-V GNU GCC toolchain, necessary build tools and OpenOCD installed as below.
-  ~~~
+  In the **%NUCLEI_TOOL_ROOT%** for **Windows**, you need to have Nuclei RISC-V GNU GCC toolchain, necessary Windows build tools and OpenOCD installed as below.
+  ~~~console
   %NUCLEI_TOOL_ROOT%
   ├── build-tools
   │   ├── bin
@@ -151,13 +152,16 @@ $NUCLEI_SDK_ROOT
 
 ## How to use
 1. Create and modify your own setup config
-   * For linux, create `setup_config.sh` in **$NUCLEI_SDK_ROOT**.
-   * For windows, create `setup_config.bat` in **%NUCLEI_SDK_ROOT%**.
-2. Source the environment script
-   * For linux: `source setup.sh`
-   * For windows: `setup.bat`
+   * For **Linux**, create `setup_config.sh` in **$NUCLEI_SDK_ROOT**.
+   * For **Windows**, create `setup_config.bat` in **%NUCLEI_SDK_ROOT%**.
+2. Source the environment script right in **NUCLEI_SDK_ROOT**
+   * For **Linux**: `source setup.sh`
+   * For **Windows**: `setup.bat`
 3. Build and run application.
-   * Assume that you will run *application/baremetal/helloworld/*.
+   * **Note:** By default, the SoC and Board is set to ``hbird`` and ``hbird_eval``,
+     if you don't pass any **SOC** and **BOARD** variable in Make command,
+     it will use the default SoC and Board.
+   * Assume that you will run this application -> *application/baremetal/helloworld/*.
    * cd *application/baremetal/helloworld/*
    * you can run *make help* to show help message.
    * We provided different Nuclei Core configurations(CORE=<your_core>) we supported, see *Build/Makefile.core*.
@@ -167,11 +171,11 @@ $NUCLEI_SDK_ROOT
      - **flash**: Program will be download into flash, when running, program will be copied to ilm/ram and run in ilm/ram
      - **ilm**: Program will be download into ilm/ram and run directly in ilm/ram, program lost when poweroff
    * For example, if you want to build your application for *CORE=n305 DOWNLOAD=ilm*, you can easily run this command:
-     ~~~
+     ~~~shell
      make CORE=n305 DOWNLOAD=ilm all
      ~~~
    * If you want to upload your application for *CORE=n305 DOWNLOAD=ilm*, you can easily run this command:
-     ~~~
+     ~~~shell
      make CORE=n305 DOWNLOAD=ilm upload
      ~~~
    * (Option 1)If you want to debug your application for *CORE=n305 DOWNLOAD=ilm*:
@@ -179,12 +183,13 @@ $NUCLEI_SDK_ROOT
      - Then run this command `make CORE=n305 DOWNLOAD=ilm run_gdb` in the existing terminal, then you can debug it using gdb,
        if you want to load your program, you need to type `load` to achieve it.
    * (Option 2)If you want to debug your application for *CORE=n305 DOWNLOAD=ilm*:
-     ~~~
+     ~~~shell
      make CORE=n305 DOWNLOAD=ilm debug
      ~~~
    * If you want to use UART terminal tool to view the UART message, you can choose `screen` or `minicom` in Linux, `teraterm` in Windows, the default UART baudrate we use is `115200`.
 
 ## Knowledge book
+* If you want to learn more about Nuclei SDK documentation, please click [Nuclei SDK documentation](http://doc.nucleisys.com/nuclei_sdk)
 * If you need to build a new application, or change **CORE** or **DOWNLOAD** option, please make sure that you have clean the project by `make clean`
 
 * If you want to specify additional compiler flags, please follow this guidance in your application Makefile.
@@ -197,12 +202,12 @@ $NUCLEI_SDK_ROOT
 * The preprovided applications and its makefile is the best startup examples about how to use Nuclei SDK.
 
 * Pass extra `V=1` to your make command, it will show verbose compiling information, otherwise it will only show basic information. Sample output with extra `V=1`
-~~~
-$ make V=1 all
-Current Configuration: RISCV_ARCH=rv32imafdc RISCV_ABI=ilp32d SOC=hbird BOARD=hbird_eval CORE=n307fd DOWNLOAD=ilm
-"Assembling : " ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S
-riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/portable/GCC -I../../../SoC/hbird/Board/hbird_eval/Include -I../../../SoC/hbird/Common/Include -MMD -MT ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S.o -MF ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S.o.d -c -o ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S.o ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S
-"Assembling : " ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S
-riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/portable/GCC -I../../../SoC/hbird/Board/hbird_eval/Include -I../../../SoC/hbird/Common/Include -MMD -MT ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S.o -MF ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S.o.d -c -o ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S.o ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S
-"Assembling : " ../../../SoC/hbird/Common/Source/GCC/startup_hbird.S
-~~~
+  ~~~console
+  $ make V=1 all
+  Current Configuration: RISCV_ARCH=rv32imafdc RISCV_ABI=ilp32d SOC=hbird BOARD=hbird_eval CORE=n307fd DOWNLOAD=ilm
+  "Assembling : " ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S
+  riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common   -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/  portable/GCC -I../../../SoC/hbird/Board/hbird_eval/Include -I../../../SoC/hbird/Common/Include -MMD -MT ../../../OS/FreeRTOS/Source/  portable/GCC/portasm.S.o -MF ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S.o.d -c -o ../../../OS/FreeRTOS/Source/portable/GCC/  portasm.S.o ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S
+  "Assembling : " ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S
+  riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common   -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/  portable/GCC -I../../../SoC/hbird/Board/hbird_eval/Include -I../../../SoC/hbird/Common/Include -MMD -MT ../../../SoC/hbird/Common/  Source/GCC/intexc_hbird.S.o -MF ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S.o.d -c -o ../../../SoC/hbird/Common/Source/GCC/  intexc_hbird.S.o ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S
+  "Assembling : " ../../../SoC/hbird/Common/Source/GCC/startup_hbird.S
+  ~~~
