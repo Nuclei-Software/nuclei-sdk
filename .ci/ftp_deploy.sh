@@ -11,6 +11,11 @@ FTPSERVER=$3
 LOCAL=$4
 REMOTE=$5
 
+if [ ! -d "$LOCAL" ] ; then
+    echo "Local directory doesn't exist, please check!"
+    exit 1
+fi
+
 echo "Start deploy local $LOCAL to remote $REMOTE"
 
 lftp -u$FTPUSER,$FTPPWD $FTPSERVER \
