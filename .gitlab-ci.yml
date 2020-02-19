@@ -43,6 +43,10 @@ deploy_doc:
 
 deploy_website:
     stage: deploy
+    when: on_success
+    only:
+        changes:
+          - doc/source
     retry: 1
     script:
         - ./.ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html nuclei_sdk
