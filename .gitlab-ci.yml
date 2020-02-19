@@ -17,7 +17,7 @@ deploy_doc:
         refs:
           - feature/document
         changes:
-          - doc/source/*
+          - doc/source/**/**/**/*
     retry: 1
     artifacts:
         name: "nuclei_sdk_doc-${CI_COMMIT_SHA::8}"
@@ -45,11 +45,6 @@ deploy_doc:
 deploy_website:
     stage: deploy
     when: on_success
-    only:
-        refs:
-          - feature/document
-        changes:
-          - doc/source/*
     retry: 1
     script:
         - ./.ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html nuclei_sdk
