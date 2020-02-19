@@ -454,7 +454,8 @@ currently it has these modes supported as described in table
 CORE
 ~~~~
 
-**CORE** variable is used to declare the Nuclei Processor core of the application.
+**CORE** variable is used to declare the Nuclei processor core
+of the application.
 
 Currently it has these cores supported as described in table
 :ref:`table_dev_buildsystem_6`.
