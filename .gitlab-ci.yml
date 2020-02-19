@@ -14,6 +14,8 @@ stages:
 deploy_doc:
     stage: release
     only:
+        refs:
+          - feature/document
         changes:
           - doc/source/*
     retry: 1
@@ -38,13 +40,14 @@ deploy_doc:
           #- cp build/latex/*.pdf build/html/
     tags:
         - software-server
-    only:
-        - feature/document
+
 
 deploy_website:
     stage: deploy
     when: on_success
     only:
+        refs:
+          - feature/document
         changes:
           - doc/source/*
     retry: 1
@@ -52,8 +55,6 @@ deploy_website:
         - ./.ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html nuclei_sdk
     tags:
         - software-server
-    only:
-        - feature/document
     dependencies:
         - deploy_doc
 
