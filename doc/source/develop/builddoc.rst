@@ -29,7 +29,12 @@ Then you can build the documentation using the following command:
 
 .. code-block:: shell
 
+    # cd to document folder
     cd doc
+    # Build Sphinx documentation
     make html
 
 The documentation will be generated in *doc/build/html* folder.
+
+You can open the *doc/build/html/index.html* in your browser to view
+the details.

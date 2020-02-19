@@ -15,7 +15,7 @@ deploy_doc:
     stage: release
     only:
         changes:
-          - doc/source
+          - doc/source/*
     retry: 1
     artifacts:
         name: "nuclei_sdk_doc-${CI_COMMIT_SHA::8}"
@@ -38,22 +38,22 @@ deploy_doc:
           #- cp build/latex/*.pdf build/html/
     tags:
         - software-server
-          #only:
-          #- master
+    only:
+        - feature/document
 
 deploy_website:
     stage: deploy
     when: on_success
     only:
         changes:
-          - doc/source
+          - doc/source/*
     retry: 1
     script:
         - ./.ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html nuclei_sdk
     tags:
         - software-server
-          #only:
-          #- master
+    only:
+        - feature/document
     dependencies:
         - deploy_doc
 
