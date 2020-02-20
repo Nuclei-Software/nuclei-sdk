@@ -8,6 +8,8 @@ GD32VF103 SoC
 Overview
 --------
 
+
+
 .. _design_soc_gd32vf103_boards:
 
 Supported Boards
