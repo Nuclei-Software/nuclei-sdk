@@ -36,8 +36,8 @@ deploy_doc:
         - scp -r html xl01:/home/xl_ci/doc_center/nuclei_sdk
         - cd ..
           #- make linkcheck
-          #- make latexpdf
-          #- cp build/latex/*.pdf build/html/
+        - make latexpdf
+        - cp build/latex/*.pdf build/html/
     tags:
         - software-server
 
