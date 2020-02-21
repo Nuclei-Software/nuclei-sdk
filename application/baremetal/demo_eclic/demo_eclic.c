@@ -6,7 +6,7 @@
 // the software interrupt will run during timer interrupt.
 // If define SWIRQ_INTLEVEL_HIGHER equals 0 the software interrupt will have a lower interrupt level.
 // the software interrupt will run after timer interrupt.
-#define SWIRQ_INTLEVEL_HIGHER   1
+#define SWIRQ_INTLEVEL_HIGHER   0
 
 #define HIGHER_INTLEVEL         2
 #define LOWER_INTLEVEL          1
@@ -56,7 +56,7 @@ __INTERRUPT void eclic_msip_handler(void)
 
     printf("[IN SOFTWARE INTERRUPT]software interrupt hit %d times\r\n", int_sw_cnt++);
     printf("[IN SOFTWARE INTERRUPT]software interrupt end\r\n");
-    
+
     // restore CSR context
     RESTORE_IRQ_CSR_CONTEXT();
 }
