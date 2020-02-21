@@ -3,11 +3,46 @@
 GD32VF103 SoC
 =============
 
+GD32VF103 SoC is the first general RISC-V MCU from `GigaDevice Semiconductor`_
+in the world which is based on Nuclei RISC-V Process Core.
+
+If you want to learn more about it, please click
+https://www.gigadevice.com/products/microcontrollers/gd32/risc-v/
+
 .. _design_soc_gd32vf103_overview:
 
 Overview
 --------
 
+The GD32VF103 device is a 32-bit general-purpose micro controller based on
+the RISC-V core with best ratio in terms of processing power, reduced power
+consumption and peripheral set.
+
+The RISC-V processor core is tightly coupled with an Enhancement Core-Local
+Interrupt Controller(ECLIC), SysTick timer and advanced debug support.
+
+The GD32VF103 device incorporates the RISC-V 32-bit processor core operating at
+108MHz frequency with Flash accesses zero wait states to obtain maximum efficiency.
+
+It provides up to 128KB on-chip Flash memory and 32KB SRAM memory.
+
+An extensive range of enhanced I/Os and peripherals connect to two APB buses.
+
+The devices offer up to two 12-bit ADCs, up to two 12-bit DACs, up to four general
+16-bit timers, two basic timers plus a PWM advanced timer, as well as standard and
+advanced communication interfaces: up to three SPIs, two I2Cs, three USARTs, two UARTs,
+two I2Ss, two CANs, an USBFS.
+
+The SoC diagram can be checked as below :ref:`figure_design_soc_gd32vf103_1`
+
+.. _figure_design_soc_gd32vf103_1:
+
+.. figure:: /asserts/images/gd32vf103_soc_diagram.png
+    :width: 80 %
+    :align: center
+    :alt: GD32VF103 SoC Diagram
+
+    GD32VF103 SoC Diagram
 
 
 .. _design_soc_gd32vf103_boards:
@@ -15,7 +50,21 @@ Overview
 Supported Boards
 ----------------
 
+In Nuclei SDK, we support the following two boards based on **GD32VF103** SoC, see:
+
+* :ref:`design_board_gd32vf103v_eval`
+* :ref:`design_board_gd32vf103v_rvstar`
+
 .. _design_soc_gd32vf103_usage:
 
 Usage
 -----
+
+If you want to use this **GD32VF103** SoC in Nuclei SDK, you need to set the
+:ref:`develop_buildsystem_var_soc` Makefile variable to ``gd32vf103``.
+
+.. code-block:: shell
+
+    make SOC=gd32vf103
+
+.. _GigaDevice Semiconductor: https://www.gigadevice.com/
