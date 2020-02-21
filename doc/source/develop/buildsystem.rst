@@ -281,12 +281,12 @@ you can create ``application/baremetal/helloworld/Makefile.local`` as below:
 Makefile targets of make command
 --------------------------------
 
-Here is a list of the :ref:.
+Here is a list of the :ref:`table_dev_buildsystem_4`.
 
 .. _table_dev_buildsystem_4:
 
 .. list-table:: Make targets supported by Nuclei SDK Build System
-   :widths: 10 90
+   :widths: 20 80
    :header-rows: 1
    :align: center
 
