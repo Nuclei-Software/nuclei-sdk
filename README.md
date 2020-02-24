@@ -2,9 +2,15 @@
 
 **Nuclei Software Development Kit(Nuclei SDK)** is developed for developing and evaluating software using our FPGA evaluation board.
 
+![Nuclei SDK Diagram](doc/source/asserts/images/nuclei_sdk_diagram.png)
+
 This Nuclei SDK is built based on the **NMSIS** framework, user can access all the APIs provided by **NMSIS** and also the APIs that provided by Nuclei SDK which mainly for on-board peripherals access such as GPIO, UART, SPI and I2C etc.
 
 We also intergated two RTOSes into Nuclei SDK, which are **FreeRTOS** and **UCOSII**, you can easily find it in the *OS* folder.
+
+## Quick Startup
+
+Wanner to a try with Nuclei SDK, click [Quick Start with Nuclei SDK](https://doc.nucleisys.com/nuclei_sdk/quickstart.html) to start up.
 
 ## Requirements
 * Ubuntu Linux >=16.04 LTS or Windows >=7
@@ -23,30 +29,46 @@ $NUCLEI_SDK_ROOT
 │   ├── baremetal
 │   ├── freertos
 │   └── ucosii
-├── SoC
-│   └── hbird
-|       ├── Common
-|       └── Board
 ├── Build
+│   ├── gmsl
 │   ├── Makefile.base
-│   ├── Makefile.soc
-│   ├── Makefile.soc.hbird
 │   ├── Makefile.conf
 │   ├── Makefile.core
 │   ├── Makefile.files
+│   ├── Makefile.files.gd32vf103
 │   ├── Makefile.files.hbird
+│   ├── Makefile.global
 │   ├── Makefile.misc
 │   ├── Makefile.rtos
 │   ├── Makefile.rtos.FreeRTOS
 │   ├── Makefile.rtos.UCOSII
-│   └── Makefile.rules
+│   ├── Makefile.rules
+│   ├── Makefile.soc
+│   ├── Makefile.soc.gd32vf103
+│   └── Makefile.soc.hbird
+├── doc
+│   ├── source
+│   ├── Makefile
+│   └── requirements.txt
 ├── NMSIS
 │   └── Include
 ├── OS
 │   ├── FreeRTOS
 │   └── UCOSII
+├── SoC
+│   ├── gd32vf103
+│   └── hbird
+├── test
+│   ├── core
+│   ├── ctest.h
+│   ├── LICENSE
+│   └── README.md
 ├── LICENSE
 ├── Makefile
+├── NMSIS_VERSION
+├── package.json
+├── README.md
+├── setup.bat
 └── setup.sh
 ~~~
 
@@ -87,6 +109,14 @@ $NUCLEI_SDK_ROOT
 * **LICENSE**
 
   Nuclei SDK license file.
+
+* **NMSIS_VERSION**
+
+  NMSIS Version file. It will show current NMSIS version used in Nuclei SDK.
+
+* **package.json**
+
+  PlatformIO package json file for Nuclei SDK, used in [Nuclei Plaform for PlatformIO](https://platformio.org/platforms/nuclei/)
 
 * **Makefile**
 
