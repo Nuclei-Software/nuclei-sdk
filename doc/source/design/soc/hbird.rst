@@ -69,7 +69,11 @@ If you want to use this **HummingBird** SoC in Nuclei SDK, you need to set the
 
 .. code-block:: shell
 
-    make SOC=hbird
+    # Choose SoC to be hbird
+    # the following command will build application
+    # using default hbird SoC based board
+    # defined in Build System and application Makefile
+    make SOC=hbird all
 
 
 .. _Nuclei: https://nucleisys.com/

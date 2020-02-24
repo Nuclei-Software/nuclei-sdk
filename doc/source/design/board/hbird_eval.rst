@@ -36,6 +36,7 @@ make sure the following items are set correctly:
 * Power on the Board using USB doggle.
 * The HummingBird SoC FPGA bitstream with Nuclei RISC-V evaluation core inside
   is programmed to this board.
+* Following steps in board user manual to setup JTAG drivers for your development environment
 
 .. _design_board_hbird_eval_use:
 
@@ -66,5 +67,9 @@ you just need to use this **SOC** and **BOARD** variables.
      the Nuclei Evaluation Core the HummingBird SoC you have.
    * You can also change the value passed to **DOWNLOAD** to run
      program in different modes.
+   * The FreeRTOS and UCOSII demos maybe not working in ``FlashXIP``
+     download mode in HummingBird board due to program running in Flash is really too slow.
+     If you want to try these demos, please use ``ilm`` or ``flash``
+     download mode.
 
 .. _HummingBird FPGA Evaluation Kit Board Documents: https://nucleisys.com/developboard.php

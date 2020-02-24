@@ -597,6 +597,23 @@ For more advanced usage, please follow the items as below:
 
 * Click :ref:`design` to learn about Nuclei SDK Design and Architecture, Board and SoC support documentation.
 * Click :ref:`develop` to learn about Nuclei SDK Build System and Application Development.
+* Click :ref:`design_app` to learn about each application usage and expected output.
+
+.. note::
+
+    * If you met some issues in using this guide, please check :ref:`faq`,
+      if still not solved, please :ref:`contribute_submit_issue`.
+
+    * If you are trying to **develop Nuclei SDK application in IDE**, now you have two choices:
+
+      1. You can take a try using Segger embedded studio, we provided prebuilt projects using Nuclei
+         SDK release version, click `Segger embedded studio projects for Nuclei SDK`_ to learn about it
+
+      2. You can also take a try with the Cross-platform PlatformIO IDE, we provided our Nuclei platform
+         and Nuclei SDK release version in PlatformIO, clean `Platform Nuclei in PlatformIO`_ to learn
+         more about it
 
 
 .. _GDB User Manual: https://www.gnu.org/software/gdb/documentation/
+.. _Segger embedded studio projects for Nuclei SDK: https://github.com/riscv-mcu/ses_nuclei_sdk_projects
+.. _Platform Nuclei in PlatformIO: https://platformio.org/platforms/nuclei

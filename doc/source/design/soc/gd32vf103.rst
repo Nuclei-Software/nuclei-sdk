@@ -65,6 +65,10 @@ If you want to use this **GD32VF103** SoC in Nuclei SDK, you need to set the
 
 .. code-block:: shell
 
-    make SOC=gd32vf103
+    # Choose SoC to be gd32vf103
+    # the following command will build application
+    # using default gd32vf103 SoC based board
+    # defined in Build System and application Makefile
+    make SOC=gd32vf103 all
 
 .. _GigaDevice Semiconductor: https://www.gigadevice.com/

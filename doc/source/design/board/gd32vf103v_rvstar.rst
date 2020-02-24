@@ -33,6 +33,7 @@ make sure the following items are set correctly:
 
 * Connect the USB Type-C port on board to your PC in order to download and
   debug programs and monitor the UART message.
+* Following steps in board user manual to setup JTAG drivers for your development environment
 
 .. _design_board_gd32vf103v_rvstar_usage:
 

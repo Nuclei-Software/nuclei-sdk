@@ -35,6 +35,7 @@ make sure the following items are set correctly:
 * Connect the GD-Link on board to your PC in order to download and debug programs.
 * Select the correct boot mode and then power on, the LEDPWR will turn on, which indicates the power supply is ready
 * Connect the ``COM0`` to your PC
+* Following steps in board user manual to setup JTAG drivers for your development environment
 
 .. _design_board_gd32vf103v_eval_use:
 
