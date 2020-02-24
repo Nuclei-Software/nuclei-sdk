@@ -6,6 +6,7 @@ Design and Architecture
 .. toctree::
    :maxdepth: 3
 
+   overview.rst
    nuclei.rst
    soc/index.rst
    board/index.rst
