@@ -15,6 +15,8 @@ Appendix
 
 * **Nuclei riscv-gcc**: https://github.com/riscv-mcu/riscv-gcc
 
+* **Nuclei Software Organization**: https://github.com/Nuclei-Software/
+
 * **Nuclei SDK**: https://github.com/Nuclei-Software/nuclei-sdk
 
 * **NMSIS**: https://github.com/Nuclei-Software/NMSIS
@@ -24,3 +26,9 @@ Appendix
 * **Nuclei RISC-V IP Products**: https://www.nucleisys.com/product.php
 
 * **RISC-V MCU Community Website**: http://www.riscv-mcu.com/
+
+* **Nuclei Spec Documentation**: https://doc.nucleisys.com/nuclei_spec/
+
+* **Nuclei SDK Documentation**: https://doc.nucleisys.com/nuclei_sdk/
+
+* **NMSIS Documentation**: https://doc.nucleisys.com/nmsis/
