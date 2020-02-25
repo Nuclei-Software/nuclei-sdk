@@ -51,7 +51,10 @@ $NUCLEI_SDK_ROOT
 │   ├── Makefile
 │   └── requirements.txt
 ├── NMSIS
-│   └── Include
+│   ├── Core
+│   ├── DSP
+│   ├── NN
+│   └── Library
 ├── OS
 │   ├── FreeRTOS
 │   └── UCOSII
@@ -97,7 +100,7 @@ $NUCLEI_SDK_ROOT
 
 * **NMSIS**
 
-  This directory contains the NMSIS-Core header files, which is widely used in this Nuclei SDK,
+  This directory contains the NMSIS header files, which is widely used in this Nuclei SDK,
   you can check the *[NMSIS_VERSION](NMSIS_VERSION)* file to know the current *NMSIS* version used in **Nuclei-SDK**.
 
   We will also sync the changes in [NMSIS project](https://github.com/Nuclei-Software/NMSIS) when it provided a new release.
@@ -127,7 +130,6 @@ $NUCLEI_SDK_ROOT
   Nuclei SDK environment setup script for **Linux**. You need to create your own `setup_config.sh`.
   ~~~shell
   NUCLEI_TOOL_ROOT=/path/to/your_tool_root
-  NMSIS_ROOT=/path/to/your_nmsis_root
   ~~~
 
   In the **$NUCLEI_TOOL_ROOT** for **Linux**, you need to have Nuclei RISC-V GNU GCC toolchain and OpenOCD installed as below.
@@ -154,7 +156,6 @@ $NUCLEI_SDK_ROOT
   Nuclei SDK environment setup bat script for **Windows**. You need to create your own `setup_config.bat`.
   ~~~bat
   set NUCLEI_TOOL_ROOT=\path\to\your_tool_root
-  set NMSIS_ROOT=\path\to\your_nmsis_root
   ~~~
 
   In the **%NUCLEI_TOOL_ROOT%** for **Windows**, you need to have Nuclei RISC-V GNU GCC toolchain, necessary Windows build tools and OpenOCD installed as below.
