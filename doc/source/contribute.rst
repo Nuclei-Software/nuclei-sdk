@@ -180,6 +180,10 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
      :ref:`download modes <develop_buildsystem_var_download>`
    * The ``gd32vf103`` SoC is a real silicon chip, it only have RAM and onchip
      flash, it only support FlashXIP mode.
+   * The **nuclei_sdk_soc.h** must be created in SoC include directory, it must
+     include the device header file <device>.h and SoC firmware library header files.
+   * The **nuclei_sdk_hal.h** must be created in Board include directory, it must
+     include **nuclei_sdk_soc.h** and board related header files.
 
 
 .. _contribute_submit_issue:
