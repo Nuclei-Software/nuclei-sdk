@@ -1,0 +1,22 @@
+TARGET = demo_dsp
+
+NUCLEI_SDK_ROOT = ../../..
+NUCLEI_SDK_NMSIS_ROOT ?= $(NUCLEI_SDK_ROOT)/NMSIS
+
+SRCDIRS = .
+
+INCDIRS = . $(NUCLEI_SDK_NMSIS_ROOT)/DSP/Include
+
+LIBDIRS = $(NUCLEI_SDK_NMSIS_ROOT)/Library/DSP/GCC
+
+DSP_ENABLE ?= ON
+COMMON_FLAGS := -O2
+
+ifeq ($(DSP_ENABLE),ON)
+COMMON_FLAGS += -D__RISCV_FEATURE_DSP=1
+LDLIBS = -lnmsis_dsp_$(RISCV_ARCH)p -lm 
+else
+LDLIBS = -lnmsis_dsp_$(RISCV_ARCH) -lm
+endif
+
+include $(NUCLEI_SDK_ROOT)/Build/Makefile.base
