@@ -9,12 +9,13 @@ INCDIRS = . $(NUCLEI_SDK_NMSIS_ROOT)/DSP/Include
 
 LIBDIRS = $(NUCLEI_SDK_NMSIS_ROOT)/Library/DSP/GCC
 
-DSP_ENABLE ?= ON
+DSP_ENABLE ?= OFF
 COMMON_FLAGS := -O2
+NEWLIB =
 
 ifeq ($(DSP_ENABLE),ON)
 COMMON_FLAGS += -D__RISCV_FEATURE_DSP=1
-LDLIBS = -lnmsis_dsp_$(RISCV_ARCH)p -lm 
+LDLIBS = -lnmsis_dsp_$(RISCV_ARCH)p -lm
 else
 LDLIBS = -lnmsis_dsp_$(RISCV_ARCH) -lm
 endif
