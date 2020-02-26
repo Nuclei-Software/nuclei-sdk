@@ -93,14 +93,14 @@ static uint64_t end_cycle;
 static uint64_t cycle;
 
 #define BENCH_INIT()            enter_cycle=__get_rv_cycle(); \
-                                printf("CSV, BENCH START, %llu\n", enter_cycle);
+                                printf("CSV, BENCH START, %u\n", (uint32_t)enter_cycle);
 #define BENCH_START(func)       start_cycle=__get_rv_cycle();
 #define BENCH_END(func)         end_cycle=__get_rv_cycle(); \
                                 cycle=end_cycle-start_cycle; \
-                                printf("CSV, %s, %llu\n", #func, cycle);
+                                printf("CSV, %s, %u\n", #func, (uint32_t)cycle);
 #define BENCH_FINISH()          exit_cycle=__get_rv_cycle(); \
                                 cycle=exit_cycle-enter_cycle; \
-                                printf("CSV, BENCH END, %llu\n", cycle);
+                                printf("CSV, BENCH END, %u\n", (uint32_t)cycle);
 
 void f32_mean_compare()
 {
