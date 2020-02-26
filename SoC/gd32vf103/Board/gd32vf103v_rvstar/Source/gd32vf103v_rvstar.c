@@ -1,9 +1,9 @@
 /*!
-    \file    gd32vf103c_start.c
-    \brief   firmware functions to manage leds, keys, COM ports
-    
-    \version 2019-06-05, V1.0.0, demo for GD32VF103
-*/
+ *  \file    gd32vf103c_start.c
+ *  \brief   firmware functions to manage leds, keys, COM ports
+ *  
+ *  \version 2020-02-05, V1.0.0, rvstar board functions for GD32VF103
+ */
 
 /*
     Copyright (c) 2019, GigaDevice Semiconductor Inc.
@@ -57,52 +57,52 @@ static const uint8_t KEY_IRQn[KEYn]             = {WAKEUP_KEY_EXTI_IRQn};
 
 /* eval board low layer private functions */
 /*!
-    \brief      configure led GPIO
-    \param[in]  lednum: specify the led to be configured
-      \arg        LED1
-    \param[out] none
-    \retval     none
-*/
+ *  \brief      configure led GPIO
+ *  \param[in]  lednum: specify the led to be configured
+ *  \arg        LED1
+ *  \param[out] none
+ *  \retval     none
+ */
 void gd_rvstar_led_init(led_typedef_enum lednum)
 {
     /* enable the led clock */
     rcu_periph_clock_enable(GPIO_CLK[lednum]);
     /* configure led GPIO port */ 
     gpio_init(GPIO_PORT[lednum], GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN[lednum]);
+    GPIO_BOP(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
+}
+
+/*!
+ *  \brief      turn on selected led
+ *  \param[in]  lednum: specify the led to be turned on
+ *  \arg        LED1
+ *  \param[out] none
+ *  \retval     none
+ */
+void gd_rvstar_led_on(led_typedef_enum lednum)
+{
     GPIO_BC(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
 }
 
 /*!
-    \brief      turn on selected led
-    \param[in]  lednum: specify the led to be turned on
-      \arg        LED1
-    \param[out] none
-    \retval     none
-*/
-void gd_rvstar_led_on(led_typedef_enum lednum)
+ *  \brief      turn off selected led
+ *  \param[in]  lednum: specify the led to be turned off
+ *  \arg        LED1
+ *  \param[out] none
+ *  \retval     none
+ */
+void gd_rvstar_led_off(led_typedef_enum lednum)
 {
     GPIO_BOP(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
 }
 
 /*!
-    \brief      turn off selected led
-    \param[in]  lednum: specify the led to be turned off
-      \arg        LED1
-    \param[out] none
-    \retval     none
-*/
-void gd_rvstar_led_off(led_typedef_enum lednum)
-{
-    GPIO_BC(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
-}
-
-/*!
-    \brief      toggle selected led
-    \param[in]  lednum: specify the led to be toggled
-      \arg        LED1
-    \param[out] none
-    \retval     none
-*/
+ *  \brief      toggle selected led
+ *  \param[in]  lednum: specify the led to be toggled
+ *  \arg        LED1
+ *  \param[out] none
+ *  \retval     none
+ */
 void gd_rvstar_led_toggle(led_typedef_enum lednum)
 {
     gpio_bit_write(GPIO_PORT[lednum], GPIO_PIN[lednum],
@@ -110,15 +110,15 @@ void gd_rvstar_led_toggle(led_typedef_enum lednum)
 }
 
 /*!
-    \brief      configure key
-    \param[in]  keynum: specify the key to be configured
-      \arg        KEY_WAKEUP: wakeup key
-    \param[in]  keymode: specify button mode
-      \arg        KEY_MODE_GPIO: key will be used as simple IO
-      \arg        KEY_MODE_EXTI: key will be connected to EXTI line with interrupt
-    \param[out] none
-    \retval     none
-*/
+ *  \brief      configure key
+ *  \param[in]  keynum: specify the key to be configured
+ *  \arg        KEY_WAKEUP: wakeup key
+ *  \param[in]  keymode: specify button mode
+ *  \arg        KEY_MODE_GPIO: key will be used as simple IO
+ *  \arg        KEY_MODE_EXTI: key will be connected to EXTI line with interrupt
+ *  \param[out] none
+ *  \retval     none
+ */
 void gd_rvstar_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode)
 {
     /* enable the key clock */
@@ -144,24 +144,24 @@ void gd_rvstar_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode)
 }
 
 /*!
-    \brief      return the selected key state
-    \param[in]  keynum: specify the key to be checked
-      \arg        KEY_WAKEUP: wakeup key
-    \param[out] none
-    \retval     the key's GPIO pin value
-*/
+ *  \brief      return the selected key state
+ *  \param[in]  keynum: specify the key to be checked
+ *  \arg        KEY_WAKEUP: wakeup key
+ *  \param[out] none
+ *  \retval     the key's GPIO pin value
+ */
 uint8_t gd_rvstar_key_state_get(key_typedef_enum keynum)
 {
     return gpio_input_bit_get(KEY_PORT[keynum], KEY_PIN[keynum]);
 }
 
 /*!
-    \brief      configure COM port
-    \param[in]  com: COM on the board
-      \arg        GD32_COM0: COM0 on the board
-    \param[out] none
-    \retval     none
-*/
+ *  \brief      configure COM port
+ *  \param[in]  com: COM on the board
+ *  \arg        GD32_COM0: COM0 on the board
+ *  \param[out] none
+ *  \retval     none
+ */
 void gd_com_init(uint32_t usart_periph)
 {    
     /* enable GPIO TX and RX clock */
