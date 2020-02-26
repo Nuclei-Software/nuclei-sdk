@@ -254,7 +254,6 @@ This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
 * If your Nuclei Processor Core has DSP feature enabled, you can pass extra
   ``DSP_ENABLE=ON`` in your make command to use NMSIS-DSP library with DSP enabled.
 * By default, the application will use NMSIS-DSP library with DSP disabled.
-* This application need to print 64bit integer value, it has to use normal newlib.
 
 .. note::
 
@@ -279,23 +278,23 @@ This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Feb 25 2020, 17:32:09
-    Download Mode: FLASHXIP
-    CPU Frequency 109080000 Hz
-    CSV, BENCH START, 985130
-    CSV, riscv_mean_f32, 13085
-    CSV, ref_mean_f32, 12740
-    riscv vs ref: 18.172632, 18.172632
-    CSV, riscv_mean_q7, 906
-    CSV, ref_mean_q7, 905
-    riscv vs ref: 3, 3
-    CSV, riscv_mean_q15, 1046
-    CSV, ref_mean_q15, 766
-    riscv vs ref: -1, -1
-    CSV, riscv_mean_q31, 1789
-    CSV, ref_mean_q31, 1648
-    riscv vs ref: -611, -611
-    CSV, BENCH END, 3321173
+   Nuclei SDK Build Time: Feb 26 2020, 15:20:43
+   Download Mode: FLASHXIP
+   CPU Frequency 108000000 Hz
+   CSV, BENCH START, 974939
+   CSV, riscv_mean_f32, 13057
+   CSV, ref_mean_f32, 12612
+   riscv vs ref: ,
+   CSV, riscv_mean_q7, 765
+   CSV, ref_mean_q7, 763
+   riscv vs ref: 3, 3
+   CSV, riscv_mean_q15, 904
+   CSV, ref_mean_q15, 905
+   riscv vs ref: -1, -1
+   CSV, riscv_mean_q31, 1933
+   CSV, ref_mean_q31, 1789
+   riscv vs ref: -611, -611
+   CSV, BENCH END, 2977160
 
 
 coremark
