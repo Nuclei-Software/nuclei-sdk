@@ -23,6 +23,9 @@ using GD32VF103VBT6 as main MCU.
 Click `GD32VF103V RVStar Development Kit`_ to access the documents
 of this board.
 
+Click online `RV-STAR Development Board Overview`_ to get basic information
+of this board.
+
 .. _design_board_gd32vf103v_rvstar_setup:
 
 Setup
@@ -59,3 +62,4 @@ you just need to use this **SOC** and **BOARD** variables.
 
 
 .. _GD32VF103V RVStar Development Kit: https://nucleisys.com/developboard.php
+.. _RV-STAR Development Board Overview: https://doc.nucleisys.com/nuclei_board_labs/overview/hw.html#rv-star
