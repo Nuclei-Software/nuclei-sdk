@@ -17,6 +17,7 @@ This is release ``0.2.0-alpha`` of Nuclei SDK.
 
   - Add ``demo_eclic`` application
   - Add ``demo_dsp`` application
+  - ``timer_test`` application renamed to ``demo_timer``
 
 * Build System
 

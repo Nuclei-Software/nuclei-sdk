@@ -73,10 +73,10 @@ will check this RISC-V CSR **MISA** register value.
     Hello World!
 
 
-timer_test
+demo_timer
 ~~~~~~~~~~
 
-This `timer_test application`_ is used to demostrate how to use
+This `demo_timer application`_ is used to demostrate how to use
 the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
 
 * Both interrupts are registered as non-vector interrupt.
@@ -89,8 +89,8 @@ the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # cd to the timer_test directory
-    cd application/baremetal/timer_test
+    # cd to the demo_timer directory
+    cd application/baremetal/demo_timer
     # Clean the application first
     make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
     # Build and upload the application
@@ -660,7 +660,7 @@ In Nuclei SDK, we provided code and Makefile for this ``ucosii demo`` applicatio
 
 
 .. _helloworld application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/helloworld
-.. _timer_test application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/timer_test
+.. _demo_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_timer
 .. _demo_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic
 .. _demo_dsp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_dsp
 .. _coremark benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/benchmark/coremark
