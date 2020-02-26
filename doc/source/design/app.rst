@@ -89,7 +89,7 @@ the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # cd to the helloworld directory
+    # cd to the timer_test directory
     cd application/baremetal/timer_test
     # Clean the application first
     make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
@@ -159,7 +159,7 @@ the ECLIC API and Interrupt.
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # cd to the helloworld directory
+    # cd to the demo_eclic directory
     cd application/baremetal/demo_eclic
     # Change macro SWIRQ_INTLEVEL_HIGHER value in demo_eclic.c
     # to see different working mode of this demo
@@ -244,6 +244,60 @@ the ECLIC API and Interrupt.
     [IN SOFTWARE INTERRUPT]software interrupt end
 
 
+demo_dsp
+~~~~~~~~
+
+This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
+
+* Mainly show how we can use DSP library and header files.
+* It mainly demo the ``riscv_mean`` functions and its reference functions
+* If your Nuclei Processor Core has DSP feature enabled, you can pass extra
+  ``DSP_ENABLE=ON`` in your make command to use NMSIS-DSP library with DSP enabled.
+* By default, the application will use NMSIS-DSP library with DSP disabled.
+* This application need to print 64bit integer value, it has to use normal newlib.
+
+.. note::
+
+    * The GD32VF103 SoC didn't has DSP enabled, so this SoC can only use NMSIS-DSP
+      library with DSP disabled.
+    * For other Nuclei Processor Core based SoC, please check whether it has DSP
+      feature enabled to decide which kind of **NMSIS-DSP** library to use.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_dsp directory
+    cd application/baremetal/demo_dsp
+    # Clean the application first
+    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    # Build and upload the application
+    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Feb 25 2020, 17:32:09
+    Download Mode: FLASHXIP
+    CPU Frequency 109080000 Hz
+    CSV, BENCH START, 985130
+    CSV, riscv_mean_f32, 13085
+    CSV, ref_mean_f32, 12740
+    riscv vs ref: 18.172632, 18.172632
+    CSV, riscv_mean_q7, 906
+    CSV, ref_mean_q7, 905
+    riscv vs ref: 3, 3
+    CSV, riscv_mean_q15, 1046
+    CSV, ref_mean_q15, 766
+    riscv vs ref: -1, -1
+    CSV, riscv_mean_q31, 1789
+    CSV, ref_mean_q31, 1648
+    riscv vs ref: -611, -611
+    CSV, BENCH END, 3321173
+
+
 coremark
 ~~~~~~~~
 
@@ -268,7 +322,7 @@ to get different score number.
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # cd to the helloworld directory
+    # cd to the coremark directory
     cd application/baremetal/benchmark/coremark
     # Clean the application first
     make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
@@ -338,8 +392,8 @@ to get different score number.
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # cd to the helloworld directory
-    cd application/baremetal/benchmark/coremark
+    # cd to the dhrystone directory
+    cd application/baremetal/benchmark/dhrystone
     # Clean the application first
     make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
     # Build and upload the application
@@ -439,7 +493,7 @@ to get different score number.
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # cd to the helloworld directory
+    # cd to the whetstone directory
     cd application/baremetal/benchmark/whetstone
     # Clean the application first
     make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
@@ -503,7 +557,7 @@ In Nuclei SDK, we provided code and Makefile for this ``freertos demo`` applicat
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # cd to the helloworld directory
+    # cd to the freertos demo directory
     cd application/freertos/demo
     # Clean the application first
     make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
@@ -556,7 +610,7 @@ In Nuclei SDK, we provided code and Makefile for this ``ucosii demo`` applicatio
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # cd to the helloworld directory
+    # cd to the ucosii demo directory
     cd application/ucosii/demo
     # Clean the application first
     make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
@@ -608,6 +662,7 @@ In Nuclei SDK, we provided code and Makefile for this ``ucosii demo`` applicatio
 .. _helloworld application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/helloworld
 .. _timer_test application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/timer_test
 .. _demo_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic
+.. _demo_dsp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_dsp
 .. _coremark benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/benchmark/coremark
 .. _dhrystone benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/benchmark/dhrystone
 .. _whetstone benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/benchmark/whetstone

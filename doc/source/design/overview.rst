@@ -56,7 +56,10 @@ Here is the directory structure for this Nuclei SDK.
     │   ├── Makefile
     │   └── requirements.txt
     ├── NMSIS
-    │   └── Include
+    │   ├── Core
+    │   ├── DSP
+    │   ├── NN
+    │   └── Library
     ├── OS
     │   ├── FreeRTOS
     │   └── UCOSII
@@ -103,7 +106,7 @@ Here is the directory structure for this Nuclei SDK.
 
 * **NMSIS**
 
-  This directory contains the NMSIS-Core header files, which is widely used in this Nuclei SDK,
+  This directory contains the NMSIS header files, which is widely used in this Nuclei SDK,
   you can check the *NMSIS_VERSION* file to know the current *NMSIS* version used in **Nuclei-SDK**.
 
   We will also sync the changes in `NMSIS project`_ when it provided a new release.
@@ -135,7 +138,6 @@ Here is the directory structure for this Nuclei SDK.
   .. code-block:: shell
 
      NUCLEI_TOOL_ROOT=/path/to/your_tool_root
-     NMSIS_ROOT=/path/to/your_nmsis_root
 
   In the **$NUCLEI_TOOL_ROOT** for **Linux**, you need to have Nuclei RISC-V GNU GCC toolchain and OpenOCD installed as below.
 
@@ -164,7 +166,6 @@ Here is the directory structure for this Nuclei SDK.
   .. code-block:: bat
 
      set NUCLEI_TOOL_ROOT=\path\to\your_tool_root
-     set NMSIS_ROOT=\path\to\your_nmsis_root
 
   In the **%NUCLEI_TOOL_ROOT%** for **Windows**, you need to have Nuclei RISC-V GNU GCC toolchain, necessary Windows build tools and OpenOCD installed as below.
 

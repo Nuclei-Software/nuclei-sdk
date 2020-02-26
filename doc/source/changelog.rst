@@ -16,11 +16,18 @@ This is release ``0.2.0-alpha`` of Nuclei SDK.
 * Application
 
   - Add ``demo_eclic`` application
+  - Add ``demo_dsp`` application
 
 * Build System
 
   - Add comments for build System
   - Small bug fixes
+
+* **NMSIS**
+
+  - Change ``NMSIS/Include`` to ``NMSIS/Core/Include``
+  - Add ``NMSIS/DSP`` and ``NMSIS/NN`` header files
+  - Add **NMSIS-DSP** and **NMSIS-NN** pre-built libraries
 
 
 V0.1.1

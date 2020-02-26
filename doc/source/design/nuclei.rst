@@ -41,6 +41,9 @@ provided by |NMSIS|.
 These NMSIS APIs are mainly responsible for accessing Nuclei RISC-V Processor
 Core.
 
+The prebuilt NMSIS-DSP and NMSIS-NN libraries are also provided in Nuclei SDK,
+see ``NMSIS/Library/`` folder.
+
 .. _design_nuclei_soc:
 
 SoC Resource
