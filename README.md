@@ -220,7 +220,9 @@ $NUCLEI_SDK_ROOT
    * If you want to use UART terminal tool to view the UART message, you can choose `screen` or `minicom` in Linux, `teraterm` in Windows, the default UART baudrate we use is `115200`.
 
 ## Knowledge book
-* If you want to learn more about Nuclei SDK documentation, please click [Nuclei SDK documentation](http://doc.nucleisys.com/nuclei_sdk)
+
+* If you want to learn more about **Nuclei SDK documentation**, please click [Nuclei SDK documentation](http://doc.nucleisys.com/nuclei_sdk)
+
 * If you need to build a new application, or change **CORE** or **DOWNLOAD** option, please make sure that you have clean the project by `make clean`
 
 * If you want to specify additional compiler flags, please follow this guidance in your application Makefile.
@@ -242,3 +244,7 @@ $NUCLEI_SDK_ROOT
   riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common   -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/  portable/GCC -I../../../SoC/hbird/Board/hbird_eval/Include -I../../../SoC/hbird/Common/Include -MMD -MT ../../../SoC/hbird/Common/  Source/GCC/intexc_hbird.S.o -MF ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S.o.d -c -o ../../../SoC/hbird/Common/Source/GCC/  intexc_hbird.S.o ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S
   "Assembling : " ../../../SoC/hbird/Common/Source/GCC/startup_hbird.S
   ~~~
+
+## [Contributing](https://doc.nucleisys.com/nuclei_sdk/contribute.html)
+
+## [Changelog](https://doc.nucleisys.com/nuclei_sdk/changelog.html)
