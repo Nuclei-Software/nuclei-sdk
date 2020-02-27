@@ -89,18 +89,21 @@ build_hbird_eval_ilm_n205e:
     variables:
         DOWNLOAD: "ilm"
         CORE: "n205e"
+        FIND_IGNORE: "! -wholename \"*dsp*\""
     <<: *build_hbird_eval_job_def
 
 build_hbird_eval_flash_n205e:
     variables:
         DOWNLOAD: "flash"
         CORE: "n205e"
+        FIND_IGNORE: "! -wholename \"*dsp*\""
     <<: *build_hbird_eval_job_def
 
 build_hbird_eval_flashxip_n205e:
     variables:
         DOWNLOAD: "flashxip"
         CORE: "n205e"
+        FIND_IGNORE: "! -wholename \"*dsp*\""
     <<: *build_hbird_eval_job_def
 
 # Build For NX600, with Flash, FlashXIP, ILM Mode
