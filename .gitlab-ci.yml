@@ -62,7 +62,7 @@ deploy_website:
 .build_hbird_eval_job_template: &build_hbird_eval_job_def
     stage: build_hbird_eval
     script:
-        - FIND_IGNORE="! -wholename \"*dsp*\"" SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
+        - SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
         - SOC=hbird BOARD=hbird_eval nsdk_build_directory    test
 
 # Build For HBird Evaluation Board with N307 Core, with Flash, FlashXIP, ILM Mode
@@ -108,18 +108,21 @@ build_hbird_eval_ilm_nx600:
     variables:
         DOWNLOAD: "ilm"
         CORE: "nx600"
+        FIND_IGNORE: "! -wholename \"*dsp*\""
     <<: *build_hbird_eval_job_def
 
 build_hbird_eval_flash_nx600:
     variables:
         DOWNLOAD: "flash"
         CORE: "nx600"
+        FIND_IGNORE: "! -wholename \"*dsp*\""
     <<: *build_hbird_eval_job_def
 
 build_hbird_eval_flashxip_nx600:
     variables:
         DOWNLOAD: "flashxip"
         CORE: "nx600"
+        FIND_IGNORE: "! -wholename \"*dsp*\""
     <<: *build_hbird_eval_job_def
 
 ## Jobs for board gd32vf103v_eval
