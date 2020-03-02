@@ -3,6 +3,21 @@
 Changelog
 =========
 
+V0.2.0-alpha.xx
+---------------
+
+Release tag name is not yet ready, just record changelog for it.
+
+* Build System
+
+  - Add extra linker options ``-u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek``
+    in Makefile.conf to make sure if you pass extra ``-flto`` compile option, link phase will not fail
+
+* Documentation
+
+  - Add documentation about how to optimize for code size in application development, using ``demo_eclic``
+    as example.
+
 V0.2.0-alpha
 ------------
 

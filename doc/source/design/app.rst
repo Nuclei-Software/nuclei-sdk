@@ -126,12 +126,61 @@ the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
     MTimer SW IRQ handler 10
     MTimer msip and mtip interrupt test finish and pass
 
+.. _design_app_demo_eclic:
 
 demo_eclic
 ~~~~~~~~~~
 
 This `demo_eclic application`_ is used to demostrate how to use
 the ECLIC API and Interrupt.
+
+.. note::
+
+    In this application's Makefile, we provided comments in Makefile about optimize
+    for code size.
+
+    If you want to optimize this application for code size, you can set the ``COMMON_FLAGS``
+    variable to the following values, we recommend to use ``-Os -flto``.
+
+    .. list-table:: Code size optimization for demo_eclic on RV-STAR target
+       :widths: 60 20 20 20 20
+       :header-rows: 1
+
+       * - COMMON_FLAGS
+         - text(bytes)
+         - data(bytes)
+         - bss(bytes)
+         - total(bytes)
+       * -
+         - 13724
+         - 112
+         - 2266
+         - 16102
+       * - -flto
+         - 13598
+         - 112
+         - 2266
+         - 15976
+       * - -Os
+         - 9690
+         - 112
+         - 2264
+         - 12066
+       * - -Os -flto
+         - 9132
+         - 112
+         - 2264
+         - 11508
+       * - -Os -msave-restore  -fno-unroll-loops
+         - 9714
+         - 112
+         - 2264
+         - 12090
+       * - -Os -msave-restore  -fno-unroll-loops -flto
+         - 9204
+         - 112
+         - 2264
+         - 11580
 
 * The timer interrupt and timer software interrupt are used
 * The timer interrupt is registered as non-vector interrupt
