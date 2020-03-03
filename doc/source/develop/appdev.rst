@@ -29,6 +29,13 @@ To develop a Nuclei SDK application from scratch, you can do the following steps
        include $(NUCLEI_SDK_ROOT)/Build/Makefile.base
 
 3. Copy or create your application code in new created directory.
+
+   .. note::
+
+      * If you just want to SoC related resource, you can include header file ``nuclei_sdk_soc.h`` in your application code.
+      * If you just want to SoC and Board related resource, you can include header file ``nuclei_sdk_hal.h`` in your application code.
+      * For simplity, we recomment you to use ``nuclei_sdk_hal.h`` header file
+
 4. Follow :ref:`develop_buildsystem` to change your application Makefile.
 
 .. _develop_appdev_addsrc:

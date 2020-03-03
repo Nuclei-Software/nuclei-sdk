@@ -588,7 +588,10 @@ There are several ways to achieve it, see as below:
 
 .. note::
 
-    Please refer to :ref:`develop_appdev` and :ref:`develop_buildsystem` for more information.
+    * Please refer to :ref:`develop_appdev` and :ref:`develop_buildsystem` for more information.
+    * If you want to access SoC related APIs, please use ``nuclei_sdk_soc.h`` header file.
+    * If you want to access SoC and board related APIs, please use ``nuclei_sdk_hal.h`` header file.
+    * For simplified application development, you can use ``nuclei_sdk_hal.h`` directly.
 
 Advanced Usage
 --------------
