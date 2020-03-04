@@ -44,7 +44,6 @@ void scheduler_ecall(void )
 }
 
 void SetupTimer()    {
-    ECLIC_SetCfgNlbits(4);
     SysTick_Config(configClockTicks);
     ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_VECTOR_INTERRUPT);
     __enable_irq();

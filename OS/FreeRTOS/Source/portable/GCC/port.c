@@ -264,7 +264,6 @@ void SOC_MTIMER_HANDLER(void)
 
 void vPortSetupTimer(void)
 {
-    ECLIC_SetCfgNlbits(4);
     SysTick_Config(configClockTicks);
     __enable_irq();
 }
