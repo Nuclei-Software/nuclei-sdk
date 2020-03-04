@@ -33,6 +33,8 @@ CTEST(eclic, en_dis_irq)
     ECLIC_SetPriorityIRQ(SysTimer_IRQn, 0);
     ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SysTimer_IRQn), 0);
 
+    ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS - 1);
+
     ECLIC_SetPriorityIRQ(SysTimer_IRQn, 1);
     ASSERT_EQUAL(ECLIC_GetPriorityIRQ(SysTimer_IRQn), 1);
 
