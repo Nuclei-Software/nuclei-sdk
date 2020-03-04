@@ -278,7 +278,7 @@ void ECLIC_Init(void)
      * TODO: Please adapt it according to your system requirement.
      * This function is called in _init function */
     ECLIC_SetMth(0);
-    ECLIC_SetCfgNlbits(2);
+    ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
 }
 
 /**

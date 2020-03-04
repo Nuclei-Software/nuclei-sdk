@@ -42,20 +42,20 @@
  * \defgroup  NMSIS_Core_SystemAndClock   System and Clock Configuration
  * \brief Functions for system and clock setup available in system_<device>.c.
  * \details
- * Nuclei provides a template file **system_Device.c** that must be adapted by 
- * the silicon vendor to match their actual device. As a <b>minimum requirement</b>, 
+ * Nuclei provides a template file **system_Device.c** that must be adapted by
+ * the silicon vendor to match their actual device. As a <b>minimum requirement</b>,
  * this file must provide:
  *  -  A device-specific system configuration function, \ref SystemInit().
- *  -  A global variable that contains the system frequency, \ref SystemCoreClock. 
- * 
- * The file configures the device and, typically, initializes the oscillator (PLL) that is part 
- * of the microcontroller device. This file might export other functions or variables that provide 
+ *  -  A global variable that contains the system frequency, \ref SystemCoreClock.
+ *
+ * The file configures the device and, typically, initializes the oscillator (PLL) that is part
+ * of the microcontroller device. This file might export other functions or variables that provide
  * a more flexible configuration of the microcontroller system.
- * 
+ *
  * \note Please pay special attention to the static variable \c SystemCoreClock. This variable might be
  * used throughout the whole system initialization and runtime to calculate frequency/time related values.
  * Thus one must assure that the variable always reflects the actual system clock speed.
- * 
+ *
  * \attention
  * Be aware that a value stored to \c SystemCoreClock during low level initializaton (i.e. \c SystemInit()) might get
  * overwritten by C libray startup code and/or .bss section initialization.
@@ -70,16 +70,16 @@
 /* ToDo: initialize SystemCoreClock with the system core clock frequency value
          achieved after system intitialization.
          This means system core clock frequency after call to SystemInit() */
-/** 
+/**
  * \brief      Variable to hold the system core clock value
  * \details
- * Holds the system core clock, which is the system clock frequency supplied to the SysTick 
- * timer and the processor core clock. This variable can be used by debuggers to query the 
+ * Holds the system core clock, which is the system clock frequency supplied to the SysTick
+ * timer and the processor core clock. This variable can be used by debuggers to query the
  * frequency of the debug timer or to configure the trace clock speed.
- *                  
+ *
  * \attention
- * Compilers must be configured to avoid removing this variable in case the application 
- * program is not using it. Debugging systems require the variable to be physically 
+ * Compilers must be configured to avoid removing this variable in case the application
+ * program is not using it. Debugging systems require the variable to be physically
  * present in memory so that it can be examined to configure the debugger.
  */
 uint32_t SystemCoreClock = __SYSTEM_CLOCK_108M_PLL_HXTAL;  /* System Clock Frequency (Core Clock) */
@@ -123,7 +123,7 @@ static void system_clock_108m_hxtal(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
 
-    /* CK_PLL = (CK_PREDIV0) * 27 = 108 MHz */ 
+    /* CK_PLL = (CK_PREDIV0) * 27 = 108 MHz */
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL | RCU_PLL_MUL27);
 
@@ -188,11 +188,11 @@ static void system_clock_config(void)
 }
 
 
-/** 
+/**
  * \brief      Function to update the variable \ref SystemCoreClock
- * \details    
- * Updates the variable \ref SystemCoreClock and must be called whenever the core clock is changed 
- * during program execution. The function evaluates the clock register settings and calculates 
+ * \details
+ * Updates the variable \ref SystemCoreClock and must be called whenever the core clock is changed
+ * during program execution. The function evaluates the clock register settings and calculates
  * the current core clock.
  */
 void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
@@ -205,36 +205,36 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
     uint32_t scss;
     uint32_t pllsel, predv0sel, pllmf, ck_src;
     uint32_t predv0, predv1, pll1mf;
-    
+
     scss = GET_BITS(RCU_CFG0, 2, 3);
-    
+
     switch (scss)
     {
         /* IRC8M is selected as CK_SYS */
         case SEL_IRC8M:
             SystemCoreClock = IRC8M_VALUE;
             break;
-            
+
         /* HXTAL is selected as CK_SYS */
         case SEL_HXTAL:
             SystemCoreClock = HXTAL_VALUE;
             break;
-            
+
         /* PLL is selected as CK_SYS */
         case SEL_PLL:
             /* PLL clock source selection, HXTAL or IRC8M/2 */
             pllsel = (RCU_CFG0 & RCU_CFG0_PLLSEL);
-    
-    
+
+
             if(RCU_PLLSRC_IRC8M_DIV2 == pllsel){
                 /* PLL clock source is IRC8M/2 */
                 ck_src = IRC8M_VALUE / 2U;
             }else{
                 /* PLL clock source is HXTAL */
                 ck_src = HXTAL_VALUE;
-    
+
                 predv0sel = (RCU_CFG1 & RCU_CFG1_PREDV0SEL);
-    
+
                 /* source clock use PLL1 */
                 if(RCU_PREDV0SRC_CKPLL1 == predv0sel){
                     predv1 = ((RCU_CFG1 & RCU_CFG1_PREDV1) >> 4) + 1U;
@@ -247,29 +247,29 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
                 predv0 = (RCU_CFG1 & RCU_CFG1_PREDV0) + 1U;
                 ck_src /= predv0;
             }
-    
+
             /* PLL multiplication factor */
             pllmf = GET_BITS(RCU_CFG0, 18, 21);
-    
+
             if((RCU_CFG0 & RCU_CFG0_PLLMF_4)){
                 pllmf |= 0x10U;
             }
-    
+
             if(pllmf >= 15U){
                 pllmf += 1U;
             }else{
                 pllmf += 2U;
             }
-    
+
             SystemCoreClock = ck_src * pllmf;
-    
+
             if(15U == pllmf){
                 /* PLL source clock multiply by 6.5 */
                 SystemCoreClock = ck_src * 6U + ck_src / 2U;
             }
-    
+
             break;
-    
+
         /* IRC8M is selected as CK_SYS */
         default:
             SystemCoreClock = IRC8M_VALUE;
@@ -277,11 +277,11 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
     }
 }
 
-/** 
+/**
  * \brief      Function to Initialize the system.
- * \details    
- * Initializes the microcontroller system. Typically, this function configures the 
- * oscillator (PLL) that is part of the microcontroller device. For systems 
+ * \details
+ * Initializes the microcontroller system. Typically, this function configures the
+ * oscillator (PLL) that is part of the microcontroller device. For systems
  * with a variable clock speed, it updates the variable \ref SystemCoreClock.
  * SystemInit is called from the file <b>startup<i>_device</i></b>.
  */
@@ -294,7 +294,7 @@ void SystemInit (void)
     /* reset the RCC clock configuration to the default reset state */
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
-    
+
     /* reset SCS, AHBPSC, APB1PSC, APB2PSC, ADCPSC, CKOUT0SEL bits */
     RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
                   RCU_CFG0_ADCPSC | RCU_CFG0_ADCPSC_2 | RCU_CFG0_CKOUT0SEL);
@@ -306,7 +306,7 @@ void SystemInit (void)
     RCU_CTL &= ~(RCU_CTL_HXTALBPS);
 
     /* reset PLLSEL, PREDV0_LSB, PLLMF, USBFSPSC bits */
-    
+
     RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0_LSB | RCU_CFG0_PLLMF |
                   RCU_CFG0_USBFSPSC | RCU_CFG0_PLLMF_4);
     RCU_CFG1 = 0x00000000U;
@@ -317,7 +317,7 @@ void SystemInit (void)
     RCU_INT = 0x00FF0000U;
 
     /* Configure the System clock source, PLL Multiplier, AHB/APBx prescalers and Flash settings */
-    system_clock_config();    
+    system_clock_config();
 }
 
 /**
@@ -501,7 +501,7 @@ void ECLIC_Init(void)
 {
     /* TODO: Add your own initialization code here. This function will be called by main */
     ECLIC_SetMth(0);
-    ECLIC_SetCfgNlbits(3);
+    ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
 }
 
 /**
@@ -521,7 +521,7 @@ void ECLIC_Init(void)
  */
 int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void *handler)
 {
-    if ((IRQn > ECLIC_NUM_INTERRUPTS) || (shv > ECLIC_VECTOR_INTERRUPT) \
+    if ((IRQn > SOC_INT_MAX) || (shv > ECLIC_VECTOR_INTERRUPT) \
         || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER ) || (handler == NULL)) {
         return -1;
     }
@@ -536,7 +536,7 @@ int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_
     /* set interrupt handler entry to vector table */
     ECLIC_SetVector(IRQn, (rv_csr_t)handler);
     /* enable interrupt */
-    ECLIC_EnableIRQ(IRQn); 
+    ECLIC_EnableIRQ(IRQn);
     return 0;
 }
 
@@ -544,7 +544,7 @@ int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_
 /**
  * \brief      delay a time in milliseconds
  * \details
- *             provide API for delay 
+ *             provide API for delay
  * \param[in]  count: count in milliseconds
  * \remarks
  */
@@ -553,9 +553,9 @@ void delay_1ms(uint32_t count)
 {
     uint64_t start_mtime, delta_mtime;
 
-    /* don't start measuruing until we see an mtime tick */ 
+    /* don't start measuruing until we see an mtime tick */
     uint64_t tmp = SysTimer_GetLoadValue();
-    
+
     do{
         start_mtime = SysTimer_GetLoadValue();
     }while(start_mtime == tmp);
