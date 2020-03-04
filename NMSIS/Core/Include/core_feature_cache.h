@@ -81,7 +81,7 @@ __STATIC_FORCEINLINE void DisableICache (void)
 /** @} */ /* End of Doxygen Group NMSIS_Core_ICache */
 #endif /* defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1) */
 
-#if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1)
+#if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1)
 /**
  * \defgroup NMSIS_Core_DCache      D-Cache Functions
  * \ingroup  NMSIS_Core_Cache
