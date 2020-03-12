@@ -174,9 +174,10 @@ CTEST(eclic, reg_read_write)
     ECLIC_SetCfgNlbits(orig);
 
     orig = ECLIC_GetMth();
-    ECLIC_SetMth(orig + 1);
-    ASSERT_EQUAL(ECLIC_GetMth(), orig);
+    ECLIC_SetMth(255);
+    ASSERT_EQUAL(ECLIC_GetMth(), 255);
     ECLIC_SetMth(orig);
+    ASSERT_EQUAL(ECLIC_GetMth(), orig);
 
     ECLIC_GetTrigIRQ(SysTimer_IRQn);
     ECLIC_SetTrigIRQ(SysTimer_IRQn, ECLIC_NEGTIVE_EDGE_TRIGGER);
