@@ -86,8 +86,8 @@ typedef struct {
     __IOM uint8_t   CFG;                        /*!< Offset: 0x000 (R/W)  CLIC configuration register */
     uint8_t RESERVED0[3];
     __IM uint32_t  INFO;                        /*!< Offset: 0x004 (R/ )  CLIC information register */
-    __IOM uint8_t  MTH;                         /*!< Offset: 0x008 (R/W)  CLIC machine mode threshold register */
     uint8_t RESERVED1[3];
+    __IOM uint8_t  MTH;                         /*!< Offset: 0x00B (R/W)  CLIC machine mode threshold register */
     uint32_t RESERVED2[0x3FD];
     CLIC_CTRL_Type CTRL[4096];                  /*!< Offset: 0x1000 (R/W) CLIC register structure for INTIP, INTIE, INTATTR, INTCTL */
 } CLIC_Type;
@@ -199,6 +199,7 @@ typedef enum IRQn {
      * According the interrupt handlers defined in startup_Device.S
      * eg.: Interrupt for Timer#1       eclic_tim1_handler   ->   TIM1_IRQn */
     FirstDeviceSpecificInterrupt_IRQn    = 19,    /*!< First Device Specific Interrupt */
+    SOC_INT_MAX,                                  /*!< Number of total interrupts */
 } IRQn_Type;
 #endif /* __ONLY_FOR_DOXYGEN_DOCUMENT_GENERATION__ */
 
@@ -245,12 +246,12 @@ typedef enum IRQn {
 #endif  /* (NMSIS_VECTAB_VIRTUAL) */
 
 /**
- * \brief  Set nlbits value of cliccfg register
+ * \brief  Set nlbits value
  * \details
- * This function set the nlbits value of cliccfg register.
+ * This function set the nlbits value of CLICCFG register.
  * \param [in]    nlbits    nlbits value
  * \remarks
- * - nlbits is used to set the width of level in the clicintctl.
+ * - nlbits is used to set the width of level in the CLICINTCTL[i].
  * \sa
  * - \ref ECLIC_GetCfgNlbits
  */
@@ -261,12 +262,12 @@ __STATIC_FORCEINLINE void __ECLIC_SetCfgNlbits(uint32_t nlbits)
 }
 
 /**
- * \brief  Get nlbits value from cliccfg register
+ * \brief  Get nlbits value
  * \details
- * This function get the nlbits value of cliccfg register.
- * \return   nlbits value of cliccfg register
+ * This function get the nlbits value of CLICCFG register.
+ * \return   nlbits value of CLICCFG register
  * \remarks
- * - nlbits is used to get the width of level in the clicintctl.
+ * - nlbits is used to set the width of level in the CLICINTCTL[i].
  * \sa
  * - \ref ECLIC_SetCfgNlbits
  */
@@ -276,12 +277,12 @@ __STATIC_FORCEINLINE uint32_t __ECLIC_GetCfgNlbits(void)
 }
 
 /**
- * \brief  Get the version control from CLIC information register
+ * \brief  Get the ECLIC version number
  * \details
- * This function gets the hardware version information from CLIC information register.
- * \return   hardware version information from CLIC information register.
+ * This function gets the hardware version information from CLICINFO register.
+ * \return   hardware version number in CLICINFO register.
  * \remarks
- * - This function gets harware version information from CLIC information register.
+ * - This function gets harware version information from CLICINFO register.
  * - Bit 20:17 for architecture version, bit 16:13 for implementation version.
  * \sa
  * - \ref ECLIC_GetInfoNum
@@ -292,14 +293,14 @@ __STATIC_FORCEINLINE uint32_t __ECLIC_GetInfoVer(void)
 }
 
 /**
- * \brief  Get CLICINTCTLBITS from CLIC information register
+ * \brief  Get CLICINTCTLBITS
  * \details
- * This function gets CLICINTCTLBITS from CLIC information register.
- * \return  CLICINTCTLBITS from CLIC information register.
+ * This function gets CLICINTCTLBITS from CLICINFO register.
+ * \return  CLICINTCTLBITS from CLICINFO register.
  * \remarks
- * - In the clicintctl registers, with 2 <= CLICINTCTLBITS <= 8.
+ * - In the CLICINTCTL[i] registers, with 2 <= CLICINTCTLBITS <= 8.
  * - The implemented bits are kept left-justified in the most-significant bits of each 8-bit
- *   clicintctl[i] register, with the lower unimplemented bits treated as hardwired to 1.
+ *   CLICINTCTL[I] register, with the lower unimplemented bits treated as hardwired to 1.
  * \sa
  * - \ref ECLIC_GetInfoNum
  */
@@ -309,12 +310,12 @@ __STATIC_FORCEINLINE uint32_t __ECLIC_GetInfoCtlbits(void)
 }
 
 /**
- * \brief  Get number of maximum interrupt inputs supported from CLIC information register
+ * \brief  Get number of maximum interrupt inputs supported
  * \details
- * This function gets number of maximum interrupt inputs supported from CLIC information register.
- * \return  number of maximum interrupt inputs supported from CLIC information register.
+ * This function gets number of maximum interrupt inputs supported from CLICINFO register.
+ * \return  number of maximum interrupt inputs supported from CLICINFO register.
  * \remarks
- * - This function gets number of maximum interrupt inputs supported from CLIC information register.
+ * - This function gets number of maximum interrupt inputs supported from CLICINFO register.
  * - The num_interrupt field specifies the actual number of maximum interrupt inputs supported in this implementation.
  * \sa
  * - \ref ECLIC_GetInfoCtlbits
@@ -534,9 +535,9 @@ __STATIC_FORCEINLINE uint32_t __ECLIC_GetShvIRQ(IRQn_Type IRQn)
 /**
  * \brief  Modify ECLIC Interrupt Input Control Register for a specific interrupt
  * \details
- * This function modify ECLIC Interrupt Input Control register of the specific interrupt \em IRQn.
+ * This function modify ECLIC Interrupt Input Control(CLICINTCTL[i]) register of the specific interrupt \em IRQn.
  * \param [in]      IRQn  Interrupt number
- * \param [in]      intctrl  Set value for clicctrl
+ * \param [in]      intctrl  Set value for CLICINTCTL[i] register
  * \remarks
  * - IRQn must not be negative.
  * \sa
