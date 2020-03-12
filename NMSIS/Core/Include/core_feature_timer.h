@@ -329,13 +329,26 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
  * - In this case, the file <b><Device>.h</b> must contain a vendor-specific implementation
  *   of this function.
  * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
+ * - Since the MTIMERCMP value might overflow, if overflowed, MTIMER will be set to 0, and MTIMERCMP set to ticks
  * \sa
  * - \ref SysTimer_SetCompareValue
  * - \ref SysTimer_SetLoadValue
  */
 __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
 {
-    SysTimer->MTIMERCMP = ticks + SysTimer->MTIMER;
+    uint64_t cur_ticks = SysTimer->MTIMER;
+    uint64_t reload_ticks = ticks + cur_ticks;
+
+    if (__USUALLY(reload_ticks > cur_ticks)) {
+        SysTimer->MTIMERCMP = reload_ticks;
+    } else {
+        /* When added the ticks value, then the MTIMERCMP < TIMER,
+         * which means the MTIMERCMP is overflowed,
+         * so we need to reset the counter to zero */
+        SysTimer->MTIMER = 0;
+        SysTimer->MTIMERCMP = ticks;
+    }
+
     return (0UL);
 }
 
