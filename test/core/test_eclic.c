@@ -186,6 +186,8 @@ CTEST(eclic, reg_read_write)
     CTEST_LOG("CLICINTCTLBITS : %d", ECLIC_GetInfoCtlbits());
     CTEST_LOG("CLIC VERSION : 0x%x", ECLIC_GetInfoVer());
     CTEST_LOG("NUM_INTERRUPT : %d", ECLIC_GetInfoNum());
+    CTEST_LOG("MTH : %d", ECLIC_GetMth());
+    CTEST_LOG("NLBITS : %d", ECLIC_GetCfgNlbits());
 }
 
 CTEST(eclic, nmi_entry) {
