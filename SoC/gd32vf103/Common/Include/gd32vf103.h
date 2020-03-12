@@ -367,7 +367,15 @@ typedef enum {
 
 #define NUM_GPIO 32
 
-uint32_t get_cpu_freq(void);
+extern uint32_t get_cpu_freq(void);
+
+/**
+ *  \brief      delay a time in milliseconds
+ *  \param[in]  count: count in milliseconds
+ *  \param[out] none
+ *  \retval     none
+ */
+extern void delay_1ms(uint32_t count);
 
 
 /** @} */ /* End of group gd32vf103_soc */

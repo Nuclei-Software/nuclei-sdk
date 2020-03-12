@@ -41,6 +41,27 @@ uint32_t get_cpu_freq()
     return cpu_freq;
 }
 
+/**
+ * \brief      delay a time in milliseconds
+ * \details
+ *             provide API for delay
+ * \param[in]  count: count in milliseconds
+ * \remarks
+ */
+void delay_1ms(uint32_t count)
+{
+    uint64_t start_mtime, delta_mtime;
 
+    /* don't start measuruing until we see an mtime tick */
+    uint64_t tmp = SysTimer_GetLoadValue();
+
+    do {
+        start_mtime = SysTimer_GetLoadValue();
+    } while(start_mtime == tmp);
+
+    do {
+        delta_mtime = SysTimer_GetLoadValue() - start_mtime;
+    } while (delta_mtime < (SystemCoreClock/4000.0 * count));
+}
 
 

@@ -459,6 +459,61 @@ void SystemBannerPrint(void)
 }
 
 /**
+ * \brief initialize eclic config
+ * \details
+ * Eclic need initialize after boot up, Vendor could also change the initialization
+ * configuration.
+ */
+void ECLIC_Init(void)
+{
+    /* TODO: Add your own initialization code here. This function will be called by main */
+    ECLIC_SetMth(0);
+    ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
+}
+
+/**
+ * \brief  Initialize a specific IRQ and register the handler
+ * \details
+ * This function set vector mode, trigger mode and polarity, interrupt level and priority,
+ * assign handler for specific IRQn.
+ * \param [in]  IRQn        NMI interrupt handler address
+ * \param [in]  shv         \ref ECLIC_NON_VECTOR_INTERRUPT means non-vector mode, and \ref ECLIC_VECTOR_INTERRUPT is vector mode
+ * \param [in]  trig_mode   see \ref ECLIC_TRIGGER_Type
+ * \param [in]  lvl         interupt level
+ * \param [in]  priority    interrupt priority
+ * \param [in]  handler     interrupt handler, if NULL, handler will not be installed
+ * return       -1 means invalid input parameter. 0 means successful.
+ * \remarks
+ * - This function use to configure specific eclic interrupt and register its interrupt handler and enable its interrupt.
+ * - If the vector table is placed in read-only section(FLASHXIP mode), handler could not be installed
+ */
+int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void *handler)
+{
+    if ((IRQn > SOC_INT_MAX) || (shv > ECLIC_VECTOR_INTERRUPT) \
+        || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER )) {
+        return -1;
+    }
+
+    /* set interrupt vector mode */
+    ECLIC_SetShvIRQ(IRQn, shv);
+    /* set interrupt trigger mode and polarity */
+    ECLIC_SetTrigIRQ(IRQn, trig_mode);
+    /* set interrupt level */
+    ECLIC_SetLevelIRQ(IRQn, lvl);
+    /* set interrupt priority */
+    ECLIC_SetPriorityIRQ(IRQn, priority);
+    if (handler != NULL) {
+        /* set interrupt handler entry to vector table */
+        ECLIC_SetVector(IRQn, (rv_csr_t)handler);
+    }
+    /* enable interrupt */
+    ECLIC_EnableIRQ(IRQn); 
+    return 0;
+}
+/** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
+
+
+/**
  * \brief _init function used in __libc_init_array()
  * \details
  * This __libc_init_array() function is called during startup code,
@@ -490,79 +545,4 @@ void _fini(void)
 {
     /* TODO: Add your own finishing code here, called after main */
 }
-
-/**
- * \brief initialize eclic config
- * \details
- * Eclic need initialize after boot up, Vendor could also change the initialization
- * configuration.
- */
-void ECLIC_Init(void)
-{
-    /* TODO: Add your own initialization code here. This function will be called by main */
-    ECLIC_SetMth(0);
-    ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
-}
-
-/**
- * \brief  initialize a specific IRQ and register the handler
- * \details
- * This function set vector mode, trigger mode and polarity, interrupt level and priority,
- * assign handler for specific IRQn.
- * \param [in]  IRQn        NMI interrupt handler address
- * \param [in]  shv         \ref ECLIC_NON_VECTOR_INTERRUPT means non-vector mode, and \ref ECLIC_VECTOR_INTERRUPT is vector mode
- * \param [in]  trig_mode   see \ref ECLIC_TRIGGER_Type
- * \param [in]  lvl         interupt level
- * \param [in]  priority    interrupt priority
- * \param [in]  handler     interrupt handler
- * return       -1 means invalid input parameter. 0 means successful.
- * \remarks
- * - This function use to register interrupt.
- */
-int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void *handler)
-{
-    if ((IRQn > SOC_INT_MAX) || (shv > ECLIC_VECTOR_INTERRUPT) \
-        || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER ) || (handler == NULL)) {
-        return -1;
-    }
-    /* set interrupt vector mode */
-    ECLIC_SetShvIRQ(IRQn, shv);
-    /* set interrupt trigger mode and polarity */
-    ECLIC_SetTrigIRQ(IRQn, trig_mode);
-    /* set interrupt level */
-    ECLIC_SetLevelIRQ(IRQn, lvl);
-    /* set interrupt priority */
-    ECLIC_SetPriorityIRQ(IRQn, priority);
-    /* set interrupt handler entry to vector table */
-    ECLIC_SetVector(IRQn, (rv_csr_t)handler);
-    /* enable interrupt */
-    ECLIC_EnableIRQ(IRQn);
-    return 0;
-}
-
-
-/**
- * \brief      delay a time in milliseconds
- * \details
- *             provide API for delay
- * \param[in]  count: count in milliseconds
- * \remarks
- */
-
-void delay_1ms(uint32_t count)
-{
-    uint64_t start_mtime, delta_mtime;
-
-    /* don't start measuruing until we see an mtime tick */
-    uint64_t tmp = SysTimer_GetLoadValue();
-
-    do{
-        start_mtime = SysTimer_GetLoadValue();
-    }while(start_mtime == tmp);
-
-    do{
-        delta_mtime = SysTimer_GetLoadValue() - start_mtime;
-    }while(delta_mtime <(SystemCoreClock/4000.0 *count));
-}
-
 /** @} */ /* End of Doxygen Group NMSIS_Core_SystemAndClock */

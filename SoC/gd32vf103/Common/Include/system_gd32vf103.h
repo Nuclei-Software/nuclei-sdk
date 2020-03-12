@@ -72,14 +72,6 @@ extern void ECLIC_Init(void);
  */
 extern int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void *handler);
 
-/**
- *  \brief      delay a time in milliseconds
- *  \param[in]  count: count in milliseconds
- *  \param[out] none
- *  \retval     none
- */
-extern void delay_1ms(uint32_t count);
-
 
 #ifdef __cplusplus
 }
