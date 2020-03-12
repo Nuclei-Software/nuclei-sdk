@@ -282,7 +282,7 @@ void ECLIC_Init(void)
 }
 
 /**
- * \brief  initialize a specific IRQ and register the handler
+ * \brief  Initialize a specific IRQ and register the handler
  * \details
  * This function set vector mode, trigger mode and polarity, interrupt level and priority,
  * assign handler for specific IRQn.
@@ -291,15 +291,16 @@ void ECLIC_Init(void)
  * \param [in]  trig_mode   see \ref ECLIC_TRIGGER_Type
  * \param [in]  lvl         interupt level
  * \param [in]  priority    interrupt priority
- * \param [in]  handler     interrupt handler
+ * \param [in]  handler     interrupt handler, if NULL, handler will not be installed
  * return       -1 means invalid input parameter. 0 means successful.
  * \remarks
- * - This function use to register interrupt.
+ * - This function use to configure specific eclic interrupt and register its interrupt handler and enable its interrupt.
+ * - If the vector table is placed in read-only section(FLASHXIP mode), handler could not be installed
  */
 int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void *handler)
 {
     if ((IRQn > SOC_INT_MAX) || (shv > ECLIC_VECTOR_INTERRUPT) \
-        || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER ) || (handler == NULL)) {
+        || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER )) {
         return -1;
     }
 
@@ -311,12 +312,15 @@ int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_
     ECLIC_SetLevelIRQ(IRQn, lvl);
     /* set interrupt priority */
     ECLIC_SetPriorityIRQ(IRQn, priority);
-    /* set interrupt handler entry to vector table */
-    ECLIC_SetVector(IRQn, (rv_csr_t)handler);
+    if (handler != NULL) {
+        /* set interrupt handler entry to vector table */
+        ECLIC_SetVector(IRQn, (rv_csr_t)handler);
+    }
     /* enable interrupt */
-    ECLIC_EnableIRQ(IRQn);
+    ECLIC_EnableIRQ(IRQn); 
     return 0;
 }
+/** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
 
 /**
  * \brief _init function used in __libc_init_array()
