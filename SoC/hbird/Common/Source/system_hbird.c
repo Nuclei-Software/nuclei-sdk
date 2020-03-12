@@ -292,7 +292,7 @@ void ECLIC_Init(void)
  * \param [in]  lvl         interupt level
  * \param [in]  priority    interrupt priority
  * \param [in]  handler     interrupt handler, if NULL, handler will not be installed
- * return       -1 means invalid input parameter. 0 means successful.
+ * \return       -1 means invalid input parameter. 0 means successful.
  * \remarks
  * - This function use to configure specific eclic interrupt and register its interrupt handler and enable its interrupt.
  * - If the vector table is placed in read-only section(FLASHXIP mode), handler could not be installed
