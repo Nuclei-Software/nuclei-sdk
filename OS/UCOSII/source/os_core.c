@@ -14,7 +14,7 @@
 * LICENSING TERMS:
 * ---------------
 *   uC/OS-II is provided in source form for FREE evaluation, for educational use or for peaceful research.
-* If you plan on using  uC/OS-II  in a commercial product you need to contact Micriµm to properly license
+* If you plan on using  uC/OS-II  in a commercial product you need to contact Micriï¿½m to properly license
 * its use in your product. We provide ALL the source code for your convenience and to help you experience
 * uC/OS-II.   The fact that the  source is provided does  NOT  mean that you can use it without  paying a
 * licensing fee.
@@ -682,7 +682,7 @@ void  OSIntExit (void)
                     OSTCBHighRdy->OSTCBCtxSwCtr++;         /* Inc. # of context switches to this task  */
 #endif
                     OSCtxSwCtr++;                          /* Keep track of the number of ctx switches */
-                    //OSIntCtxSw();                          /* Perform interrupt level ctx switch       */
+                    OSIntCtxSw();                          /* Perform interrupt level ctx switch       */
                 }
             }
         }
@@ -2025,4 +2025,4 @@ INT8U  OS_TCBInit (INT8U    prio,
     OS_EXIT_CRITICAL();
     return (OS_ERR_TASK_NO_MORE_TCB);
 }
-	 	   	  		 			 	    		   		 		 	 	 			 	    		   	 			 	  	 		 				 		  			 		 					 	  	  		      		  	   		      		  	 		 	      		   		 		  	 		 	      		  		  		  
+
