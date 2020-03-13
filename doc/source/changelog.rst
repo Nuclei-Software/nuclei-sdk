@@ -3,6 +3,21 @@
 Changelog
 =========
 
+V0.2.2-xxx
+----------
+
+Release tag is not yet decided.
+
+* OS
+
+  - Update UCOSII portable code
+  - Now both FreeRTOS and UCOSII are using similar portable code,
+    which both use ``SysTimer Interrupt`` and ``SysTimer Software Interrupt``.
+
+* Documentation
+
+  - Update documentation about RTOS
+
 V0.2.1
 ------
 
