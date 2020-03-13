@@ -1,308 +1,391 @@
 /**/
 #include "riscv_encoding.h"
 
+#ifndef __riscv_32e
+#define portRegNum          30
+#else
+#define portRegNum          14
+#endif
+
+#define portCONTEXT_SIZE    ( portRegNum * REGBYTES )
+
 #********************************************************************************************************
 #                                          PUBLIC FUNCTIONS
 #********************************************************************************************************
 
-    .extern  OSRunning                               # External references
-    .extern  OSPrioCur
-    .extern  OSPrioHighRdy
     .extern  OSTCBCur
     .extern  OSTCBHighRdy
-    .extern  OSIntEnter
-    .extern  OSIntExit
-    .extern  OSTimeTick
-    .extern  OSTaskSwHook
 
-
-    .global  OSStartHighRdy                          # Functions declared in this file
-    .global  OS_CPU_SR_Save
-    .global  OS_CPU_SR_Restore
-    .global  OSCtxSw
-    .global  OSIntCtxSw
-    .global  OSTickISR
-
-
-
-#********************************************************************************************************
-#                                               EQUATES
-#********************************************************************************************************
-
-    .equ  RISCV_MSTATUS_MIE,         0x08
-
-    .equ  RISCV_MIE_MSIE,            0x08            # M Soft Interrupt bit
-
-    .equ  RISCV_PRCI_BASE_ADDR,      0x44000000
+    .global prvPortStartFirstTask
 
 
 #********************************************************************************************************
 #                                     CODE GENERATION DIRECTIVES
 #********************************************************************************************************
 
-.section .text
+.section    .text.entry
+.align 8
 
-
-#********************************************************************************************************
-#                                 CRITICAL SECTION METHOD 3 FUNCTIONS
-#
-# Description: Disable/Enable interrupts by preserving the state of interrupts.  Generally speaking you
-#              would store the state of the interrupt disable flag in the local variable 'cpu_sr' and then
-#              disable interrupts.  'cpu_sr' is allocated in all of uC/OS-II's functions that need to
-#              disable interrupts.  You would restore the interrupt disable state by copying back 'cpu_sr'
-#              into the CPU's status register.
-#
-# Prototypes :     OS_CPU_SR  OS_CPU_SR_Save(void);
-#                  void       OS_CPU_SR_Restore(OS_CPU_SR cpu_sr);
-#
-#
-# Note(s)    : 1) These functions are used in general like this:
-#
-#                 void Task (void *p_arg)
-#                 {
-#                 #if OS_CRITICAL_METHOD == 3          /* Allocate storage for CPU status register */
-#                     OS_CPU_SR  cpu_sr;
-#                 #endif
-#
-#                          :
-#                          :
-#                     OS_ENTER_CRITICAL();             /* cpu_sr = OS_CPU_SaveSR();                */
-#                          :
-#                          :
-#                     OS_EXIT_CRITICAL();              /* OS_CPU_RestoreSR(cpu_sr);                */
-#                          :
-#                          :
-#                 }
-#********************************************************************************************************
-    .align 8
-OS_CPU_SR_Save:
-# Save the Machine status register
-    csrr   a0, mstatus
-
-# Disable global interupt
-//RISCV_MSTATUS_MIE = 0x8 (0b1000) it is the bit of MIE in mstatus
-    csrci mstatus,0x8
-    ret
-
-OS_CPU_SR_Restore:
-# Restore the Machine status register previous state
-    csrw   mstatus, a0
-    ret
-
-#********************************************************************************************************
-#                                         START MULTITASKING
-#                                      void OSStartHighRdy(void)
-#
-# Note(s) : 1) OSStartHighRdy() MUST:
-#              a) Call OSTaskSwHook() then,
-#              b) Set OSRunning to TRUE,
-#              c) Set OSTCBHighRdy->OSTCBStkPtr = SP
-#              d) Restore x1-x31; There is no need to restore x0 since it is always zero.
-#              e) Enable interrupts (tasks will run with interrupts enabled).
-#              f) Switch to highest priority task.
-#********************************************************************************************************
-
-.macro STORE_CTX_REG
-    addi sp,sp,-32*REGBYTES
-    STORE     ra,   0 * REGBYTES(sp)
-    STORE     t0,   4 * REGBYTES(sp)
-    STORE     t1,   5 * REGBYTES(sp)
-    STORE     t2,   6 * REGBYTES(sp)
-    STORE     s0,   7 * REGBYTES(sp)
-    STORE     s1,   8 * REGBYTES(sp)
-    STORE     a0,   9 * REGBYTES(sp)
-    STORE     a1,  10 * REGBYTES(sp)
-    STORE     a2,  11 * REGBYTES(sp)
-    STORE     a3,  12 * REGBYTES(sp)
-    STORE     a4,  13 * REGBYTES(sp)
-    STORE     a5,  14 * REGBYTES(sp)
-#ifndef __riscv_32e
-    STORE     a6,  15 * REGBYTES(sp)
-    STORE     a7,  16 * REGBYTES(sp)
-    STORE     s2,  17 * REGBYTES(sp)
-    STORE     s3,  18 * REGBYTES(sp)
-    STORE     s4,  19 * REGBYTES(sp)
-    STORE     s5,  20 * REGBYTES(sp)
-    STORE     s6,  21 * REGBYTES(sp)
-    STORE     s7,  22 * REGBYTES(sp)
-    STORE     s8,  23 * REGBYTES(sp)
-    STORE     s9,  24 * REGBYTES(sp)
-    STORE     s10, 25 * REGBYTES(sp)
-    STORE     s11, 26 * REGBYTES(sp)
-    STORE     t3,  27 * REGBYTES(sp)
-    STORE     t4,  28 * REGBYTES(sp)
-    STORE     t5,  29 * REGBYTES(sp)
-    STORE     t6,  30 * REGBYTES(sp)
-#endif
-
+/**
+ * \brief  Global interrupt disabled
+ * \details
+ *  This function disable global interrupt.
+ * \remarks
+ *  - All the interrupt requests will be ignored by CPU.
+ */
+.macro DISABLE_MIE
+    csrc CSR_MSTATUS, MSTATUS_MIE
 .endm
 
-.macro LOAD_CTX_REG
-    LOAD     ra,   0 * REGBYTES(sp)
-    LOAD     t0,   4 * REGBYTES(sp)
-    LOAD     t1,   5 * REGBYTES(sp)
-    LOAD     t2,   6 * REGBYTES(sp)
-    LOAD     s0,   7 * REGBYTES(sp)
-    LOAD     s1,   8 * REGBYTES(sp)
-    LOAD     a0,   9 * REGBYTES(sp)
-    LOAD     a1,  10 * REGBYTES(sp)
-    LOAD     a2,  11 * REGBYTES(sp)
-    LOAD     a3,  12 * REGBYTES(sp)
-    LOAD     a4,  13 * REGBYTES(sp)
-    LOAD     a5,  14 * REGBYTES(sp)
+/**
+ * \brief  Macro for context save
+ * \details
+ * This macro save ABI defined caller saved registers in the stack.
+ * \remarks
+ * - This Macro could use to save context when you enter to interrupt
+ * or exception
+*/
+/* Save caller registers */
+.macro SAVE_CONTEXT
+    csrrw sp, CSR_MSCRATCHCSWL, sp
+    /* Allocate stack space for context saving */
 #ifndef __riscv_32e
-    LOAD     a6,  15 * REGBYTES(sp)
-    LOAD     a7,  16 * REGBYTES(sp)
-    LOAD     s2,  17 * REGBYTES(sp)
-    LOAD     s3,  18 * REGBYTES(sp)
-    LOAD     s4,  19 * REGBYTES(sp)
-    LOAD     s5,  20 * REGBYTES(sp)
-    LOAD     s6,  21 * REGBYTES(sp)
-    LOAD     s7,  22 * REGBYTES(sp)
-    LOAD     s8,  23 * REGBYTES(sp)
-    LOAD     s9,  24 * REGBYTES(sp)
-    LOAD     s10, 25 * REGBYTES(sp)
-    LOAD     s11, 26 * REGBYTES(sp)
-    LOAD     t3,  27 * REGBYTES(sp)
-    LOAD     t4,  28 * REGBYTES(sp)
-    LOAD     t5,  29 * REGBYTES(sp)
-    LOAD     t6,  30 * REGBYTES(sp)
-#endif
-    addi sp,sp,32*REGBYTES
+    addi sp, sp, -20*REGBYTES
+#else
+    addi sp, sp, -14*REGBYTES
+#endif /* __riscv_32e */
+
+    STORE x1, 0*REGBYTES(sp)
+    STORE x4, 1*REGBYTES(sp)
+    STORE x5, 2*REGBYTES(sp)
+    STORE x6, 3*REGBYTES(sp)
+    STORE x7, 4*REGBYTES(sp)
+    STORE x10, 5*REGBYTES(sp)
+    STORE x11, 6*REGBYTES(sp)
+    STORE x12, 7*REGBYTES(sp)
+    STORE x13, 8*REGBYTES(sp)
+    STORE x14, 9*REGBYTES(sp)
+    STORE x15, 10*REGBYTES(sp)
+#ifndef __riscv_32e
+    STORE x16, 14*REGBYTES(sp)
+    STORE x17, 15*REGBYTES(sp)
+    STORE x28, 16*REGBYTES(sp)
+    STORE x29, 17*REGBYTES(sp)
+    STORE x30, 18*REGBYTES(sp)
+    STORE x31, 19*REGBYTES(sp)
+#endif /* __riscv_32e */
 .endm
 
+/**
+ * \brief  Macro for restore caller registers
+ * \details
+ * This macro restore ABI defined caller saved registers from stack.
+ * \remarks
+ * - You could use this macro to restore context before you want return
+ * from interrupt or exeception
+ */
+/* Restore caller registers */
+.macro RESTORE_CONTEXT
+    LOAD x1, 0*REGBYTES(sp)
+    LOAD x4, 1*REGBYTES(sp)
+    LOAD x5, 2*REGBYTES(sp)
+    LOAD x6, 3*REGBYTES(sp)
+    LOAD x7, 4*REGBYTES(sp)
+    LOAD x10, 5*REGBYTES(sp)
+    LOAD x11, 6*REGBYTES(sp)
+    LOAD x12, 7*REGBYTES(sp)
+    LOAD x13, 8*REGBYTES(sp)
+    LOAD x14, 9*REGBYTES(sp)
+    LOAD x15, 10*REGBYTES(sp)
+#ifndef __riscv_32e
+    LOAD x16, 14*REGBYTES(sp)
+    LOAD x17, 15*REGBYTES(sp)
+    LOAD x28, 16*REGBYTES(sp)
+    LOAD x29, 17*REGBYTES(sp)
+    LOAD x30, 18*REGBYTES(sp)
+    LOAD x31, 19*REGBYTES(sp)
 
-.global exc_entry
+    /* De-allocate the stack space */
+    addi sp, sp, 20*REGBYTES
+#else
+    /* De-allocate the stack space */
+    addi sp, sp, 14*REGBYTES
+#endif /* __riscv_32e */
+    csrrw sp, CSR_MSCRATCHCSWL, sp
+.endm
+
+/**
+ * \brief  Macro for save necessary CSRs to stack
+ * \details
+ * This macro store MCAUSE, MEPC, MSUBM to stack.
+ */
+.macro SAVE_CSR_CONTEXT
+    /* Store CSR mcause to stack using pushmcause */
+    csrrwi  x0, CSR_PUSHMCAUSE, 11
+    /* Store CSR mepc to stack using pushmepc */
+    csrrwi  x0, CSR_PUSHMEPC, 12
+    /* Store CSR msub to stack using pushmsub */
+    csrrwi  x0, CSR_PUSHMSUBM, 13
+.endm
+
+/**
+ * \brief  Macro for restore necessary CSRs from stack
+ * \details
+ * This macro restore MSUBM, MEPC, MCAUSE from stack.
+ */
+.macro RESTORE_CSR_CONTEXT
+    LOAD x5,  13*REGBYTES(sp)
+    csrw CSR_MSUBM, x5
+    LOAD x5,  12*REGBYTES(sp)
+    csrw CSR_MEPC, x5
+    LOAD x5,  11*REGBYTES(sp)
+    csrw CSR_MCAUSE, x5
+.endm
+
+/**
+ * \brief  Exception/NMI Entry
+ * \details
+ * This function provide common entry functions for exception/nmi.
+ * \remarks
+ * This function provide a default exception/nmi entry.
+ * ABI defined caller save register and some CSR registers
+ * to be saved before enter interrupt handler and be restored before return.
+ */
+.section .text.trap
+/* In CLIC mode, the exeception entry must be 64bytes aligned */
 .align 6
+.global exc_entry
 exc_entry:
+    /* Save the caller saving registers (context) */
+    SAVE_CONTEXT
+    /* Save the necessary CSR registers */
+    SAVE_CSR_CONTEXT
 
-    STORE_CTX_REG
+    /*
+     * Set the exception handler function arguments
+     * argument 1: mcause value
+     * argument 2: current stack point(SP) value
+     */
+    csrr a0, mcause
+    mv a1, sp
+    /*
+     * TODO: Call the exception handler function
+     * By default, the function template is provided in
+     * system_Device.c, you can adjust it as you want
+     */
+    call core_exception_handler
 
-    csrr t0,mstatus
-    STORE t0,1*REGBYTES(sp)
+    /* Restore the necessary CSR registers */
+    RESTORE_CSR_CONTEXT
+    /* Restore the caller saving registers (context) */
+    RESTORE_CONTEXT
 
-    //call xlen_t trap_handler(mcause,mepc,sp);
-    csrr a0,mcause
-    mv a1,sp
-    jal core_exception_handler
-
-    LOAD t0,1*REGBYTES(sp)
-    csrw mstatus,t0
-
-    LOAD_CTX_REG
-
+    /* Return to regular code */
     mret
 
-.globl eclic_mtip_handler
-eclic_mtip_handler:
+/**
+ * \brief  Non-Vector Interrupt Entry
+ * \details
+ * This function provide common entry functions for handling
+ * non-vector interrupts
+ * \remarks
+ * This function provide a default non-vector interrupt entry.
+ * ABI defined caller save register and some CSR registers need
+ * to be saved before enter interrupt handler and be restored before return.
+ */
+.section      .text.irq
+/* In CLIC mode, the interrupt entry must be 4bytes aligned */
+.align 2
+.global irq_entry
+/* This label will be set to MTVT2 register */
+irq_entry:
+    /* Save the caller saving registers (context) */
+    SAVE_CONTEXT
+    /* Save the necessary CSR registers */
+    SAVE_CSR_CONTEXT
 
-    STORE_CTX_REG
+    /* This special CSR read/write operation, which is actually
+     * claim the CLIC to find its pending highest ID, if the ID
+     * is not 0, then automatically enable the mstatus.MIE, and
+     * jump to its vector-entry-label, and update the link register
+     */
+    csrrw ra, CSR_JALMNXTI, ra
 
-    csrr t0,mstatus
-    STORE t0,1*REGBYTES(sp)
+    /* Critical section with interrupts disabled */
+    DISABLE_MIE
 
+    /* Restore the necessary CSR registers */
+    RESTORE_CSR_CONTEXT
+    /* Restore the caller saving registers (context) */
+    RESTORE_CONTEXT
 
-    csrr a0,mcause
-    csrr a1,mepc
-    mv a2,sp
-    jal timer_irq_handler
-    csrw mepc,a0
-
-    LOAD t0,1*REGBYTES(sp)
-    csrw mstatus,t0
-
-    LOAD_CTX_REG
-
+    /* Return to regular code */
     mret
 
+/* Default Handler for Exceptions / Interrupts */
+.global default_intexc_handler
+Undef_Handler:
+default_intexc_handler:
+1:
+	j 1b
+
+
+/* Start the first task.  This also clears the bit that indicates the FPU is
+	in use in case the FPU was used before the scheduler was started - which
+	would otherwise result in the unnecessary leaving of space in the stack
+	for lazy saving of FPU registers. */
 .align 3
-.global task_switch
-task_switch:
-    //restore sp when trap occur ,it's important
-    mv sp,a0
+prvPortStartFirstTask:
+    /* Setup Interrupt Stack using
+       The stack that was used by main()
+       before the scheduler is started is
+       no longer required after the scheduler is started.
+       Interrupt stack pointer is stored in CSR_MSCRATCH */
+    la t0, _sp
+    csrw CSR_MSCRATCH, t0
+    LOAD sp, OSTCBHighRdy           /* Load OSTCBHighRdy. */
+    LOAD sp, 0x0(sp)                /* Read sp from first TCB member */
 
-    //then store sp
-    la t0,OSTCBCur
-    LOAD t1,0(t0)
-    STORE sp,0(t1)
+    /* Pop PC from stack and set MEPC */
+    LOAD t0,  0  * REGBYTES(sp)
+    csrw CSR_MEPC, t0
+    /* Pop mstatus from stack and set it */
+    LOAD t0,  (portRegNum - 1)  * REGBYTES(sp)
+    csrw CSR_MSTATUS, t0
+    /* Interrupt still disable here */
+    /* Restore Registers from Stack */
+    LOAD x1,  1  * REGBYTES(sp)    /* RA */
+    LOAD x5,  2  * REGBYTES(sp)
+    LOAD x6,  3  * REGBYTES(sp)
+    LOAD x7,  4  * REGBYTES(sp)
+    LOAD x8,  5  * REGBYTES(sp)
+    LOAD x9,  6  * REGBYTES(sp)
+    LOAD x10, 7  * REGBYTES(sp)
+    LOAD x11, 8  * REGBYTES(sp)
+    LOAD x12, 9  * REGBYTES(sp)
+    LOAD x13, 10 * REGBYTES(sp)
+    LOAD x14, 11 * REGBYTES(sp)
+    LOAD x15, 12 * REGBYTES(sp)
+#ifndef __riscv_32e
+    LOAD x16, 13 * REGBYTES(sp)
+    LOAD x17, 14 * REGBYTES(sp)
+    LOAD x18, 15 * REGBYTES(sp)
+    LOAD x19, 16 * REGBYTES(sp)
+    LOAD x20, 17 * REGBYTES(sp)
+    LOAD x21, 18 * REGBYTES(sp)
+    LOAD x22, 19 * REGBYTES(sp)
+    LOAD x23, 20 * REGBYTES(sp)
+    LOAD x24, 21 * REGBYTES(sp)
+    LOAD x25, 22 * REGBYTES(sp)
+    LOAD x26, 23 * REGBYTES(sp)
+    LOAD x27, 24 * REGBYTES(sp)
+    LOAD x28, 25 * REGBYTES(sp)
+    LOAD x29, 26 * REGBYTES(sp)
+    LOAD x30, 27 * REGBYTES(sp)
+    LOAD x31, 28 * REGBYTES(sp)
+#endif
 
-    jal OSTaskSwHook
-
-    //load OSTCBCur
-    la t0,OSTCBHighRdy
-    LOAD t1,0(t0)
-    la t0,OSTCBCur
-    STORE t1,0(t0)
-
-    //load OSPrioCur
-    la t0,OSPrioHighRdy //uint8
-    lbu t1,0(t0)
-    la t0,OSPrioCur //uint8
-    sb t1,0(t0)
-
-    //load new sp
-    la     t0, OSTCBHighRdy
-    LOAD   t1, 0(t0)
-    LOAD   sp, 0(t1) //load sp
-
-    //restore context
-    LOAD t0,31*REGBYTES(sp)
-    csrw mepc,t0
-    LOAD t0,1*REGBYTES(sp)
-    csrs mstatus,t0
-
-    LOAD_CTX_REG
+    addi sp, sp, portCONTEXT_SIZE
 
     mret
 
-    .global cpu_sr_set
-    .align 4
-cpu_sr_set:
-    csrr a0,mstatus
-    csrci mstatus,0x8
-    ret
 
-    .global cpu_sr_reset
-cpu_sr_reset:
-    csrw mstatus,a0
-    ret
+.section    .text
 
+.align 2
+.global eclic_msip_handler
+eclic_msip_handler:
+    addi sp, sp, -portCONTEXT_SIZE
+    STORE x1,  1  * REGBYTES(sp)    /* RA */
+    STORE x5,  2  * REGBYTES(sp)
+    STORE x6,  3  * REGBYTES(sp)
+    STORE x7,  4  * REGBYTES(sp)
+    STORE x8,  5  * REGBYTES(sp)
+    STORE x9,  6  * REGBYTES(sp)
+    STORE x10, 7  * REGBYTES(sp)
+    STORE x11, 8  * REGBYTES(sp)
+    STORE x12, 9  * REGBYTES(sp)
+    STORE x13, 10 * REGBYTES(sp)
+    STORE x14, 11 * REGBYTES(sp)
+    STORE x15, 12 * REGBYTES(sp)
+#ifndef __riscv_32e
+    STORE x16, 13 * REGBYTES(sp)
+    STORE x17, 14 * REGBYTES(sp)
+    STORE x18, 15 * REGBYTES(sp)
+    STORE x19, 16 * REGBYTES(sp)
+    STORE x20, 17 * REGBYTES(sp)
+    STORE x21, 18 * REGBYTES(sp)
+    STORE x22, 19 * REGBYTES(sp)
+    STORE x23, 20 * REGBYTES(sp)
+    STORE x24, 21 * REGBYTES(sp)
+    STORE x25, 22 * REGBYTES(sp)
+    STORE x26, 23 * REGBYTES(sp)
+    STORE x27, 24 * REGBYTES(sp)
+    STORE x28, 25 * REGBYTES(sp)
+    STORE x29, 26 * REGBYTES(sp)
+    STORE x30, 27 * REGBYTES(sp)
+    STORE x31, 28 * REGBYTES(sp)
+#endif
+    /* Push mstatus to stack */
+    csrr t0, CSR_MSTATUS
+    STORE t0,  (portRegNum - 1)  * REGBYTES(sp)
 
-.align 3
-//this function don't set mstauts. So the first task should let user to enable global interrupt
-OSStartHighRdy:
+    /* Push additional registers */
 
-    //call OSTaskSwHook
-    jal OSTaskSwHook
+    /* Store sp to task stack */
+    LOAD t0, OSTCBCur
+    STORE sp, 0(t0)
 
-    //OSRunning=1
-    li t0, 0x01
-    la t1, OSRunning
-    sb t0, 0(t1)
+    csrr t0, CSR_MEPC
+    STORE t0, 0(sp)
 
-    la   t0, OSTCBHighRdy
-    LOAD t1, 0(t0)
-    LOAD sp, 0(t1) //load sp
+    jal xPortTaskSwitch
 
-    LOAD t0,31*REGBYTES(sp)
-    csrw mepc,t0
+    /* Switch task context */
+    LOAD t0, OSTCBHighRdy           /* Load pxCurrentTCB. */
+    LOAD sp, 0x0(t0)                /* Read sp from first TCB member */
 
-    jal TickSetup
+    /* Pop PC from stack and set MEPC */
+    LOAD t0,  0  * REGBYTES(sp)
+    csrw CSR_MEPC, t0
+    /* Pop additional registers */
 
-    LOAD_CTX_REG
-    //run task
+    /* Pop mstatus from stack and set it */
+    LOAD t0,  (portRegNum - 1)  * REGBYTES(sp)
+    csrw CSR_MSTATUS, t0
+    /* Interrupt still disable here */
+    /* Restore Registers from Stack */
+    LOAD x1,  1  * REGBYTES(sp)    /* RA */
+    LOAD x5,  2  * REGBYTES(sp)
+    LOAD x6,  3  * REGBYTES(sp)
+    LOAD x7,  4  * REGBYTES(sp)
+    LOAD x8,  5  * REGBYTES(sp)
+    LOAD x9,  6  * REGBYTES(sp)
+    LOAD x10, 7  * REGBYTES(sp)
+    LOAD x11, 8  * REGBYTES(sp)
+    LOAD x12, 9  * REGBYTES(sp)
+    LOAD x13, 10 * REGBYTES(sp)
+    LOAD x14, 11 * REGBYTES(sp)
+    LOAD x15, 12 * REGBYTES(sp)
+#ifndef __riscv_32e
+    LOAD x16, 13 * REGBYTES(sp)
+    LOAD x17, 14 * REGBYTES(sp)
+    LOAD x18, 15 * REGBYTES(sp)
+    LOAD x19, 16 * REGBYTES(sp)
+    LOAD x20, 17 * REGBYTES(sp)
+    LOAD x21, 18 * REGBYTES(sp)
+    LOAD x22, 19 * REGBYTES(sp)
+    LOAD x23, 20 * REGBYTES(sp)
+    LOAD x24, 21 * REGBYTES(sp)
+    LOAD x25, 22 * REGBYTES(sp)
+    LOAD x26, 23 * REGBYTES(sp)
+    LOAD x27, 24 * REGBYTES(sp)
+    LOAD x28, 25 * REGBYTES(sp)
+    LOAD x29, 26 * REGBYTES(sp)
+    LOAD x30, 27 * REGBYTES(sp)
+    LOAD x31, 28 * REGBYTES(sp)
+#endif
+
+    addi sp, sp, portCONTEXT_SIZE
     mret
 
-    .align 4
-
-OSCtxSw:
-    j  scheduler_ecall
-    ret
-
-//never be used!
-// delete it in OSIntexit
-OSIntCtxSw:
-
-    j scheduler_ecall//task_switch
-
-    .end

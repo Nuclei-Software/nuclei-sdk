@@ -49,6 +49,8 @@
 
 
 #include <stdint.h>
+#include "os_cpu_port.h"
+
 /*
 *********************************************************************************************************
 *                                     EXTERNAL C LANGUAGE LINKAGE
@@ -129,9 +131,10 @@ typedef  uint32_t         OS_CPU_SR;        /* Define size of Machine status reg
 #if OS_CRITICAL_METHOD == 3u
 #define  OS_ENTER_CRITICAL()  do { cpu_sr = OS_CPU_SR_Save();} while (0)
 #define  OS_EXIT_CRITICAL()   do { OS_CPU_SR_Restore(cpu_sr);} while (0)
-
+#else
+#define  OS_ENTER_CRITICAL()  portENTER_CRITICAL()
+#define  OS_EXIT_CRITICAL()   portEXIT_CRITICAL()
 #endif
-
 
 /*
 *********************************************************************************************************
@@ -141,7 +144,8 @@ typedef  uint32_t         OS_CPU_SR;        /* Define size of Machine status reg
 
 #define  OS_STK_GROWTH          1u          /* Stack grows from HIGH to LOW memory */
 
-#define  OS_TASK_SW()           OSCtxSw()
+#define  OS_TASK_SW()           portYIELD()
+#define  OSIntCtxSw()           portYIELD()
 
 #ifndef TICK_RATE_HZ
 #warning "Use default TICK_RATE_HZ=100"
@@ -155,12 +159,18 @@ typedef  uint32_t         OS_CPU_SR;        /* Define size of Machine status reg
 */
 
 #if OS_CRITICAL_METHOD == 3u                      /* See OS_CPU_A.S                                    */
-OS_CPU_SR  OS_CPU_SR_Save   (void);
-void       OS_CPU_SR_Restore(OS_CPU_SR  cpu_sr);
+portFORCE_INLINE OS_CPU_SR OS_CPU_SR_Save (void)
+{
+    return __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
+}
+
+portFORCE_INLINE void OS_CPU_SR_Restore(OS_CPU_SR cpu_sr)
+{
+    __RV_CSR_WRITE(CSR_MSTATUS, cpu_sr);
+}
 #endif
 
 void       OSCtxSw          (void);
-void       OSIntCtxSw       (void);
 void       OSStartHighRdy   (void);
 
 

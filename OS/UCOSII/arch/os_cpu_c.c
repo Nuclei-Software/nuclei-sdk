@@ -1,61 +1,6 @@
 #include <ucos_ii.h>
 #include "nuclei_sdk_soc.h"
 
-#ifdef __riscv_flen
-    unsigned long MSTATUS_INIT = (MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS);
-#else
-    unsigned long MSTATUS_INIT = (MSTATUS_MPP | MSTATUS_MPIE);
-#endif /* __riscv_flen */
-
-OS_STK *OSTaskStkInit (void (*task)(void *pd), void *pdata, OS_STK *ptos, INT16U opt)
-{
-
-    //pdata should be restore in a0
-
-    OS_STK *stk;
-    (void)opt;
-
-    // Force stack 8byte align for double floating point case
-    ptos = (OS_STK *)(((unsigned long)ptos) & (~(unsigned long)(0x0007)));
-
-    stk = ptos-32;
-    extern void halt(unsigned long a, unsigned long b);
-    stk[0]=(OS_STK)halt; //ra,meaningless ,task shuldn't exit.
-    stk[1]=MSTATUS_INIT;//mstatus.set 0x80 ,global interrupt will be set when task begin.
-    stk[2]=0;//unused
-    stk[3]=0;//unused
-    stk[4]=0;
-    stk[5]=0;
-    stk[6]=0;
-    stk[7]=0;
-    stk[8]=0;
-    stk[9]=(OS_STK)pdata;
-    stk[10]=0;
-    stk[11]=0;
-    stk[12]=0;
-    stk[13]=0;
-    stk[14]=0;
-    stk[15]=0;
-    stk[16]=0;
-    stk[17]=0;
-    stk[18]=0;
-    stk[19]=0;
-    stk[20]=0;
-    stk[21]=0;
-    stk[22]=0;
-    stk[23]=0;
-    stk[24]=0;
-    stk[25]=0;
-    stk[26]=0;
-    stk[27]=0;
-    stk[28]=0;
-    stk[29]=0;
-    stk[30]=0;
-    stk[31]=(OS_STK)task;//mepc
-    return stk;
-}
-
-
 /*
 OSTaskCreateHook() {}
 OSTaskDelHook()  {}
@@ -71,19 +16,6 @@ OSTimeTickHook() {}
 *
 *                                (c) Copyright 2006, Micrium, Weston, FL
 *                                          All Rights Reserved
-*
-*                                           ARM Cortex-M3 Port
-*
-* File      : OS_CPU_C.C
-* Version   : V2.86
-* By        : Jean J. Labrosse
-*
-* For       : ARMv7M Cortex-M3
-* Mode      : Thumb2
-* Toolchain : RealView Development Suite
-*             RealView Microcontroller Development Kit (MDK)
-*             ARM Developer Suite (ADS)
-*             Keil uVision
 *********************************************************************************************************
 */
 
