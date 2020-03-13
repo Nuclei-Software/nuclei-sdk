@@ -70,10 +70,6 @@
 /* The systick is a 64-bit counter. */
 #define portMAX_BIT_NUMBER          ( SysTimer_MTIMER_Msk )
 
-/* For strict compliance with the Cortex-M spec the task start address should
-have bit-0 clear, as it is loaded into the PC on exit from an ISR. */
-#define portSTART_ADDRESS_MASK      ( ( StackType_t ) 0xfffffffeUL )
-
 /* A fiddle factor to estimate the number of SysTick counts that would have
 occurred while the SysTick counter is stopped during tickless idle
 calculations. */
@@ -190,7 +186,7 @@ uint8_t uxMaxSysCallMTH = 255;
  * x18-27          s2-11       Saved registers                     Callee
  * x28-31          t3-6        Temporaries                         Caller
  *
- * The RISC-V context is saved t FreeRTOS tasks in the following stack frame,
+ * The RISC-V context is saved RTOS tasks in the following stack frame,
  * where the global and thread pointers are currently assumed to be constant so
  * are not saved:
  *
