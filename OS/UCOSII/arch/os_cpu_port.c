@@ -6,9 +6,9 @@
 //#define ENABLE_KERNEL_DEBUG
 
 #ifdef ENABLE_KERNEL_DEBUG
-    #define FREERTOS_PORT_DEBUG(...)                printf(__VA_ARGS__)
+    #define UCOSII_PORT_DEBUG(...)                printf(__VA_ARGS__)
 #else
-    #define FREERTOS_PORT_DEBUG(...)
+    #define UCOSII_PORT_DEBUG(...)
 #endif
 
 #ifndef configASSERT
@@ -22,10 +22,6 @@
     #define configSYSTICK_CLOCK_HZ                  SOC_TIMER_FREQ
 #endif
 
-#ifndef configTICK_RATE_HZ
-    #define configTICK_RATE_HZ                      TICK_RATE_HZ
-#endif
-
 #ifndef configKERNEL_INTERRUPT_PRIORITY
     #define configKERNEL_INTERRUPT_PRIORITY         1
 #endif
@@ -35,9 +31,6 @@
     #define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
 #endif
 
-/* Constants required to check the validity of an interrupt priority. */
-#define portFIRST_USER_INTERRUPT_NUMBER ( 18 )
-
 #define SYSTICK_TICK_CONST          (configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ)
 
 /* Masks off all bits but the ECLIC MTH bits in the MTH register. */
@@ -46,18 +39,6 @@
 /* Constants required to set up the initial stack. */
 #define portINITIAL_MSTATUS         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL)
 #define portINITIAL_EXC_RETURN      ( 0xfffffffd )
-
-/* The systick is a 64-bit counter. */
-#define portMAX_BIT_NUMBER          ( SysTimer_MTIMER_Msk )
-
-/* For strict compliance with the Cortex-M spec the task start address should
-have bit-0 clear, as it is loaded into the PC on exit from an ISR. */
-#define portSTART_ADDRESS_MASK      ( ( StackType_t ) 0xfffffffeUL )
-
-/* A fiddle factor to estimate the number of SysTick counts that would have
-occurred while the SysTick counter is stopped during tickless idle
-calculations. */
-#define portMISSED_COUNTS_FACTOR    ( 45UL )
 
 /* Let the user override the pre-loading of the initial LR with the address of
 prvTaskExitError() in case it messes up unwinding of the stack in the
@@ -114,38 +95,6 @@ static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
  */
 uint8_t uxMaxSysCallMTH = 255;
 
-/*
- * The number of SysTick increments that make up one tick period.
- */
-#if( configUSE_TICKLESS_IDLE == 1 )
-    static TickType_t ulTimerCountsForOneTick = 0;
-#endif /* configUSE_TICKLESS_IDLE */
-
-/*
- * The maximum number of tick periods that can be suppressed is limited by the
- * 24 bit resolution of the SysTick timer.
- */
-#if( configUSE_TICKLESS_IDLE == 1 )
-    static TickType_t xMaximumPossibleSuppressedTicks = 0;
-#endif /* configUSE_TICKLESS_IDLE */
-
-/*
- * Compensate for the CPU cycles that pass while the SysTick is stopped (low
- * power functionality only.
- */
-#if( configUSE_TICKLESS_IDLE == 1 )
-    static TickType_t ulStoppedTimerCompensation = 0;
-#endif /* configUSE_TICKLESS_IDLE */
-
-/*
- * Used by the portASSERT_IF_INTERRUPT_PRIORITY_INVALID() macro to ensure
- * FreeRTOS API functions are not called from interrupts that have been assigned
- * a priority above configMAX_SYSCALL_INTERRUPT_PRIORITY.
- */
-#if( configASSERT_DEFINED == 1 )
-     static uint8_t ucMaxSysCallPriority = 0;
-#endif /* configASSERT_DEFINED */
-
 /*-----------------------------------------------------------*/
 /*
  * See header file for description.
@@ -169,7 +118,7 @@ uint8_t uxMaxSysCallMTH = 255;
  * x18-27          s2-11       Saved registers                     Callee
  * x28-31          t3-6        Temporaries                         Caller
  *
- * The RISC-V context is saved t FreeRTOS tasks in the following stack frame,
+ * The RISC-V context is saved rtos tasks in the following stack frame,
  * where the global and thread pointers are currently assumed to be constant so
  * are not saved:
  *
@@ -317,15 +266,7 @@ void OSStartHighRdy (void)
 
     /* Get the real MTH should be set to ECLIC MTH register */
     uxMaxSysCallMTH = prvCalcMaxSysCallMTH(configMAX_SYSCALL_INTERRUPT_PRIORITY);
-    FREERTOS_PORT_DEBUG("Max SysCall MTH is set to 0x%x\n", uxMaxSysCallMTH);
-
-    #if( configASSERT_DEFINED == 1 )
-    {
-        /* Use the same mask on the maximum system call priority. */
-        ucMaxSysCallPriority = prvCheckMaxSysCallPrio(configMAX_SYSCALL_INTERRUPT_PRIORITY);
-        FREERTOS_PORT_DEBUG("Max SysCall Priority is set to %d\n", ucMaxSysCallPriority);
-    }
-    #endif /* conifgASSERT_DEFINED */
+    UCOSII_PORT_DEBUG("Max SysCall MTH is set to 0x%x\n", uxMaxSysCallMTH);
 
     __disable_irq();
     /* Start the timer that generates the tick ISR.  Interrupts are disabled
@@ -438,155 +379,7 @@ void xPortSysTickHandler( void )
     }
     portENABLE_INTERRUPTS();
 }
-/*-----------------------------------------------------------*/
 
-#if( configUSE_TICKLESS_IDLE == 1 )
-
-    __attribute__((weak)) void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
-    {
-        uint32_t ulReloadValue, ulCompleteTickPeriods, ulCompletedSysTickDecrements;
-        volatile TickType_t xModifiableIdleTime, xTickCountBeforeSleep, XLastLoadValue;
-
-        FREERTOS_PORT_DEBUG("Enter TickLess %d\n", (uint32_t)xExpectedIdleTime);
-
-        /* Make sure the SysTick reload value does not overflow the counter. */
-        if( xExpectedIdleTime > xMaximumPossibleSuppressedTicks )
-        {
-            xExpectedIdleTime = xMaximumPossibleSuppressedTicks;
-        }
-
-        /* Stop the SysTick momentarily.  The time the SysTick is stopped for
-        is accounted for as best it can be, but using the tickless mode will
-        inevitably result in some tiny drift of the time maintained by the
-        kernel with respect to calendar time. */
-        SysTimer_Stop();
-
-        /* Calculate the reload value required to wait xExpectedIdleTime
-        tick periods.  -1 is used because this code will execute part way
-        through one of the tick periods. */
-        ulReloadValue = ( ulTimerCountsForOneTick * ( xExpectedIdleTime - 1UL ) );
-        if( ulReloadValue > ulStoppedTimerCompensation )
-        {
-            ulReloadValue -= ulStoppedTimerCompensation;
-        }
-
-        /* Enter a critical section but don't use the taskENTER_CRITICAL()
-        method as that will mask interrupts that should exit sleep mode. */
-        __disable_irq();
-
-        /* If a context switch is pending or a task is waiting for the scheduler
-        to be unsuspended then abandon the low power entry. */
-        if( eTaskConfirmSleepModeStatus() == eAbortSleep )
-        {
-            /* Restart from whatever is left in the count register to complete
-            this tick period. */
-            /* Restart SysTick. */
-            SysTimer_Start();
-
-            /* Reset the reload register to the value required for normal tick
-               periods. */
-            SysTick_Reload(ulTimerCountsForOneTick);
-
-            /* Re-enable interrupts - see comments above the cpsid instruction()
-               above. */
-            __enable_irq();
-        }
-        else
-        {
-            xTickCountBeforeSleep = xTaskGetTickCount();
-
-            /* Set the new reload value. */
-            SysTick_Reload(ulReloadValue);
-
-            /* Get System timer load value before sleep */
-            XLastLoadValue = SysTimer_GetLoadValue();
-
-            /* Restart SysTick. */
-            SysTimer_Start();
-            ECLIC_EnableIRQ(SysTimer_IRQn);
-            __RWMB();
-
-            /* Sleep until something happens.  configPRE_SLEEP_PROCESSING() can
-            set its parameter to 0 to indicate that its implementation contains
-            its own wait for interrupt or wait for event instruction, and so wfi
-            should not be executed again.  However, the original expected idle
-            time variable must remain unmodified, so a copy is taken. */
-            xModifiableIdleTime = xExpectedIdleTime;
-            configPRE_SLEEP_PROCESSING( xModifiableIdleTime );
-            if( xModifiableIdleTime > 0 )
-            {
-                __WFI();
-            }
-            configPOST_SLEEP_PROCESSING( xExpectedIdleTime );
-
-            /* Re-enable interrupts to allow the interrupt that brought the MCU
-            out of sleep mode to execute immediately. */
-            __enable_irq();
-
-            /* Make sure interrupt enable is executed */
-            __RWMB();
-            __FENCE_I();
-            __NOP();
-
-            /* Disable interrupts again because the clock is about to be stopped
-               and interrupts that execute while the clock is stopped will increase
-               any slippage between the time maintained by the RTOS and calendar
-               time. */
-            __disable_irq();
-
-            /* Disable the SysTick clock.  Again,
-               the time the SysTick is stopped for is accounted for as best it can
-               be, but using the tickless mode will inevitably result in some tiny
-               drift of the time maintained by the kernel with respect to calendar
-               time*/
-            ECLIC_DisableIRQ(SysTimer_IRQn);
-
-            /* Determine if SysTimer Interrupt is not yet happened,
-            (in which case an interrupt other than the SysTick
-            must have brought the system out of sleep mode). */
-            if (SysTimer_GetLoadValue() >= (XLastLoadValue + ulReloadValue))
-            {
-                /* As the pending tick will be processed as soon as this
-                function exits, the tick value maintained by the tick is stepped
-                forward by one less than the time spent waiting. */
-                ulCompleteTickPeriods = xExpectedIdleTime - 1UL;
-                FREERTOS_PORT_DEBUG("TickLess - SysTimer Interrupt Entered!\n");
-            }
-            else
-            {
-                /* Something other than the tick interrupt ended the sleep.
-                Work out how long the sleep lasted rounded to complete tick
-                periods (not the ulReload value which accounted for part
-                ticks). */
-                xModifiableIdleTime = SysTimer_GetLoadValue();
-                if ( xModifiableIdleTime > XLastLoadValue ) {
-                    ulCompletedSysTickDecrements = (xModifiableIdleTime - XLastLoadValue);
-                } else {
-                    ulCompletedSysTickDecrements = (xModifiableIdleTime + portMAX_BIT_NUMBER - XLastLoadValue);
-                }
-
-                /* How many complete tick periods passed while the processor
-                was waiting? */
-                ulCompleteTickPeriods = ulCompletedSysTickDecrements / ulTimerCountsForOneTick;
-
-                /* The reload value is set to whatever fraction of a single tick
-                period remains. */
-                SysTick_Reload(ulTimerCountsForOneTick);
-                FREERTOS_PORT_DEBUG("TickLess - External Interrupt Happened!\n");
-            }
-
-            FREERTOS_PORT_DEBUG("End TickLess %d\n", (uint32_t)ulCompleteTickPeriods);
-
-            /* Restart SysTick */
-            vTaskStepTick( ulCompleteTickPeriods );
-
-            /* Exit with interrupts enabled. */
-            ECLIC_EnableIRQ(SysTimer_IRQn);
-            __enable_irq();
-        }
-    }
-
-#endif /* #if configUSE_TICKLESS_IDLE */
 /*-----------------------------------------------------------*/
 
 /*
@@ -595,16 +388,6 @@ void xPortSysTickHandler( void )
  */
 __attribute__(( weak )) void vPortSetupTimerInterrupt( void )
 {
-    /* Calculate the constants required to configure the tick interrupt. */
-    #if( configUSE_TICKLESS_IDLE == 1 )
-    {
-        ulTimerCountsForOneTick = ( SYSTICK_TICK_CONST );
-        xMaximumPossibleSuppressedTicks = portMAX_BIT_NUMBER / ulTimerCountsForOneTick;
-        ulStoppedTimerCompensation = portMISSED_COUNTS_FACTOR / ( configCPU_CLOCK_HZ / configSYSTICK_CLOCK_HZ );
-        FREERTOS_PORT_DEBUG("CountsForOneTick, SuppressedTicks and TimerCompensation: %u, %u, %u\n", \
-                (uint32_t)ulTimerCountsForOneTick, (uint32_t)xMaximumPossibleSuppressedTicks, (uint32_t)ulStoppedTimerCompensation);
-    }
-    #endif /* configUSE_TICKLESS_IDLE */
     TickType_t ticks = SYSTICK_TICK_CONST;
 
     /* Make SWI and SysTick the lowest priority interrupts. */
@@ -621,51 +404,3 @@ __attribute__(( weak )) void vPortSetupTimerInterrupt( void )
     ECLIC_EnableIRQ(SysTimerSW_IRQn);
 }
 /*-----------------------------------------------------------*/
-
-/*-----------------------------------------------------------*/
-
-#if( configASSERT_DEFINED == 1 )
-
-    void vPortValidateInterruptPriority( void )
-    {
-        uint32_t ulCurrentInterrupt;
-        uint8_t ucCurrentPriority;
-
-        /* Obtain the number of the currently executing interrupt. */
-        CSR_MCAUSE_Type mcause = (CSR_MCAUSE_Type)__RV_CSR_READ(CSR_MCAUSE);
-        /* Make sure current trap type is interrupt */
-        configASSERT(mcause.b.interrupt == 1);
-        if (mcause.b.interrupt) {
-            ulCurrentInterrupt = mcause.b.exccode;
-            /* Is the interrupt number a user defined interrupt? */
-            if ( ulCurrentInterrupt >= portFIRST_USER_INTERRUPT_NUMBER ) {
-                /* Look up the interrupt's priority. */
-                ucCurrentPriority = __ECLIC_GetLevelIRQ(ulCurrentInterrupt);
-                /* The following assertion will fail if a service routine (ISR) for
-                an interrupt that has been assigned a priority above
-                ucMaxSysCallPriority calls an ISR safe FreeRTOS API
-                function.  ISR safe FreeRTOS API functions must *only* be called
-                from interrupts that have been assigned a priority at or below
-                ucMaxSysCallPriority.
-
-                Numerically low interrupt priority numbers represent logically high
-                interrupt priorities, therefore the priority of the interrupt must
-                be set to a value equal to or numerically *higher* than
-                ucMaxSysCallPriority.
-
-                Interrupts that use the FreeRTOS API must not be left at their
-                default priority of zero as that is the highest possible priority,
-                which is guaranteed to be above ucMaxSysCallPriority,
-                and therefore also guaranteed to be invalid.
-
-                FreeRTOS maintains separate thread and ISR API functions to ensure
-                interrupt entry is as fast and simple as possible.
-
-                The following links provide detailed information:
-                http://www.freertos.org/FAQHelp.html */
-                configASSERT( ucCurrentPriority <= ucMaxSysCallPriority );
-            }
-        }
-    }
-
-#endif /* configASSERT_DEFINED */

@@ -152,6 +152,10 @@ typedef  uint32_t         OS_CPU_SR;        /* Define size of Machine status reg
 #define TICK_RATE_HZ            100
 #endif
 
+#ifndef configTICK_RATE_HZ
+    #define configTICK_RATE_HZ  TICK_RATE_HZ
+#endif
+
 /*
 *********************************************************************************************************
 *                                         FUNCTION PROTOTYPES
