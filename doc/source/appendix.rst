@@ -3,9 +3,9 @@
 Appendix
 ========
 
-* **Nuclei RISCV Tools Download**: https://nucleisys.com/download.php
+* **Nuclei RISCV Tools and Documents**: https://nucleisys.com/download.php
 
-* **Nuclei riscv-openocd Repo**: https://github.com/riscv-mcu/riscv-openocd
+* **Nuclei riscv-openocd**: https://github.com/riscv-mcu/riscv-openocd
 
 * **Nuclei riscv-binutils-gdb**: https://github.com/riscv-mcu/riscv-binutils-gdb
 
@@ -15,7 +15,9 @@ Appendix
 
 * **Nuclei riscv-gcc**: https://github.com/riscv-mcu/riscv-gcc
 
-* **Nuclei Software Organization**: https://github.com/Nuclei-Software/
+* **Nuclei Software Organization in Github**: https://github.com/Nuclei-Software/
+
+* **Nuclei Software Organization in Gitee**: https://gitee.com/Nuclei-Software/
 
 * **Nuclei SDK**: https://github.com/Nuclei-Software/nuclei-sdk
 
@@ -25,7 +27,7 @@ Appendix
 
 * **Nuclei RISC-V IP Products**: https://www.nucleisys.com/product.php
 
-* **RISC-V MCU Community Website**: http://www.riscv-mcu.com/
+* **RISC-V MCU Community Website**: https://www.riscv-mcu.com/
 
 * **Nuclei Spec Documentation**: https://doc.nucleisys.com/nuclei_spec/
 

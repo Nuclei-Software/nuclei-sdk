@@ -3,10 +3,10 @@
 Changelog
 =========
 
-V0.2.2-xxx
-----------
+V0.2.2
+------
 
-Release tag is not yet decided.
+This is release ``0.2.2`` of Nuclei SDK.
 
 * OS
 
