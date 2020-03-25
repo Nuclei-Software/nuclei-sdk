@@ -650,8 +650,15 @@ This `ucosii demo application`_ is show basic ucosii task functions.
 In Nuclei SDK, we provided code and Makefile for this ``ucosii demo`` application.
 
 * **RTOS = UCOSII** is added in its Makefile to include UCOSII service
-* The **TICK_RATE_HZ** in ``app_cfg.h`` is set to 200, you can change it
+* The **OS_TICKS_PER_SEC** in ``os_cfg.h`` is by default set to 200, you can change it
   to other number according to your requirement.
+
+.. note:
+
+   * For Nuclei SDK release > v0.2.2, the UCOSII source code is replaced using the
+     version from https://github.com/SiliconLabs/uC-OS2/, and application development
+     for UCOSII is also changed, the ``app_cfg.h``, ``os_cfg.h`` and ``app_hooks.c`` files
+     are required in application source code.
 
 **How to run this application:**
 

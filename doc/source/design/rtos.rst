@@ -57,7 +57,10 @@ And in your application code, you need to do the following things:
 
 .. note::
 
-    You can check the ``application\freertos\demo`` for reference
+    * You can check the ``application\freertos\demo`` for reference
+    * Current version of FreeRTOS used in Nuclei SDK is ``V10.3.1``
+    * If you want to change the OS ticks per seconds, you can change the ``configTICK_RATE_HZ``
+      defined in ``FreeRTOSConfig.h``
 
 More information about FreeRTOS get started, please click
 https://www.freertos.org/FreeRTOS-quick-start-guide.html
@@ -75,17 +78,34 @@ Interrupt, and using ``SysTimer Software Interrupt`` to do task switch.
 
 If you want to learn about ``UCOSII``, please click https://www.micrium.com/books/ucosii/
 
+We are using the opensource version of UC-OS2 source code from https://github.com/SiliconLabs/uC-OS2,
+with optimized code for Nuclei RISC-V processors.
+
 In Nuclei SDK, if you want to use **UCOSII** in your application, you need
 to add ``RTOS = UCOSII`` in your application Makefile.
 
 And in your application code, you need to do the following things:
 
-* Add UCOSII application configuration file -> ``app_cfg.h``
+* Add UCOSII application configuration header file -> ``app_cfg.h`` and ``os_cfg.h``
+* Add application hook source file -> ``app_hooks.c``
 * Include UCOSII header files
 
 .. note::
 
-    You can check the ``application\ucosii\demo`` for reference
+    * You can check the ``application\ucosii\demo`` for reference
+    * The UCOS-II application configuration template files can also be found in
+      https://github.com/SiliconLabs/uC-OS2/tree/master/Cfg/Template
+    * Current version of UCOSII used in Nuclei SDK is ``V2.93.00``
+    * If you want to change the OS ticks per seconds, you can change the ``OS_TICKS_PER_SEC``
+      defined in ``os_cfg.h``
+
+
+.. warning::
+
+   * For Nuclei SDK release > v0.2.2, the UCOSII source code is replaced using the
+     version from https://github.com/SiliconLabs/uC-OS2/, and application development
+     for UCOSII is also changed, the ``app_cfg.h``, ``os_cfg.h`` and ``app_hooks.c`` files
+     are required in application source code.
 
 
 .. _FreeRTOS: https://www.freertos.org/

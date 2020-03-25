@@ -3,6 +3,37 @@
 Changelog
 =========
 
+V0.2.3-dev
+----------
+
+This is release ``0.2.3`` of Nuclei SDK, which is still under development.
+
+.. warning::
+
+   * The formal release is not yet published, the code is still under development,
+     the changelog is updated due to code changes.
+
+* OS
+
+   - Update UCOSII source code from version ``V2.91`` to ``V2.93``
+   - The source code of UCOSII is fetched from https://github.com/SiliconLabs/uC-OS2/
+   - **Warning**: Now for UCOSII application development, the ``app_cfg.h``, ``os_cfg.h``
+     and ``app_hooks.c`` are required, which can be also found in
+     https://github.com/SiliconLabs/uC-OS2/tree/master/Cfg/Template
+
+* Application
+
+   - Don't use the ``get_cpu_freq`` function in application code, which currently is only
+     for internal usage, and not all SoC implementations are required to provide this function.
+   - Use ``SystemCoreClock`` to get the CPU frequency instead of using ``get_cpu_freq()`` in
+     ``whetstone`` application.
+   - Update UCOSII applications due to UCOSII version upgrade, and application development
+     for UCOSII also required little changes, please refer to :ref:`design_rtos_ucosii`
+
+* Documentation
+
+   - Update documentation about UCOSII and its application development.
+
 V0.2.2
 ------
 
