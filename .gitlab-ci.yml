@@ -5,17 +5,16 @@ before_script:
     - source .ci/build_applications.sh
 
 stages:
-    - release
-    - deploy
+    - doc_build
+    - doc_deploy
     - build_hbird_eval
     - build_gd32vf103v_eval
     - build_gd32vf103v_rvstar
 
-deploy_doc:
-    stage: release
+## Job for build document
+build_doc:
+    stage: doc_build
     only:
-        refs:
-          - master
         changes:
           - doc/source/**/**/**/*
     retry: 1
@@ -30,20 +29,34 @@ deploy_doc:
         - export PATH=$HOME/.local/bin:$PATH
         - make clean
         - make all
-        - ssh xl01 "rm -rf /home/xl_ci/doc_center/nuclei_sdk/*"
-        - ssh xl01 "mkdir -p /home/xl_ci/doc_center/nuclei_sdk/"
-        - cd build
-        - scp -r html xl01:/home/xl_ci/doc_center/nuclei_sdk
-        - cd ..
-          #- make linkcheck
         - make latexpdf
         - cp build/latex/*.pdf build/html/
     tags:
         - software-server
 
+## Job for deploy document to internal server
+deploy_doc:
+    stage: doc_deploy
+    when: on_success
+    retry: 1
+    only:
+        refs:
+          - master
+        changes:
+          - doc/source/**/**/**/*
+    script:
+        - ssh xl01 "rm -rf /home/xl_ci/doc_center/nuclei_sdk/*"
+        - ssh xl01 "mkdir -p /home/xl_ci/doc_center/nuclei_sdk/"
+        - cd doc/build
+        - scp -r html xl01:/home/xl_ci/doc_center/nuclei_sdk
+    tags:
+        - software-server
+    dependencies:
+        - build_doc
 
+## Job for deploy document to nuclei website
 deploy_website:
-    stage: deploy
+    stage: doc_deploy
     when: on_success
     retry: 1
     only:
@@ -56,7 +69,7 @@ deploy_website:
     tags:
         - software-server
     dependencies:
-        - deploy_doc
+        - build_doc
 
 ## Jobs for board hbird_eval
 .build_hbird_eval_job_template: &build_hbird_eval_job_def
