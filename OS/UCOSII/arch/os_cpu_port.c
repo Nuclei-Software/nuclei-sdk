@@ -59,6 +59,8 @@ void vPortSetupTimerInterrupt( void );
 /*
  * Exception handlers.
  */
+#define xPortSysTickHandler     eclic_mtip_handler
+
 void xPortSysTickHandler( void );
 
 /*
@@ -71,7 +73,6 @@ extern void prvPortStartFirstTask( void ) __attribute__ (( naked ));
  */
 static void prvTaskExitError( void );
 
-#define xPortSysTickHandler     eclic_mtip_handler
 
 /*-----------------------------------------------------------*/
 
@@ -402,21 +403,36 @@ void xPortTaskSwitch( void )
 }
 /*-----------------------------------------------------------*/
 
+/*
+*********************************************************************************************************
+*                                          SYS TICK HANDLER
+*
+* Description: Handle the system tick (SysTick) interrupt, which is used to generate the uC/OS-II tick
+*              interrupt.
+*
+* Arguments  : None.
+*
+* Note(s)    : This function is defined with weak linking in 'riscv_hal_stubs.c' so that it can be
+*              overridden by the kernel port with same prototype
+*********************************************************************************************************
+*/
 void xPortSysTickHandler( void )
 {
+#if OS_CRITICAL_METHOD == 3u                   /* Allocate storage for CPU status register             */
+    OS_CPU_SR cpu_sr;
+#endif
     /* The SysTick runs at the lowest interrupt priority, so when this interrupt
     executes all interrupts must be unmasked.  There is therefore no need to
     save and then restore the interrupt mask value as its value is already
     known. */
-    portDISABLE_INTERRUPTS();
-    {
-        SysTick_Reload(SYSTICK_TICK_CONST);
-        /* Increment the RTOS tick. */
-        OSIntEnter();
-        OSTimeTick();
-        OSIntExit();
-    }
-    portENABLE_INTERRUPTS();
+    OS_ENTER_CRITICAL();
+    SysTick_Reload(SYSTICK_TICK_CONST);
+    OSIntEnter();                              /* Tell uC/OS-II that we are starting an ISR            */
+    OS_EXIT_CRITICAL();
+
+    OSTimeTick();                              /* Call uC/OS-II's OSTimeTick()                         */
+
+    OSIntExit();                               /* Tell uC/OS-II that we are leaving the ISR            */
 }
 
 /*-----------------------------------------------------------*/

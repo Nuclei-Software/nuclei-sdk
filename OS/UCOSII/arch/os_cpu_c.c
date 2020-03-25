@@ -306,28 +306,8 @@ void  OSTimeTickHook (void)
 /*
 *********************************************************************************************************
 *                                          SYS TICK HANDLER
+* This Systick handler function is implemented in os_cpu_port.c portable source file
+* See xPortSysTickHandler in os_cpu_port.c
 *
-* Description: Handle the system tick (SysTick) interrupt, which is used to generate the uC/OS-II tick
-*              interrupt.
-*
-* Arguments  : None.
-*
-* Note(s)    : This function is defined with weak linking in 'riscv_hal_stubs.c' so that it can be
-*              overridden by the kernel port with same prototype
 *********************************************************************************************************
 */
-
-void  SysTick_Handler (void)
-{
-#if OS_CRITICAL_METHOD == 3u                   /* Allocate storage for CPU status register             */
-    OS_CPU_SR cpu_sr;
-#endif
-
-    OS_ENTER_CRITICAL();
-    OSIntEnter();                              /* Tell uC/OS-II that we are starting an ISR            */
-    OS_EXIT_CRITICAL();
-
-    OSTimeTick();                              /* Call uC/OS-II's OSTimeTick()                         */
-
-    OSIntExit();                               /* Tell uC/OS-II that we are leaving the ISR            */
-}
