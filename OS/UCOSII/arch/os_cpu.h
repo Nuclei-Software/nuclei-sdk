@@ -3,37 +3,30 @@
 *                                              uC/OS-II
 *                                        The Real-Time Kernel
 *
+*                    Copyright 1992-2020 Silicon Laboratories Inc. www.silabs.com
 *
-*                         (c) Copyright 2009-2017; Micrium, Inc.; Weston, FL
-*                  All rights reserved.  Protected by international copyright laws.
+*                                 SPDX-License-Identifier: APACHE-2.0
 *
-*                                             RISC-V Port
+*               This software is subject to an open source license and is distributed by
+*                Silicon Laboratories Inc. pursuant to the terms of the Apache License,
+*                    Version 2.0 available at www.apache.org/licenses/LICENSE-2.0.
 *
-* File      : OS_CPU.H
-* Version   : V2.92.13
+*********************************************************************************************************
+*/
+
+
+/*
+*********************************************************************************************************
 *
-* LICENSING TERMS:
-* ---------------
-*           uC/OS-II is provided in source form for FREE short-term evaluation, for educational use or
-*           for peaceful research.  If you plan or intend to use uC/OS-II in a commercial application/
-*           product then, you need to contact Micrium to properly license uC/OS-II for its use in your
-*           application/product.   We provide ALL the source code for your convenience and to help you
-*           experience uC/OS-II.  The fact that the source is provided does NOT mean that you can use
-*           it commercially without paying a licensing fee.
+*                                              RISC-V Port
 *
-*           Knowledge of the source code may NOT be used to develop a similar product.
-*
-*           Please help us continue to provide the embedded community with the finest software available.
-*           Your honesty is greatly appreciated.
-*
-*           You can find our product's user manual, API reference, release notes and
-*           more information at https://doc.micrium.com.
-*           You can contact us at www.micrium.com.
-*
-* For       : RISC-V RV64
+* Filename  : os_cpu.h
+* Version   : V2.93.00
+*********************************************************************************************************
+* For       : Nuclei RISC-V RV32 and RV64
 * Toolchain : GNU C Compiler
-*
-* Note(s)   : Hardware FP is not supported.
+*********************************************************************************************************
+* Note(s)   : Hardware FP is not supported, Modified by Nuclei to support Nuclei RISC-V Cores.
 *********************************************************************************************************
 */
 
@@ -45,7 +38,6 @@
 #else
 #define  OS_CPU_EXT  extern
 #endif
-
 
 
 #include <stdint.h>
@@ -147,13 +139,13 @@ typedef  uint32_t         OS_CPU_SR;        /* Define size of Machine status reg
 #define  OS_TASK_SW()           portYIELD()
 #define  OSIntCtxSw()           portYIELD()
 
-#ifndef TICK_RATE_HZ
-#warning "Use default TICK_RATE_HZ=100"
-#define TICK_RATE_HZ            100
+#ifndef OS_TICKS_PER_SEC
+#warning "Use default OS_TICKS_PER_SEC=100"
+#define OS_TICKS_PER_SEC            100
 #endif
 
 #ifndef configTICK_RATE_HZ
-    #define configTICK_RATE_HZ  TICK_RATE_HZ
+    #define configTICK_RATE_HZ  OS_TICKS_PER_SEC
 #endif
 
 /*
@@ -162,7 +154,7 @@ typedef  uint32_t         OS_CPU_SR;        /* Define size of Machine status reg
 *********************************************************************************************************
 */
 
-#if OS_CRITICAL_METHOD == 3u                      /* See OS_CPU_A.S                                    */
+#if OS_CRITICAL_METHOD == 3u                      /* See os_cpu_a.S   */
 portFORCE_INLINE OS_CPU_SR OS_CPU_SR_Save (void)
 {
     return __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);

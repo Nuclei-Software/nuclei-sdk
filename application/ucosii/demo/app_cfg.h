@@ -9,12 +9,6 @@
 *               part, or may be used as a reference only. This file can be modified as
 *               required to meet the end-product requirements.
 *
-*               Please help us continue to provide the Embedded community with the finest
-*               software available.  Your honesty is greatly appreciated.
-*
-*               You can find our product's user manual, API reference, release notes and
-*               more information at https://doc.micrium.com.
-*               You can contact us at www.micrium.com.
 *********************************************************************************************************
 */
 
@@ -22,7 +16,7 @@
 *********************************************************************************************************
 *
 *                                      APPLICATION CONFIGURATION
-*                                              uC/OS-II
+*
 *                                            EXAMPLE CODE
 *
 * Filename : app_cfg.h
@@ -44,13 +38,6 @@
 
 /*
 *********************************************************************************************************
-*                                       UCOS-II Tick Configuration
-*********************************************************************************************************
-*/
-#define TICK_RATE_HZ    200
-
-/*
-*********************************************************************************************************
 *                                       MODULE ENABLE / DISABLE
 *********************************************************************************************************
 */
@@ -62,9 +49,7 @@
 *********************************************************************************************************
 */
 
-#define  APP_CFG_STARTUP_TASK_PRIO   6u
-#define  APP_CFG_TASK1_PRIO          7u
-#define  APP_CFG_TASK2_PRIO          8u
+#define  APP_CFG_STARTUP_TASK_PRIO          3u
 
 #define  OS_TASK_TMR_PRIO                  (OS_LOWEST_PRIO - 2u)
 
@@ -75,8 +60,8 @@
 *                             Size of the task stacks (# of OS_STK entries)
 *********************************************************************************************************
 */
-#define  APP_CFG_STARTUP_TASK_STK_SIZE    	128u
-#define  APP_CFG_TASK_STK_SIZE    			128u
+
+#define  APP_CFG_STARTUP_TASK_STK_SIZE    128u
 
 
 /*
@@ -84,6 +69,18 @@
 *                                     TRACE / DEBUG CONFIGURATION
 *********************************************************************************************************
 */
+
+#ifndef  TRACE_LEVEL_OFF
+#define  TRACE_LEVEL_OFF                    0u
+#endif
+
+#ifndef  TRACE_LEVEL_INFO
+#define  TRACE_LEVEL_INFO                   1u
+#endif
+
+#ifndef  TRACE_LEVEL_DBG
+#define  TRACE_LEVEL_DBG                    2u
+#endif
 
 #define  APP_TRACE_LEVEL                   TRACE_LEVEL_OFF
 #define  APP_TRACE                         printf
