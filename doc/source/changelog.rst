@@ -34,6 +34,11 @@ This is release ``0.2.3`` of Nuclei SDK, which is still under development.
 
    - Update documentation about UCOSII and its application development.
 
+* Build System
+
+   - Build system is updated due to UCOSII version upgrade, the ``OS/UCOSII/cfg`` folder
+     no longer existed, so no need to include it.
+
 V0.2.2
 ------
 
