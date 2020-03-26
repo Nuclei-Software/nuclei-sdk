@@ -3,5 +3,8 @@ ifneq ($(wildcard $(NUCLEI_SDK_RTOS)),)
 MAKEFILE_PREREQS += $(NUCLEI_SDK_BUILD)/Makefile.rtos
 MAKEFILE_PREREQS += $(NUCLEI_SDK_BUILD)/Makefile.rtos.$(RTOS)
 include $(NUCLEI_SDK_BUILD)/Makefile.rtos.$(RTOS)
+# Define RTOS_$(RTOS) to show usage of RTOS, such as RTOS_FREERTOS
+RTOS_UPPER = $(call uc, $(RTOS))
+COMMON_FLAGS += -DRTOS_$(RTOS_UPPER)
 endif
 endif
