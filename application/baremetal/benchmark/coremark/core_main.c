@@ -365,7 +365,7 @@ MAIN_RETURN_TYPE main(int argc, char *argv[]) {
 	/* And last call any target specific code for finalizing */
 	portable_fini(&(results[0].port));
 
-    float coremark_dmips = (results[0].iterations*1000000)/(float)total_time;
+    float coremark_dmips = ((uint64_t)results[0].iterations*1000000)/(float)total_time;
 
 #if HAS_FLOAT
     ee_printf ("\n");
