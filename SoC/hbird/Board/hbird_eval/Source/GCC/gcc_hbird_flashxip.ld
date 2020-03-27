@@ -140,6 +140,7 @@ SECTIONS
     . = ALIGN(4);
     *(.rdata)
     *(.rodata .rodata.*)
+    *(.rti_fn .rti_fn.*)
     *(.gnu.linkonce.r.*)
     . = ALIGN(8);
     *(.srodata.cst16)
