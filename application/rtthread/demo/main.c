@@ -13,7 +13,7 @@
 #include <rtthread.h>
 
 #define THREAD_PRIORITY 2
-#define THREAD_STACK_SIZE 396
+#define THREAD_STACK_SIZE 512
 #define THREAD_TIMESLICE 5
 
 /*　Align stack when using static thread　*/
@@ -40,7 +40,7 @@ int create_thread_demo(void)
                    THREAD_STACK_SIZE, THREAD_PRIORITY, THREAD_TIMESLICE);
 
     rt_thread_init(&tid2, "thread2", thread_entry, (void *)1, thread_stack[1],
-                   THREAD_STACK_SIZE, THREAD_PRIORITY - 1, THREAD_TIMESLICE);
+                   THREAD_STACK_SIZE, THREAD_PRIORITY, THREAD_TIMESLICE);
 
     /* Startup threads  */
     rt_thread_startup(&tid1);
