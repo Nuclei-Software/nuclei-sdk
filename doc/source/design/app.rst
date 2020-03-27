@@ -360,10 +360,18 @@ In Nuclei SDK, we provided code and Makefile for this ``coremark`` application.
 You can also optimize the ``COMMON_FLAGS`` defined in coremark application Makefile
 to get different score number.
 
-* This application runs for 100 iterations, you can also change this in Makefile.
-  Change this ``-DITERATIONS=100`` to values such as ``-DITERATIONS=200``
+* By default, this application runs for 500 iterations, you can also change this in Makefile.
+  e.g. Change this ``-DITERATIONS=500`` to value such as ``-DITERATIONS=5000``
 * macro **PERFORMANCE_RUN=1** is defined
 * **PFLOAT = 1** is added in its Makefile to enable float value print
+
+.. note::
+
+   * Since for each SoC platforms, the CPU frequency is different, so user need to change
+     the ``ITERATIONS`` defined in Makefile to proper value to let the coremark run at least
+     10 seconds
+   * For example, for the ``gd32vf103`` based boards supported in Nuclei SDK, we suggest
+     to change ``-DITERATIONS=500`` to ``-DITERATIONS=5000``
 
 **How to run this application:**
 
@@ -372,6 +380,7 @@ to get different score number.
     # Assume that you can set up the Tools and Nuclei SDK environment
     # cd to the coremark directory
     cd application/baremetal/benchmark/coremark
+    # change ITERATIONS value in Makefile for gd32vf103 based board to 5000
     # Clean the application first
     make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
     # Build and upload the application
@@ -381,17 +390,16 @@ to get different score number.
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Feb 21 2020, 12:5Nuclei SDK Build Time: Feb 21 2020, 14:13:24
+    Nuclei SDK Build Time: Mar 27 2020, 18:27:45
     Download Mode: FLASHXIP
-    CPU Frequency 108267326 Hz
+    CPU Frequency 109080000 Hz
     Just turn on the cycles since this benchmark need to use counter to measure performance
     2K performance run parameters for coremark.
     CoreMark Size    : 666
-    Total ticks      : 32389933
-    Total time (secs): 1.196673
-    Iterations/Sec   : 83.565044
-    ERROR! Must execute for at least 10 secs for a valid result!
-    Iterations       : 100
+    Total ticks      : 1620025441
+    Total time (secs): 14.851744
+    Iterations/Sec   : 336.660807
+    Iterations       : 5000
     Compiler version : GCC9.2.0
     Compiler flags   : -O2 -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4
     Memory location  : STACK
@@ -399,17 +407,18 @@ to get different score number.
     [0]crclist       : 0xe714
     [0]crcmatrix     : 0x1fd7
     [0]crcstate      : 0x8e3a
-    [0]crcfinal      : 0x988c
-    Errors detected
+    [0]crcfinal      : 0xbd59
+    Correct operation validated. See readme.txt for run and reporting rules.
+    CoreMark 1.0 : 336.660807 / GCC9.2.0 -O2 -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 / STACK
 
 
     Print Personal Added Addtional Info to Easy Visual Analysis
 
-         (Iterations is: 100
-         (total_ticks is: 10
-     (*) Assume the core running at 1 MHz
-         So the CoreMark/MHz can be caculated by:
-         (Iterations*1000000/total_ticks) = 3.087379 CoreMark/MHz
+        (Iterations is: 5000
+        (total_ticks is: 1620025441
+    (*) Assume the core running at 1 MHz
+        So the CoreMark/MHz can be caculated by:
+        (Iterations*1000000/total_ticks) = 3.086371 CoreMark/MHz
 
 
 dhrystone

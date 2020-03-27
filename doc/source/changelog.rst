@@ -29,10 +29,12 @@ This is release ``0.2.3`` of Nuclei SDK, which is still under development.
      ``whetstone`` application.
    - Update UCOSII applications due to UCOSII version upgrade, and application development
      for UCOSII also required little changes, please refer to :ref:`design_rtos_ucosii`
+   - Fix ``time_in_secs`` function error in ``coremark``, and cleanup ``coremark`` application.
 
 * Documentation
 
    - Update documentation about UCOSII and its application development.
+   - Update ``coremark`` application documentation.
 
 * Build System
 
