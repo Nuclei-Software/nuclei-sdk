@@ -44,7 +44,7 @@ secs_ret time_in_secs(CORE_TICKS ticks)
 {
   // scale timer down to avoid uint64_t -> double conversion in RV32
   int scale = 256;
-  uint32_t delta = ticks / scale;
-  uint32_t freq = SOC_TIMER_FREQ / scale;
+  uint64_t delta = ticks / scale;
+  uint64_t freq = SystemCoreClock / scale;
   return delta / (double)freq;
 }
