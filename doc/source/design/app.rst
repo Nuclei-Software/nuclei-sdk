@@ -390,18 +390,18 @@ to get different score number.
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Mar 27 2020, 18:27:45
+    Nuclei SDK Build Time: Mar 30 2020, 18:08:53
     Download Mode: FLASHXIP
-    CPU Frequency 109080000 Hz
-    Just turn on the cycles since this benchmark need to use counter to measure performance
+    CPU Frequency 107190000 Hz
+    Start to run coremark for 5000 iterations
     2K performance run parameters for coremark.
     CoreMark Size    : 666
-    Total ticks      : 1620025441
-    Total time (secs): 14.851744
-    Iterations/Sec   : 336.660807
+    Total ticks      : 1622809457
+    Total time (secs): 15.139593
+    Iterations/Sec   : 330.259868
     Iterations       : 5000
     Compiler version : GCC9.2.0
-    Compiler flags   : -O2 -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4
+    Compiler flags   : -O2 -flto -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4
     Memory location  : STACK
     seedcrc          : 0xe9f5
     [0]crclist       : 0xe714
@@ -409,17 +409,16 @@ to get different score number.
     [0]crcstate      : 0x8e3a
     [0]crcfinal      : 0xbd59
     Correct operation validated. See readme.txt for run and reporting rules.
-    CoreMark 1.0 : 336.660807 / GCC9.2.0 -O2 -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 / STACK
+    CoreMark 1.0 : 330.259868 / GCC9.2.0 -O2 -flto -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 / STACK
 
 
     Print Personal Added Addtional Info to Easy Visual Analysis
 
         (Iterations is: 5000
-        (total_ticks is: 1620025441
+        (total_ticks is: 1622809457
     (*) Assume the core running at 1 MHz
         So the CoreMark/MHz can be caculated by:
-        (Iterations*1000000/total_ticks) = 3.086371 CoreMark/MHz
-
+        (Iterations*1000000/total_ticks) = 3.081076 CoreMark/MHz
 
 dhrystone
 ~~~~~~~~~
