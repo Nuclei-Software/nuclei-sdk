@@ -92,10 +92,7 @@ MAIN_RETURN_TYPE main(void) {
 #else
 MAIN_RETURN_TYPE main(int argc, char *argv[]) {
 #endif
-  //Bob: turn on cycles
-  ee_printf ("Just turn on the cycles since this benchmark need to use counter to measure performance\r\n");
 
-  //
 	ee_u16 i,j=0,num_algorithms=0;
 	ee_s16 known_id=-1,total_errors=0;
 	ee_u16 seedcrc=0;
@@ -124,6 +121,8 @@ MAIN_RETURN_TYPE main(int argc, char *argv[]) {
 #else
 	results[0].iterations=ITERATIONS;
 #endif
+
+    ee_printf ("Start to run coremark for %d iterations\r\n", results[0].iterations);
 
 	results[0].execs=get_seed_32(5);
 	if (results[0].execs==0) { /* if not supplied, execute all algorithms */
