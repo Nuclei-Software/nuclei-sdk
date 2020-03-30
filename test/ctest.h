@@ -495,11 +495,12 @@ __attribute__((no_sanitize_address)) int ctest_main(int argc, const char *argv[]
     struct ctest* ctest_begin = &CTEST_IMPL_TNAME(suite, test);
     struct ctest* ctest_end = &CTEST_IMPL_TNAME(suite, test);
     // find begin and end of section by comparing magics
-    while (1) {
-        struct ctest* t = ctest_begin-1;
-        if (t->magic != CTEST_IMPL_MAGIC) break;
-        ctest_begin--;
-    }
+    // Comment the following while(1) loop to avoid invalid address access which cause load exception
+    // while (1) {
+    //     struct ctest* t = ctest_begin-1;
+    //     if (t->magic != CTEST_IMPL_MAGIC) break;
+    //     ctest_begin--;
+    // }
     while (1) {
         struct ctest* t = ctest_end+1;
         if (t->magic != CTEST_IMPL_MAGIC) break;
