@@ -6,7 +6,7 @@
 //#define FLAGS_STR "-O3 -fno-common -funroll-loops -finline-functions  -falign-functions=4 -falign-jumps=4 -falign-loops=4 -funswitch-loops -fpeel-loops -fgcse-sm -fgcse-las"
 //#define FLAGS_STR "-O2 -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4"
 #ifndef FLAGS_STR
-    #define FLAGS_STR "-O3 -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4"
+    #define FLAGS_STR "-O2 -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4"
 #endif
 
 #ifndef PERFORMANCE_RUN
@@ -32,7 +32,16 @@
 #define CORE_TICKS uint64_t
 #define ee_u8 uint8_t
 #define ee_u16 uint16_t
+#if defined(__riscv_xlen) && (__riscv_xlen == 64)
+// Trick used for RISC-V 64-bit coremark:
+// Defining ee_u32 to be signed int instead of unsigned int,
+// as 32-bit values on a 64-bit RISC-V must always be signed extended,
+// so this avoids some useless sign extension shifts while still giving the correct result
+// See https://forums.sifive.com/t/how-can-i-repeat-the-coremark-score/1947/3
+#define ee_u32 int32_t
+#else
 #define ee_u32 uint32_t
+#endif
 #define ee_s16 int16_t
 #define ee_s32 int32_t
 #define ee_ptr_int uintptr_t
