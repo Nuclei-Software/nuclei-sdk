@@ -8,7 +8,9 @@
 
 #include "gd32vf103v_rvstar.h"
 
+#ifndef NUCLEI_BANNER
 #define NUCLEI_BANNER       1
+#endif
 
 #ifdef __cplusplus
 }
