@@ -3,6 +3,8 @@ RTOS = RTThread
 
 NUCLEI_SDK_ROOT = ../../..
 
+COMMON_FLAGS = -O3
+
 SRCDIRS = .
 INCDIRS = .
 

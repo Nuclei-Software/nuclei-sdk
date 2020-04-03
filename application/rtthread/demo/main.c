@@ -15,11 +15,12 @@
 #define THREAD_PRIORITY 2
 #define THREAD_STACK_SIZE 512
 #define THREAD_TIMESLICE 5
+#define THREAD_NUM      5
 
 /*　Align stack when using static thread　*/
 ALIGN(RT_ALIGN_SIZE)
-static rt_uint8_t thread_stack[2][THREAD_STACK_SIZE];
-static struct rt_thread tid1, tid2;
+static rt_uint8_t thread_stack[THREAD_NUM][THREAD_STACK_SIZE];
+static struct rt_thread tid[THREAD_NUM];
 
 /* Thread entry function */
 static void thread_entry(void *parameter)
@@ -35,16 +36,17 @@ static void thread_entry(void *parameter)
 /* Thread demo */
 int create_thread_demo(void)
 {
-    /* Create static threads */
-    rt_thread_init(&tid1, "thread1", thread_entry, (void *)0, thread_stack[0],
+    int i;
+    for (i = 0; i < THREAD_NUM; i ++) {
+        /* Create static threads */
+        rt_thread_init(&tid[i], "thread", thread_entry, (void *)i, thread_stack[i],
                    THREAD_STACK_SIZE, THREAD_PRIORITY, THREAD_TIMESLICE);
-
-    rt_thread_init(&tid2, "thread2", thread_entry, (void *)1, thread_stack[1],
-                   THREAD_STACK_SIZE, THREAD_PRIORITY, THREAD_TIMESLICE);
+    }
 
     /* Startup threads  */
-    rt_thread_startup(&tid1);
-    rt_thread_startup(&tid2);
+    for (i = 0; i < THREAD_NUM; i ++) {
+        rt_thread_startup(&tid[i]);
+    }
 
     return 0;
 }
