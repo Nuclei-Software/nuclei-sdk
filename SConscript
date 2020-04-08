@@ -109,6 +109,9 @@ CPPPATH = [ cwd + '/NMSIS/Core/Include',
             cwd + '/' + SoC_Common + '/Source/Stubs/',
             cwd + '/' + SoC_Board + '/Include']
 
+LIBPATH = [ cwd + '/NMSIS/Library/DSP/GCC',
+            cwd + '/NMSIS/Library/NN/GCC' ]
+
 if build_soc == "gd32vf103":
     CPPPATH.append(cwd + '/' + SoC_Common + '/Include/Usb')
 
@@ -128,6 +131,6 @@ extra_lflags = "{} -T {}".format(build_core_options, build_ldscript)
 
 group = DefineGroup('nuclei_sdk', src, depend = [''], \
     CCFLAGS=extra_flags, ASFLAGS=extra_flags, LINKFLAGS=extra_lflags, \
-    CPPPATH = CPPPATH, CPPDEFINES=CPPDEFINES)
+    CPPPATH = CPPPATH, CPPDEFINES=CPPDEFINES, LIBPATH=LIBPATH)
 
 Return('group')
