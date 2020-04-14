@@ -3,10 +3,13 @@
 
 #include <stddef.h>
 #include "gd32vf103.h"
+
 //#ifndef USE_USB_FS
 //#define USE_USB_HS
 //#endif
+
 #define USE_USB_FS
+
 #ifdef USE_USB_FS
     #define USB_FS_CORE
 #endif
@@ -55,13 +58,13 @@
 #define USB_LOW_POWER                                      0
 #endif
 
-#ifndef USE_HOST_MODE
-#define  USE_DEVICE_MODE
-#endif
-
 //#define USE_HOST_MODE
 //#define USE_DEVICE_MODE
 //#define USE_OTG_MODE
+
+#ifndef USE_HOST_MODE
+#define  USE_DEVICE_MODE
+#endif
 
 #ifndef USB_FS_CORE
     #ifndef USB_HS_CORE
@@ -91,7 +94,7 @@
     #endif                              /* __GNUC__ */
 #else
     #define __ALIGN_BEGIN
-    #define __ALIGN_END   
+    #define __ALIGN_END
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
 
 #endif /* __USB_CONF_H */
