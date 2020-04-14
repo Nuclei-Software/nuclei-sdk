@@ -71,4 +71,11 @@ If you want to use this **GD32VF103** SoC in Nuclei SDK, you need to set the
     # defined in Build System and application Makefile
     make SOC=gd32vf103 all
 
+.. note::
+
+    * If you want to use **USB** related functions of **GD32VF103**, you need
+      add ``USB_DRV_SUPPORT = 1`` in your application Makefile.
+    * In the ``usb_conf.h`` file of GD32VF103 firmware library, you can configure
+      the USB driver.
+
 .. _GigaDevice Semiconductor: https://www.gigadevice.com/

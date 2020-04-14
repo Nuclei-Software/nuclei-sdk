@@ -276,23 +276,6 @@ Here is the sample output of this command:
     "Assembling : " ../../../SoC/gd32vf103/Common/Source/GCC/intexc_gd32vf103.S
     "Assembling : " ../../../SoC/gd32vf103/Common/Source/GCC/startup_gd32vf103.S
     "Compiling  : " ../../../SoC/gd32vf103/Board/gd32vf103v_rvstar/Source/gd32vf103v_rvstar.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/drv_usb_core.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/drv_usb_dev.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/drv_usb_host.c
-    ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/drv_usb_host.c: In function 'usb_portvbus_switch':
-    ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/drv_usb_host.c:207:5: warning: implicit declaration of function 'usb_vbus_drive' [-Wimplicit-function-declaration]
-    207 |     usb_vbus_drive (state);
-        |     ^~~~~~~~~~~~~~
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/drv_usbd_int.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/drv_usbh_int.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/gd32vf103_usb_hw.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/usbd_core.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/usbd_enum.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/usbd_transc.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/usbh_core.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/usbh_enum.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/usbh_pipe.c
-    "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/Usb/usbh_transc.c
     "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/gd32vf103_adc.c
     "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/gd32vf103_bkp.c
     "Compiling  : " ../../../SoC/gd32vf103/Common/Source/Drivers/gd32vf103_can.c
@@ -326,7 +309,7 @@ Here is the sample output of this command:
     "Compiling  : " hello_world.c
     "Linking    : " hello_world.elf
     text    data     bss     dec     hex filename
-    13042     112    2290   15444    3c54 hello_world.elf
+    13022     112    2290   15424    3c40 hello_world.elf
 
 
 As you can see, that when the application is built successfully, the elf will be generated
