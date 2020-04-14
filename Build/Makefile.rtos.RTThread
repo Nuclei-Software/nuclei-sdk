@@ -1,0 +1,6 @@
+C_SRCDIRS += $(NUCLEI_SDK_RTOS)/src $(NUCLEI_SDK_RTOS)/libcpu/risc-v/nuclei
+ASM_SRCDIRS += $(NUCLEI_SDK_RTOS)/libcpu/risc-v/nuclei
+
+INCDIRS += $(NUCLEI_SDK_RTOS)/libcpu/risc-v/nuclei \
+	$(NUCLEI_SDK_RTOS)/include \
+	$(NUCLEI_SDK_RTOS)/include/libc

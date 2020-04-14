@@ -40,18 +40,18 @@ SECTIONS
   {
     *(.vtable)
     KEEP (*(SORT_NONE(.init)))
-  } >ilm AT>ilm 
+  } >ilm AT>ilm
 
   .ilalign         :
   {
     . = ALIGN(4);
     PROVIDE( _ilm_lma = . );
-  } >ilm AT>ilm 
+  } >ilm AT>ilm
 
   .ialign         :
   {
     PROVIDE( _ilm = . );
-  } >ilm AT>ilm 
+  } >ilm AT>ilm
 
   .text           :
   {
@@ -66,6 +66,20 @@ SECTIONS
     . = ALIGN(4);
     *(.rdata)
     *(.rodata .rodata.*)
+    /* section information for initial. */
+    . = ALIGN(4);
+    __rt_init_start = .;
+    KEEP(*(SORT(.rti_fn*)))
+    __rt_init_end = .;
+    /* section information for finsh shell */
+    . = ALIGN(4);
+    __fsymtab_start = .;
+    KEEP(*(FSymTab))
+    __fsymtab_end = .;
+    . = ALIGN(4);
+    __vsymtab_start = .;
+    KEEP(*(VSymTab))
+    __vsymtab_end = .;
     *(.gnu.linkonce.r.*)
     . = ALIGN(8);
     *(.srodata.cst16)
@@ -73,12 +87,12 @@ SECTIONS
     *(.srodata.cst4)
     *(.srodata.cst2)
     *(.srodata .srodata.*)
-  } >ilm AT>ilm 
+  } >ilm AT>ilm
 
   .fini           :
   {
     KEEP (*(SORT_NONE(.fini)))
-  } >ilm AT>ilm 
+  } >ilm AT>ilm
 
   . = ALIGN(4);
 
@@ -93,7 +107,7 @@ SECTIONS
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array))
     PROVIDE_HIDDEN (__preinit_array_end = .);
-  } >ilm AT>ilm 
+  } >ilm AT>ilm
 
   .init_array     :
   {
@@ -101,7 +115,7 @@ SECTIONS
     KEEP (*(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*)))
     KEEP (*(.init_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .ctors))
     PROVIDE_HIDDEN (__init_array_end = .);
-  } >ilm AT>ilm 
+  } >ilm AT>ilm
 
   .fini_array     :
   {
@@ -109,7 +123,7 @@ SECTIONS
     KEEP (*(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*)))
     KEEP (*(.fini_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .dtors))
     PROVIDE_HIDDEN (__fini_array_end = .);
-  } >ilm AT>ilm 
+  } >ilm AT>ilm
 
   .ctors          :
   {
@@ -131,7 +145,7 @@ SECTIONS
     KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .ctors))
     KEEP (*(SORT(.ctors.*)))
     KEEP (*(.ctors))
-  } >ilm AT>ilm 
+  } >ilm AT>ilm
 
   .dtors          :
   {
@@ -140,20 +154,20 @@ SECTIONS
     KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .dtors))
     KEEP (*(SORT(.dtors.*)))
     KEEP (*(.dtors))
-  } >ilm AT>ilm 
+  } >ilm AT>ilm
 
 
   .lalign         :
   {
     . = ALIGN(4);
     PROVIDE( _data_lma = . );
-  } >ilm AT>ilm 
+  } >ilm AT>ilm
 
   .dalign         :
   {
     . = ALIGN(4);
     PROVIDE( _data = . );
-  } >ram AT>ilm 
+  } >ram AT>ilm
 
   .data          :
   {
@@ -163,7 +177,7 @@ SECTIONS
     PROVIDE( __global_pointer$ = . + 0x800 );
     *(.sdata .sdata.* .sdata*)
     *(.gnu.linkonce.s.*)
-  } >ram AT>ilm 
+  } >ram AT>ilm
 
   . = ALIGN(4);
   PROVIDE( _edata = . );
@@ -179,7 +193,7 @@ SECTIONS
     *(.gnu.linkonce.b.*)
     *(COMMON)
     . = ALIGN(4);
-  } >ram AT>ram 
+  } >ram AT>ram
 
   . = ALIGN(8);
   PROVIDE( _end = . );
@@ -190,5 +204,5 @@ SECTIONS
     PROVIDE( _heap_end = . );
     . = __stack_size;
     PROVIDE( _sp = . );
-  } >ram AT>ram 
+  } >ram AT>ram
 }

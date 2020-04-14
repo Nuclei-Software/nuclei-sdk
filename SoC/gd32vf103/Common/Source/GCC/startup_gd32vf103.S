@@ -353,7 +353,12 @@ _start0800:
     /* argc = argv = 0 */
     li a0, 0
     li a1, 0
+#ifdef RTOS_RTTHREAD
+    // Call entry function when using RT-Thread
+    call entry
+#else
     call main
+#endif
 
 1:
     j 1b
