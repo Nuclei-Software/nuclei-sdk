@@ -32,7 +32,8 @@ Here is the directory structure for this Nuclei SDK.
     ├── application
     │   ├── baremetal
     │   ├── freertos
-    │   └── ucosii
+    │   ├── ucosii
+    │   └── rtthread
     ├── Build
     │   ├── gmsl
     │   ├── Makefile.base
@@ -46,6 +47,7 @@ Here is the directory structure for this Nuclei SDK.
     │   ├── Makefile.rtos
     │   ├── Makefile.rtos.FreeRTOS
     │   ├── Makefile.rtos.UCOSII
+    │   ├── Makefile.rtos.RTThread
     │   ├── Makefile.rules
     │   ├── Makefile.soc
     │   ├── Makefile.soc.gd32vf103
@@ -62,7 +64,8 @@ Here is the directory structure for this Nuclei SDK.
     │   └── Library
     ├── OS
     │   ├── FreeRTOS
-    │   └── UCOSII
+    │   ├── UCOSII
+    │   └── RTThread
     ├── SoC
     │   ├── gd32vf103
     │   └── hbird
@@ -75,6 +78,7 @@ Here is the directory structure for this Nuclei SDK.
     ├── Makefile
     ├── NMSIS_VERSION
     ├── package.json
+    ├── SConscript
     ├── README.md
     ├── setup.bat
     └── setup.sh
@@ -84,11 +88,12 @@ Here is the directory structure for this Nuclei SDK.
 
   This directory contains all the application softwares for this Nuclei SDK.
 
-  The application code can be divided into mainly 3 parts, which are:
+  The application code can be divided into mainly 4 parts, which are:
 
   - **Baremetal** applications, which will provide baremetal applications without any OS usage, these applications will be placed in *application/baremetal/* folder.
   - **FreeRTOS** applications, which will provide FreeRTOS applications using FreeRTOS RTOS, placed in *application/freertos/* folder.
   - **UCOSII** applications, which will provide UCOSII applications using UCOSII RTOS, placed in *application/ucosii/* folder.
+  - **RTThread** applications, which will provide RT-Thread applications using RT-Thread RTOS, placed in *application/rtthread/* folder.
 
 * **SoC**
 
@@ -126,6 +131,10 @@ Here is the directory structure for this Nuclei SDK.
 * **package.json**
 
   PlatformIO package json file for Nuclei SDK, used in `Nuclei Plaform for PlatformIO`_.
+
+* **SConscript**
+
+  RT-Thread package scons build script, used in `RT-Thread package development`_.
 
 * **Makefile**
 
@@ -208,3 +217,4 @@ This Nuclei SDK project components is list as below:
 .. _NMSIS-Core Device Templates Guidance: https://doc.nucleisys.com/nmsis/core/core_templates.html
 .. _Nuclei Plaform for PlatformIO: https://platformio.org/platforms/nuclei/
 .. _NMSIS project: https://github.com/Nuclei-Software/NMSIS
+.. _RT-Thread package development: https://www.rt-thread.org/document/site/development-guide/package/package/

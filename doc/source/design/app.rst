@@ -722,6 +722,75 @@ In Nuclei SDK, we provided code and Makefile for this ``ucosii demo`` applicatio
     task2 is running... 12
 
 
+RT-Thread applications
+----------------------
+
+demo
+~~~~
+
+This `rt-thread demo application`_ is show basic rt-thread thread functions.
+
+* main function is a pre-created thread by RT-Thread
+* main thread will create 5 test threads using the same function ``thread_entry``
+
+In Nuclei SDK, we provided code and Makefile for this ``rtthread demo`` application.
+
+* **RTOS = RTThread** is added in its Makefile to include RT-Thread service
+* The **RT_TICK_PER_SECOND** in ``rtconfig.h`` is by default set to `200`, you can change it
+  to other number according to your requirement.
+
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the rtthread demo directory
+    cd application/rtthread/demo
+    # Clean the application first
+    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    # Build and upload the application
+    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Apr 14 2020, 10:14:30
+    Download Mode: FLASHXIP
+    CPU Frequency 108270000 Hz
+
+    \ | /
+    - RT -     Thread Operating System
+    / | \     3.1.3 build Apr 14 2020
+    2006 - 2019 Copyright by rt-thread team
+    Main thread count: 0
+    thread 0 count: 0
+    thread 1 count: 0
+    thread 2 count: 0
+    thread 3 count: 0
+    thread 4 count: 0
+    thread 0 count: 1
+    thread 1 count: 1
+    thread 2 count: 1
+    thread 3 count: 1
+    thread 4 count: 1
+    Main thread count: 1
+    thread 0 count: 2
+    thread 1 count: 2
+    thread 2 count: 2
+    thread 3 count: 2
+    thread 4 count: 2
+    thread 0 count: 3
+    thread 1 count: 3
+    thread 2 count: 3
+    thread 3 count: 3
+    thread 4 count: 3
+    Main thread count: 2
+    thread 0 count: 4
+    thread 1 count: 4
+
+
 .. _helloworld application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/helloworld
 .. _demo_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_timer
 .. _demo_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic
@@ -731,3 +800,4 @@ In Nuclei SDK, we provided code and Makefile for this ``ucosii demo`` applicatio
 .. _whetstone benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/benchmark/whetstone
 .. _freertos demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/freertos/demo
 .. _ucosii demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/ucosii/demo
+.. _rt-thread demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo

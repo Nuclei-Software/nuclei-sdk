@@ -8,8 +8,8 @@ RTOS
 Overview
 --------
 
-In Nuclei SDK, we have support two used RTOSes in the world,
-one is **FreeRTOS**, and another one is **UCOSII**.
+In Nuclei SDK, we have support three most-used RTOSes in the world,
+**FreeRTOS**, **UCOSII** and **RT-Thread** from China.
 
 If you want to use RTOS in your application, you can choose one
 of the supported RTOSes.
@@ -108,5 +108,49 @@ And in your application code, you need to do the following things:
      are required in application source code.
 
 
+.. _design_rtos_rtthread:
+
+RT-Thread
+---------
+
+`RT-Thread`_ RT-Thread was born in 2006, it is an open source, neutral,
+and community-based real-time operating system (RTOS).
+
+RT-Thread is mainly written in C language, easy to understand and easy
+to port(can be quickly port to a wide range of mainstream MCUs and module chips).
+
+It applies object-oriented programming methods to real-time system design,
+making the code elegant, structured, modular, and very tailorable.
+
+In our support for RT-Thread, we get the source code of RT-Thread from a project
+called `RT-Thread Nano`_, which only provide kernel code of RT-Thread, which is easy
+to be intergated with Nuclei SDK.
+
+In our RT-Thread portable code, we are using ``SysTimer Interrupt`` as RTOS SysTick
+Interrupt, and using ``SysTimer Software Interrupt`` to do task switch.
+
+And also the ``rt_hw_board_init`` function is implemented in our portable code.
+
+If you want to learn about ``RT-Thread``, please click:
+
+* For Chinese version, click https://www.rt-thread.org/document/site/
+* For English version, click https://github.com/RT-Thread/rt-thread#documentation
+
+In Nuclei SDK, if you want to use **RT-Thread** in your application, you need
+to add ``RTOS = RTThread`` in your application Makefile.
+
+And in your application code, you need to do the following things:
+
+* Add RT-Thread application configuration header file -> ``rtconfig.h``
+* Include RT-Thread header files
+
+.. note::
+
+    * In RT-Thread, the ``main`` function is created as a RT-Thread thread,
+      so you don't need to do any OS initialization work, it is done before ``main``
+
+
 .. _FreeRTOS: https://www.freertos.org/
 .. _UCOSII: https://www.micrium.com/
+.. _RT_Thread: https://www.rt-thread.org/
+.. _RT-Thread Nano: https://github.com/RT-Thread/rtthread-nano

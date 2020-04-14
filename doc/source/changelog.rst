@@ -15,6 +15,8 @@ This is release ``0.2.3`` of Nuclei SDK, which is still under development.
 
 * OS
 
+   - Add **RT-Thread 3.1.3** as a new RTOS service of Nuclei SDK, the kernel source
+     code is from RT-Thread Nano project.
    - Update UCOSII source code from version ``V2.91`` to ``V2.93``
    - The source code of UCOSII is fetched from https://github.com/SiliconLabs/uC-OS2/
    - **Warning**: Now for UCOSII application development, the ``app_cfg.h``, ``os_cfg.h``
@@ -23,6 +25,7 @@ This is release ``0.2.3`` of Nuclei SDK, which is still under development.
 
 * Application
 
+   - Add **RT-Thread** demo application.
    - Don't use the ``get_cpu_freq`` function in application code, which currently is only
      for internal usage, and not all SoC implementations are required to provide this function.
    - Use ``SystemCoreClock`` to get the CPU frequency instead of using ``get_cpu_freq()`` in
@@ -33,13 +36,23 @@ This is release ``0.2.3`` of Nuclei SDK, which is still under development.
 
 * Documentation
 
+   - Add documentation about RT-Thread and its application development.
    - Update documentation about UCOSII and its application development.
    - Update ``coremark`` application documentation.
 
 * Build System
 
+   - Add build system support for RT-Thread support.
    - Build system is updated due to UCOSII version upgrade, the ``OS/UCOSII/cfg`` folder
      no longer existed, so no need to include it.
+
+* SoC
+
+    - Update SoC startup and linkscript files to support RT-Thread
+
+* Misc
+
+    - Add ``SConscript`` file in Nuclei SDK root, this file is used by RT-Thread package.
 
 V0.2.2
 ------

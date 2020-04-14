@@ -28,6 +28,9 @@ Nuclei provides the following `RISC-V IP Products`_ for AIoT:
 * **600 series and 900 series:** Fully support Linux for high-performance
   edge computing and smart AIoT.
 
+.. note::
+
+   * **N100 series** is not supported by **NMSIS** and **Nuclei SDK**
 
 .. _design_nuclei_nmsis:
 
@@ -43,6 +46,46 @@ Core.
 
 The prebuilt NMSIS-DSP and NMSIS-NN libraries are also provided in Nuclei SDK,
 see ``NMSIS/Library/`` folder.
+
+.. note::
+
+    * To support RT-Thread in Nuclei-SDK, we have to modify the **startup_<device>.S**,
+      to use macro ``RTOS_RTTHREAD`` defined when using RT-Thread as below:
+
+      .. code-block:: c
+
+        #ifdef RTOS_RTTHREAD
+            // Call entry function when using RT-Thread
+            call entry
+        #else
+            call main
+        #endif
+
+    * In order to support RT-Thread initialization macros ``INIT_XXX_EXPORT``, we also need
+      to modify the link script files, add lines after `` *(.rodata .rodata.*)`` as below:
+
+      .. code-block::
+
+        . = ALIGN(4);
+        *(.rdata)
+        *(.rodata .rodata.*)
+        /* RT-Thread added lines begin */
+        /* section information for initial. */
+        . = ALIGN(4);
+        __rt_init_start = .;
+        KEEP(*(SORT(.rti_fn*)))
+        __rt_init_end = .;
+        /* section information for finsh shell */
+        . = ALIGN(4);
+        __fsymtab_start = .;
+        KEEP(*(FSymTab))
+        __fsymtab_end = .;
+        . = ALIGN(4);
+        __vsymtab_start = .;
+        KEEP(*(VSymTab))
+        __vsymtab_end = .;
+        /* RT-Thread added lines end */
+        *(.gnu.linkonce.r.*)
 
 .. _design_nuclei_soc:
 

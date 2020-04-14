@@ -37,6 +37,7 @@ The **<NUCLEI_SDK_ROOT>/Build** directory content list as below:
     Makefile.rtos
     Makefile.rtos.FreeRTOS
     Makefile.rtos.UCOSII
+    Makefile.rtos.RTThread
     Makefile.rules
     Makefile.soc
     Makefile.soc.gd32vf103
@@ -567,8 +568,11 @@ You can easily find the supported RTOSes in the **<NUCLEI_SDK_ROOT>/OS** directo
     use FreeRTOS API, for ``FreeRTOS`` application, you need to have an ``FreeRTOSConfig.h`` header file
     prepared in you application. See examples in ``application/freertos``.
   - ``UCOSII``: UCOSII service will be enabled, you can include UCOSII header files now, and
-    use UCOSII API, for ``UCOSII`` application, you need to have an ``app_cfg.h`` header file
-    prepared in you application. See examples in ``application/ucosii``.
+    use UCOSII API, for ``UCOSII`` application, you need to have ``app_cfg.h``, ``os_cfg.h``
+    and ``app_hooks.c`` files prepared in you application. See examples in ``application/ucosii``.
+  - ``RTThread``: RT-Thread service will be enabled, you can include RT-Thread header files now, and
+    use RT-Thread API, for ``UCOSII`` application, you need to have an ``rtconfig.h`` header file
+    prepared in you application. See examples in ``application/rtthread``.
 
 .. _develop_buildsystem_var_pfloat:
 
