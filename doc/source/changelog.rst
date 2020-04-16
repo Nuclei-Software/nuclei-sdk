@@ -3,6 +3,23 @@
 Changelog
 =========
 
+V0.2.4-dev
+----------
+
+This is release ``0.2.4`` of Nuclei SDK, which is still under development.
+
+.. warning::
+
+   * The formal release is not yet published, the code is still under development,
+     the changelog is updated due to code changes.
+
+* SoC
+
+   - Update openocd configuration file for Hummingbird FPGA evaluation board,
+     If you want to use ``2-wire`` mode of JTAG, please change ``ftdi_oscan1_mode off``
+     in ``openocd_hbird.cfg`` to ``ftdi_oscan1_mode on``.
+
+
 V0.2.3
 ------
 
