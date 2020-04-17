@@ -223,6 +223,8 @@ $NUCLEI_SDK_ROOT
      - First open a new terminal in the same application folder and run: `make CORE=n305 DOWNLOAD=ilm run_openocd`
      - Then run this command `make CORE=n305 DOWNLOAD=ilm run_gdb` in the existing terminal, then you can debug it using gdb,
        if you want to load your program, you need to type `load` to achieve it.
+     - **Notice**: Since version 0.2.4, you can also pass extra `GDB_PORT=<portno>`, to change to use new gdb port other than default
+       `3333`, for example, `make CORE=n305 DOWNLOAD=ilm GDB_PORT=3344 run_openocd` and `make CORE=n305 DOWNLOAD=ilm GDB_PORT=3344 run_gdb`
    * (Option 2)If you want to debug your application for *CORE=n305 DOWNLOAD=ilm*:
      ~~~shell
      make CORE=n305 DOWNLOAD=ilm debug
