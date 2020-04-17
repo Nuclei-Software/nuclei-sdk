@@ -42,7 +42,7 @@ make sure the following items are set correctly:
 How to use
 ~~~~~~~~~~
 
-For **GD32VF103V-EVAL** board, the :**DOWNLOAD**: and **CORE** variables
+For **GD32VF103V-EVAL** board, the **DOWNLOAD** and **CORE** variables
 are fixed to ``flashxip`` and ``n205``.
 
 To run this application in GD32VF103V-EVAL board in Nuclei SDK,

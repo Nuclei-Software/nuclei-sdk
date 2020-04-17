@@ -44,6 +44,7 @@ How to use
 ~~~~~~~~~~
 
 For **HummingBird Evaluation board**:
+
 * **DOWNLOAD** support all the modes list in :ref:`develop_buildsystem_var_download`
 * **CORE** support all the cores list in :ref:`develop_buildsystem_var_core`
 
@@ -67,7 +68,7 @@ you just need to use this **SOC** and **BOARD** variables.
      the Nuclei Evaluation Core the HummingBird SoC you have.
    * You can also change the value passed to **DOWNLOAD** to run
      program in different modes.
-   * The FreeRTOS and UCOSII demos maybe not working in ``FlashXIP``
+   * The FreeRTOS and UCOSII demos maybe not working in ``flashxip``
      download mode in HummingBird board due to program running in Flash is really too slow.
      If you want to try these demos, please use ``ilm`` or ``flash``
      download mode.

@@ -43,7 +43,7 @@ make sure the following items are set correctly:
 How to use
 ~~~~~~~~~~
 
-For **GD32VF103V-RVSTAR** board, the :**DOWNLOAD**: and **CORE** variables
+For **GD32VF103V-RVSTAR** board, the **DOWNLOAD** and **CORE** variables
 are fixed to ``flashxip`` and ``n205``.
 
 To run this application in GD32VF103V-RVSTAR board in Nuclei SDK,
