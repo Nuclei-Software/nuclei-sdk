@@ -318,6 +318,9 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
 
    * The selected configuration is controlled by
      :ref:`develop_buildsystem_exposed_make_vars`
+   * For ``run_openocd`` and ``run_gdb`` target, if you want to
+     change a new gdb port, you can pass the variable
+     :ref:`develop_buildsystem_var_gdb_port`
 
 
 .. _develop_buildsystem_exposed_make_vars:
@@ -333,6 +336,7 @@ which can be passed via make command.
 * :ref:`develop_buildsystem_var_download`
 * :ref:`develop_buildsystem_var_core`
 * :ref:`develop_buildsystem_var_simulation`
+* :ref:`develop_buildsystem_var_gdb_port`
 * :ref:`develop_buildsystem_var_v`
 * :ref:`develop_buildsystem_var_silent`
 
@@ -495,6 +499,26 @@ simulation environment.
 .. note::
 
    * Currently the benchmark applications in **application/baremetal/benchmark** used this optimization
+
+.. _develop_buildsystem_var_gdb_port:
+
+GDB_PORT
+~~~~~~~~
+
+This variable is not used usually, by default the ``GDB_PORT`` variable is 3333.
+
+If you want to change a debug gdb port for openocd and gdb when run ``run_openocd`` and
+``run_gdb`` target, you can pass a new port such as ``3344`` to this variable.
+
+For example, if you want to debug application using run_openocd and
+run_gdb and specify a different port other than ``3333``.
+
+You can do it like this, take ``hbird_eval`` board for example, such as port ``3344``:
+
+* Open openocd server: ``make SOC=hbird BOARD=hbird_eval CORE=n307 GDB_PORT=3344 run_openocd``
+
+* connect gdb with openocd server: ``make SOC=hbird BOARD=hbird_eval CORE=n307 GDB_PORT=3344 run_gdb``
+
 
 .. _develop_buildsystem_var_v:
 

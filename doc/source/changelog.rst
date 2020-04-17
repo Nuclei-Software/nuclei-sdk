@@ -19,6 +19,11 @@ This is release ``0.2.4`` of Nuclei SDK, which is still under development.
      If you want to use ``2-wire`` mode of JTAG, please change ``ftdi_oscan1_mode off``
      in ``openocd_hbird.cfg`` to ``ftdi_oscan1_mode on``.
 
+* Build System
+
+   - Add **GDB_PORT** variable in build system, which is used to specify the gdb port
+     of openocd and gdb when running ``run_openocd`` and ``run_gdb`` targets
+
 
 V0.2.3
 ------
