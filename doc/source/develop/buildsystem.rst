@@ -505,7 +505,11 @@ simulation environment.
 GDB_PORT
 ~~~~~~~~
 
-This variable is not used usually, by default the ``GDB_PORT`` variable is 3333.
+.. note::
+
+    * This new variable **GDB_PORT** is added in Nuclei SDK since version ``0.2.4``
+
+This variable is not used usually, by default the **GDB_PORT** variable is ``3333``.
 
 If you want to change a debug gdb port for openocd and gdb when run ``run_openocd`` and
 ``run_gdb`` target, you can pass a new port such as ``3344`` to this variable.
