@@ -23,6 +23,7 @@ This is release ``0.2.4`` of Nuclei SDK, which is still under development.
 
    - Add **GDB_PORT** variable in build system, which is used to specify the gdb port
      of openocd and gdb when running ``run_openocd`` and ``run_gdb`` targets
+   - Add ``n600`` and ``n600fd`` core configurations into *Makefile.core*
 
 
 V0.2.3

@@ -482,6 +482,8 @@ Currently it has these cores supported as described in table
    n305      rv32imac   ilp32
    n307      rv32imafc  ilp32f
    n307fd    rv32imafdc ilp32d
+   n600      rv32imac   ilp32
+   n600fd    rv32imafdc ilp32d
    nx600     rv64imac   lp64
    ========  ========== =======
 
