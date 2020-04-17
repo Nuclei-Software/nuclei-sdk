@@ -103,7 +103,7 @@ upload: $(TARGET).elf
 
 run_openocd:
 	@$(ECHO) "Start openocd server"
-	$(OPENOCD) $(OPENOCD_ARGS)
+	$(OPENOCD) $(OPENOCD_PORT_ARGS) $(OPENOCD_ARGS)
 
 run_gdb: $(TARGET).elf
 	@$(ECHO) "Run gdb to connect openocd server and debug"
