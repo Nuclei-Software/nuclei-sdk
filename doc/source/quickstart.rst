@@ -596,9 +596,18 @@ For more advanced usage, please follow the items as below:
          SDK release version, click `Segger embedded studio projects for Nuclei SDK`_ to learn about it
 
       2. You can also take a try with the Cross-platform PlatformIO IDE, we provided our Nuclei platform
-         and Nuclei SDK release version in PlatformIO, clean `Platform Nuclei in PlatformIO`_ to learn
+         and Nuclei SDK release version in PlatformIO, click `Platform Nuclei in PlatformIO`_ to learn
          more about it
 
+    * If you want to develop Nuclei SDK application in Nuclei Studio, you can also easily integrate the source code with it.
+
+       1. Add required source code folders, and header file folders in IDE
+
+       2. Check the compiler and linker options using extra **V=1** passed with *make*, and adapt the options in IDE
+
+       3. Add extra macros definition and include folders in project configurations
+
+       4. Build and debug project in IDE
 
 .. _GDB User Manual: https://www.gnu.org/software/gdb/documentation/
 .. _Segger embedded studio projects for Nuclei SDK: https://github.com/riscv-mcu/ses_nuclei_sdk_projects
