@@ -49,7 +49,12 @@ int32_t gpio_write(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
     if (__RARELY(gpio == NULL)) {
         return -1;
     }
-    gpio->OUTPUT_VAL |= (mask & value);
+    // If value != 0, mean set gpio pin high, otherwise set pin low
+    if (value) {
+        gpio->OUTPUT_VAL |= (mask);
+    } else {
+        gpio->OUTPUT_VAL &= ~(mask);
+    }
     return 0;
 }
 

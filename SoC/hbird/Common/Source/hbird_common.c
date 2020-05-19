@@ -9,21 +9,21 @@ uint32_t measure_cpu_freq(uint32_t n)
 {
     uint32_t start_mtime, delta_mtime;
     uint32_t mtime_freq = get_timer_freq();
-  
+
     // Don't start measuruing until we see an mtime tick
     uint32_t tmp = (uint32_t)SysTimer_GetLoadValue();
     do {
         start_mtime = (uint32_t)SysTimer_GetLoadValue();
     } while (start_mtime == tmp);
-  
+
     uint32_t start_mcycle = __RV_CSR_READ(CSR_MCYCLE);
-  
+
     do {
         delta_mtime = (uint32_t)SysTimer_GetLoadValue() - start_mtime;
     } while (delta_mtime < n);
-  
+
     uint32_t delta_mcycle = __RV_CSR_READ(CSR_MCYCLE) - start_mcycle;
-  
+
     return (delta_mcycle / delta_mtime) * mtime_freq
            + ((delta_mcycle % delta_mtime) * mtime_freq) / delta_mtime;
 }
@@ -38,4 +38,23 @@ uint32_t get_cpu_freq()
     cpu_freq = measure_cpu_freq(100);
 
     return cpu_freq;
+}
+
+/**
+ * \brief      delay a time in milliseconds
+ * \details
+ *             provide API for delay
+ * \param[in]  count: count in milliseconds
+ * \remarks
+ */
+void delay_1ms(uint32_t count)
+{
+    uint64_t start_mtime, delta_mtime;
+    uint64_t delay_ticks = (SOC_TIMER_FREQ * (uint64_t)count) / 1000;
+
+    uint64_t tmp = SysTimer_GetLoadValue();
+
+    do {
+        delta_mtime = SysTimer_GetLoadValue() - start_mtime;
+    } while (delta_mtime < delay_ticks);
 }

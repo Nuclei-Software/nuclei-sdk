@@ -35,11 +35,15 @@ int32_t uart_write(UART_TypeDef *uart, uint8_t val)
 
 uint8_t uart_read(UART_TypeDef *uart)
 {
+    uint32_t reg;
     if (__RARELY(uart == NULL)) {
         return -1;
     }
-    while (uart->RXFIFO & UART_RXFIFO_EMPTY);
-    return (uint8_t)(uart->RXFIFO);
+    do {
+        reg = uart->RXFIFO;
+    }
+    while (reg & UART_RXFIFO_EMPTY);
+    return (uint8_t)(reg & 0xFF);
 }
 
 int32_t uart_set_tx_watermark(UART_TypeDef *uart, uint32_t watermark)

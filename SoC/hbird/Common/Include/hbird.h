@@ -215,21 +215,6 @@ typedef enum EXCn {
 /****************************************************************************
  * Platform definitions
  *****************************************************************************/
-#define SOC_ECLIC_CTRL_ADDR     _AC(0x0C000000,UL)
-#define SOC_TIMER_CTRL_ADDR     _AC(0x02000000,UL)
-#define GPIO_CTRL_ADDR          _AC(0x10012000,UL)
-#define UART0_CTRL_ADDR         _AC(0x10013000,UL)
-#define SPI0_CTRL_ADDR          _AC(0x10014000,UL)
-#define PWM0_CTRL_ADDR          _AC(0x10015000,UL)
-#define UART1_CTRL_ADDR         _AC(0x10023000,UL)
-#define SPI1_CTRL_ADDR          _AC(0x10024000,UL)
-#define PWM1_CTRL_ADDR          _AC(0x10025000,UL)
-#define SPI2_CTRL_ADDR          _AC(0x10034000,UL)
-#define PWM2_CTRL_ADDR          _AC(0x10035000,UL)
-#define I2C_CTRL_ADDR           _AC(0x10042000,UL)
-#define SPI0_MMAP_ADDR          _AC(0x20000000,UL)
-#define MEM_CTRL_ADDR           _AC(0x80000000,UL)
-
 // IOF Mappings
 #define IOF0_SPI1_MASK          _AC(0x000007FC,UL)
 #define SPI11_NUM_SS            (4)
@@ -345,10 +330,10 @@ typedef struct {
     __IOM uint32_t RESERVED2[4];
     __IOM uint32_t FMT;
     __IOM uint32_t RESERVED3;
-    __IOM uint32_t TXFIFO;
-    __IOM uint32_t RXFIFO;
-    __IOM uint32_t TXCTRL;
-    __IOM uint32_t RXCTRL;
+    __IOM uint32_t TXDATA;
+    __IOM uint32_t RXDATA;
+    __IOM uint32_t TXMARK;
+    __IOM uint32_t RXMARK;
     __IOM uint32_t RESERVED4[2];
     __IOM uint32_t FCTRL;
     __IOM uint32_t FFMT;
@@ -435,24 +420,24 @@ typedef struct {
 #define _REG8(p, i)             (*(volatile uint8_t *) ((p) + (i)))
 #define _REG32(p, i)            (*(volatile uint32_t *) ((p) + (i)))
 #define _REG32P(p, i)           ((volatile uint32_t *) ((p) + (i)))
-#define GPIO_REG(offset)        _REG32(GPIO_CTRL_ADDR, offset)
-#define OTP_REG(offset)         _REG32(OTP_CTRL_ADDR, offset)
-#define PRCI_REG(offset)        _REG32(PRCI_CTRL_ADDR, offset)
-#define PWM0_REG(offset)        _REG32(PWM0_CTRL_ADDR, offset)
-#define PWM1_REG(offset)        _REG32(PWM1_CTRL_ADDR, offset)
-#define PWM2_REG(offset)        _REG32(PWM2_CTRL_ADDR, offset)
-#define SPI0_REG(offset)        _REG32(SPI0_CTRL_ADDR, offset)
-#define SPI1_REG(offset)        _REG32(SPI1_CTRL_ADDR, offset)
-#define SPI2_REG(offset)        _REG32(SPI2_CTRL_ADDR, offset)
-#define UART0_REG(offset)       _REG32(UART0_CTRL_ADDR, offset)
-#define UART1_REG(offset)       _REG32(UART1_CTRL_ADDR, offset)
-#define I2C_REG(offset)         _REG8(I2C_CTRL_ADDR, offset)
+
+#define GPIO_REG(offset)        _REG32(GPIO_BASE, offset)
+#define PWM0_REG(offset)        _REG32(PWM0_BASE, offset)
+#define PWM1_REG(offset)        _REG32(PWM1_BASE, offset)
+#define PWM2_REG(offset)        _REG32(PWM2_BASE, offset)
+#define SPI0_REG(offset)        _REG32(QSPI0_BASE, offset)
+#define SPI1_REG(offset)        _REG32(QSPI1_BASE, offset)
+#define SPI2_REG(offset)        _REG32(QSPI2_BASE, offset)
+#define UART0_REG(offset)       _REG32(UART0_BASE, offset)
+#define UART1_REG(offset)       _REG32(UART1_BASE, offset)
+#define I2C_REG(offset)         _REG8(I2C_BASE, offset)
 
 // Misc
 
 #define NUM_GPIO 32
 
 uint32_t get_cpu_freq();
+void delay_1ms(uint32_t count);
 
 /** @} */ /* End of group hbird */
 
