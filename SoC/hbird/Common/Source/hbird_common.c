@@ -52,7 +52,7 @@ void delay_1ms(uint32_t count)
     uint64_t start_mtime, delta_mtime;
     uint64_t delay_ticks = (SOC_TIMER_FREQ * (uint64_t)count) / 1000;
 
-    uint64_t tmp = SysTimer_GetLoadValue();
+    start_mtime = SysTimer_GetLoadValue();
 
     do {
         delta_mtime = SysTimer_GetLoadValue() - start_mtime;
