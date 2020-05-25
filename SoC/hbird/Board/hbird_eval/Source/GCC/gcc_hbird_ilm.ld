@@ -27,6 +27,7 @@ ENTRY( _start )
 
 MEMORY
 {
+
   ilm (rxai!w) : ORIGIN = 0x80000000, LENGTH = 64K
   ram (wxa!ri) : ORIGIN = 0x90000000, LENGTH = 64K
 }
@@ -81,12 +82,7 @@ SECTIONS
     KEEP(*(VSymTab))
     __vsymtab_end = .;
     *(.gnu.linkonce.r.*)
-    . = ALIGN(8);
-    *(.srodata.cst16)
-    *(.srodata.cst8)
-    *(.srodata.cst4)
-    *(.srodata.cst2)
-    *(.srodata .srodata.*)
+
   } >ilm AT>ilm
 
   .fini           :
@@ -177,6 +173,12 @@ SECTIONS
     PROVIDE( __global_pointer$ = . + 0x800 );
     *(.sdata .sdata.* .sdata*)
     *(.gnu.linkonce.s.*)
+    . = ALIGN(8);
+    *(.srodata.cst16)
+    *(.srodata.cst8)
+    *(.srodata.cst4)
+    *(.srodata.cst2)
+    *(.srodata .srodata.*)
   } >ram AT>ilm
 
   . = ALIGN(4);
