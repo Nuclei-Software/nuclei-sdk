@@ -8,7 +8,6 @@
 
 #include "nuclei_sdk_soc.h"
 
-#define SOC_DEBUG_UART      UART0
 
 // Interrupt Numbers
 #define SOC_BUTTON_1_IRQn           SOC_INT49_IRQn
