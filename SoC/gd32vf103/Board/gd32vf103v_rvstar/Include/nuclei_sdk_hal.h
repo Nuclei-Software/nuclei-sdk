@@ -8,6 +8,8 @@
 
 #include "gd32vf103v_rvstar.h"
 
+#define SOC_DEBUG_UART      GD32_COM0
+
 #ifndef NUCLEI_BANNER
 #define NUCLEI_BANNER       1
 #endif
