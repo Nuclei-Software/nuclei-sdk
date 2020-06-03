@@ -237,7 +237,7 @@ typedef enum {
 typedef enum {
     FALSE = 0,
     TRUE = !FALSE
-} bool;
+} BOOL;
 
 typedef enum {
     RESET = 0,
