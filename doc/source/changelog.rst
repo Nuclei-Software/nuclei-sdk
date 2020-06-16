@@ -18,12 +18,20 @@ This is release ``0.2.4`` of Nuclei SDK, which is still under development.
    - Update openocd configuration file for Hummingbird FPGA evaluation board,
      If you want to use ``2-wire`` mode of JTAG, please change ``ftdi_oscan1_mode off``
      in ``openocd_hbird.cfg`` to ``ftdi_oscan1_mode on``.
+   - Add ``delay_1ms`` function in all supported SoC platforms
+   - Fix bugs found in uart and gpio drivers in hbird SoC
+   - Move ``srodata`` after ``sdata`` for ILM linker script
+   - Change bool to BOOL to avoid cpp compiling error in gd32vf103
+   - Fix ``adc_mode_config`` function in gd32vf103 SoC
 
 * Build System
 
    - Add **GDB_PORT** variable in build system, which is used to specify the gdb port
      of openocd and gdb when running ``run_openocd`` and ``run_gdb`` targets
-   - Add ``n600`` and ``n600fd`` core configurations into *Makefile.core*
+   - Add Nuclei N/NX/UX 600 series core configurations into *Makefile.core*
+   - Add -lstdc++ library for cpp application
+   - Generate hex output for dasm target
+
 
 
 V0.2.3

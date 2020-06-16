@@ -483,8 +483,14 @@ Currently it has these cores supported as described in table
    n307      rv32imafc  ilp32f
    n307fd    rv32imafdc ilp32d
    n600      rv32imac   ilp32
+   n600f     rv32imafc  ilp32f
    n600fd    rv32imafdc ilp32d
    nx600     rv64imac   lp64
+   nx600f    rv64imafc  lp64f
+   nx600fd   rv64imafdc lp64d
+   ux600     rv64imac   lp64
+   ux600f    rv64imafc  lp64f
+   ux600fd   rv64imafdc lp64d
    ========  ========== =======
 
 .. _develop_buildsystem_var_simulation:
