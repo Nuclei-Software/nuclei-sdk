@@ -10,15 +10,19 @@ N305_CORE_ARCH_ABI = rv32imac ilp32
 N307_CORE_ARCH_ABI = rv32imafc ilp32f
 N307FD_CORE_ARCH_ABI = rv32imafdc ilp32d
 N600_CORE_ARCH_ABI = rv32imac ilp32
+N600F_CORE_ARCH_ABI = rv32imafc ilp32f
 N600FD_CORE_ARCH_ABI = rv32imafdc ilp32d
 NX600_CORE_ARCH_ABI = rv64imac lp64
+NX600F_CORE_ARCH_ABI = rv64imafc lp64f
 NX600FD_CORE_ARCH_ABI = rv64imafdc lp64d
 UX600_CORE_ARCH_ABI = rv64imac lp64
+UX600F_CORE_ARCH_ABI = rv64imafc lp64f
 UX600FD_CORE_ARCH_ABI = rv64imafdc lp64d
 
 # Don't forget to add a new core below
 # if you add a new NXXX_CORE_ARCH_ABI above
 SUPPORTED_CORES = n201 n201e n203 n203e n205 \
 		n205e n305 n307 n307fd \
-		n600 n600fd nx600 nx600fd \
-		ux600 ux600fd
+		n600 n600f n600fd \
+		nx600 nx600f nx600fd \
+		ux600 ux600f ux600fd
