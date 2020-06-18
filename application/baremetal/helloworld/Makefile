@@ -2,8 +2,10 @@ TARGET = hello_world
 
 NUCLEI_SDK_ROOT = ../../..
 
-SRCDIRS = .
+SRCDIRS = . src
 
-INCDIRS = .
+INCDIRS = . inc
+
+COMMON_FLAGS := -O2
 
 include $(NUCLEI_SDK_ROOT)/Build/Makefile.base
