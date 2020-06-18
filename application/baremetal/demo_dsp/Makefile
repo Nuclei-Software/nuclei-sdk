@@ -9,14 +9,16 @@ INCDIRS = . $(NUCLEI_SDK_NMSIS_ROOT)/DSP/Include
 
 LIBDIRS = $(NUCLEI_SDK_NMSIS_ROOT)/Library/DSP/GCC
 
-DSP_ENABLE ?= OFF
+DSP_ENABLE ?= ON
 COMMON_FLAGS := -O2
 PFLOAT ?= 1
 
 ifeq ($(DSP_ENABLE),ON)
+$(warning "Use and link with RISC-V DSP enabled library")
 COMMON_FLAGS += -D__RISCV_FEATURE_DSP=1
 LDLIBS = -lnmsis_dsp_$(RISCV_ARCH)p -lm
 else
+$(warning "Use and link with RISC-V DSP disabled library")
 LDLIBS = -lnmsis_dsp_$(RISCV_ARCH) -lm
 endif
 
