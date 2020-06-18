@@ -299,17 +299,22 @@ demo_dsp
 This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
 
 * Mainly show how we can use DSP library and header files.
-* It mainly demo the ``riscv_mean`` functions and its reference functions
+* It mainly demo the ``riscv_conv_xx`` functions and its reference functions
 * If your Nuclei Processor Core has DSP feature enabled, you can pass extra
   ``DSP_ENABLE=ON`` in your make command to use NMSIS-DSP library with DSP enabled.
-* By default, the application will use NMSIS-DSP library with DSP disabled.
+* By default, the application will use NMSIS-DSP library with DSP enabled.
 
 .. note::
 
+    * From version 0.2.4, this demo is upgraded to a more complex version which
+      shows the usage of ``riscv_conv_xx`` functions, and ``DSP_ENABLE`` is changed
+      from ``OFF`` to ``ON`` by default.
     * The GD32VF103 SoC didn't has DSP enabled, so this SoC can only use NMSIS-DSP
-      library with DSP disabled.
+      library with DSP disabled, so please pass extra ``DSP_ENABLE=OFF`` when run make.
     * For other Nuclei Processor Core based SoC, please check whether it has DSP
       feature enabled to decide which kind of **NMSIS-DSP** library to use.
+    * Even our NMSIS-DSP library with DSP disabled are also optimized, so it can
+      also provide good performance in some functions.
 
 **How to run this application:**
 
@@ -319,31 +324,42 @@ This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
     # cd to the demo_dsp directory
     cd application/baremetal/demo_dsp
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar DSP_ENABLE=OFF clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar DSP_ENABLE=OFF upload
 
 **Expected output as below:**
 
 .. code-block:: console
 
-   Nuclei SDK Build Time: Feb 26 2020, 15:20:43
-   Download Mode: FLASHXIP
-   CPU Frequency 108000000 Hz
-   CSV, BENCH START, 974939
-   CSV, riscv_mean_f32, 13057
-   CSV, ref_mean_f32, 12612
-   riscv vs ref: ,
-   CSV, riscv_mean_q7, 765
-   CSV, ref_mean_q7, 763
-   riscv vs ref: 3, 3
-   CSV, riscv_mean_q15, 904
-   CSV, ref_mean_q15, 905
-   riscv vs ref: -1, -1
-   CSV, riscv_mean_q31, 1933
-   CSV, ref_mean_q31, 1789
-   riscv vs ref: -611, -611
-   CSV, BENCH END, 2977160
+    Nuclei SDK Build Time: Jun 18 2020, 17:43:31
+    Download Mode: FLASHXIP
+    CPU Frequency 108270000 Hz
+    CSV, riscv_conv_q31, 1225418
+    CSV, ref_conv_q31, 2666240
+    SUCCESS, riscv_conv_q31
+    CSV, riscv_conv_q15, 289940
+    CSV, ref_conv_q15, 311158
+    SUCCESS, riscv_conv_q15
+    CSV, riscv_conv_q7, 463
+    CSV, ref_conv_q7, 846
+    SUCCESS, riscv_conv_q7
+    CSV, riscv_conv_fast_q15, 106293
+    CSV, ref_conv_fast_q15, 247938
+    SUCCESS, riscv_conv_fast_q15
+    CSV, riscv_conv_fast_q31, 490539
+    CSV, ref_conv_fast_q31, 2215917
+    SUCCESS, riscv_conv_fast_q31
+    CSV, riscv_conv_opt_q15, 217250
+    CSV, ref_conv_opt_q15, 311162
+    SUCCESS, riscv_conv_opt_q15
+    CSV, riscv_conv_opt_q7, 714
+    CSV, ref_conv_opt_q7, 842
+    SUCCESS, riscv_conv_opt_q7
+    CSV, riscv_conv_fast_opt_q15, 137252
+    CSV, ref_conv_fast_opt_q15, 249958
+    SUCCESS, riscv_conv_fast_opt_q15
+    all test are passed. Well done!
 
 
 coremark

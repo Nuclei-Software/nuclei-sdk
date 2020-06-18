@@ -13,6 +13,11 @@ This is release ``0.2.4`` of Nuclei SDK, which is still under development.
    * The formal release is not yet published, the code is still under development,
      the changelog is updated due to code changes.
 
+* Application
+
+   - Upgrade the ``demo_dsp`` application to a more complicated one, and by default,
+     ``DSP_ENABLE`` is changed from ``OFF`` to ``ON``
+
 * SoC
 
    - Update openocd configuration file for Hummingbird FPGA evaluation board,
@@ -31,7 +36,6 @@ This is release ``0.2.4`` of Nuclei SDK, which is still under development.
    - Add Nuclei N/NX/UX 600 series core configurations into *Makefile.core*
    - Add -lstdc++ library for cpp application
    - Generate hex output for dasm target
-
 
 
 V0.2.3

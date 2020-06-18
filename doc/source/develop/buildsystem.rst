@@ -910,12 +910,12 @@ LIBDIRS
 This **LIBDIRS** variable is used to store the library directories, which could
 be used together with **LDLIBS**.
 
-For example, if you have a library located in **$(NUCLEI_SDK_ROOT)/Library/DSP/libdsp.a**,
+For example, if you have a library located in **$(NUCLEI_SDK_ROOT)/Library/DSP/libnmsis_dsp_rv32imac.a**,
 and you want to link it, then you can define these lines:
 
 .. code-block:: makefile
 
-   LDLIBS = -ldsp
+   LDLIBS = -lnmsis_dsp_rv32imac
    LIBDIRS = $(NUCLEI_SDK_ROOT)/Library/DSP
 
 .. _develop_buildsystem_var_linker_script:
