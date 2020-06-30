@@ -21,7 +21,7 @@ else
 	HOST_OS:=Windows
 endif
 else
-	HOST_OS:=$(shell uname -o)
+	HOST_OS:=$(shell uname)
 endif
 
 ##
@@ -54,8 +54,14 @@ ifeq "$(HOST_OS)" "Cygwin"
 	NULL=/dev/null
 endif
 
-## Check OS == GNU/Linux ##
-ifeq "$(HOST_OS)" "GNU/Linux"
+## Check OS == Linux ##
+ifeq "$(HOST_OS)" "Linux"
+	PS=/$(nullstring)
+	NULL=/dev/null
+endif
+
+## Check OS == Darwin ##
+ifeq "$(HOST_OS)" "Darwin"
 	PS=/$(nullstring)
 	NULL=/dev/null
 endif
