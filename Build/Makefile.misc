@@ -35,6 +35,8 @@ RMD=rm -rf
 ECHO=echo
 CP=cp -rf
 MKD = mkdir -p
+PS=/$(nullstring)
+NULL=/dev/null
 
 ## Check OS ##
 ## Check OS == Windows ##
@@ -46,12 +48,6 @@ ifeq "$(HOST_OS)" "Windows"
 	# or if in your evironment path there is
 	# a mingw shell, the make process will go wrong
 	SHELL:=$(WINCMD)
-endif
-
-## Check OS == Cygwin ##
-ifeq "$(HOST_OS)" "Cygwin"
-	PS=/$(nullstring)
-	NULL=/dev/null
 endif
 
 ## Check OS == Linux ##
