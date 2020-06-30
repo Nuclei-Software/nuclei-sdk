@@ -8,6 +8,7 @@ static uint32_t get_timer_freq()
 
 uint32_t measure_cpu_freq(uint32_t n)
 {
+    uint32_t start_mcycle, delta_mcycle;
     uint32_t start_mtime, delta_mtime;
     uint32_t mtime_freq = get_timer_freq();
 
@@ -15,15 +16,13 @@ uint32_t measure_cpu_freq(uint32_t n)
     uint32_t tmp = (uint32_t)SysTimer_GetLoadValue();
     do {
         start_mtime = (uint32_t)SysTimer_GetLoadValue();
+        start_mcycle = __RV_CSR_READ(CSR_MCYCLE);
     } while (start_mtime == tmp);
-
-    uint32_t start_mcycle = __RV_CSR_READ(CSR_MCYCLE);
 
     do {
         delta_mtime = (uint32_t)SysTimer_GetLoadValue() - start_mtime;
+        delta_mcycle = __RV_CSR_READ(CSR_MCYCLE) - start_mcycle;
     } while (delta_mtime < n);
-
-    uint32_t delta_mcycle = __RV_CSR_READ(CSR_MCYCLE) - start_mcycle;
 
     return (delta_mcycle / delta_mtime) * mtime_freq
            + ((delta_mcycle % delta_mtime) * mtime_freq) / delta_mtime;
