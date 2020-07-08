@@ -3,6 +3,18 @@
 Changelog
 =========
 
+V0.2.5-dev
+----------
+
+This is release ``0.2.5-dev`` of Nuclei SDK, which is under development.
+
+.. warning::
+
+   * The formal release is not yet published, the code is still under development,
+     the changelog is updated due to code changes.
+
+
+
 V0.2.4
 ------
 
