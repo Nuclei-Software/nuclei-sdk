@@ -148,6 +148,8 @@ The source code of Nuclei SDK is maintained in |github| and |gitee|.
         ``git clone https://gitee.com/Nuclei-Software/nuclei-sdk nuclei-sdk`` to clone from gitee.
       - If you have no internet access, you can also use pre-downloaded ``nuclei-sdk`` code,
         and use it.
+      - If the backup repo is not up to date, you can import github repo in gitee by yourself, see
+        https://gitee.com/projects/import/url
 
 * Create tool environment config file for Nuclei SDK
 

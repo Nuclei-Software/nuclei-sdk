@@ -3,20 +3,16 @@
 Changelog
 =========
 
-V0.2.4-dev
-----------
+V0.2.4
+------
 
-This is release ``0.2.4`` of Nuclei SDK, which is still under development.
-
-.. warning::
-
-   * The formal release is not yet published, the code is still under development,
-     the changelog is updated due to code changes.
+This is release ``0.2.4`` of Nuclei SDK.
 
 * Application
 
    - Upgrade the ``demo_dsp`` application to a more complicated one, and by default,
-     ``DSP_ENABLE`` is changed from ``OFF`` to ``ON``
+     ``DSP_ENABLE`` is changed from ``OFF`` to ``ON``, optimization level changed from
+     ``O2`` to no optimization.
 
 * SoC
 
@@ -36,6 +32,7 @@ This is release ``0.2.4`` of Nuclei SDK, which is still under development.
    - Add Nuclei N/NX/UX 600 series core configurations into *Makefile.core*
    - Add -lstdc++ library for cpp application
    - Generate hex output for dasm target
+   - Optimize Makefile to support MACOS
 
 
 V0.2.3
