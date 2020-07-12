@@ -5,21 +5,36 @@
 #include "ref_conv.h"
 #include "riscv_math.h"
 
+#ifndef READ_CYCLE
+#define READ_CYCLE      __get_rv_cycle
+#endif
+
 static uint64_t enter_cycle;
 static uint64_t exit_cycle;
 static uint64_t start_cycle;
 static uint64_t end_cycle;
 static uint64_t cycle;
+static uint64_t extra_cost = 0;
 static uint32_t bench_ercd;
 
-#define BENCH_INIT enter_cycle = __get_rv_cycle();
+#define BENCH_TRST()
+
+#define BENCH_INIT()                                                           \
+    printf("Benchmark Initialized\n");                                         \
+    BENCH_TRST();                                                              \
+    start_cycle = READ_CYCLE();                                                \
+    end_cycle = READ_CYCLE();                                                  \
+    extra_cost = end_cycle - start_cycle;                                      \
+    enter_cycle = READ_CYCLE();
 
 #define BENCH_START(func)                                                      \
-    start_cycle = __get_rv_cycle();                                            \
-    bench_ercd = 0;
+    bench_ercd = 0;                                                            \
+    BENCH_TRST();                                                              \
+    start_cycle = READ_CYCLE();
+
 #define BENCH_END(func)                                                        \
-    end_cycle = __get_rv_cycle();                                              \
-    cycle = end_cycle - start_cycle;                                           \
+    end_cycle = READ_CYCLE();                                                  \
+    cycle = end_cycle - start_cycle - extra_cost;                              \
     printf("CSV, %s, %lu\n", #func, cycle);
 
 #define BENCH_ERROR(func) bench_ercd = 1;
@@ -31,9 +46,9 @@ static uint32_t bench_ercd;
     }
 
 #define BENCH_FINISH()                                                         \
-    exit_cycle = __get_rv_cycle();                                             \
-    cycle = exit_cycle - enter_cycle;                                          \
-    printf("CSV, BENCH END, %lu\n", cycle);
+    exit_cycle = READ_CYCLE();                                                 \
+    cycle = exit_cycle - enter_cycle - extra_cost;                             \
+    printf("CSV, BENCH END, %llu\n", cycle);
 
 static float32_t test_conv_input_f32_A[300] = {
     0.240707035480160,    0.676122303863752,   0.289064571674477,
@@ -298,6 +313,8 @@ static int test_flag_error = 0;
 
 int main(void)
 {
+    BENCH_INIT();
+
     BENCH_START(riscv_conv_q31);
     riscv_conv_q31(test_conv_input_q31_A, 300, test_conv_input_q31_B, 300,
                    output_q31);
