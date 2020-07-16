@@ -256,7 +256,7 @@ Hardware Preparation
 Please check :ref:`design_board` and find your board's page, and follow **Setup** section
 to setup your hardware, mainly **JTAG debugger driver setup and on-board connection setup**.
 
-* Power on the **RVStar** board, and use USB Type-C data cable to connect the board and your PC,
+* Power on the :ref:`design_board_gd32vf103v_rvstar` board, and use USB Type-C data cable to connect the board and your PC,
   make sure you have setup the JTAG driver correctly, and you can see JTAG port and serial port.
 * Open a UART terminal tool such as |teraterm| or |minicom|, and minitor the serial port of the Board,
   the UART baudrate is *115200 bps*
@@ -573,6 +573,7 @@ There are several ways to achieve it, see as below:
 
 .. note::
 
+    * If your are looking for how to run for other boards, please ref to :ref:`design_board`.
     * Please refer to :ref:`develop_appdev` and :ref:`develop_buildsystem` for more information.
     * If you want to access SoC related APIs, please use ``nuclei_sdk_soc.h`` header file.
     * If you want to access SoC and board related APIs, please use ``nuclei_sdk_hal.h`` header file.

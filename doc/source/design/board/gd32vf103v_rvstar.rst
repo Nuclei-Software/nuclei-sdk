@@ -1,14 +1,14 @@
 .. _design_board_gd32vf103v_rvstar:
 
-GD32VF103V RVStar Kit
-=====================
+GD32VF103V RV-STAR Kit
+======================
 
 .. _design_board_gd32vf103v_rvstar_overview:
 
 Overview
 --------
 
-This GD32VF103V RVStar Kit is an arduino compatiable board from Nuclei
+This GD32VF103V RV-STAR Kit is an arduino compatiable board from Nuclei
 using GD32VF103VBT6 as main MCU.
 
 .. _figure_design_board_gd32vf103v_rvstar_1:
@@ -16,11 +16,11 @@ using GD32VF103VBT6 as main MCU.
 .. figure:: /asserts/images/gd32vf103v_rvstar_board.jpg
     :width: 80 %
     :align: center
-    :alt: GD32VF103V RVStar Board
+    :alt: GD32VF103V RV-STAR Board
 
-    GD32VF103V RVStar Board
+    GD32VF103V RV-STAR Board
 
-Click `GD32VF103V RVStar Development Kit`_ to access the documents
+Click `GD32VF103V RV-STAR Development Kit`_ to access the documents
 of this board.
 
 Click online `RV-STAR Development Board Overview`_ to get basic information
@@ -31,7 +31,7 @@ of this board.
 Setup
 ~~~~~
 
-Follow the guide in `GD32VF103V RVStar Development Kit`_ to setup the board,
+Follow the guide in `GD32VF103V RV-STAR Development Kit`_ to setup the board,
 make sure the following items are set correctly:
 
 * Connect the USB Type-C port on board to your PC in order to download and
@@ -43,10 +43,10 @@ make sure the following items are set correctly:
 How to use
 ~~~~~~~~~~
 
-For **GD32VF103V-RVSTAR** board, the **DOWNLOAD** and **CORE** variables
+For **GD32VF103V RV-STAR** board, the **DOWNLOAD** and **CORE** variables
 are fixed to ``flashxip`` and ``n205``.
 
-To run this application in GD32VF103V-RVSTAR board in Nuclei SDK,
+To run this application in GD32VF103V RV-STAR board in Nuclei SDK,
 you just need to use this **SOC** and **BOARD** variables.
 
 .. code-block:: shell
@@ -61,5 +61,5 @@ you just need to use this **SOC** and **BOARD** variables.
     make SOC=gd32vf103 BOARD=gd32vf103v_rvstar debug
 
 
-.. _GD32VF103V RVStar Development Kit: https://nucleisys.com/developboard.php
-.. _RV-STAR Development Board Overview: https://doc.nucleisys.com/nuclei_board_labs/overview/hw.html#rv-star
+.. _GD32VF103V RV-STAR Development Kit: https://nucleisys.com/developboard.php
+.. _RV-STAR Development Board Overview: https://doc.nucleisys.com/nuclei_board_labs/hw/hw.html#rv-star
