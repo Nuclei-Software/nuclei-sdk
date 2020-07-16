@@ -1,0 +1,57 @@
+{
+    "SOC": "hbird",
+    "BOARD": "hbird_eval",
+    "CORE": "n307",
+    "DOWNLOAD": "ilm",
+    "DSP_ENABLE": "ON",
+    "BENCH_UNIT": "cycle",
+    "checks": {
+        "PASS": [
+        ],
+        "FAIL": [
+            "MEPC:"
+        ]
+    },
+    "appchecks": {
+        "application/baremetal/benchmark/dhrystone": {
+            "PASS": ["1000000/(User_Cycle/Number_Of_Runs)"],
+            "FAIL": []
+        },
+        "application/baremetal/benchmark/whetstone": {
+            "PASS": ["MWIPS/MHz"],
+            "FAIL": []
+        },
+        "application/baremetal/benchmark/coremark": {
+            "PASS": ["Iterations*1000000/total_ticks"],
+            "FAIL": []
+        },
+        "application/baremetal/demo_timer": {
+            "PASS": ["MTimer msip and mtip interrupt test finish and pass"],
+            "FAIL": []
+        },
+        "application/baremetal/helloworld": {
+            "PASS": ["Hello World!"],
+            "FAIL": []
+        },
+        "application/baremetal/demo_eclic": {
+            "PASS": ["software interrupt hit 10 times"],
+            "FAIL": []
+        },
+        "application/baremetal/demo_dsp": {
+            "PASS": ["all test are passed"],
+            "FAIL": ["test error apprears"]
+        },
+        "application/freertos/demo": {
+            "PASS": ["timers Callback"],
+            "FAIL": []
+        },
+        "application/rtthread/demo": {
+            "PASS": ["Main thread count: 6"],
+            "FAIL": []
+        },
+        "application/ucosii/demo": {
+            "PASS": ["task3 is running... 10"],
+            "FAIL": []
+        }
+    }
+}
