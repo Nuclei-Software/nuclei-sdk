@@ -1,4 +1,4 @@
-TARGET = hello_world
+TARGET = helloworld
 
 NUCLEI_SDK_ROOT = ../../..
 
