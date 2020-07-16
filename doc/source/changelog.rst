@@ -13,6 +13,10 @@ This is release ``0.2.5-dev`` of Nuclei SDK, which is under development.
    * The formal release is not yet published, the code is still under development,
      the changelog is updated due to code changes.
 
+* Documentation
+
+   - Fix invalid links used in this documentation
+   - Rename `RVStar` to `RV-STAR` to keep alignment in documentation
 
 
 V0.2.4
