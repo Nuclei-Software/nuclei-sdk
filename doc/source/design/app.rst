@@ -21,6 +21,8 @@ The provided applications can be divided into three categories:
 
 * UCOSII applications: Located in ``application/ucosii``
 
+* RTThread applications: Located in ``application/rtthread``
+
 If you want to develop your own application in Nuclei SDK, please click
 :ref:`develop_appdev` to learn more about it.
 
@@ -82,7 +84,6 @@ the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
 * Both interrupts are registered as non-vector interrupt.
 * First the timer interrupt will run for 10 times
 * Then the software timer interrupt will start to run for 10 times
-
 
 **How to run this application:**
 
