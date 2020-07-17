@@ -577,6 +577,19 @@ This is a necessary variable which must be defined in application Makefile.
 It is used to set the name of the application, it will affect the generated
 target filenames.
 
+.. warning::
+
+    * Please don't put any spaces in TARGET variable
+    * The variable shouldn't contain any space
+
+    .. code-block:: Makefile
+
+        # invalid case 1
+        TARGET ?= hello world
+        # invalid case 2
+        TARGET ?= helloworld # before this # there is a extra space
+
+
 .. _develop_buildsystem_var_nuclei_sdk_root:
 
 NUCLEI_SDK_ROOT
