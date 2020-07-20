@@ -8,10 +8,14 @@ OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_hbird.cfg
 ifeq ($(DOWNLOAD),ilm)
 LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_hbird_ilm.ld
 else
+ifeq ($(DOWNLOAD),ddr)
+LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_hbird_ddr.ld
+else
 ifeq ($(DOWNLOAD),flashxip)
 LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_hbird_flashxip.ld
 else
 LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_hbird_flash.ld
+endif
 endif
 endif
 
