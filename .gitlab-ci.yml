@@ -78,7 +78,7 @@ deploy_website:
         - SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
         - SOC=hbird BOARD=hbird_eval nsdk_build_directory    test
 
-# Build For HBird Evaluation Board with N307 Core, with Flash, FlashXIP, ILM Mode
+# Build For HBird Evaluation Board with N307 Core, with Flash, FlashXIP, ILM, DDR Mode
 build_hbird_eval_ilm_n307:
     variables:
         DOWNLOAD: "ilm"
@@ -97,7 +97,13 @@ build_hbird_eval_flashxip_n307:
         CORE: "n307"
     <<: *build_hbird_eval_job_def
 
-# Build For N205E, with Flash, FlashXIP, ILM Mode
+build_hbird_eval_ddr_n307:
+    variables:
+        DOWNLOAD: "ddr"
+        CORE: "n307"
+    <<: *build_hbird_eval_job_def
+
+# Build For N205E, with Flash, FlashXIP, ILM, DDR Mode
 build_hbird_eval_ilm_n205e:
     variables:
         DOWNLOAD: "ilm"
@@ -119,26 +125,36 @@ build_hbird_eval_flashxip_n205e:
         FIND_IGNORE: "! -wholename \"*dsp*\""
     <<: *build_hbird_eval_job_def
 
-# Build For NX600, with Flash, FlashXIP, ILM Mode
+build_hbird_eval_ddr_n205e:
+    variables:
+        DOWNLOAD: "ddr"
+        CORE: "n205e"
+        FIND_IGNORE: "! -wholename \"*dsp*\""
+    <<: *build_hbird_eval_job_def
+
+# Build For NX600, with Flash, FlashXIP, ILM, DDR Mode
 build_hbird_eval_ilm_nx600:
     variables:
         DOWNLOAD: "ilm"
         CORE: "nx600"
-        FIND_IGNORE: "! -wholename \"*dsp*\""
+    <<: *build_hbird_eval_job_def
+
+build_hbird_eval_ddr_nx600:
+    variables:
+        DOWNLOAD: "ddr"
+        CORE: "nx600"
     <<: *build_hbird_eval_job_def
 
 build_hbird_eval_flash_nx600:
     variables:
         DOWNLOAD: "flash"
         CORE: "nx600"
-        FIND_IGNORE: "! -wholename \"*dsp*\""
     <<: *build_hbird_eval_job_def
 
 build_hbird_eval_flashxip_nx600:
     variables:
         DOWNLOAD: "flashxip"
         CORE: "nx600"
-        FIND_IGNORE: "! -wholename \"*dsp*\""
     <<: *build_hbird_eval_job_def
 
 ## Jobs for board gd32vf103v_eval
