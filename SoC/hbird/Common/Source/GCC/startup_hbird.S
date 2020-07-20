@@ -231,9 +231,12 @@ _start:
     /* Enable mcycle and minstret counter */
     csrci CSR_MCOUNTINHIBIT, 0x5
 
+    /* Enable ICache and DCache if present */
+    csrs CSR_MCACHE_CTL, 0x10001
+
     /* ===== Startup Stage 3 ===== */
     /*
-     * Load code section frm FLASH to ILM
+     * Load code section from FLASH to ILM
      * when code LMA is different with VMA
      */
     la a0, _ilm_lma
@@ -285,6 +288,8 @@ _start:
     /* Call C/C++ constructor start up code */
     call __libc_init_array
 
+    /* do pre-init steps before main */
+    call _premain_init
     /* ===== Call Main Function  ===== */
     /* argc = argv = 0 */
     li a0, 0
@@ -296,6 +301,8 @@ _start:
 #else
     call main
 #endif
+    /* do post-main steps after main */
+    call _postmain_fini
 
 1:
     j 1b

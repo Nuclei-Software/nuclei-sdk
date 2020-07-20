@@ -297,7 +297,7 @@ _start0800:
 
     /* ===== Startup Stage 3 ===== */
     /*
-     * Load code section frm FLASH to ILM
+     * Load code section from FLASH to ILM
      * when code LMA is different with VMA
      */
     la a0, _ilm_lma
@@ -349,16 +349,21 @@ _start0800:
     /* Call C/C++ constructor start up code */
     call __libc_init_array
 
+    /* do pre-init steps before main */
+    call _premain_init
     /* ===== Call Main Function  ===== */
     /* argc = argv = 0 */
     li a0, 0
     li a1, 0
+
 #ifdef RTOS_RTTHREAD
     // Call entry function when using RT-Thread
     call entry
 #else
     call main
 #endif
+    /* do post-main steps after main */
+    call _postmain_fini
 
 1:
     j 1b
