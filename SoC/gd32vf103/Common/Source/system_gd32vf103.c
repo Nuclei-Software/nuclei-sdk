@@ -536,13 +536,14 @@ void _premain_init(void)
 
 /**
  * \brief finish function after main
+ * \param [in]  status     status code return from main
  * \details
  * This function is executed right after main function.
  * For RISC-V gnu toolchain, _fini function might not be called
  * by __libc_fini_array function, so we defined a new function
  * to do initialization
  */
-void _postmain_fini(void)
+void _postmain_fini(int status)
 {
     /* TODO: Add your own finishing code here, called after main */
 }

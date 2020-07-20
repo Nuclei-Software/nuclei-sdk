@@ -47,12 +47,12 @@ SECTIONS
   .ilalign         :
   {
     . = ALIGN(4);
-    PROVIDE( _rom_lma = . );
+    PROVIDE( _ilm_lma = . );
   } >rom AT>rom
 
   .ialign         :
   {
-    PROVIDE( _rom = . );
+    PROVIDE( _ilm = . );
   } >rom AT>rom
 
   .text           :
@@ -96,7 +96,7 @@ SECTIONS
   PROVIDE (__etext = .);
   PROVIDE (_etext = .);
   PROVIDE (etext = .);
-  PROVIDE( _erom = . );
+  PROVIDE( _eilm = . );
 
 
   .preinit_array  :

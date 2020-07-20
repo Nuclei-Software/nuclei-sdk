@@ -57,3 +57,13 @@ void delay_1ms(uint32_t count)
         delta_mtime = SysTimer_GetLoadValue() - start_mtime;
     } while (delta_mtime < delay_ticks);
 }
+
+#ifdef SIMULATION_XLSPIKE
+// never return for xlspike
+void xlspike_exit(int status)
+{
+    // pass exit status via rxfifo register
+    UART0->RXFIFO = status;
+    uart_write(UART0, 4);
+}
+#endif
