@@ -28,9 +28,9 @@ ENTRY( _start )
 MEMORY
 {
   /* Emulate ROM using DDR */
-  rom (rxai!w) : ORIGIN = 0xA0000000, LENGTH = 256M
+  rom (rxai!w) : ORIGIN = 0xA0000000, LENGTH = 32M
   /* Emulate RAM using DDR */
-  ram (wxa!ri) : ORIGIN = 0xB0000000, LENGTH = 256M
+  ram (wxa!ri) : ORIGIN = 0xA2000000, LENGTH = 32M
 }
 
 
