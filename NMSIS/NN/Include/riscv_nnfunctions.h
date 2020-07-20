@@ -51,7 +51,7 @@
    * kernels are included in the function description. The implementation details are also
    * described in this paper [1].
    *
-   * \note Please refer to [NMSIS-NN](../../../html/nn/index.html)
+   * \note Please refer to [NMSIS-NN](../../../nn/index.html)
    *
    * Block Diagram
    * --------

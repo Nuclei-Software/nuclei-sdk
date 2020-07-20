@@ -67,6 +67,9 @@
  * \param [in]    sat  Bit position to saturate to (1..32)
  * \return             Saturated value
  */
+#if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
+#define __SSAT(val, sat)          __RV_SCLIP32((val), (sat-1))
+#else
 __STATIC_FORCEINLINE int32_t __SSAT(int32_t val, uint32_t sat)
 {
     if ((sat >= 1U) && (sat <= 32U)) {
@@ -80,6 +83,7 @@ __STATIC_FORCEINLINE int32_t __SSAT(int32_t val, uint32_t sat)
     }
     return val;
 }
+#endif
 
 /**
  * \brief   Unsigned Saturate
@@ -88,6 +92,9 @@ __STATIC_FORCEINLINE int32_t __SSAT(int32_t val, uint32_t sat)
  * \param [in]    sat  Bit position to saturate to (0..31)
  * \return             Saturated value
  */
+#if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
+#define __USAT(val, sat)        __RV_UCLIP32((val), (sat-1))
+#else
 __STATIC_FORCEINLINE uint32_t __USAT(int32_t val, uint32_t sat)
 {
     if (sat <= 31U) {
@@ -100,6 +107,7 @@ __STATIC_FORCEINLINE uint32_t __USAT(int32_t val, uint32_t sat)
     }
     return (uint32_t)val;
 }
+#endif
 
 /* ===== Data Processing Operations ===== */
 /**
@@ -177,7 +185,7 @@ __STATIC_FORCEINLINE uint32_t __ROR(uint32_t op1, uint32_t op2)
  * \return               Reversed value
  */
 #if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
-#define __RBIT(value)           __RV_BITREV((value), 31)
+#define __RBIT(value)           __RV_BITREVI((value), 31)
 #else
 __STATIC_FORCEINLINE uint32_t __RBIT(uint32_t value)
 {
