@@ -16,7 +16,7 @@
 
 #include "cpuport.h"
 
-#define SYSTICK_TICK_CONST          (SOC_TIMER_FREQ / RT_TICK_PER_SECOND)
+#define SYSTICK_TICK_CONST                          (SOC_TIMER_FREQ / RT_TICK_PER_SECOND)
 
 #ifndef configKERNEL_INTERRUPT_PRIORITY
     #define configKERNEL_INTERRUPT_PRIORITY         1
@@ -27,7 +27,7 @@
     #define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
 #endif
 
-#define portINITIAL_MSTATUS         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL)
+#define portINITIAL_MSTATUS                         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL)
 
 volatile rt_ubase_t  rt_interrupt_from_thread = 0;
 volatile rt_ubase_t  rt_interrupt_to_thread   = 0;

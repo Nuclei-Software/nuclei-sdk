@@ -33,9 +33,9 @@
     .globl rt_hw_context_switch_to
 
 /* Start the first task.  This also clears the bit that indicates the FPU is
-	in use in case the FPU was used before the scheduler was started - which
-	would otherwise result in the unnecessary leaving of space in the stack
-	for lazy saving of FPU registers. */
+    in use in case the FPU was used before the scheduler was started - which
+    would otherwise result in the unnecessary leaving of space in the stack
+    for lazy saving of FPU registers. */
 .align 3
 rt_hw_context_switch_to:
     /* Setup Interrupt Stack using
