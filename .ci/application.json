@@ -42,7 +42,7 @@
             "FAIL": []
         },
         "application/baremetal/helloworld": {
-            "PASS": ["Hello World!"],
+            "PASS": ["19: Hello World From Nuclei RISC-V Processor!"],
             "FAIL": []
         },
         "application/baremetal/demo_eclic": {
