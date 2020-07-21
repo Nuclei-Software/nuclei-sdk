@@ -89,21 +89,10 @@ int main(void)
     printf("MISA: 0x%lx\r\n", misa);
     print_misa();
 
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
-    printf("Hello World!\r\n");
+    for (int i = 0; i < 20; i ++) {
+        printf("%d: Hello World From Nuclei RISC-V Processor!\r\n", i);
+    }
+
     return 0;
 }
 
