@@ -25,8 +25,6 @@
  */
 #include <stdint.h>
 #include <stdio.h>
-#include "gd32vf103.h"
-#include "gd32vf103_libopt.h"
 #include "nuclei_sdk_hal.h"
 
 /*----------------------------------------------------------------------------
@@ -97,21 +95,22 @@ uint32_t SystemCoreClock = __SYSTEM_CLOCK_108M_PLL_HXTAL;  /* System Clock Frequ
 
 static void system_clock_108m_hxtal(void)
 {
-    uint32_t timeout   = 0U;
+    uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
 
     /* enable HXTAL */
     RCU_CTL |= RCU_CTL_HXTALEN;
 
-    /* wait until HXTAL is stable or the startup time is longer than HXTAL_STARTUP_TIMEOUT */
-    do{
+    /* wait until HXTAL is stable or the startup time is longer than
+     * HXTAL_STARTUP_TIMEOUT */
+    do {
         timeout++;
         stab_flag = (RCU_CTL & RCU_CTL_HXTALSTB);
-    }while((0U == stab_flag) && (HXTAL_STARTUP_TIMEOUT != timeout));
+    } while ((0U == stab_flag) && (HXTAL_STARTUP_TIMEOUT != timeout));
 
     /* if fail */
-    if(0U == (RCU_CTL & RCU_CTL_HXTALSTB)){
-        while(1){
+    if (0U == (RCU_CTL & RCU_CTL_HXTALSTB)) {
+        while (1) {
         }
     }
 
@@ -127,44 +126,47 @@ static void system_clock_108m_hxtal(void)
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL | RCU_PLL_MUL27);
 
-    if(HXTAL_VALUE==25000000){
-		/* CK_PREDIV0 = (CK_HXTAL)/5 *8 /10 = 4 MHz */
-		RCU_CFG1 &= ~(RCU_CFG1_PREDV0SEL | RCU_CFG1_PREDV1 | RCU_CFG1_PLL1MF | RCU_CFG1_PREDV0);
-		RCU_CFG1 |= (RCU_PREDV0SRC_CKPLL1 | RCU_PREDV1_DIV5 | RCU_PLL1_MUL8 | RCU_PREDV0_DIV10);
+    if (HXTAL_VALUE == 25000000) {
+        /* CK_PREDIV0 = (CK_HXTAL)/5 *8 /10 = 4 MHz */
+        RCU_CFG1 &= ~(RCU_CFG1_PREDV0SEL | RCU_CFG1_PREDV1 | RCU_CFG1_PLL1MF |
+                      RCU_CFG1_PREDV0);
+        RCU_CFG1 |= (RCU_PREDV0SRC_CKPLL1 | RCU_PREDV1_DIV5 | RCU_PLL1_MUL8 |
+                     RCU_PREDV0_DIV10);
 
-		/* enable PLL1 */
-		RCU_CTL |= RCU_CTL_PLL1EN;
-		/* wait till PLL1 is ready */
-		while(0U == (RCU_CTL & RCU_CTL_PLL1STB)){
-		}
+        /* enable PLL1 */
+        RCU_CTL |= RCU_CTL_PLL1EN;
+        /* wait till PLL1 is ready */
+        while (0U == (RCU_CTL & RCU_CTL_PLL1STB)) {
+        }
 
-		/* enable PLL1 */
-		RCU_CTL |= RCU_CTL_PLL2EN;
-		/* wait till PLL1 is ready */
-		while(0U == (RCU_CTL & RCU_CTL_PLL2STB)){
-		}
-    }else if(HXTAL_VALUE==8000000){
-		RCU_CFG1 &= ~(RCU_CFG1_PREDV0SEL | RCU_CFG1_PREDV1 | RCU_CFG1_PLL1MF | RCU_CFG1_PREDV0);
-		RCU_CFG1 |= (RCU_PREDV0SRC_HXTAL | RCU_PREDV0_DIV2 | RCU_PREDV1_DIV2 | RCU_PLL1_MUL20 | RCU_PLL2_MUL20);
+        /* enable PLL1 */
+        RCU_CTL |= RCU_CTL_PLL2EN;
+        /* wait till PLL1 is ready */
+        while (0U == (RCU_CTL & RCU_CTL_PLL2STB)) {
+        }
+    } else if (HXTAL_VALUE == 8000000) {
+        RCU_CFG1 &= ~(RCU_CFG1_PREDV0SEL | RCU_CFG1_PREDV1 | RCU_CFG1_PLL1MF |
+                      RCU_CFG1_PREDV0);
+        RCU_CFG1 |= (RCU_PREDV0SRC_HXTAL | RCU_PREDV0_DIV2 | RCU_PREDV1_DIV2 |
+                     RCU_PLL1_MUL20 | RCU_PLL2_MUL20);
 
-		/* enable PLL1 */
-		RCU_CTL |= RCU_CTL_PLL1EN;
-		/* wait till PLL1 is ready */
-		while(0U == (RCU_CTL & RCU_CTL_PLL1STB)){
-		}
+        /* enable PLL1 */
+        RCU_CTL |= RCU_CTL_PLL1EN;
+        /* wait till PLL1 is ready */
+        while (0U == (RCU_CTL & RCU_CTL_PLL1STB)) {
+        }
 
-		/* enable PLL2 */
-		RCU_CTL |= RCU_CTL_PLL2EN;
-		/* wait till PLL1 is ready */
-		while(0U == (RCU_CTL & RCU_CTL_PLL2STB)){
-		}
-
+        /* enable PLL2 */
+        RCU_CTL |= RCU_CTL_PLL2EN;
+        /* wait till PLL1 is ready */
+        while (0U == (RCU_CTL & RCU_CTL_PLL2STB)) {
+        }
     }
     /* enable PLL */
     RCU_CTL |= RCU_CTL_PLLEN;
 
     /* wait until PLL is stable */
-    while(0U == (RCU_CTL & RCU_CTL_PLLSTB)){
+    while (0U == (RCU_CTL & RCU_CTL_PLLSTB)) {
     }
 
     /* select PLL as system clock */
@@ -172,7 +174,7 @@ static void system_clock_108m_hxtal(void)
     RCU_CFG0 |= RCU_CKSYSSRC_PLL;
 
     /* wait until PLL is selected as system clock */
-    while(0U == (RCU_CFG0 & RCU_SCSS_PLL)){
+    while (0U == (RCU_CFG0 & RCU_SCSS_PLL)) {
     }
 }
 
@@ -199,8 +201,8 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
 {
     /* ToDo: add code to calculate the system frequency based upon the current
      *    register settings.
-     * Note: This function can be used to retrieve the system core clock frequeny
-     *    after user changed register settings.
+     * Note: This function can be used to retrieve the system core clock
+     * frequeny after user changed register settings.
      */
     uint32_t scss;
     uint32_t pllsel, predv0sel, pllmf, ck_src;
@@ -208,8 +210,7 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
 
     scss = GET_BITS(RCU_CFG0, 2, 3);
 
-    switch (scss)
-    {
+    switch (scss) {
         /* IRC8M is selected as CK_SYS */
         case SEL_IRC8M:
             SystemCoreClock = IRC8M_VALUE;
@@ -225,21 +226,20 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
             /* PLL clock source selection, HXTAL or IRC8M/2 */
             pllsel = (RCU_CFG0 & RCU_CFG0_PLLSEL);
 
-
-            if(RCU_PLLSRC_IRC8M_DIV2 == pllsel){
+            if (RCU_PLLSRC_IRC8M_DIV2 == pllsel) {
                 /* PLL clock source is IRC8M/2 */
                 ck_src = IRC8M_VALUE / 2U;
-            }else{
+            } else {
                 /* PLL clock source is HXTAL */
                 ck_src = HXTAL_VALUE;
 
                 predv0sel = (RCU_CFG1 & RCU_CFG1_PREDV0SEL);
 
                 /* source clock use PLL1 */
-                if(RCU_PREDV0SRC_CKPLL1 == predv0sel){
+                if (RCU_PREDV0SRC_CKPLL1 == predv0sel) {
                     predv1 = ((RCU_CFG1 & RCU_CFG1_PREDV1) >> 4) + 1U;
                     pll1mf = ((RCU_CFG1 & RCU_CFG1_PLL1MF) >> 8) + 2U;
-                    if(17U == pll1mf){
+                    if (17U == pll1mf) {
                         pll1mf = 20U;
                     }
                     ck_src = (ck_src / predv1) * pll1mf;
@@ -251,19 +251,19 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
             /* PLL multiplication factor */
             pllmf = GET_BITS(RCU_CFG0, 18, 21);
 
-            if((RCU_CFG0 & RCU_CFG0_PLLMF_4)){
+            if ((RCU_CFG0 & RCU_CFG0_PLLMF_4)) {
                 pllmf |= 0x10U;
             }
 
-            if(pllmf >= 15U){
+            if (pllmf >= 15U) {
                 pllmf += 1U;
-            }else{
+            } else {
                 pllmf += 2U;
             }
 
             SystemCoreClock = ck_src * pllmf;
 
-            if(15U == pllmf){
+            if (15U == pllmf) {
                 /* PLL source clock multiply by 6.5 */
                 SystemCoreClock = ck_src * 6U + ck_src / 2U;
             }
@@ -348,7 +348,7 @@ static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM+1];
  * This typedef is only used internal in this system_gd32vf103.c file.
  * It is used to do type conversion for registered exception handler before calling it.
  */
-typedef	void (*EXC_HANDLER) (unsigned long mcause, unsigned long sp);
+typedef void (*EXC_HANDLER) (unsigned long mcause, unsigned long sp);
 
 /**
  * \brief      System Default Exception Handler
@@ -441,7 +441,7 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
     if (exc_handler != NULL) {
         exc_handler(mcause, sp);
     }
-	return 0;
+    return 0;
 }
 /** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
 
