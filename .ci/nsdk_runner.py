@@ -116,6 +116,7 @@ def run_sdk_app(app, config=None, logfile=None, dry_run=False):
     fail_checks = checks.get("FAIL", [])
     checks = {"PASS": pass_checks, "FAIL": fail_checks}
     appschecks = config.get("appchecks", None)
+
     if appschecks and app in appschecks:
         print("Add application check for %s" % app)
         appchecks = appschecks[app]
@@ -139,7 +140,7 @@ def run_sdk_app(app, config=None, logfile=None, dry_run=False):
     make_options, csv_print = get_make_csv(app, config)
 
     if dry_run:
-        print("Dry run for application %s", app)
+        print("Dry run for application %s" % app)
         return True, ""
     # record checktime before build application
     checktime = time.time()
@@ -183,7 +184,13 @@ def run_and_parse_apps(appdir, config=None, logname="runapps", logdir="logs", dr
     pass_list = []
     if os.path.isdir(logdir) == False:
         os.makedirs(logdir)
+
+    appslist = config.get("applist", None)
+
     for app in nsdk_apps:
+        if appslist and app not in appslist:
+            print("Ignore application %s, which is not defined in applist" % app)
+            continue
         print("Build, upload and run application %s" % (app))
         appname = app
         if appname == ".":
@@ -198,6 +205,8 @@ def run_and_parse_apps(appdir, config=None, logname="runapps", logdir="logs", dr
             fail_list.append(app)
 
     if config:
+        if appslist is None:
+            config["applist"] = nsdk_apps
         cfg_file = os.path.join(logdir, "cfg.json")
         with open(cfg_file, "w") as cf:
             json.dump(config, cf, indent=4)

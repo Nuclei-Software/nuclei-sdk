@@ -12,6 +12,18 @@
             "MEPC:"
         ]
     },
+    "applist": [
+        "application/baremetal/benchmark/dhrystone",
+        "application/baremetal/benchmark/whetstone",
+        "application/baremetal/benchmark/coremark",
+        "application/baremetal/helloworld",
+        "application/baremetal/demo_timer",
+        "application/baremetal/demo_eclic",
+        "application/baremetal/demo_dsp",
+        "application/freertos/demo",
+        "application/ucosii/demo",
+        "application/rtthread/demo"
+    ],
     "appchecks": {
         "application/baremetal/benchmark/dhrystone": {
             "PASS": ["1000000/(User_Cycle/Number_Of_Runs)"],
