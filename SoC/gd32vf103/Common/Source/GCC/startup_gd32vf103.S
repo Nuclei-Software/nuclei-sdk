@@ -145,73 +145,73 @@ vector_base:
     DECLARE_INT_HANDLER     eclic_pmovi_handler             /* 18: Performance Monitor */
 
     DECLARE_INT_HANDLER     WWDGT_IRQHandler
-	DECLARE_INT_HANDLER     LVD_IRQHandler
-	DECLARE_INT_HANDLER     TAMPER_IRQHandler
-	DECLARE_INT_HANDLER     RTC_IRQHandler
-	DECLARE_INT_HANDLER     FMC_IRQHandler
-	DECLARE_INT_HANDLER     RCU_IRQHandler
-	DECLARE_INT_HANDLER     EXTI0_IRQHandler
-	DECLARE_INT_HANDLER     EXTI1_IRQHandler
-	DECLARE_INT_HANDLER     EXTI2_IRQHandler
-	DECLARE_INT_HANDLER     EXTI3_IRQHandler
-	DECLARE_INT_HANDLER     EXTI4_IRQHandler
-	DECLARE_INT_HANDLER     DMA0_Channel0_IRQHandler
-	DECLARE_INT_HANDLER     DMA0_Channel1_IRQHandler
-	DECLARE_INT_HANDLER     DMA0_Channel2_IRQHandler
-	DECLARE_INT_HANDLER     DMA0_Channel3_IRQHandler
-	DECLARE_INT_HANDLER     DMA0_Channel4_IRQHandler
-	DECLARE_INT_HANDLER     DMA0_Channel5_IRQHandler
-	DECLARE_INT_HANDLER     DMA0_Channel6_IRQHandler
-	DECLARE_INT_HANDLER     ADC0_1_IRQHandler
-	DECLARE_INT_HANDLER     CAN0_TX_IRQHandler
-	DECLARE_INT_HANDLER     CAN0_RX0_IRQHandler
-	DECLARE_INT_HANDLER     CAN0_RX1_IRQHandler
-	DECLARE_INT_HANDLER     CAN0_EWMC_IRQHandler
-	DECLARE_INT_HANDLER     EXTI5_9_IRQHandler
-	DECLARE_INT_HANDLER     TIMER0_BRK_IRQHandler
-	DECLARE_INT_HANDLER     TIMER0_UP_IRQHandler
-	DECLARE_INT_HANDLER     TIMER0_TRG_CMT_IRQHandler
-	DECLARE_INT_HANDLER     TIMER0_Channel_IRQHandler
-	DECLARE_INT_HANDLER     TIMER1_IRQHandler
-	DECLARE_INT_HANDLER     TIMER2_IRQHandler
-	DECLARE_INT_HANDLER     TIMER3_IRQHandler
-	DECLARE_INT_HANDLER     I2C0_EV_IRQHandler
-	DECLARE_INT_HANDLER     I2C0_ER_IRQHandler
-	DECLARE_INT_HANDLER     I2C1_EV_IRQHandler
-	DECLARE_INT_HANDLER     I2C1_ER_IRQHandler
-	DECLARE_INT_HANDLER     SPI0_IRQHandler
-	DECLARE_INT_HANDLER     SPI1_IRQHandler
-	DECLARE_INT_HANDLER     USART0_IRQHandler
-	DECLARE_INT_HANDLER     USART1_IRQHandler
-	DECLARE_INT_HANDLER     USART2_IRQHandler
-	DECLARE_INT_HANDLER     EXTI10_15_IRQHandler
-	DECLARE_INT_HANDLER     RTC_Alarm_IRQHandler
-	DECLARE_INT_HANDLER     USBFS_WKUP_IRQHandler
+    DECLARE_INT_HANDLER     LVD_IRQHandler
+    DECLARE_INT_HANDLER     TAMPER_IRQHandler
+    DECLARE_INT_HANDLER     RTC_IRQHandler
+    DECLARE_INT_HANDLER     FMC_IRQHandler
+    DECLARE_INT_HANDLER     RCU_IRQHandler
+    DECLARE_INT_HANDLER     EXTI0_IRQHandler
+    DECLARE_INT_HANDLER     EXTI1_IRQHandler
+    DECLARE_INT_HANDLER     EXTI2_IRQHandler
+    DECLARE_INT_HANDLER     EXTI3_IRQHandler
+    DECLARE_INT_HANDLER     EXTI4_IRQHandler
+    DECLARE_INT_HANDLER     DMA0_Channel0_IRQHandler
+    DECLARE_INT_HANDLER     DMA0_Channel1_IRQHandler
+    DECLARE_INT_HANDLER     DMA0_Channel2_IRQHandler
+    DECLARE_INT_HANDLER     DMA0_Channel3_IRQHandler
+    DECLARE_INT_HANDLER     DMA0_Channel4_IRQHandler
+    DECLARE_INT_HANDLER     DMA0_Channel5_IRQHandler
+    DECLARE_INT_HANDLER     DMA0_Channel6_IRQHandler
+    DECLARE_INT_HANDLER     ADC0_1_IRQHandler
+    DECLARE_INT_HANDLER     CAN0_TX_IRQHandler
+    DECLARE_INT_HANDLER     CAN0_RX0_IRQHandler
+    DECLARE_INT_HANDLER     CAN0_RX1_IRQHandler
+    DECLARE_INT_HANDLER     CAN0_EWMC_IRQHandler
+    DECLARE_INT_HANDLER     EXTI5_9_IRQHandler
+    DECLARE_INT_HANDLER     TIMER0_BRK_IRQHandler
+    DECLARE_INT_HANDLER     TIMER0_UP_IRQHandler
+    DECLARE_INT_HANDLER     TIMER0_TRG_CMT_IRQHandler
+    DECLARE_INT_HANDLER     TIMER0_Channel_IRQHandler
+    DECLARE_INT_HANDLER     TIMER1_IRQHandler
+    DECLARE_INT_HANDLER     TIMER2_IRQHandler
+    DECLARE_INT_HANDLER     TIMER3_IRQHandler
+    DECLARE_INT_HANDLER     I2C0_EV_IRQHandler
+    DECLARE_INT_HANDLER     I2C0_ER_IRQHandler
+    DECLARE_INT_HANDLER     I2C1_EV_IRQHandler
+    DECLARE_INT_HANDLER     I2C1_ER_IRQHandler
+    DECLARE_INT_HANDLER     SPI0_IRQHandler
+    DECLARE_INT_HANDLER     SPI1_IRQHandler
+    DECLARE_INT_HANDLER     USART0_IRQHandler
+    DECLARE_INT_HANDLER     USART1_IRQHandler
+    DECLARE_INT_HANDLER     USART2_IRQHandler
+    DECLARE_INT_HANDLER     EXTI10_15_IRQHandler
+    DECLARE_INT_HANDLER     RTC_Alarm_IRQHandler
+    DECLARE_INT_HANDLER     USBFS_WKUP_IRQHandler
     DECLARE_INT_HANDLER     default_intexc_handler
     DECLARE_INT_HANDLER     default_intexc_handler
     DECLARE_INT_HANDLER     default_intexc_handler
     DECLARE_INT_HANDLER     default_intexc_handler
-	DECLARE_INT_HANDLER     default_intexc_handler
-	DECLARE_INT_HANDLER     EXMC_IRQHandler
-	DECLARE_INT_HANDLER     default_intexc_handler
-	DECLARE_INT_HANDLER     TIMER4_IRQHandler
-	DECLARE_INT_HANDLER     SPI2_IRQHandler
-	DECLARE_INT_HANDLER     UART3_IRQHandler
-	DECLARE_INT_HANDLER     UART4_IRQHandler
-	DECLARE_INT_HANDLER     TIMER5_IRQHandler
-	DECLARE_INT_HANDLER     TIMER6_IRQHandler
-	DECLARE_INT_HANDLER     DMA1_Channel0_IRQHandler
-	DECLARE_INT_HANDLER     DMA1_Channel1_IRQHandler
-	DECLARE_INT_HANDLER     DMA1_Channel2_IRQHandler
-	DECLARE_INT_HANDLER     DMA1_Channel3_IRQHandler
-	DECLARE_INT_HANDLER     DMA1_Channel4_IRQHandler
+    DECLARE_INT_HANDLER     default_intexc_handler
+    DECLARE_INT_HANDLER     EXMC_IRQHandler
+    DECLARE_INT_HANDLER     default_intexc_handler
+    DECLARE_INT_HANDLER     TIMER4_IRQHandler
+    DECLARE_INT_HANDLER     SPI2_IRQHandler
+    DECLARE_INT_HANDLER     UART3_IRQHandler
+    DECLARE_INT_HANDLER     UART4_IRQHandler
+    DECLARE_INT_HANDLER     TIMER5_IRQHandler
+    DECLARE_INT_HANDLER     TIMER6_IRQHandler
+    DECLARE_INT_HANDLER     DMA1_Channel0_IRQHandler
+    DECLARE_INT_HANDLER     DMA1_Channel1_IRQHandler
+    DECLARE_INT_HANDLER     DMA1_Channel2_IRQHandler
+    DECLARE_INT_HANDLER     DMA1_Channel3_IRQHandler
+    DECLARE_INT_HANDLER     DMA1_Channel4_IRQHandler
     DECLARE_INT_HANDLER     default_intexc_handler
     DECLARE_INT_HANDLER     default_intexc_handler
-	DECLARE_INT_HANDLER     CAN1_TX_IRQHandler
-	DECLARE_INT_HANDLER     CAN1_RX0_IRQHandler
-	DECLARE_INT_HANDLER     CAN1_RX1_IRQHandler
-	DECLARE_INT_HANDLER     CAN1_EWMC_IRQHandler
-	DECLARE_INT_HANDLER     USBFS_IRQHandler
+    DECLARE_INT_HANDLER     CAN1_TX_IRQHandler
+    DECLARE_INT_HANDLER     CAN1_RX0_IRQHandler
+    DECLARE_INT_HANDLER     CAN1_RX1_IRQHandler
+    DECLARE_INT_HANDLER     CAN1_EWMC_IRQHandler
+    DECLARE_INT_HANDLER     USBFS_IRQHandler
 
     .section .init
 
@@ -225,16 +225,16 @@ _start:
     /* ===== Startup Stage 1 ===== */
     /* Disable Global Interrupt */
     csrc CSR_MSTATUS, MSTATUS_MIE
-	/* Jump to logical address first to ensure correct operation of RAM region  */
-    la		a0,	_start
-    li		a1,	1
-	slli	a1,	a1, 29
-    bleu	a1, a0, _start0800
-    srli	a1,	a1, 2
-    bleu	a1, a0, _start0800
-    la		a0,	_start0800
-    add		a0, a0, a1
-	jr      a0
+    /* Jump to logical address first to ensure correct operation of RAM region  */
+    la      a0, _start
+    li      a1, 1
+    slli    a1, a1, 29
+    bleu    a1, a0, _start0800
+    srli    a1, a1, 2
+    bleu    a1, a0, _start0800
+    la      a0, _start0800
+    add     a0, a0, a1
+    jr      a0
 
 _start0800:
     /* Initialize GP and Stack Pointer SP */
