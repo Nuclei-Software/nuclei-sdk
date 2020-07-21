@@ -188,6 +188,8 @@ def run_and_parse_apps(appdir, config=None, logname="runapps", logdir="logs", dr
     appslist = config.get("applist", None)
 
     for app in nsdk_apps:
+        # Force to change windows path to linux path, \ -> /
+        app = app.replace("\\", "/")
         if appslist and app not in appslist:
             print("Ignore application %s, which is not defined in applist" % app)
             continue
