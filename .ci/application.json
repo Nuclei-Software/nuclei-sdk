@@ -54,7 +54,7 @@
             "FAIL": ["test error apprears"]
         },
         "application/freertos/demo": {
-            "PASS": ["timers Callback"],
+            "PASS": ["timers Callback 11"],
             "FAIL": []
         },
         "application/rtthread/demo": {
