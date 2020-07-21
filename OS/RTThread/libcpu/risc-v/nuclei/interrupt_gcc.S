@@ -214,5 +214,5 @@ irq_entry:
 Undef_Handler:
 default_intexc_handler:
 1:
-	j 1b
+    j 1b
 

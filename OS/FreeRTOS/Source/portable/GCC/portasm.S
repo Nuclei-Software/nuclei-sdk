@@ -244,12 +244,12 @@ irq_entry:
 Undef_Handler:
 default_intexc_handler:
 1:
-	j 1b
+    j 1b
 
 /* Start the first task.  This also clears the bit that indicates the FPU is
-	in use in case the FPU was used before the scheduler was started - which
-	would otherwise result in the unnecessary leaving of space in the stack
-	for lazy saving of FPU registers. */
+    in use in case the FPU was used before the scheduler was started - which
+    would otherwise result in the unnecessary leaving of space in the stack
+    for lazy saving of FPU registers. */
 .align 3
 prvPortStartFirstTask:
     /* Setup Interrupt Stack using
