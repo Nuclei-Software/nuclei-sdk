@@ -58,21 +58,26 @@ will check this RISC-V CSR **MISA** register value.
     CPU Frequency 109323529 Hz
     MISA: 0x40901105
     MISA: RV32IMACUX
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
-    Hello World!
+    0: Hello World From Nuclei RISC-V Processor!
+    1: Hello World From Nuclei RISC-V Processor!
+    2: Hello World From Nuclei RISC-V Processor!
+    3: Hello World From Nuclei RISC-V Processor!
+    4: Hello World From Nuclei RISC-V Processor!
+    5: Hello World From Nuclei RISC-V Processor!
+    6: Hello World From Nuclei RISC-V Processor!
+    7: Hello World From Nuclei RISC-V Processor!
+    8: Hello World From Nuclei RISC-V Processor!
+    9: Hello World From Nuclei RISC-V Processor!
+    10: Hello World From Nuclei RISC-V Processor!
+    11: Hello World From Nuclei RISC-V Processor!
+    12: Hello World From Nuclei RISC-V Processor!
+    13: Hello World From Nuclei RISC-V Processor!
+    14: Hello World From Nuclei RISC-V Processor!
+    15: Hello World From Nuclei RISC-V Processor!
+    16: Hello World From Nuclei RISC-V Processor!
+    17: Hello World From Nuclei RISC-V Processor!
+    18: Hello World From Nuclei RISC-V Processor!
+    19: Hello World From Nuclei RISC-V Processor!
 
 
 demo_timer
