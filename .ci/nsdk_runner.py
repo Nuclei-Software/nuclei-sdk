@@ -76,7 +76,8 @@ def read_serial(port="/dev/ttyUSB1", baudrate=115200, timeout=60, checks=None, s
     try:
         ser = serial.Serial(port, baudrate, timeout=5)
         while (time.time() - start_time) < timeout:
-            line = ser.readline().decode()
+            # Remove '\r' in serial read line
+            line = str(ser.readline().decode()).replace('\r', '')
             if sdk_check== True:
                 print("XXX Check " + line)
                 if nsdk_check_tag in line:
@@ -156,7 +157,7 @@ def run_sdk_app(app, config=None, logfile=None, dry_run=False):
     ser_thread.join()
     status, log = ser_thread.get_result()
     del ser_thread
-    log = csv_print + "\r\n" + log
+    log = csv_print + "\n" + log
 
     print(log)
     if logfile:
@@ -164,7 +165,7 @@ def run_sdk_app(app, config=None, logfile=None, dry_run=False):
         if os.path.isdir(logdir) == False:
             os.makedirs(logdir)
         print("Record serial log to %s" % (logfile))
-        with open(logfile, 'w', newline='\n') as lf:
+        with open(logfile, 'w') as lf:
             lf.write(log)
     return status, log
 
@@ -225,23 +226,23 @@ def run_and_parse_apps(appdir, config=None, logname="runapps", logdir="logs", dr
     flog_csv = os.path.join(logdir, logname + ".csv")
     run_log = os.path.join(logdir, "runner_report" + ".log")
 
-    with open(flog_name, 'w', newline='\n') as lf:
+    with open(flog_name, 'w') as lf:
         lf.write(full_log)
-    log_lines = full_log.split("\r\n")
+    log_lines = full_log.split("\n")
 
-    with open(flog_csv, 'w', newline='\n') as cf:
+    with open(flog_csv, 'w') as cf:
         for log_line in log_lines:
             log_line = log_line.strip()
             if "CSV" in log_line:
-                cf.write(log_line + "\r\n")
+                cf.write(log_line + "\n")
 
-    with open(run_log, 'w', newline='\n') as rf:
-        rf.write("Passed applications as below\r\n")
+    with open(run_log, 'w') as rf:
+        rf.write("Passed applications as below\n")
         for ps in pass_list:
-            rf.write(ps+'\r\n')
-        rf.write("Failed applications as below\r\n")
+            rf.write(ps+'\n')
+        rf.write("Failed applications as below\n")
         for fl in fail_list:
-            rf.write(fl+'\r\n')
+            rf.write(fl+'\n')
 
     pass
 
