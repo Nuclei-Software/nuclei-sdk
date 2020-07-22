@@ -256,6 +256,8 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--bench_unit', default='cycles', help="BENCH_UNIT, cycles or instret, default cycles")
     parser.add_argument('-j', '--jsonconfig', default=None, help="JSON Configuration File, default no configuration")
     parser.add_argument('-l', '--logdir', default='logs', help="logs directory, default logs")
+    parser.add_argument('--port', help="Serial port for monitor")
+    parser.add_argument('--baudrate', help="Serial port baudrate for monitor")
     parser.add_argument('--dry_run', action="store_true", help="Dry run, will generate a empty json configuration file in <logdir>")
     args = parser.parse_args()
 
@@ -274,6 +276,11 @@ if __name__ == '__main__':
             config["checks"] = jsoncfg["checks"]
         jsoncfg.update(config)
         config = jsoncfg
+    if args.port:
+        config["port"] = args.port
+    if args.baudrate:
+        config["baudrate"] = args.baudrate
+
     app_names = [os.path.basename(os.path.relpath(args.appdir)), args.core.lower(), args.download.lower(), \
             args.dsp_enable.lower(), args.bench_unit.lower()]
     applog = "_".join(app_names)
