@@ -164,7 +164,7 @@ def run_sdk_app(app, config=None, logfile=None, dry_run=False):
         if os.path.isdir(logdir) == False:
             os.makedirs(logdir)
         print("Record serial log to %s" % (logfile))
-        with open(logfile, 'w') as lf:
+        with open(logfile, 'w', newline='\n') as lf:
             lf.write(log)
     return status, log
 
@@ -225,23 +225,23 @@ def run_and_parse_apps(appdir, config=None, logname="runapps", logdir="logs", dr
     flog_csv = os.path.join(logdir, logname + ".csv")
     run_log = os.path.join(logdir, "runner_report" + ".log")
 
-    with open(flog_name, 'w') as lf:
+    with open(flog_name, 'w', newline='\n') as lf:
         lf.write(full_log)
-    log_lines = full_log.split("\n")
+    log_lines = full_log.split("\r\n")
 
-    with open(flog_csv, 'w') as cf:
+    with open(flog_csv, 'w', newline='\n') as cf:
         for log_line in log_lines:
             log_line = log_line.strip()
             if "CSV" in log_line:
-                cf.write(log_line + "\n")
+                cf.write(log_line + "\r\n")
 
-    with open(run_log, 'w') as rf:
-        rf.write("Passed applications as below\n")
+    with open(run_log, 'w', newline='\n') as rf:
+        rf.write("Passed applications as below\r\n")
         for ps in pass_list:
-            rf.write(ps+'\n')
-        rf.write("Failed applications as below\n")
+            rf.write(ps+'\r\n')
+        rf.write("Failed applications as below\r\n")
         for fl in fail_list:
-            rf.write(fl+'\n')
+            rf.write(fl+'\r\n')
 
     pass
 
