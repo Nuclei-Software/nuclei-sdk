@@ -17,6 +17,14 @@ This is release ``0.2.5-RC1`` of Nuclei SDK.
 
   - Update and use NMSIS 1.0.1-RC1
   - Add NMSIS-DSP and NMSIS-NN library for RISC-V 32bit and 64bit
+  - Both RISC-V 32bit and 64bit DSP instructions are supported
+
+* SoC
+
+  - All startup and system init code are adapted to match design changes of NMSIS-1.0.1-RC1
+
+    - `_init` and `_fini` are deprecated for startup code, now please use `_premain_init` and `_postmain_fini` instead
+    - Add `DDR` download mode for Hummingbird SoC, which downloaded program into DDR and execute in DDR
 
 V0.2.4
 ------
