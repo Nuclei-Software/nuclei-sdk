@@ -34,8 +34,8 @@ This is release ``0.2.4`` of Nuclei SDK.
 * Application
 
   - Upgrade the ``demo_dsp`` application to a more complicated one, and by default,
-     ``DSP_ENABLE`` is changed from ``OFF`` to ``ON``, optimization level changed from
-     ``O2`` to no optimization.
+    ``DSP_ENABLE`` is changed from ``OFF`` to ``ON``, optimization level changed from
+    ``O2`` to no optimization.
 
 * SoC
 
