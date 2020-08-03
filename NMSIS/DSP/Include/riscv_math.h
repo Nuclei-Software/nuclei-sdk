@@ -5981,10 +5981,14 @@ __STATIC_FORCEINLINE riscv_status riscv_sqrt_f32(
   float32_t in,
   float32_t * pOut)
   {
+
     if (in >= 0.0f)
     {
-
+#if defined ( __riscv_flen )
+      __ASM volatile("fsqrt.s %0, %1" : "=f"(*pOut) : "f"(in));
+#else
       *pOut = sqrtf(in);
+#endif /*__riscv_flen*/
 
       return (RISCV_MATH_SUCCESS);
     }
