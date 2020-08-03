@@ -3,21 +3,20 @@
 Changelog
 =========
 
-V0.2.5-dev
+V0.2.5-RC1
 ----------
 
-This is release ``0.2.5-dev`` of Nuclei SDK, which is under development.
-
-.. warning::
-
-   * The formal release is not yet published, the code is still under development,
-     the changelog is updated due to code changes.
+This is release ``0.2.5-RC1`` of Nuclei SDK.
 
 * Documentation
 
    - Fix invalid links used in this documentation
    - Rename `RVStar` to `RV-STAR` to keep alignment in documentation
 
+* NMSIS
+
+  - Update and use NMSIS 1.0.1-RC1
+  - Add NMSIS-DSP and NMSIS-NN library for RISC-V 32bit and 64bit
 
 V0.2.4
 ------
