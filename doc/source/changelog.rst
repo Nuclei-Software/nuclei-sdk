@@ -10,8 +10,8 @@ This is release ``0.2.5-RC1`` of Nuclei SDK.
 
 * Documentation
 
-   - Fix invalid links used in this documentation
-   - Rename `RVStar` to `RV-STAR` to keep alignment in documentation
+  - Fix invalid links used in this documentation
+  - Rename `RVStar` to `RV-STAR` to keep alignment in documentation
 
 * NMSIS
 
@@ -33,29 +33,29 @@ This is release ``0.2.4`` of Nuclei SDK.
 
 * Application
 
-   - Upgrade the ``demo_dsp`` application to a more complicated one, and by default,
+  - Upgrade the ``demo_dsp`` application to a more complicated one, and by default,
      ``DSP_ENABLE`` is changed from ``OFF`` to ``ON``, optimization level changed from
      ``O2`` to no optimization.
 
 * SoC
 
-   - Update openocd configuration file for Hummingbird FPGA evaluation board,
-     If you want to use ``2-wire`` mode of JTAG, please change ``ftdi_oscan1_mode off``
-     in ``openocd_hbird.cfg`` to ``ftdi_oscan1_mode on``.
-   - Add ``delay_1ms`` function in all supported SoC platforms
-   - Fix bugs found in uart and gpio drivers in hbird SoC
-   - Move ``srodata`` after ``sdata`` for ILM linker script
-   - Change bool to BOOL to avoid cpp compiling error in gd32vf103
-   - Fix ``adc_mode_config`` function in gd32vf103 SoC
+  - Update openocd configuration file for Hummingbird FPGA evaluation board,
+    If you want to use ``2-wire`` mode of JTAG, please change ``ftdi_oscan1_mode off``
+    in ``openocd_hbird.cfg`` to ``ftdi_oscan1_mode on``.
+  - Add ``delay_1ms`` function in all supported SoC platforms
+  - Fix bugs found in uart and gpio drivers in hbird SoC
+  - Move ``srodata`` after ``sdata`` for ILM linker script
+  - Change bool to BOOL to avoid cpp compiling error in gd32vf103
+  - Fix ``adc_mode_config`` function in gd32vf103 SoC
 
 * Build System
 
-   - Add **GDB_PORT** variable in build system, which is used to specify the gdb port
-     of openocd and gdb when running ``run_openocd`` and ``run_gdb`` targets
-   - Add Nuclei N/NX/UX 600 series core configurations into *Makefile.core*
-   - Add -lstdc++ library for cpp application
-   - Generate hex output for dasm target
-   - Optimize Makefile to support MACOS
+  - Add **GDB_PORT** variable in build system, which is used to specify the gdb port
+    of openocd and gdb when running ``run_openocd`` and ``run_gdb`` targets
+  - Add Nuclei N/NX/UX 600 series core configurations into *Makefile.core*
+  - Add -lstdc++ library for cpp application
+  - Generate hex output for dasm target
+  - Optimize Makefile to support MACOS
 
 
 V0.2.3
@@ -65,44 +65,44 @@ This is release ``0.2.3`` of Nuclei SDK.
 
 * OS
 
-   - Add **RT-Thread 3.1.3** as a new RTOS service of Nuclei SDK, the kernel source
-     code is from RT-Thread Nano project.
-   - Update UCOSII source code from version ``V2.91`` to ``V2.93``
-   - The source code of UCOSII is fetched from https://github.com/SiliconLabs/uC-OS2/
-   - **Warning**: Now for UCOSII application development, the ``app_cfg.h``, ``os_cfg.h``
-     and ``app_hooks.c`` are required, which can be also found in
-     https://github.com/SiliconLabs/uC-OS2/tree/master/Cfg/Template
+  - Add **RT-Thread 3.1.3** as a new RTOS service of Nuclei SDK, the kernel source
+    code is from RT-Thread Nano project.
+  - Update UCOSII source code from version ``V2.91`` to ``V2.93``
+  - The source code of UCOSII is fetched from https://github.com/SiliconLabs/uC-OS2/
+  - **Warning**: Now for UCOSII application development, the ``app_cfg.h``, ``os_cfg.h``
+    and ``app_hooks.c`` are required, which can be also found in
+    https://github.com/SiliconLabs/uC-OS2/tree/master/Cfg/Template
 
 * Application
 
-   - Add **RT-Thread** demo application.
-   - Don't use the ``get_cpu_freq`` function in application code, which currently is only
-     for internal usage, and not all SoC implementations are required to provide this function.
-   - Use ``SystemCoreClock`` to get the CPU frequency instead of using ``get_cpu_freq()`` in
-     ``whetstone`` application.
-   - Update UCOSII applications due to UCOSII version upgrade, and application development
-     for UCOSII also required little changes, please refer to :ref:`design_rtos_ucosii`
-   - Fix ``time_in_secs`` function error in ``coremark``, and cleanup ``coremark`` application.
+  - Add **RT-Thread** demo application.
+  - Don't use the ``get_cpu_freq`` function in application code, which currently is only
+    for internal usage, and not all SoC implementations are required to provide this function.
+  - Use ``SystemCoreClock`` to get the CPU frequency instead of using ``get_cpu_freq()`` in
+    ``whetstone`` application.
+  - Update UCOSII applications due to UCOSII version upgrade, and application development
+    for UCOSII also required little changes, please refer to :ref:`design_rtos_ucosii`
+  - Fix ``time_in_secs`` function error in ``coremark``, and cleanup ``coremark`` application.
 
 * Documentation
 
-   - Add documentation about RT-Thread and its application development.
-   - Update documentation about UCOSII and its application development.
-   - Update ``coremark`` application documentation.
+  - Add documentation about RT-Thread and its application development.
+  - Update documentation about UCOSII and its application development.
+  - Update ``coremark`` application documentation.
 
 * Build System
 
-   - Add build system support for RT-Thread support.
-   - Build system is updated due to UCOSII version upgrade, the ``OS/UCOSII/cfg`` folder
-     no longer existed, so no need to include it.
+  - Add build system support for RT-Thread support.
+  - Build system is updated due to UCOSII version upgrade, the ``OS/UCOSII/cfg`` folder
+    no longer existed, so no need to include it.
 
 * SoC
 
-    - Update SoC startup and linkscript files to support RT-Thread
+  - Update SoC startup and linkscript files to support RT-Thread
 
 * Misc
 
-    - Add ``SConscript`` file in Nuclei SDK root, this file is used by RT-Thread package.
+  - Add ``SConscript`` file in Nuclei SDK root, this file is used by RT-Thread package.
 
 V0.2.2
 ------
