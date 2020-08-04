@@ -231,10 +231,6 @@ _start:
     /* Enable mcycle and minstret counter */
     csrci CSR_MCOUNTINHIBIT, 0x5
 
-    /* Enable ICache and DCache if present */
-    li t0, 0x10001
-    csrs CSR_MCACHE_CTL, t0
-
     /* ===== Startup Stage 3 ===== */
     /*
      * Load code section from FLASH to ILM
