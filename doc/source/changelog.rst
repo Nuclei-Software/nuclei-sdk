@@ -3,6 +3,18 @@
 Changelog
 =========
 
+V0.2.5-RC2-dev
+--------------
+
+This following changes are maded since ``0.2.5-RC1``.
+
+* SoC
+
+  - For **SOC=hbird**, in function ``_premain_init`` of ``system_hbird.c``, cache will be enable in following cases:
+    - If ``__ICACHE_PRESENT`` is set to 1 in ``hbird.h``, I-CACHE will be enabled
+    - If ``__DCACHE_PRESENT`` is set to 1 in ``hbird.h``, D-CACHE will be enabled
+
+
 V0.2.5-RC1
 ----------
 
@@ -25,6 +37,7 @@ This is release ``0.2.5-RC1`` of Nuclei SDK.
 
     - `_init` and `_fini` are deprecated for startup code, now please use `_premain_init` and `_postmain_fini` instead
     - Add `DDR` download mode for Hummingbird SoC, which downloaded program into DDR and execute in DDR
+
 
 V0.2.4
 ------
