@@ -64,3 +64,19 @@ You can only this ``ECLIC_SetVector`` API in when your vector table
 is placed in RAM which can be changed during running time, so if you want to
 write portable application, we recommended you to use exactly the eclic handler
 names defined in **startup_<device>.S**.
+
+
+Access to github.com is slow, any workaround?
+---------------------------------------------
+
+Access speed to github.com sometimes is slow and not stable, but if you want to clone source code,
+you can also switch to use our mirror site maintained in gitee.com.
+
+This mirror will sync changes from github to gitee every 6 hours, that is 4 times a day.
+
+You just need to replace the github to gitee when you clone any repo in **Nuclei-Software** or **riscv-mcu**.
+
+For example, if you want to clone **nuclei-sdk** using command
+``git clone https://github.com/Nuclei-Software/nuclei-sdk``, then
+you can achieve it by command ``git clone https://gitee.com/Nuclei-Software/nuclei-sdk``
+

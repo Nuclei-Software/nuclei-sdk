@@ -3,8 +3,10 @@
 Changelog
 =========
 
-V0.2.5-RC2-dev
---------------
+V0.2.5
+------
+
+This is the official release version ``0.2.5`` of Nuclei SDK.
 
 This following changes are maded since ``0.2.5-RC1``.
 
@@ -14,6 +16,14 @@ This following changes are maded since ``0.2.5-RC1``.
 
     - If ``__ICACHE_PRESENT`` is set to 1 in ``hbird.h``, I-CACHE will be enabled
     - If ``__DCACHE_PRESENT`` is set to 1 in ``hbird.h``, D-CACHE will be enabled
+
+* Documentation
+
+  - Fix several invalid cross reference links
+
+* NMSIS
+
+  - Update and use NMSIS 1.0.1
 
 
 V0.2.5-RC1

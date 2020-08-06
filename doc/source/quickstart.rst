@@ -593,25 +593,26 @@ For more advanced usage, please follow the items as below:
     * If you met some issues in using this guide, please check :ref:`faq`,
       if still not solved, please :ref:`contribute_submit_issue`.
 
-    * If you are trying to **develop Nuclei SDK application in IDE**, now you have two choices:
+    * If you are trying to **develop Nuclei SDK application in IDE**, now you have three choices:
 
-      1. You can take a try using Segger embedded studio, we provided prebuilt projects using Nuclei
+      1. Since Nuclei Studio 2020.08, Nuclei SDK will be deeply integrated with Nuclei Studio, you can
+         easily create a Nuclei SDK Project in Nuclei Studio through IDE Project Wizard, and easily
+         configure Nuclei SDK project when the Nuclei SDK project is created using SDK Configuration
+         Tool, for more details, please click `Nuclei Tools`_ to download Nuclei Studio, and refer to
+         the ``Nuclei Studio User Guide.pdf`` in it.
+
+      2. You can take a try using Segger embedded studio, we provided prebuilt projects using Nuclei
          SDK release version, click `Segger embedded studio projects for Nuclei SDK`_ to learn about it
 
-      2. You can also take a try with the Cross-platform PlatformIO IDE, we provided our Nuclei platform
+      3. You can also take a try with the Cross-platform PlatformIO IDE, we provided our Nuclei platform
          and Nuclei SDK release version in PlatformIO, click `Platform Nuclei in PlatformIO`_ to learn
          more about it
 
-    * If you want to develop Nuclei SDK application in Nuclei Studio, you can also easily integrate the source code with it.
+      4. You can also use source code in Nuclei SDK as base, and easily integrate with other IDE tools,
+         such as IAR workbench for RISC-V, Compiler-IDE and others.
 
-       1. Add required source code folders, and header file folders in IDE
-
-       2. Check the compiler and linker options using extra **V=1** passed with *make*, and adapt the options in IDE
-
-       3. Add extra macros definition and include folders in project configurations
-
-       4. Build and debug project in IDE
 
 .. _GDB User Manual: https://www.gnu.org/software/gdb/documentation/
+.. _Nuclei Tools: https://nucleisys.com/download.php
 .. _Segger embedded studio projects for Nuclei SDK: https://github.com/riscv-mcu/ses_nuclei_sdk_projects
 .. _Platform Nuclei in PlatformIO: https://platformio.org/platforms/nuclei
