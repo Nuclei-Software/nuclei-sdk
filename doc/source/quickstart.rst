@@ -21,6 +21,13 @@ Install and Setup Tools in Windows
 Make sure you are using at least **Windows 7**, and then you can follow the following steps
 to download and install tools for you.
 
+.. note::
+
+    Since **2020.08** release version of Nuclei Studio, you can just download the **Nuclei Studio IDE**,
+    and no need to do the following steps now, the prebuilt tools are already included, for example,
+    if you have extracted the Nuclei Studio IDE to ``D:\Software\NucleiStudio_IDE_202008``, then you
+    can find the prebuilt tools in ``D:\Software\NucleiStudio_IDE_202008\NucleiStudio\toolchain``.
+
 1. Create an ``Nuclei`` folder in your Windows Environment, such as ``D:\Software\Nuclei``
 
 2. Download the following tools from |nuclei_download_center|, please check and follow
@@ -82,7 +89,6 @@ to download and install tools for you.
 
          Nuclei Windows Build Tools directory structure of build-tools
 
-
 .. _quickstart_setup_tools_env_linux:
 
 Install and Setup Tools in Linux
@@ -96,12 +102,11 @@ to download and install tools for you.
 2. Download the following tools from |nuclei_download_center|, please check and follow
    the figure :ref:`figure_quickstart_5`.
 
-   - **Nuclei RISC-V GNU Toolchain for Linux**, for **CentOS or Ubuntu < 18.04** click number **1-1**,
-     for **Ubuntu >=18.04** click number **1-2** in the figure :ref:`figure_quickstart_5`
+   - **Nuclei RISC-V GNU Toolchain for Linux**, for **CentOS or Ubuntu** click number **1**
+     in the figure :ref:`figure_quickstart_5`
    - **Nuclei OpenOCD for Linux**, see number **2-1** for 64bit version in the figure :ref:`figure_quickstart_5`
    - **Make >= 3.82**: Install ``Make`` using ``sudo apt-get install make`` in Ubuntu,
      or ``sudo yum install make`` in CentOS.
-
 
 .. _figure_quickstart_5:
 
@@ -162,6 +167,13 @@ The source code of Nuclei SDK is maintained in |github| and |gitee|.
      .. code-block:: bat
 
          set NUCLEI_TOOL_ROOT=D:\Software\Nuclei
+
+     Or If you are directly using prebuilt tools in *Nuclei Studio(>= 2020.08)* such
+     as ``D:\Software\NucleiStudio_IDE_202008\NucleiStudio\toolchain``.
+
+     .. code-block:: bat
+
+         set NUCLEI_TOOL_ROOT=D:\Software\NucleiStudio_IDE_202008\NucleiStudio\toolchain
 
   - **Linux**
      Create ``setup_config.sh`` in ``nuclei-sdk`` folder, and open this file
