@@ -182,13 +182,18 @@ If no :ref:`develop_buildsystem_var_rtos` is chosen, then RTOS
 code will not be included during compiling, user will develop
 baremetal application.
 
-If **FreeRTOS** or **UCOSII** RTOS is chosen, then FreeRTOS or UCOSII
-source code will be included during compiling, and user can develop
-RTOS application.
+If **FreeRTOS**, **UCOSII** or **RTThread** RTOS is chosen, then FreeRTOS
+UCOSII, or RTThread source code will be included during compiling, and extra
+compiler option ``-DRTOS_$(RTOS_UPPER)`` will be passed, then user can develop RTOS application.
+
+For example, if ``FreeRTOS`` is selected, then ``-DRTOS_FREERTOS`` compiler option
+will be passed.
 
 * **Makefile.rtos.FreeRTOS**: Include FreeRTOS related source code and header
   directories
 * **Makefile.rtos.UCOSII**: Include UCOSII related source code and header
+  directories
+* **Makefile.rtos.RTThread**: Include RTThread related source code and header
   directories
 
 .. _develop_buildsystem_makefile_core:
@@ -440,19 +445,23 @@ currently it has these modes supported as described in table
      - Description
    * - ilm
      - | Program will be download into ilm/ram and
-       | run directly in ilm/ram, program lost when poweroff
+       | run directly in ilm/ram, program will lost when poweroff
    * - flash
      - | Program will be download into flash, when running,
        | program will be copied to ilm/ram and run in ilm/ram
    * - flashxip
-     - Program will to be download into flash and run directly in Flash
+     - Program will to be download into flash and run directly in flash
+   * - ddr
+     - | Program will to be download into ddr and
+       | run directly in ddr, program will lost when poweroff
 
 .. note::
 
     * :ref:`design_soc_gd32vf103` only support **DOWNLOAD=flashxip**
     * :ref:`design_soc_hbird` support all the download modes.
     * **flashxip** mode in :ref:`design_soc_hbird` is very slow due to
-      the CORE frequency is very slow, and Flash speed is slow
+      the CORE frequency is very slow, and flash execution speed is slow
+    * **ddr** mode is introduced in release ``0.2.5`` of Nuclei SDK
 
 .. _develop_buildsystem_var_core:
 
@@ -613,15 +622,18 @@ You can easily find the supported RTOSes in the **<NUCLEI_SDK_ROOT>/OS** directo
   See examples in ``application/baremetal``.
 * If **RTOS** is set the the following values, RTOS service will be enabled with this application.
 
-  - ``FreeRTOS``: FreeRTOS service will be enabled, you can include FreeRTOS header files now, and
-    use FreeRTOS API, for ``FreeRTOS`` application, you need to have an ``FreeRTOSConfig.h`` header file
-    prepared in you application. See examples in ``application/freertos``.
-  - ``UCOSII``: UCOSII service will be enabled, you can include UCOSII header files now, and
-    use UCOSII API, for ``UCOSII`` application, you need to have ``app_cfg.h``, ``os_cfg.h``
-    and ``app_hooks.c`` files prepared in you application. See examples in ``application/ucosii``.
-  - ``RTThread``: RT-Thread service will be enabled, you can include RT-Thread header files now, and
-    use RT-Thread API, for ``UCOSII`` application, you need to have an ``rtconfig.h`` header file
-    prepared in you application. See examples in ``application/rtthread``.
+  - ``FreeRTOS``: FreeRTOS service will be enabled, extra macro ``RTOS_FREERTOS`` will be defined,
+    you can include FreeRTOS header files now, and use FreeRTOS API, for ``FreeRTOS`` application,
+    you need to have an ``FreeRTOSConfig.h`` header file prepared in you application.
+    See examples in ``application/freertos``.
+  - ``UCOSII``: UCOSII service will be enabled, extra macro ``RTOS_UCOSII`` will be defined,
+    you can include UCOSII header files now, and use UCOSII API, for ``UCOSII`` application,
+    you need to have ``app_cfg.h``, ``os_cfg.h`` and ``app_hooks.c`` files prepared in you application.
+    See examples in ``application/ucosii``.
+  - ``RTThread``: RT-Thread service will be enabled, extra macro ``RTOS_RTTHREAD`` will be defined,
+    you can include RT-Thread header files now, and use RT-Thread API, for ``UCOSII`` application,
+    you need to have an ``rtconfig.h`` header file prepared in you application.
+    See examples in ``application/rtthread``.
 
 .. _develop_buildsystem_var_pfloat:
 
