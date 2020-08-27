@@ -71,6 +71,9 @@ void print_misa(void)
     if (misa_bits.b.u) {
         misa_chars[index++] = 'U';
     }
+    if (misa_bits.b.v) {
+        misa_chars[index++] = 'V';
+    }
     if (misa_bits.b.x) {
         misa_chars[index++] = 'X';
     }
