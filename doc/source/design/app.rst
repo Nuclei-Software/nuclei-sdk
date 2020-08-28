@@ -646,7 +646,7 @@ In Nuclei SDK, we provided code and Makefile for this ``freertos demo`` applicat
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Feb Nuclei SDK Build Time: Feb 21 2020, 14:56:00
+    Nuclei SDK Build Time: Feb 21 2020, 14:56:00
     Download Mode: FLASHXIP
     CPU Frequency 109058823 Hz
     Before StartScheduler
