@@ -1,6 +1,6 @@
 {
     "name": "framework-nuclei-sdk",
     "description": "Nuclei N/NX Embedded SDK",
-    "version": "0.2.5",
+    "version": "0.2.6-dev",
     "url": "https://github.com/Nuclei-Software/nuclei-sdk/"
 }

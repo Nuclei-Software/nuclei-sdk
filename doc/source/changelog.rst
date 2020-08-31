@@ -3,6 +3,26 @@
 Changelog
 =========
 
+V0.2.6-dev
+----------
+
+This is the develop release version ``0.2.6`` of Nuclei SDK.
+
+* Application
+
+    - Fix typo in rtthread demo code
+    - Update helloworld application to parse vector extension
+
+* NMSIS
+
+    - Update NMSIS DSP and NN library built using NMSIS commit 3d9d40ff
+
+* Documentation
+
+    - Update quick startup nuclei tool setup section
+    - Update build system documentation
+    - Fix typo in application documentation
+
 V0.2.5
 ------
 
