@@ -306,7 +306,7 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
     SysTimer_SetLoadValue(0);
     SysTimer_SetCompareValue(ticks);
     ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
-    ECLIC_SetLevelIRQ(SysTimer_IRQn, 1);
+    ECLIC_SetLevelIRQ(SysTimer_IRQn, 0);
     ECLIC_EnableIRQ(SysTimer_IRQn);
     return (0UL);
 }
