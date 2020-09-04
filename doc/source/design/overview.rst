@@ -118,7 +118,7 @@ Here is the directory structure for this Nuclei SDK.
 
 * **OS**
 
-  This directory provided two RTOS package we suppported which are **FreeRTOS** and **UCOSII**.
+  This directory provided three RTOS package we suppported which are **FreeRTOS**, **UCOSII** and **RT-Thread**.
 
 * **LICENSE**
 

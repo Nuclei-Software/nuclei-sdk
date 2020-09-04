@@ -113,7 +113,7 @@ $NUCLEI_SDK_ROOT
 
 * **OS**
 
-  This directory provided two RTOS package we suppported which are **FreeRTOS** and **UCOSII**.
+  This directory provided three RTOS package we suppported which are **FreeRTOS**, **UCOSII** and **RT-Thread**.
 
 * **LICENSE**
 
