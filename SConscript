@@ -10,7 +10,7 @@ from building import *
 
 BUILTIN_ALL_DOWNLOADED_MODES = {
     "gd32vf103": ("flashxip"),
-    "hbird": ("ilm", "flash", "flashxip")
+    "hbird": ("ilm", "flash", "flashxip", "ddr")
 }
 
 default_arch_abi = ("rv32imac", "ilp32")
