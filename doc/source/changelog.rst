@@ -3,6 +3,25 @@
 Changelog
 =========
 
+V0.2.7
+------
+
+This is the official release version ``0.2.7`` of Nuclei SDK.
+
+* OS
+
+    - Fix OS portable code, configKERNEL_INTERRUPT_PRIORITY should
+      set to default 0, not 1. 0 is the lowest abs interrupt level.
+
+* Application
+
+    - Fix configKERNEL_INTERRUPT_PRIORITY in FreeRTOSConfig.h to 0
+
+* NMSIS
+
+    - Change timer abs irq level setting in function SysTick_Config from 1 to 0
+
+
 V0.2.6
 ------
 
