@@ -23,7 +23,7 @@
 #endif
 
 #ifndef configKERNEL_INTERRUPT_PRIORITY
-    #define configKERNEL_INTERRUPT_PRIORITY         1
+    #define configKERNEL_INTERRUPT_PRIORITY         0
 #endif
 
 #ifndef configMAX_SYSCALL_INTERRUPT_PRIORITY

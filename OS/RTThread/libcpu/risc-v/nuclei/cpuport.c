@@ -19,7 +19,7 @@
 #define SYSTICK_TICK_CONST                          (SOC_TIMER_FREQ / RT_TICK_PER_SECOND)
 
 #ifndef configKERNEL_INTERRUPT_PRIORITY
-    #define configKERNEL_INTERRUPT_PRIORITY         1
+    #define configKERNEL_INTERRUPT_PRIORITY         0
 #endif
 
 #ifndef configMAX_SYSCALL_INTERRUPT_PRIORITY
