@@ -3,6 +3,21 @@
 Changelog
 =========
 
+V0.2.8
+------
+
+This is the official release version ``0.2.8`` of Nuclei SDK.
+
+* SoC
+
+    - Fixed implementation for ``_read`` newlib stub function, now scanf
+      can be used correctly for both gd32vf103 and hbird SoCs.
+
+* Misc
+
+    - Update platformio package json file according to latest platformio requirements
+
+
 V0.2.7
 ------
 
