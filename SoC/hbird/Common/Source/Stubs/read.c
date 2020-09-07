@@ -4,14 +4,17 @@
 #include <sys/types.h>
 #include "nuclei_sdk_hal.h"
 
+// #define UART_AUTO_ECHO
+
 ssize_t _read(int fd, void* ptr, size_t len)
 {
-    if (!isatty(fd)) {
+    if (fd != STDIN_FILENO) {
         return -1;
     }
     uint8_t *readbuf = (uint8_t *)ptr;
-    for (int i = 0; i < len; i ++) {
-        readbuf[i] = uart_read(SOC_DEBUG_UART);
-    }
-    return len;
+    readbuf[0] = uart_read(SOC_DEBUG_UART);
+#ifdef UART_AUTO_ECHO
+    uart_write(SOC_DEBUG_UART, readbuf[0]);
+#endif
+    return 1;
 }
