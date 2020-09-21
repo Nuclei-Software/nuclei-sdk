@@ -81,7 +81,8 @@ int32_t gpio_set_pue(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
     if (__RARELY(gpio == NULL)) {
         return -1;
     }
-    gpio->PULLUP_EN |= (mask & value);
+    mask = gpio->PULLUP_EN & (~mask);
+    gpio->PULLUP_EN = (mask | value);
     return 0;
 }
 
@@ -90,7 +91,8 @@ int32_t gpio_set_ds(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
     if (__RARELY(gpio == NULL)) {
         return -1;
     }
-    gpio->DRIVE |= (mask & value);
+    mask = gpio->DRIVE & (~mask);
+    gpio->DRIVE = (mask | value);
     return 0;
 }
 
@@ -99,7 +101,8 @@ int32_t gpio_set_outxor(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
     if (__RARELY(gpio == NULL)) {
         return -1;
     }
-    gpio->OUTPUT_XOR |= (mask & value);
+    mask = gpio->OUTPUT_XOR & (~mask);
+    gpio->OUTPUT_XOR = (mask | value);
     return 0;
 }
 
