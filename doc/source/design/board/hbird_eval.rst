@@ -46,6 +46,11 @@ How to use
 For **HummingBird Evaluation board**:
 
 * **DOWNLOAD** support all the modes list in :ref:`develop_buildsystem_var_download`
+
+  - You can find linker scripts for different download modes in ``SoC/hbird/Board/hbird_eval/Source/GCC/``
+  - If you want to change ILM or DLM size in link script file, you can adapt it according to your
+    Core information.
+
 * **CORE** support all the cores list in :ref:`develop_buildsystem_var_core`
 
 To run this application in HummingBird Evaluation board in Nuclei SDK,
@@ -72,5 +77,6 @@ you just need to use this **SOC** and **BOARD** variables.
      download mode in HummingBird board due to program running in Flash is really too slow.
      If you want to try these demos, please use ``ilm`` or ``flash``
      download mode.
+
 
 .. _HummingBird FPGA Evaluation Kit Board Documents: https://nucleisys.com/developboard.php

@@ -80,3 +80,41 @@ For example, if you want to clone **nuclei-sdk** using command
 ``git clone https://github.com/Nuclei-Software/nuclei-sdk``, then
 you can achieve it by command ``git clone https://gitee.com/Nuclei-Software/nuclei-sdk``
 
+\`.text' will not fit in region \`ilm' or \`.bss' will not fit in region \`ram'
+-------------------------------------------------------------------------------
+
+If you met similar message as below when build an application:
+
+.. code-block:: console
+
+    /home/hqfang/mysofts/Nuclei/gcc_latest/bin/../lib/gcc/riscv-nuclei-elf/9.2.0/../../../../riscv-nuclei-elf/bin/ld: cifar10.elf section `.text' will not fit in region `ilm'
+    /home/hqfang/mysofts/Nuclei/gcc_latest/bin/../lib/gcc/riscv-nuclei-elf/9.2.0/../../../../riscv-nuclei-elf/bin/ld: cifar10.elf section `.bss' will not fit in region `ram'
+    /home/hqfang/mysofts/Nuclei/gcc_latest/bin/../lib/gcc/riscv-nuclei-elf/9.2.0/../../../../riscv-nuclei-elf/bin/ld: section .stack VMA [000000009000f800,000000009000ffff] overlaps section .bss VMA [00000000900097c0,00000000900144eb]
+    /home/hqfang/mysofts/Nuclei/gcc_latest/bin/../lib/gcc/riscv-nuclei-elf/9.2.0/../../../../riscv-nuclei-elf/bin/ld: region `ilm' overflowed by 43832 bytes
+    /home/hqfang/mysofts/Nuclei/gcc_latest/bin/../lib/gcc/riscv-nuclei-elf/9.2.0/../../../../riscv-nuclei-elf/bin/ld: region `ram' overflowed by 0 bytes
+
+It is caused by the program is too big, our default link script is 64K ILM, 64K DLM, 4M SPIFlash for Nuclei HummingBird SoC.
+
+If your core has bigger ILM or DLM, you can change related linker script file according to your choice.
+
+For example, if you want to change linker script for hbird_eval ilm download mode:
+``ILM to 512K, DLM to 256K``, then you can change link script file
+``SoC/hbird/Board/hbird_eval/Source/GCC/gcc_hbird_ilm.ld`` as below:
+
+.. code-block:: diff
+
+    diff --git a/SoC/hbird/Board/hbird_eval/Source/GCC/gcc_hbird_ilm.ld b/SoC/hbird/Board/hbird_eval/Source/GCC/gcc_hbird_ilm.ld
+    index 1ac5b90..08451b3 100644
+    --- a/SoC/hbird/Board/hbird_eval/Source/GCC/gcc_hbird_ilm.ld
+    +++ b/SoC/hbird/Board/hbird_eval/Source/GCC/gcc_hbird_ilm.ld
+    @@ -28,8 +28,8 @@ ENTRY( _start )
+     MEMORY
+     {
+    
+    -  ilm (rxai!w) : ORIGIN = 0x80000000, LENGTH = 64K
+    -  ram (wxa!ri) : ORIGIN = 0x90000000, LENGTH = 64K
+    +  ilm (rxai!w) : ORIGIN = 0x80000000, LENGTH = 512K
+    +  ram (wxa!ri) : ORIGIN = 0x90000000, LENGTH = 256K
+     }
+
+
