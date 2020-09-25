@@ -21,7 +21,6 @@ Why I can't download application?
     You can't do that when your target is ``exec'
     "monitor" command not supported by this target.
     "monitor" command not supported by this target.
-    "Successfully uploaded hello_world.elf "
 
 Please check whether your driver is installed successfully via replace target `upload` to `run_openocd`
 as the board user manual described, especially, for **RV-STAR** and **HummingBird Evaluation** boards,
@@ -45,7 +44,6 @@ If still not working, please check whether your JTAG connection is good.
     You can't do that when your target is `exec'
     "monitor" command not supported by this target.
     "monitor" command not supported by this target.
-    "Successfully uploaded helloworld.elf "
 
 *bfd* is addbreviation for **Binary File Descriptor**.
 
@@ -69,7 +67,6 @@ just change it to ``CORE=n305``.
     You can't do that when your target is ``exec'
     "monitor" command not supported by this target.
     "monitor" command not supported by this target.
-    "Successfully uploaded helloworld.elf "
 
 This issue is caused by the program is a riscv 64 program,
 but the core is a riscv 32 core, so just change your program

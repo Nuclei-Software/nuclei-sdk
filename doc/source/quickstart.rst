@@ -376,9 +376,7 @@ Here is the sample output of this command:
             Inferior 1 [Remote target] will be detached.
 
     Quit anyway? (y or n) [answered Y; input not from terminal]
-    Remote communication error.  Target disconnected.: Not a directory.
-    "Successfully uploaded hello_world.elf "
-
+    [Inferior 1 (Remote target) detached]
 
 As you can see the application is uploaded successfully using ``openocd`` and ``gdb``,
 then you can check the output in your UART terminal, see :ref:`figure_quickstart_8`.
