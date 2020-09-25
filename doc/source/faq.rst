@@ -3,10 +3,10 @@
 FAQ
 ===
 
-Why I can't download application in Windows?
---------------------------------------------
+Why I can't download application?
+---------------------------------
 
-If you met the following issue as below message showed:
+* **Case 1: Remote communication error.  Target disconnected.: Success.**
 
 .. code-block:: console
 
@@ -23,14 +23,60 @@ If you met the following issue as below message showed:
     "monitor" command not supported by this target.
     "Successfully uploaded hello_world.elf "
 
+Please check whether your driver is installed successfully via replace target `upload` to `run_openocd`
+as the board user manual described, especially, for **RV-STAR** and **HummingBird Evaluation** boards,
+For windows, you need to download the **HummingBird Debugger Windows Driver** from
+https://nucleisys.com/developboard.php, and install it.
 
-Please check whether your driver is installed successfully as the board user manual described,
-especially, for **RV-STAR** and **HummingBird Evaluation** boards, you need to download the
-**HummingBird Debugger Windows Driver** from https://nucleisys.com/developboard.php, and install it.
+If still not working, please check whether your JTAG connection is good.
 
 .. note::
 
     The USB driver might lost when you re-plug the USB port, you might need to reinstall the driver.
+
+* **Case 2: bfd requires flen 4, but target has flen 0**
+
+.. code-block:: console
+
+    bfd requires flen 4, but target has flen 0
+    "monitor" command not supported by this target.
+    "monitor" command not supported by this target.
+    "monitor" command not supported by this target.
+    You can't do that when your target is `exec'
+    "monitor" command not supported by this target.
+    "monitor" command not supported by this target.
+    "Successfully uploaded helloworld.elf "
+
+*bfd* is addbreviation for **Binary File Descriptor**.
+
+This is caused by the target core flen is 0, which means it didn't have float point
+unit in it, but your program is compiled using flen = 4, single point float unit used,
+which is incompatiable, similar cases such as ``bfd requires flen 8, but target has flen 4``
+
+Just change your CORE to proper core settings will solve this issue.
+
+For example, if you compile your core with ``CORE=n307``,
+just change it to ``CORE=n305``.
+
+* **Case 3: bfd requires xlen 8, but target has xlen 4**
+
+.. code-block:: console
+
+    bfd requires xlen 8, but target has xlen 4
+    "monitor" command not supported by this target.
+    "monitor" command not supported by this target.
+    "monitor" command not supported by this target.
+    You can't do that when your target is ``exec'
+    "monitor" command not supported by this target.
+    "monitor" command not supported by this target.
+    "Successfully uploaded helloworld.elf "
+
+This issue is caused by the program is a riscv 64 program,
+but the core is a riscv 32 core, so just change your program
+to be compiled using a riscv 32 compile option.
+
+For example, if you compile your core with ``CORE=ux600``,
+just change it to ``CORE=n305``.
 
 
 Why I can't download application in Linux?
@@ -110,7 +156,7 @@ For example, if you want to change linker script for hbird_eval ilm download mod
     @@ -28,8 +28,8 @@ ENTRY( _start )
      MEMORY
      {
-    
+
     -  ilm (rxai!w) : ORIGIN = 0x80000000, LENGTH = 64K
     -  ram (wxa!ri) : ORIGIN = 0x90000000, LENGTH = 64K
     +  ilm (rxai!w) : ORIGIN = 0x80000000, LENGTH = 512K
