@@ -133,11 +133,11 @@ If you met similar message as below when build an application:
 
 .. code-block:: console
 
-    /home/hqfang/mysofts/Nuclei/gcc_latest/bin/../lib/gcc/riscv-nuclei-elf/9.2.0/../../../../riscv-nuclei-elf/bin/ld: cifar10.elf section `.text' will not fit in region `ilm'
-    /home/hqfang/mysofts/Nuclei/gcc_latest/bin/../lib/gcc/riscv-nuclei-elf/9.2.0/../../../../riscv-nuclei-elf/bin/ld: cifar10.elf section `.bss' will not fit in region `ram'
-    /home/hqfang/mysofts/Nuclei/gcc_latest/bin/../lib/gcc/riscv-nuclei-elf/9.2.0/../../../../riscv-nuclei-elf/bin/ld: section .stack VMA [000000009000f800,000000009000ffff] overlaps section .bss VMA [00000000900097c0,00000000900144eb]
-    /home/hqfang/mysofts/Nuclei/gcc_latest/bin/../lib/gcc/riscv-nuclei-elf/9.2.0/../../../../riscv-nuclei-elf/bin/ld: region `ilm' overflowed by 43832 bytes
-    /home/hqfang/mysofts/Nuclei/gcc_latest/bin/../lib/gcc/riscv-nuclei-elf/9.2.0/../../../../riscv-nuclei-elf/bin/ld: region `ram' overflowed by 0 bytes
+    xxx/bin/ld: cifar10.elf section `.text' will not fit in region `ilm'
+    xxx/bin/ld: cifar10.elf section `.bss' will not fit in region `ram'
+    xxx/bin/ld: section .stack VMA [000000009000f800,000000009000ffff] overlaps section .bss VMA [00000000900097c0,00000000900144eb]
+    xxx/bin/ld: region `ilm' overflowed by 43832 bytes
+    xxx/bin/ld: region `ram' overflowed by 0 bytes
 
 It is caused by the program is too big, our default link script is 64K ILM, 64K DLM, 4M SPIFlash for Nuclei HummingBird SoC.
 
