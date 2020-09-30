@@ -3,6 +3,31 @@
 Changelog
 =========
 
+V0.2.9-dev
+----------
+
+This is version ``0.2.9-dev`` of Nuclei SDK, which is still in development.
+
+* SoC
+
+    - Add support for Nuclei RV-STAR Board Version 2 using **BDVER**,
+      and the default RV-STAR board selected will be version 2.
+    - Fix typos in **system_<Device>.c**
+    - Fix gpio driver implementation bugs of hbird
+    - Enable more CSR(micfg_info, mdcfg_info, mcfg_info) show in gdb debug
+
+* Documentation
+
+    - Update documentation for Nuclei RV-STAR board
+    - Add **BDVER** documentation in build system
+    - Add more faqs
+
+* Build System
+
+    - Remove unnecessary upload gdb command
+    - Remove upload successfully message for ``make upload``
+
+
 V0.2.8
 ------
 

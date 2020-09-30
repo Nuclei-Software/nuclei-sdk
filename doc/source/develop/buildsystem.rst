@@ -338,6 +338,7 @@ which can be passed via make command.
 
 * :ref:`develop_buildsystem_var_soc`
 * :ref:`develop_buildsystem_var_board`
+* :ref:`develop_buildsystem_var_bdver`
 * :ref:`develop_buildsystem_var_download`
 * :ref:`develop_buildsystem_var_core`
 * :ref:`develop_buildsystem_var_simulation`
@@ -383,7 +384,7 @@ Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
 BOARD
 ~~~~~
 
-**Board** variable is used to declare which Board is used in application during compiling.
+**BOARD** variable is used to declare which Board is used in application during compiling.
 
 The **BOARD** variable should match the supported boards of chosen **SOC**.
 You can easily find the supported Boards in the **<NUCLEI_SDK_ROOT>/<SOC>/Board/** directory.
@@ -424,6 +425,17 @@ Currently we support the following SoCs.
 
     * If you only specify **SOC** variable in make command, it will use default **BOARD**
       and **CORE** option defined in Makefile.soc.<SOC>
+
+.. _develop_buildsystem_var_bdver:
+
+BDVER
+~~~~~
+
+**BDVER** variable is used to declare which board version is used in application during compiling.
+
+It might be implemented according to whether the board is changed a lot or only a bit.
+
+Currently only :ref:`design_board_gd32vf103v_rvstar` has used this variable.
 
 .. _develop_buildsystem_var_download:
 
