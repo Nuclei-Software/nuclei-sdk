@@ -10,16 +10,18 @@ This is version ``0.2.9-dev`` of Nuclei SDK, which is still in development.
 
 * SoC
 
-    - Add support for Nuclei RV-STAR Board Version 2 using **BDVER**,
-      and the default RV-STAR board selected will be version 2.
+    - Remove ``ftdi_device_desc "Dual RS232-HS"`` line in openocd configuration.
+      Newer version of RVSTAR and Hummingbird Debugger have changed the FTDI description
+      from "Dual RS232-HS" to "USB <-> JTAG-DEBUGGER", to be back-compatiable with older
+      version, we just removed this ``ftdi_device_desc "Dual RS232-HS"`` line.
+      If you want to select specified JTAG, you can add this ``ftdi_device_desc`` according
+      to your description.
     - Fix typos in **system_<Device>.c**
     - Fix gpio driver implementation bugs of hbird
     - Enable more CSR(micfg_info, mdcfg_info, mcfg_info) show in gdb debug
 
 * Documentation
 
-    - Update documentation for Nuclei RV-STAR board
-    - Add **BDVER** documentation in build system
     - Add more faqs
 
 * Build System
