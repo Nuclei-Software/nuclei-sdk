@@ -76,10 +76,27 @@ For example, if you compile your core with ``CORE=ux600``,
 just change it to ``CORE=n305``.
 
 
+How to select correct FDTI debugger?
+------------------------------------
+
+From Nuclei SDK release 0.2.9, the openocd configuration file doesn't
+contain `ftdi_device_desc`_ line by default, so if there are more than
+one FTDI debuggers which has the same VID/PID(0x0403/0x6010) as Nuclei
+Debugger Kit use, then you might need to add extra ``ftdi_device_desc``
+line in the openocd configuration file to describe the FTDI device description.
+
+* For **HummingBird Evaluation Board**, you can check the openocd configuration
+  file in *SoC/hbird/Board/hbird_eval/openocd_hbird.cfg*.
+
+* For **Nuclei RVSTAR Board**, you can check the openocd configuration file
+  in *SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg*.
+
+
 Why I can't download application in Linux?
 ------------------------------------------
 
-Please check that whether you have followed the board user manual to setup the USB JTAG drivers correctly.
+Please check that whether you have followed the `debugger kit manual`_
+to setup the USB JTAG drivers correctly.
 The windows steps and linux steps are different, please take care.
 
 
@@ -161,3 +178,5 @@ For example, if you want to change linker script for hbird_eval ilm download mod
      }
 
 
+.. _debugger kit manual: https://www.nucleisys.com/theme/package/Nuclei_FPGA_DebugKit_Intro.pdf
+.. _ftdi_device_desc: http://openocd.org/doc/html/Debug-Adapter-Configuration.html

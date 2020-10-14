@@ -45,7 +45,12 @@ How to use
 For **GD32VF103V-EVAL** board, the **DOWNLOAD** and **CORE** variables
 are fixed to ``flashxip`` and ``n205``.
 
-You can find its linker script in ``SoC/gd32vf103/Board/gd32vf103v_eval/Source/GCC/``
+* You can find its linker script in ``SoC/gd32vf103/Board/gd32vf103v_eval/Source/GCC/``
+
+  - ``gcc_gd32vf103_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip``
+
+* If you want to specify your own modified linker script, you can follow steps described in :ref:`develop_appdev_linkscript`
+* You can find its openocd configuration file in ``SoC/gd32vf103/Board/gd32vf103v_eval/openocd_gd32vf103.cfg``
 
 To run this application in GD32VF103V-EVAL board in Nuclei SDK,
 you just need to use this **SOC** and **BOARD** variables.

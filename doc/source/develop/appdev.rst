@@ -128,6 +128,8 @@ Change Link Script
 If you want to change the default link script defined by your make configuration(SOC, BOARD, DOWNLOAD).
 You can use :ref:`develop_buildsystem_var_linker_script` variable to set your linker script.
 
+The default linker script used for different boards can be found in :ref:`design_board`.
+
 .. _develop_appdev_setdefaultmake:
 
 Set Default Make Options
