@@ -95,7 +95,10 @@ static QueueHandle_t xQueue = NULL;
 static TaskHandle_t StartTask1_Handler;
 static TaskHandle_t StartTask2_Handler;
 
-void prvSetupHardware(void) {}
+void prvSetupHardware(void)
+{
+
+}
 
 void start_task1(void *pvParameters);
 void start_task2(void *pvParameters);
@@ -114,8 +117,8 @@ int main(void)
                           sizeof(uint32_t));
 
     if (xQueue == NULL) {
-        for (;;)
-            ;
+        printf("Unable to create xQueue due to low memory.\n");
+        while(1);
     }
     xTaskCreate((TaskFunction_t)start_task1, (const char *)"start_task1",
                 (uint16_t)256, (void *)NULL, (UBaseType_t)2,
@@ -126,20 +129,17 @@ int main(void)
                 (TaskHandle_t *)&StartTask2_Handler);
 
     xExampleSoftwareTimer =
-        xTimerCreate((const char *)"LEDTimer", mainSOFTWARE_TIMER_PERIOD_MS,
+        xTimerCreate((const char *)"ExTimer", mainSOFTWARE_TIMER_PERIOD_MS,
                      pdTRUE, (void *)0, vExampleTimerCallback);
 
     xTimerStart(xExampleSoftwareTimer, 0);
-    printf("Before StartScheduler\r\n"); // Bob: I added it to here to easy
-                                         // analysis
+    printf("Before StartScheduler\r\n");
 
     vTaskStartScheduler();
 
-    printf("post   ok \r\n");
+    printf("OS should never run to here\r\n");
 
-    for (;;) {
-        ;
-    };
+    while(1);
 }
 
 void start_task1(void *pvParameters)
@@ -204,12 +204,11 @@ void vApplicationMallocFailedHook(void)
     timers, and semaphores.  The size of the FreeRTOS heap is set by the
     configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
     printf("malloc failed\n");
-    for (;;)
-        ;
+    while(1);
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName)
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
 {
     /* Run time stack overflow checking is performed if
     configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
@@ -217,8 +216,7 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName)
     inspected in the debugger if the task name passed into this function is
     corrupt. */
     printf("Stack Overflow\n");
-    for (;;)
-        ;
+    while(1);
 }
 /*-----------------------------------------------------------*/
 
