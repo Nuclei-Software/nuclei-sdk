@@ -75,10 +75,10 @@ make sure the following items are set correctly:
 
 * Use **Hummingbird debugger** to connect the **MCU-JTAG** on board to your PC
   in order to download and debug programs and monitor the UART message.
-* Power on the Board using USB doggle.
+* Power on the board using USB doggle(for 100T) or DC 12V Power(for MCU 200T or DDR 200T).
 * The HummingBird SoC FPGA bitstream with Nuclei RISC-V evaluation core inside
-  is programmed to this board.
-* Following steps in board user manual to setup JTAG drivers for your development environment
+  is programmed to FPGA on this board.
+* Following steps in `debugger kit manual`_ to setup JTAG drivers for your development environment
 
 .. _design_board_hbird_eval_use:
 
@@ -134,3 +134,4 @@ you just need to use this **SOC** and **BOARD** variables.
 .. _HummingBird FPGA Evaluation Kit Board Documents: https://nucleisys.com/developboard.php
 .. _Memory Section: https://sourceware.org/binutils/docs/ld/MEMORY.html
 .. _Nuclei Linux SDK: https://github.com/Nuclei-Software/nuclei-linux-sdk
+.. _debugger kit manual: https://www.nucleisys.com/theme/package/Nuclei_FPGA_DebugKit_Intro.pdf

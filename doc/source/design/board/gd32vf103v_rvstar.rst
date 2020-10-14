@@ -36,7 +36,7 @@ make sure the following items are set correctly:
 
 * Connect the USB Type-C port on board to your PC in order to download and
   debug programs and monitor the UART message.
-* Following steps in board user manual to setup JTAG drivers for your development environment
+* Following steps in `RV-STAR user manual`_ to setup JTAG drivers for your development environment
 
 .. _design_board_gd32vf103v_rvstar_usage:
 
@@ -69,3 +69,4 @@ you just need to use this **SOC** and **BOARD** variables.
 
 .. _GD32VF103V RV-STAR Development Kit: https://nucleisys.com/developboard.php
 .. _RV-STAR Development Board Overview: https://doc.nucleisys.com/nuclei_board_labs/hw/hw.html#rv-star
+.. _RV-STAR user manual: https://doc.nucleisys.com/nuclei_board_labs/hw/hw.html#on-board-debugger-driver
