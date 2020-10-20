@@ -3,10 +3,10 @@
 Changelog
 =========
 
-V0.2.9-dev
-----------
+V0.2.9
+------
 
-This is version ``0.2.9-dev`` of Nuclei SDK, which is still in development.
+This is official version ``0.2.9`` of Nuclei SDK.
 
 * SoC
 

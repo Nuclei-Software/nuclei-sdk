@@ -33,7 +33,7 @@ Interrupt, and using ``SysTimer Software Interrupt`` to do task switch.
 
 These two interrupts are kept as lowest level, and ``SysTimer Interrupt``
 is initialized as non-vector interrupt, and ``SysTimer Software Interrupt``
-is initialized as vector interrupt.
+is initialized as vector interrupt and interrupt handler implemented using asm code.
 
 In our FreeRTOS porting, we also allow FreeRTOS configuration variable
 ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` which can be find in https://www.freertos.org/a00110.html.
@@ -148,9 +148,12 @@ And in your application code, you need to do the following things:
 
     * In RT-Thread, the ``main`` function is created as a RT-Thread thread,
       so you don't need to do any OS initialization work, it is done before ``main``
+    * We also provide good support directly through RT-Thread official repo,
+      you can check Nuclei processor support for RT-Thread in `RT-Thread BSP For Nuclei`_.
 
 
 .. _FreeRTOS: https://www.freertos.org/
 .. _UCOSII: https://www.micrium.com/
 .. _RT_Thread: https://www.rt-thread.org/
 .. _RT-Thread Nano: https://github.com/RT-Thread/rtthread-nano
+.. _RT-Thread BSP For Nuclei: https://github.com/RT-Thread/rt-thread/tree/master/bsp/nuclei/
