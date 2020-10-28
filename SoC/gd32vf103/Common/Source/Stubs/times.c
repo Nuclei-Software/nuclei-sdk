@@ -2,14 +2,28 @@
 
 #include <errno.h>
 #include <sys/times.h>
+#include <sys/time.h>
+#include <time.h>
 #include "nuclei_sdk_soc.h"
+
+extern int _gettimeofday(struct timeval *, void *);
 
 clock_t _times(struct tms *buf)
 {
-    buf->tms_cstime = 0;
-    buf->tms_cutime = 0;
-    buf->tms_stime = __get_rv_cycle();
-    buf->tms_utime = 0;
+    static struct timeval t0;
+    struct timeval t;
+    long long utime;
+
+    /* When called for the first time, initialize t0. */
+    if (t0.tv_sec == 0 && t0.tv_usec == 0) {
+        _gettimeofday(&t0, 0);
+    }
+
+    _gettimeofday(&t, 0);
+
+    utime = (t.tv_sec - t0.tv_sec) * 1000000 + (t.tv_usec - t0.tv_usec);
+    buf->tms_utime = utime * CLOCKS_PER_SEC / 1000000;
+    buf->tms_stime = buf->tms_cstime = buf->tms_cutime = 0;
 
     return buf->tms_utime;
 }
