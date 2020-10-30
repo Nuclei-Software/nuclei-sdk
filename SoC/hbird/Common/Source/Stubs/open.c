@@ -5,7 +5,8 @@
 #undef errno
 extern int errno;
 
-__WEAK int _lseek(int file, int offset, int whence)
+__WEAK int _open(const char *name, int flags, int mode)
 {
-    return 0;
+    errno = ENOSYS;
+    return -1;
 }

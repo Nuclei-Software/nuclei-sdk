@@ -5,7 +5,8 @@
 #undef errno
 extern int errno;
 
-__WEAK int _lseek(int file, int offset, int whence)
+int _link(char *old, char *new)
 {
-    return 0;
+    errno = EMLINK;
+    return -1;
 }

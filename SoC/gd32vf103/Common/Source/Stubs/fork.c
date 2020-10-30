@@ -5,7 +5,8 @@
 #undef errno
 extern int errno;
 
-__WEAK int _lseek(int file, int offset, int whence)
+__WEAK int fork(void)
 {
-    return 0;
+    errno = EAGAIN;
+    return -1;
 }

@@ -1,17 +1,18 @@
+/* See LICENSE of license details. */
 #include <stdint.h>
 #include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include "nuclei_sdk_hal.h"
-#include "gd32vf103_usart.h"
 
 // #define UART_AUTO_ECHO
 
-ssize_t _read(int fd, void* ptr, size_t len)
+__WEAK ssize_t _read(int fd, void* ptr, size_t len)
 {
     if (fd != STDIN_FILENO) {
         return -1;
     }
+
     uint8_t *readbuf = (uint8_t *)ptr;
     readbuf[0] = usart_read(SOC_DEBUG_UART);
 #ifdef UART_AUTO_ECHO

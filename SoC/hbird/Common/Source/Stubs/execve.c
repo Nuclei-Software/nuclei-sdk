@@ -5,7 +5,8 @@
 #undef errno
 extern int errno;
 
-__WEAK int _lseek(int file, int offset, int whence)
+__WEAK int _execve(char *name, char **argv, char **env)
 {
-    return 0;
+    errno = ENOMEM;
+    return -1;
 }
