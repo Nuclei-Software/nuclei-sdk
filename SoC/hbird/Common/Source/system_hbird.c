@@ -165,9 +165,10 @@ typedef void (*EXC_HANDLER) (unsigned long mcause, unsigned long sp);
 static void system_default_exception_handler(unsigned long mcause, unsigned long sp)
 {
     /* TODO: Uncomment this if you have implement printf function */
-    printf("MCAUSE: 0x%lx\r\n", mcause);
-    printf("MEPC  : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
-    printf("MTVAL : 0x%lx\r\n", __RV_CSR_READ(CSR_MBADADDR));
+    printf("MCAUSE : 0x%lx\r\n", mcause);
+    printf("MDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_MDCAUSE));
+    printf("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
+    printf("MTVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
     while(1);
 }
 
