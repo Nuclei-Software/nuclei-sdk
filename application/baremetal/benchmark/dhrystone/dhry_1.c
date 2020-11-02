@@ -294,31 +294,10 @@ main ()
 #endif
     Instret =  User_Instret / Number_Of_Runs;
 
-    //printf ("Microseconds for one run through Dhrystone: ");
-    //printf ("%6.1f \n", Microseconds);
-    //printf ("Dhrystones per Second:                      ");
-    //printf ("%6.1f \n", Dhrystones_Per_Second);
-    //printf ("\n");
-    //printf ("\n");
-
-    //DMIPS_MHZ = (Dhrystones_Per_Second/8.388)/1757;
     DMIPS_MHZ = (1000000/((float)User_Cycle/(float)Number_Of_Runs))/1757;
 
-    //printf ("Print Personal Added Addtional Info to Easy Visual Analysis\n");
-    //printf ("\n");
     printf (" (*) User_Cycle for total run through Dhrystone with loops %d: \n", Number_Of_Runs);
     printf ("%ld \n", User_Cycle);
-    //printf (" (*) User_Time  for total run through Dhrystone with loops %d: \n", Number_Of_Runs);
-    //printf ("%lld \n", User_Time);
-    //printf ("\n");
-    //printf (" (*) Instret for one run through Dhrystone: ");
-    //printf ("%lld \n", Instret);
-    //printf ("\n");
-    //printf (" (*) Please ignore the above printed Dhrystones_Per_Second since it is using the User_Time which\n");
-    //printf ("       is a long type and derived from a division and generated quite lots of deviations. So here\n");
-    //printf ("       we use the original User_Cycle to caculate.\n");
-    //printf ("     Assume the core is running at 1MHZ, and each loop need cycles of User_Cycle/Number_Of_Runs \n");
-    //printf ("       then the Dhrystones_Per_Second is 1000000/(User_Cycle/Number_Of_Runs)\n");
     printf ("       So the DMIPS/MHz can be caculated by: \n");
     printf ("       1000000/(User_Cycle/Number_Of_Runs)/1757 = %2.6f DMIPS/MHz\n", DMIPS_MHZ);
     printf ("\n");
