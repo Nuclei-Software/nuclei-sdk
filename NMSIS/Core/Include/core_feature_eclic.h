@@ -67,7 +67,7 @@ typedef union {
         uint32_t numint:13;                     /*!< bit:  0..12   number of maximum interrupt inputs supported */
         uint32_t version:8;                     /*!< bit:  13..20  20:17 for architecture version,16:13 for implementation version */
         uint32_t intctlbits:4;                  /*!< bit:  21..24  specifies how many hardware bits are actually implemented in the clicintctl registers */
-        uint32_t _reserved0:8;                  /*!< bit:  25..31  Reserved */
+        uint32_t _reserved0:7;                  /*!< bit:  25..31  Reserved */
     } b;                                        /*!< Structure used for bit  access */
     uint32_t w;                                 /*!< Type      used for word access */
 } CLICINFO_Type;
