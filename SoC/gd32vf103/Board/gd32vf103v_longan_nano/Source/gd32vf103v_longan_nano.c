@@ -33,7 +33,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "gd32vf103v_rvstar.h"
+#include "gd32vf103v_longan_nano.h"
 
 /* private variables */
 static const uint32_t GPIO_PORT[LEDn]       = {LEDG_GPIO_PORT,LEDB_GPIO_PORT,LEDR_GPIO_PORT};
