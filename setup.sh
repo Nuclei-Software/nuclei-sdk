@@ -1,4 +1,4 @@
-NUCLEI_TOOL_ROOT=~/Nuclei
+NUCLEI_TOOL_ROOT=/home/roman/localgit/risc-v/nuclei-sdk
 # Create your setup_config.sh
 # and define NUCLEI_TOOL_ROOT like below
 # NUCLEI_TOOL_ROOT=/home/develop/Software/Nuclei
