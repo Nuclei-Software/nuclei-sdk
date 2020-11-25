@@ -1,12 +1,13 @@
 /*!
-    \file    gd32vf103c_start.h
-    \brief   definitions for GD32VF103C_START's leds, keys and COM ports hardware resources
+    \file    gd32vf103c_longan_nano.h
+    \brief   definitions for GD32VF103C_longan_nano's leds, keys and COM ports hardware resources
 
-    \version 2019-06-05, V1.0.0, demo for GD32VF103
+    \version 2020-11-25, V1.0.0, demo for GD32VF103
 */
 
 /*
     Copyright (c) 2019, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, Roman Buchert (roman_dot_buchert_at_googlemail_dot_com)
 
     Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -32,8 +33,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef GD32VF103C_RVSTART_H
-#define GD32VF103C_RVSTART_H
+#ifndef GD32VF103C_LONGAN_NANO_H
+#define GD32VF103C_LONGAN_NANO_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -61,61 +62,48 @@ typedef enum
 }keymode_typedef_enum;
 
 
-/* rvstar board low layer led */
-#define LEDn                             3U
+/* sipeed longan nano board low layer led */
+#define LEDn                             (3U)
 
 #define LEDG_PIN                         GPIO_PIN_1
 #define LEDG_GPIO_PORT                   GPIOA
 #define LEDG_GPIO_CLK                    RCU_GPIOA
 
-#define LEDB_PIN                         GPIO_PIN_3
+#define LEDB_PIN                         GPIO_PIN_2
 #define LEDB_GPIO_PORT                   GPIOA
 #define LEDB_GPIO_CLK                    RCU_GPIOA
 
-#define LEDR_PIN                         GPIO_PIN_2
-#define LEDR_GPIO_PORT                   GPIOA
-#define LEDR_GPIO_CLK                    RCU_GPIOA
+#define LEDR_PIN                         GPIO_PIN_13
+#define LEDR_GPIO_PORT                   GPIOC
+#define LEDR_GPIO_CLK                    RCU_GPIOC
 
-/* rvstar board UART com port */
-#define GD32_COM0                        UART4
-#define GD32_COM_CLK                     RCU_UART4
-#define GD32_COM_TX_PIN                  GPIO_PIN_12
-#define GD32_COM_RX_PIN                  GPIO_PIN_2
-#define GD32_COM_TX_GPIO_PORT            GPIOC
-#define GD32_COM_RX_GPIO_PORT            GPIOD
-#define GD32_COM_TX_GPIO_CLK             RCU_GPIOC
-#define GD32_COM_RX_GPIO_CLK             RCU_GPIOD
+/* sipeed longan nano board UART com port */
+#define GD32_COM0                        UART0
+#define GD32_COM_CLK                     RCU_UART0
+#define GD32_COM_TX_PIN                  GPIO_PIN_9
+#define GD32_COM_RX_PIN                  GPIO_PIN_10
+#define GD32_COM_TX_GPIO_PORT            GPIOA
+#define GD32_COM_RX_GPIO_PORT            GPIOA
+#define GD32_COM_TX_GPIO_CLK             RCU_GPIOA
+#define GD32_COM_RX_GPIO_CLK             RCU_GPIOA
 
-/* rvstar board low layer button */
-#define KEYn                             (1U)
-
-/* wakeup push-button */
-#define WAKEUP_KEY_PIN                   GPIO_PIN_0
-#define WAKEUP_KEY_GPIO_PORT             GPIOA
-#define WAKEUP_KEY_GPIO_CLK              RCU_GPIOA
-#define WAKEUP_KEY_EXTI_LINE             EXTI_0
-#define WAKEUP_KEY_EXTI_PORT_SOURCE      GPIO_PORT_SOURCE_GPIOA
-#define WAKEUP_KEY_EXTI_PIN_SOURCE       GPIO_PIN_SOURCE_0
-#define WAKEUP_KEY_EXTI_IRQn             EXTI0_IRQn
+/* sipeed longan nano board low layer button (none)*/
+#define KEYn                             (0U)
 
 /* function declarations */
 /* configure led GPIO */
-void gd_rvstar_led_init(led_typedef_enum lednum);
+void gd_longan_nano_led_init(led_typedef_enum lednum);
 /* turn on selected led */
-void gd_rvstar_led_on(led_typedef_enum lednum);
+void gd_longan_nano_led_on(led_typedef_enum lednum);
 /* turn off selected led */
-void gd_rvstar_led_off(led_typedef_enum lednum);
+void gd_longan_nano_led_off(led_typedef_enum lednum);
 /* toggle the selected led */
-void gd_rvstar_led_toggle(led_typedef_enum lednum);
-/* configure key */
-void gd_rvstar_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode);
-/* return the selected key state */
-uint8_t gd_rvstar_key_state_get(key_typedef_enum keynum);
+void gd_longan_nano_led_toggle(led_typedef_enum lednum);
 /* configure COM port */
 void gd_com_init(uint32_t usart_periph);
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* GD32VF103V_RVSTART_H */
+#endif /* GD32VF103V_LONGAN_NANO_H */
 
