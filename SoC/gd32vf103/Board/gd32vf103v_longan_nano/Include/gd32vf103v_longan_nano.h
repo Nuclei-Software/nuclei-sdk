@@ -78,8 +78,8 @@ typedef enum
 #define LEDR_GPIO_CLK                    RCU_GPIOC
 
 /* sipeed longan nano board UART com port */
-#define GD32_COM0                        UART0
-#define GD32_COM_CLK                     RCU_UART0
+#define GD32_COM0                        USART0
+#define GD32_COM_CLK                     RCU_USART0
 #define GD32_COM_TX_PIN                  GPIO_PIN_9
 #define GD32_COM_RX_PIN                  GPIO_PIN_10
 #define GD32_COM_TX_GPIO_PORT            GPIOA
