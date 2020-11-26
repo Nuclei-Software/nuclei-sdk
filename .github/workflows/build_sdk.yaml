@@ -62,37 +62,51 @@ jobs:
     - name: Build SDK for HummingBird SoC
       if: matrix.soc == 'hbird'
       run: |
+        echo "Setup build environment"
         source setup.sh
         source .ci/build_sdk.sh
         source .ci/build_applications.sh
+        touch build.log
         export CORE=n305
         export DOWNLOAD=ilm
         echo "Build For Board hbird_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application  >> build.log
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test         >> build.log
         export CORE=ux600
         export DOWNLOAD=ddr
         echo "Build For Board hbird_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application  >> build.log
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test         >> build.log
         export CORE=n307fd
         export DOWNLOAD=flashxip
         echo "Build For Board hbird_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application  >> build.log
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test         >> build.log
+
+        mv build.log build_${{ matrix.soc }}.log
 
     - name: Build SDK for GD32VF103 SoC
       if: matrix.soc == 'gd32vf103'
       run: |
+        echo "Setup build environment"
         source setup.sh
         source .ci/build_sdk.sh
         source .ci/build_applications.sh
+        touch build.log
         export CORE=n205
         export DOWNLOAD=flashxip
         echo "Build For Board gd32vf103v_eval"
-        SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    application
-        SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    test
+        SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    application >> build.log
+        SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    test        >> build.log
         echo "Build For Board gd32vf103v_rvstar"
-        SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    application
-        SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    test
+        SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    application   >> build.log
+        SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    test          >> build.log
+        mv build.log build_${{ matrix.soc }}.log
+
+    - name: Upload Build Log for ${{ matrix.soc }}
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          name: build_${{ matrix.soc }}
+          path: |
+            build*.log
 
