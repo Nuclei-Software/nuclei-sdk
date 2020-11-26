@@ -57,7 +57,7 @@ jobs:
           fi
           tar -xjf $toolzip
           cd ..
-          echo "NUCLEI_TOOL_ROOT=$(pwd)/prebuilt_tools" > ../setup_config.sh
+          echo "NUCLEI_TOOL_ROOT=$(pwd)/prebuilt_tools" > setup_config.sh
 
     - name: Build SDK for HummingBird SoC
       if: matrix.soc == 'hbird'
