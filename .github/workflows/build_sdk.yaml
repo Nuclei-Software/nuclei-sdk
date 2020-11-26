@@ -1,0 +1,97 @@
+name: Build SDK
+
+on:
+  push:
+    paths:
+        - "Build/**"
+        - "application/**"
+        - "NMSIS/**"
+        - "OS/**"
+        - "SoC/**"
+        - "test/**"
+        - ".github/**"
+        - ".ci/**"
+  pull_request:
+    paths:
+        - "Build/**"
+        - "application/**"
+        - "NMSIS/**"
+        - "OS/**"
+        - "SoC/**"
+        - "test/**"
+        - ".github/**"
+        - ".ci/**"
+
+jobs:
+  build:
+    name: Build SDK
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04]
+        soc: [hbird, gd32vf103]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Caching tools
+        uses: actions/cache@v2
+        with:
+          path: |
+            prebuilt_tools/*.tar.bz2
+            *.zip
+          key: build
+
+    - name: Prepare Tools for Ubuntu
+      if: startsWith(matrix.os, 'ubuntu')
+      run: |
+          mkdir -p prebuilt_tools
+          cd prebuilt_tools
+          toolzip=nuclei_riscv_newlibc_prebuilt_linux64_2020.08.tar.bz2
+          if [ ! -e $toolzip ] ; then
+            wget https://nucleisys.com/upload/files/toochain/gcc/$toolzip
+          fi
+          tar -xjf $toolzip
+          cd ..
+          echo "NUCLEI_TOOL_ROOT=$(pwd)/prebuilt_tools" > ../setup_config.sh
+
+    - name: Build SDK for HummingBird SoC
+      if: matrix.soc == 'hbird'
+      run: |
+        source setup.sh
+        source .ci/build_sdk.sh
+        source .ci/build_applications.sh
+        export CORE=n305
+        export DOWNLOAD=ilm
+        echo "Build For Board hbird_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test
+        export CORE=ux600
+        export DOWNLOAD=ddr
+        echo "Build For Board hbird_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test
+        export CORE=n307fd
+        export DOWNLOAD=flashxip
+        echo "Build For Board hbird_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
+        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test
+
+    - name: Build SDK for GD32VF103 SoC
+      if: matrix.soc == 'gd32vf103'
+      run: |
+        source setup.sh
+        source .ci/build_sdk.sh
+        source .ci/build_applications.sh
+        export CORE=n205
+        export DOWNLOAD=flashxip
+        echo "Build For Board gd32vf103v_eval"
+        SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    application
+        SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    test
+        echo "Build For Board gd32vf103v_rvstar"
+        SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    application
+        SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    test
+
