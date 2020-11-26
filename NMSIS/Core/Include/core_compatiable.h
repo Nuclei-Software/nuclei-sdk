@@ -53,11 +53,11 @@
 #define __LDRT(ptr)                         __LW((ptr))
 
 /** \brief STRT Unprivileged (8 bit), ARM Compatiable */
-#define __STRBT(ptr)                        __SB((ptr))
+#define __STRBT(val, ptr)                   __SB((ptr), (val))
 /** \brief STRT Unprivileged (16 bit), ARM Compatiable */
-#define __STRHT(ptr)                        __SH((ptr))
+#define __STRHT(val, ptr)                   __SH((ptr), (val))
 /** \brief STRT Unprivileged (32 bit), ARM Compatiable */
-#define __STRT(ptr)                         __SW((ptr))
+#define __STRT(val, ptr)                    __SW((ptr), (val))
 
 /* ===== Saturation Operations ===== */
 /**
@@ -93,7 +93,7 @@ __STATIC_FORCEINLINE int32_t __SSAT(int32_t val, uint32_t sat)
  * \return             Saturated value
  */
 #if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
-#define __USAT(val, sat)        __RV_UCLIP32((val), (sat-1))
+#define __USAT(val, sat)        __RV_UCLIP32((val), (sat))
 #else
 __STATIC_FORCEINLINE uint32_t __USAT(int32_t val, uint32_t sat)
 {
