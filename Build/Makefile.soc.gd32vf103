@@ -1,5 +1,4 @@
 BOARD ?= gd32vf103v_rvstar
-BOARD ?= gd32vf103v_longan_nano
 
 # override DOWNLOAD and CORE variable for GD32VF103 SoC
 # even though it was set with a command argument
