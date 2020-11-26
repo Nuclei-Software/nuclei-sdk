@@ -3,6 +3,31 @@
 Changelog
 =========
 
+V0.3.0-dev
+----------
+
+This is version ``0.3.0-dev`` of Nuclei SDK, which is still in development.
+
+* SoC
+
+    - Add more newlib stub functions for all SoC support packages
+    - Dump extra csr ``mdcause`` in default exception handler for hbird
+
+* Documentation
+
+    - Add ``demo_nice`` application documentation
+
+* Application
+
+    - Cleanup unused comments in dhrystone
+    - Add new ``demo_nice`` application to show Nuclei NICE feature
+
+* NMSIS
+
+    - Fix typo in CLICINFO_Type._reserved0 bits
+    - Fix ``__STRBT``, ``__STRHT``, ``__STRT`` and ``__USAT`` macros
+
+
 V0.2.9
 ------
 
@@ -11,11 +36,15 @@ This is official version ``0.2.9`` of Nuclei SDK.
 * SoC
 
     - Remove ``ftdi_device_desc "Dual RS232-HS"`` line in openocd configuration.
-      Newer version of RVSTAR and Hummingbird Debugger have changed the FTDI description
-      from "Dual RS232-HS" to "USB <-> JTAG-DEBUGGER", to be back-compatiable with older
-      version, we just removed this ``ftdi_device_desc "Dual RS232-HS"`` line.
-      If you want to select specified JTAG, you can add this ``ftdi_device_desc`` according
-      to your description.
+
+      .. note::
+
+         Newer version of RVSTAR and Hummingbird Debugger have changed the FTDI description
+         from "Dual RS232-HS" to "USB <-> JTAG-DEBUGGER", to be back-compatiable with older
+         version, we just removed this ``ftdi_device_desc "Dual RS232-HS"`` line.
+         If you want to select specified JTAG, you can add this ``ftdi_device_desc`` according
+         to your description.
+
     - Fix typos in **system_<Device>.c**
     - Fix gpio driver implementation bugs of hbird
     - Enable more CSR(micfg_info, mdcfg_info, mcfg_info) show in gdb debug
