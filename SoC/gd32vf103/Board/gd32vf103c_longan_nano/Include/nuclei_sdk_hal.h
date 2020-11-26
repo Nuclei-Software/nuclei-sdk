@@ -6,7 +6,7 @@
  extern "C" {
 #endif
 
-#include "gd32vf103v_longan_nano.h"
+#include "gd32vf103c_longan_nano.h"
 
 #define SOC_DEBUG_UART      GD32_COM0
 
