@@ -104,9 +104,8 @@ jobs:
         mv build.log build_${{ matrix.soc }}.log
 
     - name: Upload Build Log for ${{ matrix.soc }}
-        uses: actions/upload-artifact@v2.2.0
-        with:
-          name: build_${{ matrix.soc }}
-          path: |
-            build*.log
-
+      uses: actions/upload-artifact@v2.2.0
+      with:
+        name: build_${{ matrix.soc }}
+        path: |
+          build*.log
