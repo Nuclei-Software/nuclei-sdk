@@ -11,6 +11,7 @@ on:
         - "test/**"
         - ".github/**"
         - ".ci/**"
+
   pull_request:
     paths:
         - "Build/**"
@@ -38,12 +39,12 @@ jobs:
         fetch-depth: 0
 
     - name: Caching tools
-        uses: actions/cache@v2
-        with:
-          path: |
-            prebuilt_tools/*.tar.bz2
-            *.zip
-          key: build
+      uses: actions/cache@v2
+      with:
+        path: |
+          prebuilt_tools/*.tar.bz2
+          prebuilt_tools/*.zip
+        key: build
 
     - name: Prepare Tools for Ubuntu
       if: startsWith(matrix.os, 'ubuntu')
