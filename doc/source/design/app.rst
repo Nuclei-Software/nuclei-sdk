@@ -367,6 +367,75 @@ This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
     SUCCESS, riscv_conv_fast_opt_q15
     all test are passed. Well done!
 
+demo_nice
+~~~~~~~~~
+
+This `demo_nice application`_ is used to demostrate how to Nuclei NICE feature.
+
+**NICE** is short for Nuclei Instruction Co-unit Extension, which is used to
+support extensive customization and specialization.
+
+**NICE** allows customers to create user-defined instructions, enabling the
+integrations of custom hardware co-units that improve domain-specific
+performance while reducing power consumption.
+
+For more about **NICE** feature, please click `Nuclei User Extended Introduction`_.
+
+* Mainly show how to use NICE intrinsic function with compiler.
+* It only works with Nuclei RISC-V Processor with the hardware NICE demo intergated.
+
+.. note::
+
+    * If didn't work with gd32vf103 processor.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei UX607 RISC-V processor as example, hardware NICE demo intergated
+    # cd to the demo_dsp directory
+    cd application/baremetal/demo_nice
+    # Clean the application first
+    make SOC=hbird BOARD=hbird_eval CORE=ux600 clean
+    # Build and upload the application
+    make SOC=hbird BOARD=hbird_eval CORE=ux600 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Nov 26 2020, 11:14:51
+    Download Mode: ILM
+    CPU Frequency 15999631 Hz
+
+    Nuclei Nice Acceleration Demonstration
+    1. Print input matrix array
+    the element of array is :
+            10      30      90
+            20      40      80
+            30      90      120
+
+    2. Do reference matrix column sum and row sum
+    2. Do nice matrix column sum and row sum
+    3. Compare reference and nice result
+      1) Reference result:
+    the sum of each row is :
+                    130     140     240
+    the sum of each col is :
+                    60      160     290
+      2) Nice result:
+    the sum of each row is :
+                    130     140     240
+    the sum of each col is :
+                    60      160     290
+      3) Compare reference vs nice: PASS
+    4. Performance summary
+             normal:
+                  instret: 511, cycle: 790
+             nice  :
+                  instret: 125, cycle: 227
+
 
 coremark
 ~~~~~~~~
@@ -829,9 +898,11 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread demo`` applicat
 .. _demo_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_timer
 .. _demo_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic
 .. _demo_dsp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_dsp
+.. _demo_nice application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_nice
 .. _coremark benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/coremark
 .. _dhrystone benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/dhrystone
 .. _whetstone benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/whetstone
 .. _freertos demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/freertos/demo
 .. _ucosii demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/ucosii/demo
 .. _rt-thread demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo
+.. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html
