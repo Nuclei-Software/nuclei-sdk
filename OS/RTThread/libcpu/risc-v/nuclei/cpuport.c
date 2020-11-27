@@ -233,7 +233,7 @@ extern ssize_t _read(int fd, void* ptr, size_t len);
 char rt_hw_console_getchar(void)
 {
     int ch = -1;
-    _read(STDOUT_FILENO, &ch, 1);
+    _read(STDIN_FILENO, &ch, 1);
     return ch;
 }
 
