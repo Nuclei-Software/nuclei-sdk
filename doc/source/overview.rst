@@ -18,6 +18,9 @@ peripherals access such as GPIO, UART, SPI and I2C, etc.
 Nuclei SDK provides a good start base for embedded developers which will help them simplify
 software development and improve time-to-market through well-designed software framework.
 
+.. note::
+
+    To get a pdf version of this documentation, please click `Nuclei SDK Document`_
 
 .. _overview_design_arch:
 
@@ -115,3 +118,5 @@ License
 -------
 
 Nuclei SDK is an opensource project licensed by :ref:`Apache License 2.0 <license>`.
+
+.. _Nuclei SDK Document: https://doc.nucleisys.com/nuclei_sdk/nucleisdk.pdf
