@@ -21,12 +21,19 @@ This is version ``0.3.0-dev`` of Nuclei SDK, which is still in development.
 
     - Cleanup unused comments in dhrystone
     - Add new ``demo_nice`` application to show Nuclei NICE feature
+    - Add new ``msh`` application to show RT-Thread MSH shell compoment usage
 
 * NMSIS
 
     - Fix typo in CLICINFO_Type._reserved0 bits
     - Fix ``__STRBT``, ``__STRHT``, ``__STRT`` and ``__USAT`` macros
 
+* OS
+
+    - Add ``msh`` compoment source code into RT-Thread RTOS source code
+    - Both ``rt_hw_console_getchar`` and ``rt_hw_console_output`` are now defined
+      as weak function implementation, which allow application to reimplement it
+      in application level source code
 
 V0.2.9
 ------
