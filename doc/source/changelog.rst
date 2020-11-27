@@ -12,6 +12,7 @@ This is version ``0.3.0-dev`` of Nuclei SDK, which is still in development.
 
     - Add more newlib stub functions for all SoC support packages
     - Dump extra csr ``mdcause`` in default exception handler for hbird
+    - Add Sipeed Longan Nano as new supported board
 
 * Documentation
 
