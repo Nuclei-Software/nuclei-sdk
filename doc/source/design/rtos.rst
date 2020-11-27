@@ -143,6 +143,8 @@ And in your application code, you need to do the following things:
 
 * Add RT-Thread application configuration header file -> ``rtconfig.h``
 * Include RT-Thread header files
+* If you want to enable RT-Thread MSH feature, just add ``RTTHREAD_MSH := 1`` in
+  your application Makefile.
 
 .. note::
 

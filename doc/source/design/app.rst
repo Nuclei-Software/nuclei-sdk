@@ -893,6 +893,52 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread demo`` applicat
     thread 0 count: 4
     thread 1 count: 4
 
+msh
+~~~
+
+This `rt-thread msh application`_ demonstrates msh shell in serial console which is a component of rt-thread.
+
+* ``MSH_CMD_EXPORT(nsdk, msh nuclei sdk demo)`` exports a command ``nsdk`` to msh shell
+
+In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` application.
+
+* **RTOS = RTThread** is added in its Makefile to include RT-Thread service
+* **RTTHREAD_MSH := 1** is added in its Makefile to include RT-Thread msh component
+* The **RT_TICK_PER_SECOND** in ``rtconfig.h`` is by default set to `200`, you can change it
+  to other number according to your requirement.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the rtthread msh directory
+    cd application/rtthread/msh
+    # Clean the application first
+    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    # Build and upload the application
+    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Nov 27 2020, 11:00:29
+    Download Mode: FLASHXIP
+    CPU Frequency 107732673 Hz
+
+    \ | /
+    - RT -     Thread Operating System
+    / | \     3.1.3 build Nov 27 2020
+    2006 - 2019 Copyright by rt-thread team
+    Hello RT-Thread!
+    msh >help
+    RT-Thread shell commands:
+    list_timer list_mailbox list_sem list_thread version ps help nsdk
+    msh >nsdk
+    Hello Nuclei SDK!
+    msh >
+
 
 .. _helloworld application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/helloworld
 .. _demo_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_timer
@@ -905,4 +951,5 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread demo`` applicat
 .. _freertos demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/freertos/demo
 .. _ucosii demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/ucosii/demo
 .. _rt-thread demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo
+.. _rt-thread msh application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/msh
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html

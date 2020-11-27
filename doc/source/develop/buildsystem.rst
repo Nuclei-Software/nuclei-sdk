@@ -675,6 +675,20 @@ remove sections for you, but sometimes it might remove sections that are useful,
 e.g. For Nuclei SDK test cases, we use ctest framework, and we need to set **NOGC=1**
 to disable GC feature.
 
+.. _develop_buildsystem_var_rtthread_msh:
+
+RTTHREAD_MSH
+~~~~~~~~~~~~
+
+**RTTHREAD_MSH** variable is valid only when **RTOS** is set to **RTThread**.
+
+When **RTTHREAD_MSH** is set to **1**:
+
+* The RTThread MSH compoment source code will be included
+* The MSH thread will be enabled in the background
+* Currently the msh getchar implementation is using a weak function implemented
+  in ``rt_hw_console_getchar`` in ``OS/RTTThread/libcpu/risc-v/nuclei/cpuport.c``
+
 .. _develop_buildsystem_app_build_vars:
 
 Build Related Makefile variables used only in Application Makefile
