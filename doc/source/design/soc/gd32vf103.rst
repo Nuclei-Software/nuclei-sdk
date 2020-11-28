@@ -50,10 +50,11 @@ The SoC diagram can be checked as below :ref:`figure_design_soc_gd32vf103_1`
 Supported Boards
 ----------------
 
-In Nuclei SDK, we support the following two boards based on **GD32VF103** SoC, see:
+In Nuclei SDK, we support the following three boards based on **GD32VF103** SoC, see:
 
 * :ref:`design_board_gd32vf103v_eval`
 * :ref:`design_board_gd32vf103v_rvstar`
+* :ref:`design_board_sipeed_longan_nano`
 
 .. _design_soc_gd32vf103_usage:
 

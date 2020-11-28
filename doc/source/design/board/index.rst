@@ -9,3 +9,4 @@ Board
    hbird_eval.rst
    gd32vf103v_rvstar.rst
    gd32vf103v_eval.rst
+   gd32vf103c_longan_nano.rst
