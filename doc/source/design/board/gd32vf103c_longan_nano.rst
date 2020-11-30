@@ -122,7 +122,7 @@ To run this application in Sipeed Longan Nano board in Nuclei SDK, you just need
 Extensions
 ~~~~~~~~~~
 
-There are two extensions on the board:
+There are three extensions on the board:
 
 * On the back of the circuit board there is a socket for a micro SD card.
 
@@ -132,6 +132,16 @@ There are two extensions on the board:
 
   - The LCD is connected to SPI0.
 
-  - The LCD controller is similar to Sitronix' ST7735.
+  - The controller on the LCD is similar to Sitronix' ST7735.
+
+* One RGB-LED
+
+  - The red LED is controlled via PC13. This LED can be addressed by LED3 or LEDR.
+
+  - The green LED is controlled via PA1. This LED can be addressed by LED1 or LEDG.
+
+  - The blue LED is controlled via PA2 This LED can be addressed by LED2 or LEDB.
+
+There are two buttons on the board. One is the reset button and the other is to activate the internal bootloader. Unfortunately, none of these buttons can be used as user inputs.
 
 .. _Sipeed Longan Nano Documentation: https://longan.sipeed.com/en/
