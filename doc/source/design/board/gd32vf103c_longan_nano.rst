@@ -20,6 +20,22 @@ Is is similar to the well known STM32-based "Blue Pill" board.
 
     Sipeed Longan Nano Board.
 
+
+.. _design_board_sipeed_longan_nano_versions:
+
+Versions
+~~~~~~~~
+
+There are two versions of this board available.
+
+* GD32VF103C\ **B**\ T6 with 128k Flash / 32k RAM
+
+* GD32VF103C\ **8**\ T6 with 64k Flash / 20k RAM. This is sometimes called the "lite" version.
+
+If you want to buy one, carefully take a look at the description because sometimes they are offered with the GD32VF103CB controller, but they only contain the GD32VF103C8 controller.
+
+
+
 .. _design_board_sipeed_longan_nano_pinout:
 
 Pinout
@@ -79,7 +95,7 @@ are fixed to ``flashxip`` and ``n205``.
 * There are two versions of this board avail. One with 64k flash and one with 128k flash.
 
   - You have to change the linker script to set the right flash size. By default, 128k flash is set.
-  
+
 * You can find its linker script in ``SoC/gd32vf103/Board/gd32vf103c_longan_nano/Source/GCC/``
 
   - ``gcc_gd32vf103_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip``
@@ -100,5 +116,22 @@ To run this application in Sipeed Longan Nano board in Nuclei SDK, you just need
     make SOC=gd32vf103 BOARD=gd32vf103c_longan_nano upload
     # Debug the application using openocd and gdb
     make SOC=gd32vf103 BOARD=gd32vf103c_longan_nano debug
+
+.. _design_board_sipeed_longan_nano_extensions:
+
+Extensions
+~~~~~~~~~~
+
+There are two extensions on the board:
+
+* On the back of the circuit board there is a socket for a micro SD card.
+
+  - The SD-card is connected to SPI1.
+
+* On the front there is a socket for a small LCD which is offered by some sellers.
+
+  - The LCD is connected to SPI0.
+
+  - The LCD controller is similar to Sitronix' ST7735.
 
 .. _Sipeed Longan Nano Documentation: https://longan.sipeed.com/en/
