@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 - 2020Nuclei Limited. All rights reserved.
+ * Copyright (c) 2019 - 2020 Nuclei Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
