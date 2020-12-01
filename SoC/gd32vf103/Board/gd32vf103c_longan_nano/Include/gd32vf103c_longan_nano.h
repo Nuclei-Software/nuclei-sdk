@@ -51,12 +51,12 @@ typedef enum
     LEDG = 0,
     LEDB = 1,
     LEDR = 2,
-	LED_1 = 0,
-	LED_2 = 1,
-	LED_3 = 2,
-	LED_G = 0,
-	LED_B = 1,
-	LED_R = 2,
+    LED_1 = 0,
+    LED_2 = 1,
+    LED_3 = 2,
+    LED_G = 0,
+    LED_B = 1,
+    LED_R = 2,
 }led_typedef_enum;
 
 typedef enum
