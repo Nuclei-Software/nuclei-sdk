@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Nuclei Limited. All rights reserved.
+ * Copyright (c) 2019 - 2020Nuclei Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 /******************************************************************************
- * @file     gcc_Device.ld
- * @brief    GNU Linker Script for gd32vf103 based device
+ * @file     gcc_gd32vf103xb_flashxip.ld
+ * @brief    GNU Linker Script for gd32vf103xb based device
  * @version  V1.0.0
- * @date     17. Dec 2019
+ * @date     1. Dec 2020
  ******************************************************************************/
 
 /*********** Use Configuration Wizard in Context Menu *************************/
@@ -50,7 +50,7 @@ __ILM_RAM_SIZE = 0x00010000;
  * </h>
 */
 __RAM_BASE = 0x20000000;
-__RAM_SIZE = 0x00005000;
+__RAM_SIZE = 0x00008000;
 
 /********************* Stack / Heap Configuration ****************************
  * <h> Stack / Heap Configuration
