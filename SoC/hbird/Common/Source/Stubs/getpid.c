@@ -2,7 +2,7 @@
 #include "nuclei_sdk_soc.h"
 #include <errno.h>
 
-__WEAK int getpid(void)
+__WEAK int _getpid(void)
 {
     return 1;
 }
