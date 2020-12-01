@@ -50,7 +50,7 @@ static const rcu_periph_enum GPIO_CLK[LEDn] = {LEDG_GPIO_CLK,LEDB_GPIO_CLK,LEDR_
  *  \param[out] none
  *  \retval     none
  */
-void gd_longan_nano_led_init(led_typedef_enum lednum)
+void gd_led_init(led_typedef_enum lednum)
 {
     /* enable the led clock */
     rcu_periph_clock_enable(GPIO_CLK[lednum]);
@@ -66,7 +66,7 @@ void gd_longan_nano_led_init(led_typedef_enum lednum)
  *  \param[out] none
  *  \retval     none
  */
-void gd_longan_nano_led_on(led_typedef_enum lednum)
+void gd_led_on(led_typedef_enum lednum)
 {
     GPIO_BC(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
 }
@@ -78,7 +78,7 @@ void gd_longan_nano_led_on(led_typedef_enum lednum)
  *  \param[out] none
  *  \retval     none
  */
-void gd_longan_nano_led_off(led_typedef_enum lednum)
+void gd_led_off(led_typedef_enum lednum)
 {
     GPIO_BOP(GPIO_PORT[lednum]) = GPIO_PIN[lednum];
 }
@@ -90,7 +90,7 @@ void gd_longan_nano_led_off(led_typedef_enum lednum)
  *  \param[out] none
  *  \retval     none
  */
-void gd_longan_nano_led_toggle(led_typedef_enum lednum)
+void gd_led_toggle(led_typedef_enum lednum)
 {
     gpio_bit_write(GPIO_PORT[lednum], GPIO_PIN[lednum],
         (bit_status)(1-gpio_input_bit_get(GPIO_PORT[lednum], GPIO_PIN[lednum])));

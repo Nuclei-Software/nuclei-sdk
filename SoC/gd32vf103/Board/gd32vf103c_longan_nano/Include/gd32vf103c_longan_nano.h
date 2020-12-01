@@ -51,6 +51,12 @@ typedef enum
     LEDG = 0,
     LEDB = 1,
     LEDR = 2,
+	LED_1 = 0,
+	LED_2 = 1,
+	LED_3 = 2,
+	LED_G = 0,
+	LED_B = 1,
+	LED_R = 2,
 }led_typedef_enum;
 
 typedef enum
@@ -95,13 +101,13 @@ typedef enum
 
 /* function declarations */
 /* configure led GPIO */
-void gd_longan_nano_led_init(led_typedef_enum lednum);
+void gd_led_init(led_typedef_enum lednum);
 /* turn on selected led */
-void gd_longan_nano_led_on(led_typedef_enum lednum);
+void gd_led_on(led_typedef_enum lednum);
 /* turn off selected led */
-void gd_longan_nano_led_off(led_typedef_enum lednum);
+void gd_led_off(led_typedef_enum lednum);
 /* toggle the selected led */
-void gd_longan_nano_led_toggle(led_typedef_enum lednum);
+void gd_led_toggle(led_typedef_enum lednum);
 /* configure COM port */
 void gd_com_init(uint32_t usart_periph);
 #ifdef __cplusplus

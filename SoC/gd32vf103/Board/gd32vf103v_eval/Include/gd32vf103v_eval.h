@@ -47,7 +47,11 @@ typedef enum
     LED1 = 0,
     LED2 = 1,
     LED3 = 2,
-    LED4 = 3
+    LED4 = 3,
+	LED_1 = 0,
+	LED_2 = 1,
+	LED_3 = 2,
+	LED_4 = 3
 } led_typedef_enum;
 
 typedef enum
@@ -160,6 +164,15 @@ void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode);
 uint8_t gd_eval_key_state_get(key_typedef_enum key);
 /* configure COM port */
 void gd_com_init(uint32_t com);
+
+/* Defines for LED / Key functions to new / general API */
+#define gd_led_init 		gd_eval_led_init
+#define gd_led_on 			gd_eval_led_on
+#define gd_led_off 			gd_eval_led_off
+#define gd_led_toggle 		gd_eval_led_toggle
+
+#define gd_key_init			gd_eval_key_init
+#define gd_key_state_get	gd_eval_key_state_get
 
 #ifdef cplusplus
 }
