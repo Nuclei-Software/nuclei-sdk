@@ -1,4 +1,6 @@
 BOARD ?= gd32vf103v_rvstar
+# Variant for Board or SoC
+VARIANT ?=
 
 # override DOWNLOAD and CORE variable for GD32VF103 SoC
 # even though it was set with a command argument
@@ -18,7 +20,6 @@ endif
 else
 LINKER_SCRIPT ?= $(GD32VF103_SDK_SOC_BOARD)/Source/GCC/gcc_gd32vf103_flashxip.ld
 endif
-
 
 OPENOCD_CFG ?= $(GD32VF103_SDK_SOC_BOARD)/openocd_gd32vf103.cfg
 
