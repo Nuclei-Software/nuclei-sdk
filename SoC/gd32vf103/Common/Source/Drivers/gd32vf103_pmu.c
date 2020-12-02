@@ -105,7 +105,7 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
         __WFI();
     }else{
         __disable_irq();
-	__WFE();
+    __WFE();
         __enable_irq();
     }
 }
@@ -136,7 +136,7 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
         __WFI();
     }else{
         __disable_irq();
-	__WFE();
+    __WFE();
         __enable_irq();
     }
     /* reset sleepdeep bit of RISC-V system control register */
@@ -168,7 +168,7 @@ void pmu_to_standbymode(uint8_t standbymodecmd)
         __WFI();
     }else{
         __disable_irq();
-	__WFE();
+    __WFE();
         __enable_irq();
     }
     __RV_CSR_CLEAR(CSR_WFE, WFE_WFE);

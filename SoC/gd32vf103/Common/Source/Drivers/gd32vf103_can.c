@@ -915,9 +915,9 @@ FlagStatus can_flag_get(uint32_t can_periph, can_flag_enum flag)
       \arg        CAN_FLAG_RFF0: receive FIFO0 full
       \arg        CAN_FLAG_RFO1: receive FIFO1 overfull
       \arg        CAN_FLAG_RFF1: receive FIFO1 full
-      \arg		  CAN_FLAG_BOERR: bus-off error
-	  \arg		  CAN_FLAG_PERR: passive error
-	  \arg		  CAN_FLAG_WERR: warning error
+      \arg          CAN_FLAG_BOERR: bus-off error
+      \arg          CAN_FLAG_PERR: passive error
+      \arg          CAN_FLAG_WERR: warning error
     \param[out] none
     \retval     none
 */
@@ -947,8 +947,8 @@ void can_flag_clear(uint32_t can_periph, can_flag_enum flag)
 */
 FlagStatus can_interrupt_flag_get(uint32_t can_periph, can_interrupt_flag_enum flag)
 {  
-	uint32_t ret1 = RESET;
-	uint32_t ret2 = RESET;
+    uint32_t ret1 = RESET;
+    uint32_t ret2 = RESET;
     
     /* get the staus of interrupt flag */
     ret1 = CAN_REG_VALS(can_periph, flag) & BIT(CAN_BIT_POS0(flag));
@@ -977,9 +977,9 @@ FlagStatus can_interrupt_flag_get(uint32_t can_periph, can_interrupt_flag_enum f
       \arg        CAN_INT_FLAG_RFF0: receive FIFO0 full interrupt flag
       \arg        CAN_INT_FLAG_RFO1: receive FIFO1 overfull interrupt flag
       \arg        CAN_INT_FLAG_RFF1: receive FIFO1 full interrupt flag
-	  \arg		  CAN_FLAG_BOERR: bus-off error
-	  \arg		  CAN_FLAG_PERR: passive error
-	  \arg		  CAN_FLAG_WERR: warning error
+      \arg          CAN_FLAG_BOERR: bus-off error
+      \arg          CAN_FLAG_PERR: passive error
+      \arg          CAN_FLAG_WERR: warning error
     \param[out] none
     \retval     none
 */
