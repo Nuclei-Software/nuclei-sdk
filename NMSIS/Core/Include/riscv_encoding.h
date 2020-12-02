@@ -270,17 +270,17 @@
 
 
 /* === PMP CFG Bits === */
-#define PMP_R				0x01
-#define PMP_W				0x02
-#define PMP_X				0x04
-#define PMP_A				0x18
-#define PMP_A_TOR			0x08
-#define PMP_A_NA4			0x10
-#define PMP_A_NAPOT			0x18
-#define PMP_L				0x80
+#define PMP_R                0x01
+#define PMP_W                0x02
+#define PMP_X                0x04
+#define PMP_A                0x18
+#define PMP_A_TOR            0x08
+#define PMP_A_NA4            0x10
+#define PMP_A_NAPOT          0x18
+#define PMP_L                0x80
 
-#define PMP_SHIFT			2
-#define PMP_COUNT			16
+#define PMP_SHIFT            2
+#define PMP_COUNT            16
 
 // page table entry (PTE) fields
 #define PTE_V     0x001 // Valid
@@ -329,7 +329,7 @@
  *   @{
  */
 /* === Standard RISC-V CSR Registers === */
-#define CSR_USTATUS	0x0
+#define CSR_USTATUS 0x0
 #define CSR_FFLAGS 0x1
 #define CSR_FRM 0x2
 #define CSR_FCSR 0x3
@@ -387,10 +387,10 @@
 #define CSR_MBADADDR 0x343
 #define CSR_MTVAL 0x343
 #define CSR_MIP 0x344
-#define CSR_PMPCFG0	0x3a0
-#define CSR_PMPCFG1	0x3a1
-#define CSR_PMPCFG2	0x3a2
-#define CSR_PMPCFG3	0x3a3
+#define CSR_PMPCFG0 0x3a0
+#define CSR_PMPCFG1 0x3a1
+#define CSR_PMPCFG2 0x3a2
+#define CSR_PMPCFG3 0x3a3
 #define CSR_PMPADDR0 0x3b0
 #define CSR_PMPADDR1 0x3b1
 #define CSR_PMPADDR2 0x3b2
