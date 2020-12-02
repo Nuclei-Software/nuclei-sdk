@@ -14,20 +14,20 @@ SPDP time()
 
 void getSecs()
 {
-	theseSecs = time() ;
-	return;
+    theseSecs = time() ;
+    return;
 }
 
 void start_time()
 {
-	getSecs();
-	startSecs = theseSecs;
-	return;
+    getSecs();
+    startSecs = theseSecs;
+    return;
 }
 
 void end_time()
 {
-	getSecs();
-	secs = theseSecs - startSecs;
-	return;
+    getSecs();
+    secs = theseSecs - startSecs;
+    return;
 }

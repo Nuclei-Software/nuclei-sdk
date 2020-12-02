@@ -1,32 +1,32 @@
 /*
 Author : Shay Gal-On, EEMBC
 
-This file is part of  EEMBC(R) and CoreMark(TM), which are Copyright (C) 2009 
-All rights reserved.                            
+This file is part of  EEMBC(R) and CoreMark(TM), which are Copyright (C) 2009
+All rights reserved.
 
 EEMBC CoreMark Software is a product of EEMBC and is provided under the terms of the
-CoreMark License that is distributed with the official EEMBC COREMARK Software release. 
-If you received this EEMBC CoreMark Software without the accompanying CoreMark License, 
-you must discontinue use and download the official release from www.coremark.org.  
+CoreMark License that is distributed with the official EEMBC COREMARK Software release.
+If you received this EEMBC CoreMark Software without the accompanying CoreMark License,
+you must discontinue use and download the official release from www.coremark.org.
 
-Also, if you are publicly displaying scores generated from the EEMBC CoreMark software, 
+Also, if you are publicly displaying scores generated from the EEMBC CoreMark software,
 make sure that you are in compliance with Run and Reporting rules specified in the accompanying readme.txt file.
 
-EEMBC 
+EEMBC
 4354 Town Center Blvd. Suite 114-200
-El Dorado Hills, CA, 95762 
-*/ 
+El Dorado Hills, CA, 95762
+*/
 /* Topic: Description
-	This file contains  declarations of the various benchmark functions.
+    This file contains  declarations of the various benchmark functions.
 */
 
 /* Configuration: TOTAL_DATA_SIZE
-	Define total size for data algorithms will operate on
+    Define total size for data algorithms will operate on
 */
 #ifndef COREMARK_H
 #define COREMARK_H
 
-#ifndef TOTAL_DATA_SIZE 
+#ifndef TOTAL_DATA_SIZE
 #define TOTAL_DATA_SIZE 2*1000
 #endif
 
@@ -51,8 +51,8 @@ El Dorado Hills, CA, 95762
 void *iterate(void *pres);
 
 /* Typedef: secs_ret
-	For machines that have floating point support, get number of seconds as a double. 
-	Otherwise an unsigned int.
+    For machines that have floating point support, get number of seconds as a double.
+    Otherwise an unsigned int.
 */
 #if HAS_FLOAT
 typedef double secs_ret;
@@ -61,12 +61,12 @@ typedef ee_u32 secs_ret;
 #endif
 
 #if MAIN_HAS_NORETURN
-#define MAIN_RETURN_VAL 
+#define MAIN_RETURN_VAL
 #define MAIN_RETURN_TYPE void
 #else
 #define MAIN_RETURN_VAL 0
 #define MAIN_RETURN_TYPE int
-#endif 
+#endif
 
 void start_time(void);
 void stop_time(void);
@@ -84,21 +84,21 @@ void portable_free(void *p);
 ee_s32 parseval(char *valstring);
 
 /* Algorithm IDS */
-#define ID_LIST 	(1<<0)
-#define ID_MATRIX 	(1<<1)
-#define ID_STATE 	(1<<2)
+#define ID_LIST     (1<<0)
+#define ID_MATRIX   (1<<1)
+#define ID_STATE    (1<<2)
 #define ALL_ALGORITHMS_MASK (ID_LIST|ID_MATRIX|ID_STATE)
 #define NUM_ALGORITHMS 3
 
 /* list data structures */
 typedef struct list_data_s {
-	ee_s16 data16;
-	ee_s16 idx;
+    ee_s16 data16;
+    ee_s16 idx;
 } list_data;
 
 typedef struct list_head_s {
-	struct list_head_s *next;
-	struct list_data_s *info;
+    struct list_head_s *next;
+    struct list_data_s *info;
 } list_head;
 
 
@@ -113,47 +113,47 @@ typedef ee_f32 MATRES;
 #endif
 
 typedef struct MAT_PARAMS_S {
-	int N;
-	MATDAT *A;
-	MATDAT *B;
-	MATRES *C;
+    int N;
+    MATDAT *A;
+    MATDAT *B;
+    MATRES *C;
 } mat_params;
 
 /* state machine related stuff */
 /* List of all the possible states for the FSM */
 typedef enum CORE_STATE {
-	CORE_START=0,
-	CORE_INVALID,
-	CORE_S1,
-	CORE_S2,
-	CORE_INT,
-	CORE_FLOAT,
-	CORE_EXPONENT,
-	CORE_SCIENTIFIC,
-	NUM_CORE_STATES
+    CORE_START=0,
+    CORE_INVALID,
+    CORE_S1,
+    CORE_S2,
+    CORE_INT,
+    CORE_FLOAT,
+    CORE_EXPONENT,
+    CORE_SCIENTIFIC,
+    NUM_CORE_STATES
 } core_state_e ;
 
-		
+
 /* Helper structure to hold results */
 typedef struct RESULTS_S {
-	/* inputs */
-	ee_s16	seed1;		/* Initializing seed */
-	ee_s16	seed2;		/* Initializing seed */
-	ee_s16	seed3;		/* Initializing seed */
-	void	*memblock[4];	/* Pointer to safe memory location */
-	ee_u32	size;		/* Size of the data */
-	ee_u32 iterations;		/* Number of iterations to execute */
-	ee_u32	execs;		/* Bitmask of operations to execute */
-	struct list_head_s *list;
-	mat_params mat;
-	/* outputs */
-	ee_u16	crc;
-	ee_u16	crclist;
-	ee_u16	crcmatrix;
-	ee_u16	crcstate;
-	ee_s16	err;
-	/* ultithread specific */
-	core_portable port;
+    /* inputs */
+    ee_s16      seed1;          /* Initializing seed */
+    ee_s16      seed2;          /* Initializing seed */
+    ee_s16      seed3;          /* Initializing seed */
+    void        *memblock[4];   /* Pointer to safe memory location */
+    ee_u32      size;           /* Size of the data */
+    ee_u32      iterations;     /* Number of iterations to execute */
+    ee_u32      execs;          /* Bitmask of operations to execute */
+    struct list_head_s *list;
+    mat_params  mat;
+    /* outputs */
+    ee_u16      crc;
+    ee_u16      crclist;
+    ee_u16      crcmatrix;
+    ee_u16      crcstate;
+    ee_s16      err;
+    /* ultithread specific */
+    core_portable port;
 } core_results;
 
 /* Multicore execution handling */
@@ -168,8 +168,8 @@ ee_u16 core_bench_list(core_results *res, ee_s16 finder_idx);
 
 /* state benchmark functions */
 void core_init_state(ee_u32 size, ee_s16 seed, ee_u8 *p);
-ee_u16 core_bench_state(ee_u32 blksize, ee_u8 *memblock, 
-		ee_s16 seed1, ee_s16 seed2, ee_s16 step, ee_u16 crc);
+ee_u16 core_bench_state(ee_u32 blksize, ee_u8 *memblock,
+ee_s16 seed1, ee_s16 seed2, ee_s16 step, ee_u16 crc);
 
 /* matrix benchmark functions */
 ee_u32 core_init_matrix(ee_u32 blksize, void *memblk, ee_s32 seed, mat_params *p);
