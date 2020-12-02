@@ -107,7 +107,7 @@ void gd_com_init(uint32_t usart_periph)
 {    
     /* enable GPIO TX and RX clock */
     rcu_periph_clock_enable(GD32_COM_TX_GPIO_CLK);
-	rcu_periph_clock_enable(GD32_COM_RX_GPIO_CLK);
+    rcu_periph_clock_enable(GD32_COM_RX_GPIO_CLK);
 
     /* enable USART clock */
     rcu_periph_clock_enable(GD32_COM_CLK);

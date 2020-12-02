@@ -180,7 +180,7 @@ void gd_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode)
 
     if (key_mode == KEY_MODE_EXTI) {
         /* enable and set key EXTI interrupt to the lowest priority */
-	ECLIC_EnableIRQ(KEY_IRQn[keynum]);
+        ECLIC_EnableIRQ(KEY_IRQn[keynum]);
         ECLIC_SetLevelIRQ(KEY_IRQn[keynum],1);
         ECLIC_SetPriorityIRQ(KEY_IRQn[keynum],1);
 
