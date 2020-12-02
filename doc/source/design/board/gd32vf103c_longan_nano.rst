@@ -90,15 +90,12 @@ How to use
 ~~~~~~~~~~
 
 For **Sipeed Longan Nano** board, the **DOWNLOAD** and **CORE** variables
-are fixed to ``flashxip`` and ``n205``.
+are fixed to ``flashxip`` and ``n205``. The **VARIANT** variable can be used for choosing a board variant.
 
-* There are two versions of this board avail. One with 64k flash and one with 128k flash.
+* You can find its linker scripts in ``SoC/gd32vf103/Board/gd32vf103c_longan_nano/Source/GCC/``
 
-  - You have to change the linker script to set the right flash size. By default, 128k flash is set.
-
-* You can find its linker script in ``SoC/gd32vf103/Board/gd32vf103c_longan_nano/Source/GCC/``
-
-  - ``gcc_gd32vf103_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip``
+  - ``gcc_gd32vf103xb_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip`` and 128k flash, this is the default.
+  - ``gcc_gd32vf103x8_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip`` and 64k flash.
 
 * If you want to specify your own modified linker script, you can follow steps described in :ref:`develop_appdev_linkscript`
 
@@ -116,6 +113,13 @@ To run this application in Sipeed Longan Nano board in Nuclei SDK, you just need
     make SOC=gd32vf103 BOARD=gd32vf103c_longan_nano upload
     # Debug the application using openocd and gdb
     make SOC=gd32vf103 BOARD=gd32vf103c_longan_nano debug
+
+To build for the "lite" variant you also need to set the **VARIANT** variable.
+
+.. code-block:: shell
+
+    # Build the application
+    make SOC=gd32vf103 BOARD=gd32vf103c_longan_nano VARIANT=lite all
 
 .. _design_board_sipeed_longan_nano_extensions:
 
