@@ -151,28 +151,28 @@ typedef enum
 
 /* function declarations */
 /* configure led GPIO */
-void gd_eval_led_init(led_typedef_enum lednum);
+void gd_led_init(led_typedef_enum lednum);
 /* turn on selected led */
-void gd_eval_led_on(led_typedef_enum lednum);
+void gd_led_on(led_typedef_enum lednum);
 /* turn off selected led */
-void gd_eval_led_off(led_typedef_enum lednum);
+void gd_led_off(led_typedef_enum lednum);
 /* toggle the selected led */
-void gd_eval_led_toggle(led_typedef_enum lednum);
+void gd_led_toggle(led_typedef_enum lednum);
 /* configure key */
-void gd_eval_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode);
+void gd_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode);
 /* return the selected key state */
-uint8_t gd_eval_key_state_get(key_typedef_enum key);
+uint8_t gd_key_state_get(key_typedef_enum key);
 /* configure COM port */
 void gd_com_init(uint32_t com);
 
 /* Defines for LED / Key functions to new / general API */
-#define gd_led_init         gd_eval_led_init
-#define gd_led_on           gd_eval_led_on
-#define gd_led_off          gd_eval_led_off
-#define gd_led_toggle       gd_eval_led_toggle
+#define gd_eval_led_init         gd_led_init
+#define gd_eval_led_on           gd_led_on
+#define gd_eval_led_off          gd_led_off
+#define gd_eval_led_toggle       gd_led_toggle
 
-#define gd_key_init         gd_eval_key_init
-#define gd_key_state_get    gd_eval_key_state_get
+#define gd_eval_key_init         gd_key_init
+#define gd_eval_key_state_get    gd_key_state_get
 
 #ifdef cplusplus
 }
