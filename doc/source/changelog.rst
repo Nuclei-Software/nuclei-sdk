@@ -13,6 +13,7 @@ This is version ``0.3.0-dev`` of Nuclei SDK, which is still in development.
     - Add more newlib stub functions for all SoC support packages
     - Dump extra csr ``mdcause`` in default exception handler for hbird
     - Add Sipeed Longan Nano as new supported board
+    - Add **gd32vf103c_longan_nano** board support, contributed by `tuupola`_ and `RomanBuchert`_
 
 * Documentation
 
@@ -32,9 +33,7 @@ This is version ``0.3.0-dev`` of Nuclei SDK, which is still in development.
 * OS
 
     - Add ``msh`` compoment source code into RT-Thread RTOS source code
-    - Both ``rt_hw_console_getchar`` and ``rt_hw_console_output`` are now defined
-      as weak function implementation, which allow application to reimplement it
-      in application level source code
+    - Add ``rt_hw_console_getchar`` implementation
 
 V0.2.9
 ------
@@ -336,3 +335,5 @@ Here are the main features of this release:
 
 
 .. _Nuclei-SDK: https://github.com/Nuclei-Software/nuclei-sdk
+.. _tuupola: https://github.com/tuupola
+.. _RomanBuchert: https://github.com/RomanBuchert
