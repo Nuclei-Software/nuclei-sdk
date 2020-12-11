@@ -21,6 +21,7 @@ build_doc:
     only:
         changes:
           - doc/source/**/**/**/*
+          - .gitlab-ci.yml
     retry: 1
     artifacts:
         name: "nuclei_sdk_doc-${CI_COMMIT_SHA::8}"
