@@ -106,6 +106,10 @@ jobs:
         SOC=gd32vf103 BOARD=gd32vf103c_longan_nano nsdk_build_directory    application   >> build.log
         SOC=gd32vf103 BOARD=gd32vf103c_longan_nano nsdk_build_directory    test          >> build.log
         mv build.log build_${{ matrix.soc }}.log
+        echo "Build For Board gd32vf103c_t_display"
+        SOC=gd32vf103 BOARD=gd32vf103c_t_display nsdk_build_directory    application   >> build.log
+        SOC=gd32vf103 BOARD=gd32vf103c_t_display nsdk_build_directory    test          >> build.log
+        mv build.log build_${{ matrix.soc }}.log
 
     - name: Upload Build Log for ${{ matrix.soc }}
       uses: actions/upload-artifact@v2.2.0
