@@ -14,6 +14,7 @@ From **2020.10** release version of Nuclei Studio, you can directly use the preb
 provided in Nuclei Studio, please check :ref:`quickstart_setup_tools_env_nside`
 
 If you want to use latest toolchain, you can follow guides below:
+
 * For Windows users, please check :ref:`quickstart_setup_tools_env_windows`
 * For Linux users, please check :ref:`quickstart_setup_tools_env_linux`
 
