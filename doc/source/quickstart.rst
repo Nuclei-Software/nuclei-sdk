@@ -3,6 +3,21 @@
 Quick Startup
 =============
 
+.. _quickstart_using_nside:
+
+Use Nuclei SDK in Nuclei Studio
+-------------------------------
+
+From **2020.08** release version of Nuclei Studio IDE, the nuclei-sdk **released**
+version will be deeply integrated with Nuclei Studio, and you can directly create
+nuclei-sdk project in Nuclei Studio IDE.
+
+You can download **Nuclei Studio IDE** from |nuclei_download_center|, and follow
+`Nuclei_Studio_User_Guide.pdf`_ to learn how to use it.
+
+But if you want to use latest source code of Nuclei SDK, please follow the rest
+part of this guide to build and run using Nuclei SDK Build System in Makefile.
+
 .. _quickstart_setup_tools_env:
 
 Setup Tools and Environment
@@ -11,7 +26,7 @@ Setup Tools and Environment
 To start to use Nuclei SDK, you need to install the following tools:
 
 From **2020.10** release version of Nuclei Studio, you can directly use the prebuilt tools
-provided in Nuclei Studio, please check :ref:`quickstart_setup_tools_env_nside`
+provided in Nuclei Studio, please check :ref:`quickstart_setup_tools_env_nside`.
 
 If you want to use latest toolchain, you can follow guides below:
 
@@ -618,6 +633,8 @@ There are several ways to achieve it, see as below:
     * If you want to access SoC related APIs, please use ``nuclei_sdk_soc.h`` header file.
     * If you want to access SoC and board related APIs, please use ``nuclei_sdk_hal.h`` header file.
     * For simplified application development, you can use ``nuclei_sdk_hal.h`` directly.
+
+.. _quickstart_advanced_usage:
 
 Advanced Usage
 --------------
