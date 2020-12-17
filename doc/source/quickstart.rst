@@ -10,8 +10,30 @@ Setup Tools and Environment
 
 To start to use Nuclei SDK, you need to install the following tools:
 
+From **2020.10** release version of Nuclei Studio, you can directly use the prebuilt tools
+provided in Nuclei Studio, please check :ref:`quickstart_setup_tools_env_nside`
+
+If you want to use latest toolchain, you can follow guides below:
 * For Windows users, please check :ref:`quickstart_setup_tools_env_windows`
 * For Linux users, please check :ref:`quickstart_setup_tools_env_linux`
+
+.. _quickstart_setup_tools_env_nside:
+
+Use Prebuilt Tools in Nuclei Studio
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Since **2020.10** release version of Nuclei Studio, you just need to download the
+**Nuclei Studio IDE** from |nuclei_download_center| for your development OS, and
+no need to do the following steps below, the prebuilt tools are already included.
+
+For example:
+
+* In Windows, if you have extracted the Nuclei Studio IDE to ``D:\Software\NucleiStudio_IDE_202010``,
+  then you can find the prebuilt tools in ``D:\Software\NucleiStudio_IDE_202010\NucleiStudio\toolchain``.
+* In Linux, if you have extracted the Nuclei Studio IDE to ``/home/labdev/NucleiStudio_IDE_202010``,
+  then you can find the prebuilt tools in ``/home/labdev/NucleiStudio_IDE_202010/NucleiStudio/toolchain``.
+
+If you have downloaded and extracted the Nuclei Studio, then you can jump to :ref:`quickstart_get_set_nuclei_sdk`.
 
 .. _quickstart_setup_tools_env_windows:
 
@@ -20,13 +42,6 @@ Install and Setup Tools in Windows
 
 Make sure you are using at least **Windows 7**, and then you can follow the following steps
 to download and install tools for you.
-
-.. note::
-
-    Since **2020.08** release version of Nuclei Studio, you can just download the **Nuclei Studio IDE**,
-    and no need to do the following steps now, the prebuilt tools are already included, for example,
-    if you have extracted the Nuclei Studio IDE to ``D:\Software\NucleiStudio_IDE_202008``, then you
-    can find the prebuilt tools in ``D:\Software\NucleiStudio_IDE_202008\NucleiStudio\toolchain``.
 
 1. Create an ``Nuclei`` folder in your Windows Environment, such as ``D:\Software\Nuclei``
 
@@ -89,6 +104,8 @@ to download and install tools for you.
 
          Nuclei Windows Build Tools directory structure of build-tools
 
+If you have setuped the prebuilt tools in Windows, then you can jump to :ref:`quickstart_get_set_nuclei_sdk`.
+
 .. _quickstart_setup_tools_env_linux:
 
 Install and Setup Tools in Linux
@@ -127,6 +144,7 @@ to download and install tools for you.
        * Only ``gcc`` and ``openocd`` are required for Linux.
        * Extract the downloaded Linux tools, not the windows version.
 
+If you have setuped the prebuilt tools in Linux, then you can jump to :ref:`quickstart_get_set_nuclei_sdk`.
 
 .. _quickstart_get_set_nuclei_sdk:
 
@@ -159,31 +177,36 @@ The source code of Nuclei SDK is maintained in |github| and |gitee|.
 * Create tool environment config file for Nuclei SDK
 
   - **Windows**
-     Create ``setup_config.bat`` in ``nuclei-sdk`` folder, and open this file
+     If you want to use Nuclei SDK in **Windows Command Prompt** terminal, you need to
+     create ``setup_config.bat`` in ``nuclei-sdk`` folder, and open this file
      your editor, and paste the following content, assuming you followed
-     :ref:`quickstart_setup_tools_env_windows` and install tools into ``D:\Software\Nuclei``,
+     :ref:`quickstart_setup_tools_env`, and prebuilt tools located in
+     ``D:\Software\NucleiStudio_IDE_202010\NucleiStudio\toolchain``,
      otherwise please use your correct tool root path.
 
      .. code-block:: bat
 
-         set NUCLEI_TOOL_ROOT=D:\Software\Nuclei
+        set NUCLEI_TOOL_ROOT=D:\Software\NucleiStudio_IDE_202010\NucleiStudio\toolchain
 
-     Or If you are directly using prebuilt tools in *Nuclei Studio(>= 2020.08)* such
-     as ``D:\Software\NucleiStudio_IDE_202008\NucleiStudio\toolchain``.
+     If you want to use Nuclei SDK in **Windows PowerShell** terminal, you need to create
+     a ``setup_config.ps1`` in ``nuclei-sdk`` folder, and edit this file with content below
+     if your prebuilt tools are located in ``D:\Software\NucleiStudio_IDE_202010\NucleiStudio\toolchain``:
 
-     .. code-block:: bat
+     .. code-block:: ps1
 
-         set NUCLEI_TOOL_ROOT=D:\Software\NucleiStudio_IDE_202008\NucleiStudio\toolchain
+        $NUCLEI_TOOL_ROOT="D:\Software\NucleiStudio_IDE_202009\NucleiStudio\toolchain"
+
 
   - **Linux**
      Create ``setup_config.sh`` in ``nuclei-sdk`` folder, and open this file
      your editor, and paste the following content, assuming you followed
-     :ref:`quickstart_setup_tools_env_linux` and install tools into ``~/Software/Nuclei``,
+     :ref:`quickstart_setup_tools_env` and prebuilt tools located in
+     ``/home/labdev/NucleiStudio_IDE_202010/NucleiStudio/toolchain``,
      otherwise please use your correct tool root path.
 
      .. code-block:: shell
 
-         NUCLEI_TOOL_ROOT=~/Software/Nuclei
+        NUCLEI_TOOL_ROOT=/home/labdev/NucleiStudio_IDE_202010/NucleiStudio/toolchain
 
 
 .. _quickstart_buildrundebug_app:
@@ -192,12 +215,16 @@ Build, Run and Debug Sample Application
 ---------------------------------------
 
 Assume you have followed steps in :ref:`quickstart_get_set_nuclei_sdk` to clone
-source code and create ``setup_config.bat`` and ``setup_config.sh``.
+source code and create files below:
+
+* ``setup_config.bat`` for run in **Windows Command Prompt** terminal
+* ``setup_config.ps1`` for run in **Windows PowerShell** terminal
+* ``setup_config.sh`` for run in **Linux Bash** terminal
 
 To build, run and debug application, you need to open command terminal in ``nuclei-sdk``
 folder.
 
-* For **Windows** users, you can open windows command terminal and cd to ``nuclei-sdk`` folder,
+* For **Windows** users, you can open **Windows Command Prompt** terminal and cd to ``nuclei-sdk`` folder,
   then run the following commands to setup build environment for Nuclei SDK, the output will
   be similar as this screenshot :ref:`figure_quickstart_6`:
 
@@ -214,11 +241,11 @@ folder.
   .. figure:: /asserts/images/nuclei_sdk_open_cmd.png
      :width: 80 %
      :align: center
-     :alt: Setup Build Environment for Nuclei SDK in Windows Command Line
+     :alt: Setup Build Environment for Nuclei SDK in Windows Command Prompt
 
-     Setup Build Environment for Nuclei SDK in Windows Command Line
+     Setup Build Environment for Nuclei SDK in Windows Command Prompt
 
-* For **Linux** users, you can open Linux bash terminal and cd to ``nuclei-sdk`` folder,
+* For **Linux** users, you can open **Linux Bash** terminal and cd to ``nuclei-sdk`` folder,
   then run the following commands to setup build environment for Nuclei SDK, the output will
   be similar as this screenshot :ref:`figure_quickstart_7`:
 
@@ -251,6 +278,8 @@ folder.
     * If you know how to append Nuclei RISC-V GCC Toolchain, OpenOCD and Build-Tools binary paths to **PATH** variable
       in your OS environment, you can also put the downloaded Nuclei Tools as you like, and no need to run ``setup.bat``
       or ``source setup.sh``
+    * If you want to run in **Windows PowerShell**, please run ``. .\setup.ps1`` instead of ``setup.bat``, and
+      ``setup_config.ps1`` must be created as described in :ref:`quickstart_get_set_nuclei_sdk`.
 
 
 Here for a quick startup, this guide will take board :ref:`design_board_gd32vf103v_rvstar`

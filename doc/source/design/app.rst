@@ -906,6 +906,8 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 * **RTTHREAD_MSH := 1** is added in its Makefile to include RT-Thread msh component
 * The **RT_TICK_PER_SECOND** in ``rtconfig.h`` is by default set to `200`, you can change it
   to other number according to your requirement.
+* To run this application in :ref:`design_soc_hbird`, the SoC clock frequency must be above 16MHz,
+  if run in 8MHz, uart read is not correct due to bit error in uart rx process.
 
 **How to run this application:**
 

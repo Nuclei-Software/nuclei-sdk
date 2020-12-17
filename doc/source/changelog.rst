@@ -35,6 +35,10 @@ This is version ``0.3.0-dev`` of Nuclei SDK, which is still in development.
     - Add ``msh`` compoment source code into RT-Thread RTOS source code
     - Add ``rt_hw_console_getchar`` implementation
 
+* Build
+
+    - Add ``setup.ps1`` for setting up environment in windows powershell
+
 V0.2.9
 ------
 
