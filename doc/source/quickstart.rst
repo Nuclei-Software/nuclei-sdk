@@ -635,11 +635,11 @@ For more advanced usage, please follow the items as below:
 
     * If you are trying to **develop Nuclei SDK application in IDE**, now you have three choices:
 
-      1. Since Nuclei Studio 2020.08, Nuclei SDK will be deeply integrated with Nuclei Studio, you can
-         easily create a Nuclei SDK Project in Nuclei Studio through IDE Project Wizard, and easily
-         configure Nuclei SDK project when the Nuclei SDK project is created using SDK Configuration
-         Tool, for more details, please click `Nuclei Tools`_ to download Nuclei Studio, and refer to
-         the ``Nuclei Studio User Guide.pdf`` in it.
+      1. **Recommended**: Since Nuclei Studio 2020.08, Nuclei SDK will be deeply integrated with
+         Nuclei Studio IDE, you can easily create a Nuclei SDK Project in Nuclei Studio through IDE
+         Project Wizard, and easily configure selected Nuclei SDK project using SDK Configuration Tool,
+         for more details, please click `Nuclei Tools`_ to download Nuclei Studio IDE, and refer to
+         the `Nuclei_Studio_User_Guide.pdf`_ for how to use it.
 
       2. You can take a try using Segger embedded studio, we provided prebuilt projects using Nuclei
          SDK release version, click `Segger embedded studio projects for Nuclei SDK`_ to learn about it
@@ -656,3 +656,4 @@ For more advanced usage, please follow the items as below:
 .. _Nuclei Tools: https://nucleisys.com/download.php
 .. _Segger embedded studio projects for Nuclei SDK: https://github.com/riscv-mcu/ses_nuclei_sdk_projects
 .. _Platform Nuclei in PlatformIO: https://platformio.org/platforms/nuclei
+.. _Nuclei_Studio_User_Guide.pdf: https://www.nucleisys.com/upload/files/doc/nucleistudio/Nuclei_Studio_User_Guide.pdf
