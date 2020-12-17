@@ -29,7 +29,7 @@ of this board.
 .. _design_board_gd32vf103v_rvstar_setup:
 
 Setup
-~~~~~
+-----
 
 Follow the guide in `GD32VF103V RV-STAR Development Kit`_ to setup the board,
 make sure the following items are set correctly:
@@ -41,7 +41,7 @@ make sure the following items are set correctly:
 .. _design_board_gd32vf103v_rvstar_usage:
 
 How to use
-~~~~~~~~~~
+----------
 
 For **GD32VF103V RV-STAR** board, the **DOWNLOAD** and **CORE** variables
 are fixed to ``flashxip`` and ``n205``.

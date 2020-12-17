@@ -68,7 +68,7 @@ Click `HummingBird FPGA Evaluation Kit Board Documents`_ to access the documents
 .. _design_board_hbird_eval_setup:
 
 Setup
-~~~~~
+-----
 
 Follow the guide in `HummingBird FPGA Evaluation Kit Board Documents`_ to setup the board,
 make sure the following items are set correctly:
@@ -83,7 +83,7 @@ make sure the following items are set correctly:
 .. _design_board_hbird_eval_use:
 
 How to use
-~~~~~~~~~~
+----------
 
 For **HummingBird Evaluation board**:
 

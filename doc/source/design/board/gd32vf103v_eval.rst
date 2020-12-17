@@ -27,7 +27,7 @@ If you want to learn about this board, please click `GD32VF103V EVAL Board Docum
 .. _design_board_gd32vf103v_eval_setup:
 
 Setup
-~~~~~
+-----
 
 Follow the guide in `GD32VF103V EVAL Board Documents`_ to setup the board,
 make sure the following items are set correctly:
@@ -40,7 +40,7 @@ make sure the following items are set correctly:
 .. _design_board_gd32vf103v_eval_use:
 
 How to use
-~~~~~~~~~~
+----------
 
 For **GD32VF103V-EVAL** board, the **DOWNLOAD** and **CORE** variables
 are fixed to ``flashxip`` and ``n205``.

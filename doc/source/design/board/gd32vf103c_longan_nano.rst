@@ -9,7 +9,7 @@ Overview
 --------
 
 The Sipeed Longan Nano is a board made by Sipeed using a GD32VF103CBT6 as main MCU.
-Is is similar to the well known STM32-based "Blue Pill" board.
+Is is similar to the well known STM32-based **Blue Pill** board.
 
 .. _figure_design_sipeed_longan_nano_1:
 
@@ -24,24 +24,24 @@ Is is similar to the well known STM32-based "Blue Pill" board.
 .. _design_board_sipeed_longan_nano_versions:
 
 Versions
-~~~~~~~~
+--------
 
 There are two versions of this board available.
 
 * GD32VF103C\ **B**\ T6 with 128k Flash / 32k RAM
 
-* GD32VF103C\ **8**\ T6 with 64k Flash / 20k RAM. This is sometimes called the "lite" version.
+* GD32VF103C\ **8**\ T6 with 64k Flash / 20k RAM. This is sometimes called the **lite** version.
 
-If you want to buy one, carefully take a look at the description because sometimes they are offered with the GD32VF103CB controller, but they only contain the GD32VF103C8 controller.
-
+If you want to buy one, carefully take a look at the description because sometimes they are offered
+with the GD32VF103CB controller, but they only contain the GD32VF103C8 controller.
 
 
 .. _design_board_sipeed_longan_nano_pinout:
 
 Pinout
-~~~~~~
+------
 
-The pinout of Sipeeds Logan Nano is shown in the following picture
+The pinout of Sipeed Logan Nano is shown in the following picture
 
 .. _figure_design_sipeed_longan_nano_2:
 
@@ -55,7 +55,7 @@ The pinout of Sipeeds Logan Nano is shown in the following picture
 .. _design_board_sipeed_longan_nano_schematic:
 
 Schematic
-~~~~~~~~~
+---------
 
 .. _figure_design_sipeed_longan_nano_3:
 
@@ -69,14 +69,14 @@ Schematic
 .. _design_board_sipeed_longan_nano_resources:
 
 Resources
-~~~~~~~~~
+---------
 
-Click `Sipeed Longan Nano Documentation`_ to get all information about this board from Sipeeds website.
+Click `Sipeed Longan Nano Documentation`_ to get all information about this board from Sipeed website.
 
 .. _design_board_sipeed_longan_nano_setup:
 
 Setup
-~~~~~
+-----
 
 To setup the board, make sure the following items are set correctly:
 
@@ -87,7 +87,7 @@ To setup the board, make sure the following items are set correctly:
 .. _design_board_sipeed_longan_nano_usage:
 
 How to use
-~~~~~~~~~~
+----------
 
 For **Sipeed Longan Nano** board, the **DOWNLOAD** and **CORE** variables
 are fixed to ``flashxip`` and ``n205``. The **VARIANT** variable can be used for choosing a board variant.
@@ -95,7 +95,8 @@ are fixed to ``flashxip`` and ``n205``. The **VARIANT** variable can be used for
 * You can find its linker scripts in ``SoC/gd32vf103/Board/gd32vf103c_longan_nano/Source/GCC/``
 
   - ``gcc_gd32vf103xb_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip`` and 128k flash, this is the default.
-  - ``gcc_gd32vf103x8_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip`` and 64k flash.
+  - ``gcc_gd32vf103x8_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip`` and 64k flash, the **lite** version,
+    you can pass extra ``VARIANT=lite`` via make command to select this linker script.
 
 * If you want to specify your own modified linker script, you can follow steps described in :ref:`develop_appdev_linkscript`
 
@@ -114,7 +115,7 @@ To run this application in Sipeed Longan Nano board in Nuclei SDK, you just need
     # Debug the application using openocd and gdb
     make SOC=gd32vf103 BOARD=gd32vf103c_longan_nano debug
 
-To build for the "lite" variant you also need to set the **VARIANT** variable.
+To build for the **lite** variant you also need to set the **VARIANT** variable.
 
 .. code-block:: shell
 
@@ -124,7 +125,7 @@ To build for the "lite" variant you also need to set the **VARIANT** variable.
 .. _design_board_sipeed_longan_nano_extensions:
 
 Extensions
-~~~~~~~~~~
+----------
 
 There are three extensions on the board:
 
