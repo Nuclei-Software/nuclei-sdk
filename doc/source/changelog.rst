@@ -3,10 +3,10 @@
 Changelog
 =========
 
-V0.3.0-dev
-----------
+V0.3.0
+------
 
-This is version ``0.3.0-dev`` of Nuclei SDK, which is still in development.
+This is official version ``0.3.0`` of Nuclei SDK.
 
 * SoC
 
@@ -18,6 +18,10 @@ This is version ``0.3.0-dev`` of Nuclei SDK, which is still in development.
 * Documentation
 
     - Add ``demo_nice`` application documentation
+    - Add ``msh`` application documentation
+    - Update get started guide
+    - Add **gd32vf103c_longan_nano** board Documentation
+    - Update board documentation structure levels
 
 * Application
 
