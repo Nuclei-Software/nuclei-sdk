@@ -43,7 +43,7 @@
 
 // <o>the stack size of main thread<1-4086>
 //  <i>Default: 128
-#define IDLE_THREAD_STACK_SIZE        256
+#define IDLE_THREAD_STACK_SIZE        396
 
 
 
@@ -149,13 +149,15 @@
     // <o>the stack of finsh thread <1-4096>
     //  <i>the stack of finsh thread
     //  <i>Default: 4096  (4096Byte)
-    #define FINSH_THREAD_STACK_SIZE     512
+    #define FINSH_THREAD_STACK_SIZE     4096
     // <o>the history lines of finsh thread <1-32>
     //  <i>the history lines of finsh thread
     //  <i>Default: 5
     #define FINSH_HISTORY_LINES         1
 
     #define FINSH_USING_SYMTAB
+
+    #define FINSH_USING_DESCRIPTION
     // </h>
 #endif
 
