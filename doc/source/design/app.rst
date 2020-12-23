@@ -925,18 +925,32 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Nov 27 2020, 11:00:29
+    Nuclei SDK Build Time: Dec 23 2020, 16:39:21
     Download Mode: FLASHXIP
-    CPU Frequency 107732673 Hz
+    CPU Frequency 108810000 Hz
 
     \ | /
     - RT -     Thread Operating System
-    / | \     3.1.3 build Nov 27 2020
+    / | \     3.1.3 build Dec 23 2020
     2006 - 2019 Copyright by rt-thread team
     Hello RT-Thread!
     msh >help
     RT-Thread shell commands:
-    list_timer list_mailbox list_sem list_thread version ps help nsdk
+    list_timer       - list timer in system
+    list_mailbox     - list mail box in system
+    list_sem         - list semaphore in system
+    list_thread      - list thread
+    version          - show RT-Thread version information
+    ps               - List threads in the system.
+    help             - RT-Thread shell help.
+    nsdk             - msh nuclei sdk demo
+
+    msh >ps
+    thread   pri  status      sp     stack size max used left tick  error
+    -------- ---  ------- ---------- ----------  ------  ---------- ---
+    tshell     6  ready   0x00000178 0x00001000    09%   0x00000008 000
+    tidle      7  ready   0x00000078 0x0000018c    30%   0x00000020 000
+    main       2  suspend 0x000000b8 0x00000200    35%   0x00000013 000
     msh >nsdk
     Hello Nuclei SDK!
     msh >
