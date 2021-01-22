@@ -43,6 +43,7 @@ OF SUCH DAMAGE.
 #define USB_ITF_DESC_LEN             0x09U       /*!< USB interface descriptor length */
 #define USB_EP_DESC_LEN              0x07U       /*!< USB endpoint descriptor length */
 #define USB_OTG_DESC_LEN             0x03U       /*!< USB device OTG descriptor length */
+#define USB_ITF_ASSOCIATION_DESC_LEN 0x08U       /*!< USB interface association descriptor length */
 
 #define USB_SETUP_PACKET_LEN         0x08U       /*!< USB setup packet length */
 
@@ -98,6 +99,7 @@ enum _usb_desctype {
     USB_DESCTYPE_DEV_QUALIFIER    = 0x6U,        /*!< USB device qualtfier descriptor type */
     USB_DESCTYPE_OTHER_SPD_CONFIG = 0x7U,        /*!< USB other speed configuration descriptor type */
     USB_DESCTYPE_ITF_POWER        = 0x8U,        /*!< USB interface power descriptor type */
+    USB_DESCTYPE_ITF_ASSOCIATION  = 0xbU,        /*!< USB interface association descriptor type */
     USB_DESCTYPE_BOS              = 0xFU         /*!< USB BOS descriptor type  */
 };
 
@@ -212,6 +214,17 @@ typedef struct _usb_desc_itf {
     uint8_t bInterfaceProtocol;           /*!< interface protocol ID */
     uint8_t iInterface;                   /*!< index of the string descriptor describing the interface */
 } usb_desc_itf;
+
+typedef struct _usb_desc_itf_association {
+    usb_desc_header header;               /*!< descriptor header, including type and size */
+
+    uint8_t bFirstInterface;              /*!< Interface number of the first interface that is associated with this function */
+    uint8_t bInterfaceCount;              /*!< Number of contiguous interfaces that are associated with this function */
+    uint8_t bFunctoinClass;               /*!< Class code */
+    uint8_t bFunctionSubClass;            /*!< Subclass code */
+    uint8_t bFunctionProtocol;            /*!< Protocol */
+    uint8_t iFunction;                    /*!< Index of string descriptor describing this function */
+} usb_desc_itf_association;
 
 typedef struct _usb_desc_ep {
     usb_desc_header header;               /*!< descriptor header, including type and size. */
