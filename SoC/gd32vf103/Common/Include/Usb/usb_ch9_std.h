@@ -99,7 +99,7 @@ enum _usb_desctype {
     USB_DESCTYPE_DEV_QUALIFIER    = 0x6U,        /*!< USB device qualtfier descriptor type */
     USB_DESCTYPE_OTHER_SPD_CONFIG = 0x7U,        /*!< USB other speed configuration descriptor type */
     USB_DESCTYPE_ITF_POWER        = 0x8U,        /*!< USB interface power descriptor type */
-    USB_DESCTYPE_ITF_ASSOCIATION  = 0xbU,        /*!< USB interface association descriptor type */
+    USB_DESCTYPE_ITF_ASSOCIATION  = 0xBU,        /*!< USB interface association descriptor type */
     USB_DESCTYPE_BOS              = 0xFU         /*!< USB BOS descriptor type  */
 };
 
