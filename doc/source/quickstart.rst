@@ -663,7 +663,8 @@ For more advanced usage, please follow the items as below:
 
       3. You can also take a try with the Cross-platform PlatformIO IDE, we provided our Nuclei platform
          and Nuclei SDK release version in PlatformIO, click `Platform Nuclei in PlatformIO`_ to learn
-         more about it
+         more about it, or you can visit `Light on onboard LED of RVSTAR board using PlatformIO(Chinese)`_
+         to play with PlatformIO for Nuclei.
 
       4. You can also use source code in Nuclei SDK as base, and easily integrate with other IDE tools,
          such as IAR workbench for RISC-V, Compiler-IDE and others.
@@ -674,3 +675,4 @@ For more advanced usage, please follow the items as below:
 .. _Segger embedded studio projects for Nuclei SDK: https://github.com/riscv-mcu/ses_nuclei_sdk_projects
 .. _Platform Nuclei in PlatformIO: https://platformio.org/platforms/nuclei
 .. _Nuclei_Studio_User_Guide.pdf: https://www.nucleisys.com/upload/files/doc/nucleistudio/Nuclei_Studio_User_Guide.pdf
+.. _Light on onboard LED of RVSTAR board using PlatformIO(Chinese): https://www.rvmcu.com/community-topic-id-310.html

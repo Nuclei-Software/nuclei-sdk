@@ -3,6 +3,31 @@
 Changelog
 =========
 
+V0.3.1-dev
+----------
+
+This is version ``0.3.1`` of Nuclei SDK which is **still in development**.
+
+* SoC
+
+    - board: Add support for TTGO T-Display-GD32, contributed by `tuupola`_
+    - Add definitions for the Interface Association Descriptor of USB for GD32VF103, contributed by `michahoiting`_.
+
+* Documentation
+
+    - Update ``msh`` application documentation
+    - Add basic documentation for **TTGO T-Display-GD32**
+    - Add Platformio user guide(written in Chinese) link in get started guide contributed by Maker Young
+
+* Application
+
+    - Increase idle and finsh thread stack for RT-Thread, due to stack size is not enough for RISC-V 64bit
+
+* Build
+
+    - Format Makefile space to tab
+    - Add $(TARGET).dasm into clean targets which are missing before
+
 V0.3.0
 ------
 
@@ -345,3 +370,4 @@ Here are the main features of this release:
 .. _Nuclei-SDK: https://github.com/Nuclei-Software/nuclei-sdk
 .. _tuupola: https://github.com/tuupola
 .. _RomanBuchert: https://github.com/RomanBuchert
+.. _michahoiting: https://github.com/michahoiting
