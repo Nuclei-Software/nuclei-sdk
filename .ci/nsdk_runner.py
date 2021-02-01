@@ -77,11 +77,16 @@ def read_serial(port="/dev/ttyUSB1", baudrate=115200, timeout=60, checks=None, s
         ser = serial.Serial(port, baudrate, timeout=5)
         while (time.time() - start_time) < timeout:
             # Remove '\r' in serial read line
-            line = str(ser.readline().decode()).replace('\r', '')
+            sline = ser.readline()
+            line = ""
+            try:
+                line = str(sline.decode()).replace('\r', '')
+            except:
+                pass
             if sdk_check== True:
                 print("XXX Check " + line)
                 if nsdk_check_tag in line:
-                    timestr = line.split(nsdk_check_tag)[1].strip()
+                    timestr = line.split(nsdk_check_tag)[-1].strip()
                     cur_time = time.mktime(time.strptime(timestr, "%b %d %Y, %H:%M:%S"))
                     if int(cur_time) >= int(checktime):
                         sdk_check = False
