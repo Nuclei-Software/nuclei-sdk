@@ -37,7 +37,8 @@ build_doc:
         - make latexpdf
         - cp build/latex/*.pdf build/html/
     tags:
-        - software-server
+        - env::native
+        - host::xls01
 
 ## Job for deploy document to internal server
 deploy_doc:
@@ -56,7 +57,8 @@ deploy_doc:
         - cd doc/build
         - scp -r html $DOC_SERVER:$DOC_CENTER/nuclei_sdk
     tags:
-        - software-server
+        - env::native
+        - host::xls01
     dependencies:
         - build_doc
 
@@ -73,13 +75,17 @@ deploy_website:
     script:
         - ./.ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html nuclei_sdk
     tags:
-        - software-server
+        - env::native
+        - host::xls01
     dependencies:
         - build_doc
 
 ## Jobs for board hbird_eval
 .build_hbird_eval_job_template: &build_hbird_eval_job_def
     stage: build_hbird_eval
+    tags:
+        - env::native
+        - host::xls01
     script:
         - SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
         - SOC=hbird BOARD=hbird_eval nsdk_build_directory    test
@@ -166,6 +172,9 @@ build_hbird_eval_flashxip_nx600:
 ## Jobs for board gd32vf103v_eval
 .build_gd32vf103v_eval_job_template: &build_gd32vf103v_eval_job_def
     stage: build_gd32vf103v_eval
+    tags:
+        - env::native
+        - host::xls01
     script:
         - SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory      application
         - SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    test
@@ -179,6 +188,9 @@ build_gd32vf103v_eval_flashxip:
 ## Jobs for board gd32vf103v_rvstar only flashxip mode
 .build_gd32vf103v_rvstar_job_template: &build_gd32vf103v_rvstar_job_def
     stage: build_gd32vf103v_rvstar
+    tags:
+        - env::native
+        - host::xls01
     script:
         - SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    application
         - SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    test
