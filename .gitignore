@@ -7,6 +7,7 @@
 *.map
 *.bin
 *.log
+*.hex
 .vscode
 
 software/*/*.s
