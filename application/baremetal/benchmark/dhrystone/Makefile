@@ -2,7 +2,9 @@ TARGET := dhrystone
 
 NUCLEI_SDK_ROOT = ../../../..
 
-COMMON_FLAGS := -O2 -flto -fno-inline -funroll-loops -Wno-implicit -mexplicit-relocs  -fno-builtin-printf -fno-common -falign-functions=4 -falign-jumps=4 -falign-loops=4
+BENCH_FLAGS ?= -O2 -flto -fno-inline -funroll-loops -Wno-implicit -mexplicit-relocs  -fno-builtin-printf -fno-common -falign-functions=4 -falign-jumps=4 -falign-loops=4
+
+COMMON_FLAGS := $(BENCH_FLAGS)
 
 C_SRCDIRS = .
 

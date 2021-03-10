@@ -2,7 +2,9 @@ TARGET := whetstone
 
 NUCLEI_SDK_ROOT = ../../../..
 
-COMMON_FLAGS := -O3 -funroll-loops -fsingle-precision-constant
+BENCH_FLAGS ?= -O3 -funroll-loops -fsingle-precision-constant
+
+COMMON_FLAGS := $(BENCH_FLAGS)
 
 LDFLAGS := -lm
 
