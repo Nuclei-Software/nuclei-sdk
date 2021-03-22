@@ -86,7 +86,7 @@ $(ALL_CXX_OBJS): %.o: % $(COMMON_PREREQS)
 	$(Q)$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 dasm: $(TARGET).elf
-	$(OBJDUMP) -S -D $< > $(TARGET).dump
+	$(OBJDUMP) -S -d $< > $(TARGET).dump
 	$(OBJDUMP) -d $< > $(TARGET).dasm
 	$(OBJCOPY) $< -O ihex $(TARGET).hex
 	$(OBJCOPY) $< -O verilog $(TARGET).verilog
@@ -97,7 +97,7 @@ bin: $(TARGET).elf
 upload: $(TARGET).elf
 	@$(ECHO) "Download and run $<"
 	$(GDB) $< -ex "set remotetimeout 240" \
-	-ex "target remote | $(OPENOCD) --pipe $(OPENOCD_ARGS)" \
+	-ex "target remote $(GDBREMOTE)" \
 	$(GDB_UPLOAD_ARGS) $(GDB_UPLOAD_CMDS)
 
 run_openocd:
