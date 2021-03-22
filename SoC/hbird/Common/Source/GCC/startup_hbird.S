@@ -90,6 +90,7 @@
     .weak  eclic_irq50_handler
 
     .globl vector_base
+    .type vector_base, @object
 vector_base:
 #if defined(DOWNLOAD_MODE) && (DOWNLOAD_MODE != DOWNLOAD_MODE_FLASH)
     j _start                                                /* 0: Reserved, Jump to _start when reset for ILM/FlashXIP mode.*/
@@ -164,7 +165,7 @@ vector_base:
     .section .init
 
     .globl _start
-    .type _start,@function
+    .type _start, @function
 
 /**
  * Reset Handler called on controller reset
