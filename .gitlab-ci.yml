@@ -11,7 +11,7 @@ before_script:
 stages:
     - doc_build
     - doc_deploy
-    - build_hbird_eval
+    - build_nuclei_fpga_eval
     - build_gd32vf103v_eval
     - build_gd32vf103v_rvstar
 
@@ -80,94 +80,94 @@ deploy_website:
     dependencies:
         - build_doc
 
-## Jobs for board hbird_eval
-.build_hbird_eval_job_template: &build_hbird_eval_job_def
-    stage: build_hbird_eval
+## Jobs for board nuclei_fpga_eval
+.build_nuclei_fpga_eval_job_template: &build_nuclei_fpga_eval_job_def
+    stage: build_nuclei_fpga_eval
     tags:
         - env::native
         - host::xls01
     script:
-        - SOC=hbird BOARD=hbird_eval nsdk_build_directory    application
-        - SOC=hbird BOARD=hbird_eval nsdk_build_directory    test
+        - SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    application
+        - SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    test
 
-# Build For HBird Evaluation Board with N307 Core, with Flash, FlashXIP, ILM, DDR Mode
-build_hbird_eval_ilm_n307:
+# Build For Nuclei FPGA Evaluation Board with N307 Core, with Flash, FlashXIP, ILM, DDR Mode
+build_nuclei_fpga_eval_ilm_n307:
     variables:
         DOWNLOAD: "ilm"
         CORE: "n307"
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
-build_hbird_eval_flash_n307:
+build_nuclei_fpga_eval_flash_n307:
     variables:
         DOWNLOAD: "flash"
         CORE: "n307"
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
-build_hbird_eval_flashxip_n307:
+build_nuclei_fpga_eval_flashxip_n307:
     variables:
         DOWNLOAD: "flashxip"
         CORE: "n307"
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
-build_hbird_eval_ddr_n307:
+build_nuclei_fpga_eval_ddr_n307:
     variables:
         DOWNLOAD: "ddr"
         CORE: "n307"
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
 # Build For N205E, with Flash, FlashXIP, ILM, DDR Mode
-build_hbird_eval_ilm_n205e:
+build_nuclei_fpga_eval_ilm_n205e:
     variables:
         DOWNLOAD: "ilm"
         CORE: "n205e"
         FIND_IGNORE: "! -wholename \"*dsp*\""
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
-build_hbird_eval_flash_n205e:
+build_nuclei_fpga_eval_flash_n205e:
     variables:
         DOWNLOAD: "flash"
         CORE: "n205e"
         FIND_IGNORE: "! -wholename \"*dsp*\""
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
-build_hbird_eval_flashxip_n205e:
+build_nuclei_fpga_eval_flashxip_n205e:
     variables:
         DOWNLOAD: "flashxip"
         CORE: "n205e"
         FIND_IGNORE: "! -wholename \"*dsp*\""
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
-build_hbird_eval_ddr_n205e:
+build_nuclei_fpga_eval_ddr_n205e:
     variables:
         DOWNLOAD: "ddr"
         CORE: "n205e"
         FIND_IGNORE: "! -wholename \"*dsp*\""
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
 # Build For NX600, with Flash, FlashXIP, ILM, DDR Mode
-build_hbird_eval_ilm_nx600:
+build_nuclei_fpga_eval_ilm_nx600:
     variables:
         DOWNLOAD: "ilm"
         CORE: "nx600"
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
-build_hbird_eval_ddr_nx600:
+build_nuclei_fpga_eval_ddr_nx600:
     variables:
         DOWNLOAD: "ddr"
         CORE: "nx600"
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
-build_hbird_eval_flash_nx600:
+build_nuclei_fpga_eval_flash_nx600:
     variables:
         DOWNLOAD: "flash"
         CORE: "nx600"
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
-build_hbird_eval_flashxip_nx600:
+build_nuclei_fpga_eval_flashxip_nx600:
     variables:
         DOWNLOAD: "flashxip"
         CORE: "nx600"
-    <<: *build_hbird_eval_job_def
+    <<: *build_nuclei_fpga_eval_job_def
 
 ## Jobs for board gd32vf103v_eval
 .build_gd32vf103v_eval_job_template: &build_gd32vf103v_eval_job_def
