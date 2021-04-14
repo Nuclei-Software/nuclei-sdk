@@ -10,7 +10,7 @@ from building import *
 
 BUILTIN_ALL_DOWNLOADED_MODES = {
     "gd32vf103": ("flashxip"),
-    "hbird": ("ilm", "flash", "flashxip", "ddr")
+    "demosoc": ("ilm", "flash", "flashxip", "ddr")
 }
 
 default_arch_abi = ("rv32imac", "ilp32")
@@ -44,6 +44,14 @@ build_march = getattr(rtconfig, "NUCLEI_SDK_RISCV_ARCH", "").lower().strip()
 build_mabi = getattr(rtconfig, "NUCLEI_SDK_RISCV_ABI", "").lower().strip()
 build_mcmodel = getattr(rtconfig, "NUCLEI_SDK_RISCV_MCMODEL", "medany").lower().strip()
 build_ldscript = getattr(rtconfig, "NUCLEI_SDK_LDSCRIPT", "").lower().strip()
+
+# Backward compatibility with previous Nuclei SDK releases
+if build_soc == "hbird":
+    print("Warning! Since Nuclei SDK 0.3.1, SoC hbird is renamed to demosoc, please change NUCLEI_SDK_SOC to demosoc!")
+    build_soc = "demosoc"
+    if build_board == "hbird_eval":
+        print("Warning! Since Nuclei SDK 0.3.1, Board hbird_eval is renamed to nuclei_fpga_eval, please change NUCLEI_SDK_BOARD to nuclei_fpga_eval!")
+        build_board = "nuclei_fpga_eval"
 
 if not build_march and not build_mabi and build_core in core_arch_abis:
     build_march, build_mabi = core_arch_abis[build_core]
