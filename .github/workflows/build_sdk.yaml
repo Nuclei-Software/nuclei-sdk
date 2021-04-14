@@ -30,7 +30,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-18.04]
-        soc: [hbird, gd32vf103]
+        soc: [demosoc, gd32vf103]
 
     steps:
     - uses: actions/checkout@v2
@@ -59,8 +59,8 @@ jobs:
           cd ..
           echo "NUCLEI_TOOL_ROOT=$(pwd)/prebuilt_tools" > setup_config.sh
 
-    - name: Build SDK for HummingBird SoC
-      if: matrix.soc == 'hbird'
+    - name: Build SDK for Nuclei Demo SoC
+      if: matrix.soc == 'demosoc'
       run: |
         echo "Setup build environment"
         source setup.sh
@@ -69,19 +69,24 @@ jobs:
         touch build.log
         export CORE=n305
         export DOWNLOAD=ilm
-        echo "Build For Board hbird_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application  >> build.log
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test         >> build.log
+        echo "Build For Board nuclei_fpga_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
+        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    application  >> build.log
+        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    test         >> build.log
         export CORE=ux600
         export DOWNLOAD=ddr
-        echo "Build For Board hbird_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application  >> build.log
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test         >> build.log
+        echo "Build For Board nuclei_fpga_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
+        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    application  >> build.log
+        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    test         >> build.log
+        export CORE=ux600fd
+        export DOWNLOAD=flash
+        echo "Build For Board nuclei_fpga_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
+        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    application  >> build.log
+        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    test         >> build.log
         export CORE=n307fd
         export DOWNLOAD=flashxip
-        echo "Build For Board hbird_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    application  >> build.log
-        SOC=hbird BOARD=hbird_eval nsdk_build_directory    test         >> build.log
+        echo "Build For Board nuclei_fpga_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
+        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    application  >> build.log
+        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    test         >> build.log
 
         mv build.log build_${{ matrix.soc }}.log
 
