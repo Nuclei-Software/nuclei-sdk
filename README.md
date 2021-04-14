@@ -41,7 +41,7 @@ $NUCLEI_SDK_ROOT
 │   ├── Makefile.core
 │   ├── Makefile.files
 │   ├── Makefile.files.gd32vf103
-│   ├── Makefile.files.hbird
+│   ├── Makefile.files.demosoc
 │   ├── Makefile.global
 │   ├── Makefile.misc
 │   ├── Makefile.rtos
@@ -51,7 +51,7 @@ $NUCLEI_SDK_ROOT
 │   ├── Makefile.rules
 │   ├── Makefile.soc
 │   ├── Makefile.soc.gd32vf103
-│   └── Makefile.soc.hbird
+│   └── Makefile.soc.demosoc
 ├── doc
 │   ├── build
 │   ├── source
@@ -68,7 +68,7 @@ $NUCLEI_SDK_ROOT
 │   └── RTThread
 ├── SoC
 │   ├── gd32vf103
-│   └── hbird
+│   └── demosoc
 ├── test
 │   ├── core
 │   ├── ctest.h
@@ -98,11 +98,11 @@ $NUCLEI_SDK_ROOT
 
   This directory contains all the supported SoCs for this Nuclei SDK, the directory name for SoC and its boards should always in lower case.
 
-  Here we mainly support Nuclei processor cores running in Hummingbird FPGA evaluation board, the support package placed in *SoC/hbird/*.
+  Here we mainly support Nuclei processor cores running on Nuclei FPGA evaluation board(MCU200T/DDR200T), the support package placed in *SoC/demosoc/*.
 
-  In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/hbird/Common/Include/nuclei_sdk_soc.h*.
+  In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/demosoc/Common/Include/nuclei_sdk_soc.h*.
 
-  In each SoC Board's include directory, *nuclei_sdk_hal.h* must be provided, and include the board header file, for example, *SoC/hbird/Board/hbird_eval/Include/nuclei_sdk_hal.h*.
+  In each SoC Board's include directory, *nuclei_sdk_hal.h* must be provided, and include the board header file, for example, *SoC/demosoc/Board/nuclei_fpga_eval/Include/nuclei_sdk_hal.h*.
 
 * **Build**
 
@@ -203,7 +203,7 @@ $NUCLEI_SDK_ROOT
    * For **Linux**: `source setup.sh`
    * For **Windows**: `setup.bat`
 3. Build and run application.
-   * **Note:** By default, the SoC and Board is set to ``hbird`` and ``hbird_eval``,
+   * **Note:** By default, the SoC and Board is set to ``demosoc`` and ``nuclei_fpga_eval``,
      if you don't pass any **SOC** and **BOARD** variable in Make command,
      it will use the default SoC and Board.
    * Assume that you will run this application -> *application/baremetal/helloworld/*.
@@ -253,12 +253,12 @@ $NUCLEI_SDK_ROOT
 * Pass extra `V=1` to your make command, it will show verbose compiling information, otherwise it will only show basic information. Sample output with extra `V=1`
   ~~~console
   $ make V=1 all
-  Current Configuration: RISCV_ARCH=rv32imafdc RISCV_ABI=ilp32d SOC=hbird BOARD=hbird_eval CORE=n307fd DOWNLOAD=ilm
+  Current Configuration: RISCV_ARCH=rv32imafdc RISCV_ABI=ilp32d SOC=demosoc BOARD=nuclei_fpga_eval CORE=n307fd DOWNLOAD=ilm
   "Assembling : " ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S
-  riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common   -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/  portable/GCC -I../../../SoC/hbird/Board/hbird_eval/Include -I../../../SoC/hbird/Common/Include -MMD -MT ../../../OS/FreeRTOS/Source/  portable/GCC/portasm.S.o -MF ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S.o.d -c -o ../../../OS/FreeRTOS/Source/portable/GCC/  portasm.S.o ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S
-  "Assembling : " ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S
-  riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common   -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/  portable/GCC -I../../../SoC/hbird/Board/hbird_eval/Include -I../../../SoC/hbird/Common/Include -MMD -MT ../../../SoC/hbird/Common/  Source/GCC/intexc_hbird.S.o -MF ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S.o.d -c -o ../../../SoC/hbird/Common/Source/GCC/  intexc_hbird.S.o ../../../SoC/hbird/Common/Source/GCC/intexc_hbird.S
-  "Assembling : " ../../../SoC/hbird/Common/Source/GCC/startup_hbird.S
+  riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common   -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/  portable/GCC -I../../../SoC/demosoc/Board/nuclei_fpga_eval/Include -I../../../SoC/demosoc/Common/Include -MMD -MT ../../../OS/FreeRTOS/Source/  portable/GCC/portasm.S.o -MF ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S.o.d -c -o ../../../OS/FreeRTOS/Source/portable/GCC/  portasm.S.o ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S
+  "Assembling : " ../../../SoC/demosoc/Common/Source/GCC/intexc_demosoc.S
+  riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common   -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/  portable/GCC -I../../../SoC/demosoc/Board/nuclei_fpga_eval/Include -I../../../SoC/demosoc/Common/Include -MMD -MT ../../../SoC/demosoc/Common/  Source/GCC/intexc_demosoc.S.o -MF ../../../SoC/demosoc/Common/Source/GCC/intexc_demosoc.S.o.d -c -o ../../../SoC/demosoc/Common/Source/GCC/  intexc_demosoc.S.o ../../../SoC/demosoc/Common/Source/GCC/intexc_demosoc.S
+  "Assembling : " ../../../SoC/demosoc/Common/Source/GCC/startup_demosoc.S
   ~~~
 
 ## [Contributing](https://doc.nucleisys.com/nuclei_sdk/contribute.html)
