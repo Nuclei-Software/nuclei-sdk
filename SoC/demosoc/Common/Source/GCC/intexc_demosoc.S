@@ -18,7 +18,7 @@
 /******************************************************************************
  * \file     intexc_demosoc.S
  * \brief    NMSIS Interrupt and Exception Handling Template File
- *  for Nuclei HummingBird evaluation SoC which support Nuclei N/NX class cores
+ *  for Nuclei Demo SoC which support Nuclei N/NX class cores
  * \version  V1.00
  * \date     17 Dec 2019
  *

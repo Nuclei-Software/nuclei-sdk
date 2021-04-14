@@ -1,7 +1,7 @@
 /******************************************************************************
  * @file     demosoc.h
  * @brief    NMSIS Core Peripheral Access Layer Header File for
- *           Nuclei HummingBird evaluation SoC which support Nuclei N/NX class cores
+ *           Nuclei Demo SoC which support Nuclei N/NX class cores
  * @version  V1.00
  * @date     22. Nov 2019
  ******************************************************************************/

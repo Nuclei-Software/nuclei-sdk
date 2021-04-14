@@ -18,7 +18,7 @@
 /******************************************************************************
  * \file     startup_demosoc.S
  * \brief    NMSIS Nuclei N/NX Class Core based Core Device Startup File for
- *  Nuclei HummingBird evaluation SoC which support Nuclei N/NX class cores
+ *  Nuclei Demo SoC which support Nuclei N/NX class cores
  * \version  V1.00
  * \date     17. Dec 2019
  *

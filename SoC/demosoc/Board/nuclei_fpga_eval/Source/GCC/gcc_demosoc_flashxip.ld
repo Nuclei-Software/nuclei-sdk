@@ -17,7 +17,7 @@
  */
 /******************************************************************************
  * @file     gcc_demosoc_flashxip.ld
- * @brief    GNU Linker Script for Nuclei N/NX based device in FlashXIP Download Mode
+ * @brief    GNU Linker Script for Nuclei N/NX based device in flashxip Download Mode
  * @version  V1.0.0
  * @date     17. Dec 2019
  ******************************************************************************/
