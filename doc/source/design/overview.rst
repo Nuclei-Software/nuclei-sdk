@@ -41,7 +41,7 @@ Here is the directory structure for this Nuclei SDK.
     │   ├── Makefile.core
     │   ├── Makefile.files
     │   ├── Makefile.files.gd32vf103
-    │   ├── Makefile.files.hbird
+    │   ├── Makefile.files.demosoc
     │   ├── Makefile.global
     │   ├── Makefile.misc
     │   ├── Makefile.rtos
@@ -51,7 +51,7 @@ Here is the directory structure for this Nuclei SDK.
     │   ├── Makefile.rules
     │   ├── Makefile.soc
     │   ├── Makefile.soc.gd32vf103
-    │   └── Makefile.soc.hbird
+    │   └── Makefile.soc.demosoc
     ├── doc
     │   ├── build
     │   ├── source
@@ -68,7 +68,7 @@ Here is the directory structure for this Nuclei SDK.
     │   └── RTThread
     ├── SoC
     │   ├── gd32vf103
-    │   └── hbird
+    │   └── demosoc
     ├── test
     │   ├── core
     │   ├── ctest.h
@@ -99,11 +99,11 @@ Here is the directory structure for this Nuclei SDK.
 
   This directory contains all the supported SoCs for this Nuclei SDK, the directory name for SoC and its boards should always in lower case.
 
-  Here we mainly support Nuclei processor cores running in Hummingbird FPGA evaluation board, the support package placed in *SoC/hbird/*.
+  Here we mainly support Nuclei processor cores running in Nuclei FPGA evaluation board, the support package placed in *SoC/demosoc/*.
 
-  In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/hbird/Common/Include/nuclei_sdk_soc.h*.
+  In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/demosoc/Common/Include/nuclei_sdk_soc.h*.
 
-  In each SoC Board's include directory, *nuclei_sdk_hal.h* must be provided, and include the board header file, for example, *SoC/hbird/Board/hbird_eval/Include/nuclei_sdk_hal.h*.
+  In each SoC Board's include directory, *nuclei_sdk_hal.h* must be provided, and include the board header file, for example, *SoC/demosoc/Board/nuclei_fpga_eval/Include/nuclei_sdk_hal.h*.
 
 * **Build**
 

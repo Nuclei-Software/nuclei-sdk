@@ -23,7 +23,7 @@ Why I can't download application?
     "monitor" command not supported by this target.
 
 Please check whether your driver is installed successfully via replace target `upload` to `run_openocd`
-as the board user manual described, especially, for **RV-STAR** and **HummingBird Evaluation** boards,
+as the board user manual described, especially, for **RV-STAR** and **Nuclei Demo SoC Evaluation** boards,
 For windows, you need to download the **HummingBird Debugger Windows Driver** from
 https://nucleisys.com/developboard.php, and install it.
 
@@ -85,8 +85,8 @@ one FTDI debuggers which has the same VID/PID(0x0403/0x6010) as Nuclei
 Debugger Kit use, then you might need to add extra ``ftdi_device_desc``
 line in the openocd configuration file to describe the FTDI device description.
 
-* For **HummingBird Evaluation Board**, you can check the openocd configuration
-  file in *SoC/hbird/Board/hbird_eval/openocd_hbird.cfg*.
+* For **Nuclei FPGA Evaluation Board**, you can check the openocd configuration
+  file in *SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg*.
 
 * For **Nuclei RVSTAR Board**, you can check the openocd configuration file
   in *SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg*.
@@ -100,7 +100,7 @@ to setup the USB JTAG drivers correctly.
 The windows steps and linux steps are different, please take care.
 
 
-Why the provided application is not running correctly in my HummingBird Evaluation Board?
+Why the provided application is not running correctly in my Nuclei FPGA Evaluation Board?
 -----------------------------------------------------------------------------------------
 
 Please check the following items:
@@ -153,20 +153,20 @@ If you met similar message as below when build an application:
     xxx/bin/ld: region `ilm' overflowed by 43832 bytes
     xxx/bin/ld: region `ram' overflowed by 0 bytes
 
-It is caused by the program is too big, our default link script is 64K ILM, 64K DLM, 4M SPIFlash for Nuclei HummingBird SoC.
+It is caused by the program is too big, our default link script is 64K ILM, 64K DLM, 4M SPIFlash for Nuclei Demo SoC.
 
 If your core has bigger ILM or DLM, you can change related linker script file according to your choice.
 
-For example, if you want to change linker script for hbird_eval ilm download mode:
+For example, if you want to change linker script for nuclei_fpga_eval ilm download mode:
 ``ILM to 512K, DLM to 256K``, then you can change link script file
-``SoC/hbird/Board/hbird_eval/Source/GCC/gcc_hbird_ilm.ld`` as below:
+``SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld`` as below:
 
 .. code-block:: diff
 
-    diff --git a/SoC/hbird/Board/hbird_eval/Source/GCC/gcc_hbird_ilm.ld b/SoC/hbird/Board/hbird_eval/Source/GCC/gcc_hbird_ilm.ld
+    diff --git a/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld b/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
     index 1ac5b90..08451b3 100644
-    --- a/SoC/hbird/Board/hbird_eval/Source/GCC/gcc_hbird_ilm.ld
-    +++ b/SoC/hbird/Board/hbird_eval/Source/GCC/gcc_hbird_ilm.ld
+    --- a/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
+    +++ b/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
     @@ -28,8 +28,8 @@ ENTRY( _start )
      MEMORY
      {

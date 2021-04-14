@@ -75,7 +75,7 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
            mainly ``_write``, ``_read``, ``_sbrk`` stub function
          * The **GCC** folder contains *startup* and *exeception/interrupt* assemble code,
            if your board share the same linker script files, you can also put link script files here,
-           the linker script files name rules can refer to previously supported *hbird* SoC.
+           the linker script files name rules can refer to previously supported *demosoc* SoC.
          * The **nuclei_sdk_soc.h** file is very important, it is a Nuclei SoC Header file used
            by common application which can run accoss different SoC, it should include the SoC device
            header file ``ncstar.h``
@@ -105,7 +105,7 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
            to the SoC, you need to put your linker script here
          * **openocd_ncstar.cfg** file is the board related openocd debug configuration file
          * **ncstar_eval.h** file contains board related definition or APIs and also include
-           the **SoC** header file, you can refer to previously supported board such as ``hbird_eval``
+           the **SoC** header file, you can refer to previously supported board such as ``nuclei_fpga_eval``
          * **nuclei_sdk_hal.h** is very important, it includes the **ncstar_eval.h** header file.
            This file is used in application as entry header file to access board and SoC resources.
 
@@ -174,8 +174,8 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
 .. note::
 
    * You can always refer to previously supported SoCs for reference,
-     such as the ``hbird`` and ``gd32vf103`` SoC.
-   * The ``hbird`` SoC is a FPGA based evaluation platform, it have
+     such as the ``demosoc`` and ``gd32vf103`` SoC.
+   * The ``demosoc`` SoC is a FPGA based evaluation platform, it have
      ``ilm`` and ``dlm``, so it support three
      :ref:`download modes <develop_buildsystem_var_download>`
    * The ``gd32vf103`` SoC is a real silicon chip, it only have RAM and onchip

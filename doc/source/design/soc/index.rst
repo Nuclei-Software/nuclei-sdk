@@ -6,5 +6,5 @@ SoC
 .. toctree::
    :maxdepth: 3
 
-   hbird.rst
+   demosoc.rst
    gd32vf103.rst

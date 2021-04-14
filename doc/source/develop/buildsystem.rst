@@ -31,7 +31,7 @@ The **<NUCLEI_SDK_ROOT>/Build** directory content list as below:
     Makefile.core
     Makefile.files
     Makefile.files.gd32vf103
-    Makefile.files.hbird
+    Makefile.files.demosoc
     Makefile.global  -> Created by user
     Makefile.misc
     Makefile.rtos
@@ -41,7 +41,7 @@ The **<NUCLEI_SDK_ROOT>/Build** directory content list as below:
     Makefile.rules
     Makefile.soc
     Makefile.soc.gd32vf103
-    Makefile.soc.hbird
+    Makefile.soc.demosoc
 
 The file or directory is used explained as below:
 
@@ -144,8 +144,8 @@ This **Makefile.files** file will do the following things:
 
   - **Makefile.files.gd32vf103**: Used to include source code for
     :ref:`design_soc_gd32vf103`
-  - **Makefile.files.hbird**: Used to include source code for
-    :ref:`design_soc_hbird`
+  - **Makefile.files.demosoc**: Used to include source code for
+    :ref:`design_soc_demosoc`
 
 
 .. _develop_buildsystem_makefile_soc:
@@ -160,7 +160,7 @@ It will define the following items:
 
 * **DOWNLOAD** and **CORE** variables
 
-  - For :ref:`design_soc_hbird`, we can support all the modes defined in
+  - For :ref:`design_soc_demosoc`, we can support all the modes defined in
     :ref:`develop_buildsystem_var_download`, and **CORE** list defined in
     :ref:`develop_buildsystem_makefile_core`
   - For :ref:`design_soc_gd32vf103`, The **CORE** is fixed to N205, since
@@ -251,7 +251,7 @@ create the **<NUCLEI_SDK_ROOT>/Build/Makefile.global** as below:
     * If you create the **Makefile.global** like above sample code, you will also be able
       to use Nuclei SDK build system as usually, it will only change the default **SOC**,
       **BOARD** and **DOWNLOAD**, but you can still override the default variable using
-      make command, such as ``make SOC=hbird BOARD=hbird_eval DOWNLOAD=ilm``
+      make command, such as ``make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm``
 
 .. _develop_buildsystem_makefile_local:
 
@@ -375,8 +375,8 @@ Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
      - Reference
    * - gd32vf103
      - :ref:`design_soc_gd32vf103`
-   * - hbird
-     - :ref:`design_soc_hbird`
+   * - demosoc
+     - :ref:`design_soc_demosoc`
 
 .. _develop_buildsystem_var_board:
 
@@ -410,15 +410,15 @@ Currently we support the following SoCs.
 
 .. _table_dev_buildsystem_3:
 
-.. list-table:: Supported Boards when SOC=hbird
+.. list-table:: Supported Boards when SOC=demosoc
    :widths: 10 60
    :header-rows: 1
    :align: center
 
    * - **BOARD**
      - Reference
-   * - hbird_eval
-     - :ref:`design_board_hbird_eval`
+   * - nuclei_fpga_eval
+     - :ref:`design_board_nuclei_fpga_eval`
 
 .. note::
 
@@ -458,8 +458,8 @@ currently it has these modes supported as described in table
 .. note::
 
     * :ref:`design_soc_gd32vf103` only support **DOWNLOAD=flashxip**
-    * :ref:`design_soc_hbird` support all the download modes.
-    * **flashxip** mode in :ref:`design_soc_hbird` is very slow due to
+    * :ref:`design_soc_demosoc` support all the download modes.
+    * **flashxip** mode in :ref:`design_soc_demosoc` is very slow due to
       the CORE frequency is very slow, and flash execution speed is slow
     * **ddr** mode is introduced in release ``0.2.5`` of Nuclei SDK
 
@@ -534,11 +534,11 @@ If you want to change a debug gdb port for openocd and gdb when run ``run_openoc
 For example, if you want to debug application using run_openocd and
 run_gdb and specify a different port other than ``3333``.
 
-You can do it like this, take ``hbird_eval`` board for example, such as port ``3344``:
+You can do it like this, take ``nuclei_fpga_eval`` board for example, such as port ``3344``:
 
-* Open openocd server: ``make SOC=hbird BOARD=hbird_eval CORE=n307 GDB_PORT=3344 run_openocd``
+* Open openocd server: ``make SOC=demosoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_openocd``
 
-* connect gdb with openocd server: ``make SOC=hbird BOARD=hbird_eval CORE=n307 GDB_PORT=3344 run_gdb``
+* connect gdb with openocd server: ``make SOC=demosoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_gdb``
 
 
 .. _develop_buildsystem_var_v:

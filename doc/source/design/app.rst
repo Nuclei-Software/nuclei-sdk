@@ -397,9 +397,9 @@ For more about **NICE** feature, please click `Nuclei User Extended Introduction
     # cd to the demo_dsp directory
     cd application/baremetal/demo_nice
     # Clean the application first
-    make SOC=hbird BOARD=hbird_eval CORE=ux600 clean
+    make SOC=demosoc BOARD=nuclei_fpga_eval CORE=ux600 clean
     # Build and upload the application
-    make SOC=hbird BOARD=hbird_eval CORE=ux600 upload
+    make SOC=demosoc BOARD=nuclei_fpga_eval CORE=ux600 upload
 
 **Expected output as below:**
 
@@ -906,7 +906,7 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 * **RTTHREAD_MSH := 1** is added in its Makefile to include RT-Thread msh component
 * The **RT_TICK_PER_SECOND** in ``rtconfig.h`` is by default set to `200`, you can change it
   to other number according to your requirement.
-* To run this application in :ref:`design_soc_hbird`, the SoC clock frequency must be above 16MHz,
+* To run this application in :ref:`design_soc_demosoc`, the SoC clock frequency must be above 16MHz,
   if run in 8MHz, uart read is not correct due to bit error in uart rx process.
 
 **How to run this application:**
