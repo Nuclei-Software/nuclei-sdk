@@ -4,8 +4,7 @@
 
 int main(void)
 {
-    unsigned int array[ROW_LEN][COL_LEN] = \
-    {
+    unsigned int array[ROW_LEN][COL_LEN] = {
         {10, 30, 90},
         {20, 40, 80},
         {30, 90, 120}
@@ -22,6 +21,8 @@ int main(void)
     __enable_mcycle_counter();
 
     printf("\r\nNuclei Nice Acceleration Demonstration\r\n");
+    printf("Warning: This demo required CPU to implement Nuclei provided NICE Demo instructions.\r\n");
+    printf("         Otherwise this example will trap to cpu core exception!\r\n\r\n");
 
     printf("1. Print input matrix array\r\n");
     print_array(array);
