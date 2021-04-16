@@ -65,7 +65,7 @@ static  INT16U  OSTmrCtr;
 */
 
 #if OS_CPU_HOOKS_EN > 0u
-void  OSInitHookBegin (void)
+void  OSInitHookBegin(void)
 {
 #if OS_TMR_EN > 0u
     OSTmrCtr = 0u;
@@ -88,7 +88,7 @@ void  OSInitHookBegin (void)
 */
 
 #if OS_CPU_HOOKS_EN > 0u
-void  OSInitHookEnd (void)
+void  OSInitHookEnd(void)
 {
 
 }
@@ -108,7 +108,7 @@ void  OSInitHookEnd (void)
 */
 
 #if OS_CPU_HOOKS_EN > 0u
-void  OSTaskCreateHook (OS_TCB  *p_tcb)
+void  OSTaskCreateHook(OS_TCB*  p_tcb)
 {
 #if OS_APP_HOOKS_EN > 0u
     App_TaskCreateHook(p_tcb);
@@ -132,7 +132,7 @@ void  OSTaskCreateHook (OS_TCB  *p_tcb)
 */
 
 #if OS_CPU_HOOKS_EN > 0u
-void  OSTaskDelHook (OS_TCB  *p_tcb)
+void  OSTaskDelHook(OS_TCB*  p_tcb)
 {
 #if OS_APP_HOOKS_EN > 0u
     App_TaskDelHook(p_tcb);
@@ -157,7 +157,7 @@ void  OSTaskDelHook (OS_TCB  *p_tcb)
 */
 
 #if OS_CPU_HOOKS_EN > 0u
-void  OSTaskIdleHook (void)
+void  OSTaskIdleHook(void)
 {
 #if OS_APP_HOOKS_EN > 0u
     App_TaskIdleHook();
@@ -180,7 +180,7 @@ void  OSTaskIdleHook (void)
 */
 
 #if OS_CPU_HOOKS_EN > 0u
-void  OSTaskReturnHook (OS_TCB  *p_tcb)
+void  OSTaskReturnHook(OS_TCB*  p_tcb)
 {
 #if OS_APP_HOOKS_EN > 0u
     App_TaskReturnHook(p_tcb);
@@ -203,7 +203,7 @@ void  OSTaskReturnHook (OS_TCB  *p_tcb)
 */
 
 #if OS_CPU_HOOKS_EN > 0u
-void  OSTaskStatHook (void)
+void  OSTaskStatHook(void)
 {
 #if OS_APP_HOOKS_EN > 0u
     App_TaskStatHook();
@@ -238,7 +238,7 @@ void  OSTaskStatHook (void)
 */
 
 #if (OS_CPU_HOOKS_EN > 0u) && (OS_TASK_SW_HOOK_EN > 0u)
-void  OSTaskSwHook (void)
+void  OSTaskSwHook(void)
 {
 #if OS_APP_HOOKS_EN > 0u
     App_TaskSwHook();
@@ -262,7 +262,7 @@ void  OSTaskSwHook (void)
 */
 
 #if OS_CPU_HOOKS_EN > 0u
-void  OSTCBInitHook (OS_TCB  *p_tcb)
+void  OSTCBInitHook(OS_TCB*  p_tcb)
 {
 #if OS_APP_HOOKS_EN > 0u
     App_TCBInitHook(p_tcb);
@@ -286,7 +286,7 @@ void  OSTCBInitHook (OS_TCB  *p_tcb)
 */
 
 #if (OS_CPU_HOOKS_EN > 0u) && (OS_TIME_TICK_HOOK_EN > 0u)
-void  OSTimeTickHook (void)
+void  OSTimeTickHook(void)
 {
 #if OS_APP_HOOKS_EN > 0u
     App_TimeTickHook();

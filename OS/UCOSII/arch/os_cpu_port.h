@@ -43,17 +43,17 @@ typedef uint64_t TickType_t;
 
 /* Scheduler utilities. */
 #define portYIELD()                                                             \
-{                                                                               \
-    /* Set a software interrupt(SWI) request to request a context switch. */    \
-    SysTimer_SetSWIRQ();                                                        \
-    /* Barriers are normally not required but do ensure the code is completely  \
-    within the specified behaviour for the architecture. */                     \
-    __RWMB();                                                                   \
-}
+    {                                                                               \
+        /* Set a software interrupt(SWI) request to request a context switch. */    \
+        SysTimer_SetSWIRQ();                                                        \
+        /* Barriers are normally not required but do ensure the code is completely  \
+        within the specified behaviour for the architecture. */                     \
+        __RWMB();                                                                   \
+    }
 
 /* Critical section management. */
-extern void vPortEnterCritical( void );
-extern void vPortExitCritical( void );
+extern void vPortEnterCritical(void);
+extern void vPortExitCritical(void);
 
 #define portDISABLE_INTERRUPTS()            vPortRaiseBASEPRI()
 #define portENABLE_INTERRUPTS()             vPortSetBASEPRI(0)
@@ -68,7 +68,7 @@ extern void vPortExitCritical( void );
 #define portINLINE                          __inline
 
 #ifndef portFORCE_INLINE
-    #define portFORCE_INLINE                inline __attribute__(( always_inline))
+#define portFORCE_INLINE                inline __attribute__(( always_inline))
 #endif
 
 /* This variable should not be set in any of the RTOS application
@@ -76,14 +76,14 @@ extern void vPortExitCritical( void );
 extern uint8_t uxMaxSysCallMTH;
 
 /*-----------------------------------------------------------*/
-portFORCE_INLINE static void vPortRaiseBASEPRI( void )
+portFORCE_INLINE static void vPortRaiseBASEPRI(void)
 {
     ECLIC_SetMth(uxMaxSysCallMTH);
     __RWMB();
 }
 
 /*-----------------------------------------------------------*/
-portFORCE_INLINE static uint8_t ulPortRaiseBASEPRI( void )
+portFORCE_INLINE static uint8_t ulPortRaiseBASEPRI(void)
 {
     uint8_t ulOriginalBASEPRI;
 
@@ -97,7 +97,7 @@ portFORCE_INLINE static uint8_t ulPortRaiseBASEPRI( void )
 }
 /*-----------------------------------------------------------*/
 
-portFORCE_INLINE static void vPortSetBASEPRI( uint8_t ulNewMaskValue )
+portFORCE_INLINE static void vPortSetBASEPRI(uint8_t ulNewMaskValue)
 {
     ECLIC_SetMth(ulNewMaskValue);
     __RWMB();

@@ -145,7 +145,7 @@ typedef  uint32_t         OS_CPU_SR;        /* Define size of Machine status reg
 #endif
 
 #ifndef configTICK_RATE_HZ
-    #define configTICK_RATE_HZ  OS_TICKS_PER_SEC
+#define configTICK_RATE_HZ  OS_TICKS_PER_SEC
 #endif
 
 /*
@@ -155,7 +155,7 @@ typedef  uint32_t         OS_CPU_SR;        /* Define size of Machine status reg
 */
 
 #if OS_CRITICAL_METHOD == 3u                      /* See os_cpu_a.S   */
-portFORCE_INLINE OS_CPU_SR OS_CPU_SR_Save (void)
+portFORCE_INLINE OS_CPU_SR OS_CPU_SR_Save(void)
 {
     return __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
 }
@@ -166,8 +166,8 @@ portFORCE_INLINE void OS_CPU_SR_Restore(OS_CPU_SR cpu_sr)
 }
 #endif
 
-void       OSCtxSw          (void);
-void       OSStartHighRdy   (void);
+void       OSCtxSw(void);
+void       OSStartHighRdy(void);
 
 
 /*

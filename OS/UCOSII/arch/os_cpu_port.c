@@ -6,29 +6,29 @@
 //#define ENABLE_KERNEL_DEBUG
 
 #ifdef ENABLE_KERNEL_DEBUG
-    #define UCOSII_PORT_DEBUG(...)                printf(__VA_ARGS__)
+#define UCOSII_PORT_DEBUG(...)                printf(__VA_ARGS__)
 #else
-    #define UCOSII_PORT_DEBUG(...)
+#define UCOSII_PORT_DEBUG(...)
 #endif
 
 #ifndef configASSERT
-	#define configASSERT( x )
-	#define configASSERT_DEFINED 0
+#define configASSERT( x )
+#define configASSERT_DEFINED 0
 #else
-	#define configASSERT_DEFINED 1
+#define configASSERT_DEFINED 1
 #endif
 
 #ifndef configSYSTICK_CLOCK_HZ
-    #define configSYSTICK_CLOCK_HZ                  SOC_TIMER_FREQ
+#define configSYSTICK_CLOCK_HZ                  SOC_TIMER_FREQ
 #endif
 
 #ifndef configKERNEL_INTERRUPT_PRIORITY
-    #define configKERNEL_INTERRUPT_PRIORITY         0
+#define configKERNEL_INTERRUPT_PRIORITY         0
 #endif
 
 #ifndef configMAX_SYSCALL_INTERRUPT_PRIORITY
-    // See function prvCheckMaxSysCallPrio and prvCalcMaxSysCallMTH
-    #define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
+// See function prvCheckMaxSysCallPrio and prvCalcMaxSysCallMTH
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
 #endif
 
 #define SYSTICK_TICK_CONST          (configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ)
@@ -44,9 +44,9 @@
 prvTaskExitError() in case it messes up unwinding of the stack in the
 debugger. */
 #ifdef configTASK_RETURN_ADDRESS
-    #define portTASK_RETURN_ADDRESS configTASK_RETURN_ADDRESS
+#define portTASK_RETURN_ADDRESS configTASK_RETURN_ADDRESS
 #else
-    #define portTASK_RETURN_ADDRESS prvTaskExitError
+#define portTASK_RETURN_ADDRESS prvTaskExitError
 #endif
 
 /*
@@ -54,24 +54,24 @@ debugger. */
  * file is weak to allow application writers to change the timer used to
  * generate the tick interrupt.
  */
-void vPortSetupTimerInterrupt( void );
+void vPortSetupTimerInterrupt(void);
 
 /*
  * Exception handlers.
  */
 #define xPortSysTickHandler     eclic_mtip_handler
 
-void xPortSysTickHandler( void );
+void xPortSysTickHandler(void);
 
 /*
  * Start first task is a separate function so it can be tested in isolation.
  */
-extern void prvPortStartFirstTask( void ) __attribute__ (( naked ));
+extern void prvPortStartFirstTask(void) __attribute__((naked));
 
 /*
  * Used to catch tasks that attempt to return from their implementing function.
  */
-static void prvTaskExitError( void );
+static void prvTaskExitError(void);
 
 
 /*-----------------------------------------------------------*/
@@ -195,12 +195,12 @@ uint8_t uxMaxSysCallMTH = 255;
  * portTASK_RETURN_ADDRESS
  * pxCode
  */
-OS_STK *OSTaskStkInit (void (*task)(void *pd), void *pdata, OS_STK *ptos, INT16U opt)
+OS_STK* OSTaskStkInit(void (*task)(void* pd), void* pdata, OS_STK* ptos, INT16U opt)
 {
     /* Simulate the stack frame as it would be created by a context switch
     interrupt. */
     // Force stack 8byte align for double floating point case
-    OS_STK * pxTopOfStack = (OS_STK *)(((unsigned long)ptos) & (~(unsigned long)(portBYTE_ALIGNMENT-1)));
+    OS_STK* pxTopOfStack = (OS_STK*)(((unsigned long)ptos) & (~(unsigned long)(portBYTE_ALIGNMENT - 1)));
 
     /* Offset added to account for the way the MCU uses the stack on entry/exit
     of interrupts, and to ensure alignment. */
@@ -213,17 +213,17 @@ OS_STK *OSTaskStkInit (void (*task)(void *pd), void *pdata, OS_STK *ptos, INT16U
 #else
     pxTopOfStack -= 6;    /* X11 - X15. */
 #endif
-    *pxTopOfStack = ( StackType_t ) pdata;    /* X10/A0 */
+    *pxTopOfStack = (StackType_t) pdata;      /* X10/A0 */
     pxTopOfStack -= 6; /* X5 - X9 */
-    *pxTopOfStack = ( StackType_t ) portTASK_RETURN_ADDRESS;    /* RA, X1 */
+    *pxTopOfStack = (StackType_t) portTASK_RETURN_ADDRESS;      /* RA, X1 */
 
     pxTopOfStack --;
-    *pxTopOfStack = ( ( StackType_t ) task ) ;    /* PC */
+    *pxTopOfStack = ((StackType_t) task) ;        /* PC */
 
     return pxTopOfStack;
 }
 
-static void prvTaskExitError( void )
+static void prvTaskExitError(void)
 {
     volatile uint32_t ulDummy = 0;
 
@@ -233,10 +233,9 @@ static void prvTaskExitError( void )
 
     Artificially force an assert() to be triggered if configASSERT() is
     defined, then stop here so application writers can catch the error. */
-    configASSERT( uxCriticalNesting == ~0UL );
+    configASSERT(uxCriticalNesting == ~0UL);
     portDISABLE_INTERRUPTS();
-    while( ulDummy == 0 )
-    {
+    while (ulDummy == 0) {
         /* This file calls prvTaskExitError() after the scheduler has been
         started to remove a compiler warning about the function being defined
         but never called.  ulDummy is used purely to quieten other warnings
@@ -251,7 +250,7 @@ static void prvTaskExitError( void )
 
 /*-----------------------------------------------------------*/
 
-static uint8_t prvCheckMaxSysCallPrio( uint8_t max_syscall_prio )
+static uint8_t prvCheckMaxSysCallPrio(uint8_t max_syscall_prio)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = __ECLIC_INTCTLBITS;
@@ -263,14 +262,14 @@ static uint8_t prvCheckMaxSysCallPrio( uint8_t max_syscall_prio )
         lvlbits = intctlbits;
     }
 
-    temp = ((1<<lvlbits) - 1);
+    temp = ((1 << lvlbits) - 1);
     if (max_syscall_prio > temp) {
         max_syscall_prio = temp;
     }
     return max_syscall_prio;
 }
 
-static uint8_t prvCalcMaxSysCallMTH( uint8_t max_syscall_prio )
+static uint8_t prvCalcMaxSysCallMTH(uint8_t max_syscall_prio)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = __ECLIC_INTCTLBITS;
@@ -286,12 +285,12 @@ static uint8_t prvCalcMaxSysCallMTH( uint8_t max_syscall_prio )
 
     lfabits = 8 - lvlbits;
 
-    temp = ((1<<lvlbits) - 1);
+    temp = ((1 << lvlbits) - 1);
     if (max_syscall_prio > temp) {
         max_syscall_prio = temp;
     }
 
-    maxsyscallmth = (max_syscall_prio << lfabits) | ((1<<lfabits) - 1);
+    maxsyscallmth = (max_syscall_prio << lfabits) | ((1 << lfabits) - 1);
 
     return maxsyscallmth;
 }
@@ -299,10 +298,10 @@ static uint8_t prvCalcMaxSysCallMTH( uint8_t max_syscall_prio )
 /*
  * See header file for description.
  */
-void OSStartHighRdy (void)
+void OSStartHighRdy(void)
 {
     /* configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0. */
-    configASSERT( configMAX_SYSCALL_INTERRUPT_PRIORITY );
+    configASSERT(configMAX_SYSCALL_INTERRUPT_PRIORITY);
 
     /* Get the real MTH should be set to ECLIC MTH register */
     uxMaxSysCallMTH = prvCalcMaxSysCallMTH(configMAX_SYSCALL_INTERRUPT_PRIORITY);
@@ -338,15 +337,15 @@ void OSStartHighRdy (void)
 }
 /*-----------------------------------------------------------*/
 
-void vPortEndScheduler( void )
+void vPortEndScheduler(void)
 {
     /* Not implemented in ports where there is nothing to return to.
     Artificially force an assert. */
-    configASSERT( uxCriticalNesting == 1000UL );
+    configASSERT(uxCriticalNesting == 1000UL);
 }
 /*-----------------------------------------------------------*/
 
-void vPortEnterCritical( void )
+void vPortEnterCritical(void)
 {
     portDISABLE_INTERRUPTS();
     uxCriticalNesting++;
@@ -356,30 +355,28 @@ void vPortEnterCritical( void )
     functions that end in "FromISR" can be used in an interrupt.  Only assert if
     the critical nesting count is 1 to protect against recursive calls if the
     assert function also uses a critical section. */
-    if( uxCriticalNesting == 1 )
-    {
-        configASSERT( ( __ECLIC_GetMth() & portMTH_MASK ) == uxMaxSysCallMTH );
+    if (uxCriticalNesting == 1) {
+        configASSERT((__ECLIC_GetMth() & portMTH_MASK) == uxMaxSysCallMTH);
     }
 }
 /*-----------------------------------------------------------*/
 
-void vPortExitCritical( void )
+void vPortExitCritical(void)
 {
-    configASSERT( uxCriticalNesting );
+    configASSERT(uxCriticalNesting);
     uxCriticalNesting--;
-    if( uxCriticalNesting == 0 )
-    {
+    if (uxCriticalNesting == 0) {
         portENABLE_INTERRUPTS();
     }
 }
 /*-----------------------------------------------------------*/
 
-void vPortAssert( int32_t x )
+void vPortAssert(int32_t x)
 {
     if ((x) == 0) {
         portDISABLE_INTERRUPTS();
 
-        while(1) {
+        while (1) {
             /* Sleep and wait for interrupt */
             __WFI();
         };
@@ -388,7 +385,7 @@ void vPortAssert( int32_t x )
 /*-----------------------------------------------------------*/
 
 
-void xPortTaskSwitch( void )
+void xPortTaskSwitch(void)
 {
     portDISABLE_INTERRUPTS();
     /* Clear Software IRQ, A MUST */
@@ -416,7 +413,7 @@ void xPortTaskSwitch( void )
 *              overridden by the kernel port with same prototype
 *********************************************************************************************************
 */
-void xPortSysTickHandler( void )
+void xPortSysTickHandler(void)
 {
 #if OS_CRITICAL_METHOD == 3u                   /* Allocate storage for CPU status register             */
     OS_CPU_SR cpu_sr;
@@ -441,7 +438,7 @@ void xPortSysTickHandler( void )
  * Setup the systick timer to generate the tick interrupts at the required
  * frequency.
  */
-__attribute__(( weak )) void vPortSetupTimerInterrupt( void )
+__attribute__((weak)) void vPortSetupTimerInterrupt(void)
 {
     TickType_t ticks = SYSTICK_TICK_CONST;
 
