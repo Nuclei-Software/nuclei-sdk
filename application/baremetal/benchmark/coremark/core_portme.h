@@ -6,7 +6,7 @@
 //#define FLAGS_STR "-O3 -fno-common -funroll-loops -finline-functions  -falign-functions=4 -falign-jumps=4 -falign-loops=4 -funswitch-loops -fpeel-loops -fgcse-sm -fgcse-las"
 //#define FLAGS_STR "-O2 -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4"
 #ifndef FLAGS_STR
-    #define FLAGS_STR "-O2 -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4"
+#define FLAGS_STR "-O2 -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4"
 #endif
 
 #ifndef PERFORMANCE_RUN
@@ -70,8 +70,8 @@
 #define default_num_contexts MULTITHREAD
 
 typedef int core_portable;
-static void portable_init(core_portable *p, int *argc, char *argv[]) {}
-static void portable_fini(core_portable *p) {}
+static void portable_init(core_portable* p, int* argc, char* argv[]) {}
+static void portable_fini(core_portable* p) {}
 
 #if !defined(PROFILE_RUN) && !defined(PERFORMANCE_RUN) && !defined(VALIDATION_RUN)
 #if (TOTAL_DATA_SIZE==1200)

@@ -23,7 +23,7 @@ OS_STK start_stk[STK_LEN];
 #define TASK3_PRIO 11
 #define TASK_START_PRIO 10
 
-void task1(void *args)
+void task1(void* args)
 {
     int cnt = 0;
     for (;;) {
@@ -33,7 +33,7 @@ void task1(void *args)
     }
 }
 
-void task2(void *args)
+void task2(void* args)
 {
     int cnt = 0;
     for (;;) {
@@ -43,7 +43,7 @@ void task2(void *args)
     }
 }
 
-void task3(void *args)
+void task3(void* args)
 {
     int cnt = 0;
     for (;;) {
@@ -53,7 +53,7 @@ void task3(void *args)
     }
 }
 
-void start_task(void *args)
+void start_task(void* args)
 {
     printf("start all task...\r\n");
     OSTaskCreate(task1, NULL, &task1_stk[STK_LEN - 1], TASK1_PRIO);

@@ -5,16 +5,16 @@
 
 long csr_cycle(void)
 {
-  return __get_rv_cycle();
+    return __get_rv_cycle();
 }
 
 long csr_instret(void)
 {
-  return __get_rv_instret();
+    return __get_rv_instret();
 }
 
 long time(void)
 {
-  return SysTimer_GetLoadValue() / SOC_TIMER_FREQ;
+    return SysTimer_GetLoadValue() / SOC_TIMER_FREQ;
 }
 

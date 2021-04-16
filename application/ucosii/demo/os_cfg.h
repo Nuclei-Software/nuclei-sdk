@@ -29,7 +29,7 @@
 #define OS_CFG_H
 
 
-                                       /* ---------------------- MISCELLANEOUS ----------------------- */
+/* ---------------------- MISCELLANEOUS ----------------------- */
 #define OS_APP_HOOKS_EN           1u   /* Application-defined hooks are called from the uC/OS-II hooks */
 #define OS_ARG_CHK_EN             1u   /* Enable (1) or Disable (0) argument checking                  */
 #define OS_CPU_HOOKS_EN           1u   /* uC/OS-II hooks are found in the processor port files         */
@@ -40,7 +40,7 @@
 #define OS_EVENT_NAME_EN          1u   /* Enable names for Sem, Mutex, Mbox and Q                      */
 
 #define OS_LOWEST_PRIO           63u   /* Defines the lowest priority that can be assigned ...         */
-                                       /* ... MUST NEVER be higher than 254!                           */
+/* ... MUST NEVER be higher than 254!                           */
 
 #define OS_MAX_EVENTS            10u   /* Max. number of event control blocks in your application      */
 #define OS_MAX_FLAGS              5u   /* Max. number of Event Flag Groups    in your application      */
@@ -56,13 +56,13 @@
 #define OS_TLS_TBL_SIZE           0u   /* Size of Thread-Local Storage Table                           */
 
 
-                                       /* --------------------- TASK STACK SIZE ---------------------- */
+/* --------------------- TASK STACK SIZE ---------------------- */
 #define OS_TASK_TMR_STK_SIZE    128u   /* Timer      task stack size (# of OS_STK wide entries)        */
 #define OS_TASK_STAT_STK_SIZE   128u   /* Statistics task stack size (# of OS_STK wide entries)        */
 #define OS_TASK_IDLE_STK_SIZE   128u   /* Idle       task stack size (# of OS_STK wide entries)        */
 
 
-                                       /* --------------------- TASK MANAGEMENT ---------------------- */
+/* --------------------- TASK MANAGEMENT ---------------------- */
 #define OS_TASK_CHANGE_PRIO_EN    1u   /*     Include code for OSTaskChangePrio()                      */
 #define OS_TASK_CREATE_EN         1u   /*     Include code for OSTaskCreate()                          */
 #define OS_TASK_CREATE_EXT_EN     1u   /*     Include code for OSTaskCreateExt()                       */
@@ -77,7 +77,7 @@
 #define OS_TASK_SW_HOOK_EN        1u   /*     Include code for OSTaskSwHook()                          */
 
 
-                                       /* ----------------------- EVENT FLAGS ------------------------ */
+/* ----------------------- EVENT FLAGS ------------------------ */
 #define OS_FLAG_EN                1u   /* Enable (1) or Disable (0) code generation for EVENT FLAGS    */
 #define OS_FLAG_ACCEPT_EN         1u   /*     Include code for OSFlagAccept()                          */
 #define OS_FLAG_DEL_EN            1u   /*     Include code for OSFlagDel()                             */
@@ -87,7 +87,7 @@
 #define OS_FLAGS_NBITS           16u   /* Size in #bits of OS_FLAGS data type (8, 16 or 32)            */
 
 
-                                       /* -------------------- MESSAGE MAILBOXES --------------------- */
+/* -------------------- MESSAGE MAILBOXES --------------------- */
 #define OS_MBOX_EN                1u   /* Enable (1) or Disable (0) code generation for MAILBOXES      */
 #define OS_MBOX_ACCEPT_EN         1u   /*     Include code for OSMboxAccept()                          */
 #define OS_MBOX_DEL_EN            1u   /*     Include code for OSMboxDel()                             */
@@ -97,20 +97,20 @@
 #define OS_MBOX_QUERY_EN          1u   /*     Include code for OSMboxQuery()                           */
 
 
-                                       /* --------------------- MEMORY MANAGEMENT -------------------- */
+/* --------------------- MEMORY MANAGEMENT -------------------- */
 #define OS_MEM_EN                 1u   /* Enable (1) or Disable (0) code generation for MEMORY MANAGER */
 #define OS_MEM_NAME_EN            1u   /*     Enable memory partition names                            */
 #define OS_MEM_QUERY_EN           1u   /*     Include code for OSMemQuery()                            */
 
 
-                                       /* ---------------- MUTUAL EXCLUSION SEMAPHORES --------------- */
+/* ---------------- MUTUAL EXCLUSION SEMAPHORES --------------- */
 #define OS_MUTEX_EN               1u   /* Enable (1) or Disable (0) code generation for MUTEX          */
 #define OS_MUTEX_ACCEPT_EN        1u   /*     Include code for OSMutexAccept()                         */
 #define OS_MUTEX_DEL_EN           1u   /*     Include code for OSMutexDel()                            */
 #define OS_MUTEX_QUERY_EN         1u   /*     Include code for OSMutexQuery()                          */
 
 
-                                       /* ---------------------- MESSAGE QUEUES ---------------------- */
+/* ---------------------- MESSAGE QUEUES ---------------------- */
 #define OS_Q_EN                   1u   /* Enable (1) or Disable (0) code generation for QUEUES         */
 #define OS_Q_ACCEPT_EN            1u   /*     Include code for OSQAccept()                             */
 #define OS_Q_DEL_EN               1u   /*     Include code for OSQDel()                                */
@@ -122,7 +122,7 @@
 #define OS_Q_QUERY_EN             1u   /*     Include code for OSQQuery()                              */
 
 
-                                       /* ------------------------ SEMAPHORES ------------------------ */
+/* ------------------------ SEMAPHORES ------------------------ */
 #define OS_SEM_EN                 1u   /* Enable (1) or Disable (0) code generation for SEMAPHORES     */
 #define OS_SEM_ACCEPT_EN          1u   /*    Include code for OSSemAccept()                            */
 #define OS_SEM_DEL_EN             1u   /*    Include code for OSSemDel()                               */
@@ -131,14 +131,14 @@
 #define OS_SEM_SET_EN             1u   /*    Include code for OSSemSet()                               */
 
 
-                                       /* --------------------- TIME MANAGEMENT ---------------------- */
+/* --------------------- TIME MANAGEMENT ---------------------- */
 #define OS_TIME_DLY_HMSM_EN       1u   /*     Include code for OSTimeDlyHMSM()                         */
 #define OS_TIME_DLY_RESUME_EN     1u   /*     Include code for OSTimeDlyResume()                       */
 #define OS_TIME_GET_SET_EN        1u   /*     Include code for OSTimeGet() and OSTimeSet()             */
 #define OS_TIME_TICK_HOOK_EN      1u   /*     Include code for OSTimeTickHook()                        */
 
 
-                                       /* --------------------- TIMER MANAGEMENT --------------------- */
+/* --------------------- TIMER MANAGEMENT --------------------- */
 #define OS_TMR_EN                 1u   /* Enable (1) or Disable (0) code generation for TIMERS         */
 #define OS_TMR_CFG_MAX           16u   /*     Maximum number of timers                                 */
 #define OS_TMR_CFG_NAME_EN        1u   /*     Determine timer names                                    */
@@ -146,7 +146,7 @@
 #define OS_TMR_CFG_TICKS_PER_SEC 10u   /*     Rate at which timer management task runs (Hz)            */
 
 
-                                       /* ---------------------- TRACE RECORDER ---------------------- */
+/* ---------------------- TRACE RECORDER ---------------------- */
 #define OS_TRACE_EN               0u   /* Enable (1) or Disable (0) uC/OS-II Trace instrumentation     */
 #define OS_TRACE_API_ENTER_EN     0u   /* Enable (1) or Disable (0) uC/OS-II Trace API enter instrum.  */
 #define OS_TRACE_API_EXIT_EN      0u   /* Enable (1) or Disable (0) uC/OS-II Trace API exit  instrum.  */

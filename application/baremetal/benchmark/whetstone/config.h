@@ -12,18 +12,18 @@
  */
 
 #if __riscv_flen == 64
-    #define SPDP double
-    #define Precision "Double"
+#define SPDP double
+#define Precision "Double"
 #else //__riscv_flen == 32
-    #define SPDP float
-    #define Precision "Single"
+#define SPDP float
+#define Precision "Single"
 
-    #define atan    atanf
-    #define sin     sinf
-    #define cos     cosf
-    #define sqrt    sqrtf
-    #define exp     expf
-    #define log     logf
+#define atan    atanf
+#define sin     sinf
+#define cos     cosf
+#define sqrt    sqrtf
+#define exp     expf
+#define log     logf
 #endif
 
 

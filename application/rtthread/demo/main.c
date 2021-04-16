@@ -23,7 +23,7 @@ static rt_uint8_t thread_stack[THREAD_NUM][THREAD_STACK_SIZE];
 static struct rt_thread tid[THREAD_NUM];
 
 /* Thread entry function */
-static void thread_entry(void *parameter)
+static void thread_entry(void* parameter)
 {
     rt_uint32_t count = 0;
 
@@ -39,8 +39,8 @@ int create_thread_demo(void)
     int i;
     for (i = 0; i < THREAD_NUM; i ++) {
         /* Create static threads */
-        rt_thread_init(&tid[i], "thread", thread_entry, (void *)i, thread_stack[i],
-                   THREAD_STACK_SIZE, THREAD_PRIORITY, THREAD_TIMESLICE);
+        rt_thread_init(&tid[i], "thread", thread_entry, (void*)i, thread_stack[i],
+                       THREAD_STACK_SIZE, THREAD_PRIORITY, THREAD_TIMESLICE);
     }
 
     /* Startup threads  */

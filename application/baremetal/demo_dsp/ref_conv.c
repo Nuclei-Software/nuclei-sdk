@@ -1,7 +1,7 @@
 #include "ref_conv.h"
 
-void ref_conv_f32(float32_t *pSrcA, uint32_t srcALen, float32_t *pSrcB,
-                  uint32_t srcBLen, float32_t *pDst)
+void ref_conv_f32(float32_t* pSrcA, uint32_t srcALen, float32_t* pSrcB,
+                  uint32_t srcBLen, float32_t* pDst)
 {
     float32_t sum; /* Accumulator */
     uint32_t i, j; /* loop counters */
@@ -24,9 +24,9 @@ void ref_conv_f32(float32_t *pSrcA, uint32_t srcALen, float32_t *pSrcB,
     }
 }
 
-riscv_status ref_conv_partial_f32(float32_t *pSrcA, uint32_t srcALen,
-                                  float32_t *pSrcB, uint32_t srcBLen,
-                                  float32_t *pDst, uint32_t firstIndex,
+riscv_status ref_conv_partial_f32(float32_t* pSrcA, uint32_t srcALen,
+                                  float32_t* pSrcB, uint32_t srcBLen,
+                                  float32_t* pDst, uint32_t firstIndex,
                                   uint32_t numPoints)
 {
     ref_conv_f32(pSrcA, srcALen, pSrcB, srcBLen, pDst);
@@ -34,8 +34,8 @@ riscv_status ref_conv_partial_f32(float32_t *pSrcA, uint32_t srcALen,
     return RISCV_MATH_SUCCESS;
 }
 
-void ref_conv_q31(q31_t *pSrcA, uint32_t srcALen, q31_t *pSrcB,
-                  uint32_t srcBLen, q31_t *pDst)
+void ref_conv_q31(q31_t* pSrcA, uint32_t srcALen, q31_t* pSrcB,
+                  uint32_t srcBLen, q31_t* pDst)
 {
     q63_t sum;     /* Accumulator */
     uint32_t i, j; /* loop counter */
@@ -60,8 +60,8 @@ void ref_conv_q31(q31_t *pSrcA, uint32_t srcALen, q31_t *pSrcB,
     }
 }
 
-void ref_conv_fast_q31(q31_t *pSrcA, uint32_t srcALen, q31_t *pSrcB,
-                       uint32_t srcBLen, q31_t *pDst)
+void ref_conv_fast_q31(q31_t* pSrcA, uint32_t srcALen, q31_t* pSrcB,
+                       uint32_t srcBLen, q31_t* pDst)
 {
     q31_t sum;     /* Accumulator */
     uint32_t i, j; /* loop counter */
@@ -78,8 +78,8 @@ void ref_conv_fast_q31(q31_t *pSrcA, uint32_t srcALen, q31_t *pSrcB,
             if ((i - j < srcBLen) && (j < srcALen)) {
                 /* z[i] += x[i-j] * y[j] */
                 sum = (q31_t)(
-                    (((q63_t)sum << 32) + ((q63_t)pSrcA[j] * pSrcB[i - j])) >>
-                    32);
+                          (((q63_t)sum << 32) + ((q63_t)pSrcA[j] * pSrcB[i - j])) >>
+                          32);
             }
         }
 
@@ -88,8 +88,8 @@ void ref_conv_fast_q31(q31_t *pSrcA, uint32_t srcALen, q31_t *pSrcB,
     }
 }
 
-riscv_status ref_conv_partial_q31(q31_t *pSrcA, uint32_t srcALen, q31_t *pSrcB,
-                                  uint32_t srcBLen, q31_t *pDst,
+riscv_status ref_conv_partial_q31(q31_t* pSrcA, uint32_t srcALen, q31_t* pSrcB,
+                                  uint32_t srcBLen, q31_t* pDst,
                                   uint32_t firstIndex, uint32_t numPoints)
 {
     ref_conv_q31(pSrcA, srcALen, pSrcB, srcBLen, pDst);
@@ -97,9 +97,9 @@ riscv_status ref_conv_partial_q31(q31_t *pSrcA, uint32_t srcALen, q31_t *pSrcB,
     return RISCV_MATH_SUCCESS;
 }
 
-riscv_status ref_conv_partial_fast_q31(q31_t *pSrcA, uint32_t srcALen,
-                                       q31_t *pSrcB, uint32_t srcBLen,
-                                       q31_t *pDst, uint32_t firstIndex,
+riscv_status ref_conv_partial_fast_q31(q31_t* pSrcA, uint32_t srcALen,
+                                       q31_t* pSrcB, uint32_t srcBLen,
+                                       q31_t* pDst, uint32_t firstIndex,
                                        uint32_t numPoints)
 {
     ref_conv_fast_q31(pSrcA, srcALen, pSrcB, srcBLen, pDst);
@@ -107,8 +107,8 @@ riscv_status ref_conv_partial_fast_q31(q31_t *pSrcA, uint32_t srcALen,
     return RISCV_MATH_SUCCESS;
 }
 
-void ref_conv_q15(q15_t *pSrcA, uint32_t srcALen, q15_t *pSrcB,
-                  uint32_t srcBLen, q15_t *pDst)
+void ref_conv_q15(q15_t* pSrcA, uint32_t srcALen, q15_t* pSrcB,
+                  uint32_t srcBLen, q15_t* pDst)
 {
     q63_t sum;     /* Accumulator */
     uint32_t i, j; /* loop counter */
@@ -133,11 +133,11 @@ void ref_conv_q15(q15_t *pSrcA, uint32_t srcALen, q15_t *pSrcB,
     }
 }
 
-riscv_status ref_conv_partial_fast_opt_q15(q15_t *pSrcA, uint32_t srcALen,
-                                           q15_t *pSrcB, uint32_t srcBLen,
-                                           q15_t *pDst, uint32_t firstIndex,
-                                           uint32_t numPoints, q15_t *pScratch1,
-                                           q15_t *pScratch2)
+riscv_status ref_conv_partial_fast_opt_q15(q15_t* pSrcA, uint32_t srcALen,
+                                           q15_t* pSrcB, uint32_t srcBLen,
+                                           q15_t* pDst, uint32_t firstIndex,
+                                           uint32_t numPoints, q15_t* pScratch1,
+                                           q15_t* pScratch2)
 {
     q31_t sum;     /* Accumulator */
     uint32_t i, j; /* loop counter */
@@ -164,8 +164,8 @@ riscv_status ref_conv_partial_fast_opt_q15(q15_t *pSrcA, uint32_t srcALen,
     return RISCV_MATH_SUCCESS;
 }
 
-void ref_conv_fast_q15(q15_t *pSrcA, uint32_t srcALen, q15_t *pSrcB,
-                       uint32_t srcBLen, q15_t *pDst)
+void ref_conv_fast_q15(q15_t* pSrcA, uint32_t srcALen, q15_t* pSrcB,
+                       uint32_t srcBLen, q15_t* pDst)
 {
     q31_t sum;     /* Accumulator */
     uint32_t i, j; /* loop counter */
@@ -190,9 +190,9 @@ void ref_conv_fast_q15(q15_t *pSrcA, uint32_t srcALen, q15_t *pSrcB,
     }
 }
 
-void ref_conv_fast_opt_q15(q15_t *pSrcA, uint32_t srcALen, q15_t *pSrcB,
-                           uint32_t srcBLen, q15_t *pDst, q15_t *pScratch1,
-                           q15_t *pScratch2)
+void ref_conv_fast_opt_q15(q15_t* pSrcA, uint32_t srcALen, q15_t* pSrcB,
+                           uint32_t srcBLen, q15_t* pDst, q15_t* pScratch1,
+                           q15_t* pScratch2)
 {
     q31_t sum;     /* Accumulator */
     uint32_t i, j; /* loop counter */
@@ -217,8 +217,8 @@ void ref_conv_fast_opt_q15(q15_t *pSrcA, uint32_t srcALen, q15_t *pSrcB,
     }
 }
 
-riscv_status ref_conv_partial_q15(q15_t *pSrcA, uint32_t srcALen, q15_t *pSrcB,
-                                  uint32_t srcBLen, q15_t *pDst,
+riscv_status ref_conv_partial_q15(q15_t* pSrcA, uint32_t srcALen, q15_t* pSrcB,
+                                  uint32_t srcBLen, q15_t* pDst,
                                   uint32_t firstIndex, uint32_t numPoints)
 {
     ref_conv_q15(pSrcA, srcALen, pSrcB, srcBLen, pDst);
@@ -226,9 +226,9 @@ riscv_status ref_conv_partial_q15(q15_t *pSrcA, uint32_t srcALen, q15_t *pSrcB,
     return RISCV_MATH_SUCCESS;
 }
 
-riscv_status ref_conv_partial_fast_q15(q15_t *pSrcA, uint32_t srcALen,
-                                       q15_t *pSrcB, uint32_t srcBLen,
-                                       q15_t *pDst, uint32_t firstIndex,
+riscv_status ref_conv_partial_fast_q15(q15_t* pSrcA, uint32_t srcALen,
+                                       q15_t* pSrcB, uint32_t srcBLen,
+                                       q15_t* pDst, uint32_t firstIndex,
                                        uint32_t numPoints)
 {
     ref_conv_fast_q15(pSrcA, srcALen, pSrcB, srcBLen, pDst);
@@ -236,8 +236,8 @@ riscv_status ref_conv_partial_fast_q15(q15_t *pSrcA, uint32_t srcALen,
     return RISCV_MATH_SUCCESS;
 }
 
-void ref_conv_q7(q7_t *pSrcA, uint32_t srcALen, q7_t *pSrcB, uint32_t srcBLen,
-                 q7_t *pDst)
+void ref_conv_q7(q7_t* pSrcA, uint32_t srcALen, q7_t* pSrcB, uint32_t srcBLen,
+                 q7_t* pDst)
 {
     q31_t sum;     /* Accumulator */
     uint32_t i, j; /* loop counter */
@@ -262,8 +262,8 @@ void ref_conv_q7(q7_t *pSrcA, uint32_t srcALen, q7_t *pSrcB, uint32_t srcBLen,
     }
 }
 
-riscv_status ref_conv_partial_q7(q7_t *pSrcA, uint32_t srcALen, q7_t *pSrcB,
-                                 uint32_t srcBLen, q7_t *pDst,
+riscv_status ref_conv_partial_q7(q7_t* pSrcA, uint32_t srcALen, q7_t* pSrcB,
+                                 uint32_t srcBLen, q7_t* pDst,
                                  uint32_t firstIndex, uint32_t numPoints)
 {
     ref_conv_q7(pSrcA, srcALen, pSrcB, srcBLen, pDst);

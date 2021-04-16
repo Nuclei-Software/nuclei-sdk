@@ -1,16 +1,16 @@
 #include "ref_common.h"
 
-float riscv_snr_f32(float *pRef, float *pTest, uint32_t buffSize)
+float riscv_snr_f32(float* pRef, float* pTest, uint32_t buffSize)
 {
     float EnergySignal = 0.0, EnergyError = 0.0;
     uint32_t i;
     float SNR;
     int temp;
-    int *test;
+    int* test;
 
     for (i = 0; i < buffSize; i++) {
         /* Checking for a NAN value in pRef array */
-        test = (int *)(&pRef[i]);
+        test = (int*)(&pRef[i]);
         temp = *test;
 
         if (temp == 0x7FC00000) {
@@ -18,7 +18,7 @@ float riscv_snr_f32(float *pRef, float *pTest, uint32_t buffSize)
         }
 
         /* Checking for a NAN value in pTest array */
-        test = (int *)(&pTest[i]);
+        test = (int*)(&pTest[i]);
         temp = *test;
 
         if (temp == 0x7FC00000) {
@@ -29,7 +29,7 @@ float riscv_snr_f32(float *pRef, float *pTest, uint32_t buffSize)
     }
 
     /* Checking for a NAN value in EnergyError */
-    test = (int *)(&EnergyError);
+    test = (int*)(&EnergyError);
     temp = *test;
 
     if (temp == 0x7FC00000) {
@@ -41,7 +41,7 @@ float riscv_snr_f32(float *pRef, float *pTest, uint32_t buffSize)
     return (SNR);
 }
 
-float32_t ref_detrm(float32_t *pSrc, float32_t *temp, uint32_t size)
+float32_t ref_detrm(float32_t* pSrc, float32_t* temp, uint32_t size)
 {
     float32_t s = 1, det = 0;
     int i, j, m, n, c;
@@ -81,7 +81,7 @@ float32_t ref_detrm(float32_t *pSrc, float32_t *temp, uint32_t size)
     return (det);
 }
 
-void ref_cofact(float32_t *pSrc, float32_t *pDst, float32_t *temp,
+void ref_cofact(float32_t* pSrc, float32_t* pDst, float32_t* temp,
                 uint32_t size)
 {
     int p, q, m, n, i, j;
@@ -120,7 +120,7 @@ void ref_cofact(float32_t *pSrc, float32_t *pDst, float32_t *temp,
     }
 }
 
-float64_t ref_detrm64(float64_t *pSrc, float64_t *temp, uint32_t size)
+float64_t ref_detrm64(float64_t* pSrc, float64_t* temp, uint32_t size)
 {
     float64_t s = 1, det = 0;
     int i, j, m, n, c;
@@ -160,7 +160,7 @@ float64_t ref_detrm64(float64_t *pSrc, float64_t *temp, uint32_t size)
     return (det);
 }
 
-void ref_cofact64(float64_t *pSrc, float64_t *pDst, float64_t *temp,
+void ref_cofact64(float64_t* pSrc, float64_t* pDst, float64_t* temp,
                   uint32_t size)
 {
     int p, q, m, n, i, j;

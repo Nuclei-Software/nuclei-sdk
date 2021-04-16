@@ -191,7 +191,7 @@
 void whetstones(long xtra, long x100, int calibrate);
 void pa(SPDP e[4], SPDP t, SPDP t2);
 void po(SPDP e1[4], long j, long k, long l);
-void p3(SPDP *x, SPDP *y, SPDP *z, SPDP t, SPDP t1, SPDP t2);
+void p3(SPDP* x, SPDP* y, SPDP* z, SPDP t, SPDP t1, SPDP t2);
 void pout(char title[22], float ops, int type, SPDP checknum, SPDP time,
           int calibrate, int section);
 
@@ -241,10 +241,12 @@ int main()
         }
     } while (count > 0);
 
-    if (TimeUsed > 0)
+    if (TimeUsed > 0) {
         xtra = (long)((SPDP)(duration * xtra) / TimeUsed);
-    if (xtra < 1)
+    }
+    if (xtra < 1) {
         xtra = 1;
+    }
 
     calibrate = 0;
 
@@ -276,8 +278,9 @@ int main()
     printf("\nMWIPS/MHz        ");
 
     printf("%39.3f%19.3f\n\n", mwips / SystemCoreClock * 1000000, TimeUsed);
-    if (Check == 0)
+    if (Check == 0) {
         printf("Wrong answer  ");
+    }
 
     return 0;
 }
@@ -353,18 +356,21 @@ void whetstones(long xtra, long x100, int calibrate)
     {
         for (ix = 0; ix < xtra; ix++) {
             for (i = 0; i < n3; i++) {
-                if (j == 1)
+                if (j == 1) {
                     j = 2;
-                else
+                } else {
                     j = 3;
-                if (j > 2)
+                }
+                if (j > 2) {
                     j = 0;
-                else
+                } else {
                     j = 1;
-                if (j < 1)
+                }
+                if (j < 1) {
                     j = 1;
-                else
+                } else {
                     j = 0;
+                }
             }
         }
     }
@@ -490,7 +496,7 @@ void po(SPDP e1[4], long j, long k, long l)
     return;
 }
 
-void p3(SPDP *x, SPDP *y, SPDP *z, SPDP t, SPDP t1, SPDP t2)
+void p3(SPDP* x, SPDP* y, SPDP* z, SPDP t, SPDP t1, SPDP t2)
 {
     *x = *y;
     *y = *z;

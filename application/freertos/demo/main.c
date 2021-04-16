@@ -100,8 +100,8 @@ void prvSetupHardware(void)
 
 }
 
-void start_task1(void *pvParameters);
-void start_task2(void *pvParameters);
+void start_task1(void* pvParameters);
+void start_task2(void* pvParameters);
 
 int main(void)
 {
@@ -112,25 +112,25 @@ int main(void)
     prvSetupHardware();
 
     xQueue = xQueueCreate(/* The number of items the queue can hold. */
-                          mainQUEUE_LENGTH,
-                          /* The size of each item the queue holds. */
-                          sizeof(uint32_t));
+                 mainQUEUE_LENGTH,
+                 /* The size of each item the queue holds. */
+                 sizeof(uint32_t));
 
     if (xQueue == NULL) {
         printf("Unable to create xQueue due to low memory.\n");
-        while(1);
+        while (1);
     }
-    xTaskCreate((TaskFunction_t)start_task1, (const char *)"start_task1",
-                (uint16_t)256, (void *)NULL, (UBaseType_t)2,
-                (TaskHandle_t *)&StartTask1_Handler);
+    xTaskCreate((TaskFunction_t)start_task1, (const char*)"start_task1",
+                (uint16_t)256, (void*)NULL, (UBaseType_t)2,
+                (TaskHandle_t*)&StartTask1_Handler);
 
-    xTaskCreate((TaskFunction_t)start_task2, (const char *)"start_task2",
-                (uint16_t)256, (void *)NULL, (UBaseType_t)1,
-                (TaskHandle_t *)&StartTask2_Handler);
+    xTaskCreate((TaskFunction_t)start_task2, (const char*)"start_task2",
+                (uint16_t)256, (void*)NULL, (UBaseType_t)1,
+                (TaskHandle_t*)&StartTask2_Handler);
 
     xExampleSoftwareTimer =
-        xTimerCreate((const char *)"ExTimer", mainSOFTWARE_TIMER_PERIOD_MS,
-                     pdTRUE, (void *)0, vExampleTimerCallback);
+        xTimerCreate((const char*)"ExTimer", mainSOFTWARE_TIMER_PERIOD_MS,
+                     pdTRUE, (void*)0, vExampleTimerCallback);
 
     xTimerStart(xExampleSoftwareTimer, 0);
     printf("Before StartScheduler\r\n");
@@ -139,10 +139,10 @@ int main(void)
 
     printf("OS should never run to here\r\n");
 
-    while(1);
+    while (1);
 }
 
-void start_task1(void *pvParameters)
+void start_task1(void* pvParameters)
 {
     int cnt = 0;
     printf("Enter to task_1\r\n");
@@ -152,7 +152,7 @@ void start_task1(void *pvParameters)
     }
 }
 
-void start_task2(void *pvParameters)
+void start_task2(void* pvParameters)
 {
     int cnt = 0;
     printf("Enter to task_2\r\n");
@@ -204,11 +204,11 @@ void vApplicationMallocFailedHook(void)
     timers, and semaphores.  The size of the FreeRTOS heap is set by the
     configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
     printf("malloc failed\n");
-    while(1);
+    while (1);
 }
 /*-----------------------------------------------------------*/
 
-void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char* pcTaskName)
 {
     /* Run time stack overflow checking is performed if
     configconfigCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
@@ -216,7 +216,7 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
     inspected in the debugger if the task name passed into this function is
     corrupt. */
     printf("Stack Overflow\n");
-    while(1);
+    while (1);
 }
 /*-----------------------------------------------------------*/
 

@@ -27,23 +27,26 @@ void nice_case(unsigned int array[ROW_LEN][COL_LEN], unsigned int col_sum[COL_LE
 
     custom_wsetup(COL_LEN - 1);
     for (i = 0; i < ROW_LEN; i++) {
-        row_sum[i] = custom_rowsum((unsigned long *)array[i]);
+        row_sum[i] = custom_rowsum((unsigned long*)array[i]);
     }
-    custom_sbuf((unsigned long *)col_sum);
+    custom_sbuf((unsigned long*)col_sum);
 }
 
 void print_array(unsigned int array[ROW_LEN][COL_LEN])
 {
     int i, j;
     printf("the element of array is :\r\n\t");
-    for (i = 0; i < ROW_LEN; i++)
+    for (i = 0; i < ROW_LEN; i++) {
         printf("%d\t", array[0][i]);
+    }
     printf("\r\n\t");
-    for (i = 0; i < ROW_LEN; i++)
+    for (i = 0; i < ROW_LEN; i++) {
         printf("%d\t", array[1][i]);
+    }
     printf("\r\n\t");
-    for (i = 0; i < ROW_LEN; i++)
+    for (i = 0; i < ROW_LEN; i++) {
         printf("%d\t", array[2][i]);
+    }
     printf("\r\n\r\n");
 }
 
@@ -51,17 +54,19 @@ void print_result(unsigned int col_sum[COL_LEN], unsigned int row_sum[ROW_LEN])
 {
     int i, j;
     printf("the sum of each row is :\r\n\t\t");
-    for (i = 0; i < ROW_LEN; i++)
+    for (i = 0; i < ROW_LEN; i++) {
         printf("%d\t", row_sum[i]);
+    }
     printf("\r\n");
     printf("the sum of each col is :\r\n\t\t");
-    for (j = 0; j < COL_LEN; j++)
+    for (j = 0; j < COL_LEN; j++) {
         printf("%d\t", col_sum[j]);
+    }
     printf("\r\n");
 }
 
 int compare_result(unsigned int ref_cs[COL_LEN], unsigned int ref_rs[ROW_LEN], \
-    unsigned int nice_cs[COL_LEN], unsigned int nice_rs[ROW_LEN])
+                   unsigned int nice_cs[COL_LEN], unsigned int nice_rs[ROW_LEN])
 {
     int i, ret = 0;
     for (i = 0; i < COL_LEN; i ++) {

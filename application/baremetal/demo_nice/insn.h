@@ -2,7 +2,7 @@
 #define __INSN_H__
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #include <stdint.h>
@@ -56,7 +56,7 @@
 #define COL_LEN     3
 
 /** custom nice instruction add */
-__STATIC_FORCEINLINE int custom_add(unsigned long * add1, unsigned long * add2)
+__STATIC_FORCEINLINE int custom_add(unsigned long* add1, unsigned long* add2)
 {
     int sum;
 
@@ -68,7 +68,7 @@ __STATIC_FORCEINLINE int custom_add(unsigned long * add1, unsigned long * add2)
 }
 
 /** custom nice instruction pipeadd */
-__STATIC_FORCEINLINE int custom_pipeadd(unsigned long * add1, unsigned long * add2)
+__STATIC_FORCEINLINE int custom_pipeadd(unsigned long* add1, unsigned long* add2)
 {
     int sum;
 
@@ -80,7 +80,7 @@ __STATIC_FORCEINLINE int custom_pipeadd(unsigned long * add1, unsigned long * ad
 }
 
 /** custom nice instruction lbuf */
-__STATIC_FORCEINLINE void custom_lbuf(unsigned long * addr)
+__STATIC_FORCEINLINE void custom_lbuf(unsigned long* addr)
 {
     int zero = 0;
 
@@ -88,7 +88,7 @@ __STATIC_FORCEINLINE void custom_lbuf(unsigned long * addr)
 }
 
 /** custom nice instruction sbuf */
-__STATIC_FORCEINLINE void custom_sbuf(unsigned long * addr)
+__STATIC_FORCEINLINE void custom_sbuf(unsigned long* addr)
 {
     int zero = 0;
 
@@ -114,7 +114,7 @@ __STATIC_FORCEINLINE int custom_rsetup(void)
 }
 
 /** custom nice instruction rowsum */
-__STATIC_FORCEINLINE int custom_rowsum(unsigned long *addr)
+__STATIC_FORCEINLINE int custom_rowsum(unsigned long* addr)
 {
     int rowsum;
 
@@ -145,7 +145,7 @@ void print_result(unsigned int col_sum[COL_LEN], unsigned int row_sum[ROW_LEN]);
 
 /** compare result of reference and nice */
 int compare_result(unsigned int ref_cs[COL_LEN], unsigned int ref_rs[ROW_LEN], \
-    unsigned int nice_cs[COL_LEN], unsigned int nice_rs[ROW_LEN]);
+                   unsigned int nice_cs[COL_LEN], unsigned int nice_rs[ROW_LEN]);
 
 #ifdef __cplusplus
 }

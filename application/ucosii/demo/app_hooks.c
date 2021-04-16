@@ -104,7 +104,7 @@
 *********************************************************************************************************
 */
 
-void  App_TaskCreateHook (OS_TCB *ptcb)
+void  App_TaskCreateHook(OS_TCB* ptcb)
 {
     (void)ptcb;
 }
@@ -122,7 +122,7 @@ void  App_TaskCreateHook (OS_TCB *ptcb)
 *********************************************************************************************************
 */
 
-void  App_TaskDelHook (OS_TCB *ptcb)
+void  App_TaskDelHook(OS_TCB* ptcb)
 {
     (void)ptcb;
 }
@@ -142,7 +142,7 @@ void  App_TaskDelHook (OS_TCB *ptcb)
 */
 
 #if OS_VERSION >= 251
-void  App_TaskIdleHook (void)
+void  App_TaskIdleHook(void)
 {
 }
 #endif
@@ -159,7 +159,7 @@ void  App_TaskIdleHook (void)
 *********************************************************************************************************
 */
 
-void  App_TaskStatHook (void)
+void  App_TaskStatHook(void)
 {
 }
 
@@ -179,7 +179,7 @@ void  App_TaskStatHook (void)
 
 
 #if OS_VERSION >= 289
-void  App_TaskReturnHook (OS_TCB  *ptcb)
+void  App_TaskReturnHook(OS_TCB*  ptcb)
 {
     (void)ptcb;
 }
@@ -204,7 +204,7 @@ void  App_TaskReturnHook (OS_TCB  *ptcb)
 */
 
 #if OS_TASK_SW_HOOK_EN > 0
-void  App_TaskSwHook (void)
+void  App_TaskSwHook(void)
 {
 
 }
@@ -225,7 +225,7 @@ void  App_TaskSwHook (void)
 */
 
 #if OS_VERSION >= 204
-void  App_TCBInitHook (OS_TCB *ptcb)
+void  App_TCBInitHook(OS_TCB* ptcb)
 {
     (void)ptcb;
 }
@@ -245,7 +245,7 @@ void  App_TCBInitHook (OS_TCB *ptcb)
 */
 
 #if OS_TIME_TICK_HOOK_EN > 0
-void  App_TimeTickHook (void)
+void  App_TimeTickHook(void)
 {
 
 }
