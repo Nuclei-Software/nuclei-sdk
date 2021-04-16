@@ -3,7 +3,7 @@
 
 __WEAK void _exit(int fd)
 {
-    while(1) {
+    while (1) {
         __WFI();
     }
 }

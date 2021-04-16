@@ -3,7 +3,7 @@
 #define _NUCLEI_SDK_HAL_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #include "board_nuclei_fpga_eval.h"

@@ -1,7 +1,7 @@
 #include "demosoc.h"
 #include "demosoc_gpio.h"
 
-int32_t gpio_iof_config(GPIO_TypeDef *gpio, uint32_t mask, IOF_FUNC func)
+int32_t gpio_iof_config(GPIO_TypeDef* gpio, uint32_t mask, IOF_FUNC func)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;
@@ -24,7 +24,7 @@ int32_t gpio_iof_config(GPIO_TypeDef *gpio, uint32_t mask, IOF_FUNC func)
     return 0;
 }
 
-int32_t gpio_enable_output(GPIO_TypeDef *gpio, uint32_t mask)
+int32_t gpio_enable_output(GPIO_TypeDef* gpio, uint32_t mask)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;
@@ -34,7 +34,7 @@ int32_t gpio_enable_output(GPIO_TypeDef *gpio, uint32_t mask)
     return 0;
 }
 
-int32_t gpio_enable_input(GPIO_TypeDef *gpio, uint32_t mask)
+int32_t gpio_enable_input(GPIO_TypeDef* gpio, uint32_t mask)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;
@@ -44,7 +44,7 @@ int32_t gpio_enable_input(GPIO_TypeDef *gpio, uint32_t mask)
     return 0;
 }
 
-int32_t gpio_write(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
+int32_t gpio_write(GPIO_TypeDef* gpio, uint32_t mask, uint32_t value)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;
@@ -58,7 +58,7 @@ int32_t gpio_write(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
     return 0;
 }
 
-int32_t gpio_toggle(GPIO_TypeDef *gpio, uint32_t mask)
+int32_t gpio_toggle(GPIO_TypeDef* gpio, uint32_t mask)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;
@@ -68,7 +68,7 @@ int32_t gpio_toggle(GPIO_TypeDef *gpio, uint32_t mask)
 }
 
 
-int32_t gpio_read(GPIO_TypeDef *gpio, uint32_t mask)
+int32_t gpio_read(GPIO_TypeDef* gpio, uint32_t mask)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;
@@ -76,7 +76,7 @@ int32_t gpio_read(GPIO_TypeDef *gpio, uint32_t mask)
     return gpio->INPUT_VAL & mask;
 }
 
-int32_t gpio_set_pue(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
+int32_t gpio_set_pue(GPIO_TypeDef* gpio, uint32_t mask, uint32_t value)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;
@@ -86,7 +86,7 @@ int32_t gpio_set_pue(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
     return 0;
 }
 
-int32_t gpio_set_ds(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
+int32_t gpio_set_ds(GPIO_TypeDef* gpio, uint32_t mask, uint32_t value)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;
@@ -96,7 +96,7 @@ int32_t gpio_set_ds(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
     return 0;
 }
 
-int32_t gpio_set_outxor(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
+int32_t gpio_set_outxor(GPIO_TypeDef* gpio, uint32_t mask, uint32_t value)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;
@@ -106,7 +106,7 @@ int32_t gpio_set_outxor(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value)
     return 0;
 }
 
-int32_t gpio_enable_interrupt(GPIO_TypeDef *gpio, uint32_t mask, GPIO_INT_TYPE type)
+int32_t gpio_enable_interrupt(GPIO_TypeDef* gpio, uint32_t mask, GPIO_INT_TYPE type)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;
@@ -130,7 +130,7 @@ int32_t gpio_enable_interrupt(GPIO_TypeDef *gpio, uint32_t mask, GPIO_INT_TYPE t
     return 0;
 }
 
-int32_t gpio_disable_interrupt(GPIO_TypeDef *gpio, uint32_t mask, GPIO_INT_TYPE type)
+int32_t gpio_disable_interrupt(GPIO_TypeDef* gpio, uint32_t mask, GPIO_INT_TYPE type)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;
@@ -154,7 +154,7 @@ int32_t gpio_disable_interrupt(GPIO_TypeDef *gpio, uint32_t mask, GPIO_INT_TYPE 
     return 0;
 }
 
-int32_t gpio_clear_interrupt(GPIO_TypeDef *gpio, uint32_t mask, GPIO_INT_TYPE type)
+int32_t gpio_clear_interrupt(GPIO_TypeDef* gpio, uint32_t mask, GPIO_INT_TYPE type)
 {
     if (__RARELY(gpio == NULL)) {
         return -1;

@@ -7,7 +7,7 @@
 #undef errno
 extern int errno;
 
-__WEAK int _fstat(int file, struct stat *st)
+__WEAK int _fstat(int file, struct stat* st)
 {
     if ((STDOUT_FILENO == file) || (STDERR_FILENO == file)) {
         st->st_mode = S_IFCHR;

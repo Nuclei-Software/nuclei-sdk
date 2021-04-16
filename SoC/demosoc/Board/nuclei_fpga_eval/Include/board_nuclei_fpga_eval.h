@@ -3,7 +3,7 @@
 #define _BOARD_NUCLEI_FPGA_EVAL_H_
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #include "nuclei_sdk_soc.h"

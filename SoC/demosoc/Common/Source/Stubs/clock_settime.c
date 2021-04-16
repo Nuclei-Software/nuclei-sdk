@@ -4,7 +4,7 @@
 #include <time.h>
 
 /* Set CLOCK to value TP. */
-__WEAK int clock_settime(clockid_t clock_id, const struct timespec *tp)
+__WEAK int clock_settime(clockid_t clock_id, const struct timespec* tp)
 {
     return -1;
 }

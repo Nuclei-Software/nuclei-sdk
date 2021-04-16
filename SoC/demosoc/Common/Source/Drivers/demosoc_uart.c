@@ -1,7 +1,7 @@
 #include "demosoc.h"
 #include "demosoc_uart.h"
 
-int32_t uart_init(UART_TypeDef *uart, uint32_t baudrate)
+int32_t uart_init(UART_TypeDef* uart, uint32_t baudrate)
 {
     if (__RARELY(uart == NULL)) {
         return -1;
@@ -12,7 +12,7 @@ int32_t uart_init(UART_TypeDef *uart, uint32_t baudrate)
     return 0;
 }
 
-int32_t uart_config_stopbit(UART_TypeDef *uart, UART_STOP_BIT stopbit)
+int32_t uart_config_stopbit(UART_TypeDef* uart, UART_STOP_BIT stopbit)
 {
     if (__RARELY(uart == NULL)) {
         return -1;
@@ -23,7 +23,7 @@ int32_t uart_config_stopbit(UART_TypeDef *uart, UART_STOP_BIT stopbit)
     return 0;
 }
 
-int32_t uart_write(UART_TypeDef *uart, uint8_t val)
+int32_t uart_write(UART_TypeDef* uart, uint8_t val)
 {
     if (__RARELY(uart == NULL)) {
         return -1;
@@ -35,7 +35,7 @@ int32_t uart_write(UART_TypeDef *uart, uint8_t val)
     return 0;
 }
 
-uint8_t uart_read(UART_TypeDef *uart)
+uint8_t uart_read(UART_TypeDef* uart)
 {
     uint32_t reg;
     if (__RARELY(uart == NULL)) {
@@ -43,12 +43,11 @@ uint8_t uart_read(UART_TypeDef *uart)
     }
     do {
         reg = uart->RXFIFO;
-    }
-    while (reg & UART_RXFIFO_EMPTY);
+    } while (reg & UART_RXFIFO_EMPTY);
     return (uint8_t)(reg & 0xFF);
 }
 
-int32_t uart_set_tx_watermark(UART_TypeDef *uart, uint32_t watermark)
+int32_t uart_set_tx_watermark(UART_TypeDef* uart, uint32_t watermark)
 {
     if (__RARELY(uart == NULL)) {
         return -1;
@@ -58,7 +57,7 @@ int32_t uart_set_tx_watermark(UART_TypeDef *uart, uint32_t watermark)
     return 0;
 }
 
-int32_t uart_enable_txint(UART_TypeDef *uart)
+int32_t uart_enable_txint(UART_TypeDef* uart)
 {
     if (__RARELY(uart == NULL)) {
         return -1;
@@ -67,7 +66,7 @@ int32_t uart_enable_txint(UART_TypeDef *uart)
     return 0;
 }
 
-int32_t uart_disable_txint(UART_TypeDef *uart)
+int32_t uart_disable_txint(UART_TypeDef* uart)
 {
     if (__RARELY(uart == NULL)) {
         return -1;
@@ -76,7 +75,7 @@ int32_t uart_disable_txint(UART_TypeDef *uart)
     return 0;
 }
 
-int32_t uart_set_rx_watermark(UART_TypeDef *uart, uint32_t watermark)
+int32_t uart_set_rx_watermark(UART_TypeDef* uart, uint32_t watermark)
 {
     if (__RARELY(uart == NULL)) {
         return -1;
@@ -86,7 +85,7 @@ int32_t uart_set_rx_watermark(UART_TypeDef *uart, uint32_t watermark)
     return 0;
 }
 
-int32_t uart_enable_rxint(UART_TypeDef *uart)
+int32_t uart_enable_rxint(UART_TypeDef* uart)
 {
     if (__RARELY(uart == NULL)) {
         return -1;
@@ -95,7 +94,7 @@ int32_t uart_enable_rxint(UART_TypeDef *uart)
     return 0;
 }
 
-int32_t uart_disable_rxint(UART_TypeDef *uart)
+int32_t uart_disable_rxint(UART_TypeDef* uart)
 {
     if (__RARELY(uart == NULL)) {
         return -1;

@@ -40,14 +40,14 @@ extern uint32_t SystemCoreClock;     /*!< System Clock Frequency (Core Clock)  *
  * \details
  * Initialize the System and update the SystemCoreClock variable.
  */
-extern void SystemInit (void);
+extern void SystemInit(void);
 
 /**
  * \brief  Update SystemCoreClock variable.
  * \details
  * Updates the SystemCoreClock with current core Clock retrieved from cpu registers.
  */
-extern void SystemCoreClockUpdate (void);
+extern void SystemCoreClockUpdate(void);
 
 /**
  * \brief Register an exception handler for exception code EXCn
@@ -70,7 +70,7 @@ extern void ECLIC_Init(void);
  * This function set vector mode, trigger mode and polarity, interrupt level and priority,
  * assign handler for specific IRQn.
  */
-extern int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void *handler);
+extern int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler);
 
 #ifdef __cplusplus
 }

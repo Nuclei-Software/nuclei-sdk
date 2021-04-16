@@ -99,7 +99,7 @@ uint32_t SystemCoreClock = SYSTEM_CLOCK;  /* System Clock Frequency (Core Clock)
  * during program execution. The function evaluates the clock register settings and calculates
  * the current core clock.
  */
-void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
+void SystemCoreClockUpdate(void)             /* Get Core Clock Frequency */
 {
     /* ToDo: add code to calculate the system frequency based upon the current
      *    register settings.
@@ -117,7 +117,7 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency */
  * with a variable clock speed, it updates the variable \ref SystemCoreClock.
  * SystemInit is called from the file <b>startup<i>_device</i></b>.
  */
-void SystemInit (void)
+void SystemInit(void)
 {
     /* ToDo: add code to initialize the system
      * Warn: do not use global variables because this function is called before
@@ -146,7 +146,7 @@ void SystemInit (void)
  * - Exception code 0 - 11, totally 12 exceptions are mapped to SystemExceptionHandlers[0:11]
  * - Exception for NMI is also re-routed to exception handling(exception code 0xFFF) in startup code configuration, the handler itself is mapped to SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM]
  */
-static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM+1];
+static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM + 1];
 
 /**
  * \brief      Exception Handler Function Typedef
@@ -154,7 +154,7 @@ static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM+1];
  * This typedef is only used internal in this system_<Device>.c file.
  * It is used to do type conversion for registered exception handler before calling it.
  */
-typedef void (*EXC_HANDLER) (unsigned long mcause, unsigned long sp);
+typedef void (*EXC_HANDLER)(unsigned long mcause, unsigned long sp);
 
 /**
  * \brief      System Default Exception Handler
@@ -169,7 +169,7 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
     printf("MDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_MDCAUSE));
     printf("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
     printf("MTVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
-    while(1);
+    while (1);
 }
 
 /**
@@ -181,7 +181,7 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
  */
 static void Exception_Init(void)
 {
-    for (int i = 0; i < MAX_SYSTEM_EXCEPTION_NUM+1; i++) {
+    for (int i = 0; i < MAX_SYSTEM_EXCEPTION_NUM + 1; i++) {
         SystemExceptionHandlers[i] = (unsigned long)system_default_exception_handler;
     }
 }
@@ -298,10 +298,10 @@ void ECLIC_Init(void)
  * - This function use to configure specific eclic interrupt and register its interrupt handler and enable its interrupt.
  * - If the vector table is placed in read-only section(FLASHXIP mode), handler could not be installed
  */
-int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void *handler)
+int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler)
 {
     if ((IRQn > SOC_INT_MAX) || (shv > ECLIC_VECTOR_INTERRUPT) \
-        || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER )) {
+        || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER)) {
         return -1;
     }
 
@@ -365,7 +365,7 @@ void _postmain_fini(int status)
 {
     /* TODO: Add your own finishing code here, called after main */
 #ifdef SIMULATION_XLSPIKE
-extern void xlspike_exit(int status);
+    extern void xlspike_exit(int status);
     xlspike_exit(status);
 #endif
 }

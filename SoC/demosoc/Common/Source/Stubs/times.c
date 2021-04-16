@@ -4,9 +4,9 @@
 #include <time.h>
 #include "nuclei_sdk_soc.h"
 
-extern int _gettimeofday(struct timeval *, void *);
+extern int _gettimeofday(struct timeval*, void*);
 
-__WEAK clock_t _times(struct tms *buf)
+__WEAK clock_t _times(struct tms* buf)
 {
     static struct timeval t0;
     struct timeval t;

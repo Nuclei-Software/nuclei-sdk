@@ -52,9 +52,8 @@ extern "C" {
 /* ================                                Interrupt Number Definition                                ================ */
 /* =========================================================================================================================== */
 
-typedef enum IRQn
-{
-/* =======================================  Nuclei Core Specific Interrupt Numbers  ======================================== */
+typedef enum IRQn {
+    /* =======================================  Nuclei Core Specific Interrupt Numbers  ======================================== */
 
     Reserved0_IRQn            =   0,              /*!<  Internal reserved */
     Reserved1_IRQn            =   1,              /*!<  Internal reserved */
@@ -76,10 +75,10 @@ typedef enum IRQn
     Reserved15_IRQn           =  17,              /*!<  Internal reserved */
     Reserved16_IRQn           =  18,              /*!<  Internal reserved */
 
-/* ===========================================  demosoc Specific Interrupt Numbers  ========================================= */
-/* ToDo: add here your device specific external interrupt numbers. 19~1023 is reserved number for user. Maxmum interrupt supported
-         could get from clicinfo.NUM_INTERRUPT. According the interrupt handlers defined in startup_Device.s
-         eg.: Interrupt for Timer#1       eclic_tim1_handler   ->   TIM1_IRQn */
+    /* ===========================================  demosoc Specific Interrupt Numbers  ========================================= */
+    /* ToDo: add here your device specific external interrupt numbers. 19~1023 is reserved number for user. Maxmum interrupt supported
+             could get from clicinfo.NUM_INTERRUPT. According the interrupt handlers defined in startup_Device.s
+             eg.: Interrupt for Timer#1       eclic_tim1_handler   ->   TIM1_IRQn */
     SOC_INT19_IRQn           = 19,                /*!< Device Interrupt */
     SOC_INT20_IRQn           = 20,                /*!< Device Interrupt */
     SOC_INT21_IRQn           = 21,                /*!< Device Interrupt */
@@ -120,7 +119,7 @@ typedef enum IRQn
 /* =========================================================================================================================== */
 
 typedef enum EXCn {
-/* =======================================  Nuclei N/NX Specific Exception Code  ======================================== */
+    /* =======================================  Nuclei N/NX Specific Exception Code  ======================================== */
     InsUnalign_EXCn          =   0,              /*!<  Instruction address misaligned */
     InsAccFault_EXCn         =   1,              /*!<  Instruction access fault */
     IlleIns_EXCn             =   2,              /*!<  Illegal instruction */
@@ -195,9 +194,9 @@ typedef enum EXCn {
 
 /* ========================================  Start of section using anonymous unions  ======================================== */
 #if   defined (__GNUC__)
-  /* anonymous unions are enabled by default */
+/* anonymous unions are enabled by default */
 #else
-  #warning Not supported compiler type
+#warning Not supported compiler type
 #endif
 
 #define RTC_FREQ                    32768
@@ -309,11 +308,11 @@ typedef struct {
   */
 typedef struct {
     __IOM uint32_t CFG;
-          uint32_t RESERVED0;
+    uint32_t RESERVED0;
     __IOM uint32_t COUNT;
-          uint32_t RESERVED1;
+    uint32_t RESERVED1;
     __IOM uint32_t S;
-          uint32_t RESERVED2[3];
+    uint32_t RESERVED2[3];
     __IOM uint32_t CMP0;
     __IOM uint32_t CMP1;
     __IOM uint32_t CMP2;
@@ -364,9 +363,9 @@ typedef struct {
 
 /* =========================================  End of section using anonymous unions  ========================================= */
 #if defined (__GNUC__)
-  /* anonymous unions are enabled by default */
+/* anonymous unions are enabled by default */
 #else
-  #warning Not supported compiler type
+#warning Not supported compiler type
 #endif
 
 

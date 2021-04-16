@@ -3,7 +3,7 @@
 #define _DEMOSOC_GPIO_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #define GPIO_INPUT_VAL      (0x00)
@@ -37,18 +37,18 @@ typedef enum gpio_int_type {
     GPIO_INT_LOW = 3
 } GPIO_INT_TYPE;
 
-int32_t gpio_iof_config(GPIO_TypeDef *gpio, uint32_t mask, IOF_FUNC func);
-int32_t gpio_enable_output(GPIO_TypeDef *gpio, uint32_t mask);
-int32_t gpio_enable_input(GPIO_TypeDef *gpio, uint32_t mask);
-int32_t gpio_write(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value);
-int32_t gpio_toggle(GPIO_TypeDef *gpio, uint32_t mask);
-int32_t gpio_read(GPIO_TypeDef *gpio, uint32_t mask);
-int32_t gpio_set_pue(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value);
-int32_t gpio_set_ds(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value);
-int32_t gpio_set_outxor(GPIO_TypeDef *gpio, uint32_t mask, uint32_t value);
-int32_t gpio_enable_interrupt(GPIO_TypeDef *gpio, uint32_t mask, GPIO_INT_TYPE type);
-int32_t gpio_disable_interrupt(GPIO_TypeDef *gpio, uint32_t mask, GPIO_INT_TYPE type);
-int32_t gpio_clear_interrupt(GPIO_TypeDef *gpio, uint32_t mask, GPIO_INT_TYPE type);
+int32_t gpio_iof_config(GPIO_TypeDef* gpio, uint32_t mask, IOF_FUNC func);
+int32_t gpio_enable_output(GPIO_TypeDef* gpio, uint32_t mask);
+int32_t gpio_enable_input(GPIO_TypeDef* gpio, uint32_t mask);
+int32_t gpio_write(GPIO_TypeDef* gpio, uint32_t mask, uint32_t value);
+int32_t gpio_toggle(GPIO_TypeDef* gpio, uint32_t mask);
+int32_t gpio_read(GPIO_TypeDef* gpio, uint32_t mask);
+int32_t gpio_set_pue(GPIO_TypeDef* gpio, uint32_t mask, uint32_t value);
+int32_t gpio_set_ds(GPIO_TypeDef* gpio, uint32_t mask, uint32_t value);
+int32_t gpio_set_outxor(GPIO_TypeDef* gpio, uint32_t mask, uint32_t value);
+int32_t gpio_enable_interrupt(GPIO_TypeDef* gpio, uint32_t mask, GPIO_INT_TYPE type);
+int32_t gpio_disable_interrupt(GPIO_TypeDef* gpio, uint32_t mask, GPIO_INT_TYPE type);
+int32_t gpio_clear_interrupt(GPIO_TypeDef* gpio, uint32_t mask, GPIO_INT_TYPE type);
 
 #ifdef __cplusplus
 }

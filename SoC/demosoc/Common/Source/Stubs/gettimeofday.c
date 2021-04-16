@@ -3,7 +3,7 @@
 #include <sys/time.h>
 #include "nuclei_sdk_soc.h"
 
-__WEAK int _gettimeofday(struct timeval *tp, void *tzp)
+__WEAK int _gettimeofday(struct timeval* tp, void* tzp)
 {
     uint64_t cycles;
 

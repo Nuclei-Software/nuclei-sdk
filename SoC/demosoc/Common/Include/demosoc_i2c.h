@@ -4,7 +4,7 @@
 #define _DEMOSOC_I2C_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* register offsets */
