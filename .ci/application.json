@@ -3,7 +3,7 @@
     "BOARD": "hbird_eval",
     "CORE": "n307",
     "DOWNLOAD": "ilm",
-    "DSP_ENABLE": "ON",
+    "DSP_ENABLE": "OFF",
     "BENCH_UNIT": "cycle",
     "checks": {
         "PASS": [
@@ -19,51 +19,51 @@
         "application/baremetal/helloworld",
         "application/baremetal/demo_timer",
         "application/baremetal/demo_eclic",
+        "application/baremetal/demo_nice",
         "application/baremetal/demo_dsp",
         "application/freertos/demo",
         "application/ucosii/demo",
-        "application/rtthread/demo"
+        "application/rtthread/demo",
+        "application/rtthread/msh"
     ],
     "appchecks": {
         "application/baremetal/benchmark/dhrystone": {
-            "PASS": ["1000000/(User_Cycle/Number_Of_Runs)"],
-            "FAIL": []
+            "PASS": ["1000000/(User_Cycle/Number_Of_Runs)"]
         },
         "application/baremetal/benchmark/whetstone": {
-            "PASS": ["MWIPS/MHz"],
-            "FAIL": []
+            "PASS": ["MWIPS/MHz"]
         },
         "application/baremetal/benchmark/coremark": {
-            "PASS": ["Iterations*1000000/total_ticks"],
-            "FAIL": []
+            "PASS": ["Iterations*1000000/total_ticks"]
         },
         "application/baremetal/demo_timer": {
-            "PASS": ["MTimer msip and mtip interrupt test finish and pass"],
-            "FAIL": []
+            "PASS": ["MTimer msip and mtip interrupt test finish and pass"]
         },
         "application/baremetal/helloworld": {
-            "PASS": ["19: Hello World From Nuclei RISC-V Processor!"],
-            "FAIL": []
+            "PASS": ["19: Hello World From Nuclei RISC-V Processor!"]
         },
         "application/baremetal/demo_eclic": {
-            "PASS": ["software interrupt hit 10 times"],
-            "FAIL": []
+            "PASS": ["software interrupt hit 10 times"]
+        },
+        "application/baremetal/demo_nice": {
+            "PASS": ["PASS"],
+            "FAIL": ["FAIL", "MCAUSE:"]
         },
         "application/baremetal/demo_dsp": {
             "PASS": ["all test are passed"],
             "FAIL": ["test error apprears"]
         },
         "application/freertos/demo": {
-            "PASS": ["timers Callback 11"],
-            "FAIL": []
+            "PASS": ["timers Callback 11"]
         },
         "application/rtthread/demo": {
-            "PASS": ["Main thread count: 6"],
-            "FAIL": []
+            "PASS": ["Main thread count: 6"]
+        },
+        "application/rtthread/msh": {
+            "PASS": ["msh >"]
         },
         "application/ucosii/demo": {
-            "PASS": ["task3 is running... 10"],
-            "FAIL": []
+            "PASS": ["task3 is running... 10"]
         }
     }
 }
