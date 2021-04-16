@@ -22,7 +22,6 @@
 --align-reference=type
 
 --add-braces
---add-one-line-braces
 
 --convert-tabs
 --max-code-length=200
