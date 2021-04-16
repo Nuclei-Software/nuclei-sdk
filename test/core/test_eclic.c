@@ -90,7 +90,7 @@ CTEST(eclic, en_dis_irq)
     __disable_irq();
 }
 
-void get_max_lvl_pri(uint8_t *maxpri, uint8_t *maxlvl)
+void get_max_lvl_pri(uint8_t* maxpri, uint8_t* maxlvl)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = (uint8_t)__ECLIC_INTCTLBITS;
@@ -190,7 +190,8 @@ CTEST(eclic, reg_read_write)
     CTEST_LOG("NLBITS : %d", ECLIC_GetCfgNlbits());
 }
 
-CTEST(eclic, nmi_entry) {
+CTEST(eclic, nmi_entry)
+{
     ASSERT_EQUAL(__get_nmi_entry(), __RV_CSR_READ(CSR_MTVEC));
 }
 
@@ -199,7 +200,8 @@ void new_nonvec_entry(void)
 
 }
 
-CTEST(eclic, nonvec_entry) {
+CTEST(eclic, nonvec_entry)
+{
     rv_csr_t entry = __get_nonvec_entry();
     CTEST_LOG("Non vector entry is 0x%x", entry);
 
@@ -219,7 +221,8 @@ void new_exc_entry(void)
 
 }
 
-CTEST(eclic, exc_entry) {
+CTEST(eclic, exc_entry)
+{
     rv_csr_t entry = __get_exc_entry();
     CTEST_LOG("Exception entry is 0x%x", entry);
     __set_exc_entry((rv_csr_t)new_exc_entry);

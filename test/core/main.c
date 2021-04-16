@@ -20,7 +20,7 @@ void ctest_delay(uint32_t ms)
     } while (cur_cycle < end_cycle);
 }
 
-int main(int argc, const char *argv[])
+int main(int argc, const char* argv[])
 {
     int result = ctest_main(argc, argv);
     //const char *argv_passed[] = {NULL, "eclic"};
