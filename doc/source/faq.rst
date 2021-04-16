@@ -22,12 +22,12 @@ Why I can't download application?
     "monitor" command not supported by this target.
     "monitor" command not supported by this target.
 
-Please check whether your driver is installed successfully via replace target `upload` to `run_openocd`
+Please check whether your driver is installed successfully via replace target ``upload`` to ``run_openocd``
 as the board user manual described, especially, for **RV-STAR** and **Nuclei Demo SoC Evaluation** boards,
 For windows, you need to download the **HummingBird Debugger Windows Driver** from
 https://nucleisys.com/developboard.php, and install it.
 
-If still not working, please check whether your JTAG connection is good.
+If still not working, please check whether your JTAG connection is good or your CPU core is OK.
 
 .. note::
 

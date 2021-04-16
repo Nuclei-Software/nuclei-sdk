@@ -3,12 +3,12 @@
 Changelog
 =========
 
-V0.3.1-dev
-----------
+V0.3.1
+------
 
-This is version ``0.3.1`` of Nuclei SDK which is **still in development**.
+This is official version ``0.3.1`` of Nuclei SDK.
 
-.. note::
+.. caution::
 
     - We are using ``demosoc`` to represent the Nuclei Evaluation SoC for customer to replace the old name ``hbird``.
     - The ``hbird`` SoC is renamed to ``demosoc``, so the ``SoC/hbird`` folder is renamed to ``SoC/demosoc``,
