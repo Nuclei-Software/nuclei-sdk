@@ -319,6 +319,15 @@ static int test_flag_error = 0;
 
 int main(void)
 {
+    printf("\r\nNuclei RISC-V NMSIS-DSP Library Demonstration\r\n");
+#if defined(__RISCV_FEATURE_DSP) && __RISCV_FEATURE_DSP == 1
+    printf("Using Nuclei RISC-V DSP(P-ext) accelerated and optimized NMSIS-DSP library!\r\n");
+    printf("Warning: Make sure Nuclei RISC-V DSP(P-ext) is present in your CPU core!\r\n");
+    printf("         Otherwise this example will trap to cpu core exception!\r\n\r\n");
+#else
+    printf("Using c-only optimized NMSIS-DSP library!\r\n");
+#endif
+
     BENCH_INIT();
 
     BENCH_START(riscv_conv_q31);
