@@ -29,7 +29,7 @@ void task1(void* args)
     for (;;) {
         cnt++;
         printf("task1 is running... %d\r\n", cnt);
-        OSTimeDly(200);
+        OSTimeDlyHMSM(0, 0, 2, 0);
     }
 }
 
@@ -39,7 +39,7 @@ void task2(void* args)
     for (;;) {
         cnt++;
         printf("task2 is running... %d\r\n", cnt);
-        OSTimeDly(100);
+        OSTimeDlyHMSM(0, 0, 1, 0);
     }
 }
 
@@ -49,7 +49,7 @@ void task3(void* args)
     for (;;) {
         cnt++;
         printf("task3 is running... %d\r\n", cnt);
-        OSTimeDly(100);
+        OSTimeDlyHMSM(0, 0, 1, 0);
     }
 }
 
