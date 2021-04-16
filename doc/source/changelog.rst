@@ -40,6 +40,10 @@ This is version ``0.3.1`` of Nuclei SDK which is **still in development**.
     - Format Makefile space to tab
     - Add $(TARGET).dasm into clean targets which are missing before
 
+* Code style
+
+    - Format source files located in application, OS, SoC, test using astyle tool
+
 V0.3.0
 ------
 
