@@ -21,13 +21,13 @@ extern "C" {
 
 /* Scheduler utilities. */
 #define portYIELD()                                                             \
-{                                                                               \
-    /* Set a software interrupt(SWI) request to request a context switch. */    \
-    SysTimer_SetSWIRQ();                                                        \
-    /* Barriers are normally not required but do ensure the code is completely  \
-    within the specified behaviour for the architecture. */                     \
-    __RWMB();                                                                   \
-}
+    {                                                                               \
+        /* Set a software interrupt(SWI) request to request a context switch. */    \
+        SysTimer_SetSWIRQ();                                                        \
+        /* Barriers are normally not required but do ensure the code is completely  \
+        within the specified behaviour for the architecture. */                     \
+        __RWMB();                                                                   \
+    }
 
 
 #ifdef __cplusplus

@@ -19,12 +19,12 @@
 #define SYSTICK_TICK_CONST                          (SOC_TIMER_FREQ / RT_TICK_PER_SECOND)
 
 #ifndef configKERNEL_INTERRUPT_PRIORITY
-    #define configKERNEL_INTERRUPT_PRIORITY         0
+#define configKERNEL_INTERRUPT_PRIORITY         0
 #endif
 
 #ifndef configMAX_SYSCALL_INTERRUPT_PRIORITY
-    // See function prvCheckMaxSysCallPrio and prvCalcMaxSysCallMTH
-    #define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
+// See function prvCheckMaxSysCallPrio and prvCalcMaxSysCallMTH
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
 #endif
 
 #define portINITIAL_MSTATUS                         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL)
@@ -33,8 +33,7 @@ volatile rt_ubase_t  rt_interrupt_from_thread = 0;
 volatile rt_ubase_t  rt_interrupt_to_thread   = 0;
 volatile rt_ubase_t rt_thread_switch_interrupt_flag = 0;
 
-struct rt_hw_stack_frame
-{
+struct rt_hw_stack_frame {
     rt_ubase_t epc;        /* epc - epc    - program counter                     */
     rt_ubase_t ra;         /* x1  - ra     - return address for jumps            */
     rt_ubase_t t0;         /* x5  - t0     - temporary register 0                */
@@ -79,24 +78,23 @@ struct rt_hw_stack_frame
  *
  * @return stack address
  */
-rt_uint8_t *rt_hw_stack_init(void       *tentry,
-                             void       *parameter,
-                             rt_uint8_t *stack_addr,
-                             void       *texit)
+rt_uint8_t* rt_hw_stack_init(void*       tentry,
+                             void*       parameter,
+                             rt_uint8_t* stack_addr,
+                             void*       texit)
 {
-    struct rt_hw_stack_frame *frame;
-    rt_uint8_t         *stk;
+    struct rt_hw_stack_frame* frame;
+    rt_uint8_t*         stk;
     int                i;
 
     stk  = stack_addr + sizeof(rt_ubase_t);
-    stk  = (rt_uint8_t *)RT_ALIGN_DOWN((rt_ubase_t)stk, REGBYTES);
+    stk  = (rt_uint8_t*)RT_ALIGN_DOWN((rt_ubase_t)stk, REGBYTES);
     stk -= sizeof(struct rt_hw_stack_frame);
 
-    frame = (struct rt_hw_stack_frame *)stk;
+    frame = (struct rt_hw_stack_frame*)stk;
 
-    for (i = 0; i < sizeof(struct rt_hw_stack_frame) / sizeof(rt_ubase_t); i++)
-    {
-        ((rt_ubase_t *)frame)[i] = 0xdeadbeef;
+    for (i = 0; i < sizeof(struct rt_hw_stack_frame) / sizeof(rt_ubase_t); i++) {
+        ((rt_ubase_t*)frame)[i] = 0xdeadbeef;
     }
 
     frame->ra      = (rt_ubase_t)texit;
@@ -113,8 +111,9 @@ rt_uint8_t *rt_hw_stack_init(void       *tentry,
  */
 void rt_hw_context_switch_interrupt(rt_ubase_t from, rt_ubase_t to)
 {
-    if (rt_thread_switch_interrupt_flag == 0)
+    if (rt_thread_switch_interrupt_flag == 0) {
         rt_interrupt_from_thread = from;
+    }
 
     rt_interrupt_to_thread = to;
     rt_thread_switch_interrupt_flag = 1;
@@ -135,20 +134,19 @@ void rt_hw_cpu_shutdown()
     rt_kprintf("shutdown...\n");
 
     level = rt_hw_interrupt_disable();
-    while (level)
-    {
+    while (level) {
         RT_ASSERT(0);
     }
 }
 
-void xPortTaskSwitch( void )
+void xPortTaskSwitch(void)
 {
     /* Clear Software IRQ, A MUST */
     SysTimer_ClearSWIRQ();
     rt_thread_switch_interrupt_flag = 0;
 }
 
-void vPortSetupTimerInterrupt( void )
+void vPortSetupTimerInterrupt(void)
 {
     uint64_t ticks = SYSTICK_TICK_CONST;
 
@@ -170,12 +168,12 @@ void vPortSetupTimerInterrupt( void )
 #if defined(RT_USING_USER_MAIN) && defined(RT_USING_HEAP)
 #define RT_HEAP_SIZE 1024
 static uint32_t rt_heap[RT_HEAP_SIZE];  // heap default size: 4K(1024 * 4)
-RT_WEAK void *rt_heap_begin_get(void)
+RT_WEAK void* rt_heap_begin_get(void)
 {
     return rt_heap;
 }
 
-RT_WEAK void *rt_heap_end_get(void)
+RT_WEAK void* rt_heap_end_get(void)
 {
     return rt_heap + RT_HEAP_SIZE;
 }
@@ -221,7 +219,7 @@ void SysTick_Handler(void)
 
 extern ssize_t _write(int fd, const void* ptr, size_t len);
 
-void rt_hw_console_output(const char *str)
+void rt_hw_console_output(const char* str)
 {
     rt_size_t size = 0;
 
