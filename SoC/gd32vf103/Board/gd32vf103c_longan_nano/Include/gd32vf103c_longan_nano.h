@@ -37,14 +37,13 @@ OF SUCH DAMAGE.
 #define GD32VF103C_LONGAN_NANO_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #include "nuclei_sdk_soc.h"
 
 /* exported types */
-typedef enum
-{
+typedef enum {
     LED1 = 0,
     LED2 = 1,
     LED3 = 2,
@@ -57,18 +56,16 @@ typedef enum
     LED_G = 0,
     LED_B = 1,
     LED_R = 2,
-}led_typedef_enum;
+} led_typedef_enum;
 
-typedef enum
-{
+typedef enum {
     KEY_WAKEUP = 0,
-}key_typedef_enum;
+} key_typedef_enum;
 
-typedef enum
-{
+typedef enum {
     KEY_MODE_GPIO = 0,
     KEY_MODE_EXTI = 1
-}keymode_typedef_enum;
+} keymode_typedef_enum;
 
 
 /* sipeed longan nano board low layer led */

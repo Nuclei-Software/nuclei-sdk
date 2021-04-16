@@ -36,29 +36,27 @@ OF SUCH DAMAGE.
 #define GD32VF103C_T_DISPLAY_H
 
 #ifdef cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #include "nuclei_sdk_soc.h"
 
-/* exported types */
-typedef enum
-{
-    LED_1 = 0,
-    LED_2 = 1,
-    LED_3 = 2,
-    LED_G = 0,
-    LED_B = 1,
-    LED_R = 2
-} led_typedef_enum;
+    /* exported types */
+    typedef enum {
+        LED_1 = 0,
+        LED_2 = 1,
+        LED_3 = 2,
+        LED_G = 0,
+        LED_B = 1,
+        LED_R = 2
+    } led_typedef_enum;
 
-typedef enum
-{
-    KEY_MODE_GPIO = 0,
-    KEY_MODE_EXTI = 1
-} keymode_typedef_enum;
+    typedef enum {
+        KEY_MODE_GPIO = 0,
+        KEY_MODE_EXTI = 1
+    } keymode_typedef_enum;
 
-/* leds on bottomside of the board */
+    /* leds on bottomside of the board */
 #define LEDn                             (3U)
 
 #define LEDG_PIN                         GPIO_PIN_1
@@ -82,17 +80,17 @@ typedef enum
 #define GD32_COM0_GPIO_PORT              GPIOA
 #define GD32_COM0_GPIO_CLK               RCU_GPIOA
 
-/* function declarations */
-/* configure led GPIO */
-void gd_led_init(led_typedef_enum lednum);
-/* turn on selected led */
-void gd_led_on(led_typedef_enum lednum);
-/* turn off selected led */
-void gd_led_off(led_typedef_enum lednum);
-/* toggle the selected led */
-void gd_led_toggle(led_typedef_enum lednum);
-/* configure COM port */
-void gd_com_init(uint32_t com);
+    /* function declarations */
+    /* configure led GPIO */
+    void gd_led_init(led_typedef_enum lednum);
+    /* turn on selected led */
+    void gd_led_on(led_typedef_enum lednum);
+    /* turn off selected led */
+    void gd_led_off(led_typedef_enum lednum);
+    /* toggle the selected led */
+    void gd_led_toggle(led_typedef_enum lednum);
+    /* configure COM port */
+    void gd_com_init(uint32_t com);
 
 #ifdef cplusplus
 }

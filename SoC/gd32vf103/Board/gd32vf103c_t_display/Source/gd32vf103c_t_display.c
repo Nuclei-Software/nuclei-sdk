@@ -107,7 +107,7 @@ void gd_led_off(led_typedef_enum lednum)
 void gd_led_toggle(led_typedef_enum lednum)
 {
     gpio_bit_write(GPIO_PORT[lednum], GPIO_PIN[lednum],
-        (bit_status)(1-gpio_input_bit_get(GPIO_PORT[lednum], GPIO_PIN[lednum])));
+                   (bit_status)(1 - gpio_input_bit_get(GPIO_PORT[lednum], GPIO_PIN[lednum])));
 }
 
 /*!
@@ -120,7 +120,7 @@ void gd_led_toggle(led_typedef_enum lednum)
 void gd_com_init(uint32_t com)
 {
     uint32_t com_id = 0U;
-    if(GD32_COM0 == com){
+    if (GD32_COM0 == com) {
         com_id = 0U;
     }
 

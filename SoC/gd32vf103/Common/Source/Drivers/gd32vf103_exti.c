@@ -80,33 +80,33 @@ void exti_init(exti_line_enum linex, exti_mode_enum mode, exti_trig_type_enum tr
 
     /* set the EXTI mode and enable the interrupts or events from EXTI line x */
     switch (mode) {
-    case EXTI_INTERRUPT:
-        EXTI_INTEN |= (uint32_t) linex;
-        break;
-    case EXTI_EVENT:
-        EXTI_EVEN |= (uint32_t) linex;
-        break;
-    default:
-        break;
+        case EXTI_INTERRUPT:
+            EXTI_INTEN |= (uint32_t) linex;
+            break;
+        case EXTI_EVENT:
+            EXTI_EVEN |= (uint32_t) linex;
+            break;
+        default:
+            break;
     }
 
     /* set the EXTI trigger type */
     switch (trig_type) {
-    case EXTI_TRIG_RISING:
-        EXTI_RTEN |= (uint32_t) linex;
-        EXTI_FTEN &= ~(uint32_t) linex;
-        break;
-    case EXTI_TRIG_FALLING:
-        EXTI_RTEN &= ~(uint32_t) linex;
-        EXTI_FTEN |= (uint32_t) linex;
-        break;
-    case EXTI_TRIG_BOTH:
-        EXTI_RTEN |= (uint32_t) linex;
-        EXTI_FTEN |= (uint32_t) linex;
-        break;
-    case EXTI_TRIG_NONE:
-    default:
-        break;
+        case EXTI_TRIG_RISING:
+            EXTI_RTEN |= (uint32_t) linex;
+            EXTI_FTEN &= ~(uint32_t) linex;
+            break;
+        case EXTI_TRIG_FALLING:
+            EXTI_RTEN &= ~(uint32_t) linex;
+            EXTI_FTEN |= (uint32_t) linex;
+            break;
+        case EXTI_TRIG_BOTH:
+            EXTI_RTEN |= (uint32_t) linex;
+            EXTI_FTEN |= (uint32_t) linex;
+            break;
+        case EXTI_TRIG_NONE:
+        default:
+            break;
     }
 }
 

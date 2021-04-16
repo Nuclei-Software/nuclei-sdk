@@ -132,7 +132,7 @@ OF SUCH DAMAGE.
 #define I2C_REG_VAL(i2cx, offset)       (REG32((i2cx) + (((uint32_t)(offset) & 0xFFFFU) >> 6)))
 #define I2C_BIT_POS(val)                ((uint32_t)(val) & 0x1FU)
 #define I2C_REGIDX_BIT2(regidx, bitpos, regidx2, bitpos2)   (((uint32_t)(regidx2) << 22) | (uint32_t)((bitpos2) << 16)\
-                                                              | (((uint32_t)(regidx) << 6) | (uint32_t)(bitpos)))
+                                                             | (((uint32_t)(regidx) << 6) | (uint32_t)(bitpos)))
 #define I2C_REG_VAL2(i2cx, offset)      (REG32((i2cx) + ((uint32_t)(offset) >> 22)))
 #define I2C_BIT_POS2(val)               (((uint32_t)(val) & 0x1F0000U) >> 16)
 
@@ -171,20 +171,20 @@ typedef enum {
 /* I2C interrupt flags */
 typedef enum {
     /* interrupt flags in CTL1 register */
-    I2C_INT_FLAG_SBSEND = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U,I2C_STAT0_REG_OFFSET, 0U), /*!< start condition sent out in master mode interrupt flag */
-    I2C_INT_FLAG_ADDSEND = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U,I2C_STAT0_REG_OFFSET, 1U), /*!< address is sent in master mode or received and matches in slave mode interrupt flag */
-    I2C_INT_FLAG_BTC = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U,I2C_STAT0_REG_OFFSET, 2U), /*!< byte transmission finishes */
-    I2C_INT_FLAG_ADD10SEND = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U,I2C_STAT0_REG_OFFSET, 3U), /*!< header of 10-bit address is sent in master mode interrupt flag */
-    I2C_INT_FLAG_STPDET = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U,I2C_STAT0_REG_OFFSET, 4U), /*!< stop condition detected in slave mode interrupt flag */
-    I2C_INT_FLAG_RBNE = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U,I2C_STAT0_REG_OFFSET, 6U), /*!< I2C_DATA is not Empty during receiving interrupt flag */
-    I2C_INT_FLAG_TBE = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U,I2C_STAT0_REG_OFFSET, 7U), /*!< I2C_DATA is empty during transmitting interrupt flag */
-    I2C_INT_FLAG_BERR = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U,I2C_STAT0_REG_OFFSET, 8U), /*!< a bus error occurs indication a unexpected start or stop condition on I2C bus interrupt flag */
-    I2C_INT_FLAG_LOSTARB = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U,I2C_STAT0_REG_OFFSET, 9U), /*!< arbitration lost in master mode interrupt flag */
-    I2C_INT_FLAG_AERR = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U,I2C_STAT0_REG_OFFSET, 10U), /*!< acknowledge error interrupt flag */
-    I2C_INT_FLAG_OUERR = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U,I2C_STAT0_REG_OFFSET, 11U), /*!< over-run or under-run situation occurs in slave mode interrupt flag */
-    I2C_INT_FLAG_PECERR = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U,I2C_STAT0_REG_OFFSET, 12U), /*!< PEC error when receiving data interrupt flag */
-    I2C_INT_FLAG_SMBTO = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U,I2C_STAT0_REG_OFFSET, 14U), /*!< timeout signal in SMBus mode interrupt flag */
-    I2C_INT_FLAG_SMBALT = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U,I2C_STAT0_REG_OFFSET, 15U), /*!< SMBus Alert status interrupt flag */
+    I2C_INT_FLAG_SBSEND = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U, I2C_STAT0_REG_OFFSET, 0U), /*!< start condition sent out in master mode interrupt flag */
+    I2C_INT_FLAG_ADDSEND = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U, I2C_STAT0_REG_OFFSET, 1U), /*!< address is sent in master mode or received and matches in slave mode interrupt flag */
+    I2C_INT_FLAG_BTC = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U, I2C_STAT0_REG_OFFSET, 2U), /*!< byte transmission finishes */
+    I2C_INT_FLAG_ADD10SEND = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U, I2C_STAT0_REG_OFFSET, 3U), /*!< header of 10-bit address is sent in master mode interrupt flag */
+    I2C_INT_FLAG_STPDET = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U, I2C_STAT0_REG_OFFSET, 4U), /*!< stop condition detected in slave mode interrupt flag */
+    I2C_INT_FLAG_RBNE = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U, I2C_STAT0_REG_OFFSET, 6U), /*!< I2C_DATA is not Empty during receiving interrupt flag */
+    I2C_INT_FLAG_TBE = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 9U, I2C_STAT0_REG_OFFSET, 7U), /*!< I2C_DATA is empty during transmitting interrupt flag */
+    I2C_INT_FLAG_BERR = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U, I2C_STAT0_REG_OFFSET, 8U), /*!< a bus error occurs indication a unexpected start or stop condition on I2C bus interrupt flag */
+    I2C_INT_FLAG_LOSTARB = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U, I2C_STAT0_REG_OFFSET, 9U), /*!< arbitration lost in master mode interrupt flag */
+    I2C_INT_FLAG_AERR = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U, I2C_STAT0_REG_OFFSET, 10U), /*!< acknowledge error interrupt flag */
+    I2C_INT_FLAG_OUERR = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U, I2C_STAT0_REG_OFFSET, 11U), /*!< over-run or under-run situation occurs in slave mode interrupt flag */
+    I2C_INT_FLAG_PECERR = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U, I2C_STAT0_REG_OFFSET, 12U), /*!< PEC error when receiving data interrupt flag */
+    I2C_INT_FLAG_SMBTO = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U, I2C_STAT0_REG_OFFSET, 14U), /*!< timeout signal in SMBus mode interrupt flag */
+    I2C_INT_FLAG_SMBALT = I2C_REGIDX_BIT2(I2C_CTL1_REG_OFFSET, 8U, I2C_STAT0_REG_OFFSET, 15U), /*!< SMBus Alert status interrupt flag */
 } i2c_interrupt_flag_enum;
 
 /* I2C interrupt enable or disable */
@@ -278,7 +278,7 @@ void i2c_deinit(uint32_t i2c_periph);
 /* configure I2C clock */
 void i2c_clock_config(uint32_t i2c_periph, uint32_t clkspeed, uint32_t dutycyc);
 /* configure I2C address */
-void i2c_mode_addr_config(uint32_t i2c_periph, uint32_t mode,uint32_t addformat, uint32_t addr);
+void i2c_mode_addr_config(uint32_t i2c_periph, uint32_t mode, uint32_t addformat, uint32_t addr);
 /* SMBus type selection */
 void i2c_smbus_type_config(uint32_t i2c_periph, uint32_t type);
 /* whether or not to send an ACK */
@@ -286,9 +286,9 @@ void i2c_ack_config(uint32_t i2c_periph, uint32_t ack);
 /* configure I2C POAP position */
 void i2c_ackpos_config(uint32_t i2c_periph, uint32_t pos);
 /* master sends slave address */
-void i2c_master_addressing(uint32_t i2c_periph, uint32_t addr,uint32_t trandirection);
+void i2c_master_addressing(uint32_t i2c_periph, uint32_t addr, uint32_t trandirection);
 /* configure I2C saddress1 */
-void i2c_saddr1_config(uint32_t i2c_periph,uint32_t addr);
+void i2c_saddr1_config(uint32_t i2c_periph, uint32_t addr);
 /* enable dual-address mode */
 void i2c_dualaddr_enable(uint32_t i2c_periph, uint32_t dualaddr);
 /* disable dual-address mode */
@@ -337,8 +337,8 @@ void i2c_interrupt_enable(uint32_t i2c_periph, i2c_interrupt_enum interrupt);
 /* disable I2C interrupt */
 void i2c_interrupt_disable(uint32_t i2c_periph, i2c_interrupt_enum interrupt);
 /* check I2C interrupt flag */
-FlagStatus i2c_interrupt_flag_get(uint32_t i2c_periph,i2c_interrupt_flag_enum int_flag);
+FlagStatus i2c_interrupt_flag_get(uint32_t i2c_periph, i2c_interrupt_flag_enum int_flag);
 /* clear I2C interrupt flag */
-void i2c_interrupt_flag_clear(uint32_t i2c_periph,i2c_interrupt_flag_enum int_flag);
+void i2c_interrupt_flag_clear(uint32_t i2c_periph, i2c_interrupt_flag_enum int_flag);
 
 #endif /* GD32VF103_I2C_H */

@@ -3,7 +3,7 @@
 #define _NUCLEI_SDK_HAL_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #include "gd32vf103v_rvstar.h"

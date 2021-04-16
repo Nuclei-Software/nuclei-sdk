@@ -1,7 +1,7 @@
 /*!
     \file  gd32vf103_can.h
     \brief definitions for the CAN
- 
+
     \version 2019-6-5, V1.0.0, firmware for GD32VF103
 */
 
@@ -660,7 +660,7 @@ void can_deinit(uint32_t can_periph);
 void can_struct_para_init(can_struct_type_enum type, void* p_struct);
 /* initialize CAN */
 ErrStatus can_init(uint32_t can_periph,
-        can_parameter_struct* can_parameter_init);
+                   can_parameter_struct* can_parameter_init);
 /* CAN filter init */
 void can_filter_init(can_filter_parameter_struct* can_filter_parameter_init);
 /* set can1 fliter start bank number */
@@ -678,15 +678,15 @@ void can_time_trigger_mode_disable(uint32_t can_periph);
 /* transmit functions */
 /* transmit CAN message */
 uint8_t can_message_transmit(uint32_t can_periph,
-        can_trasnmit_message_struct* transmit_message);
+                             can_trasnmit_message_struct* transmit_message);
 /* get CAN transmit state */
 can_transmit_state_enum can_transmit_states(uint32_t can_periph,
-        uint8_t mailbox_number);
+                                            uint8_t mailbox_number);
 /* stop CAN transmission */
 void can_transmission_stop(uint32_t can_periph, uint8_t mailbox_number);
 /* CAN receive message */
 void can_message_receive(uint32_t can_periph, uint8_t fifo_number,
-        can_receive_message_struct* receive_message);
+                         can_receive_message_struct* receive_message);
 /* CAN release fifo */
 void can_fifo_release(uint32_t can_periph, uint8_t fifo_number);
 /* CAN receive message length */
@@ -713,7 +713,7 @@ FlagStatus can_flag_get(uint32_t can_periph, can_flag_enum flag);
 void can_flag_clear(uint32_t can_periph, can_flag_enum flag);
 /* CAN get interrupt flag state */
 FlagStatus can_interrupt_flag_get(uint32_t can_periph,
-        can_interrupt_flag_enum flag);
+                                  can_interrupt_flag_enum flag);
 /* CAN clear interrupt flag state */
 void can_interrupt_flag_clear(uint32_t can_periph, can_interrupt_flag_enum flag);
 

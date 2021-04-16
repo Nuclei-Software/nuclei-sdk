@@ -6,7 +6,7 @@
 #undef errno
 extern int errno;
 
-__WEAK int _wait(int *status)
+__WEAK int _wait(int* status)
 {
     errno = ECHILD;
     return -1;

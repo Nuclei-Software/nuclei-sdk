@@ -61,7 +61,7 @@ void fmc_wscnt_set(uint32_t wscnt)
  */
 void fmc_unlock(void)
 {
-    if((RESET != (FMC_CTL0 & FMC_CTL0_LK))){
+    if ((RESET != (FMC_CTL0 & FMC_CTL0_LK))) {
         /* write the FMC unlock key */
         FMC_KEY0 = UNLOCK_KEY0;
         FMC_KEY0 = UNLOCK_KEY1;
@@ -114,17 +114,17 @@ fmc_state_enum fmc_page_erase(uint32_t page_address)
 fmc_state_enum fmc_mass_erase(void)
 {
     fmc_state_enum fmc_state;
-        fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+    fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
-        if(FMC_READY == fmc_state){
-            /* start whole chip erase */
-            FMC_CTL0 |= FMC_CTL0_MER;
-            FMC_CTL0 |= FMC_CTL0_START;
-            /* wait for the FMC ready */
-            fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
-            /* reset the MER bit */
-            FMC_CTL0 &= ~FMC_CTL0_MER;
-        }
+    if (FMC_READY == fmc_state) {
+        /* start whole chip erase */
+        FMC_CTL0 |= FMC_CTL0_MER;
+        FMC_CTL0 |= FMC_CTL0_START;
+        /* wait for the FMC ready */
+        fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
+        /* reset the MER bit */
+        FMC_CTL0 &= ~FMC_CTL0_MER;
+    }
     /* return the FMC state  */
     return fmc_state;
 }
@@ -141,7 +141,7 @@ fmc_state_enum fmc_word_program(uint32_t address, uint32_t data)
     fmc_state_enum fmc_state = FMC_READY;
     fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
-    if(FMC_READY == fmc_state){
+    if (FMC_READY == fmc_state) {
         /* set the PG bit to start program */
         FMC_CTL0 |= FMC_CTL0_PG;
         REG32(address) = data;
@@ -165,7 +165,7 @@ fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data)
     fmc_state_enum fmc_state = FMC_READY;
     fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
-    if(FMC_READY == fmc_state){
+    if (FMC_READY == fmc_state) {
         /* set the PG bit to start program */
         FMC_CTL0 |= FMC_CTL0_PG;
         REG16(address) = data;
@@ -186,7 +186,7 @@ fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data)
  */
 void ob_unlock(void)
 {
-    if(RESET == (FMC_CTL0 & FMC_CTL0_OBWEN)){
+    if (RESET == (FMC_CTL0 & FMC_CTL0_OBWEN)) {
         /* write the FMC key */
         FMC_OBKEY = UNLOCK_KEY0;
         FMC_OBKEY = UNLOCK_KEY1;
@@ -223,11 +223,11 @@ fmc_state_enum ob_erase(void)
     fmc_state_enum fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
     /* check the option byte security protection value */
-    if(RESET != ob_spc_get()){
+    if (RESET != ob_spc_get()) {
         temp_spc = FMC_USPC;
     }
 
-    if(FMC_READY == fmc_state){
+    if (FMC_READY == fmc_state) {
 
         /* start erase the option byte */
         FMC_CTL0 |= FMC_CTL0_OBER;
@@ -236,7 +236,7 @@ fmc_state_enum ob_erase(void)
         /* wait for the FMC ready */
         fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
-        if(FMC_READY == fmc_state){
+        if (FMC_READY == fmc_state) {
             /* reset the OBER bit */
             FMC_CTL0 &= ~FMC_CTL0_OBER;
             /* set the OBPG bit */
@@ -249,8 +249,8 @@ fmc_state_enum ob_erase(void)
                 /* reset the OBPG bit */
                 FMC_CTL0 &= ~FMC_CTL0_OBPG;
             }
-        }else{
-            if(FMC_TOERR != fmc_state){
+        } else {
+            if (FMC_TOERR != fmc_state) {
                 /* reset the OBPG bit */
                 FMC_CTL0 &= ~FMC_CTL0_OBPG;
             }
@@ -277,42 +277,42 @@ fmc_state_enum ob_write_protection_enable(uint32_t ob_wp)
 
     fmc_state_enum fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
-    ob_wp = (uint32_t) (~ob_wp);
-    temp_wp0 = (uint16_t) (ob_wp & OB_WP0_WP0);
-    temp_wp1 = (uint16_t) ((ob_wp & OB_WP1_WP1) >> 8U);
-    temp_wp2 = (uint16_t) ((ob_wp & OB_WP2_WP2) >> 16U);
-    temp_wp3 = (uint16_t) ((ob_wp & OB_WP3_WP3) >> 24U);
+    ob_wp = (uint32_t)(~ob_wp);
+    temp_wp0 = (uint16_t)(ob_wp & OB_WP0_WP0);
+    temp_wp1 = (uint16_t)((ob_wp & OB_WP1_WP1) >> 8U);
+    temp_wp2 = (uint16_t)((ob_wp & OB_WP2_WP2) >> 16U);
+    temp_wp3 = (uint16_t)((ob_wp & OB_WP3_WP3) >> 24U);
 
-    if(FMC_READY == fmc_state){
+    if (FMC_READY == fmc_state) {
 
         /* set the OBPG bit*/
         FMC_CTL0 |= FMC_CTL0_OBPG;
 
-        if(0xFFU != temp_wp0){
+        if (0xFFU != temp_wp0) {
             OB_WP0 = temp_wp0;
 
             /* wait for the FMC ready */
             fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
         }
-        if((FMC_READY == fmc_state) && (0xFFU != temp_wp1)){
+        if ((FMC_READY == fmc_state) && (0xFFU != temp_wp1)) {
             OB_WP1 = temp_wp1;
 
             /* wait for the FMC ready */
             fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
         }
-        if((FMC_READY == fmc_state) && (0xFFU != temp_wp2)){
+        if ((FMC_READY == fmc_state) && (0xFFU != temp_wp2)) {
             OB_WP2 = temp_wp2;
 
             /* wait for the FMC ready */
             fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
         }
-        if((FMC_READY == fmc_state) && (0xFFU != temp_wp3)){
+        if ((FMC_READY == fmc_state) && (0xFFU != temp_wp3)) {
             OB_WP3 = temp_wp3;
 
             /* wait for the FMC ready */
             fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
         }
-        if(FMC_TOERR != fmc_state){
+        if (FMC_TOERR != fmc_state) {
             /* reset the OBPG bit */
             FMC_CTL0 &= ~FMC_CTL0_OBPG;
         }
@@ -334,14 +334,14 @@ fmc_state_enum ob_security_protection_config(uint8_t ob_spc)
 {
     fmc_state_enum fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
-    if(FMC_READY == fmc_state){
+    if (FMC_READY == fmc_state) {
         FMC_CTL0 |= FMC_CTL0_OBER;
         FMC_CTL0 |= FMC_CTL0_START;
 
         /* wait for the FMC ready */
         fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
-        if(FMC_READY == fmc_state){
+        if (FMC_READY == fmc_state) {
             /* reset the OBER bit */
             FMC_CTL0 &= ~FMC_CTL0_OBER;
 
@@ -357,7 +357,7 @@ fmc_state_enum ob_security_protection_config(uint8_t ob_spc)
                 /* reset the OBPG bit */
                 FMC_CTL0 &= ~FMC_CTL0_OBPG;
             }
-        }else{
+        } else {
             if (FMC_TOERR != fmc_state) {
                 /* reset the OBER bit */
                 FMC_CTL0 &= ~FMC_CTL0_OBER;
@@ -392,7 +392,7 @@ fmc_state_enum ob_user_write(uint8_t ob_fwdgt, uint8_t ob_deepsleep, uint8_t ob_
     /* wait for the FMC ready */
     fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
-    if(FMC_READY == fmc_state){
+    if (FMC_READY == fmc_state) {
         /* set the OBPG bit*/
         FMC_CTL0 |= FMC_CTL0_OBPG;
 
@@ -402,7 +402,7 @@ fmc_state_enum ob_user_write(uint8_t ob_fwdgt, uint8_t ob_deepsleep, uint8_t ob_
         /* wait for the FMC ready */
         fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
-        if(FMC_TOERR != fmc_state){
+        if (FMC_TOERR != fmc_state) {
             /* reset the OBPG bit */
             FMC_CTL0 &= ~FMC_CTL0_OBPG;
         }
@@ -418,10 +418,11 @@ fmc_state_enum ob_user_write(uint8_t ob_fwdgt, uint8_t ob_deepsleep, uint8_t ob_
     \param[out] none
     \retval     state of FMC, refer to fmc_state_enum
  */
-fmc_state_enum ob_data_program(uint32_t address, uint8_t data) {
+fmc_state_enum ob_data_program(uint32_t address, uint8_t data)
+{
     fmc_state_enum fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
-    if(FMC_READY == fmc_state){
+    if (FMC_READY == fmc_state) {
         /* set the OBPG bit */
         FMC_CTL0 |= FMC_CTL0_OBPG;
         REG16(address) = data;
@@ -429,7 +430,7 @@ fmc_state_enum ob_data_program(uint32_t address, uint8_t data) {
         /* wait for the FMC ready */
         fmc_state = fmc_ready_wait(FMC_TIMEOUT_COUNT);
 
-        if(FMC_TOERR != fmc_state){
+        if (FMC_TOERR != fmc_state) {
             /* reset the OBPG bit */
             FMC_CTL0 &= ~FMC_CTL0_OBPG;
         }
@@ -447,7 +448,7 @@ fmc_state_enum ob_data_program(uint32_t address, uint8_t data) {
 uint8_t ob_user_get(void)
 {
     /* return the FMC user option byte value */
-    return (uint8_t) (FMC_OBSTAT >> 2U);
+    return (uint8_t)(FMC_OBSTAT >> 2U);
 }
 
 /*!
@@ -458,7 +459,7 @@ uint8_t ob_user_get(void)
  */
 uint16_t ob_data_get(void)
 {
-    return (uint16_t) (FMC_OBSTAT >> 10U);
+    return (uint16_t)(FMC_OBSTAT >> 10U);
 }
 
 /*!
@@ -483,9 +484,9 @@ FlagStatus ob_spc_get(void)
 {
     FlagStatus spc_state = RESET;
 
-    if(RESET != (FMC_OBSTAT & FMC_OBSTAT_SPC)){
+    if (RESET != (FMC_OBSTAT & FMC_OBSTAT_SPC)) {
         spc_state = SET;
-    }else{
+    } else {
         spc_state = RESET;
     }
     return spc_state;
@@ -533,7 +534,7 @@ void fmc_interrupt_disable(uint32_t interrupt)
  */
 FlagStatus fmc_flag_get(uint32_t flag)
 {
-    if(RESET != (FMC_REG_VAL(flag) & BIT(FMC_BIT_POS(flag)))){
+    if (RESET != (FMC_REG_VAL(flag) & BIT(FMC_BIT_POS(flag)))) {
         return SET;
     } else {
         return RESET;
@@ -570,16 +571,16 @@ FlagStatus fmc_interrupt_flag_get(fmc_interrupt_flag_enum flag)
     FlagStatus ret1 = RESET;
     FlagStatus ret2 = RESET;
 
-    if(FMC_STAT0_REG_OFFSET == FMC_REG_OFFSET_GET(flag)){
+    if (FMC_STAT0_REG_OFFSET == FMC_REG_OFFSET_GET(flag)) {
         /* get the staus of interrupt flag */
-        ret1 = (FlagStatus) (FMC_REG_VALS(flag) & BIT(FMC_BIT_POS0(flag)));
+        ret1 = (FlagStatus)(FMC_REG_VALS(flag) & BIT(FMC_BIT_POS0(flag)));
         /* get the staus of interrupt enale bit */
-        ret2 = (FlagStatus) (FMC_CTL0 & BIT(FMC_BIT_POS1(flag)));
+        ret2 = (FlagStatus)(FMC_CTL0 & BIT(FMC_BIT_POS1(flag)));
     }
 
-    if(ret1 && ret2){
+    if (ret1 && ret2) {
         return SET;
-    }else{
+    } else {
         return RESET;
     }
 }
@@ -609,13 +610,13 @@ fmc_state_enum fmc_state_get(void)
 {
     fmc_state_enum fmc_state = FMC_READY;
 
-    if((uint32_t) 0x00U != (FMC_STAT0 & FMC_STAT0_BUSY)){
+    if ((uint32_t) 0x00U != (FMC_STAT0 & FMC_STAT0_BUSY)) {
         fmc_state = FMC_BUSY;
-    }else{
-        if((uint32_t) 0x00U != (FMC_STAT0 & FMC_STAT0_WPERR)){
+    } else {
+        if ((uint32_t) 0x00U != (FMC_STAT0 & FMC_STAT0_WPERR)) {
             fmc_state = FMC_WPERR;
-        }else{
-            if((uint32_t) 0x00U != (FMC_STAT0 & (FMC_STAT0_PGERR))){
+        } else {
+            if ((uint32_t) 0x00U != (FMC_STAT0 & (FMC_STAT0_PGERR))) {
                 fmc_state = FMC_PGERR;
             }
         }
@@ -635,13 +636,13 @@ fmc_state_enum fmc_ready_wait(uint32_t timeout)
     fmc_state_enum fmc_state = FMC_BUSY;
 
     /* wait for FMC ready */
-    do{
+    do {
         /* get FMC state */
         fmc_state = fmc_state_get();
         timeout--;
-    }while((FMC_BUSY == fmc_state) && (0x00U != timeout));
+    } while ((FMC_BUSY == fmc_state) && (0x00U != timeout));
 
-    if(FMC_BUSY == fmc_state){
+    if (FMC_BUSY == fmc_state) {
         fmc_state = FMC_TOERR;
     }
     /* return the FMC state */

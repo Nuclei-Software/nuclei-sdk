@@ -120,7 +120,7 @@ uint32_t crc_single_data_calculate(uint32_t sdata)
 uint32_t crc_block_data_calculate(uint32_t array[], uint32_t size)
 {
     uint32_t index;
-    for(index = 0U; index < size; index++){
+    for (index = 0U; index < size; index++) {
         CRC_DATA = array[index];
     }
     return (CRC_DATA);

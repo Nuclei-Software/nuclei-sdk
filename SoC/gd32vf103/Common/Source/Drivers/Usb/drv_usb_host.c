@@ -8,27 +8,27 @@
 /*
     Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -42,32 +42,32 @@ const uint32_t PIPE_DPID[] = {
 };
 
 //__STATIC_INLINE uint8_t usb_frame_even (usb_core_driver *pudev)
-uint32_t usb_frame_even (usb_core_driver *pudev)
+uint32_t usb_frame_even(usb_core_driver* pudev)
 {
     return !(pudev->regs.hr->HFINFR & 0x01U);
 }
 
 //__STATIC_INLINE void usb_phyclock_config (usb_core_driver *pudev, uint8_t clock)
-void usb_phyclock_config (usb_core_driver *pudev, uint8_t clock)
+void usb_phyclock_config(usb_core_driver* pudev, uint8_t clock)
 {
     pudev->regs.hr->HCTL &= ~HCTL_CLKSEL;
     pudev->regs.hr->HCTL |= clock;
 }
 
 //__STATIC_INLINE uint32_t usb_port_read (usb_core_driver *pudev)
-uint32_t usb_port_read (usb_core_driver *pudev)
+uint32_t usb_port_read(usb_core_driver* pudev)
 {
     return *pudev->regs.HPCS & ~(HPCS_PE | HPCS_PCD | HPCS_PEDC);
 }
 
 //__STATIC_INLINE uint32_t usb_curspeed_get (usb_core_driver *pudev)
 
-uint32_t usb_curspeed_get (usb_core_driver *pudev)
+uint32_t usb_curspeed_get(usb_core_driver* pudev)
 {
     return *pudev->regs.HPCS & HPCS_PS;
 }
 
-uint32_t usb_curframe_get (usb_core_driver *pudev)
+uint32_t usb_curframe_get(usb_core_driver* pudev)
 {
     return (pudev->regs.hr->HFINFR & 0xFFFFU);
 }
@@ -78,7 +78,7 @@ uint32_t usb_curframe_get (usb_core_driver *pudev)
     \param[out] none
     \retval     operation status
 */
-usb_status usb_host_init (usb_core_driver *pudev)
+usb_status usb_host_init(usb_core_driver* pudev)
 {
     uint32_t i = 0, inten = 0U;
 
@@ -93,12 +93,12 @@ usb_status usb_host_init (usb_core_driver *pudev)
 
     /* initialize host configuration register */
     if (USB_ULPI_PHY == pudev->bp.phy_itf) {
-        usb_phyclock_config (pudev, HCTL_30_60MHZ); 
+        usb_phyclock_config(pudev, HCTL_30_60MHZ);
     } else {
-        usb_phyclock_config (pudev, HCTL_48MHZ);
+        usb_phyclock_config(pudev, HCTL_48MHZ);
     }
 
-    usb_port_reset (pudev);
+    usb_port_reset(pudev);
 
     /* support FS/LS only */
     pudev->regs.hr->HCTL &= ~HCTL_SPDFSLS;
@@ -157,10 +157,10 @@ usb_status usb_host_init (usb_core_driver *pudev)
     /* make sure the FIFOs are flushed */
 
     /* flush all Tx FIFOs in device or host mode */
-    usb_txfifo_flush (&pudev->regs, 0x10U);
+    usb_txfifo_flush(&pudev->regs, 0x10U);
 
     /* flush the entire Rx FIFO */
-    usb_rxfifo_flush (&pudev->regs);
+    usb_rxfifo_flush(&pudev->regs);
 
     /* clear all pending host channel interrupts */
     for (i = 0U; i < pudev->bp.num_pipe; i++) {
@@ -169,7 +169,7 @@ usb_status usb_host_init (usb_core_driver *pudev)
     }
 
 #ifndef USE_OTG_MODE
-    usb_portvbus_switch (pudev, 1U);
+    usb_portvbus_switch(pudev, 1U);
 #endif /* USE_OTG_MODE */
 
     pudev->regs.gr->GINTEN = GINTEN_WKUPIE | GINTEN_SPIE;
@@ -199,15 +199,15 @@ usb_status usb_host_init (usb_core_driver *pudev)
     \param[out] none
     \retval     none
 */
-void usb_portvbus_switch (usb_core_driver *pudev, uint8_t state)
+void usb_portvbus_switch(usb_core_driver* pudev, uint8_t state)
 {
     uint32_t port = 0U;
 
     /* enable or disable the external charge pump */
-    usb_vbus_drive (state);
+    usb_vbus_drive(state);
 
     /* turn on the host port power. */
-    port = usb_port_read (pudev);
+    port = usb_port_read(pudev);
 
     if (!(port & HPCS_PP) && (1U == state)) {
         port |= HPCS_PP;
@@ -219,7 +219,7 @@ void usb_portvbus_switch (usb_core_driver *pudev, uint8_t state)
 
     *pudev->regs.HPCS = port;
 
-    usb_mdelay (200U);
+    usb_mdelay(200U);
 }
 
 /*!
@@ -228,17 +228,17 @@ void usb_portvbus_switch (usb_core_driver *pudev, uint8_t state)
     \param[out] none
     \retval     operation status
 */
-uint32_t usb_port_reset (usb_core_driver *pudev)
+uint32_t usb_port_reset(usb_core_driver* pudev)
 {
-    __IO uint32_t port = usb_port_read (pudev);
+    __IO uint32_t port = usb_port_read(pudev);
 
     *pudev->regs.HPCS = port | HPCS_PRST;
 
-    usb_mdelay (100U); /* see note */
+    usb_mdelay(100U);  /* see note */
 
     *pudev->regs.HPCS = port & ~HPCS_PRST;
 
-    usb_mdelay (20U);
+    usb_mdelay(20U);
 
     return 1;
 }
@@ -250,14 +250,14 @@ uint32_t usb_port_reset (usb_core_driver *pudev)
     \param[out] none
     \retval     operation status
 */
-usb_status usb_pipe_init (usb_core_driver *pudev, uint8_t pipe_num)
+usb_status usb_pipe_init(usb_core_driver* pudev, uint8_t pipe_num)
 {
     usb_status status = USB_OK;
 
     __IO uint32_t pp_ctl = 0U;
     __IO uint32_t pp_inten = HCHINTEN_TFIE;
 
-    usb_pipe *pp = &pudev->host.pipe[pipe_num];
+    usb_pipe* pp = &pudev->host.pipe[pipe_num];
 
     /* clear old interrupt conditions for this host channel */
     pudev->regs.pr[pipe_num]->HCHINTF = 0xFFFFFFFFU;
@@ -288,7 +288,7 @@ usb_status usb_pipe_init (usb_core_driver *pudev, uint8_t pipe_num)
 
         case USB_EPTYPE_INTR:
             pp_inten |= HCHINTEN_STALLIE | HCHINTEN_USBERIE | HCHINTEN_DTERIE \
-                         | HCHINTEN_NAKIE | HCHINTEN_REQOVRIE;
+                        | HCHINTEN_NAKIE | HCHINTEN_REQOVRIE;
             break;
 
         case USB_EPTYPE_ISOC:
@@ -333,7 +333,7 @@ usb_status usb_pipe_init (usb_core_driver *pudev, uint8_t pipe_num)
     \param[out] none
     \retval     operation status
 */
-usb_status usb_pipe_xfer (usb_core_driver *pudev, uint8_t pipe_num)
+usb_status usb_pipe_xfer(usb_core_driver* pudev, uint8_t pipe_num)
 {
     usb_status status = USB_OK;
 
@@ -342,7 +342,7 @@ usb_status usb_pipe_xfer (usb_core_driver *pudev, uint8_t pipe_num)
 
     __IO uint32_t pp_ctl = 0U;
 
-    usb_pipe *pp = &pudev->host.pipe[pipe_num];
+    usb_pipe* pp = &pudev->host.pipe[pipe_num];
 
     uint16_t max_packet_len = pp->ep.mps;
 
@@ -415,7 +415,7 @@ usb_status usb_pipe_xfer (usb_core_driver *pudev, uint8_t pipe_num)
             }
 
             /* write packet into the tx fifo. */
-            usb_txfifo_write (&pudev->regs, pp->xfer_buf, pipe_num, pp->xfer_len);
+            usb_txfifo_write(&pudev->regs, pp->xfer_buf, pipe_num, pp->xfer_len);
         }
     }
 
@@ -429,7 +429,7 @@ usb_status usb_pipe_xfer (usb_core_driver *pudev, uint8_t pipe_num)
     \param[out] none
     \retval     operation status
 */
-usb_status usb_pipe_halt (usb_core_driver *pudev, uint8_t pipe_num)
+usb_status usb_pipe_halt(usb_core_driver* pudev, uint8_t pipe_num)
 {
     __IO uint32_t pp_ctl = pudev->regs.pr[pipe_num]->HCHCTL;
 
@@ -438,22 +438,22 @@ usb_status usb_pipe_halt (usb_core_driver *pudev, uint8_t pipe_num)
     pp_ctl |= HCHCTL_CEN | HCHCTL_CDIS;
 
     switch (ep_type) {
-    case USB_EPTYPE_CTRL:
-    case USB_EPTYPE_BULK:
-        if (0U == (pudev->regs.gr->HNPTFQSTAT & HNPTFQSTAT_NPTXFS)) {
-            pp_ctl &= ~HCHCTL_CEN;
-        }
-        break;
+        case USB_EPTYPE_CTRL:
+        case USB_EPTYPE_BULK:
+            if (0U == (pudev->regs.gr->HNPTFQSTAT & HNPTFQSTAT_NPTXFS)) {
+                pp_ctl &= ~HCHCTL_CEN;
+            }
+            break;
 
-    case USB_EPTYPE_INTR:
-    case USB_EPTYPE_ISOC:
-        if (0U == (pudev->regs.hr->HPTFQSTAT & HPTFQSTAT_PTXFS)) {
-            pp_ctl &= ~HCHCTL_CEN;
-        }
-        break;
+        case USB_EPTYPE_INTR:
+        case USB_EPTYPE_ISOC:
+            if (0U == (pudev->regs.hr->HPTFQSTAT & HPTFQSTAT_PTXFS)) {
+                pp_ctl &= ~HCHCTL_CEN;
+            }
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
     pudev->regs.pr[pipe_num]->HCHCTL = pp_ctl;
@@ -468,14 +468,14 @@ usb_status usb_pipe_halt (usb_core_driver *pudev, uint8_t pipe_num)
     \param[out] none
     \retval     operation status
 */
-usb_status usb_pipe_ping (usb_core_driver *pudev, uint8_t pipe_num)
+usb_status usb_pipe_ping(usb_core_driver* pudev, uint8_t pipe_num)
 {
     uint32_t pp_ctl = 0U;
 
     pudev->regs.pr[pipe_num]->HCHLEN = HCHLEN_PING | (HCHLEN_PCNT & (1U << 19U));
 
     pp_ctl = pudev->regs.pr[pipe_num]->HCHCTL;
- 
+
     pp_ctl |= HCHCTL_CEN;
     pp_ctl &= ~HCHCTL_CDIS;
 
@@ -490,7 +490,7 @@ usb_status usb_pipe_ping (usb_core_driver *pudev, uint8_t pipe_num)
     \param[out] none
     \retval     none
 */
-void usb_host_stop (usb_core_driver *pudev)
+void usb_host_stop(usb_core_driver* pudev)
 {
     uint32_t i;
     __IO uint32_t pp_ctl = 0U;
@@ -509,6 +509,6 @@ void usb_host_stop (usb_core_driver *pudev)
     }
 
     /* flush the FIFO */
-    usb_rxfifo_flush (&pudev->regs);
-    usb_txfifo_flush (&pudev->regs, 0x10U);
+    usb_rxfifo_flush(&pudev->regs);
+    usb_txfifo_flush(&pudev->regs, 0x10U);
 }

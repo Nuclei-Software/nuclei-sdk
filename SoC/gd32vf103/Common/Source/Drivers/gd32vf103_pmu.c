@@ -101,11 +101,11 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
     __RV_CSR_CLEAR(CSR_WFE, WFE_WFE);
 
     /* select WFI or WFE command to enter sleep mode */
-    if(WFI_CMD == sleepmodecmd){
+    if (WFI_CMD == sleepmodecmd) {
         __WFI();
-    }else{
+    } else {
         __disable_irq();
-    __WFE();
+        __WFE();
         __enable_irq();
     }
 }
@@ -123,7 +123,7 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
     \param[out] none
     \retval     none
 */
-void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
+void pmu_to_deepsleepmode(uint32_t ldo, uint8_t deepsleepmodecmd)
 {
     /* clear stbmod and ldolp bits */
     PMU_CTL &= ~((uint32_t)(PMU_CTL_STBMOD | PMU_CTL_LDOLP));
@@ -132,11 +132,11 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
     /* set CSR_SLEEPVALUE bit of RISC-V system control register */
     __RV_CSR_SET(CSR_WFE, WFE_WFE);
     /* select WFI or WFE command to enter deepsleep mode */
-    if(WFI_CMD == deepsleepmodecmd){
+    if (WFI_CMD == deepsleepmodecmd) {
         __WFI();
-    }else{
+    } else {
         __disable_irq();
-    __WFE();
+        __WFE();
         __enable_irq();
     }
     /* reset sleepdeep bit of RISC-V system control register */
@@ -164,11 +164,11 @@ void pmu_to_standbymode(uint8_t standbymodecmd)
     PMU_CTL |= PMU_CTL_WURST;
 
     /* select WFI or WFE command to enter standby mode */
-    if(WFI_CMD == standbymodecmd){
+    if (WFI_CMD == standbymodecmd) {
         __WFI();
-    }else{
+    } else {
         __disable_irq();
-    __WFE();
+        __WFE();
         __enable_irq();
     }
     __RV_CSR_CLEAR(CSR_WFE, WFE_WFE);
@@ -230,9 +230,9 @@ void pmu_backup_write_disable(void)
 */
 FlagStatus pmu_flag_get(uint32_t flag)
 {
-    if(PMU_CS & flag){
+    if (PMU_CS & flag) {
         return  SET;
-    }else{
+    } else {
         return  RESET;
     }
 }
@@ -248,16 +248,16 @@ FlagStatus pmu_flag_get(uint32_t flag)
 */
 void pmu_flag_clear(uint32_t flag_reset)
 {
-    switch(flag_reset){
-    case PMU_FLAG_RESET_WAKEUP:
-        /* reset wakeup flag */
-        PMU_CTL |= PMU_CTL_WURST;
-        break;
-    case PMU_FLAG_RESET_STANDBY:
-        /* reset standby flag */
-        PMU_CTL |= PMU_CTL_STBRST;
-        break;
-    default :
-        break;
+    switch (flag_reset) {
+        case PMU_FLAG_RESET_WAKEUP:
+            /* reset wakeup flag */
+            PMU_CTL |= PMU_CTL_WURST;
+            break;
+        case PMU_FLAG_RESET_STANDBY:
+            /* reset standby flag */
+            PMU_CTL |= PMU_CTL_STBRST;
+            break;
+        default :
+            break;
     }
 }

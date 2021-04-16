@@ -35,11 +35,11 @@ OF SUCH DAMAGE.
 #include "gd32vf103v_rvstar.h"
 
 /* private variables */
-static const uint32_t GPIO_PORT[LEDn]       = {LEDG_GPIO_PORT,LEDB_GPIO_PORT,LEDR_GPIO_PORT};
+static const uint32_t GPIO_PORT[LEDn]       = {LEDG_GPIO_PORT, LEDB_GPIO_PORT, LEDR_GPIO_PORT};
 
-static const uint32_t GPIO_PIN[LEDn]        = {LEDG_PIN,LEDB_PIN,LEDR_PIN};
+static const uint32_t GPIO_PIN[LEDn]        = {LEDG_PIN, LEDB_PIN, LEDR_PIN};
 
-static const rcu_periph_enum GPIO_CLK[LEDn] = {LEDG_GPIO_CLK,LEDB_GPIO_CLK,LEDR_GPIO_CLK};
+static const rcu_periph_enum GPIO_CLK[LEDn] = {LEDG_GPIO_CLK, LEDB_GPIO_CLK, LEDR_GPIO_CLK};
 
 static const uint32_t KEY_PORT[KEYn]        = {WAKEUP_KEY_GPIO_PORT};
 
@@ -106,7 +106,7 @@ void gd_led_off(led_typedef_enum lednum)
 void gd_led_toggle(led_typedef_enum lednum)
 {
     gpio_bit_write(GPIO_PORT[lednum], GPIO_PIN[lednum],
-        (bit_status)(1-gpio_input_bit_get(GPIO_PORT[lednum], GPIO_PIN[lednum])));
+                   (bit_status)(1 - gpio_input_bit_get(GPIO_PORT[lednum], GPIO_PIN[lednum])));
 }
 
 /*!
@@ -131,8 +131,8 @@ void gd_key_init(key_typedef_enum keynum, keymode_typedef_enum keymode)
     if (keymode == KEY_MODE_EXTI) {
         /* enable and set key EXTI interrupt to the lowest priority */
         ECLIC_EnableIRQ(KEY_IRQn[keynum]);
-        ECLIC_SetLevelIRQ(KEY_IRQn[keynum],1);
-        ECLIC_SetPriorityIRQ(KEY_IRQn[keynum],1);
+        ECLIC_SetLevelIRQ(KEY_IRQn[keynum], 1);
+        ECLIC_SetPriorityIRQ(KEY_IRQn[keynum], 1);
 
         /* connect key EXTI line to key GPIO pin */
         gpio_exti_source_select(KEY_PORT_SOURCE[keynum], KEY_PIN_SOURCE[keynum]);

@@ -70,17 +70,15 @@ OF SUCH DAMAGE.
 
 /* constants definitions */
 /* EXMC NOR/SRAM timing initialize struct */
-typedef struct
-{
+typedef struct {
     uint32_t bus_latency;                                               /*!< configure the bus latency */
     uint32_t asyn_data_setuptime;                                       /*!< configure the data setup time,asynchronous access mode valid */
     uint32_t asyn_address_holdtime;                                     /*!< configure the address hold time,asynchronous access mode valid */
     uint32_t asyn_address_setuptime;                                    /*!< configure the data setup time,asynchronous access mode valid */
-}exmc_norsram_timing_parameter_struct;
+} exmc_norsram_timing_parameter_struct;
 
 /* EXMC NOR/SRAM initialize struct */
-typedef struct
-{
+typedef struct {
     uint32_t norsram_region;                                            /*!< select the region of EXMC NOR/SRAM bank */
     uint32_t asyn_wait;                                                 /*!< enable or disable the asynchronous wait function */
     uint32_t nwait_signal;                                              /*!< enable or disable the NWAIT signal */
@@ -90,7 +88,7 @@ typedef struct
     uint32_t memory_type;                                               /*!< specifies the type of external memory */
     uint32_t address_data_mux;                                          /*!< specifies whether the data bus and address bus are multiplexed */
     exmc_norsram_timing_parameter_struct* read_write_timing;            /*!< timing parameters for read and write */
-}exmc_norsram_parameter_struct;
+} exmc_norsram_parameter_struct;
 
 /* EXMC register address */
 #define EXMC_SNCTL(region)                REG32(EXMC + 0x08U * (region))                  /*!< EXMC SRAM/NOR flash control register */

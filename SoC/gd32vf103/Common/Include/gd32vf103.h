@@ -53,9 +53,8 @@ extern "C" {
 /* ================                                Interrupt Number Definition                                ================ */
 /* =========================================================================================================================== */
 
-typedef enum IRQn
-{
-/* =======================================  Nuclei Core Specific Interrupt Numbers  ======================================== */
+typedef enum IRQn {
+    /* =======================================  Nuclei Core Specific Interrupt Numbers  ======================================== */
 
     Reserved0_IRQn            =   0,              /*!<  Internal reserved */
     Reserved1_IRQn            =   1,              /*!<  Internal reserved */
@@ -77,10 +76,10 @@ typedef enum IRQn
     BusError_IRQn             =  17,              /*!<  Bus Error interrupt */
     PerfMon_IRQn              =  18,              /*!<  Performance Monitor */
 
-/* ===========================================  GD32VF103 Specific Interrupt Numbers  ========================================= */
-/* ToDo: add here your device specific external interrupt numbers. 19~1023 is reserved number for user. Maxmum interrupt supported
-         could get from clicinfo.NUM_INTERRUPT. According the interrupt handlers defined in startup_Device.s
-         eg.: Interrupt for Timer#1       TIM1_IRQHandler   ->   TIM1_IRQn */
+    /* ===========================================  GD32VF103 Specific Interrupt Numbers  ========================================= */
+    /* ToDo: add here your device specific external interrupt numbers. 19~1023 is reserved number for user. Maxmum interrupt supported
+             could get from clicinfo.NUM_INTERRUPT. According the interrupt handlers defined in startup_Device.s
+             eg.: Interrupt for Timer#1       TIM1_IRQHandler   ->   TIM1_IRQn */
     /* interruput numbers */
     WWDGT_IRQn                   = 19,      /*!< window watchDog timer interrupt                          */
     LVD_IRQn                     = 20,      /*!< LVD through EXTI line detect interrupt                   */
@@ -155,7 +154,7 @@ typedef enum IRQn
 /* =========================================================================================================================== */
 
 typedef enum EXCn {
-/* =======================================  Nuclei N/NX Specific Exception Code  ======================================== */
+    /* =======================================  Nuclei N/NX Specific Exception Code  ======================================== */
     InsUnalign_EXCn          =   0,              /*!<  Instruction address misaligned */
     InsAccFault_EXCn         =   1,              /*!<  Instruction access fault */
     IlleIns_EXCn             =   2,              /*!<  Illegal instruction */
@@ -209,9 +208,9 @@ typedef enum EXCn {
 
 /* ========================================  Start of section using anonymous unions  ======================================== */
 #if   defined (__GNUC__)
-  /* anonymous unions are enabled by default */
+/* anonymous unions are enabled by default */
 #else
-  #warning Not supported compiler type
+#warning Not supported compiler type
 #endif
 
 
@@ -224,7 +223,7 @@ typedef enum EXCn {
 
 
 #define RTC_FREQ LXTAL_VALUE
- // The TIMER frequency is just the RTC frequency
+// The TIMER frequency is just the RTC frequency
 #define SOC_TIMER_FREQ     ((uint32_t)SystemCoreClock/4)  //LXTAL_VALUE units HZ
 
 
@@ -279,9 +278,9 @@ typedef enum {
 
 /* =========================================  End of section using anonymous unions  ========================================= */
 #if defined (__GNUC__)
-  /* anonymous unions are enabled by default */
+/* anonymous unions are enabled by default */
 #else
-  #warning Not supported compiler type
+#warning Not supported compiler type
 #endif
 
 

@@ -229,10 +229,10 @@ OF SUCH DAMAGE.
 #define RCU_DSV_DSLPVS                  BITS(0,1)                 /*!< deep-sleep mode voltage select */
 
 /* constants definitions */
- /* define value of high speed crystal oscillator (HXTAL) in Hz */
-#if !defined  HXTAL_VALUE  
-   #define HXTAL_VALUE    ((uint32_t)8000000) /*!< value of the external oscillator in Hz */
-   #define HXTAL_VALUE_25M  HXTAL_VALUE
+/* define value of high speed crystal oscillator (HXTAL) in Hz */
+#if !defined  HXTAL_VALUE
+#define HXTAL_VALUE    ((uint32_t)8000000) /*!< value of the external oscillator in Hz */
+#define HXTAL_VALUE_25M  HXTAL_VALUE
 #endif /* high speed crystal oscillator value */
 
 /* define startup timeout value of high speed crystal oscillator (HXTAL) */
@@ -241,7 +241,7 @@ OF SUCH DAMAGE.
 #endif /* high speed crystal oscillator startup timeout */
 
 /* define value of internal 8MHz RC oscillator (IRC8M) in Hz */
-#if !defined  (IRC8M_VALUE) 
+#if !defined  (IRC8M_VALUE)
 #define IRC8M_VALUE  ((uint32_t)8000000)
 #endif /* internal 8MHz RC oscillator value */
 
@@ -251,12 +251,12 @@ OF SUCH DAMAGE.
 #endif /* internal 8MHz RC oscillator startup timeout */
 
 /* define value of internal 40KHz RC oscillator(IRC40K) in Hz */
-#if !defined  (IRC40K_VALUE) 
+#if !defined  (IRC40K_VALUE)
 #define IRC40K_VALUE  ((uint32_t)40000)
 #endif /* internal 40KHz RC oscillator value */
 
 /* define value of low speed crystal oscillator (LXTAL)in Hz */
-#if !defined  (LXTAL_VALUE) 
+#if !defined  (LXTAL_VALUE)
 #define LXTAL_VALUE  ((uint32_t)32768)
 #endif /* low speed crystal oscillator value */
 
@@ -343,7 +343,7 @@ typedef enum {
 
 /* peripheral clock enable when sleep mode*/
 typedef enum {
-/* AHB peripherals */
+    /* AHB peripherals */
     RCU_SRAM_SLP = RCU_REGIDX_BIT(AHBEN_REG_OFFSET, 2U),          /*!< SRAM clock */
     RCU_FMC_SLP = RCU_REGIDX_BIT(AHBEN_REG_OFFSET, 4U),           /*!< FMC clock */
 } rcu_periph_sleep_enum;

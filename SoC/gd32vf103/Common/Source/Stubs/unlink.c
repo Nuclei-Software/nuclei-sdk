@@ -6,7 +6,7 @@
 #undef errno
 extern int errno;
 
-__WEAK int _unlink(const char *name)
+__WEAK int _unlink(const char* name)
 {
     return -1;
 }

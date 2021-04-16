@@ -112,8 +112,7 @@ OF SUCH DAMAGE.
 
 /* constants definitions */
 /* BKP data register number */
-typedef enum 
-{
+typedef enum {
     BKP_DATA_0 = 1,                                              /*!< BKP data register 0 */
     BKP_DATA_1,                                                  /*!< BKP data register 1 */
     BKP_DATA_2,                                                  /*!< BKP data register 2 */
@@ -156,7 +155,7 @@ typedef enum
     BKP_DATA_39,                                                 /*!< BKP data register 39 */
     BKP_DATA_40,                                                 /*!< BKP data register 40 */
     BKP_DATA_41,                                                 /*!< BKP data register 41 */
-}bkp_data_register_enum;
+} bkp_data_register_enum;
 
 /* BKP register */
 #define BKP_DATA0_9(number)             REG16((BKP) + 0x04U + (number) * 0x04U)

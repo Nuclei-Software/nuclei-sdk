@@ -8,27 +8,27 @@
 /*
     Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -40,7 +40,7 @@ OF SUCH DAMAGE.
 #include <wchar.h>
 
 #ifndef NULL
-    #define NULL                0U
+#define NULL                0U
 #endif
 
 typedef enum _usb_reqsta {
@@ -49,8 +49,7 @@ typedef enum _usb_reqsta {
 } usb_reqsta;
 
 /* string descriptor index */
-enum _str_index
-{
+enum _str_index {
     STR_IDX_LANGID                = 0x0U,  /* language ID string index */
     STR_IDX_MFC                   = 0x1U,  /* manufacturer string index */
     STR_IDX_PRODUCT               = 0x2U,  /* product string index */
@@ -65,8 +64,7 @@ typedef enum _usb_pwrsta {
     USB_PWRSTA_REMOTE_WAKEUP      = 0x2U,  /* USB is in remote wakeup status */
 } usb_pwrsta;
 
-typedef enum _usb_feature
-{
+typedef enum _usb_feature {
     USB_FEATURE_EP_HALT           = 0x0U,  /* USB has endpoint halt feature */
     USB_FEATURE_REMOTE_WAKEUP     = 0x1U,  /* USB has endpoint remote wakeup feature */
     USB_FEATURE_TEST_MODE         = 0x2U   /* USB has endpoint test mode feature */
@@ -95,19 +93,19 @@ typedef enum _usb_feature
 /* function declarations */
 
 /* handle USB standard device request */
-usb_reqsta usbd_standard_request (usb_core_driver *udev, usb_req *req);
+usb_reqsta usbd_standard_request(usb_core_driver* udev, usb_req* req);
 
 /* handle USB device class request */
-usb_reqsta usbd_class_request (usb_core_driver *udev, usb_req *req);
+usb_reqsta usbd_class_request(usb_core_driver* udev, usb_req* req);
 
 /* handle USB vendor request */
-usb_reqsta usbd_vendor_request (usb_core_driver *udev, usb_req *req);
+usb_reqsta usbd_vendor_request(usb_core_driver* udev, usb_req* req);
 
 /* handle USB enumeration error */
-void usbd_enum_error (usb_core_driver *udev, usb_req *req);
+void usbd_enum_error(usb_core_driver* udev, usb_req* req);
 
 /* convert hex 32bits value into unicode char */
-void int_to_unicode (uint32_t value, uint8_t *pbuf, uint8_t len);
+void int_to_unicode(uint32_t value, uint8_t* pbuf, uint8_t len);
 
 #endif /* __USBD_ENUM_H */
 

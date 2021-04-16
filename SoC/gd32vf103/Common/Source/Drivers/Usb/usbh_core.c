@@ -8,27 +8,27 @@
 /*
     Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -38,16 +38,15 @@ OF SUCH DAMAGE.
 #include "usbh_core.h"
 #include "drv_usbh_int.h"
 
-uint8_t usbh_sof (usb_core_driver *pudev);
+uint8_t usbh_sof(usb_core_driver* pudev);
 
-usbh_int_cb usbh_int_op = 
-{
+usbh_int_cb usbh_int_op = {
     usbh_sof
 };
 
-usbh_int_cb *usbh_int_fop = &usbh_int_op;
+usbh_int_cb* usbh_int_fop = &usbh_int_op;
 
-static usbh_status usbh_enum_task (usb_core_driver *pudev, usbh_host *puhost);
+static usbh_status usbh_enum_task(usb_core_driver* pudev, usbh_host* puhost);
 
 /*!
     \brief      USB SOF callback function from the interrupt
@@ -55,7 +54,7 @@ static usbh_status usbh_enum_task (usb_core_driver *pudev, usbh_host *puhost);
     \param[out] none
     \retval     operation status
 */
-uint8_t usbh_sof (usb_core_driver *pudev)
+uint8_t usbh_sof(usb_core_driver* pudev)
 {
     /* this callback could be used to implement a scheduler process */
     return 0U;
@@ -69,7 +68,7 @@ uint8_t usbh_sof (usb_core_driver *pudev)
     \param[out] none
     \retval     operation status
 */
-void usbh_init (usb_core_driver *pudev, usb_core_enum core, usbh_host *puhost)
+void usbh_init(usb_core_driver* pudev, usb_core_enum core, usbh_host* puhost)
 {
     uint8_t i = 0U;
 
@@ -86,13 +85,13 @@ void usbh_init (usb_core_driver *pudev, usb_core_enum core, usbh_host *puhost)
 
     pudev->host.pipe[0].ep.mps = 8U;
 
-    usb_basic_init (&pudev->bp, &pudev->regs, core);
+    usb_basic_init(&pudev->bp, &pudev->regs, core);
 
 #ifndef DUAL_ROLE_MODE_ENABLED
 
-    usb_core_init (pudev->bp, &pudev->regs);
+    usb_core_init(pudev->bp, &pudev->regs);
 
-    usb_host_init (pudev);
+    usb_host_init(pudev);
 
 #endif /* DUAL_ROLE_MODE_ENABLED */
 
@@ -107,7 +106,7 @@ void usbh_init (usb_core_driver *pudev, usb_core_enum core, usbh_host *puhost)
     \param[out] none
     \retval     operation status
 */
-usbh_status usbh_deinit(usb_core_driver *pudev, usbh_host *puhost)
+usbh_status usbh_deinit(usb_core_driver* pudev, usbh_host* puhost)
 {
     /* software init */
     puhost->cur_state = HOST_DEFAULT;
@@ -133,7 +132,7 @@ usbh_status usbh_deinit(usb_core_driver *pudev, usbh_host *puhost)
     \param[out] none
     \retval     none
 */
-void usbh_core_task (usb_core_driver *pudev, usbh_host *puhost)
+void usbh_core_task(usb_core_driver* pudev, usbh_host* puhost)
 {
     volatile usbh_status status = USBH_FAIL;
 
@@ -149,9 +148,9 @@ void usbh_core_task (usb_core_driver *pudev, usbh_host *puhost)
             if (pudev->host.connect_status) {
                 puhost->cur_state = HOST_DETECT_DEV_SPEED;
 
-                usb_mdelay (100U);
-               // usb_mdelay (2U);
-                usb_port_reset (pudev);
+                usb_mdelay(100U);
+                // usb_mdelay (2U);
+                usb_port_reset(pudev);
 
                 puhost->usr_cb->dev_reset();
             }
@@ -160,10 +159,10 @@ void usbh_core_task (usb_core_driver *pudev, usbh_host *puhost)
         case HOST_DETECT_DEV_SPEED:
             if (pudev->host.port_enabled) {
                 puhost->cur_state = HOST_DEV_ATTACHED;
-                puhost->dev_prop.speed = usb_curspeed_get (pudev);
+                puhost->dev_prop.speed = usb_curspeed_get(pudev);
                 puhost->usr_cb->dev_speed_detected(puhost->dev_prop.speed);
 
-                usb_mdelay (50U);               
+                usb_mdelay(50U);
             }
             break;
 
@@ -173,21 +172,21 @@ void usbh_core_task (usb_core_driver *pudev, usbh_host *puhost)
             puhost->control.pipe_in_num = usbh_pipe_allocate(pudev, 0x80U);
 
             /* reset USB device */
-            usb_port_reset (pudev);
+            usb_port_reset(pudev);
 
             /* open IN control pipe */
-            usbh_pipe_create (pudev,
-                              &puhost->dev_prop,
-                              puhost->control.pipe_in_num,
-                              USB_EPTYPE_CTRL,
-                              puhost->control.max_len);
+            usbh_pipe_create(pudev,
+                             &puhost->dev_prop,
+                             puhost->control.pipe_in_num,
+                             USB_EPTYPE_CTRL,
+                             puhost->control.max_len);
 
             /* open OUT control pipe */
-            usbh_pipe_create (pudev,
-                              &puhost->dev_prop,
-                              puhost->control.pipe_out_num,
-                              USB_EPTYPE_CTRL,
-                              puhost->control.max_len);
+            usbh_pipe_create(pudev,
+                             &puhost->dev_prop,
+                             puhost->control.pipe_out_num,
+                             USB_EPTYPE_CTRL,
+                             puhost->control.max_len);
 
             puhost->cur_state = HOST_ENUM;
             break;
@@ -195,7 +194,7 @@ void usbh_core_task (usb_core_driver *pudev, usbh_host *puhost)
         case HOST_ENUM:
 
             /* check for enumeration status */
-            if (USBH_OK == usbh_enum_task (pudev, puhost)) {
+            if (USBH_OK == usbh_enum_task(pudev, puhost)) {
                 /* the function shall return USBH_OK when full enumeration is complete */
 
                 /* user callback for end of device basic enumeration */
@@ -220,7 +219,7 @@ void usbh_core_task (usb_core_driver *pudev, usbh_host *puhost)
             if (USBH_OK == status) {
                 puhost->cur_state = HOST_CLASS_HANDLER;
             } else {
-                usbh_error_handler (puhost, status);
+                usbh_error_handler(puhost, status);
             }
             break;
 
@@ -228,7 +227,7 @@ void usbh_core_task (usb_core_driver *pudev, usbh_host *puhost)
             /* process class state machine */
             status = puhost->class_cb->class_machine(pudev, puhost);
 
-            usbh_error_handler (puhost, status);
+            usbh_error_handler(puhost, status);
             break;
 
         case HOST_SUSPENDED:
@@ -236,7 +235,7 @@ void usbh_core_task (usb_core_driver *pudev, usbh_host *puhost)
 
         case HOST_ERROR:
             /* re-initilaize host for new enumeration */
-            usbh_deinit (pudev, puhost);
+            usbh_deinit(pudev, puhost);
             puhost->usr_cb->dev_deinit();
             puhost->class_cb->class_deinit(pudev, puhost);
             break;
@@ -265,7 +264,7 @@ void usbh_core_task (usb_core_driver *pudev, usbh_host *puhost)
     \param[out] none
     \retval     none
 */
-void usbh_error_handler (usbh_host *puhost, usbh_status err_type)
+void usbh_error_handler(usbh_host* puhost, usbh_status err_type)
 {
     /* error unrecovered or not supported device speed */
     if ((USBH_SPEED_UNKNOWN_ERROR == err_type) || (USBH_UNRECOVERED_ERROR == err_type)) {
@@ -287,7 +286,7 @@ void usbh_error_handler (usbh_host *puhost, usbh_status err_type)
     \param[out] none
     \retval     none
 */
-static usbh_status usbh_enum_task (usb_core_driver *pudev, usbh_host *puhost)
+static usbh_status usbh_enum_task(usb_core_driver* pudev, usbh_host* puhost)
 {
     uint8_t str_buf[64];
 
@@ -298,23 +297,23 @@ static usbh_status usbh_enum_task (usb_core_driver *pudev, usbh_host *puhost)
     switch (puhost->enum_state) {
         case ENUM_DEFAULT:
             /* get device descriptor for only 1st 8 bytes : to get ep0 maxpacketsize */
-            if (USBH_OK == usbh_devdesc_get (pudev, puhost, 8U)) {
+            if (USBH_OK == usbh_devdesc_get(pudev, puhost, 8U)) {
 
                 puhost->control.max_len = puhost->dev_prop.dev_desc.bMaxPacketSize0;
 
                 /* issue reset */
-                usb_port_reset (pudev);
+                usb_port_reset(pudev);
 
                 /* modify control channels configuration for maximum packet size */
-                usbh_pipe_update (pudev,
-                                  puhost->control.pipe_out_num,
-                                  0U, 0U,
-                                  puhost->control.max_len);
+                usbh_pipe_update(pudev,
+                                 puhost->control.pipe_out_num,
+                                 0U, 0U,
+                                 puhost->control.max_len);
 
-                usbh_pipe_update (pudev,
-                                  puhost->control.pipe_in_num,
-                                  0U, 0U,
-                                  puhost->control.max_len);
+                usbh_pipe_update(pudev,
+                                 puhost->control.pipe_in_num,
+                                 0U, 0U,
+                                 puhost->control.max_len);
 
                 puhost->enum_state = ENUM_GET_DEV_DESC;
 
@@ -323,7 +322,7 @@ static usbh_status usbh_enum_task (usb_core_driver *pudev, usbh_host *puhost)
 
         case ENUM_GET_DEV_DESC:
             /* get full device descriptor */
-            if (USBH_OK == usbh_devdesc_get (pudev, puhost, USB_DEV_DESC_LEN)) {
+            if (USBH_OK == usbh_devdesc_get(pudev, puhost, USB_DEV_DESC_LEN)) {
                 puhost->usr_cb->dev_devdesc_assigned(&puhost->dev_prop.dev_desc);
 
                 index_mfc_str = puhost->dev_prop.dev_desc.iManufacturer;
@@ -334,10 +333,10 @@ static usbh_status usbh_enum_task (usb_core_driver *pudev, usbh_host *puhost)
             }
             break;
 
-        case ENUM_SET_ADDR: 
+        case ENUM_SET_ADDR:
             /* set address */
-            if (USBH_OK == usbh_setaddress (pudev, puhost, USBH_DEV_ADDR)) {
-                usb_mdelay (2);
+            if (USBH_OK == usbh_setaddress(pudev, puhost, USBH_DEV_ADDR)) {
+                usb_mdelay(2);
 
                 puhost->dev_prop.addr = USBH_DEV_ADDR;
 
@@ -345,15 +344,15 @@ static usbh_status usbh_enum_task (usb_core_driver *pudev, usbh_host *puhost)
                 puhost->usr_cb->dev_address_set();
 
                 /* modify control channels to update device address */
-                usbh_pipe_update (pudev,
-                                  puhost->control.pipe_in_num,
-                                  puhost->dev_prop.addr,
-                                  0U, 0U);
+                usbh_pipe_update(pudev,
+                                 puhost->control.pipe_in_num,
+                                 puhost->dev_prop.addr,
+                                 0U, 0U);
 
-                usbh_pipe_update (pudev,
-                                  puhost->control.pipe_out_num,
-                                  puhost->dev_prop.addr,
-                                  0U, 0U);
+                usbh_pipe_update(pudev,
+                                 puhost->control.pipe_out_num,
+                                 puhost->dev_prop.addr,
+                                 0U, 0U);
 
                 puhost->enum_state = ENUM_GET_CFG_DESC;
             }
@@ -361,18 +360,18 @@ static usbh_status usbh_enum_task (usb_core_driver *pudev, usbh_host *puhost)
 
         case ENUM_GET_CFG_DESC:
             /* get standard configuration descriptor */
-            if (USBH_OK == usbh_cfgdesc_get (pudev, puhost, USB_CFG_DESC_LEN)) {
+            if (USBH_OK == usbh_cfgdesc_get(pudev, puhost, USB_CFG_DESC_LEN)) {
                 puhost->enum_state = ENUM_GET_CFG_DESC_SET;
             }
             break;
 
         case ENUM_GET_CFG_DESC_SET:
             /* get full config descriptor (config, interface, endpoints) */
-            if (USBH_OK == usbh_cfgdesc_get (pudev, puhost, puhost->dev_prop.cfg_desc.wTotalLength)) {
+            if (USBH_OK == usbh_cfgdesc_get(pudev, puhost, puhost->dev_prop.cfg_desc.wTotalLength)) {
                 /* user callback for configuration descriptors available */
-                puhost->usr_cb->dev_cfgdesc_assigned (&puhost->dev_prop.cfg_desc,
-                                                       puhost->dev_prop.itf_desc,
-                                                       puhost->dev_prop.ep_desc[0]);
+                puhost->usr_cb->dev_cfgdesc_assigned(&puhost->dev_prop.cfg_desc,
+                                                     puhost->dev_prop.itf_desc,
+                                                     puhost->dev_prop.ep_desc[0]);
 
                 puhost->enum_state = ENUM_GET_STR_DESC;
             }
@@ -380,11 +379,11 @@ static usbh_status usbh_enum_task (usb_core_driver *pudev, usbh_host *puhost)
 
         case ENUM_GET_STR_DESC:
             if (index_mfc_str) {
-                if (USBH_OK == usbh_strdesc_get (pudev, 
-                                                 puhost, 
-                                                 puhost->dev_prop.dev_desc.iManufacturer, 
-                                                 str_buf,
-                                                 0xFFU)) {
+                if (USBH_OK == usbh_strdesc_get(pudev,
+                                                puhost,
+                                                puhost->dev_prop.dev_desc.iManufacturer,
+                                                str_buf,
+                                                0xFFU)) {
                     /* user callback for manufacturing string */
                     puhost->usr_cb->dev_mfc_str(str_buf);
 
@@ -393,22 +392,22 @@ static usbh_status usbh_enum_task (usb_core_driver *pudev, usbh_host *puhost)
             } else {
                 if (index_prod_str) {
                     /* check that product string is available */
-                    if (USBH_OK == usbh_strdesc_get (pudev, 
-                                                     puhost, 
-                                                     puhost->dev_prop.dev_desc.iProduct, 
-                                                     str_buf, 
-                                                     0xFFU)) {
+                    if (USBH_OK == usbh_strdesc_get(pudev,
+                                                    puhost,
+                                                    puhost->dev_prop.dev_desc.iProduct,
+                                                    str_buf,
+                                                    0xFFU)) {
                         puhost->usr_cb->dev_prod_str(str_buf);
 
                         index_prod_str = 0U;
                     }
                 } else {
                     if (index_serial_str) {
-                        if (USBH_OK == usbh_strdesc_get (pudev, 
-                                                         puhost, 
-                                                         puhost->dev_prop.dev_desc.iSerialNumber,
-                                                         str_buf, 
-                                                         0xFFU)) {
+                        if (USBH_OK == usbh_strdesc_get(pudev,
+                                                        puhost,
+                                                        puhost->dev_prop.dev_desc.iSerialNumber,
+                                                        str_buf,
+                                                        0xFFU)) {
                             puhost->usr_cb->dev_seral_str(str_buf);
                             puhost->enum_state = ENUM_SET_CONFIGURATION;
 
@@ -422,9 +421,9 @@ static usbh_status usbh_enum_task (usb_core_driver *pudev, usbh_host *puhost)
             break;
 
         case ENUM_SET_CONFIGURATION:
-            if (USBH_OK == usbh_setcfg (pudev, 
-                                        puhost,
-                                        puhost->dev_prop.cfg_desc.bConfigurationValue)) {
+            if (USBH_OK == usbh_setcfg(pudev,
+                                       puhost,
+                                       puhost->dev_prop.cfg_desc.bConfigurationValue)) {
                 puhost->enum_state = ENUM_DEV_CONFIGURED;
             }
             break;

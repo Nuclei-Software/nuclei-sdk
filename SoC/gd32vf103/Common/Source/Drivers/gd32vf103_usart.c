@@ -35,41 +35,41 @@ OF SUCH DAMAGE.
 #include "gd32vf103_usart.h"
 
 /*!
-    \brief      reset USART/UART 
+    \brief      reset USART/UART
     \param[in]  usart_periph: USARTx(x=0,1,2)/UARTx(x=3,4)
     \param[out] none
     \retval     none
 */
 void usart_deinit(uint32_t usart_periph)
 {
-    switch(usart_periph){
-    case USART0:
-        /* reset USART0 */
-        rcu_periph_reset_enable(RCU_USART0RST);
-        rcu_periph_reset_disable(RCU_USART0RST);
-        break;
-    case USART1:
-        /* reset USART1 */
-        rcu_periph_reset_enable(RCU_USART1RST);
-        rcu_periph_reset_disable(RCU_USART1RST);
-        break;
-    case USART2:
-        /* reset USART2 */
-        rcu_periph_reset_enable(RCU_USART2RST);
-        rcu_periph_reset_disable(RCU_USART2RST);
-        break;
-    case UART3:
-        /* reset UART3 */
-        rcu_periph_reset_enable(RCU_UART3RST);
-        rcu_periph_reset_disable(RCU_UART3RST);
-        break;
-    case UART4:
-        /* reset UART4 */
-        rcu_periph_reset_enable(RCU_UART4RST);
-        rcu_periph_reset_disable(RCU_UART4RST);
-        break;
-    default:
-        break;
+    switch (usart_periph) {
+        case USART0:
+            /* reset USART0 */
+            rcu_periph_reset_enable(RCU_USART0RST);
+            rcu_periph_reset_disable(RCU_USART0RST);
+            break;
+        case USART1:
+            /* reset USART1 */
+            rcu_periph_reset_enable(RCU_USART1RST);
+            rcu_periph_reset_disable(RCU_USART1RST);
+            break;
+        case USART2:
+            /* reset USART2 */
+            rcu_periph_reset_enable(RCU_USART2RST);
+            rcu_periph_reset_disable(RCU_USART2RST);
+            break;
+        case UART3:
+            /* reset UART3 */
+            rcu_periph_reset_enable(RCU_UART3RST);
+            rcu_periph_reset_disable(RCU_UART3RST);
+            break;
+        case UART4:
+            /* reset UART4 */
+            rcu_periph_reset_enable(RCU_UART4RST);
+            rcu_periph_reset_disable(RCU_UART4RST);
+            break;
+        default:
+            break;
     }
 }
 
@@ -79,37 +79,37 @@ void usart_deinit(uint32_t usart_periph)
     \param[in]  baudval: baud rate value
     \param[out] none
     \retval     none
-*/ 
+*/
 void usart_baudrate_set(uint32_t usart_periph, uint32_t baudval)
 {
-    uint32_t uclk=0U, intdiv=0U, fradiv=0U, udiv=0U;
-    switch(usart_periph){
-         /* get clock frequency */
-    case USART0:
-         /* get USART0 clock */
-         uclk=rcu_clock_freq_get(CK_APB2);
-         break;
-    case USART1:
-         /* get USART1 clock */
-         uclk=rcu_clock_freq_get(CK_APB1);
-         break;
-    case USART2:
-         /* get USART2 clock */
-         uclk=rcu_clock_freq_get(CK_APB1);
-         break;
-    case UART3:
-         /* get UART3 clock */
-         uclk=rcu_clock_freq_get(CK_APB1);
-         break;
-    case UART4:
-         /* get UART4 clock */
-         uclk=rcu_clock_freq_get(CK_APB1);
-         break;  
-    default:
-         break;
+    uint32_t uclk = 0U, intdiv = 0U, fradiv = 0U, udiv = 0U;
+    switch (usart_periph) {
+        /* get clock frequency */
+        case USART0:
+            /* get USART0 clock */
+            uclk = rcu_clock_freq_get(CK_APB2);
+            break;
+        case USART1:
+            /* get USART1 clock */
+            uclk = rcu_clock_freq_get(CK_APB1);
+            break;
+        case USART2:
+            /* get USART2 clock */
+            uclk = rcu_clock_freq_get(CK_APB1);
+            break;
+        case UART3:
+            /* get UART3 clock */
+            uclk = rcu_clock_freq_get(CK_APB1);
+            break;
+        case UART4:
+            /* get UART4 clock */
+            uclk = rcu_clock_freq_get(CK_APB1);
+            break;
+        default:
+            break;
     }
     /* oversampling by 16, configure the value of USART_BAUD */
-    udiv = (uclk+baudval/2U)/baudval;
+    udiv = (uclk + baudval / 2U) / baudval;
     intdiv = udiv & (0x0000fff0U);
     fradiv = udiv & (0x0000000fU);
     USART_BAUD(usart_periph) = ((USART_BAUD_FRADIV | USART_BAUD_INTDIV) & (intdiv | fradiv));
@@ -122,7 +122,7 @@ void usart_baudrate_set(uint32_t usart_periph, uint32_t baudval)
                only one parameter can be selected which is shown as below:
       \arg       USART_PM_NONE: no parity
       \arg       USART_PM_ODD:  odd parity
-      \arg       USART_PM_EVEN: even parity 
+      \arg       USART_PM_EVEN: even parity
     \param[out] none
     \retval     none
 */
@@ -167,7 +167,7 @@ void usart_word_length_set(uint32_t usart_periph, uint32_t wlen)
 void usart_stop_bit_set(uint32_t usart_periph, uint32_t stblen)
 {
     /* clear USART_CTL1 STB bits */
-    USART_CTL1(usart_periph) &= ~USART_CTL1_STB; 
+    USART_CTL1(usart_periph) &= ~USART_CTL1_STB;
     /* configure USART stop bits */
     USART_CTL1(usart_periph) |= stblen;
 }
@@ -207,7 +207,7 @@ void usart_disable(uint32_t usart_periph)
 void usart_transmit_config(uint32_t usart_periph, uint32_t txconfig)
 {
     uint32_t ctl = 0U;
-    
+
     ctl = USART_CTL0(usart_periph);
     ctl &= ~USART_CTL0_TEN;
     ctl |= txconfig;
@@ -228,7 +228,7 @@ void usart_transmit_config(uint32_t usart_periph, uint32_t txconfig)
 void usart_receive_config(uint32_t usart_periph, uint32_t rxconfig)
 {
     uint32_t ctl = 0U;
-    
+
     ctl = USART_CTL0(usart_periph);
     ctl &= ~USART_CTL0_REN;
     ctl |= rxconfig;
@@ -239,7 +239,7 @@ void usart_receive_config(uint32_t usart_periph, uint32_t rxconfig)
 /*!
     \brief      USART transmit data function
     \param[in]  usart_periph: USARTx(x=0,1,2)/UARTx(x=3,4)
-    \param[in]  data: data of transmission 
+    \param[in]  data: data of transmission
     \param[out] none
     \retval     none
 */
@@ -317,7 +317,7 @@ void usart_mute_mode_wakeup_config(uint32_t usart_periph, uint32_t wmethod)
     \retval     none
 */
 void usart_lin_mode_enable(uint32_t usart_periph)
-{   
+{
     USART_CTL1(usart_periph) |= USART_CTL1_LMEN;
 }
 
@@ -328,7 +328,7 @@ void usart_lin_mode_enable(uint32_t usart_periph)
     \retval     none
 */
 void usart_lin_mode_disable(uint32_t usart_periph)
-{   
+{
     USART_CTL1(usart_periph) &= ~(USART_CTL1_LMEN);
 }
 
@@ -366,7 +366,7 @@ void usart_send_break(uint32_t usart_periph)
     \retval     none
 */
 void usart_halfduplex_enable(uint32_t usart_periph)
-{   
+{
     USART_CTL2(usart_periph) |= USART_CTL2_HDEN;
 }
 
@@ -377,7 +377,7 @@ void usart_halfduplex_enable(uint32_t usart_periph)
     \retval     none
 */
 void usart_halfduplex_disable(uint32_t usart_periph)
-{  
+{
     USART_CTL2(usart_periph) &= ~(USART_CTL2_HDEN);
 }
 
@@ -408,15 +408,15 @@ void usart_synchronous_clock_disable(uint32_t usart_periph)
     \param[in]  usart_periph: USARTx(x=0,1,2)
     \param[in]  clen: CK length
                 only one parameter can be selected which is shown as below:
-      \arg        USART_CLEN_NONE: there are 7 CK pulses for an 8 bit frame and 8 CK pulses for a 9 bit frame 
+      \arg        USART_CLEN_NONE: there are 7 CK pulses for an 8 bit frame and 8 CK pulses for a 9 bit frame
       \arg        USART_CLEN_EN:   there are 8 CK pulses for an 8 bit frame and 9 CK pulses for a 9 bit frame
     \param[in]  cph: clock phase
                 only one parameter can be selected which is shown as below:
-      \arg        USART_CPH_1CK: first clock transition is the first data capture edge 
+      \arg        USART_CPH_1CK: first clock transition is the first data capture edge
       \arg        USART_CPH_2CK: second clock transition is the first data capture edge
     \param[in]  cpl: clock polarity
                 only one parameter can be selected which is shown as below:
-      \arg        USART_CPL_LOW:  steady low value on CK pin 
+      \arg        USART_CPL_LOW:  steady low value on CK pin
       \arg        USART_CPL_HIGH: steady high value on CK pin
     \param[out] none
     \retval     none
@@ -424,7 +424,7 @@ void usart_synchronous_clock_disable(uint32_t usart_periph)
 void usart_synchronous_clock_config(uint32_t usart_periph, uint32_t clen, uint32_t cph, uint32_t cpl)
 {
     uint32_t ctl = 0U;
-    
+
     /* read USART_CTL1 register */
     ctl = USART_CTL1(usart_periph);
     ctl &= ~(USART_CTL1_CLEN | USART_CTL1_CPH | USART_CTL1_CPL);
@@ -441,10 +441,10 @@ void usart_synchronous_clock_config(uint32_t usart_periph, uint32_t clen, uint32
     \param[out] none
     \retval     none
 */
-void usart_guard_time_config(uint32_t usart_periph,uint32_t gaut)
+void usart_guard_time_config(uint32_t usart_periph, uint32_t gaut)
 {
     USART_GP(usart_periph) &= ~(USART_GP_GUAT);
-    USART_GP(usart_periph) |= (USART_GP_GUAT & ((gaut)<<8));
+    USART_GP(usart_periph) |= (USART_GP_GUAT & ((gaut) << 8));
 }
 
 /*!
@@ -555,7 +555,7 @@ void usart_irda_lowpower_config(uint32_t usart_periph, uint32_t irlp)
 void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig)
 {
     uint32_t ctl = 0U;
-    
+
     ctl = USART_CTL2(usart_periph);
     ctl &= ~USART_CTL2_RTSEN;
     ctl |= rtsconfig;
@@ -576,7 +576,7 @@ void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig)
 void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig)
 {
     uint32_t ctl = 0U;
-    
+
     ctl = USART_CTL2(usart_periph);
     ctl &= ~USART_CTL2_CTSEN;
     ctl |= ctsconfig;
@@ -597,7 +597,7 @@ void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig)
 void usart_dma_receive_config(uint32_t usart_periph, uint32_t dmacmd)
 {
     uint32_t ctl = 0U;
-    
+
     ctl = USART_CTL2(usart_periph);
     ctl &= ~USART_CTL2_DENR;
     ctl |= dmacmd;
@@ -618,7 +618,7 @@ void usart_dma_receive_config(uint32_t usart_periph, uint32_t dmacmd)
 void usart_dma_transmit_config(uint32_t usart_periph, uint32_t dmacmd)
 {
     uint32_t ctl = 0U;
-    
+
     ctl = USART_CTL2(usart_periph);
     ctl &= ~USART_CTL2_DENT;
     ctl |= dmacmd;
@@ -632,23 +632,23 @@ void usart_dma_transmit_config(uint32_t usart_periph, uint32_t dmacmd)
     \param[in]  flag: USART flags, refer to usart_flag_enum
                 only one parameter can be selected which is shown as below:
       \arg        USART_FLAG_CTSF: CTS change flag
-      \arg        USART_FLAG_LBDF: LIN break detected flag 
-      \arg        USART_FLAG_TBE: transmit data buffer empty 
-      \arg        USART_FLAG_TC: transmission complete 
-      \arg        USART_FLAG_RBNE: read data buffer not empty 
-      \arg        USART_FLAG_IDLEF: IDLE frame detected flag 
-      \arg        USART_FLAG_ORERR: overrun error 
-      \arg        USART_FLAG_NERR: noise error flag 
-      \arg        USART_FLAG_FERR: frame error flag 
-      \arg        USART_FLAG_PERR: parity error flag 
+      \arg        USART_FLAG_LBDF: LIN break detected flag
+      \arg        USART_FLAG_TBE: transmit data buffer empty
+      \arg        USART_FLAG_TC: transmission complete
+      \arg        USART_FLAG_RBNE: read data buffer not empty
+      \arg        USART_FLAG_IDLEF: IDLE frame detected flag
+      \arg        USART_FLAG_ORERR: overrun error
+      \arg        USART_FLAG_NERR: noise error flag
+      \arg        USART_FLAG_FERR: frame error flag
+      \arg        USART_FLAG_PERR: parity error flag
     \param[out] none
     \retval     FlagStatus: SET or RESET
 */
 FlagStatus usart_flag_get(uint32_t usart_periph, usart_flag_enum flag)
 {
-    if(RESET != (USART_REG_VAL(usart_periph, flag) & BIT(USART_BIT_POS(flag)))){
+    if (RESET != (USART_REG_VAL(usart_periph, flag) & BIT(USART_BIT_POS(flag)))) {
         return SET;
-    }else{
+    } else {
         return RESET;
     }
 }
@@ -739,10 +739,10 @@ FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, uint32_t int_flag)
     /* get the corresponding flag bit status */
     flagstatus = (USART_REG_VAL2(usart_periph, int_flag) & BIT(USART_BIT_POS2(int_flag)));
 
-    if(flagstatus && intenable){
+    if (flagstatus && intenable) {
         return SET;
-    }else{
-        return RESET; 
+    } else {
+        return RESET;
     }
 }
 
@@ -763,10 +763,10 @@ void usart_interrupt_flag_clear(uint32_t usart_periph, uint32_t flag)
     USART_REG_VAL2(usart_periph, flag) &= ~BIT(USART_BIT_POS2(flag));
 }
 
-int usart_write(uint32_t usart_periph,int ch)
+int usart_write(uint32_t usart_periph, int ch)
 {
-    usart_data_transmit(usart_periph, (uint8_t) ch );
-    while (usart_flag_get(usart_periph, USART_FLAG_TBE)== RESET){
+    usart_data_transmit(usart_periph, (uint8_t) ch);
+    while (usart_flag_get(usart_periph, USART_FLAG_TBE) == RESET) {
     }
 
     return ch;
@@ -775,7 +775,7 @@ int usart_write(uint32_t usart_periph,int ch)
 
 uint8_t usart_read(uint32_t usart_periph)
 {
-        /* loop until RBNE = 1 */
-        while (usart_flag_get(usart_periph, USART_FLAG_RBNE) == RESET);
-        return(usart_data_receive(usart_periph));
+    /* loop until RBNE = 1 */
+    while (usart_flag_get(usart_periph, USART_FLAG_RBNE) == RESET);
+    return (usart_data_receive(usart_periph));
 }

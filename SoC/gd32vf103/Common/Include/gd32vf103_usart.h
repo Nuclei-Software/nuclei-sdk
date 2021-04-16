@@ -125,7 +125,7 @@ OF SUCH DAMAGE.
 #define USART_REG_VAL(usartx, offset)        (REG32((usartx) + (((uint32_t)(offset) & (0x0000FFFFU)) >> 6)))
 #define USART_BIT_POS(val)                   ((uint32_t)(val) & (0x0000001FU))
 #define USART_REGIDX_BIT2(regidx, bitpos, regidx2, bitpos2)   (((uint32_t)(regidx2) << 22) | (uint32_t)((bitpos2) << 16)\
-                                                              | (((uint32_t)(regidx) << 6) | (uint32_t)(bitpos)))
+                                                               | (((uint32_t)(regidx) << 6) | (uint32_t)(bitpos)))
 #define USART_REG_VAL2(usartx, offset)       (REG32((usartx) + ((uint32_t)(offset) >> 22)))
 #define USART_BIT_POS2(val)                  (((uint32_t)(val) & (0x001F0000U)) >> 16)
 
@@ -136,8 +136,7 @@ OF SUCH DAMAGE.
 #define USART_CTL2_REG_OFFSET                     (0x00000014U)            /*!< CTL2 register offset */
 
 /* USART flags */
-typedef enum
-{
+typedef enum {
     /* flags in STAT register */
     USART_FLAG_CTSF = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 9U),      /*!< CTS change flag */
     USART_FLAG_LBDF = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 8U),      /*!< LIN break detected flag */
@@ -149,11 +148,10 @@ typedef enum
     USART_FLAG_NERR = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 2U),      /*!< noise error flag */
     USART_FLAG_FERR = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 1U),      /*!< frame error flag */
     USART_FLAG_PERR = USART_REGIDX_BIT(USART_STAT_REG_OFFSET, 0U),      /*!< parity error flag */
-}usart_flag_enum;
+} usart_flag_enum;
 
 /* USART interrupt flags */
-typedef enum
-{
+typedef enum {
     /* interrupt flags in CTL0 register */
     USART_INT_FLAG_PERR = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 8U, USART_STAT_REG_OFFSET, 0U),       /*!< parity error interrupt and flag */
     USART_INT_FLAG_TBE = USART_REGIDX_BIT2(USART_CTL0_REG_OFFSET, 7U, USART_STAT_REG_OFFSET, 7U),        /*!< transmitter buffer empty interrupt and flag */
@@ -168,11 +166,10 @@ typedef enum
     USART_INT_FLAG_ERR_ORERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 3U),  /*!< error interrupt and overrun error */
     USART_INT_FLAG_ERR_NERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 2U),   /*!< error interrupt and noise error flag */
     USART_INT_FLAG_ERR_FERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 1U),   /*!< error interrupt and frame error flag */
-}usart_interrupt_flag_enum;
+} usart_interrupt_flag_enum;
 
 /* USART interrupt enable or disable */
-typedef enum
-{
+typedef enum {
     /* interrupt in CTL0 register */
     USART_INT_PERR = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 8U),       /*!< parity error interrupt */
     USART_INT_TBE = USART_REGIDX_BIT(USART_CTL0_REG_OFFSET, 7U),        /*!< transmitter buffer empty interrupt */
@@ -184,7 +181,7 @@ typedef enum
     /* interrupt in CTL2 register */
     USART_INT_CTS = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 10U),       /*!< CTS interrupt */
     USART_INT_ERR = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 0U),        /*!< error interrupt */
-}usart_interrupt_enum;
+} usart_interrupt_enum;
 
 /* USART receiver configure */
 #define CTL0_REN(regval)              (BIT(2) & ((uint32_t)(regval) << 2))
@@ -373,6 +370,6 @@ void usart_interrupt_disable(uint32_t usart_periph, uint32_t int_flag);
 FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, uint32_t int_flag);
 /* clear interrupt flag in STAT register */
 void usart_interrupt_flag_clear(uint32_t usart_periph, uint32_t flag);
-int usart_write(uint32_t usart_periph,int ch);
+int usart_write(uint32_t usart_periph, int ch);
 uint8_t usart_read(uint32_t usart_periph);
 #endif /* GD32VF103_USART_H */
