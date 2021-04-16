@@ -21,7 +21,7 @@
 #define RT_THREAD_PRIORITY_MAX  8
 // <o>OS tick per second
 //  <i>Default: 1000   (1ms)
-#define RT_TICK_PER_SECOND  200
+#define RT_TICK_PER_SECOND  100
 // <o>Alignment size for CPU architecture data access
 //  <i>Default: 4
 #define RT_ALIGN_SIZE   8
@@ -37,11 +37,11 @@
 
 // <o>the stack size of main thread<1-4086>
 //  <i>Default: 512
-#define RT_MAIN_THREAD_STACK_SIZE     512
+#define RT_MAIN_THREAD_STACK_SIZE     1024
 
 // <o>the stack size of main thread<1-4086>
 //  <i>Default: 128
-#define IDLE_THREAD_STACK_SIZE        256
+#define IDLE_THREAD_STACK_SIZE        512
 
 
 
