@@ -1,4 +1,3 @@
-/**/
 #include "riscv_encoding.h"
 
 #ifndef __riscv_32e
