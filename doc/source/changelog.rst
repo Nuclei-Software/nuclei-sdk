@@ -34,6 +34,7 @@ This is version ``0.3.1`` of Nuclei SDK which is **still in development**.
 * Application
 
     - Increase idle and finsh thread stack for RT-Thread, due to stack size is not enough for RISC-V 64bit
+    - Set rt-thread example tick hz to 100, and ucosii example tick hz to 50
 
 * Build
 

@@ -696,7 +696,7 @@ This `freertos demo application`_ is show basic freertos task functions.
 In Nuclei SDK, we provided code and Makefile for this ``freertos demo`` application.
 
 * **RTOS = FreeRTOS** is added in its Makefile to include FreeRTOS service
-* The **configTICK_RATE_HZ** in ``FreeRTOSConfig.h`` is set to 200, you can change it
+* The **configTICK_RATE_HZ** in ``FreeRTOSConfig.h`` is set to 100, you can change it
   to other number according to your requirement.
 
 **How to run this application:**
@@ -761,7 +761,7 @@ This `ucosii demo application`_ is show basic ucosii task functions.
 In Nuclei SDK, we provided code and Makefile for this ``ucosii demo`` application.
 
 * **RTOS = UCOSII** is added in its Makefile to include UCOSII service
-* The **OS_TICKS_PER_SEC** in ``os_cfg.h`` is by default set to 200, you can change it
+* The **OS_TICKS_PER_SEC** in ``os_cfg.h`` is by default set to 50, you can change it
   to other number according to your requirement.
 
 .. note:
@@ -839,7 +839,7 @@ This `rt-thread demo application`_ is show basic rt-thread thread functions.
 In Nuclei SDK, we provided code and Makefile for this ``rtthread demo`` application.
 
 * **RTOS = RTThread** is added in its Makefile to include RT-Thread service
-* The **RT_TICK_PER_SECOND** in ``rtconfig.h`` is by default set to `200`, you can change it
+* The **RT_TICK_PER_SECOND** in ``rtconfig.h`` is by default set to `100`, you can change it
   to other number according to your requirement.
 
 
@@ -904,7 +904,7 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 
 * **RTOS = RTThread** is added in its Makefile to include RT-Thread service
 * **RTTHREAD_MSH := 1** is added in its Makefile to include RT-Thread msh component
-* The **RT_TICK_PER_SECOND** in ``rtconfig.h`` is by default set to `200`, you can change it
+* The **RT_TICK_PER_SECOND** in ``rtconfig.h`` is by default set to `100`, you can change it
   to other number according to your requirement.
 * To run this application in :ref:`design_soc_demosoc`, the SoC clock frequency must be above 16MHz,
   if run in 8MHz, uart read is not correct due to bit error in uart rx process.
