@@ -36,6 +36,7 @@ def load_json(file):
         data = json.load(open(file, 'r'))
         return JSON_OK, data
     except:
+        print("Error: %s is an invalid json file!" % (file))
         return JSON_INVAILD, None
 
 def save_json(file, data):
@@ -46,6 +47,7 @@ def save_json(file, data):
             json.dump(data, cf, indent=4)
         return True
     except:
+        print("Error: Data can't be serialized to json file!")
         return False
 
 def get_make_csv(app, config):
