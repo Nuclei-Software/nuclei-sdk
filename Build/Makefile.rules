@@ -31,6 +31,7 @@ info:
 
 help:
 	@$(ECHO) "Nuclei N/NX-series RISC-V Embedded Processor Software Development Kit "
+	@$(ECHO) "== For detailed user guide, please check https://doc.nucleisys.com/nuclei_sdk/"
 	@$(ECHO) "== Make variables used in Nuclei SDK =="
 	@$(ECHO) "SOC:         Select SoC built in Nuclei SDK, will select demosoc by default"
 	@$(ECHO) "BOARD:       Select SoC's Board built in Nuclei SDK, will select nuclei_fpga_eval by default"
