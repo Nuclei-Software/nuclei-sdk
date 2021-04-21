@@ -1,0 +1,24 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "serport": "COM9",
+            "baudrate": 115200,
+            "timeout": 60
+        }
+    },
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "gd32vf103",
+        "BOARD": "gd32vf103v_rvstar",
+        "CORE": "n205",
+        "DOWNLOAD": "flashxip",
+        "DSP_ENABLE": "OFF"
+    },
+    "expected": {
+        "application/baremetal/demo_nice" : {
+            "run": false,
+            "build": true
+        }
+    }
+}

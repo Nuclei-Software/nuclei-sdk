@@ -36,3 +36,5 @@ Makefile.global
 
 doc/build/
 _build
+__pycache__
+*.pyc
