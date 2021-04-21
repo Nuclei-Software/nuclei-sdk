@@ -1,0 +1,24 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "serport": "COM21",
+            "baudrate": 115200,
+            "timeout": 60
+        }
+    },
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "CORE": "ux600",
+        "DOWNLOAD": "ilm",
+        "DSP_ENABLE": "OFF"
+    },
+    "expected": {
+        "application/baremetal/demo_nice" : {
+            "run": false,
+            "build": true
+        }
+    }
+}
