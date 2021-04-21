@@ -18,7 +18,8 @@
     "build_configs": {
         "ilm": {"DOWNLOAD": "ilm"},
         "flash": {"DOWNLOAD": "flash"},
-        "flashxip": {"DOWNLOAD": "flashxip"}
+        "flashxip": {"DOWNLOAD": "flashxip"},
+        "ddr": {"DOWNLOAD": "ddr"}
     },
     "appdirs": [
         "application",
