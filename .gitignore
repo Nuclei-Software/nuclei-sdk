@@ -38,3 +38,4 @@ doc/build/
 _build
 __pycache__
 *.pyc
+logs*

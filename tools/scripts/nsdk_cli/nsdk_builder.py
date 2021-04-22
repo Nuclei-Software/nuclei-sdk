@@ -48,17 +48,35 @@ class nsdk_builder(object):
         build_objects["verilog"] = find_app_object("*.verilog")
         return build_objects
 
-    def build_target_only(self, appdir, make_options="", target="clean", show_output=True, logfile=None):
+    def build_target_only(self, appdir, make_options="", target="clean", show_output=True, logfile=None, parallel=""):
         if self.is_app(appdir) == False:
             return COMMAND_NOTAPP, 0
 
-        build_cmd = "make -C %s %s %s" % (appdir, make_options, target)
-        if not ((show_output == False) and (target == "info")):
-            print("Build application %s, with target: %s" % (appdir, target))
-            print("Build command: %s" % (build_cmd))
-        ret, ticks = run_command(build_cmd, show_output, logfile=logfile)
-        if not ((show_output == False) and (target == "info")):
-            print("Build command return value: %s" % (ret))
+        # Parallel must start with -j
+        if isinstance(parallel, str):
+            parallel = parallel.strip()
+            if parallel != "" and parallel.startswith("-j") == False:
+                parallel = ""
+        else:
+            parallel = ""
+        if parallel != "": # need to split targets
+            build_targets = target.strip().split()
+        else:
+            build_targets = [target]
+        if os.path.isfile(logfile):
+            os.remove(logfile)
+        total_ticks = 0
+        for btg in build_targets:
+            build_cmd = "make %s -C %s %s %s" % (parallel, appdir, make_options, btg)
+            if not ((show_output == False) and (btg == "info")):
+                print("Build application %s, with target: %s" % (appdir, btg))
+                print("Build command: %s" % (build_cmd))
+            ret, ticks = run_command(build_cmd, show_output, logfile=logfile, append=True)
+            if not ((show_output == False) and (btg == "info")):
+                print("Build command return value: %s" % (ret))
+            total_ticks += ticks
+            if ret != 0: # if one target failed, then stop
+                break
 
         return ret, ticks
 
@@ -83,11 +101,11 @@ class nsdk_builder(object):
         os.remove(infolog)
         return build_info
 
-    def build_target(self, appdir, make_options="", target="clean", show_output=True, logfile=None):
+    def build_target(self, appdir, make_options="", target="clean", show_output=True, logfile=None, parallel=""):
         if self.is_app(appdir) == False:
             return False, None
         build_status = dict()
-        ret, ticks = self.build_target_only(appdir, make_options, target, show_output, logfile)
+        ret, ticks = self.build_target_only(appdir, make_options, target, show_output, logfile, parallel)
         cmdsts = True
         if ret == COMMAND_INTERRUPTED:
             print("%s: Exit program due to CTRL - C pressed" % (sys._getframe().f_code.co_name))
@@ -112,8 +130,8 @@ class nsdk_builder(object):
     def clean_app(self, appdir, make_options="", show_output=True, logfile=None):
         return self.build_target(appdir, make_options, "clean", show_output, logfile)
 
-    def compile_app(self, appdir, make_options="", show_output=True, logfile=None):
-        return self.build_target(appdir, make_options, "all", show_output, logfile)
+    def compile_app(self, appdir, make_options="", show_output=True, logfile=None, parallel=""):
+        return self.build_target(appdir, make_options, "all", show_output, logfile, parallel)
 
     def upload_app(self, appdir, make_options="", show_output=True, logfile=None):
         if logfile is None:
@@ -380,6 +398,7 @@ class nsdk_runner(nsdk_builder):
     def build_app_with_config(self, appdir, appconfig:dict, show_output=True, logfile=None):
         build_config = appconfig.get("build_config", None)
         target = appconfig.get("build_target", "all")
+        parallel = appconfig.get("parallel", "")
         make_options = ""
         if isinstance(build_config, dict):
             for key, value in build_config.items():
@@ -390,7 +409,7 @@ class nsdk_runner(nsdk_builder):
                     make_options += " %s=\"%s\""%(key, value)
                 else:
                     make_options += " %s=%s"%(key, value)
-        appcmdsts, appsts = self.build_target(appdir, make_options, target, show_output, logfile)
+        appcmdsts, appsts = self.build_target(appdir, make_options, target, show_output, logfile, parallel)
         buildtime = appsts["time"]["build"]
         print("Build application %s, time cost %s seconds, passed: %s" %(appdir, buildtime, appcmdsts))
 

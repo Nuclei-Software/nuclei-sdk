@@ -24,6 +24,7 @@ class nsdk_executor(nsdk_runner):
             return False, None
         global_build_config = config.get("build_config", dict())
         global_target = config.get("build_target", "all")
+        global_parallel = config.get("parallel", "")
         rootdirs = config.get("appdirs", [])
         ignored_rootdirs = config.get("appdirs_ignore", [])
         if (isinstance(rootdirs, list) and isinstance(ignored_rootdirs, list)) == False:
@@ -65,6 +66,7 @@ class nsdk_executor(nsdk_runner):
                     applogfile = get_logfile(appdir, rootdir, logdir, "build.log")
                 app_buildcfg = copy.deepcopy(global_build_config)
                 app_buildtarget = copy.deepcopy(global_target)
+                app_parallel = copy.deepcopy(global_parallel)
                 found_cfg = find_local_appconfig(appdir, appconfigs)
                 if found_cfg:
                     appcfg = appconfigs[found_cfg]
@@ -76,12 +78,15 @@ class nsdk_executor(nsdk_runner):
                         app_buildcfg.update(appcfg.get("build_config", dict()))
                         if "build_target" in appcfg:
                             app_buildtarget = appcfg["build_target"]
+                        if "parallel" in appcfg:
+                            app_parallel = appcfg["parallel"]
                     else: # if merge_global is false, then use app config only
                         app_buildcfg = appcfg.get("build_config", dict())
                         app_buildtarget = appcfg.get("build_target", "all")
+                        app_parallel = appcfg.get("parallel", "")
 
                 appconfig = {"build_config": app_buildcfg, "build_target": app_buildtarget, \
-                            "logs": {"build": applogfile}}
+                            "parallel": app_parallel, "logs": {"build": applogfile}}
                 apps_config[appdir] = copy.deepcopy(appconfig)
 
         if len(apps_config) == 0:
@@ -97,6 +102,7 @@ class nsdk_executor(nsdk_runner):
             return False, None
         global_build_config = config.get("build_config", dict())
         global_target = config.get("build_target", "clean all")
+        global_parallel = config.get("parallel", "")
         global_run_config = config.get("run_config", dict())
         global_checks = config.get("checks", None)
         rootdirs = config.get("appdirs", [])
@@ -142,6 +148,7 @@ class nsdk_executor(nsdk_runner):
                     app_runlogfile = get_logfile(appdir, rootdir, logdir, "run.log")
                 app_buildcfg = copy.deepcopy(global_build_config)
                 app_buildtarget = copy.deepcopy(global_target)
+                app_parallel = copy.deepcopy(global_parallel)
                 app_runcfg = copy.deepcopy(global_run_config)
                 app_checks = copy.deepcopy(global_checks)
                 found_cfg = find_local_appconfig(appdir, appconfigs)
@@ -156,14 +163,17 @@ class nsdk_executor(nsdk_runner):
                         app_checks.update(appcfg.get("checks", dict()))
                         if "build_target" in appcfg:
                             app_buildtarget = appcfg["build_target"]
+                        if "parallel" in appcfg:
+                            app_parallel = appcfg["parallel"]
                     else: # if merge_global is false, then use app config only
                         app_buildcfg = appcfg.get("build_config", dict())
                         app_buildtarget = appcfg.get("build_target", "clean all")
+                        app_parallel = appcfg.get("parallel", "")
                         app_runcfg = appcfg.get("run_config", dict())
                         app_checks = appcfg.get("checks", dict())
 
                 appconfig = {"build_config": app_buildcfg, "build_target": app_buildtarget, \
-                            "run_config": app_runcfg, "checks": app_checks, \
+                            "parallel": app_parallel, "run_config": app_runcfg, "checks": app_checks, \
                             "logs": {"build": app_buildlogfile, "run": app_runlogfile}}
                 apps_config[appdir] = copy.deepcopy(appconfig)
 
@@ -181,10 +191,11 @@ def merge_config(appcfg, hwcfg):
     if isinstance(appcfg, dict) == False and isinstance(hwcfg, dict) == True:
         return hwcfg
     merged_appcfg = copy.deepcopy(appcfg)
-    merged_appcfg.update(hwcfg)
+    #merged_appcfg.update(hwcfg)
+    dict_merge(merged_appcfg, hwcfg)
     return merged_appcfg
 
-def merge_cmd_config(config, serport, baudrate, make_options):
+def merge_cmd_config(config, serport, baudrate, make_options, parallel=None):
     if isinstance(config, dict) == False:
         return None
     new_config = copy.deepcopy(config)
@@ -206,6 +217,8 @@ def merge_cmd_config(config, serport, baudrate, make_options):
                 new_config["run_config"]["hardware"]["baudrate"] = int(baudrate)
             else:
                 new_config["run_config"]["hardware"] = {"serport": "/dev/ttyUSB1", "baudrate": int(baudrate)}
+    if parallel is not None:
+        new_config["parallel"] = parallel
     if make_options:
         opt_splits=make_options.strip().split()
         passed_buildcfg = dict()
@@ -272,6 +285,7 @@ if __name__ == '__main__':
     parser.add_argument('--serport', help="Serial port for monitor, if not specified, it will use the specified by appcfg and hwcfg")
     parser.add_argument('--baudrate', help="Serial port baudrate for monitor, it will use the specified by appcfg and hwcfg")
     parser.add_argument('--make_options', help="Extra make options passed to overwrite default build configuration passed via appcfg and hwcfg")
+    parser.add_argument('--parallel', help="parallel value, such as -j4 or -j or -j8, default None")
     parser.add_argument('--run', action='store_true', help="If specified, will do run not build process")
     parser.add_argument('--verbose', action='store_true', help="If specified, will show detailed build/run messsage")
     args = parser.parse_args()
@@ -288,7 +302,7 @@ if __name__ == '__main__':
     # Merge appcfg and hwcfg, hwcfg has higher priority
     config = merge_config(appcfg, hwcfg)
     # Merge options passed by serport, baudrate, make_options
-    config = merge_cmd_config(config, args.serport, args.baudrate, args.make_options)
+    config = merge_cmd_config(config, args.serport, args.baudrate, args.make_options, args.parallel)
 
     nsdk_ext = nsdk_executor()
     if args.run:
@@ -302,12 +316,16 @@ if __name__ == '__main__':
     print("Applications build or run as expected: %s" % (ret))
     save_results(appcfg, hwcfg, config, result, args.logdir)
     if result:
-        print("App, build, run, total, text, data, bss")
+        csvfile = os.path.join(args.logdir, "result.csv")
+        csvstrings = "App, build, run, total, text, data, bss\n"
         for app in result:
             size = result[app]["size"]
             app_status = result[app]["status"]
-            print("%s, %s, %s, %d, %d, %d, %d" % (app, app_status["build"], app_status.get("run", False), \
-                size["total"], size["text"], size["data"], size["bss"]))
+            csvstrings +="%s, %s, %s, %d, %d, %d, %d\n" % (app, app_status["build"], app_status.get("run", False), \
+                size["total"], size["text"], size["data"], size["bss"])
+        with open(csvfile, "w") as cf:
+            cf.write(csvstrings)
+        print(csvstrings)
     # Exit with ret value
     if ret:
         sys.exit(0)
