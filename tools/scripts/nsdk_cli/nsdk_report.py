@@ -80,16 +80,29 @@ def analyze_report(config, result, runapp=False):
     passed_apps = dict()
     failed_apps = dict()
     build_cfgs = dict()
+
+    glb_buildcfg = config.get("build_config", dict())
+    # TODO currently this feature only cover cases that the application build_configs
+    # just extend the global build_configs
     # get build configs used per cfgname
     if "build_configs" not in config:
         build_cfgs["default"] = config.get("build_config", dict())
     else:
-        glb_buildcfg = config.get("build_config", dict())
         sub_configs = config["build_configs"]
         for cfgname in sub_configs:
             bcfg = copy.deepcopy(glb_buildcfg)
             bcfg.update(sub_configs[cfgname])
             build_cfgs[cfgname] = bcfg
+    if "appconfig" in config:
+        appcfgs = config.get("appconfig", dict())
+        for app in appcfgs:
+            if "build_configs" in appcfgs[app]:
+                appsub_configs = appcfgs[app]["build_configs"]
+                for cfgname in appsub_configs:
+                    bcfg = copy.deepcopy(glb_buildcfg)
+                    bcfg.update(appsub_configs[cfgname])
+                    build_cfgs[cfgname] = bcfg
+
     def check_app_status(status, expected, runapp=False):
         app_sts = {"expected": True, "exp_build": True, "exp_run": True, "build": True, "run": True}
         for cfgname in status:
@@ -239,7 +252,7 @@ def merge_all_config_and_result(logdir):
 
     return all_mergedcfg, all_result
 
-def generate_report_for_logs(logdir):
+def generate_report_for_logs(logdir, run=False):
     if logdir and os.path.isdir(logdir):
         reportfile =  os.path.join(logdir, "report.md")
 
@@ -251,17 +264,18 @@ def generate_report_for_logs(logdir):
         save_json(config_file, all_mergedcfg)
         save_json(result_file, all_result)
         print("Save generated report file to %s" % (reportfile))
-        generate_report(all_mergedcfg, all_result, reportfile, logdir, True)
+        generate_report(all_mergedcfg, all_result, reportfile, logdir, run)
     pass
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Nuclei SDK Bench report Generate Tools")
     parser.add_argument('--logdir', required=True, help="logs directory where saved the report json files")
+    parser.add_argument('--run', action='store_true', help="If specified, it means this is a runner report")
     args = parser.parse_args()
 
     if os.path.isdir(args.logdir) == False:
         print("The log directory doesn't exist, please check!")
         sys.exit(1)
 
-    generate_report_for_logs(args.logdir)
+    generate_report_for_logs(args.logdir, args.run)
