@@ -170,16 +170,23 @@ class nsdk_builder(object):
         else:
             uploadlog = logfile
         cmdsts, build_status = self.build_target(appdir, make_options, "upload", show_output, uploadlog)
+        uploader = dict()
         if cmdsts:
             upload_sts = False
             with open(uploadlog, 'r') as uf:
                 for line in uf.readlines():
+                    if "-ex" in line or "\\" in line:
+                        # strip extra newline and \
+                        uploader["cmd"] = uploader.get("cmd", "") + line.strip().strip("\\")
+                    if "On-Chip Debugger" in line:
+                        uploader["version"] = line.strip()
                     if "Start address" in line:
                         upload_sts = True
                         break
             if upload_sts == False: # actually not upload successfully
                 cmdsts = False
-
+        if "app" in build_status:
+            build_status["app"]["uploader"] = uploader
         if logfile is None:
             os.remove(uploadlog)
         print("Upload application %s status: %s" % (appdir, cmdsts))
@@ -354,13 +361,15 @@ class nsdk_runner(nsdk_builder):
             baudrate = hwconfig.get("baudrate", 115200)
             timeout = hwconfig.get("timeout", 60)
         ser_thread = None
+        uploader = None
         try:
             if serport: # only monitor serial port when port found
                 ser_thread = MonitorThread(serport, baudrate, timeout, app_runchecks, checktime, True, logfile, show_output)
                 ser_thread.start()
             else:
                 print("Warning: No available serial port found, please check!")
-            cmdsts, _ = self.upload_app(appdir, make_options, show_output, None)
+            cmdsts, upload_sts = self.upload_app(appdir, make_options, show_output, None)
+            uploader = upload_sts.get("app", dict()).get("uploader", None)
             status = True
             if ser_thread:
                 if cmdsts == False:
@@ -378,7 +387,7 @@ class nsdk_runner(nsdk_builder):
             sys.exit(1)
 
         final_status = cmdsts and status
-        return final_status
+        return final_status, uploader
 
     def run_app_onqemu(self, appdir, runcfg:dict(), show_output=True, logfile=None):
         app_runcfg = runcfg.get("run_config", dict())
@@ -507,12 +516,14 @@ class nsdk_runner(nsdk_builder):
         runstatus = False
         appsts["status_code"]["run"] = RUNSTATUS_NOTSTART
         if app_runtarget == "hardware":
-            runstatus = self.run_app_onhw(appdir, runcfg, show_output, runlog)
+            runstatus, uploader = self.run_app_onhw(appdir, runcfg, show_output, runlog)
             # If run successfully, then do log analyze
             if runlog and runstatus:
                 appsts["result"] = self.analyze_runlog(runlog)
             appsts["logs"]["run"] = runlog
             appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
+            if uploader:
+                appsts["app"]["uploader"] = uploader
         elif app_runtarget == "qemu":
             runstatus, sim_cmd = self.run_app_onqemu(appdir, runcfg, show_output, runlog)
             # If run successfully, then do log analyze
