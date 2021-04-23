@@ -180,6 +180,8 @@ class MonitorThread(Thread):
         self.logfile = logfile
         self.show_output = show_output
         self._exit_req = False
+        self._check_sdk = False
+        self._check_sdk_timeout = 10
         pass
 
     def get_result(self):
@@ -190,6 +192,12 @@ class MonitorThread(Thread):
 
     def exit_request(self):
         self._exit_req = True
+        pass
+
+    def set_check_sdk_timeout(self, timeout=10):
+        self._check_sdk_timestart = time.time()
+        self._check_sdk_timeout = timeout
+        self._check_sdk = True # start to check timeout monitor
         pass
 
     def run(self):
@@ -211,7 +219,7 @@ class MonitorThread(Thread):
         check_finished = False
         try:
             ser = None
-            ser = serial.Serial(self.port, self.baudrate, timeout=5)
+            ser = serial.Serial(self.port, self.baudrate, timeout=3)
             while (time.time() - start_time) < self.timeout:
                 if self._exit_req:
                     break
@@ -221,6 +229,11 @@ class MonitorThread(Thread):
                 if self.sdk_check == True:
                     if self.show_output:
                         print("XXX Check " + line, end='')
+                    if self._check_sdk:
+                        chk_time_cost = time.time() - self._check_sdk_timestart
+                        if chk_time_cost > self._check_sdk_timeout:
+                            print("No SDK banner found in %s, quit now!", self._check_sdk_timeout)
+                            break
                     if NSDK_CHECK_TAG in line:
                         timestr = line.split(NSDK_CHECK_TAG)[-1].strip()
                         cur_time = time.mktime(time.strptime(timestr, "%b %d %Y, %H:%M:%S"))
@@ -257,69 +270,6 @@ class MonitorThread(Thread):
                 lf.write(serial_log)
         self.result = check_status
         return check_status
-
-def monitor_serial_and_check(port:str, baudrate:str, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False):
-    start_time = time.time()
-    serial_log = ""
-    check_status = False
-    pass_checks = checks.get("PASS", [])
-    fail_checks = checks.get("FAIL", [])
-    def test_in_check(string, checks):
-        if type(checks) == list:
-            for check in checks:
-                if check in string:
-                    return True
-        return False
-
-    print("Read serial log from %s, baudrate %s" %(port, baudrate))
-    NSDK_CHECK_TAG = "Nuclei SDK Build Time:"
-    print("Checker used: ", checks)
-    check_finished = False
-    try:
-        ser = None
-        ser = serial.Serial(port, baudrate, timeout=5)
-        while (time.time() - start_time) < timeout:
-            # Remove '\r' in serial read line
-            sline = ser.readline()
-            line = str(try_decode_bytes(sline)).replace('\r', '')
-            if sdk_check == True:
-                if show_output:
-                    print("XXX Check " + line, end='')
-                if NSDK_CHECK_TAG in line:
-                    timestr = line.split(NSDK_CHECK_TAG)[-1].strip()
-                    cur_time = time.mktime(time.strptime(timestr, "%b %d %Y, %H:%M:%S"))
-                    if int(cur_time) >= int(checktime):
-                        sdk_check = False
-                        line = NSDK_CHECK_TAG + " " + timestr + "\n"
-                        serial_log = serial_log + str(line)
-            else:
-                serial_log = serial_log + str(line)
-                if show_output:
-                    print(line, end='')
-                if check_finished == False:
-                    if test_in_check(line, fail_checks):
-                        check_status = False
-                        check_finished = True
-                    if test_in_check(line, pass_checks):
-                        check_status = True
-                        check_finished = True
-                    if check_finished:
-                        # record another 2 seconds by reset start_time and timeout to 2
-                        start_time = time.time()
-                        timeout = 2
-
-    except serial.serialutil.SerialException:
-        # https://stackoverflow.com/questions/21050671/how-to-check-if-device-is-connected-pyserial
-        print("serial port %s might not exist or in use" % port)
-    except:
-        print("Some error happens during serial operations")
-    finally:
-        if ser:
-            ser.close()
-    if logfile:
-        with open(logfile, 'w') as lf:
-            lf.write(serial_log)
-    return check_status
 
 class nsdk_runner(nsdk_builder):
     def __init__(self):
@@ -398,6 +348,8 @@ class nsdk_runner(nsdk_builder):
             if ser_thread:
                 if cmdsts == False:
                     ser_thread.exit_request()
+                else:
+                    ser_thread.set_check_sdk_timeout(5)
                 while ser_thread.is_alive():
                     ser_thread.join(1)
                 status = ser_thread.get_result()
