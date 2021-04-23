@@ -3,6 +3,8 @@
 import os
 import sys
 import time
+import signal
+import psutil
 import copy
 import serial
 import serial.tools.list_ports
@@ -113,6 +115,29 @@ def try_decode_bytes(bytes):
             continue
     return destr
 
+def kill_async_subprocess(proc):
+    if proc is not None:
+        try:
+            parent_proc = psutil.Process(proc.pid)
+            child_procs = parent_proc.children(recursive=True)
+            for child_proc in child_procs:
+                print("Kill child process %s, pid %d" %(child_proc.name(), child_proc.pid))
+                try:
+                    os.kill(child_proc.pid, signal.SIGKILL) # kill child process
+                except:
+                    continue
+            print("Kill parent process %s, pid %d" %(parent_proc.name(), parent_proc.pid))
+            os.kill(parent_proc.pid, signal.SIGKILL) # kill parent process
+            # kill using process.kill again
+            proc.kill()
+        except Exception as exc:
+            print("Warning: kill process %d failed with %s" %(proc.pid, exc))
+    pass
+
+def kill_subprocess(proc):
+    kill_async_subprocess(proc)
+    pass
+
 COMMAND_RUNOK=0
 COMMAND_INVALID=1
 COMMAND_FAIL=2
@@ -120,6 +145,7 @@ COMMAND_INTERRUPTED=3
 COMMAND_EXCEPTION=4
 COMMAND_NOTAPP=5
 COMMAND_TIMEOUT=6
+COMMAND_TIMEOUT_READ=7
 
 RUNSTATUS_OK=0
 RUNSTATUS_FAIL=1
@@ -171,7 +197,7 @@ def run_command(command, show_output=True, logfile=None, append=False):
 
 async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False):
     logfh = None
-    ret = COMMAND_RUNOK
+    ret = COMMAND_FAIL
     cmd_elapsed_ticks = 0
     if isinstance(command, str) == False:
         return COMMAND_INVALID, cmd_elapsed_ticks
@@ -191,6 +217,8 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     check_finished = False
     start_time = time.time()
     serial_log = ""
+    nsdk_check_timeout = 3
+    sdk_checkstarttime = time.time()
     try:
         if isinstance(logfile, str):
             logfh = open(logfile, "wb")
@@ -200,16 +228,28 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
             try:
                 linebytes = await asyncio.wait_for(process.stdout.readline(), 1)
             except asyncio.TimeoutError:
-                continue
+                if sdk_check == True:
+                    linebytes = None
+                else:
+                    continue
             except KeyboardInterrupt:
                 print("Key CTRL-C pressed, command executing stopped!")
                 break
             except:
                 break
-            line = str(try_decode_bytes(linebytes)).replace('\r', '')
-            if (not line) and process.poll() is not None:
-                break
+            if linebytes:
+                line = str(try_decode_bytes(linebytes)).replace('\r', '')
+            else:
+                line = ""
+
             if sdk_check == True:
+                if (time.time() - sdk_checkstarttime) > nsdk_check_timeout:
+                    print("No SDK banner found in 5s, quit now!")
+                    ret = COMMAND_TIMEOUT
+                    check_status = False
+                    break
+                if line == "":
+                    continue
                 if show_output:
                     print("XXX Check " + line, end='')
                 if NSDK_CHECK_TAG in line:
@@ -231,30 +271,22 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
                         check_status = True
                         check_finished = True
                     if check_finished:
+                        ret = COMMAND_RUNOK
                         # record another 2 seconds by reset start_time and timeout to 2
                         start_time = time.time()
                         timeout = 1
-            if logfh:
+            if logfh and linebytes:
                 logfh.write(linebytes)
             time.sleep(0.01)
-        # kill this process
-        process.kill()
-        if process.returncode != 0:
-            ret = COMMAND_FAIL
     except (KeyboardInterrupt):
         print("Key CTRL-C pressed, command executing stopped!")
         ret = COMMAND_INTERRUPTED
-    except subprocess.TimeoutExpired:
-        process.kill()
-        ret = COMMAND_TIMEOUT
     except Exception as exc:
         print("Unexpected exception happened: %s" %(str(exc)))
         ret = COMMAND_EXCEPTION
     finally:
-        if process:
-            process.kill()
-            await process.wait()
-            del process
+        # kill this process
+        kill_async_subprocess(process)
         if logfh:
             logfh.close()
     cmd_elapsed_ticks = time.time() - startticks
