@@ -27,6 +27,7 @@ class nsdk_bench(nsdk_runner):
         global_build_configs = config.get("build_configs", dict())
         global_target = config.get("build_target", "all")
         global_parallel = config.get("parallel", "")
+        global_cpobjs = config.get("copy_objects", False)
         rootdirs = config.get("appdirs", [])
         ignored_rootdirs = config.get("appdirs_ignore", [])
         if (isinstance(rootdirs, list) and isinstance(ignored_rootdirs, list)) == False:
@@ -68,6 +69,7 @@ class nsdk_bench(nsdk_runner):
                 app_buildcfgs = copy.deepcopy(global_build_configs)
                 app_buildtarget = copy.deepcopy(global_target)
                 app_parallel = copy.deepcopy(global_parallel)
+                app_cpobjs = copy.deepcopy(global_cpobjs)
                 found_cfg = find_local_appconfig(appdir, appconfigs)
                 if found_cfg:
                     appcfg = appconfigs[found_cfg]
@@ -82,11 +84,14 @@ class nsdk_bench(nsdk_runner):
                             app_buildtarget = appcfg["build_target"]
                         if "parallel" in appcfg:
                             app_parallel = appcfg["parallel"]
+                        if "copy_objects" in appcfg:
+                            app_cpobjs = appcfg["copy_objects"]
                     else: # if merge_global is false, then use app config only
                         app_buildcfg = appcfg.get("build_config", dict())
                         app_buildcfgs = appcfg.get("build_configs", dict())
                         app_buildtarget = appcfg.get("build_target", "all")
                         app_parallel = appcfg.get("parallel", "")
+                        app_cpobjs = appcfg.get("copy_objects", False)
 
                 app_allconfigs = {"configs": {}}
                 if len(app_buildcfgs) == 0:
@@ -100,7 +105,7 @@ class nsdk_bench(nsdk_runner):
                     percfg_appbuildcfg = copy.deepcopy(app_buildcfg)
                     percfg_appbuildcfg.update(app_buildcfgs[cfgname])
                     app_allconfigs["configs"][cfgname] = {"build_config": percfg_appbuildcfg, "build_target": app_buildtarget, \
-                            "parallel": app_parallel, "logs": {"build": applogfile}}
+                            "copy_objects": app_cpobjs, "parallel": app_parallel, "logs": {"build": applogfile}}
 
                 apps_config[appdir] = copy.deepcopy(app_allconfigs)
 
@@ -119,6 +124,7 @@ class nsdk_bench(nsdk_runner):
         global_build_configs = config.get("build_configs", dict())
         global_target = config.get("build_target", "clean all")
         global_parallel = config.get("parallel", "")
+        global_cpobjs = config.get("copy_objects", False)
         global_run_config = config.get("run_config", dict())
         global_checks = config.get("checks", None)
         rootdirs = config.get("appdirs", [])
@@ -162,6 +168,7 @@ class nsdk_bench(nsdk_runner):
                 app_buildcfgs = copy.deepcopy(global_build_configs)
                 app_buildtarget = copy.deepcopy(global_target)
                 app_parallel = copy.deepcopy(global_parallel)
+                app_cpobjs = copy.deepcopy(global_cpobjs)
                 app_runcfg = copy.deepcopy(global_run_config)
                 app_checks = copy.deepcopy(global_checks)
                 found_cfg = find_local_appconfig(appdir, appconfigs)
@@ -179,6 +186,8 @@ class nsdk_bench(nsdk_runner):
                             app_buildtarget = appcfg["build_target"]
                         if "parallel" in appcfg:
                             app_parallel = appcfg["parallel"]
+                        if "copy_objects" in appcfg:
+                            app_cpobjs = appcfg["copy_objects"]
                     else: # if merge_global is false, then use app config only
                         app_buildcfg = appcfg.get("build_config", dict())
                         app_buildcfgs = appcfg.get("build_configs", dict())
@@ -186,6 +195,7 @@ class nsdk_bench(nsdk_runner):
                         app_parallel = appcfg.get("parallel", "")
                         app_runcfg = appcfg.get("run_config", dict())
                         app_checks = appcfg.get("checks", dict())
+                        app_cpobjs = appcfg.get("copy_objects", False)
 
                 app_allconfigs = {"configs": {}}
                 if len(app_buildcfgs) == 0:
@@ -202,7 +212,7 @@ class nsdk_bench(nsdk_runner):
                     percfg_appbuildcfg = copy.deepcopy(app_buildcfg)
                     percfg_appbuildcfg.update(app_buildcfgs[cfgname])
                     app_allconfigs["configs"][cfgname] = {"build_config": percfg_appbuildcfg, "build_target": app_buildtarget, \
-                            "parallel": app_parallel, "run_config": app_runcfg, "checks": app_checks, \
+                            "copy_objects": app_cpobjs, "parallel": app_parallel, "run_config": app_runcfg, "checks": app_checks, \
                             "logs": {"build": app_buildlogfile, "run": app_runlogfile}}
 
                 apps_config[appdir] = copy.deepcopy(app_allconfigs)

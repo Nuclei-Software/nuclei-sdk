@@ -455,7 +455,7 @@ def parse_benchmark_runlog(lines):
         if "Whetstone" in line:
             program_type = PROGRAM_WHETSTONE
         if "MWIPS/MHz" in line:
-            value = line.strip().split()[1:2]
+            value = split("MWIPS/MHz")[-1].strip().split()
             result = dict()
             result["MWIPS/MHz"] = (float)(value[0])
     return program_type, result
