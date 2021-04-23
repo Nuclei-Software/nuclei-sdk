@@ -61,7 +61,7 @@ def find_possible_serports():
 
 def find_most_possible_serport():
     serports = find_possible_serports()
-    if len(serports) > 1:
+    if len(serports) > 0:
         # sort the ports
         serports.sort()
         # get the biggest port

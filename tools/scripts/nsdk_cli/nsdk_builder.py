@@ -365,10 +365,11 @@ class nsdk_runner(nsdk_builder):
 
     def analyze_runlog(self, logfile):
         result = {"type": "unknown", "value": {}}
-        result_lines = open(logfile).readlines()
-        program_found, result_parsed = parse_benchmark_runlog(result_lines)
-        if program_found != PROGRAM_UNKNOWN:
-            result = {"type": program_found, "value": result_parsed}
+        if os.path.isfile(logfile):
+            result_lines = open(logfile).readlines()
+            program_found, result_parsed = parse_benchmark_runlog(result_lines)
+            if program_found != PROGRAM_UNKNOWN:
+                result = {"type": program_found, "value": result_parsed}
         return result
 
     def run_app_onhw(self, appdir, runcfg:dict(), show_output=True, logfile=None):
@@ -380,7 +381,7 @@ class nsdk_runner(nsdk_builder):
         serport = None
         timeout = 60
         baudrate = 115200
-        if hwconfig and "serport" in hwconfig:
+        if hwconfig:
             most_possible_serport = find_most_possible_serport()
             serport = hwconfig.get("serport", most_possible_serport)
             baudrate = hwconfig.get("baudrate", 115200)
