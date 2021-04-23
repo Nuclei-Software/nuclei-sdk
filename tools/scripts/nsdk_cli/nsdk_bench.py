@@ -217,56 +217,10 @@ class nsdk_bench(nsdk_runner):
 
 
 def merge_config(appcfg, hwcfg):
-    if isinstance(appcfg, dict) == True and isinstance(hwcfg, dict) == False:
-        return appcfg
-    if isinstance(appcfg, dict) == False and isinstance(hwcfg, dict) == True:
-        return hwcfg
-    merged_appcfg = copy.deepcopy(appcfg)
-    #merged_appcfg.update(hwcfg) # this one don't update the dict recursively
-    dict_merge(merged_appcfg, hwcfg)
-    return merged_appcfg
+    return merge_two_config(appcfg, hwcfg)
 
-def merge_cmd_config(config, serport, baudrate, make_options, parallel=None):
-    if isinstance(config, dict) == False:
-        return None
-    new_config = copy.deepcopy(config)
-    if serport:
-        run_cfg = new_config.get("run_config", None)
-        if run_cfg is None:
-            new_config["run_config"] = {"hardware" : {"serport": str(serport), "baudrate": 115200}}
-        else:
-            if "hardware" in run_cfg:
-                new_config["run_config"]["hardware"]["serport"] = str(serport)
-            else:
-                new_config["run_config"]["hardware"] = {"serport": str(serport), "baudrate": 115200}
-    if baudrate:
-        run_cfg = new_config.get("run_config", None)
-        if run_cfg is None:
-            new_config["run_config"] = {"hardware" : {"baudrate": int(baudrate)}}
-        else:
-            if "hardware" in run_cfg:
-                new_config["run_config"]["hardware"]["baudrate"] = int(baudrate)
-            else:
-                new_config["run_config"]["hardware"] = {"baudrate": int(baudrate)}
-    if parallel is not None:
-        new_config["parallel"] = parallel
-    if make_options:
-        opt_splits=make_options.strip().split()
-        passed_buildcfg = dict()
-        for opt in opt_splits:
-            if "=" in opt:
-                values = opt.split("=")
-                # Make new build config
-                if (len(values) == 2):
-                    passed_buildcfg[values[0]] = values[1]
-        build_cfg = new_config.get("build_config", None)
-        if build_cfg is None:
-            new_config["build_config"] = passed_buildcfg
-        else:
-            # update build_config using parsed config via values specified in make_options
-            new_config["build_config"].update(passed_buildcfg)
-    return new_config
-
+def merge_cmd_config(config, args_dict):
+    return merge_config_with_args(config, args_dict)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Nuclei SDK Benchmark and Report Tool")
@@ -276,6 +230,8 @@ if __name__ == '__main__':
     parser.add_argument('--serport', help="Serial port for monitor, if not specified, it will use the specified by appcfg and hwcfg")
     parser.add_argument('--baudrate', help="Serial port baudrate for monitor, it will use the specified by appcfg and hwcfg")
     parser.add_argument('--make_options', help="Extra make options passed to overwrite default build configuration passed via appcfg and hwcfg")
+    parser.add_argument('--build_target', help="Build target passed to make, to overwrite default build_target defined in configuration file")
+    parser.add_argument('--run_target', help="Run target which program will run, such as hardware, qemu or xlspike")
     parser.add_argument('--parallel', help="parallel value, such as -j4 or -j or -j8, default None")
     parser.add_argument('--run', action='store_true', help="If specified, will do run not build process")
     parser.add_argument('--verbose', action='store_true', help="If specified, will show detailed build/run messsage")
@@ -292,7 +248,7 @@ if __name__ == '__main__':
     # Merge appcfg and hwcfg, hwcfg has higher priority
     config = merge_config(appcfg, hwcfg)
     # Merge options passed by serport, baudrate, make_options
-    config = merge_cmd_config(config, args.serport, args.baudrate, args.make_options, args.parallel)
+    config = merge_cmd_config(config, vars(args))
 
     nsdk_ext = nsdk_bench()
     if args.run:
