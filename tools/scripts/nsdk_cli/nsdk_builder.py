@@ -381,7 +381,7 @@ class nsdk_runner(nsdk_builder):
         serport = None
         timeout = 60
         baudrate = 115200
-        if hwconfig:
+        if hwconfig is not None:
             most_possible_serport = find_most_possible_serport()
             serport = hwconfig.get("serport", most_possible_serport)
             baudrate = hwconfig.get("baudrate", 115200)
@@ -421,7 +421,7 @@ class nsdk_runner(nsdk_builder):
 
         timeout = 60
         qemu_exe = None
-        if hwconfig:
+        if hwconfig is not None:
             qemu32_exe = hwconfig.get("qemu32", "qemu-system-riscv32")
             qemu64_exe = hwconfig.get("qemu64", "qemu-system-riscv64")
             qemu_exe = qemu32_exe
@@ -440,10 +440,50 @@ class nsdk_runner(nsdk_builder):
                 qemu_exe = qemu64_exe
             timeout = hwconfig.get("timeout", 60)
         command = None
+        cmdsts = False
         if qemu_exe:
-            command = "%s -M %s -cpu nuclei-%s -nodefaults -nographic -serial stdio -kernel %s" % (qemu_exe, machine, build_info["CORE"], build_objects["elf"])
-            print("Run command: %s" %(command))
-            cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, True, logfile, show_output)
+            if os.path.isfile(build_objects["elf"]):
+                command = "%s -M %s -cpu nuclei-%s -nodefaults -nographic -serial stdio -kernel %s" \
+                    % (qemu_exe, machine, build_info["CORE"], build_objects["elf"])
+                print("Run command: %s" %(command))
+                cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, True, logfile, show_output)
+            else:
+                print("ELF file %s doesn't exist, can't run on qemu" % (build_objects["elf"]))
+
+        final_status = cmdsts
+        return final_status, command
+
+    def run_app_onxlspike(self, appdir, runcfg:dict(), show_output=True, logfile=None):
+        app_runcfg = runcfg.get("run_config", dict())
+        app_runchecks = runcfg.get("checks", dict())
+        build_info = runcfg["misc"]["build_info"]
+        build_objects = runcfg["misc"]["build_objects"]
+        checktime = runcfg["misc"]["build_time"]
+        hwconfig = app_runcfg.get("xlspike", dict())
+
+        timeout = 60
+        xlspike_exe = None
+        if hwconfig is not None:
+            xlspike_exe = hwconfig.get("xlspike", "xl_spike")
+            build_soc = build_info["SOC"]
+            build_board = build_info["BOARD"]
+            if not (build_soc == "hbird" or build_soc == "demosoc"):
+                xlspike_exe = None
+                print("SOC=%s BOARD=%s is not supported by xlspike" % (build_soc, build_board))
+            else:
+                riscv_arch = build_info["RISCV_ARCH"]
+            timeout = hwconfig.get("timeout", 60)
+        command = None
+        cmdsts = False
+        if xlspike_exe:
+            if os.path.isfile(build_objects["elf"]):
+                command = "%s --isa %s %s" % (xlspike_exe, riscv_arch, build_objects["elf"])
+                print("Run command: %s" %(command))
+                cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, True, logfile, show_output)
+            else:
+                print("ELF file %s doesn't exist, can't run on xlspike" % (build_objects["elf"]))
+        else:
+            print("Can't run on xlspike due to run config not exist or config not supported")
 
         final_status = cmdsts
         return final_status, command
@@ -507,6 +547,17 @@ class nsdk_runner(nsdk_builder):
             appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
             if sim_cmd:
                 appsts["app"]["qemu_cmd"] = sim_cmd
+        elif app_runtarget == "xlspike":
+            runstatus, sim_cmd = self.run_app_onxlspike(appdir, runcfg, show_output, runlog)
+            # If run successfully, then do log analyze
+            if runlog and runstatus:
+                appsts["result"] = self.analyze_runlog(runlog)
+            appsts["logs"]["run"] = runlog
+            appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
+            if sim_cmd:
+                appsts["app"]["xlspike_cmd"] = sim_cmd
+        else:
+            print("Unsupported run target %s" %(app_runtarget))
 
         runtime = round(time.time() - runstarttime, 2)
         print("Run application %s on %s, time cost %s seconds, passed: %s" %(appdir, app_runtarget, runtime, runstatus))
