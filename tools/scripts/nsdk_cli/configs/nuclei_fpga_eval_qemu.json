@@ -1,0 +1,41 @@
+{
+    "run_config": {
+        "target" : "qemu",
+        "hardware" : {
+            "serport": "COM21",
+            "baudrate": 115200,
+            "timeout": 60
+        },
+        "qemu" : {
+            "timeout": 60
+        }
+    },
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "CORE": "ux600",
+        "DOWNLOAD": "ilm",
+        "DSP_ENABLE": "OFF"
+    },
+    "appconfig": {
+        "application/baremetal/benchmark/dhrystone": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["1000000/(User_Cycle/Number_Of_Runs)", "Please increase number"]
+            }
+        },
+        "application/rtthread/msh": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["msh >", "Hello RT-Thread!"]
+            }
+        }
+    },
+    "expected": {
+        "application/baremetal/demo_nice" : {
+            "run": false,
+            "build": true
+        }
+    }
+}
