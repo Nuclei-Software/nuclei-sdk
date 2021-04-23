@@ -33,13 +33,26 @@ class nsdk_builder(object):
         return False
 
     @staticmethod
-    def get_objects(appdir):
+    def get_objects(appdir, timestamp=None):
         if nsdk_builder.is_app(appdir) == False:
             return None
 
         def find_app_object(pattern):
             files = find_files(appdir, pattern)
-            return (files[0] if len(files) > 0 else "")
+            found_file = ""
+            latest_timestamp = 0
+            for fl in files:
+                flct = os.stat(fl).st_ctime
+                if timestamp:
+                    if flct >= timestamp:
+                        found_file = fl
+                        break
+                else:
+                    # find a latest file
+                    if flct > latest_timestamp:
+                        latest_timestamp = flct
+                        found_file = fl
+            return found_file
         build_objects = dict()
         build_objects["elf"] = find_app_object("*.elf")
         build_objects["map"] = find_app_object("*.map")
@@ -105,6 +118,7 @@ class nsdk_builder(object):
         if self.is_app(appdir) == False:
             return False, None
         build_status = dict()
+        build_timestamp = time.time() # get build time stamp
         ret, ticks = self.build_target_only(appdir, make_options, target, show_output, logfile, parallel)
         cmdsts = True
         if ret == COMMAND_INTERRUPTED:
@@ -395,6 +409,43 @@ class nsdk_runner(nsdk_builder):
         final_status = cmdsts and status
         return final_status
 
+    def run_app_onqemu(self, appdir, runcfg:dict(), show_output=True, logfile=None):
+        app_runcfg = runcfg.get("run_config", dict())
+        app_runchecks = runcfg.get("checks", dict())
+        build_info = runcfg["misc"]["build_info"]
+        build_objects = runcfg["misc"]["build_objects"]
+        checktime = runcfg["misc"]["build_time"]
+        hwconfig = app_runcfg.get("qemu", None)
+
+        timeout = 60
+        qemu_exe = None
+        if hwconfig:
+            qemu32_exe = hwconfig.get("qemu32", "qemu-system-riscv32")
+            qemu64_exe = hwconfig.get("qemu64", "qemu-system-riscv64")
+            qemu_exe = qemu32_exe
+            build_soc = build_info["SOC"]
+            build_board = build_info["BOARD"]
+            if build_soc == "hbird" or build_soc == "demosoc":
+                machine = "nuclei_n"
+            else:
+                if build_board == "gd32vf103v_rvstar":
+                    machine = "gd32vf103_rvstar"
+                elif build_board == "gd32vf103v_eval":
+                    machine = "gd32vf103_eval"
+                else:
+                    machine = "nuclei_n"
+            if "rv64" in build_info["RISCV_ARCH"]:
+                qemu_exe = qemu64_exe
+
+            timeout = hwconfig.get("timeout", 60)
+        if qemu_exe:
+            command = "%s -M %s -cpu nuclei-%s -nodefaults -nographic -serial stdio -kernel %s" % (qemu_exe, machine, build_info["CORE"], build_objects["elf"])
+            print("Run command: %s" %(command))
+            cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, True, logfile, show_output)
+
+        final_status = cmdsts
+        return final_status
+
     def build_app_with_config(self, appdir, appconfig:dict, show_output=True, logfile=None):
         build_config = appconfig.get("build_config", None)
         target = appconfig.get("build_target", "all")
@@ -431,7 +482,8 @@ class nsdk_runner(nsdk_builder):
         # get run checks
         DEFAULT_CHECKS = { "PASS": [ ], "FAIL": [ "MCAUSE:" ] }
         app_runchecks = appconfig.get("checks", DEFAULT_CHECKS)
-        misc_config = {"make_options": appsts["app"]["make_options"], "build_time": build_cktime}
+        misc_config = {"make_options": appsts["app"]["make_options"], \
+            "build_info": appsts["info"], "build_objects": appsts["objects"], "build_time": build_cktime}
         runcfg = {"run_config": app_runcfg, "checks": app_runchecks, "misc": misc_config}
         print("Run application on %s" % app_runtarget)
         runstarttime = time.time()
@@ -439,6 +491,13 @@ class nsdk_runner(nsdk_builder):
         appsts["status_code"]["run"] = RUNSTATUS_NOTSTART
         if app_runtarget == "hardware":
             runstatus = self.run_app_onhw(appdir, runcfg, show_output, runlog)
+            # If run successfully, then do log analyze
+            if runlog and runstatus:
+                appsts["result"] = self.analyze_runlog(runlog)
+            appsts["logs"]["run"] = runlog
+            appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
+        elif app_runtarget == "qemu":
+            runstatus = self.run_app_onqemu(appdir, runcfg, show_output, runlog)
             # If run successfully, then do log analyze
             if runlog and runstatus:
                 appsts["result"] = self.analyze_runlog(runlog)

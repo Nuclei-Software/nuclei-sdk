@@ -150,6 +150,196 @@ def run_command(command, show_output=True, logfile=None, append=False):
     cmd_elapsed_ticks = time.time() - startticks
     return ret, cmd_elapsed_ticks
 
+async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False):
+    logfh = None
+    ret = COMMAND_RUNOK
+    cmd_elapsed_ticks = 0
+    if isinstance(command, str) == False:
+        return COMMAND_INVALID, cmd_elapsed_ticks
+    startticks = time.time()
+    process = None
+    check_status = False
+    pass_checks = checks.get("PASS", [])
+    fail_checks = checks.get("FAIL", [])
+    def test_in_check(string, checks):
+        if type(checks) == list:
+            for check in checks:
+                if check in string:
+                    return True
+        return False
+    NSDK_CHECK_TAG = "Nuclei SDK Build Time:"
+    print("Checker used: ", checks)
+    check_finished = False
+    start_time = time.time()
+    serial_log = ""
+    try:
+        if isinstance(logfile, str):
+            logfh = open(logfile, "wb")
+        process = await asyncio.create_subprocess_shell(command, \
+                stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT)
+        while (time.time() - start_time) < timeout:
+            try:
+                linebytes = await asyncio.wait_for(process.stdout.readline(), 1)
+            except asyncio.TimeoutError:
+                continue
+            except KeyboardInterrupt:
+                print("Key CTRL-C pressed, command executing stopped!")
+                break
+            except:
+                break
+            line = str(try_decode_bytes(linebytes)).replace('\r', '')
+            if (not line) and process.poll() is not None:
+                break
+            if sdk_check == True:
+                if show_output:
+                    print("XXX Check " + line, end='')
+                if NSDK_CHECK_TAG in line:
+                    timestr = line.split(NSDK_CHECK_TAG)[-1].strip()
+                    cur_time = time.mktime(time.strptime(timestr, "%b %d %Y, %H:%M:%S"))
+                    if int(cur_time) >= int(checktime):
+                        sdk_check = False
+                        line = NSDK_CHECK_TAG + " " + timestr + "\n"
+                        serial_log = serial_log + str(line)
+            else:
+                serial_log = serial_log + str(line)
+                if show_output:
+                    print(line, end='')
+                if check_finished == False:
+                    if test_in_check(line, fail_checks):
+                        check_status = False
+                        check_finished = True
+                    if test_in_check(line, pass_checks):
+                        check_status = True
+                        check_finished = True
+                    if check_finished:
+                        # record another 2 seconds by reset start_time and timeout to 2
+                        start_time = time.time()
+                        timeout = 1
+            if logfh:
+                logfh.write(linebytes)
+            time.sleep(0.01)
+        # kill this process
+        process.kill()
+        if process.returncode != 0:
+            ret = COMMAND_FAIL
+    except (KeyboardInterrupt):
+        print("Key CTRL-C pressed, command executing stopped!")
+        ret = COMMAND_INTERRUPTED
+    except subprocess.TimeoutExpired:
+        process.kill()
+        ret = COMMAND_TIMEOUT
+    except Exception as exc:
+        print("Unexpected exception happened: %s" %(str(exc)))
+        ret = COMMAND_EXCEPTION
+    finally:
+        if process:
+            process.kill()
+            await process.wait()
+            del process
+        if logfh:
+            logfh.close()
+    cmd_elapsed_ticks = time.time() - startticks
+    return check_status, cmd_elapsed_ticks
+
+def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False):
+    if sys.platform == "win32":
+        loop = asyncio.ProactorEventLoop() # For subprocess' pipes on Windows
+        asyncio.set_event_loop(loop)
+    else:
+        loop = asyncio.get_event_loop()
+    try:
+        ret, cmd_elapsed_ticks = loop.run_until_complete( \
+            run_cmd_and_check_async(command, timeout, checks, checktime, sdk_check, logfile, show_output))
+    except KeyboardInterrupt:
+        print("Key CTRL-C pressed, command executing stopped!")
+        ret, cmd_elapsed_ticks = False, 0
+    finally:
+        if sys.platform != "win32":
+            os.system("stty echo")
+
+    return ret, cmd_elapsed_ticks
+
+# def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False):
+#     logfh = None
+#     ret = COMMAND_RUNOK
+#     cmd_elapsed_ticks = 0
+#     if isinstance(command, str) == False:
+#         return COMMAND_INVALID, cmd_elapsed_ticks
+#     startticks = time.time()
+#     process = None
+#     check_status = False
+#     pass_checks = checks.get("PASS", [])
+#     fail_checks = checks.get("FAIL", [])
+#     def test_in_check(string, checks):
+#         if type(checks) == list:
+#             for check in checks:
+#                 if check in string:
+#                     return True
+#         return False
+#     NSDK_CHECK_TAG = "Nuclei SDK Build Time:"
+#     print("Checker used: ", checks)
+#     check_finished = False
+#     start_time = time.time()
+#     serial_log = ""
+#     try:
+#         if isinstance(logfile, str):
+#             logfh = open(logfile, "wb")
+#         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, \
+#                             stderr=subprocess.STDOUT)
+#         while (time.time() - start_time) < timeout:
+#             linebytes = process.stdout.readline()
+#             line = str(try_decode_bytes(linebytes)).replace('\r', '')
+#             if (not line) and process.poll() is not None:
+#                 break
+#             if sdk_check == True:
+#                 if show_output:
+#                     print("XXX Check " + line, end='')
+#                 if NSDK_CHECK_TAG in line:
+#                     timestr = line.split(NSDK_CHECK_TAG)[-1].strip()
+#                     cur_time = time.mktime(time.strptime(timestr, "%b %d %Y, %H:%M:%S"))
+#                     if int(cur_time) >= int(checktime):
+#                         sdk_check = False
+#                         line = NSDK_CHECK_TAG + " " + timestr + "\n"
+#                         serial_log = serial_log + str(line)
+#             else:
+#                 serial_log = serial_log + str(line)
+#                 if show_output:
+#                     print(line, end='')
+#                 if check_finished == False:
+#                     if test_in_check(line, fail_checks):
+#                         check_status = False
+#                         check_finished = True
+#                     if test_in_check(line, pass_checks):
+#                         check_status = True
+#                         check_finished = True
+#                     if check_finished:
+#                         # record another 2 seconds by reset start_time and timeout to 2
+#                         start_time = time.time()
+#                         timeout = 2
+
+#             if logfh:
+#                 logfh.write(linebytes)
+#             time.sleep(0.01)
+#         process.kill()
+#         if process.returncode != 0:
+#             ret = COMMAND_FAIL
+#     except (KeyboardInterrupt):
+#         print("Key CTRL-C pressed, command executing stopped!")
+#         ret = COMMAND_INTERRUPTED
+#     except subprocess.TimeoutExpired:
+#         process.kill()
+#         ret = COMMAND_TIMEOUT
+#     except Exception as exc:
+#         print("Unexpected exception happened: %s" %(str(exc)))
+#         ret = COMMAND_EXCEPTION
+#     finally:
+#         if process:
+#             del process
+#         if logfh:
+#             logfh.close()
+#     cmd_elapsed_ticks = time.time() - startticks
+#     return check_status, cmd_elapsed_ticks
+
 # def run_command(command, show_output=True, logfile=None):
 #     if sys.platform == "win32":
 #         loop = asyncio.ProactorEventLoop() # For subprocess' pipes on Windows
