@@ -127,15 +127,22 @@ def kill_async_subprocess(proc):
                 except:
                     continue
             print("Kill parent process %s, pid %d" %(parent_proc.name(), parent_proc.pid))
-            os.kill(parent_proc.pid, signal.SIGKILL) # kill parent process
+            if parent_proc.is_running():
+                os.kill(parent_proc.pid, signal.SIGKILL) # kill parent process
             # kill using process.kill again
             proc.kill()
+        except psutil.NoSuchProcess:
+            pass
         except Exception as exc:
-            print("Warning: kill process %d failed with %s" %(proc.pid, exc))
+            print("Warning: kill process %s %d failed with %s" %(parent_proc.name(), proc.pid, exc))
     pass
 
 def kill_subprocess(proc):
-    kill_async_subprocess(proc)
+    try:
+        if proc.poll() is None: # process is still running
+            kill_async_subprocess(proc)
+    except:
+        pass
     pass
 
 COMMAND_RUNOK=0
@@ -182,12 +189,12 @@ def run_command(command, show_output=True, logfile=None, append=False):
         print("Key CTRL-C pressed, command executing stopped!")
         ret = COMMAND_INTERRUPTED
     except subprocess.TimeoutExpired:
-        process.kill()
         ret = COMMAND_TIMEOUT
     except Exception as exc:
         print("Unexpected exception happened: %s" %(str(exc)))
         ret = COMMAND_EXCEPTION
     finally:
+        kill_subprocess(process)
         if process:
             del process
         if logfh:
@@ -324,6 +331,21 @@ def get_logfile(appdir, startdir, logdir, logname):
     if os.path.isdir(applogdir) == False:
         os.makedirs(applogdir)
     return applog
+
+def check_tool_version(ver_cmd, ver_check):
+    vercmd_log = tempfile.mktemp()
+    ret, _ = run_command(ver_cmd, show_output=False, logfile=vercmd_log)
+    check_sts = False
+    verstr = None
+    if ret == COMMAND_RUNOK:
+        with open(vercmd_log, 'r') as vlf:
+            for line in vlf.readlines():
+                if ver_check in line:
+                    verstr = line.strip()
+                    check_sts = True
+                    break
+    os.remove(vercmd_log)
+    return check_sts, verstr
 
 def get_elfsize(elf):
     sizeinfo = {"text": -1, "data": -1, "bss": -1, "total": -1}
