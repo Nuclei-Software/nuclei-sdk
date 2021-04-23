@@ -74,6 +74,7 @@ class nsdk_builder(object):
             parallel = ""
         if parallel != "": # need to split targets
             build_targets = target.strip().split()
+            print("Target \"%s\" are split to seperated targets %s in parallel mode." %(target, build_targets))
         else:
             build_targets = [target]
         if os.path.isfile(logfile):
@@ -415,7 +416,7 @@ class nsdk_runner(nsdk_builder):
         build_info = runcfg["misc"]["build_info"]
         build_objects = runcfg["misc"]["build_objects"]
         checktime = runcfg["misc"]["build_time"]
-        hwconfig = app_runcfg.get("qemu", None)
+        hwconfig = app_runcfg.get("qemu", dict())
 
         timeout = 60
         qemu_exe = None
@@ -436,15 +437,15 @@ class nsdk_runner(nsdk_builder):
                     machine = "nuclei_n"
             if "rv64" in build_info["RISCV_ARCH"]:
                 qemu_exe = qemu64_exe
-
             timeout = hwconfig.get("timeout", 60)
+        command = None
         if qemu_exe:
             command = "%s -M %s -cpu nuclei-%s -nodefaults -nographic -serial stdio -kernel %s" % (qemu_exe, machine, build_info["CORE"], build_objects["elf"])
             print("Run command: %s" %(command))
             cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, True, logfile, show_output)
 
         final_status = cmdsts
-        return final_status
+        return final_status, command
 
     def build_app_with_config(self, appdir, appconfig:dict, show_output=True, logfile=None):
         build_config = appconfig.get("build_config", None)
@@ -497,12 +498,14 @@ class nsdk_runner(nsdk_builder):
             appsts["logs"]["run"] = runlog
             appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
         elif app_runtarget == "qemu":
-            runstatus = self.run_app_onqemu(appdir, runcfg, show_output, runlog)
+            runstatus, sim_cmd = self.run_app_onqemu(appdir, runcfg, show_output, runlog)
             # If run successfully, then do log analyze
             if runlog and runstatus:
                 appsts["result"] = self.analyze_runlog(runlog)
             appsts["logs"]["run"] = runlog
             appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
+            if sim_cmd:
+                appsts["app"]["qemu_cmd"] = sim_cmd
 
         runtime = round(time.time() - runstarttime, 2)
         print("Run application %s on %s, time cost %s seconds, passed: %s" %(appdir, app_runtarget, runtime, runstatus))
