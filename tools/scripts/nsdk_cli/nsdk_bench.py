@@ -242,12 +242,12 @@ def merge_cmd_config(config, serport, baudrate, make_options, parallel=None):
     if baudrate:
         run_cfg = new_config.get("run_config", None)
         if run_cfg is None:
-            new_config["run_config"] = {"hardware" : {"serport": "/dev/ttyUSB1", "baudrate": int(baudrate)}}
+            new_config["run_config"] = {"hardware" : {"baudrate": int(baudrate)}}
         else:
             if "hardware" in run_cfg:
                 new_config["run_config"]["hardware"]["baudrate"] = int(baudrate)
             else:
-                new_config["run_config"]["hardware"] = {"serport": "/dev/ttyUSB1", "baudrate": int(baudrate)}
+                new_config["run_config"]["hardware"] = {"baudrate": int(baudrate)}
     if parallel is not None:
         new_config["parallel"] = parallel
     if make_options:

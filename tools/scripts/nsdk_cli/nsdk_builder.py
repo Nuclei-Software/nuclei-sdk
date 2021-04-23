@@ -119,7 +119,6 @@ class nsdk_builder(object):
         if self.is_app(appdir) == False:
             return False, None
         build_status = dict()
-        build_timestamp = time.time() # get build time stamp
         ret, ticks = self.build_target_only(appdir, make_options, target, show_output, logfile, parallel)
         cmdsts = True
         if ret == COMMAND_INTERRUPTED:
@@ -382,16 +381,17 @@ class nsdk_runner(nsdk_builder):
         timeout = 60
         baudrate = 115200
         if hwconfig and "serport" in hwconfig:
-            serport = hwconfig.get("serport", "/dev/ttyUSB1")
+            most_possible_serport = find_most_possible_serport()
+            serport = hwconfig.get("serport", most_possible_serport)
             baudrate = hwconfig.get("baudrate", 115200)
             timeout = hwconfig.get("timeout", 60)
         ser_thread = None
         try:
-            if serport:
-                #ser_thread = NThread(monitor_serial_and_check, \
-                #    (serport, baudrate, timeout, app_runchecks, checktime, True, logfile, show_output))
+            if serport: # only monitor serial port when port found
                 ser_thread = MonitorThread(serport, baudrate, timeout, app_runchecks, checktime, True, logfile, show_output)
                 ser_thread.start()
+            else:
+                print("Warning: No available serial port found, please check!")
             cmdsts, _ = self.upload_app(appdir, make_options, show_output, None)
             status = True
             if ser_thread:

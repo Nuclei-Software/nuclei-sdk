@@ -5,6 +5,7 @@ import sys
 import time
 import copy
 import serial
+import serial.tools.list_ports
 import tempfile
 import collections
 from threading import Thread
@@ -51,6 +52,24 @@ def save_json(file, data):
     except:
         print("Error: Data can't be serialized to json file!")
         return False
+
+# Return possible serports, return a list of possible serports
+def find_possible_serports():
+    comports = serial.tools.list_ports.comports()
+    serports = [ port.device for port in comports ]
+    return serports
+
+def find_most_possible_serport():
+    serports = find_possible_serports()
+    if len(serports) > 1:
+        # sort the ports
+        serports.sort()
+        # get the biggest port
+        # for /dev/ttyUSB0, /dev/ttyUSB1, get /dev/ttyUSB1
+        # for COM16, COM17, get COM17
+        return serports[-1]
+    else:
+        return None
 
 # get from https://gist.github.com/angstwad/bf22d1822c38a92ec0a9
 def dict_merge(dct, merge_dct):
