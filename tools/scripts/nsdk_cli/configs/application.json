@@ -2,7 +2,6 @@
     "run_config": {
         "target" : "hardware",
         "hardware" : {
-            "serport": "COM21",
             "baudrate": 115200,
             "timeout": 60
         },
