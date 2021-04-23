@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import copy
+import shutil
 import glob
 import serial
 import tempfile
@@ -31,6 +32,22 @@ class nsdk_builder(object):
             if os.path.isfile(mkfile_path):
                 return True
         return False
+
+    @staticmethod
+    def copy_objects(appsts, copydir):
+        if isinstance(appsts, dict) and "objects" in appsts:
+            os.makedirs(copydir, exist_ok=True)
+            objects = appsts["objects"]
+            if "saved_objects" not in appsts:
+                appsts["saved_objects"] = dict()
+            for obj in objects:
+                obj_file = objects[obj]
+                if os.path.isfile(obj_file): # only copy when exist
+                    filename = os.path.basename(obj_file)
+                    newfile = os.path.join(copydir, filename)
+                    shutil.copyfile(obj_file, newfile)
+                    appsts["saved_objects"][obj] = newfile
+        pass
 
     @staticmethod
     def get_objects(appdir, timestamp=None):
@@ -444,6 +461,8 @@ class nsdk_runner(nsdk_builder):
         build_config = appconfig.get("build_config", None)
         target = appconfig.get("build_target", "all")
         parallel = appconfig.get("parallel", "")
+        # Copy program objects if copy_objects is true
+        copy_objects_required = appconfig.get("copy_objects", False)
         make_options = ""
         if isinstance(build_config, dict):
             for key, value in build_config.items():
@@ -455,6 +474,10 @@ class nsdk_runner(nsdk_builder):
                 else:
                     make_options += " %s=%s"%(key, value)
         appcmdsts, appsts = self.build_target(appdir, make_options, target, show_output, logfile, parallel)
+        objs_copydir = os.path.dirname(logfile) # where objects are copied to
+        # copy objects if copy_objects_required
+        if copy_objects_required:
+            nsdk_builder.copy_objects(appsts, objs_copydir)
         buildtime = appsts["time"]["build"]
         print("Build application %s, time cost %s seconds, passed: %s" %(appdir, buildtime, appcmdsts))
 
