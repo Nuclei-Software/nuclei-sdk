@@ -183,6 +183,12 @@ class nsdk_builder(object):
                     if "Start address" in line:
                         upload_sts = True
                         break
+            # append openocd log to upload log
+            openocd_log = os.path.join(appdir, "openocd.log")
+            if os.path.isfile(openocd_log):
+                with open(uploadlog, 'a') as uf:
+                    uf.writeline("\r\nOpenOCD log content dumped as below:\n")
+                    uf.writelines(open(openocd_log).readlines())
             if upload_sts == False: # actually not upload successfully
                 cmdsts = False
         if "app" in build_status:
