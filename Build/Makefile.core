@@ -18,6 +18,15 @@ NX600FD_CORE_ARCH_ABI = rv64imafdc lp64d
 UX600_CORE_ARCH_ABI = rv64imac lp64
 UX600F_CORE_ARCH_ABI = rv64imafc lp64f
 UX600FD_CORE_ARCH_ABI = rv64imafdc lp64d
+N900_CORE_ARCH_ABI = rv32imac ilp32
+N900F_CORE_ARCH_ABI = rv32imafc ilp32f
+N900FD_CORE_ARCH_ABI = rv32imafdc ilp32d
+NX900_CORE_ARCH_ABI = rv64imac lp64
+NX900F_CORE_ARCH_ABI = rv64imafc lp64f
+NX900FD_CORE_ARCH_ABI = rv64imafdc lp64d
+UX900_CORE_ARCH_ABI = rv64imac lp64
+UX900F_CORE_ARCH_ABI = rv64imafc lp64f
+UX900FD_CORE_ARCH_ABI = rv64imafdc lp64d
 
 # Don't forget to add a new core below
 # if you add a new NXXX_CORE_ARCH_ABI above
@@ -25,4 +34,7 @@ SUPPORTED_CORES = n201 n201e n203 n203e n205 \
 		n205e n305 n307 n307fd \
 		n600 n600f n600fd \
 		nx600 nx600f nx600fd \
-		ux600 ux600f ux600fd
+		ux600 ux600f ux600fd \
+		n900 n900f n900fd \
+		nx900 nx900f nx900fd \
+		ux900 ux900f ux900fd
