@@ -27,7 +27,7 @@ def get_expected(config, app, cfg_name):
         app_cfgexpected = config.get("expecteds", dict()).get(found_app_expecteds).get(cfg_name, dict())
     else:
         app_cfgexpected = dict()
-    app_expected.update(app_cfgexpected)
+    app_expected = merge_two_config(app_expected, app_cfgexpected)
     return app_expected
 
 
@@ -247,8 +247,8 @@ def merge_all_config_and_result(logdir):
             print("Merging config json file %s, result json file %s" %(configfile, resultfile))
             _, config = load_json(configfile)
             _, result = load_json(resultfile)
-            all_mergedcfg.update(config)
-            all_result.update(result)
+            all_mergedcfg = merge_two_config(all_mergedcfg, config)
+            all_result = merge_two_config(all_result, result)
 
     return all_mergedcfg, all_result
 
