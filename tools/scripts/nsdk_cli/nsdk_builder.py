@@ -187,8 +187,10 @@ class nsdk_builder(object):
             openocd_log = os.path.join(appdir, "openocd.log")
             if os.path.isfile(openocd_log):
                 with open(uploadlog, 'a') as uf:
-                    uf.writeline("\r\nOpenOCD log content dumped as below:\n")
-                    uf.writelines(open(openocd_log).readlines())
+                    uf.write("\n=====OpenOCD log content dumped as below:=====\n")
+                    with open(openocd_log, "r") as of:
+                        for line in of.readlines():
+                            uf.write(line)
             if upload_sts == False: # actually not upload successfully
                 cmdsts = False
         if "app" in build_status:
