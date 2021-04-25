@@ -118,17 +118,21 @@ def try_decode_bytes(bytes):
 def kill_async_subprocess(proc):
     if proc is not None:
         try:
+            kill_sig = signal.SIGTERM
+            if sys.platform != "win32":
+                kill_sig = signal.SIGKILL
+
             parent_proc = psutil.Process(proc.pid)
             child_procs = parent_proc.children(recursive=True)
             for child_proc in child_procs:
                 print("Kill child process %s, pid %d" %(child_proc.name(), child_proc.pid))
                 try:
-                    os.kill(child_proc.pid, signal.SIGKILL) # kill child process
+                    os.kill(child_proc.pid, kill_sig) # kill child process
                 except:
                     continue
             print("Kill parent process %s, pid %d" %(parent_proc.name(), parent_proc.pid))
             if parent_proc.is_running():
-                os.kill(parent_proc.pid, signal.SIGKILL) # kill parent process
+                os.kill(parent_proc.pid, kill_sig) # kill parent process
             # kill using process.kill again
             proc.kill()
         except psutil.NoSuchProcess:
@@ -300,11 +304,7 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     return check_status, cmd_elapsed_ticks
 
 def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False):
-    if sys.platform == "win32":
-        loop = asyncio.ProactorEventLoop() # For subprocess' pipes on Windows
-        asyncio.set_event_loop(loop)
-    else:
-        loop = asyncio.get_event_loop()
+    loop = asyncio.get_event_loop()
     try:
         ret, cmd_elapsed_ticks = loop.run_until_complete( \
             run_cmd_and_check_async(command, timeout, checks, checktime, sdk_check, logfile, show_output))
