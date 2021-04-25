@@ -287,6 +287,8 @@ if __name__ == '__main__':
         with open(csvfile, "w") as cf:
             cf.write(csvstrings)
         print(csvstrings)
+        print("Generate report csv file to %s" % (csvfile))
+        print("Generate report markdown file to %s" % (rptfile))
     # Exit with ret value
     if ret:
         sys.exit(0)
