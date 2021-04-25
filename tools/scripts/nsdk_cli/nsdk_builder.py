@@ -346,7 +346,7 @@ class nsdk_runner(nsdk_builder):
                 result = {"type": program_found, "value": result_parsed}
         return result
 
-    def run_app_onhw(self, appdir, runcfg:dict(), show_output=True, logfile=None):
+    def run_app_onhw(self, appdir, runcfg:dict(), show_output=True, logfile=None, uploadlog=None):
         app_runcfg = runcfg.get("run_config", dict())
         app_runchecks = runcfg.get("checks", dict())
         make_options = runcfg["misc"]["make_options"]
@@ -368,7 +368,7 @@ class nsdk_runner(nsdk_builder):
                 ser_thread.start()
             else:
                 print("Warning: No available serial port found, please check!")
-            cmdsts, upload_sts = self.upload_app(appdir, make_options, show_output, None)
+            cmdsts, upload_sts = self.upload_app(appdir, make_options, show_output, uploadlog)
             uploader = upload_sts.get("app", dict()).get("uploader", None)
             status = True
             if ser_thread:
@@ -530,11 +530,15 @@ class nsdk_runner(nsdk_builder):
         runstatus = False
         appsts["status_code"]["run"] = RUNSTATUS_NOTSTART
         if app_runtarget == "hardware":
-            runstatus, uploader = self.run_app_onhw(appdir, runcfg, show_output, runlog)
+            uploadlog = None
+            if runlog:
+                uploadlog = os.path.join(os.path.dirname(runlog), "upload.log")
+            runstatus, uploader = self.run_app_onhw(appdir, runcfg, show_output, runlog, uploadlog)
             # If run successfully, then do log analyze
             if runlog and runstatus:
                 appsts["result"] = self.analyze_runlog(runlog)
             appsts["logs"]["run"] = runlog
+            appsts["logs"]["upload"] = uploadlog
             appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
             if uploader:
                 appsts["app"]["uploader"] = uploader
