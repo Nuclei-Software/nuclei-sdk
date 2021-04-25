@@ -15,7 +15,17 @@ VALID_PROGRAM_MAKEFILE=$(wildcard $(PROGRAM)/Makefile)
 # Valid SDK Rules accepted by build system
 VALID_SDK_RULES := all info help bin size dasm upload run_openocd run_gdb clean debug
 
-PROGS_TO_SEARCH := test/* application/* application/*/* application/*/*/* application/*/*/*/*
+# Default root directories to search
+APP_ROOT_DIRS := application test
+# Extra application root directories passed by make
+EXTRA_APP_ROOT_DIRS ?=
+
+TOTAL_ROOT_DIRS := $(APP_ROOT_DIRS) $(EXTRA_APP_ROOT_DIRS)
+
+# Default search patterns
+SEARCH_PATTERNS := * */* */*/* */*/*/*
+
+PROGS_TO_SEARCH := $(foreach rootdir, $(TOTAL_ROOT_DIRS), $(addprefix $(rootdir)/, $(SEARCH_PATTERNS)))
 PROGS_makefile := $(foreach progdir, $(PROGS_TO_SEARCH), $(sort $(dir $(wildcard $(progdir)/makefile))))
 PROGS_Makefile := $(foreach progdir, $(PROGS_TO_SEARCH), $(sort $(dir $(wildcard $(progdir)/Makefile))))
 PROGS_DIRS := $(sort $(PROGS_makefile) $(PROGS_Makefile))
