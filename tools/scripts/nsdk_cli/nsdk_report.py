@@ -45,10 +45,10 @@ def check_expected(build_status, config, run=False):
             if isinstance(app_cfg_expected, dict):
                 expected_build_ret = app_cfg_expected.get("build", True)
                 expected_run_ret = app_cfg_expected.get("run", True)
-                if expected_build_ret != build_ret:
+                if build_ret == False and expected_build_ret != build_ret:
                     ret = False
                 if run:
-                    if expected_run_ret != run_ret:
+                    if run_ret == False and expected_run_ret != run_ret:
                         ret = False
             else:
                 if build_ret == False:
@@ -111,9 +111,9 @@ def analyze_report(config, result, runapp=False):
             expected_run = app_cfg_expected.get("run", True)
             real_build = status[cfgname]["status"].get("build", False)
             real_run = status[cfgname]["status"].get("run", False)
-            if expected_build != real_build:
+            if real_build == False and expected_build != real_build:
                 app_sts["exp_build"] = False
-            if expected_run != real_run:
+            if real_run == False and expected_run != real_run:
                 app_sts["exp_run"] = False
             if real_build == False:
                 app_sts["build"] = False
