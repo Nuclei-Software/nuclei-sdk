@@ -124,7 +124,7 @@ class nsdk_builder(object):
                 INFO_TAG = "Current Configuration:"
                 if line.startswith(INFO_TAG):
                     build_info = dict()
-                    infos = line.strip(INFO_TAG).split()
+                    infos = line.replace(INFO_TAG, "").strip().split()
                     for info in infos:
                         splits = info.split("=")
                         if len(splits) == 2:
@@ -410,18 +410,32 @@ class nsdk_runner(nsdk_builder):
         if hwconfig is not None:
             qemu32_exe = hwconfig.get("qemu32", "qemu-system-riscv32")
             qemu64_exe = hwconfig.get("qemu64", "qemu-system-riscv64")
+            qemu_machine = hwconfig.get("qemu_machine", None)
+            qemu_cpu = hwconfig.get("qemu_cpu", None)
             qemu_exe = qemu32_exe
             build_soc = build_info["SOC"]
             build_board = build_info["BOARD"]
-            if build_soc == "hbird" or build_soc == "demosoc":
-                machine = "nuclei_n"
-            else:
-                if build_board == "gd32vf103v_rvstar":
-                    machine = "gd32vf103_rvstar"
-                elif build_board == "gd32vf103v_eval":
-                    machine = "gd32vf103_eval"
-                else:
+            build_core = build_info["CORE"]
+            build_download = build_info["DOWNLOAD"]
+            if qemu_machine is None:
+                if build_soc == "hbird" or build_soc == "demosoc":
                     machine = "nuclei_n"
+                else:
+                    if build_board == "gd32vf103v_rvstar":
+                        machine = "gd32vf103_rvstar"
+                    elif build_board == "gd32vf103v_eval":
+                        machine = "gd32vf103_eval"
+                    else:
+                        machine = "nuclei_n"
+                # machine combined with download
+                machine = machine + ",download=%s" %(build_download.lower())
+            else:
+                machine = qemu_machine
+            if qemu_cpu is None:
+                qemu_sel_cpu = "nuclei-%s" % (build_core.lower())
+            else:
+                qemu_sel_cpu = qemu_cpu
+
             if "rv64" in build_info["RISCV_ARCH"]:
                 qemu_exe = qemu64_exe
             timeout = hwconfig.get("timeout", 60)
@@ -433,8 +447,8 @@ class nsdk_runner(nsdk_builder):
                 verchk = "QEMU emulator version"
                 ret, verstr = check_tool_version(vercmd, verchk)
                 if ret:
-                    command = "%s -M %s -cpu nuclei-%s -nodefaults -nographic -serial stdio -kernel %s" \
-                        % (qemu_exe, machine, build_info["CORE"], build_objects["elf"])
+                    command = "%s -M %s -cpu %s -nodefaults -nographic -serial stdio -kernel %s" \
+                        % (qemu_exe, machine, qemu_sel_cpu, build_objects["elf"])
                     print("Run command: %s" %(command))
                     runner = {"cmd": command, "version": verstr}
                     cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, True, logfile, show_output)
