@@ -13,7 +13,7 @@
     "build_config": {
         "SOC": "gd32vf103",
         "BOARD": "gd32vf103v_rvstar",
-        "DOWNLOAD": "ilm",
+        "DOWNLOAD": "flashxip",
         "DSP_ENABLE": "OFF"
     },
     "appconfig": {
