@@ -401,6 +401,7 @@ class nsdk_runner(nsdk_builder):
         app_runcfg = runcfg.get("run_config", dict())
         app_runchecks = runcfg.get("checks", dict())
         build_info = runcfg["misc"]["build_info"]
+        build_config = runcfg["misc"]["build_config"]
         build_objects = runcfg["misc"]["build_objects"]
         checktime = runcfg["misc"]["build_time"]
         hwconfig = app_runcfg.get("qemu", dict())
@@ -417,6 +418,7 @@ class nsdk_runner(nsdk_builder):
             build_board = build_info["BOARD"]
             build_core = build_info["CORE"]
             build_download = build_info["DOWNLOAD"]
+            build_dsp_enable = build_config.get("DSP_ENABLE", "OFF")
             if qemu_machine is None:
                 if build_soc == "hbird" or build_soc == "demosoc":
                     machine = "nuclei_n"
@@ -433,6 +435,8 @@ class nsdk_runner(nsdk_builder):
                 machine = qemu_machine
             if qemu_cpu is None:
                 qemu_sel_cpu = "nuclei-%s" % (build_core.lower())
+                if build_dsp_enable == "ON":
+                    qemu_sel_cpu = qemu_sel_cpu + "p"
             else:
                 qemu_sel_cpu = qemu_cpu
 
@@ -544,7 +548,7 @@ class nsdk_runner(nsdk_builder):
         # get run checks
         DEFAULT_CHECKS = { "PASS": [ ], "FAIL": [ "MCAUSE:" ] }
         app_runchecks = appconfig.get("checks", DEFAULT_CHECKS)
-        misc_config = {"make_options": appsts["app"]["make_options"], \
+        misc_config = {"make_options": appsts["app"]["make_options"], "build_config": appconfig["build_config"],\
             "build_info": appsts["info"], "build_objects": appsts["objects"], "build_time": build_cktime}
         runcfg = {"run_config": app_runcfg, "checks": app_runchecks, "misc": misc_config}
         print("Run application on %s" % app_runtarget)
