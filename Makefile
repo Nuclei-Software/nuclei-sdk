@@ -2,12 +2,15 @@ PROGRAM :=baremetal/helloworld
 
 .PHONY: __help
 __help:
-	@echo "Help about Build/Run/Debug an Nuclei SDK Application"
-	@echo "make [PROGRAM=/path/to/app]  help        Show Build System Help Message"
-	@echo "make cleanall                            Clean all the applications found in application and test folder"
-	@echo "Example:"
+	@echo "Help about Build/Run/Debug/Clean Nuclei SDK Application"
+	@echo "make [PROGRAM=/path/to/app]  help                        Show Build System Help Message"
+	@echo "make [EXTRA_APP_ROOTDIRS=/path/to/extraapps] cleanall    Clean all the applications"
+	@echo "Examples:"
 	@echo "make PROGRAM=application/baremetal/helloworld all"
+	@echo "make PROGRAM=application/baremetal/helloworld SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean all"
 	@echo "make -k cleanall"
+	@echo "make -k SOC=gd32vf103 BOARD=gd32vf103v_rvstar cleanall"
+	@echo "make -k EXTRA_APP_ROOTDIRS=soc_testcases cleanall"
 
 VALID_PROGRAM=$(wildcard $(PROGRAM))
 VALID_PROGRAM_MAKEFILE=$(wildcard $(PROGRAM)/Makefile)
@@ -16,16 +19,17 @@ VALID_PROGRAM_MAKEFILE=$(wildcard $(PROGRAM)/Makefile)
 VALID_SDK_RULES := all info help bin size dasm upload run_openocd run_gdb clean debug
 
 # Default root directories to search
-APP_ROOT_DIRS := application test
+APP_ROOTDIRS := application test
 # Extra application root directories passed by make
-EXTRA_APP_ROOT_DIRS ?=
+EXTRA_APP_ROOTDIRS ?=
 
-TOTAL_ROOT_DIRS := $(APP_ROOT_DIRS) $(EXTRA_APP_ROOT_DIRS)
+# get all the root directories for applications
+TOTAL_ROOTDIRS := $(APP_ROOTDIRS) $(EXTRA_APP_ROOTDIRS)
 
 # Default search patterns
 SEARCH_PATTERNS := * */* */*/* */*/*/*
 
-PROGS_TO_SEARCH := $(foreach rootdir, $(TOTAL_ROOT_DIRS), $(addprefix $(rootdir)/, $(SEARCH_PATTERNS)))
+PROGS_TO_SEARCH := $(foreach rootdir, $(TOTAL_ROOTDIRS), $(addprefix $(rootdir)/, $(SEARCH_PATTERNS)))
 PROGS_makefile := $(foreach progdir, $(PROGS_TO_SEARCH), $(sort $(dir $(wildcard $(progdir)/makefile))))
 PROGS_Makefile := $(foreach progdir, $(PROGS_TO_SEARCH), $(sort $(dir $(wildcard $(progdir)/Makefile))))
 PROGS_DIRS := $(sort $(PROGS_makefile) $(PROGS_Makefile))
