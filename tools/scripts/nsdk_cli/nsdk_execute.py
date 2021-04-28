@@ -284,15 +284,15 @@ if __name__ == '__main__':
     save_results(appcfg, hwcfg, config, result, args.logdir)
     if result:
         csvfile = os.path.join(args.logdir, "result.csv")
-        csvstrings = "App, build, run, total, text, data, bss\n"
+        csvlines = ["App, Case, build, run, total, text, data, bss"]
         for app in result:
             size = result[app]["size"]
             app_status = result[app]["status"]
-            csvstrings +="%s, %s, %s, %d, %d, %d, %d\n" % (app, app_status["build"], app_status.get("run", False), \
+            csvline ="%s, %s, %s, %d, %d, %d, %d" % (app, app_status["build"], app_status.get("run", False), \
                 size["total"], size["text"], size["data"], size["bss"])
-        with open(csvfile, "w") as cf:
-            cf.write(csvstrings)
-        print(csvstrings)
+            csvlines.append(csvline)
+        # save csv file
+        save_csv(csvfile, csvlines)
         print("Generate report csv file to %s" % (csvfile))
     # Exit with ret value
     if ret:

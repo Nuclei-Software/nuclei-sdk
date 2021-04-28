@@ -276,17 +276,17 @@ if __name__ == '__main__':
         rptfile = os.path.join(args.logdir, "report.md")
         generate_report(config, result, rptfile, args.logdir, args.run)
         csvfile = os.path.join(args.logdir, "result.csv")
-        csvstrings = "App, Case, build, run, total, text, data, bss\n"
+        csvlines = ["App, Case, build, run, total, text, data, bss"]
         for app in result:
             size_of_all_cases = result[app]
             for case in size_of_all_cases:
                 size = size_of_all_cases[case]["size"]
                 app_status = size_of_all_cases[case]["status"]
-                csvstrings += "%s, %s, %s, %s, %d, %d, %d, %d\n" % (app, case, app_status["build"], app_status.get("run", False), \
+                csvline = "%s, %s, %s, %s, %d, %d, %d, %d" % (app, case, app_status["build"], app_status.get("run", False), \
                     size["total"], size["text"], size["data"], size["bss"])
-        with open(csvfile, "w") as cf:
-            cf.write(csvstrings)
-        print(csvstrings)
+                csvlines.append(csvline)
+        # save csv file
+        save_csv(csvfile, csvlines)
         print("Generate report csv file to %s" % (csvfile))
         print("Generate report markdown file to %s" % (rptfile))
     # Exit with ret value

@@ -55,6 +55,21 @@ def save_json(file, data):
         print("Error: Data can't be serialized to json file!")
         return False
 
+def save_csv(file, csvlines, display=True):
+    if isinstance(csvlines, list) == False:
+        return False
+    try:
+        with open(file, "w") as cf:
+            for line in csvlines:
+                csvline = line + "\n"
+                cf.write(csvline)
+                if display:
+                    print("CSV, %s" % line)
+        return True
+    except:
+        print("Error: Data can't be saved to file!")
+        return False
+
 # Return possible serports, return a list of possible serports
 def find_possible_serports():
     comports = serial.tools.list_ports.comports()
