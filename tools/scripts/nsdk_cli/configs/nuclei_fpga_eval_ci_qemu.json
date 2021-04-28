@@ -49,10 +49,6 @@
         "ux600fd-ddr": {"DOWNLOAD": "ddr", "CORE": "ux600fd"}
 
     },
-    "appdirs": [
-        "application",
-        "test"
-    ],
     "appconfig": {
         "application/baremetal/benchmark/dhrystone": {
             "build_config" : {},

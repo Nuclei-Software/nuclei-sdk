@@ -20,10 +20,6 @@
         "flashxip": {"DOWNLOAD": "flashxip"},
         "ddr": {"DOWNLOAD": "ddr"}
     },
-    "appdirs": [
-        "application",
-        "test"
-    ],
     "expected": {
         "application/baremetal/demo_nice" : {
             "run": false,
