@@ -328,7 +328,7 @@ def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), 
         ret, cmd_elapsed_ticks = False, 0
     finally:
         if sys.platform != "win32":
-            os.system("stty echo")
+            os.system("stty echo 2> /dev/null")
 
     return ret, cmd_elapsed_ticks
 
