@@ -64,15 +64,15 @@
     },
     "expecteds": {
         "application/baremetal/demo_dsp" : {
-            "n201-ilm": { "build": false },
-            "n201-flash": { "build": false },
-            "n201-flashxip": { "build": false },
-            "n205e-ilm": { "build": false },
-            "n205e-flash": { "build": false },
-            "n205e-flashxip": { "build": false },
-            "n201e-ilm": { "build": false },
-            "n201e-flash": { "build": false },
-            "n201e-flashxip": { "build": false }
+            "n201-ilm": { "build": false, "run": false },
+            "n201-flash": { "build": false, "run": false },
+            "n201-flashxip": { "build": false, "run": false },
+            "n205e-ilm": { "build": false, "run": false },
+            "n205e-flash": { "build": false, "run": false },
+            "n205e-flashxip": { "build": false, "run": false },
+            "n201e-ilm": { "build": false, "run": false },
+            "n201e-flash": { "build": false, "run": false },
+            "n201e-flashxip": { "build": false, "run": false }
         }
     }
 }
