@@ -153,7 +153,7 @@ def kill_async_subprocess(proc):
         except psutil.NoSuchProcess:
             pass
         except Exception as exc:
-            print("Warning: kill process %s %d failed with %s" %(parent_proc.name(), proc.pid, exc))
+            print("Warning: kill process failed with %s" %(exc))
     pass
 
 def kill_subprocess(proc):
