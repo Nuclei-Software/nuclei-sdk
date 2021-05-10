@@ -96,7 +96,7 @@ bin: $(TARGET).elf
 	$(OBJCOPY) $< -O binary $(TARGET).bin
 
 size: $(TARGET).elf
-	$(Q)$(SIZE) $@
+	$(Q)$(SIZE) $<
 
 upload: $(TARGET).elf
 	@$(ECHO) "Download and run $<"
