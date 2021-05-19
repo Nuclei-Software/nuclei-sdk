@@ -3,6 +3,29 @@
 Changelog
 =========
 
+V0.3.2-dev
+----------
+
+This is development version ``0.3.2-dev`` of Nuclei SDK.
+
+* Build
+
+    - Change openocd ``--pipe`` option to ``-c "gdb_port pipe; log_output openocd.log"``
+    - Remove ``-ex "monitor flash protect 0 0 last off"`` when upload or debug program to avoid error
+      when openocd configuration file didn't configure a flash
+    - Add ``cleanall`` target in **<NUCLEI_SDK_ROOT>/Makefile**, you can clean all the applications
+      defined by ``EXTRA_APP_ROOTDIRS`` variable
+    - Fix ``size`` target of build system
+
+* Tools
+
+    - Add ``nsdk_cli`` tools in Nuclei SDK which support run applications
+      - **tools/scripts/nsdk_cli/requirements.txt**: python module requirement file
+      - **tools/scripts/nsdk_cli/configs**: sample configurations used by scripts below
+      - **tools/scripts/nsdk_cli/nsdk_bench.py**: nsdk bench runner script
+      - **tools/scripts/nsdk_cli/nsdk_execute.py**: nsdk execute runner script
+
+
 V0.3.1
 ------
 

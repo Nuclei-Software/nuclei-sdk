@@ -398,7 +398,7 @@ Here is the sample output of this command:
 
     "Download and run hello_world.elf"
     riscv-nuclei-elf-gdb hello_world.elf -ex "set remotetimeout 240" \
-            -ex "target remote | openocd --pipe -f ../../../SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg" \
+            -ex "target remote | openocd -c \"gdb_port pipe; log_output openocd.log\" -f ../../../SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg" \
             --batch -ex "monitor halt" -ex "monitor halt" -ex "monitor flash protect 0 0 last off" -ex "load" -ex "monitor resume" -ex "monitor shutdown" -ex "quit"
     D:\Software\Nuclei\gcc\bin\riscv-nuclei-elf-gdb.exe: warning: Couldn't determine a path for the index cache directory.
     Nuclei OpenOCD, 64-bit Open On-Chip Debugger 0.10.0+dev-00014-g0eae03214 (2019-12-12-07:43)
@@ -454,7 +454,7 @@ then you can debug it using this command line:
 
       "Download and debug hello_world.elf"
       riscv-nuclei-elf-gdb hello_world.elf -ex "set remotetimeout 240" \
-              -ex "target remote | openocd --pipe -f ../../../SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg"
+              -ex "target remote | openocd -c \"gdb_port pipe; log_output openocd.log\" -f ../../../SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg"
       D:\Software\Nuclei\gcc\bin\riscv-nuclei-elf-gdb.exe: warning: Couldn't determine a path for the index cache directory.
       GNU gdb (GDB) 8.3.0.20190516-git
       Copyright (C) 2019 Free Software Foundation, Inc.
@@ -473,7 +473,7 @@ then you can debug it using this command line:
       For help, type "help".
       Type "apropos word" to search for commands related to "word"...
       Reading symbols from hello_world.elf...
-      Remote debugging using | openocd --pipe -f ../../../SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg
+      Remote debugging using | openocd -c \"gdb_port pipe; log_output openocd.log\" -f ../../../SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg
       Nuclei OpenOCD, 64-bit Open On-Chip Debugger 0.10.0+dev-00014-g0eae03214 (2019-12-12-07:43)
       Licensed under GNU GPL v2
       For bug reports, read
