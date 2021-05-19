@@ -246,7 +246,7 @@ class MonitorThread(Thread):
             return False
 
         print("Read serial log from %s, baudrate %s" %(self.port, self.baudrate))
-        NSDK_CHECK_TAG = "Nuclei SDK Build Time:"
+        NSDK_CHECK_TAG = get_sdk_checktag()
         print("Checker used: ", self.checks)
         check_finished = False
         try:
@@ -370,9 +370,11 @@ class nsdk_runner(nsdk_builder):
             timeout = hwconfig.get("timeout", 60)
         ser_thread = None
         uploader = None
+        sdk_check = get_sdk_check()
         try:
             if serport: # only monitor serial port when port found
-                ser_thread = MonitorThread(serport, baudrate, timeout, app_runchecks, checktime, True, logfile, show_output)
+                ser_thread = MonitorThread(serport, baudrate, timeout, app_runchecks, checktime, \
+                    sdk_check, logfile, show_output)
                 ser_thread.start()
             else:
                 print("Warning: No available serial port found, please check!")
@@ -445,6 +447,7 @@ class nsdk_runner(nsdk_builder):
             timeout = hwconfig.get("timeout", 60)
         runner = None
         cmdsts = False
+        sdk_check = get_sdk_check()
         if qemu_exe:
             if os.path.isfile(build_objects["elf"]):
                 vercmd = "%s --version" % (qemu_exe)
@@ -455,7 +458,8 @@ class nsdk_runner(nsdk_builder):
                         % (qemu_exe, machine, qemu_sel_cpu, build_objects["elf"])
                     print("Run command: %s" %(command))
                     runner = {"cmd": command, "version": verstr}
-                    cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, True, logfile, show_output)
+                    cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
+                        sdk_check, logfile, show_output)
                 else:
                     print("%s doesn't exist in PATH, please check!" % qemu_exe)
             else:
@@ -486,6 +490,7 @@ class nsdk_runner(nsdk_builder):
             timeout = hwconfig.get("timeout", 60)
         runner = None
         cmdsts = False
+        sdk_check = get_sdk_check()
         if xlspike_exe:
             if os.path.isfile(build_objects["elf"]):
                 vercmd = "%s --help" % (xlspike_exe)
@@ -495,7 +500,8 @@ class nsdk_runner(nsdk_builder):
                     command = "%s --isa %s %s" % (xlspike_exe, riscv_arch, build_objects["elf"])
                     print("Run command: %s" %(command))
                     runner = {"cmd": command, "version": verstr}
-                    cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, True, logfile, show_output)
+                    cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
+                        sdk_check, logfile, show_output)
                 else:
                     print("%s doesn't exist in PATH, please check!" % xlspike_exe)
             else:

@@ -16,6 +16,11 @@ import asyncio
 import glob
 import json
 
+SDK_GLOBAL_VARIABLES = {
+    "sdk_checktag": "Nuclei SDK Build Time:",
+    "sdk_check": True
+    }
+
 class NThread(Thread):
     def __init__(self, func, args):
         super(NThread, self).__init__()
@@ -238,8 +243,9 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
                 if check in string:
                     return True
         return False
-    NSDK_CHECK_TAG = "Nuclei SDK Build Time:"
+    NSDK_CHECK_TAG = get_sdk_checktag()
     print("Checker used: ", checks)
+    print("SDK Checker Tag \"%s\", checker enable %s" % (NSDK_CHECK_TAG, sdk_check))
     check_finished = False
     start_time = time.time()
     serial_log = ""
@@ -439,6 +445,25 @@ def merge_two_config(appcfg, hwcfg):
     merged_appcfg = copy.deepcopy(appcfg)
     dict_merge(merged_appcfg, hwcfg)
     return merged_appcfg
+
+def set_global_variables(config):
+    global SDK_GLOBAL_VARIABLES
+    if isinstance(config, dict) == False:
+        return False
+
+    if "global_variables" in config:
+        dict_merge(SDK_GLOBAL_VARIABLES, config["global_variables"])
+        print("Using global variables: %s" % SDK_GLOBAL_VARIABLES)
+    return True
+
+def get_global_variables():
+    return SDK_GLOBAL_VARIABLES
+
+def get_sdk_checktag():
+    return SDK_GLOBAL_VARIABLES.get("sdk_checktag")
+
+def get_sdk_check():
+    return SDK_GLOBAL_VARIABLES.get("sdk_check")
 
 def find_local_appconfig(appdir, localcfgs):
     if isinstance(appdir, str) and isinstance(localcfgs, dict):

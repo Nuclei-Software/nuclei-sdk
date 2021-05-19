@@ -260,6 +260,8 @@ if __name__ == '__main__':
     # Merge options passed by serport, baudrate, make_options
     config = merge_cmd_config(config, vars(args))
 
+    set_global_variables(config)
+
     nsdk_ext = nsdk_bench()
     if args.run:
         cmdsts, result = nsdk_ext.run_apps(config, args.verbose, args.logdir, False)
