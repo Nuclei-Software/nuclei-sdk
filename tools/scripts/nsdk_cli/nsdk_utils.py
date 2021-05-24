@@ -276,7 +276,7 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
 
             if sdk_check == True:
                 if (time.time() - sdk_checkstarttime) > nsdk_check_timeout:
-                    print("No SDK banner found in 5s, quit now!")
+                    print("No SDK banner found in %s s, quit now!" % (nsdk_check_timeout))
                     ret = COMMAND_TIMEOUT
                     check_status = False
                     break

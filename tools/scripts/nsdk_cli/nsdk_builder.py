@@ -248,6 +248,7 @@ class MonitorThread(Thread):
         print("Read serial log from %s, baudrate %s" %(self.port, self.baudrate))
         NSDK_CHECK_TAG = get_sdk_checktag()
         print("Checker used: ", self.checks)
+        print("SDK Checker Tag \"%s\", checker enable %s" % (NSDK_CHECK_TAG, self.sdk_check))
         check_finished = False
         try:
             ser = None
@@ -264,7 +265,7 @@ class MonitorThread(Thread):
                     if self._check_sdk:
                         chk_time_cost = time.time() - self._check_sdk_timestart
                         if chk_time_cost > self._check_sdk_timeout:
-                            print("No SDK banner found in %s, quit now!", self._check_sdk_timeout)
+                            print("No SDK banner found in %s s, quit now!" % (self._check_sdk_timeout))
                             break
                     if NSDK_CHECK_TAG in line:
                         timestr = line.split(NSDK_CHECK_TAG)[-1].strip()
