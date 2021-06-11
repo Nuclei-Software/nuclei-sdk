@@ -670,7 +670,7 @@ When GC is enabled, these options will be added:
 * Adding to compiler options: ``-ffunction-sections -fdata-sections``
 * Adding to linker options: ``-Wl,--gc-sections -Wl,--check-sections``
 
-If you don't want disable this GC feature, you can set **NOGC=1**, GC feature will
+If you want to enable this GC feature, you can set **NOGC=0**(default), GC feature will
 remove sections for you, but sometimes it might remove sections that are useful,
 e.g. For Nuclei SDK test cases, we use ctest framework, and we need to set **NOGC=1**
 to disable GC feature.
