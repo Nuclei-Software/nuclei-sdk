@@ -107,6 +107,7 @@ void gd_led_off(led_typedef_enum lednum);
 void gd_led_toggle(led_typedef_enum lednum);
 /* configure COM port */
 void gd_com_init(uint32_t usart_periph);
+
 #ifdef __cplusplus
 }
 #endif

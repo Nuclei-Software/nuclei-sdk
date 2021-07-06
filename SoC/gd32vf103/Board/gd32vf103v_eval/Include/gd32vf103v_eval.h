@@ -41,32 +41,32 @@ extern "C" {
 
 #include "nuclei_sdk_soc.h"
 
-    /* exported types */
-    typedef enum {
-        LED1 = 0,
-        LED2 = 1,
-        LED3 = 2,
-        LED4 = 3,
-        LED_1 = 0,
-        LED_2 = 1,
-        LED_3 = 2,
-        LED_4 = 3
-    } led_typedef_enum;
+/* exported types */
+typedef enum {
+    LED1 = 0,
+    LED2 = 1,
+    LED3 = 2,
+    LED4 = 3,
+    LED_1 = 0,
+    LED_2 = 1,
+    LED_3 = 2,
+    LED_4 = 3
+} led_typedef_enum;
 
-    typedef enum {
-        KEY_A = 0,
-        KEY_B = 1,
-        KEY_C = 2,
-        KEY_D = 3,
-        KEY_CET = 4
-    } key_typedef_enum;
+typedef enum {
+    KEY_A = 0,
+    KEY_B = 1,
+    KEY_C = 2,
+    KEY_D = 3,
+    KEY_CET = 4
+} key_typedef_enum;
 
-    typedef enum {
-        KEY_MODE_GPIO = 0,
-        KEY_MODE_EXTI = 1
-    } keymode_typedef_enum;
+typedef enum {
+    KEY_MODE_GPIO = 0,
+    KEY_MODE_EXTI = 1
+} keymode_typedef_enum;
 
-    /* eval board low layer led */
+/* eval board low layer led */
 #define LEDn                             4U
 
 #define LED1_PIN                         GPIO_PIN_0
@@ -103,7 +103,7 @@ extern "C" {
 
 #define KEYn                             5U
 
-    /* wakeup push-button */
+/* wakeup push-button */
 #define KEY_A_PIN                        GPIO_PIN_0
 #define KEY_A_GPIO_PORT                  GPIOA
 #define KEY_A_GPIO_CLK                   RCU_GPIOA
@@ -112,7 +112,7 @@ extern "C" {
 #define KEY_A_EXTI_PIN_SOURCE            GPIO_PIN_SOURCE_0
 #define KEY_A_EXTI_IRQn                  EXTI0_IRQn
 
-    /* tamper push-button */
+/* tamper push-button */
 #define KEY_B_PIN                        GPIO_PIN_13
 #define KEY_B_GPIO_PORT                  GPIOC
 #define KEY_B_GPIO_CLK                   RCU_GPIOC
@@ -121,7 +121,7 @@ extern "C" {
 #define KEY_B_EXTI_PIN_SOURCE            GPIO_PIN_SOURCE_13
 #define KEY_B_EXTI_IRQn                  EXTI10_15_IRQn
 
-    /* user push-button */
+/* user push-button */
 #define KEY_C_PIN                        GPIO_PIN_14
 #define KEY_C_GPIO_PORT                  GPIOB
 #define KEY_C_GPIO_CLK                   RCU_GPIOB
@@ -146,23 +146,23 @@ extern "C" {
 #define KEY_CET_EXTI_PIN_SOURCE          GPIO_PIN_SOURCE_4
 #define KEY_CET_EXTI_IRQn                EXTI4_IRQn
 
-    /* function declarations */
-    /* configure led GPIO */
-    void gd_led_init(led_typedef_enum lednum);
-    /* turn on selected led */
-    void gd_led_on(led_typedef_enum lednum);
-    /* turn off selected led */
-    void gd_led_off(led_typedef_enum lednum);
-    /* toggle the selected led */
-    void gd_led_toggle(led_typedef_enum lednum);
-    /* configure key */
-    void gd_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode);
-    /* return the selected key state */
-    uint8_t gd_key_state_get(key_typedef_enum key);
-    /* configure COM port */
-    void gd_com_init(uint32_t com);
+/* function declarations */
+/* configure led GPIO */
+void gd_led_init(led_typedef_enum lednum);
+/* turn on selected led */
+void gd_led_on(led_typedef_enum lednum);
+/* turn off selected led */
+void gd_led_off(led_typedef_enum lednum);
+/* toggle the selected led */
+void gd_led_toggle(led_typedef_enum lednum);
+/* configure key */
+void gd_key_init(key_typedef_enum keynum, keymode_typedef_enum key_mode);
+/* return the selected key state */
+uint8_t gd_key_state_get(key_typedef_enum key);
+/* configure COM port */
+void gd_com_init(uint32_t com);
 
-    /* Defines for LED / Key functions to new / general API */
+/* Defines for LED functions to new / general API */
 #define gd_eval_led_init         gd_led_init
 #define gd_eval_led_on           gd_led_on
 #define gd_eval_led_off          gd_led_off

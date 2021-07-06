@@ -114,7 +114,7 @@ uint8_t gd_key_state_get(key_typedef_enum keynum);
 /* configure COM port */
 void gd_com_init(uint32_t usart_periph);
 
-/* Defines for LED functio/* Defines for LED / Key functions to new / general API */
+/* Defines for LED functions to new / general API */
 #define gd_rvstar_led_init         gd_led_init
 #define gd_rvstar_led_on           gd_led_on
 #define gd_rvstar_led_off          gd_led_off
