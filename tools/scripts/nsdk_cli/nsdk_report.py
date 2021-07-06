@@ -169,6 +169,22 @@ def generate_build_run_status_md(appresult, logdir, bold_false=True):
         rsts_md = gen_sts_md(apprsts, apprlog, bold_false)
         return bsts_md, rsts_md
 
+def get_app_runresult(apprst):
+    if not isinstance(apprst, dict):
+        return "unknown", "-"
+    if "type" not in apprst:
+        return "unknown", "-"
+    rsttype = apprst["type"]
+    rstvaluedict = apprst.get("value", dict())
+    if rstvaluedict:
+        rstval = ""
+        for key in rstvaluedict:
+            rstval += "%s : %s," %(key, rstvaluedict[key])
+        rstval = rstval.rstrip(',')
+    else:
+        rstval = "-"
+    return rsttype, rstval
+
 def generate_report(config, result, rptfile, logdir, runapp=False):
     if not(isinstance(config, dict) and isinstance(result, dict) and isinstance(rptfile, str)):
         return False
@@ -206,14 +222,15 @@ def generate_report(config, result, rptfile, logdir, runapp=False):
         rf.write("\r\n# Build and run status\r\n")
         x = PrettyTable()
         x.set_style(MARKDOWN)
-        x.field_names = ["App/Test Case", "Case Name", "Build Status", "Run Status", "Total", "Text", "Data", "Bss"]
+        x.field_names = ["App/Test Case", "Case Name", "Build Status", "Run Status", "Type", "Value", "Total", "Text", "Data", "Bss"]
         apps_buildsts = result
         for app in apps_buildsts:
             app_sts = apps_buildsts[app]
             for cfgname in app_sts:
                 size = app_sts[cfgname]["size"]
+                apprsttype, apprstval = get_app_runresult(app_sts[cfgname].get("result", dict()))
                 bsts_md, rsts_md = generate_build_run_status_md(app_sts[cfgname], logdir, True)
-                x.add_row([app, cfgname, bsts_md, rsts_md, \
+                x.add_row([app, cfgname, bsts_md, rsts_md, apprsttype, apprstval, \
                     size["total"], size["text"], size["data"], size["bss"]])
         rf.write(str(x))
         x = PrettyTable()
