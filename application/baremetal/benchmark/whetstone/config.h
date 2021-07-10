@@ -11,7 +11,7 @@
  * 32: if F toolchain is used
  */
 
-#if __riscv_flen == 64
+#if defined(__riscv_flen) && __riscv_flen == 64
 #define SPDP double
 #define Precision "Double"
 #else //__riscv_flen == 32
