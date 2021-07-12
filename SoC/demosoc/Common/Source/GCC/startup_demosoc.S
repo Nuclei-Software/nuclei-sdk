@@ -222,7 +222,7 @@ _start:
 
     /* ===== Startup Stage 2 ===== */
 
-#ifdef __riscv_flen
+#if defined(__riscv_flen) && __riscv_flen > 0
     /* Enable FPU */
     li t0, MSTATUS_FS
     csrs mstatus, t0
