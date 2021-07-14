@@ -40,18 +40,11 @@ $NUCLEI_SDK_ROOT
 │   ├── Makefile.conf
 │   ├── Makefile.core
 │   ├── Makefile.files
-│   ├── Makefile.files.gd32vf103
-│   ├── Makefile.files.demosoc
 │   ├── Makefile.global
 │   ├── Makefile.misc
 │   ├── Makefile.rtos
-│   ├── Makefile.rtos.FreeRTOS
-│   ├── Makefile.rtos.UCOSII
-│   ├── Makefile.rtos.RTThread
 │   ├── Makefile.rules
-│   ├── Makefile.soc
-│   ├── Makefile.soc.gd32vf103
-│   └── Makefile.soc.demosoc
+│   └── Makefile.soc
 ├── doc
 │   ├── build
 │   ├── source

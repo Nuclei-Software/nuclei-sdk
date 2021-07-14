@@ -30,18 +30,11 @@ The **<NUCLEI_SDK_ROOT>/Build** directory content list as below:
     Makefile.conf
     Makefile.core
     Makefile.files
-    Makefile.files.gd32vf103
-    Makefile.files.demosoc
     Makefile.global  -> Created by user
     Makefile.misc
     Makefile.rtos
-    Makefile.rtos.FreeRTOS
-    Makefile.rtos.UCOSII
-    Makefile.rtos.RTThread
     Makefile.rules
     Makefile.soc
-    Makefile.soc.gd32vf103
-    Makefile.soc.demosoc
 
 The file or directory is used explained as below:
 
@@ -138,22 +131,15 @@ This **Makefile.files** file will do the following things:
 
 * Define common C/C++/ASM source and include directories
 * Define common C/C++/ASM macros
-* Include **Makefile.files.<SOC>** which will include all the source
-  code related to the :ref:`develop_buildsystem_var_soc` and
-  :ref:`develop_buildsystem_var_board`
-
-  - **Makefile.files.gd32vf103**: Used to include source code for
-    :ref:`design_soc_gd32vf103`
-  - **Makefile.files.demosoc**: Used to include source code for
-    :ref:`design_soc_demosoc`
-
 
 .. _develop_buildsystem_makefile_soc:
 
 Makefile.soc
 ~~~~~~~~~~~~
 
-This **Makefile.soc** will just include **Makefile.soc.<SOC>** according
+This **Makefile.soc** will include valid makefiles located in
+**<NUCLEI_SDK_ROOT>/SoC/<SOC>/Makefile.build** and
+**<NUCLEI_SDK_ROOT>/SoC/<SOC>/Makefile.files** according
 to the :ref:`develop_buildsystem_var_soc` makefile variable setting.
 
 It will define the following items:
@@ -175,7 +161,8 @@ It will define the following items:
 Makefile.rtos
 ~~~~~~~~~~~~~
 
-This **Makefile.rtos** will include **Makefile.rtos.<RTOS>** file
+This **Makefile.rtos** will include **<NUCLEI_SDK_ROOT>/OS/<RTOS>/Makefile.files**(must)
+and **<NUCLEI_SDK_ROOT>/OS/<RTOS>/Makefile.build**(optional)
 according to our :ref:`develop_buildsystem_var_rtos` variable.
 
 If no :ref:`develop_buildsystem_var_rtos` is chosen, then RTOS
@@ -188,13 +175,6 @@ compiler option ``-DRTOS_$(RTOS_UPPER)`` will be passed, then user can develop R
 
 For example, if ``FreeRTOS`` is selected, then ``-DRTOS_FREERTOS`` compiler option
 will be passed.
-
-* **Makefile.rtos.FreeRTOS**: Include FreeRTOS related source code and header
-  directories
-* **Makefile.rtos.UCOSII**: Include UCOSII related source code and header
-  directories
-* **Makefile.rtos.RTThread**: Include RTThread related source code and header
-  directories
 
 .. _develop_buildsystem_makefile_core:
 
@@ -423,7 +403,7 @@ Currently we support the following SoCs.
 .. note::
 
     * If you only specify **SOC** variable in make command, it will use default **BOARD**
-      and **CORE** option defined in Makefile.soc.<SOC>
+      and **CORE** option defined in **<NUCLEI_SDK_ROOT>/SoC/<SOC>/Makefile.build**
 
 .. _develop_buildsystem_var_download:
 
