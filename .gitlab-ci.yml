@@ -20,7 +20,7 @@ build_doc:
     stage: doc_build
     only:
         changes:
-          - doc/source/**/**/**/*
+          - doc/**/**/**/*
           - .gitlab-ci.yml
     retry: 1
     artifacts:
