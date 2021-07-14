@@ -8,7 +8,7 @@ NUCLEI_SDK_BUILD = $(NUCLEI_SDK_ROOT)/Build
 # DOWNLOAD ?= ilm
 EXTRA_MKS := $(wildcard Makefile.local $(NUCLEI_SDK_BUILD)/Makefile.global)
 ifneq ("$(strip $(EXTRA_MKS))", "")
-$(info Obtaining addtional make variables from $(EXTRA_MKS))
+$(info Obtaining addtional make variables from $(realpath $(EXTRA_MKS)))
 include $(EXTRA_MKS)
 endif
 

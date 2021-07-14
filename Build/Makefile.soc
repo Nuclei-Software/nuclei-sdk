@@ -3,4 +3,16 @@ $(warning SOC hbird is renamed to demosoc since Nuclei SDK 0.3.1, please use SOC
 override SOC := demosoc
 endif
 
-include $(NUCLEI_SDK_BUILD)/Makefile.soc.$(SOC)
+SOC_BUILD_MAKEFILE := $(NUCLEI_SDK_ROOT)/SoC/$(SOC)/Makefile.build
+SOC_FILES_MAKEFILE := $(NUCLEI_SDK_ROOT)/SoC/$(SOC)/Makefile.files
+
+VALID_SOC_MAKEFILES := $(wildcard $(SOC_BUILD_MAKEFILE) $(SOC_FILES_MAKEFILE))
+VALID_SOC_MAKEFILES_COUNT := $(words $(VALID_SOC_MAKEFILES))
+
+ifeq ($(VALID_SOC_MAKEFILES_COUNT), 2)
+MAKEFILE_PREREQS += $(VALID_SOC_MAKEFILES)
+include $(SOC_BUILD_MAKEFILE)
+include $(SOC_FILES_MAKEFILE)
+else
+$(error Makefile.build and Makefile.files might not exist in $(realpath $(NUCLEI_SDK_ROOT)/SoC/$(SOC)))
+endif
