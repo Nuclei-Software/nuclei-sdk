@@ -27,6 +27,3 @@ CORE_UPPER = $(call uc, $(CORE))
 
 RISCV_ARCH ?= rv32imac
 RISCV_ABI ?= ilp32
-
-# Extra openocd and gdb commands
-GDB_UPLOAD_CMDS += -ex "monitor halt"

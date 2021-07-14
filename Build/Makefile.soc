@@ -3,6 +3,19 @@ $(warning SOC hbird is renamed to demosoc since Nuclei SDK 0.3.1, please use SOC
 override SOC := demosoc
 endif
 
+# Check if the SOC is valid, if there is only one SoC in this folder, force it to be the only SoC
+ifeq ($(wildcard $(NUCLEI_SDK_SOC)),)
+NUCLEI_SOC_VALID_BUILD_MKS := $(wildcard $(NUCLEI_SDK_ROOT)/SoC/*/Makefile.build)
+NUCLEI_SOC_COUNT := $(words $(NUCLEI_SOC_VALID_BUILD_MKS))
+NUCLEI_SOC_VALID := $(notdir $(patsubst %/,%,$(dir $(NUCLEI_SOC_VALID_BUILD_MKS))))
+ifeq ($(NUCLEI_SOC_COUNT),1)
+$(warning No SoC named $(SOC) located $(realpath $(NUCLEI_SDK_ROOT)/SoC), force SOC=$(NUCLEI_SOC_VALID) now)
+override SOC := $(NUCLEI_SOC_VALID)
+else
+$(error There is no SoC named $(SOC) located in $(realpath $(NUCLEI_SDK_ROOT)/SoC, please pass correct SOC variable))
+endif
+endif
+
 SOC_BUILD_MAKEFILE := $(NUCLEI_SDK_ROOT)/SoC/$(SOC)/Makefile.build
 SOC_FILES_MAKEFILE := $(NUCLEI_SDK_ROOT)/SoC/$(SOC)/Makefile.files
 

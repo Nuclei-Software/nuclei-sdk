@@ -13,7 +13,7 @@ include $(EXTRA_MKS)
 endif
 
 # Variables could be passed in make command
-# NOTE: CORE and BOARD are defined in Makefile.soc.$(SOC)
+# NOTE: CORE and BOARD are defined in $(NUCLEI_SDK_ROOT)/SoC/$(SOC)/Makefile.build
 # BOARD and SOC name should always be lower-case
 ## Available choices:
 ## The name of sub directories in $(NUCLEI_SDK_ROOT)/SoC/

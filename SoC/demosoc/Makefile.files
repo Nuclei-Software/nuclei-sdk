@@ -1,3 +1,11 @@
+## SoC Makefile.files content notice
+# In this Makefile.files, you need to declare the following items:
+# 1. C/ASM/CPP source code folders which need to be compiled
+# 2. Some C/ASM/CPP source code files whihc need to be compiled
+# You can use these makefile variables defined in $(NUCLEI_SDK_BUILD)/Makefile.files to achieve this, for details,
+# please check https://doc.nucleisys.com/nuclei_sdk/develop/buildsystem.html#build-related-makefile-variables-used-only-in-application-makefile
+##
+
 INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include
 
 C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers \
