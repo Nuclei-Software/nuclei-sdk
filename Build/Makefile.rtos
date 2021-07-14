@@ -5,7 +5,7 @@ MAKEFILE_PREREQS += $(NUCLEI_SDK_BUILD)/Makefile.rtos
 RTOS_BUILD_MAKEFILE := $(NUCLEI_SDK_ROOT)/OS/$(RTOS)/Makefile.build
 RTOS_FILES_MAKEFILE := $(NUCLEI_SDK_ROOT)/OS/$(RTOS)/Makefile.files
 
-# Makefile.build is not necessary for RTOS
+# Makefile.build is optional for RTOS
 ifneq ($(wildcard $(RTOS_BUILD_MAKEFILE)),)
 MAKEFILE_PREREQS += $(RTOS_BUILD_MAKEFILE)
 include $(RTOS_BUILD_MAKEFILE)
