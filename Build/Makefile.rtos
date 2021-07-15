@@ -2,21 +2,14 @@ ifneq ($(RTOS),)
 ifneq ($(wildcard $(NUCLEI_SDK_RTOS)),)
 MAKEFILE_PREREQS += $(NUCLEI_SDK_BUILD)/Makefile.rtos
 
-RTOS_BUILD_MAKEFILE := $(NUCLEI_SDK_ROOT)/OS/$(RTOS)/Makefile.build
-RTOS_FILES_MAKEFILE := $(NUCLEI_SDK_ROOT)/OS/$(RTOS)/Makefile.files
+RTOS_BUILD_MAKEFILE := $(NUCLEI_SDK_ROOT)/OS/$(RTOS)/build.mk
 
-# Makefile.build is optional for RTOS
+# build.mk is necessary for RTOS
 ifneq ($(wildcard $(RTOS_BUILD_MAKEFILE)),)
 MAKEFILE_PREREQS += $(RTOS_BUILD_MAKEFILE)
 include $(RTOS_BUILD_MAKEFILE)
-endif
-
-# Makefile.files is necessary for RTOS
-ifneq ($(wildcard $(RTOS_FILES_MAKEFILE)),)
-MAKEFILE_PREREQS += $(RTOS_FILES_MAKEFILE)
-include $(RTOS_FILES_MAKEFILE)
 else
-$(error Makefile.files might not exist in $(realpath $(NUCLEI_SDK_ROOT)/OS/$(RTOS)))
+$(error build.mk might not exist in $(realpath $(NUCLEI_SDK_ROOT)/OS/$(RTOS)))
 endif
 
 # Define RTOS_$(RTOS) to show usage of RTOS, such as RTOS_FREERTOS

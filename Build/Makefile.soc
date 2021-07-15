@@ -5,7 +5,7 @@ endif
 
 # Check if the SOC is valid, if there is only one SoC in this folder, force it to be the only SoC
 ifeq ($(wildcard $(NUCLEI_SDK_SOC)),)
-NUCLEI_SOC_VALID_BUILD_MKS := $(wildcard $(NUCLEI_SDK_ROOT)/SoC/*/Makefile.build)
+NUCLEI_SOC_VALID_BUILD_MKS := $(wildcard $(NUCLEI_SDK_ROOT)/SoC/*/build.mk)
 NUCLEI_SOC_COUNT := $(words $(NUCLEI_SOC_VALID_BUILD_MKS))
 NUCLEI_SOC_VALID := $(notdir $(patsubst %/,%,$(dir $(NUCLEI_SOC_VALID_BUILD_MKS))))
 ifeq ($(NUCLEI_SOC_COUNT),1)
@@ -16,16 +16,11 @@ $(error There is no SoC named $(SOC) located in $(realpath $(NUCLEI_SDK_ROOT)/So
 endif
 endif
 
-SOC_BUILD_MAKEFILE := $(NUCLEI_SDK_ROOT)/SoC/$(SOC)/Makefile.build
-SOC_FILES_MAKEFILE := $(NUCLEI_SDK_ROOT)/SoC/$(SOC)/Makefile.files
+SOC_BUILD_MAKEFILE := $(NUCLEI_SDK_ROOT)/SoC/$(SOC)/build.mk
 
-VALID_SOC_MAKEFILES := $(wildcard $(SOC_BUILD_MAKEFILE) $(SOC_FILES_MAKEFILE))
-VALID_SOC_MAKEFILES_COUNT := $(words $(VALID_SOC_MAKEFILES))
-
-ifeq ($(VALID_SOC_MAKEFILES_COUNT), 2)
-MAKEFILE_PREREQS += $(VALID_SOC_MAKEFILES)
+ifneq ($(wildcard $(SOC_BUILD_MAKEFILE)),)
+MAKEFILE_PREREQS += $(SOC_BUILD_MAKEFILE)
 include $(SOC_BUILD_MAKEFILE)
-include $(SOC_FILES_MAKEFILE)
 else
-$(error Makefile.build and Makefile.files might not exist in $(realpath $(NUCLEI_SDK_ROOT)/SoC/$(SOC)))
+$(error build.mk might not exist in $(realpath $(NUCLEI_SDK_ROOT)/SoC/$(SOC)))
 endif
