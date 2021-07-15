@@ -50,12 +50,12 @@ $(error The link script file $(LINKER_SCRIPT) for $(SOC) doesn't exist, please c
 endif
 
 # Set RISCV_ARCH and RISCV_ABI
-CORE_UPPER = $(call uc, $(CORE))
+CORE_UPPER := $(call uc, $(CORE))
 include $(NUCLEI_SDK_BUILD)/Makefile.core
 # you can override SUPPORTED_CORES defined in Makefile.core to limit the COREs used in this SoC
 # eg. override SUPPORTED_CORES := n305 n307
 
-CORE_ARCH_ABI = $($(CORE_UPPER)_CORE_ARCH_ABI)
+CORE_ARCH_ABI := $($(CORE_UPPER)_CORE_ARCH_ABI)
 # Check whether CORE is in SUPPORTED_CORES
 ifeq ($(filter $(CORE), $(SUPPORTED_CORES)),)
 $(error Here we only support these cores: $(SUPPORTED_CORES))
@@ -79,7 +79,7 @@ ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_demosoc.S \
 		$(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_demosoc.S
 
 # Add extra board related source files and header files
-VALID_NUCLEI_SDK_SOC_BOARD=$(wildcard $(NUCLEI_SDK_SOC_BOARD))
+VALID_NUCLEI_SDK_SOC_BOARD := $(wildcard $(NUCLEI_SDK_SOC_BOARD))
 ifneq ($(VALID_NUCLEI_SDK_SOC_BOARD),)
 INCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Include
 C_SRCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Source

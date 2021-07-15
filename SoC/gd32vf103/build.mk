@@ -35,7 +35,7 @@ $(error The link script file $(LINKER_SCRIPT) for $(SOC) doesn't exist, please c
 endif
 
 # Set RISCV_ARCH and RISCV_ABI
-CORE_UPPER = $(call uc, $(CORE))
+CORE_UPPER := $(call uc, $(CORE))
 
 RISCV_ARCH ?= rv32imac
 RISCV_ABI ?= ilp32
@@ -56,7 +56,7 @@ ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_gd32vf103.S \
 		$(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_gd32vf103.S
 
 # Add extra board related source files and header files
-VALID_NUCLEI_SDK_SOC_BOARD=$(wildcard $(NUCLEI_SDK_SOC_BOARD))
+VALID_NUCLEI_SDK_SOC_BOARD := $(wildcard $(NUCLEI_SDK_SOC_BOARD))
 ifneq ($(VALID_NUCLEI_SDK_SOC_BOARD),)
 INCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Include
 C_SRCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Source

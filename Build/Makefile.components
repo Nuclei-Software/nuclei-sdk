@@ -14,7 +14,7 @@ $(error build.mk might not exist in one of the middleware $(MIDDLEWARE_SORTED))
 endif
 
 # Define WITH_COMPONENT_$(MID) to show components, such as WITH_COMPONENT_TJPGD
-MIDDLEWARE_WITH_DEFINES = $(foreach MID, $(MIDDLEWARE_SORTED), -DWITH_COMPONENT_$(call uc, $(MID)))
+MIDDLEWARE_WITH_DEFINES := $(foreach MID, $(MIDDLEWARE_SORTED), -DWITH_COMPONENT_$(call uc, $(MID)))
 COMMON_FLAGS += $(MIDDLEWARE_WITH_DEFINES)
 endif
 endif
