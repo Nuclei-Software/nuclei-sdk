@@ -1,0 +1,27 @@
+ifneq ($(MIDDLEWARE),)
+ifneq ($(wildcard $(NUCLEI_SDK_MIDDLEWARE)),)
+MAKEFILE_PREREQS += $(NUCLEI_SDK_BUILD)/Makefile.components
+
+MIDDLEWARE_SORTED := $(sort $(MIDDLEWARE))
+MIDDLEWARE_BUILD_MAKEFILES := $(foreach MID, $(MIDDLEWARE_SORTED), $(wildcard $(NUCLEI_SDK_MIDDLEWARE)/$(MID)/Makefile.build))
+MIDDLEWARE_FILES_MAKEFILES := $(foreach MID, $(MIDDLEWARE_SORTED), $(wildcard $(NUCLEI_SDK_MIDDLEWARE)/$(MID)/Makefile.files))
+
+# Makefile.build is optional for Middlewares
+ifneq ($(wildcard $(MIDDLEWARE_BUILD_MAKEFILES)),)
+MAKEFILE_PREREQS += $(MIDDLEWARE_BUILD_MAKEFILES)
+include $(MIDDLEWARE_BUILD_MAKEFILES)
+endif
+
+# Makefile.files is necessary for Middlewares
+ifneq ($(wildcard $(MIDDLEWARE_FILES_MAKEFILES)),)
+MAKEFILE_PREREQS += $(MIDDLEWARE_FILES_MAKEFILES)
+include $(MIDDLEWARE_FILES_MAKEFILES)
+else
+$(error Makefile.files might not exist in one of the middleware $(MIDDLEWARE_SORTED))
+endif
+
+# Define WITH_COMPONENT_$(MID) to show components, such as WITH_COMPONENT_TJPGD
+MIDDLEWARE_WITH_DEFINES = $(foreach MID, $(MIDDLEWARE_SORTED), -DWITH_COMPONENT_$(call uc, $(MID)))
+COMMON_FLAGS += $(MIDDLEWARE_WITH_DEFINES)
+endif
+endif
