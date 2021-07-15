@@ -10,8 +10,16 @@ This is development version ``0.3.2-dev`` of Nuclei SDK.
 
 * Build
 
-    - **Important changes**: The SoC and RTOS related makefiles are moving to its own folder, and controlled By
-      **Makefile.build** and **Makefile.files** inside in in the SoC/<SOC> or OS/<RTOS> folders.
+    - **Important changes** about build system:
+
+      - The SoC and RTOS related makefiles are moving to its own folder, and controlled By
+        **build.mk** inside in in the SoC/<SOC> or OS/<RTOS> folders.
+      - Middlware component build system is also available now, you can add you own middleware or library
+        into ``Components`` folder, such as ``Components/tjpgd`` or ``Components/fatfs``, and you can include
+        this component using make variable ``MIDDLEWARE`` in application Makefile, such as ``MIDDLEWARE := fatfs``,
+        or ``MIDDLEWARE := tjpgd fatfs``.
+      - Each middleware component folder should create a ``build.mk``, which is used to control
+        the component build settings and source code management.
     - Change openocd ``--pipe`` option to ``-c "gdb_port pipe; log_output openocd.log"``
     - Remove ``-ex "monitor flash protect 0 0 last off"`` when upload or debug program to avoid error
       when openocd configuration file didn't configure a flash
@@ -22,6 +30,7 @@ This is development version ``0.3.2-dev`` of Nuclei SDK.
 * Tools
 
     - Add ``nsdk_cli`` tools in Nuclei SDK which support run applications
+
       - **tools/scripts/nsdk_cli/requirements.txt**: python module requirement file
       - **tools/scripts/nsdk_cli/configs**: sample configurations used by scripts below
       - **tools/scripts/nsdk_cli/nsdk_bench.py**: nsdk bench runner script
@@ -94,7 +103,7 @@ This is official version ``0.3.0`` of Nuclei SDK.
 
     - Cleanup unused comments in dhrystone
     - Add new ``demo_nice`` application to show Nuclei NICE feature
-    - Add new ``msh`` application to show RT-Thread MSH shell compoment usage
+    - Add new ``msh`` application to show RT-Thread MSH shell component usage
 
 * NMSIS
 
@@ -103,7 +112,7 @@ This is official version ``0.3.0`` of Nuclei SDK.
 
 * OS
 
-    - Add ``msh`` compoment source code into RT-Thread RTOS source code
+    - Add ``msh`` component source code into RT-Thread RTOS source code
     - Add ``rt_hw_console_getchar`` implementation
 
 * Build

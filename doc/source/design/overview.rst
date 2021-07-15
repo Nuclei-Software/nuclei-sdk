@@ -39,6 +39,7 @@ Here is the directory structure for this Nuclei SDK.
     │   ├── Makefile.base
     │   ├── Makefile.conf
     │   ├── Makefile.core
+    │   ├── Makefile.components
     │   ├── Makefile.files
     │   ├── Makefile.global
     │   ├── Makefile.misc

@@ -39,6 +39,7 @@ $NUCLEI_SDK_ROOT
 │   ├── Makefile.base
 │   ├── Makefile.conf
 │   ├── Makefile.core
+│   ├── Makefile.components
 │   ├── Makefile.files
 │   ├── Makefile.global
 │   ├── Makefile.misc
