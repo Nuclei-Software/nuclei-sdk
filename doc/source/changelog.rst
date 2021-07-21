@@ -20,6 +20,11 @@ This is development version ``0.3.2-dev`` of Nuclei SDK.
         or ``MIDDLEWARE := tjpgd fatfs``.
       - Each middleware component folder should create a ``build.mk``, which is used to control
         the component build settings and source code management.
+      - An extra ``DOWNLOAD_MODE_STRING`` macro is passed to represent the DOWNLOAD mode string.
+      - In ``startup_<Device>.S`` now, we don't use ``DOWNLOAD_MODE`` to handle the vector table location, instead
+        we defined a new macro called ``VECTOR_TABLE_REMAPPED`` to stand for whether the vector table's vma != lma.
+        If ``VECTOR_TABLE_REMAPPED`` is defined, the vector table is placed in ``.vtable_ilm``, which means the vector
+        table is placed in flash and copy to ilm when startup.
     - Change openocd ``--pipe`` option to ``-c "gdb_port pipe; log_output openocd.log"``
     - Remove ``-ex "monitor flash protect 0 0 last off"`` when upload or debug program to avoid error
       when openocd configuration file didn't configure a flash
