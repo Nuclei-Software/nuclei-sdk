@@ -126,7 +126,7 @@ main()
         //Bob: We dont use scanf
 #ifdef CFG_SIMULATION
         //Bob: for simulation we make it small
-        Number_Of_Runs = 5;
+        Number_Of_Runs = 2;
 #else
         Number_Of_Runs = 500000;
 #endif

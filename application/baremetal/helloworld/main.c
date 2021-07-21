@@ -83,6 +83,12 @@ void print_misa(void)
     printf("MISA: RV%s\r\n", misa_chars);
 }
 
+#ifndef CFG_SIMULATION
+#define RUN_LOOPS   20
+#else
+#define RUN_LOOPS   5
+#endif
+
 int main(void)
 {
     srand(__get_rv_cycle()  | __get_rv_instret() | __RV_CSR_READ(CSR_MCYCLE));
@@ -92,7 +98,7 @@ int main(void)
     printf("MISA: 0x%lx\r\n", misa);
     print_misa();
 
-    for (int i = 0; i < 20; i ++) {
+    for (int i = 0; i < RUN_LOOPS; i ++) {
         printf("%d: Hello World From Nuclei RISC-V Processor!\r\n", i);
     }
 
