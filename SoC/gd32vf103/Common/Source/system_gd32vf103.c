@@ -449,12 +449,10 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
 void SystemBannerPrint(void)
 {
 #if defined(NUCLEI_BANNER) && (NUCLEI_BANNER == 1)
-#ifndef DOWNLOAD_MODE
-#error DOWNLOAD_MODE is not defined via build system, please check!
-#endif
-    const char* download_modes[] = {"FLASHXIP", "FLASH", "ILM", "DDR"};
     printf("Nuclei SDK Build Time: %s, %s\r\n", __DATE__, __TIME__);
-    printf("Download Mode: %s\r\n", download_modes[DOWNLOAD_MODE]);
+#ifdef DOWNLOAD_MODE_STRING
+    printf("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
+#endif
     printf("CPU Frequency %d Hz\r\n", SystemCoreClock);
 #endif
 }

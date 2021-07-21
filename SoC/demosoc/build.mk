@@ -49,6 +49,11 @@ ifeq ($(wildcard $(LINKER_SCRIPT)),)
 $(error The link script file $(LINKER_SCRIPT) for $(SOC) doesn't exist, please check!)
 endif
 
+# Add extra cflags for SoC related
+ifeq ($(DOWNLOAD), flash)
+COMMON_FLAGS += -DVECTOR_TABLE_REMAPPED
+endif
+
 # Set RISCV_ARCH and RISCV_ABI
 CORE_UPPER := $(call uc, $(CORE))
 include $(NUCLEI_SDK_BUILD)/Makefile.core

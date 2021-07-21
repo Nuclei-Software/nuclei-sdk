@@ -46,7 +46,14 @@ extern "C" {
   * @{
   */
 
-
+/** \brief SoC Download mode definition */
+typedef enum {
+    DOWNLOAD_MODE_FLASHXIP = 0,         /*!< Flashxip download mode */
+    DOWNLOAD_MODE_FLASH = 1,            /*!< Flash download mode */
+    DOWNLOAD_MODE_ILM = 2,              /*!< ilm download mode */
+    DOWNLOAD_MODE_DDR = 3,              /*!< ddr download mode */
+    DOWNLOAD_MODE_MAX,
+} DownloadMode_Type;
 
 /* =========================================================================================================================== */
 /* ================                                Interrupt Number Definition                                ================ */
