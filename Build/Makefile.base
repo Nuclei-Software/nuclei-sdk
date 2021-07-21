@@ -41,7 +41,7 @@ NEWLIB ?= nano
 ## If NOGC=1, it will not gc any sections during compiling to save code size
 NOGC ?=
 
-# Directories for SoC and RTOS chosen
+# Directory variables for NMSIS, SoC/RTOS chosen, Middleware Components
 NUCLEI_SDK_NMSIS ?= $(NUCLEI_SDK_ROOT)/NMSIS
 NUCLEI_SDK_SOC := $(NUCLEI_SDK_ROOT)/SoC/$(SOC)
 NUCLEI_SDK_RTOS := $(NUCLEI_SDK_ROOT)/OS/$(RTOS)
