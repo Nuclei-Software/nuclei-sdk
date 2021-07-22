@@ -40,6 +40,8 @@ PFLOAT ?= 0
 NEWLIB ?= nano
 ## If NOGC=1, it will not gc any sections during compiling to save code size
 NOGC ?=
+## If BANNER=0, it will not display sdk banner when program run
+BANNER ?=
 
 # Directory variables for NMSIS, SoC/RTOS chosen, Middleware Components
 NUCLEI_SDK_NMSIS ?= $(NUCLEI_SDK_ROOT)/NMSIS
