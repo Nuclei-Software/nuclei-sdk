@@ -167,6 +167,19 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
         C_SRCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Source
         endif
 
+   * If you need to place vector table in flash device, and copy it to ilm when startup, such as
+     using ``DOWNLOAD=flash`` mode, then you need to define extra ``VECTOR_TABLE_REMAPPED`` macro
+     in this ``build.mk``, just take ``SoC/demosoc/build.mk`` as reference.
+
+     .. code-block:: Makefile
+
+        ## omit some code above
+        # Add extra cflags for SoC related
+        ifeq ($(DOWNLOAD), flash)
+        COMMON_FLAGS += -DVECTOR_TABLE_REMAPPED
+        endif
+        ## omit some code below
+        RISCV_ARCH ?= rv32imafc
 
 3. If you have setup the source code and build system correctly, then you can test
    your SoC using the common applications, e.g.

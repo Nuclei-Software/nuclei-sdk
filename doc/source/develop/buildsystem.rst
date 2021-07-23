@@ -514,6 +514,23 @@ currently it has these modes supported as described in table
     * **flashxip** mode in :ref:`design_soc_demosoc` is very slow due to
       the CORE frequency is very slow, and flash execution speed is slow
     * **ddr** mode is introduced in release ``0.2.5`` of Nuclei SDK
+    * macro ``DOWNLOAD_MODE`` and ``DOWNLOAD_MODE_STRING`` will be defined in Makefile,
+      eg. when ``DOWNLOAD=flash``, macro will be defined as ``-DDOWNLOAD_MODE=DOWNLOAD_MODE_FLASH``,
+      and ``-DDOWNLOAD_MODE_STRING=\"flash\"``, the ``flash`` will be in upper case,
+      currently ``DOWNLOAD_MODE_STRING`` macro is used in ``system_<Device>.c`` when
+      banner is print.
+    * This download mode is also used to clarify whether in the link script,
+      your eclic vector table is placed in ``.vtable_ilm`` or ``.vtable`` section, eg.
+      for demosoc, when ``DOWNLOAD=flash``, vector table is placed in ``.vtable_ilm`` section,
+      and an extra macro called ``VECTOR_TABLE_REMAPPED`` will be passed in Makefile.
+      When ``VECTOR_TABLE_REMAPPED`` is defined, it means vector table's LMA and VMA are
+      different, it is remapped.
+    * From release ``0.3.2``, this ``DOWNLOAD_MODE`` should not be used, and macros
+      ``DOWNLOAD_MODE_ILM``, ``DOWNLOAD_MODE_FLASH``, ``DOWNLOAD_MODE_FLASHXIP`` and
+      ``DOWNLOAD_MODE_DDR`` previously defined in ``riscv_encoding.h`` now are moved to
+      ``<Device.h>`` such as ``demosoc.h``, and should be deprecated in future.
+      Now we are directly using ``DOWNLOAD_MODE_STRING`` to pass the download mode string,
+      no longer need to define it in source code as before.
 
 .. _develop_buildsystem_var_core:
 
@@ -619,14 +636,16 @@ Makefile variables used only in Application Makefile
 ----------------------------------------------------
 
 The following variables should be used in application Makefile at your demand,
-e.g. ``application/baremetal/timer_test/Makefile``.
+e.g. ``application/baremetal/demo_timer/Makefile``.
 
 * :ref:`develop_buildsystem_var_target`
 * :ref:`develop_buildsystem_var_nuclei_sdk_root`
+* :ref:`develop_buildsystem_var_middleware`
 * :ref:`develop_buildsystem_var_rtos`
 * :ref:`develop_buildsystem_var_pfloat`
 * :ref:`develop_buildsystem_var_newlib`
 * :ref:`develop_buildsystem_var_nogc`
+* :ref:`develop_buildsystem_var_rtthread_msh`
 
 .. _develop_buildsystem_var_target:
 
