@@ -370,6 +370,8 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
      - build and start gdb process with selected configuration
    * - debug
      - build and debug application with selected configuration
+   * - size
+     - show program size
 
 .. note::
 
@@ -571,6 +573,14 @@ Currently it has these cores supported as described in table
    ux600fd   rv64imafdc lp64d
    ========  ========== =======
 
+When **CORE** is selected, the **ARCH** and **ABI** are set, and it will affect the
+compiler options, eg. If **CORE=n205**, then ``ARCH=rv32imac, ABI=ilp32``,
+riscv arch related compile and link options will be passed, for this case,
+it will be ``-march=rv32imac -mabi=ilp32 -mcmodel=medany``.
+
+The some SoCs, the CORE is fixed, so the ARCH and ABI will be fixed, such as
+``gd32vf103`` SoC, in build system, the CORE is fixed to n205, and ARCH=rv32imac, ABI=ilp32.
+
 .. _develop_buildsystem_var_simulation:
 
 SIMULATION
@@ -608,6 +618,24 @@ You can do it like this, take ``nuclei_fpga_eval`` board for example, such as po
 * Open openocd server: ``make SOC=demosoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_openocd``
 
 * connect gdb with openocd server: ``make SOC=demosoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_gdb``
+
+.. _develop_buildsystem_var_banner:
+
+BANNER
+~~~~~~
+
+If **BANNER=0**, when program is rebuilt, then the banner message print in console will not be print,
+banner print is default enabled via ``NUCLEI_BANNER=1`` in ``nuclei_sdk_hal.h``.
+
+when ``BANNER=0``, an macro ``-DNUCLEI_BANNER=0`` will be passed in Makefile.
+
+The banner message looks like this:
+
+.. code-block:: c
+
+    Nuclei SDK Build Time: Jul 23 2021, 10:22:50
+    Download Mode: ILM
+    CPU Frequency 15999959 Hz
 
 
 .. _develop_buildsystem_var_v:
@@ -726,7 +754,11 @@ PFLOAT
 
 **PFLOAT** variable is used to enable floating point value print when using the newlib nano(**NEWLIB=nano**).
 
+**PFLOAT=1** will enable float print, it will pass extra ``-u _printf_float`` through link option.
+
 If you don't use newlib nano, this variable will have no affect.
+
+when `
 
 .. _develop_buildsystem_var_newlib:
 
@@ -758,6 +790,9 @@ If you want to enable this GC feature, you can set **NOGC=0**(default), GC featu
 remove sections for you, but sometimes it might remove sections that are useful,
 e.g. For Nuclei SDK test cases, we use ctest framework, and we need to set **NOGC=1**
 to disable GC feature.
+
+When ``NOGC=0``(default), extra compile options ``-ffunction-sections -fdata-sections``,
+and extra link options ``-Wl,--gc-sections -Wl,--check-sections`` will be passed.
 
 .. _develop_buildsystem_var_rtthread_msh:
 
