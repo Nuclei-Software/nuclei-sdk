@@ -203,7 +203,9 @@ SECTIONS
   .stack ORIGIN(ram) + LENGTH(ram) - __stack_size :
   {
     PROVIDE( _heap_end = . );
+    __StackLimit = .;
     . = __stack_size;
+    __StackTop = .;
     PROVIDE( _sp = . );
   } >ram AT>ram
 }

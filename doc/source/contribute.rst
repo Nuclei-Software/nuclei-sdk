@@ -48,14 +48,27 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
             │   ├── intexc_ncstar.S
             │   └── startup_ncstar.S
             ├── Stubs
+            │   ├── clock_getres.c
+            │   ├── clock_gettime.c
+            │   ├── clock_settime.c
             │   ├── close.c
+            │   ├── execve.c
+            │   ├── exit.c
+            │   ├── fork.c
             │   ├── fstat.c
+            │   ├── getpid.c
             │   ├── gettimeofday.c
             │   ├── isatty.c
+            │   ├── kill.c
+            │   ├── link.c
             │   ├── lseek.c
+            │   ├── open.c
             │   ├── read.c
             │   ├── sbrk.c
-            │   ├── stub.h
+            │   ├── stat.c
+            │   ├── times.c
+            │   ├── unlink.c
+            │   ├── wait.c
             │   └── write.c
             ├── ncstar_soc.c
             └── system_ncstar.c
@@ -72,7 +85,8 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
            such  as uart, gpio, i2c, spi driver headers, usually get from the SoC firmware library,
            it should be placed in **Include** folder.
          * The **Stubs** folder contains the stub code files for newlib c library porting code,
-           mainly ``_write``, ``_read``, ``_sbrk`` stub function
+           mainly ``_write``, ``_read``, ``_sbrk`` stub function, take ``SoC/demosoc/Common/Stubs``
+           as reference.
          * The **GCC** folder contains *startup* and *exeception/interrupt* assemble code,
            if your board share the same linker script files, you can also put link script files here,
            the linker script files name rules can refer to previously supported *demosoc* SoC.
@@ -110,11 +124,13 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
            This file is used in application as entry header file to access board and SoC resources.
 
 
-2. Create Makefiles related to ``ncstar`` in :ref:`Nuclei SDK build system <develop_buildsystem>`
+2. Create Makefile related to ``ncstar`` in :ref:`Nuclei SDK build system <develop_buildsystem>`
 
-   * Create **Build/Makefile.soc.ncstar**, the file content should be like this:
+   * Create **SoC/ncstar/build.mk**, the file content should be like this:
 
      .. code-block:: Makefile
+
+        ##### Put your SoC build configurations below #####
 
         BOARD ?= ncstar_eval
 
@@ -123,36 +139,34 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
         override CORE := n307
         override DOWNLOAD := flashxip
 
-        NCSTAR_SDK_SOC_BOARD=$(NUCLEI_SDK_SOC)/Board/$(BOARD)
-        NCSTAR_SDK_SOC_COMMON=$(NUCLEI_SDK_SOC)/Common
+        NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
+        NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
 
         #no ilm on NCSTAR SoC
-        LINKER_SCRIPT ?= $(NCSTAR_SDK_SOC_BOARD)/Source/GCC/gcc_ncstar_flashxip.ld
-        OPENOCD_CFG ?= $(NCSTAR_SDK_SOC_BOARD)/openocd_ncstar.cfg
+        LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_ncstar_flashxip.ld
+        OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_ncstar.cfg
 
         RISCV_ARCH ?= rv32imafc
         RISCV_ABI ?= ilp32f
 
+        ##### Put your Source code Management configurations below #####
 
-   * Create **Makefile.files.ncstar**, the file content should be like this:
+        INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include
 
-     .. code-block:: Makefile
+        C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source \
+                     $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers \
+                     $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs
 
-        INCDIRS += $(NCSTAR_SDK_SOC_COMMON)/Include
-
-        C_SRCDIRS += $(NCSTAR_SDK_SOC_COMMON)/Source \
-                     $(NCSTAR_SDK_SOC_COMMON)/Source/Drivers \
-                     $(NCSTAR_SDK_SOC_COMMON)/Source/Stubs
-
-        ASM_SRCS += $(NCSTAR_SDK_SOC_COMMON)/Source/GCC/startup_ncstar.S \
-                     $(NCSTAR_SDK_SOC_COMMON)/Source/GCC/intexc_ncstar.S
+        ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_ncstar.S \
+                     $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_ncstar.S
 
         # Add extra board related source files and header files
-        VALID_NCSTAR_SDK_SOC_BOARD=$(wildcard $(NCSTAR_SDK_SOC_BOARD))
-        ifneq ($(VALID_NCSTAR_SDK_SOC_BOARD),)
-        INCDIRS += $(VALID_NCSTAR_SDK_SOC_BOARD)/Include
-        C_SRCDIRS += $(VALID_NCSTAR_SDK_SOC_BOARD)/Source
+        VALID_NUCLEI_SDK_SOC_BOARD := $(wildcard $(NUCLEI_SDK_SOC_BOARD))
+        ifneq ($(VALID_NUCLEI_SDK_SOC_BOARD),)
+        INCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Include
+        C_SRCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Source
         endif
+
 
 3. If you have setup the source code and build system correctly, then you can test
    your SoC using the common applications, e.g.

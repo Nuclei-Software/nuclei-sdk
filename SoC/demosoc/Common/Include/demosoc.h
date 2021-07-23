@@ -46,7 +46,14 @@ extern "C" {
   * @{
   */
 
-
+/** \brief SoC Download mode definition */
+typedef enum {
+    DOWNLOAD_MODE_FLASHXIP = 0,         /*!< Flashxip download mode */
+    DOWNLOAD_MODE_FLASH = 1,            /*!< Flash download mode */
+    DOWNLOAD_MODE_ILM = 2,              /*!< ilm download mode */
+    DOWNLOAD_MODE_DDR = 3,              /*!< ddr download mode */
+    DOWNLOAD_MODE_MAX,
+} DownloadMode_Type;
 
 /* =========================================================================================================================== */
 /* ================                                Interrupt Number Definition                                ================ */
@@ -111,6 +118,24 @@ typedef enum IRQn {
     SOC_INT48_IRQn           = 48,                /*!< Device Interrupt */
     SOC_INT49_IRQn           = 49,                /*!< Device Interrupt */
     SOC_INT50_IRQn           = 50,                /*!< Device Interrupt */
+    SOC_INT51_IRQn           = 51,                /*!< Device Interrupt */
+    SOC_INT52_IRQn           = 52,                /*!< Device Interrupt */
+    SOC_INT53_IRQn           = 53,                /*!< Device Interrupt */
+    SOC_INT54_IRQn           = 54,                /*!< Device Interrupt */
+    SOC_INT55_IRQn           = 55,                /*!< Device Interrupt */
+    SOC_INT56_IRQn           = 56,                /*!< Device Interrupt */
+    SOC_INT57_IRQn           = 57,                /*!< Device Interrupt */
+    SOC_INT58_IRQn           = 58,                /*!< Device Interrupt */
+    SOC_INT59_IRQn           = 59,                /*!< Device Interrupt */
+    SOC_INT60_IRQn           = 60,                /*!< Device Interrupt */
+    SOC_INT61_IRQn           = 61,                /*!< Device Interrupt */
+    SOC_INT62_IRQn           = 62,                /*!< Device Interrupt */
+    SOC_INT63_IRQn           = 63,                /*!< Device Interrupt */
+    SOC_INT64_IRQn           = 64,                /*!< Device Interrupt */
+    SOC_INT65_IRQn           = 65,                /*!< Device Interrupt */
+    SOC_INT66_IRQn           = 66,                /*!< Device Interrupt */
+    SOC_INT67_IRQn           = 67,                /*!< Device Interrupt */
+    SOC_INT68_IRQn           = 68,                /*!< Device Interrupt */
     SOC_INT_MAX,
 } IRQn_Type;
 

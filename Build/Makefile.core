@@ -1,11 +1,15 @@
 # Format for adding a new core
 # NXXX_CORE_ARCH_ABI = ARCH ABI
+N200_CORE_ARCH_ABI = rv32imc ilp32
 N201_CORE_ARCH_ABI = rv32iac ilp32
 N201E_CORE_ARCH_ABI = rv32eac ilp32e
 N203_CORE_ARCH_ABI = rv32imac ilp32
 N203E_CORE_ARCH_ABI = rv32emac ilp32e
 N205_CORE_ARCH_ABI = rv32imac ilp32
 N205E_CORE_ARCH_ABI = rv32emac ilp32e
+N300_CORE_ARCH_ABI = rv32imac ilp32
+N300F_CORE_ARCH_ABI = rv32imafc ilp32f
+N300FD_CORE_ARCH_ABI = rv32imafdc ilp32d
 N305_CORE_ARCH_ABI = rv32imac ilp32
 N307_CORE_ARCH_ABI = rv32imafc ilp32f
 N307FD_CORE_ARCH_ABI = rv32imafdc ilp32d
@@ -30,8 +34,8 @@ UX900FD_CORE_ARCH_ABI = rv64imafdc lp64d
 
 # Don't forget to add a new core below
 # if you add a new NXXX_CORE_ARCH_ABI above
-SUPPORTED_CORES = n201 n201e n203 n203e n205 \
-		n205e n305 n307 n307fd \
+SUPPORTED_CORES = n200 n201 n201e n203 n203e n205 \
+		n205e n300 n300f n300fd n305 n307 n307fd \
 		n600 n600f n600fd \
 		nx600 nx600f nx600fd \
 		ux600 ux600f ux600fd \

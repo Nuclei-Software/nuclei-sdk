@@ -101,6 +101,7 @@ else:
 
 # Use correct downloaded modes
 DOWNLOAD_MODE = "DOWNLOAD_MODE_%s" % build_download_mode.upper()
+build_download_mode_upper = build_download_mode.upper()
 
 src = Glob(SoC_Common + '/Source/*.c')
 src += Glob(SoC_Common + '/Source/Drivers/*.c')
@@ -124,7 +125,12 @@ if build_soc == "gd32vf103":
     CPPPATH.append(cwd + '/' + SoC_Common + '/Include/Usb')
 
 CPPDEFINES = [ '-DDOWNLOAD_MODE={}'.format(DOWNLOAD_MODE),
+               '-DDOWNLOAD_MODE_STRING=\"{}\"'.format(build_download_mode_upper),
                '-DRTOS_RTTHREAD', '-DNUCLEI_BANNER=0' ]
+
+# Flash download mode vector table need to remapped
+if build_download_mode_upper == "FLASH":
+    CPPDEFINES.extend(['-DVECTOR_TABLE_REMAPPED'])
 
 extra_flags = build_core_options
 extra_lflags = "{} -T {}".format(build_core_options, build_ldscript)

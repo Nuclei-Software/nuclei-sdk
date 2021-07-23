@@ -29,19 +29,13 @@ The **<NUCLEI_SDK_ROOT>/Build** directory content list as below:
     Makefile.base
     Makefile.conf
     Makefile.core
+    Makefile.components
     Makefile.files
-    Makefile.files.gd32vf103
-    Makefile.files.demosoc
     Makefile.global  -> Created by user
     Makefile.misc
     Makefile.rtos
-    Makefile.rtos.FreeRTOS
-    Makefile.rtos.UCOSII
-    Makefile.rtos.RTThread
     Makefile.rules
     Makefile.soc
-    Makefile.soc.gd32vf103
-    Makefile.soc.demosoc
 
 The file or directory is used explained as below:
 
@@ -138,23 +132,15 @@ This **Makefile.files** file will do the following things:
 
 * Define common C/C++/ASM source and include directories
 * Define common C/C++/ASM macros
-* Include **Makefile.files.<SOC>** which will include all the source
-  code related to the :ref:`develop_buildsystem_var_soc` and
-  :ref:`develop_buildsystem_var_board`
-
-  - **Makefile.files.gd32vf103**: Used to include source code for
-    :ref:`design_soc_gd32vf103`
-  - **Makefile.files.demosoc**: Used to include source code for
-    :ref:`design_soc_demosoc`
-
 
 .. _develop_buildsystem_makefile_soc:
 
 Makefile.soc
 ~~~~~~~~~~~~
 
-This **Makefile.soc** will just include **Makefile.soc.<SOC>** according
-to the :ref:`develop_buildsystem_var_soc` makefile variable setting.
+This **Makefile.soc** will include valid makefiles located in
+**<NUCLEI_SDK_ROOT>/SoC/<SOC>/build.mk** according to
+the :ref:`develop_buildsystem_var_soc` makefile variable setting.
 
 It will define the following items:
 
@@ -170,13 +156,61 @@ It will define the following items:
 * OpenOCD debug configuration file used for the SoC and Board
 * Some extra compiling or debugging options
 
+A valid SoC should be organized like this, take ``demosoc`` as example:
+
+.. code-block::
+
+    SoC/demosoc
+    ├── Board
+    │   └── nuclei_fpga_eval
+    │       ├── Include
+    │       │   ├── board_nuclei_fpga_eval.h
+    │       │   └── nuclei_sdk_hal.h
+    │       ├── Source
+    │       │   └── GCC
+    │       └── openocd_demosoc.cfg
+    ├── build.mk
+    └── Common
+        ├── Include
+        │   ├── demosoc.h
+        │   ├── ... ...
+        │   ├── demosoc_uart.h
+        │   ├── nuclei_sdk_soc.h
+        │   └── system_demosoc.h
+        └── Source
+            ├── Drivers
+            │   ├── ... ...
+            │   └── demosoc_uart.c
+            ├── GCC
+            │   ├── intexc_demosoc.S
+            │   └── startup_demosoc.S
+            ├── Stubs
+            │   ├── read.c
+            │   ├── ... ...
+            │   └── write.c
+            ├── demosoc_common.c
+            └── system_demosoc.c
+
+
 .. _develop_buildsystem_makefile_rtos:
 
 Makefile.rtos
 ~~~~~~~~~~~~~
 
-This **Makefile.rtos** will include **Makefile.rtos.<RTOS>** file
+This **Makefile.rtos** will include **<NUCLEI_SDK_ROOT>/OS/<RTOS>/build.mk**
 according to our :ref:`develop_buildsystem_var_rtos` variable.
+
+A valid rtos should be organized like this, take ``UCOSII`` as example:
+
+.. code-block::
+
+    OS/UCOSII/
+    ├── arch
+    ├── build.mk
+    ├── license.txt
+    ├── readme.md
+    └── source
+
 
 If no :ref:`develop_buildsystem_var_rtos` is chosen, then RTOS
 code will not be included during compiling, user will develop
@@ -189,12 +223,30 @@ compiler option ``-DRTOS_$(RTOS_UPPER)`` will be passed, then user can develop R
 For example, if ``FreeRTOS`` is selected, then ``-DRTOS_FREERTOS`` compiler option
 will be passed.
 
-* **Makefile.rtos.FreeRTOS**: Include FreeRTOS related source code and header
-  directories
-* **Makefile.rtos.UCOSII**: Include UCOSII related source code and header
-  directories
-* **Makefile.rtos.RTThread**: Include RTThread related source code and header
-  directories
+.. _develop_buildsystem_makefile_components:
+
+Makefile.components
+~~~~~~~~~~~~~~~~~~~
+
+This **Makefile.components** will include ``build.mk`` Makefiles of selected components defined
+via makefile variable :ref:`develop_buildsystem_var_middleware`, the Makefiles are placed in
+the sub-folders of **<NUCLEI_SDK_ROOT>/Components/**.
+
+A valid middleware component should be organized like this, take ``fatfs`` as example :
+
+.. code-block::
+
+    Components/fatfs/
+    ├── build.mk
+    ├── documents
+    ├── LICENSE.txt
+    └── source
+
+
+For example, if there are two valid middleware components in **<NUCLEI_SDK_ROOT>/Components/**, called
+``fatfs`` and ``tjpgd``, and you want to use them in your application, then you can set ``MIDDLEWARE``
+like this ``MIDDLEWARE := fatfs tjpgd``, then the application will include these two middlewares into
+build process.
 
 .. _develop_buildsystem_makefile_core:
 
@@ -423,7 +475,7 @@ Currently we support the following SoCs.
 .. note::
 
     * If you only specify **SOC** variable in make command, it will use default **BOARD**
-      and **CORE** option defined in Makefile.soc.<SOC>
+      and **CORE** option defined in **<NUCLEI_SDK_ROOT>/SoC/<SOC>/build.mk**
 
 .. _develop_buildsystem_var_download:
 
@@ -635,6 +687,19 @@ You can easily find the supported RTOSes in the **<NUCLEI_SDK_ROOT>/OS** directo
     you need to have an ``rtconfig.h`` header file prepared in you application.
     See examples in ``application/rtthread``.
 
+.. _develop_buildsystem_var_middleware:
+
+MIDDLEWARE
+~~~~~~~~~~
+
+**MIDDLEWARE** variable is used to select which middlewares should be used in this application.
+
+You can easily find the available middleware components in the **<NUCLEI_SDK_ROOT>/Components** directory.
+
+* If **MIDDLEWARE** is not defined, not leave empty, no middlware package will be selected.
+* If **MIDDLEWARE** is defined with more than 1 string, such as ``fatfs tjpgd``, then these two
+  middlewares will be selected.
+
 .. _develop_buildsystem_var_pfloat:
 
 PFLOAT
@@ -684,7 +749,7 @@ RTTHREAD_MSH
 
 When **RTTHREAD_MSH** is set to **1**:
 
-* The RTThread MSH compoment source code will be included
+* The RTThread MSH component source code will be included
 * The MSH thread will be enabled in the background
 * Currently the msh getchar implementation is using a weak function implemented
   in ``rt_hw_console_getchar`` in ``OS/RTTThread/libcpu/risc-v/nuclei/cpuport.c``

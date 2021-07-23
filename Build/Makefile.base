@@ -8,12 +8,12 @@ NUCLEI_SDK_BUILD = $(NUCLEI_SDK_ROOT)/Build
 # DOWNLOAD ?= ilm
 EXTRA_MKS := $(wildcard Makefile.local $(NUCLEI_SDK_BUILD)/Makefile.global)
 ifneq ("$(strip $(EXTRA_MKS))", "")
-$(info Obtaining addtional make variables from $(EXTRA_MKS))
+$(info Obtaining addtional make variables from $(realpath $(EXTRA_MKS)))
 include $(EXTRA_MKS)
 endif
 
 # Variables could be passed in make command
-# NOTE: CORE and BOARD are defined in Makefile.soc.$(SOC)
+# NOTE: CORE and BOARD are defined in $(NUCLEI_SDK_ROOT)/SoC/$(SOC)/Makefile.build
 # BOARD and SOC name should always be lower-case
 ## Available choices:
 ## The name of sub directories in $(NUCLEI_SDK_ROOT)/SoC/
@@ -40,10 +40,14 @@ PFLOAT ?= 0
 NEWLIB ?= nano
 ## If NOGC=1, it will not gc any sections during compiling to save code size
 NOGC ?=
+## If BANNER=0, it will not display sdk banner when program run
+BANNER ?=
 
-# Directories for SoC and RTOS chosen
-NUCLEI_SDK_SOC = $(NUCLEI_SDK_ROOT)/SoC/$(SOC)
-NUCLEI_SDK_RTOS = $(NUCLEI_SDK_ROOT)/OS/$(RTOS)
+# Directory variables for NMSIS, SoC/RTOS chosen, Middleware Components
+NUCLEI_SDK_NMSIS ?= $(NUCLEI_SDK_ROOT)/NMSIS
+NUCLEI_SDK_SOC := $(NUCLEI_SDK_ROOT)/SoC/$(SOC)
+NUCLEI_SDK_RTOS := $(NUCLEI_SDK_ROOT)/OS/$(RTOS)
+NUCLEI_SDK_MIDDLEWARE := $(NUCLEI_SDK_ROOT)/Components
 
 ## Include GNU Make Standard Library
 ## Website: http://gmsl.sourceforge.net/

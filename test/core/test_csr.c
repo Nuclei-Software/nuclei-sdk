@@ -165,22 +165,25 @@ CTEST(core, wfe)
     // TODO Not yet find a way to test it
 }
 
-static uint32_t ebreak = 0;
+static uint32_t ecall = 0;
 
-void ebreak_handler(unsigned long epc, unsigned long sp)
+void ecall_handler(unsigned long mcause, unsigned long sp)
 {
-    ebreak = 1;
-    epc = epc + 8;
-    CTEST_LOG("__EBREAK called\n");
-    __RV_CSR_WRITE(CSR_MEPC, epc);
+    ecall = 1;
+    EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
+    // mepc for ecall is the pc where ecall instruction located
+    // so we just add 4 to mepc to return to the next instruction
+    exc_frame->mepc += 4;
+    CTEST_LOG("__ECALL called\n");
 }
 
-CTEST(core, ebreak)
+CTEST(core, ecall)
 {
-    //TODO Not yet working, ebreak will not trigger the exception of EBREAK
-    //Exception_Register_EXC(Break_EXCn, (unsigned long)ebreak_handler);
-    //__EBREAK();
-    //ASSERT_EQUAL(ebreak, 1);
+    ecall = 0;
+    // working: ecall will not trigger the exception of machine mode ecall
+    Exception_Register_EXC(MmodeEcall_EXCn, (unsigned long)ecall_handler);
+    __ECALL();
+    ASSERT_EQUAL(ecall, 1);
 }
 
 CTEST(core, sleepmode)
