@@ -303,7 +303,7 @@ for example to demostrate how to setup hardware, build run and debug application
 
 The demo application, we will take ``application/baremetal/helloworld`` for example.
 
-First of all, please reuse previously setuped build environment command terminal.
+First of all, please reuse previously build environment command terminal.
 
 Run ``cd application/baremetal/helloworld`` to cd the ``helloworld`` example folder.
 
@@ -317,6 +317,10 @@ to setup your hardware, mainly **JTAG debugger driver setup and on-board connect
   make sure you have setup the JTAG driver correctly, and you can see JTAG port and serial port.
 * Open a UART terminal tool such as |teraterm| or |minicom|, and minitor the serial port of the Board,
   the UART baudrate is *115200 bps*
+* If you are building example for your own SoC and Board, please pass correct :ref:`develop_buildsystem_var_soc` and
+  :ref:`develop_buildsystem_var_board` make variable. eg. If you SoC is ``demosoc`` and Board is ``nuclei_fpga_eval``,
+  just pass ``SOC=demosoc BOARD=nuclei_fpga_eval`` to make instead of the one mentioned below. If your default board
+  for this ``demosoc`` is ``nuclei_fpga_eval``, then you don't need to pass ``BOARD=nuclei_fpga_eval``.
 
 Build Application
 ~~~~~~~~~~~~~~~~~

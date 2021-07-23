@@ -432,6 +432,14 @@ Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
    * - demosoc
      - :ref:`design_soc_demosoc`
 
+.. note::
+
+   If you are our SoC subsystem customer, in the SDK delivered to you, you can find your soc name
+   in this **<NUCLEI_SDK_ROOT>/SoC** directory, take ``gd32vf103`` SoC as example, when **SOC=gd32vf103``,
+   the SoC source code in **<NUCLEI_SDK_ROOT>/SoC/gd32vf103/Common** will be used.
+
+   This documentation just document the open source version of Nuclei SDK's supported SOC and Board.
+
 .. _develop_buildsystem_var_board:
 
 BOARD
@@ -461,6 +469,10 @@ Currently we support the following SoCs.
      - :ref:`design_board_gd32vf103v_rvstar`
    * - gd32vf103v_eval
      - :ref:`design_board_gd32vf103v_eval`
+   * - gd32vf103c_longan_nano
+     - :ref:`design_board_sipeed_longan_nano`
+   * - gd32vf103c_t_display
+     - :ref:`design_board_sipeed_longan_nano`
 
 .. _table_dev_buildsystem_3:
 
@@ -478,6 +490,9 @@ Currently we support the following SoCs.
 
     * If you only specify **SOC** variable in make command, it will use default **BOARD**
       and **CORE** option defined in **<NUCLEI_SDK_ROOT>/SoC/<SOC>/build.mk**
+    * If you are our SoC subsystem customer, in the SDK delivered to you, you can check
+      the board supported list in **<NUCLEI_SDK_ROOT>/<SOC>/Board/**, take ``SOC=gd32vf103 BOARD=gd32vf103v_rvstar``
+      as example, the board source code located **<NUCLEI_SDK_ROOT>/gd32vf103/Board/gd32vf103v_rvstar** will be used.
 
 .. _develop_buildsystem_var_download:
 
@@ -533,6 +548,8 @@ currently it has these modes supported as described in table
       ``<Device.h>`` such as ``demosoc.h``, and should be deprecated in future.
       Now we are directly using ``DOWNLOAD_MODE_STRING`` to pass the download mode string,
       no longer need to define it in source code as before.
+    * From release ``0.3.2``, you can define **DOWNLOAD** not just the download mode list above,
+      you can use other download mode names specified by your customized SoC.
 
 .. _develop_buildsystem_var_core:
 
