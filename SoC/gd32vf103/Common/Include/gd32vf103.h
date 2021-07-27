@@ -347,7 +347,7 @@ typedef enum {
 /* ================                                  Peripheral declaration                                   ================ */
 /* =========================================================================================================================== */
 
-/* Macros for Bit Operations */
+/* Macros for memory access operations */
 #define _REG8P(p, i)                        ((volatile uint8_t *) ((uintptr_t)((p) + (i))))
 #define _REG16P(p, i)                       ((volatile uint16_t *) ((uintptr_t)((p) + (i))))
 #define _REG32P(p, i)                       ((volatile uint32_t *) ((uintptr_t)((p) + (i))))
@@ -361,8 +361,20 @@ typedef enum {
 #define REG32(addr)                         _REG32((addr), 0)
 #define REG64(addr)                         _REG64((addr), 0)
 
-#define BIT(ofs)                            ((unsigned long)((unsigned long)0x1UL << (ofs)))
-#define BITS(start, end)                    ((((unsigned long)0x1UL << ((end) - (start) + 1)) - 1) << (start))
+/* Macros for Bit Operations */
+#if __riscv_xlen == 32
+#define BITMASK_MAX                         0xFFFFFFFFUL
+#define BITOFS_MAX                          31
+#else
+#define BITMASK_MAX                         0xFFFFFFFFFFFFFFFFULL
+#define BITOFS_MAX                          63
+#endif
+
+// BIT/BITS only support bit mask for __riscv_xlen
+// For RISC-V 32 bit, it support mask 32 bit wide
+// For RISC-V 64 bit, it support mask 64 bit wide
+#define BIT(ofs)                            (0x1UL << (ofs))
+#define BITS(start, end)                    ((BITMASK_MAX) << (start) & (BITMASK_MAX) >> (BITOFS_MAX - (end)))
 #define GET_BIT(regval, bitofs)             (((regval) >> (bitofs)) & 0x1)
 #define SET_BIT(regval, bitofs)             ((regval) |= BIT(bitofs))
 #define CLR_BIT(regval, bitofs)             ((regval) &= (~BIT(bitofs)))
