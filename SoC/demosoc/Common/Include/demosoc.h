@@ -393,11 +393,43 @@ typedef struct {
 #warning Not supported compiler type
 #endif
 
+/* Macros for Bit Operations */
+#define _REG8P(p, i)                        ((volatile uint8_t *) ((uintptr_t)((p) + (i))))
+#define _REG16P(p, i)                       ((volatile uint16_t *) ((uintptr_t)((p) + (i))))
+#define _REG32P(p, i)                       ((volatile uint32_t *) ((uintptr_t)((p) + (i))))
+#define _REG64P(p, i)                       ((volatile uint64_t *) ((uintptr_t)((p) + (i))))
+#define _REG8(p, i)                         (*(_REG8P(p, i)))
+#define _REG16(p, i)                        (*(_REG16P(p, i)))
+#define _REG32(p, i)                        (*(_REG32P(p, i)))
+#define _REG64(p, i)                        (*(_REG64P(p, i)))
+#define REG8(addr)                          _REG8((addr), 0)
+#define REG16(addr)                         _REG16((addr), 0)
+#define REG32(addr)                         _REG32((addr), 0)
+#define REG64(addr)                         _REG64((addr), 0)
+
+#define BIT(ofs)                            ((unsigned long)((unsigned long)0x1UL << (ofs)))
+#define BITS(start, end)                    ((((unsigned long)0x1UL << ((end) - (start) + 1)) - 1) << (start))
+#define GET_BIT(regval, bitofs)             (((regval) >> (bitofs)) & 0x1)
+#define SET_BIT(regval, bitofs)             ((regval) |= BIT(bitofs))
+#define CLR_BIT(regval, bitofs)             ((regval) &= (~BIT(bitofs)))
+#define FLIP_BIT(regval, bitofs)            ((regval) ^= BIT(bitofs))
+#define CHECK_BIT(regval, bitofs)           (!!((regval) & (0x1UL<<(bitofs))))
+#define GET_BITS(regval, start, end)        (((regval) & BITS((start), (end))) >> (start))
+#define SET_BITS(regval, start, end)        ((regval) |= BITS((start), (end)))
+#define CLR_BITS(regval, start, end)        ((regval) &= (~BITS((start), (end))))
+#define FLIP_BITS(regval, start, end)       ((regval) ^= BITS((start), (end)))
+#define CHECK_BITS_ALL(regval, start, end)  (!((~(regval)) & BITS((start), (end))))
+#define CHECK_BITS_ANY(regval, start, end)  ((regval) & BITS((start), (end)))
+
+#define BITMASK_SET(regval, mask)           ((regval) |= (mask))
+#define BITMASK_CLR(regval, mask)           ((regval) &= (~(mask)))
+#define BITMASK_FLIP(regval, mask)          ((regval) ^= (mask))
+#define BITMASK_CHECK_ALL(regval, mask)     (!((~(regval)) & (mask)))
+#define BITMASK_CHECK_ANY(regval, mask)     ((regval) & (mask))
 
 /* =========================================================================================================================== */
 /* ================                          Device Specific Peripheral Address Map                           ================ */
 /* =========================================================================================================================== */
-
 
 /* ToDo: add here your device peripherals base addresses
          following is an example for timer */
@@ -449,10 +481,6 @@ typedef struct {
 #define PWM2                    ((PWM_TypeDef *) PWM2_BASE)
 #define I2C                     ((I2C_TypeDef *) I2C_BASE)
 
-// Helper functions
-#define _REG8(p, i)             (*(volatile uint8_t *) ((p) + (i)))
-#define _REG32(p, i)            (*(volatile uint32_t *) ((p) + (i)))
-#define _REG32P(p, i)           ((volatile uint32_t *) ((p) + (i)))
 
 #define GPIO_REG(offset)        _REG32(GPIO_BASE, offset)
 #define PWM0_REG(offset)        _REG32(PWM0_BASE, offset)
