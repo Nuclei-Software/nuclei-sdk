@@ -44,9 +44,10 @@ NOGC ?=
 BANNER ?=
 
 # Directory variables for NMSIS, SoC/RTOS chosen, Middleware Components
+# NUCLEI_SDK_SOC and NUCLEI_SDK_RTOS variables need to be set deferred
 NUCLEI_SDK_NMSIS ?= $(NUCLEI_SDK_ROOT)/NMSIS
-NUCLEI_SDK_SOC := $(NUCLEI_SDK_ROOT)/SoC/$(SOC)
-NUCLEI_SDK_RTOS := $(NUCLEI_SDK_ROOT)/OS/$(RTOS)
+NUCLEI_SDK_SOC = $(NUCLEI_SDK_ROOT)/SoC/$(SOC)
+NUCLEI_SDK_RTOS = $(NUCLEI_SDK_ROOT)/OS/$(RTOS)
 NUCLEI_SDK_MIDDLEWARE := $(NUCLEI_SDK_ROOT)/Components
 
 ## Include GNU Make Standard Library
