@@ -41,6 +41,16 @@ This is development version ``0.3.2-dev`` of Nuclei SDK.
       - **tools/scripts/nsdk_cli/nsdk_bench.py**: nsdk bench runner script
       - **tools/scripts/nsdk_cli/nsdk_execute.py**: nsdk execute runner script
 
+* SoC
+
+    - Add general bit operations and memory access APIs in ``<Device>.h``, eg. ``_REG32(p, i)``, ``FLIP_BIT(regval, bitofs)``
+    - ``DOWNLOAD_MODE_xxx`` macros are now placed in ``<Device>.h``, which is removed from ``riscv_encoding.h``, user can define
+      different ``DOWNLOAD_MODE_xxx`` according to its device/board settings.
+    - ``DOWNLOAD_MODE_STRING`` are now used to show the download mode string, which should be passed eg. ``-DOWNLOAD_MODE_STRING=\"flash\"``,
+      it is used in ``system_<Device>.c``
+    - ``DOWNLOAD_MODE_xxx`` now is used in ``startup_<Device>.S`` to control the vector table location,
+      instead a new macro called ``VECTOR_TABLE_REMAPPED`` is used, and it should be defined in ``SoC/<SOC>/build.mk``
+      if the vector table's LMA and VMA are different.
 
 V0.3.1
 ------
