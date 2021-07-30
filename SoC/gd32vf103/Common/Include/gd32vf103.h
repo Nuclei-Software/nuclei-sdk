@@ -361,6 +361,15 @@ typedef enum {
 #define REG32(addr)                         _REG32((addr), 0)
 #define REG64(addr)                         _REG64((addr), 0)
 
+/* Macros for address type convert and access operations */
+#define ADDR16(addr)                        ((uint16_t)(uintptr_t)(addr))
+#define ADDR32(addr)                        ((uint32_t)(uintptr_t)(addr))
+#define ADDR64(addr)                        ((uint64_t)(uintptr_t)(addr))
+#define ADDR8P(addr)                        ((uint8_t *)(uintptr_t)(addr))
+#define ADDR16P(addr)                       ((uint16_t *)(uintptr_t)(addr))
+#define ADDR32P(addr)                       ((uint32_t *)(uintptr_t)(addr))
+#define ADDR64P(addr)                       ((uint64_t *)(uintptr_t)(addr))
+
 /* Macros for Bit Operations */
 #if __riscv_xlen == 32
 #define BITMASK_MAX                         0xFFFFFFFFUL
@@ -379,11 +388,13 @@ typedef enum {
 #define SET_BIT(regval, bitofs)             ((regval) |= BIT(bitofs))
 #define CLR_BIT(regval, bitofs)             ((regval) &= (~BIT(bitofs)))
 #define FLIP_BIT(regval, bitofs)            ((regval) ^= BIT(bitofs))
+#define WRITE_BIT(regval, bitofs, val)      CLR_BIT(regval, bitofs); ((regval) |= ((val) << bitofs) & BIT(bitofs))
 #define CHECK_BIT(regval, bitofs)           (!!((regval) & (0x1UL<<(bitofs))))
 #define GET_BITS(regval, start, end)        (((regval) & BITS((start), (end))) >> (start))
 #define SET_BITS(regval, start, end)        ((regval) |= BITS((start), (end)))
 #define CLR_BITS(regval, start, end)        ((regval) &= (~BITS((start), (end))))
 #define FLIP_BITS(regval, start, end)       ((regval) ^= BITS((start), (end)))
+#define WRITE_BITS(regval, start, end, val) CLR_BITS(regval, start, end); ((regval) |= ((val) << start) & BITS((start), (end)))
 #define CHECK_BITS_ALL(regval, start, end)  (!((~(regval)) & BITS((start), (end))))
 #define CHECK_BITS_ANY(regval, start, end)  ((regval) & BITS((start), (end)))
 
