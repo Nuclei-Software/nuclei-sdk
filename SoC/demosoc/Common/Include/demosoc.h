@@ -520,8 +520,8 @@ typedef struct {
 
 #define NUM_GPIO 32
 
-uint32_t get_cpu_freq();
-void delay_1ms(uint32_t count);
+extern uint32_t get_cpu_freq(void);
+extern void delay_1ms(uint32_t count);
 
 /** @} */ /* End of group demosoc */
 
