@@ -3,10 +3,10 @@
 Changelog
 =========
 
-V0.3.2-dev
-----------
+V0.3.2
+------
 
-This is development version ``0.3.2-dev`` of Nuclei SDK.
+This is release version ``0.3.2`` of Nuclei SDK.
 
 * Build
 
@@ -55,6 +55,10 @@ This is development version ``0.3.2-dev`` of Nuclei SDK.
 * NMSIS
 
     - Bump NMSIS to version 1.0.2
+
+* OS
+
+    - Fix OS task switch bug in RT-Thread
 
 V0.3.1
 ------
