@@ -52,6 +52,10 @@ This is development version ``0.3.2-dev`` of Nuclei SDK.
       instead a new macro called ``VECTOR_TABLE_REMAPPED`` is used, and it should be defined in ``SoC/<SOC>/build.mk``
       if the vector table's LMA and VMA are different.
 
+* NMSIS
+
+    - Bump NMSIS to version 1.0.2
+
 V0.3.1
 ------
 
