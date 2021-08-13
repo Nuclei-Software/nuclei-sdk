@@ -38,6 +38,7 @@ typedef enum {
 #define DBL_MIN  2.22507385850720138e-308
 #endif
 
+#ifndef SCHAR_MIN
 #define SCHAR_MIN (-128)
 /* mimimum value for an object of type signed char */
 #define SCHAR_MAX 127
@@ -62,7 +63,7 @@ typedef enum {
 /* maximum value for an object of type long int */
 #define ULONG_MAX 0xffffffffUL
 /* maximum value for an object of type unsigned long int */
-
+#endif
 
 /*
  * Helper Functions
