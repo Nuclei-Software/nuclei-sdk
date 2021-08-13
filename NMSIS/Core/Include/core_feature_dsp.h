@@ -18603,8 +18603,10 @@ __STATIC_FORCEINLINE int32_t __SMUSD(int32_t op1, int32_t op2)
 /** \brief Dual extracted 8-bit to 16-bit signed addition. TODO Need test */
 __STATIC_FORCEINLINE int32_t __SXTAB16(uint32_t op1, uint32_t op2)
 {
-    return __RV_ADD16(op1, __RV_SUNPKD830(op2));
+    return __RV_ADD16(op1, __RV_SUNPKD820(op2));
 }
+#define __SXTAB16_RORn(ARG1, ARG2, ROTATE)        __SXTAB16(ARG1, __ROR(ARG2, ROTATE))
+
 /** \brief 32-bit signed multiply with 32-bit truncated accumulator. */
 __STATIC_FORCEINLINE int32_t __SMMLA(int32_t op1, int32_t op2, int32_t op3)
 {
@@ -18640,10 +18642,11 @@ __STATIC_FORCEINLINE int32_t __SMMLA(int32_t op1, int32_t op2, int32_t op3)
 #define __PKTT16                __RV_PKTT16
 #define __KADD16                __RV_KADD16
 #define __SADD16                __RV_ADD16
+#define __SSUB8                __RV_KSUB8
+#define __SADD8                __RV_KADD8
+#define __USAT16               __RV_UCLIP16
 
 #endif /* (__RISCV_FEATURE_DSP == 1) */
-
-#endif /* defined(__DSP_PRESENT) && (__DSP_PRESENT == 1) */
 
 /** \brief Halfword packing instruction. Combines bits[15:0] of val1 with bits[31:16] of val2 levitated with the val3. */
 #define __PKHBT(ARG1,ARG2,ARG3)          ( ((((uint32_t)(ARG1))          ) & 0x0000FFFFUL) |  \
@@ -18651,6 +18654,10 @@ __STATIC_FORCEINLINE int32_t __SMMLA(int32_t op1, int32_t op2, int32_t op3)
 /** \brief Halfword packing instruction. Combines bits[31:16] of val1 with bits[15:0] of val2 right-shifted with the val3. */
 #define __PKHTB(ARG1,ARG2,ARG3)          ( ((((uint32_t)(ARG1))          ) & 0xFFFF0000UL) |  \
                                            ((((uint32_t)(ARG2)) >> (ARG3)) & 0x0000FFFFUL)  )
+/** first rotate then extract. This is more suitable for arm compiler for it can rotate and extract in one command*/
+#define __SXTB16_RORn(ARG1, ARG2)        __RV_SUNPKD820(__ROR(ARG1, ARG2))
+
+#endif /* defined(__DSP_PRESENT) && (__DSP_PRESENT == 1) */
 
 #ifdef __cplusplus
 }

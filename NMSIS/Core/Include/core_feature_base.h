@@ -61,7 +61,7 @@
  * @{
  */
 /**
- * \brief  Union type to access MISA register.
+ * \brief  Union type to access MISA CSR register.
  */
 typedef union {
     struct {
@@ -101,7 +101,7 @@ typedef union {
 } CSR_MISA_Type;
 
 /**
- * \brief  Union type to access MSTATUS configure register.
+ * \brief  Union type to access MSTATUS CSR register.
  */
 typedef union {
     struct {
@@ -142,7 +142,7 @@ typedef union {
 } CSR_MSTATUS_Type;
 
 /**
- * \brief  Union type to access MTVEC configure register.
+ * \brief  Union type to access MTVEC CSR register.
  */
 typedef union {
     struct {
@@ -157,7 +157,7 @@ typedef union {
 } CSR_MTVEC_Type;
 
 /**
- * \brief  Union type to access MCAUSE configure register.
+ * \brief  Union type to access MCAUSE CSR register.
  */
 typedef union {
     struct {
@@ -179,7 +179,7 @@ typedef union {
 } CSR_MCAUSE_Type;
 
 /**
- * \brief  Union type to access MCOUNTINHIBIT configure register.
+ * \brief  Union type to access MCOUNTINHIBIT CSR register.
  */
 typedef union {
     struct {
@@ -196,7 +196,7 @@ typedef union {
 } CSR_MCOUNTINHIBIT_Type;
 
 /**
- * \brief  Union type to access msubm configure register.
+ * \brief  Union type to access MSUBM CSR register.
  */
 typedef union {
     struct {
@@ -213,7 +213,18 @@ typedef union {
 } CSR_MSUBM_Type;
 
 /**
- * \brief  Union type to access MMISC_CTRL configure register.
+ * \brief  Union type to access MDCAUSE CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t mdcause:2;                     /*!< bit:     0..1   More detailed exception information as MCAUSE supplement */
+        rv_csr_t _reserved0:__RISCV_XLEN-2;     /*!< bit:     2..XLEN-1 Reserved */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MDCAUSE_Type;
+
+/**
+ * \brief  Union type to access MMISC_CTRL CSR register.
  */
 typedef union {
     struct {
@@ -232,9 +243,32 @@ typedef union {
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MMISCCTRL_Type;
 
+typedef CSR_MMISCCTRL_Type CSR_MMISCCTL_Type;
 
 /**
- * \brief  Union type to access MSAVESTATUS configure register.
+ * \brief  Union type to access MCACHE_CTL CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t ic_en:1;                       /*!< I-Cache enable */
+        rv_csr_t ic_scpd_mod:1;                 /*!< Scratchpad mode, 0: Scratchpad as ICache Data RAM, 1: Scratchpad as ILM SRAM */
+        rv_csr_t ic_ecc_en:1;                   /*!< I-Cache ECC enable */
+        rv_csr_t ic_ecc_excp_en:1;              /*!< I-Cache 2bit ECC error exception enable */
+        rv_csr_t ic_rwtecc:1;                   /*!< Control I-Cache Tag Ram ECC code injection */
+        rv_csr_t ic_rwdecc:1;                   /*!< Control I-Cache Data Ram ECC code injection */
+        rv_csr_t _reserved0:10;
+        rv_csr_t dc_en:1;                       /*!< DCache enable */
+        rv_csr_t dc_ecc_en:1;                   /*!< D-Cache ECC enable */
+        rv_csr_t dc_ecc_excp_en:1;              /*!< D-Cache 2bit ECC error exception enable */
+        rv_csr_t dc_rwtecc:1;                   /*!< Control D-Cache Tag Ram ECC code injection */
+        rv_csr_t dc_rwdecc:1;                   /*!< Control D-Cache Data Ram ECC code injection */
+        rv_csr_t _reserved1:__RISCV_XLEN-21;
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MCACHECTL_Type;
+
+/**
+ * \brief  Union type to access MSAVESTATUS CSR register.
  */
 typedef union {
     struct {
@@ -254,6 +288,146 @@ typedef union {
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t w;                                 /*!< Type      used for csr data access */
 } CSR_MSAVESTATUS_Type;
+
+/**
+ * \brief  Union type to access MILM_CTL CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t ilm_en:1;                      /*!< ILM enable */
+        rv_csr_t ilm_ecc_en:1;                  /*!< ILM ECC eanble */
+        rv_csr_t ilm_ecc_excp_en:1;             /*!< ILM ECC exception enable */
+        rv_csr_t ilm_rwecc:1;                   /*!< Control mecc_code write to ilm, simulate error injection */
+        rv_csr_t _reserved0:6;                  /*!< Reserved */
+        rv_csr_t ilm_bpa:__RISCV_XLEN-10;       /*!< ILM base address */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MILMCTL_Type;
+
+/**
+ * \brief  Union type to access MDLM_CTL CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t dlm_en:1;                      /*!< DLM enable */
+        rv_csr_t dlm_ecc_en:1;                  /*!< DLM ECC eanble */
+        rv_csr_t dlm_ecc_excp_en:1;             /*!< DLM ECC exception enable */
+        rv_csr_t dlm_rwecc:1;                   /*!< Control mecc_code write to dlm, simulate error injection */
+        rv_csr_t _reserved0:6;                  /*!< Reserved */
+        rv_csr_t dlm_bpa:__RISCV_XLEN-10;       /*!< DLM base address */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MDLMCTL_Type;
+
+/**
+ * \brief  Union type to access MCFG_INFO CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t tee:1;                         /*!< TEE present */
+        rv_csr_t ecc:1;                         /*!< ECC present */
+        rv_csr_t clic:1;                        /*!< CLIC present */
+        rv_csr_t plic:1;                        /*!< PLIC present */
+        rv_csr_t fio:1;                         /*!< FIO present */
+        rv_csr_t ppi:1;                         /*!< PPI present */
+        rv_csr_t nice:1;                        /*!< NICE present */
+        rv_csr_t ilm:1;                         /*!< ILM present */
+        rv_csr_t dlm:1;                         /*!< DLM present */
+        rv_csr_t icache:1;                      /*!< ICache present */
+        rv_csr_t dcache:1;                      /*!< DCache present */
+        rv_csr_t _reserved0:__RISCV_XLEN-11;
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MCFGINFO_Type;
+
+/**
+ * \brief  Union type to access MICFG_INFO CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t set:4;                         /*!< I-Cache sets per way */
+        rv_csr_t way:3;                         /*!< I-Cache way */
+        rv_csr_t lsize:3;                       /*!< I-Cache line size */
+        rv_csr_t cache_ecc:1;                   /*!< I-Cache ECC present */
+        rv_csr_t _reserved0:5;
+        rv_csr_t lm_size:5;                     /*!< ILM size, need to be 2^n size */
+        rv_csr_t lm_xonly:1;                    /*!< ILM Execute only permission */
+        rv_csr_t lm_ecc:1;                      /*!< ILM ECC present */
+        rv_csr_t _reserved1:__RISCV_XLEN-23;
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MICFGINFO_Type;
+
+/**
+ * \brief  Union type to access MDCFG_INFO CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t set:4;                         /*!< D-Cache sets per way */
+        rv_csr_t way:3;                         /*!< D-Cache way */
+        rv_csr_t lsize:3;                       /*!< D-Cache line size */
+        rv_csr_t cache_ecc:1;                   /*!< D-Cache ECC present */
+        rv_csr_t _reserved0:5;
+        rv_csr_t lm_size:5;                     /*!< DLM size, need to be 2^n size */
+        rv_csr_t lm_xonly:1;                    /*!< DLM Execute only permission */
+        rv_csr_t lm_ecc:1;                      /*!< DLM ECC present */
+        rv_csr_t _reserved1:__RISCV_XLEN-23;
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MDCFGINFO_Type;
+
+/**
+ * \brief  Union type to access MPPICFG_INFO CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t _reserved0:1;                  /*!< Reserved */
+        rv_csr_t ppi_size:5;                    /*!< PPI size, need to be 2^n size */
+        rv_csr_t _reserved1:4;                  /*!< Reserved */
+        rv_csr_t ppi_bpa:__RISCV_XLEN-10;       /*!< PPI base address */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MPPICFGINFO_Type;
+
+/**
+ * \brief  Union type to access MFIOCFG_INFO CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t _reserved0:1;                  /*!< Reserved */
+        rv_csr_t fio_size:5;                    /*!< FIO size, need to be 2^n size */
+        rv_csr_t _reserved1:4;                  /*!< Reserved */
+        rv_csr_t fio_bpa:__RISCV_XLEN-10;       /*!< FIO base address */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MFIOCFGINFO_Type;
+
+/**
+ * \brief  Union type to access MECC_LOCK CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t ecc_lock:1;                    /*!< RW permission, ECC Lock configure */
+        rv_csr_t _reserved0:__RISCV_XLEN-1;     /*!< Reserved */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MECCLOCK_Type;
+
+/**
+ * \brief  Union type to access MECC_CODE CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t code:9;                        /*!< Used to inject ECC check code */
+        rv_csr_t _reserved0:7;                  /*!< Reserved */
+        rv_csr_t ramid:5;                       /*!< Indicate 2bit ECC error, software can clear these bits */
+        rv_csr_t _reserved1:3;                  /*!< Reserved */
+        rv_csr_t sramid:5;                      /*!< Indicate 1bit ECC error, software can clear these bits */
+        rv_csr_t _reserved2:__RISCV_XLEN-29;    /*!< Reserved */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MECCCODE_Type;
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_Base_Registers */
 
 /* ###########################  Core Function Access  ########################### */

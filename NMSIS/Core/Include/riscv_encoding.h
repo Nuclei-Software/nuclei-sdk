@@ -31,6 +31,7 @@
  * The following macros are used for CSR encodings
  *   @{
  */
+/* === Standard CSR bit mask === */
 #define MSTATUS_UIE         0x00000001
 #define MSTATUS_SIE         0x00000002
 #define MSTATUS_HIE         0x00000004
@@ -143,6 +144,10 @@
 #define MIE_HEIE            MIP_HEIP
 #define MIE_MEIE            MIP_MEIP
 
+/* === P-ext CSR bit mask === */
+
+#define UCODE_OV            (0x1)
+
 /* === Nuclei custom CSR bit mask === */
 
 #define WFE_WFE                     (0x1)
@@ -153,9 +158,15 @@
 #define MCOUNTINHIBIT_CY            (1<<0)
 
 #define MILM_CTL_ILM_BPA            (((1ULL<<((__riscv_xlen)-10))-1)<<10)
+#define MILM_CTL_ILM_RWECC          (1<<3)
+#define MILM_CTL_ILM_ECC_EXCP_EN    (1<<2)
+#define MILM_CTL_ILM_ECC_EN         (1<<1)
 #define MILM_CTL_ILM_EN             (1<<0)
 
 #define MDLM_CTL_DLM_BPA            (((1ULL<<((__riscv_xlen)-10))-1)<<10)
+#define MDLM_CTL_DLM_RWECC          (1<<3)
+#define MDLM_CTL_DLM_ECC_EXCP_EN    (1<<2)
+#define MDLM_CTL_DLM_ECC_EN         (1<<1)
 #define MDLM_CTL_DLM_EN             (1<<0)
 
 #define MSUBM_PTYP                  (0x3<<8)
@@ -169,7 +180,15 @@
 
 #define MCACHE_CTL_IC_EN            (1<<0)
 #define MCACHE_CTL_IC_SCPD_MOD      (1<<1)
+#define MCACHE_CTL_IC_ECC_EN        (1<<2)
+#define MCACHE_CTL_IC_ECC_EXCP_EN   (1<<3)
+#define MCACHE_CTL_IC_RWTECC        (1<<4)
+#define MCACHE_CTL_IC_RWDECC        (1<<5)
 #define MCACHE_CTL_DC_EN            (1<<16)
+#define MCACHE_CTL_DC_ECC_EN        (1<<17)
+#define MCACHE_CTL_DC_ECC_EXCP_EN   (1<<18)
+#define MCACHE_CTL_DC_RWTECC        (1<<19)
+#define MCACHE_CTL_DC_RWDECC        (1<<20)
 
 #define MTVT2_MTVT2EN               (1<<0)
 #define MTVT2_COMMON_CODE_ENTRY     (((1ULL<<((__riscv_xlen)-2))-1)<<2)
@@ -189,19 +208,33 @@
 #define MICFG_IC_SET                (0xF<<0)
 #define MICFG_IC_WAY                (0x7<<4)
 #define MICFG_IC_LSIZE              (0x7<<7)
+#define MICFG_IC_ECC                (0x1<<10)
 #define MICFG_ILM_SIZE              (0x1F<<16)
-#define MICFG_ILM_XONLY             (1<<21)
+#define MICFG_ILM_XONLY             (0x1<<21)
+#define MICFG_ILM_ECC               (0x1<<22)
 
 #define MDCFG_DC_SET                (0xF<<0)
 #define MDCFG_DC_WAY                (0x7<<4)
 #define MDCFG_DC_LSIZE              (0x7<<7)
+#define MDCFG_DC_ECC                (0x1<<10)
 #define MDCFG_DLM_SIZE              (0x1F<<16)
+#define MDCFG_DLM_ECC               (0x1<<21)
 
 #define MPPICFG_INFO_PPI_SIZE       (0x1F<<1)
 #define MPPICFG_INFO_PPI_BPA        (((1ULL<<((__riscv_xlen)-10))-1)<<10)
 
 #define MFIOCFG_INFO_FIO_SIZE       (0x1F<<1)
 #define MFIOCFG_INFO_FIO_BPA        (((1ULL<<((__riscv_xlen)-10))-1)<<10)
+
+#define MECC_LOCK_ECC_LOCK          (0x1)
+
+#define MECC_CODE_CODE              (0x1FF)
+#define MECC_CODE_RAMID             (0x1F<<16)
+#define MECC_CODE_SRAMID            (0x1F<<24)
+
+#define CCM_SUEN_SUEN               (0x1<<0)
+#define CCM_DATA_DATA               (0x7<<0)
+#define CCM_COMMAND_COMMAND         (0x1F<<0)
 
 #define SIP_SSIP MIP_SSIP
 #define SIP_STIP MIP_STIP
@@ -230,12 +263,6 @@
 #define IRQ_COP      12
 #define IRQ_HOST     13
 
-#define DEFAULT_RSTVEC     0x00001000
-#define DEFAULT_NMIVEC     0x00001004
-#define DEFAULT_MTVEC      0x00001010
-#define CONFIG_STRING_ADDR 0x0000100C
-#define EXT_IO_BASE        0x40000000
-#define DRAM_BASE          0x80000000
 
 /* === FPU FRM Rounding Mode === */
 /** FPU Round to Nearest, ties to Even*/
@@ -313,7 +340,6 @@
 #define RISCV_PGSIZE (1 << RISCV_PGSHIFT)
 
 #endif /* __riscv */
-
 
 /**
  * \defgroup NMSIS_Core_CSR_Registers    Core CSR Registers
@@ -548,10 +574,14 @@
 #define CSR_MSCRATCHCSWL        0x349
 #define CSR_MCLICBASE           0x350
 
+/* === P-Extension Registers === */
+#define CSR_UCODE               0x801
+
 /* === Nuclei custom CSR Registers === */
 #define CSR_MCOUNTINHIBIT       0x320
 #define CSR_MILM_CTL            0x7C0
 #define CSR_MDLM_CTL            0x7C1
+#define CSR_MECC_CODE           0x7C2
 #define CSR_MNVEC               0x7C3
 #define CSR_MSUBM               0x7C4
 #define CSR_MDCAUSE             0x7C9
@@ -564,6 +594,8 @@
 #define CSR_MSAVECAUSE2         0x7DA
 #define CSR_MSAVEDCAUSE1        0x7DB
 #define CSR_MSAVEDCAUSE2        0x7DC
+#define CSR_MTLB_CTL            0x7DD
+#define CSR_MECC_LOCK           0x7DE
 #define CSR_PUSHMSUBM           0x7EB
 #define CSR_MTVT2               0x7EC
 #define CSR_JALMNXTI            0x7ED
@@ -577,6 +609,20 @@
 #define CSR_MICFG_INFO          0xFC0
 #define CSR_MDCFG_INFO          0xFC1
 #define CSR_MCFG_INFO           0xFC2
+#define CSR_MTLBCFG_INFO        0xFC3
+
+/* === Nuclei CCM Registers === */
+#define CSR_CCM_MBEGINADDR      0x7CB
+#define CSR_CCM_MCOMMAND        0x7CC
+#define CSR_CCM_MDATA           0x7CD
+#define CSR_CCM_SUEN            0x7CE
+#define CSR_CCM_SBEGINADDR      0x5CB
+#define CSR_CCM_SCOMMAND        0x5CC
+#define CSR_CCM_SDATA           0x5CD
+#define CSR_CCM_UBEGINADDR      0x4CB
+#define CSR_CCM_UCOMMAND        0x4CC
+#define CSR_CCM_UDATA           0x4CD
+#define CSR_CCM_FPIPE           0x4CF
 
 /** @} */ /** End of Doxygen Group NMSIS_Core_CSR_Registers **/
 
