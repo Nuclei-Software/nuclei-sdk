@@ -1,0 +1,67 @@
+## Package Base Information
+name: bsp-nsdk_gd32vf103c_t_display
+owner: nuclei
+description: LILYGO TTGO T-Display-GD32 Board Support Package
+type: bsp
+keywords:
+  - board
+  - risc-v
+  - nuclei
+license: Apache-2.0
+homepage: http://www.lilygo.cn/prod_view.aspx?TypeId=50033&Id=1251&FId=t3:50033:3
+
+packinfo:
+  vendor: Lilygo
+  name: LILYGO TTGO T-Display-GD32 Board
+  doc:
+    website: http://www.lilygo.cn/prod_view.aspx?TypeId=50033&Id=1251&FId=t3:50033:3
+    sch: https://github.com/Xinyuan-LilyGO/LilyGO-T-DisplayGD32/blob/master/Schematic/T_Display_GD32_Schematic.pdf
+    usermanual: https://doc.nucleisys.com/nuclei_sdk/design/board/gd32vf103c_t_display.html
+    extra:
+      - uri: # file path or web link
+        description: # description
+
+## Package Dependency
+dependencies:
+  - name: ssp-nsdk_gd32vf103
+    version:
+
+## Package Configurations
+configuration:
+  download_mode:
+    default_value: flashxip
+    type: choice
+    global: true
+    description: Download/Run Mode
+    choices:
+      - name: flashxip
+        description: FLASHXIP download mode, program will to be download into flash and run directly in Flash
+
+## Source Code Management
+codemanage:
+  installdir: gd32vf103c_t_display
+  copyfiles:
+    - path: ["Source/", "Include/", "openocd_gd32vf103.cfg"]
+  incdirs:
+    - path: ["Include/"]
+
+## Set Configuration for other packages
+setconfig:
+
+## Debug Configuration for this board
+debugconfig:
+  - type: openocd
+    description: Nuclei OpenOCD
+    configs:
+      - key: config
+        value: "openocd_gd32vf103.cfg"
+
+buildconfig:
+  - type: gcc
+    linkscript:
+      - script: "Source/GCC/gcc_gd32vf103_${download_mode}.ld"
+    common_flags:
+      - flags:
+    common_defines:
+      - defines: DOWNLOAD_MODE=DOWNLOAD_MODE_$(upper(${download_mode}))
+      - defines: DOWNLOAD_MODE_STRING=\"$(upper(${download_mode}))\"

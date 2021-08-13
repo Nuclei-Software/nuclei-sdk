@@ -1,0 +1,217 @@
+## Package Base Information
+name: ssp-nsdk_demosoc
+owner: nuclei
+description: Nuclei Demosoc Support Package
+type: ssp
+keywords:
+  - soc
+  - risc-v
+  - nuclei
+license: Apache-2.0
+homepage: https://nucleisys.com/developboard.php#ddr200t
+
+packinfo:
+  core_vendor: Nuclei
+  vendor: Nuclei
+  name: Nuclei FPGA Evaluation Demo SoC
+  doc:
+    website: https://nucleisys.com/developboard.php#ddr200t # Website
+    datasheet: https://nucleisys.com/developboard.php#ddr200t # SoC datasheet
+    usermanual: https://nucleisys.com/developboard.php#ddr200t # User Manual
+    extra:
+      - uri: # file path or web link
+        description: # description
+
+## Package Dependency
+dependencies:
+  - name: csp-nsdk_nmsis
+    version:
+
+## Package Configurations
+configuration:
+  nuclei_core:
+    default_value: n307fd
+    type: choice
+    global: true
+    description: Nuclei RISC-V Core
+    choices:
+      - name: n201
+        arch: rv32iac
+        abi: ilp32
+        description: N201 Core(ARCH=rv32iac, ABI=ilp32)
+      - name: n201e
+        arch: rv32eac
+        abi: ilp32e
+        description: N201E Core(ARCH=rv32eac, ABI=ilp32e)
+      - name: n203
+        arch: rv32imac
+        abi: ilp32
+        description: N203 Core(ARCH=rv32imac, ABI=ilp32)
+      - name: n203e
+        arch: rv32emac
+        abi: ilp32e
+        description: N203E Core(ARCH=rv32emac, ABI=ilp32e)
+      - name: n205
+        arch: rv32imac
+        abi: ilp32
+        description: N205 Core(ARCH=rv32imac, ABI=ilp32)
+      - name: n205e
+        arch: rv32emac
+        abi: ilp32e
+        description: N205E Core(ARCH=rv32emac, ABI=ilp32e)
+      - name: n305
+        arch: rv32imac
+        abi: ilp32
+        description: N305 Core(ARCH=rv32imac, ABI=ilp32)
+      - name: n307
+        arch: rv32imafc
+        abi: ilp32f
+        description: N307 Core(ARCH=rv32imafc, ABI=ilp32f)
+      - name: n307fd
+        arch: rv32imafdc
+        abi: ilp32d
+        description: N307FD Core(ARCH=rv32imafdc, ABI=ilp32d)
+      - name: n600
+        arch: rv32imac
+        abi: ilp32
+        description: N600 Core(ARCH=rv32imac, ABI=ilp32)
+      - name: n600f
+        arch: rv32imafc
+        abi: ilp32f
+        description: N600F Core(ARCH=rv32imafc, ABI=ilp32f)
+      - name: n600fd
+        arch: rv32imafdc
+        abi: ilp32d
+        description: N600FD Core(ARCH=rv32imafdc, ABI=ilp32d)
+      - name: nx600
+        arch: rv64imac
+        abi: lp64
+        description: NX600 Core(ARCH=rv64imac, ABI=lp64)
+      - name: nx600f
+        arch: rv64imafc
+        abi: lp64f
+        description: NX600F Core(ARCH=rv64imafc, ABI=lp64f)
+      - name: nx600fd
+        arch: rv64imafdc
+        abi: lp64d
+        description: NX600FD Core(ARCH=rv64imafdc, ABI=lp64d)
+      - name: ux600
+        arch: rv64imac
+        abi: lp64
+        description: UX600 Core(ARCH=rv64imac, ABI=lp64)
+      - name: ux600f
+        arch: rv64imafc
+        abi: lp64f
+        description: UX600F Core(ARCH=rv64imafc, ABI=lp64f)
+      - name: ux600fd
+        arch: rv64imafdc
+        abi: lp64d
+        description: UX600FD Core(ARCH=rv64imafdc, ABI=lp64d)
+      - name: n900
+        arch: rv32imac
+        abi: ilp32
+        description: N900 Core(ARCH=rv32imac, ABI=ilp32)
+      - name: n900f
+        arch: rv32imafc
+        abi: ilp32f
+        description: N900F Core(ARCH=rv32imafc, ABI=ilp32f)
+      - name: n900fd
+        arch: rv32imafdc
+        abi: ilp32d
+        description: N900FD Core(ARCH=rv32imafdc, ABI=ilp32d)
+      - name: nx900
+        arch: rv64imac
+        abi: lp64
+        description: NX900 Core(ARCH=rv64imac, ABI=lp64)
+      - name: nx900f
+        arch: rv64imafc
+        abi: lp64f
+        description: NX900F Core(ARCH=rv64imafc, ABI=lp64f)
+      - name: nx900fd
+        arch: rv64imafdc
+        abi: lp64d
+        description: NX900FD Core(ARCH=rv64imafdc, ABI=lp64d)
+      - name: ux900
+        arch: rv64imac
+        abi: lp64
+        description: UX900 Core(ARCH=rv64imac, ABI=lp64)
+      - name: ux900f
+        arch: rv64imafc
+        abi: lp64f
+        description: UX900F Core(ARCH=rv64imafc, ABI=lp64f)
+      - name: ux900fd
+        arch: rv64imafdc
+        abi: lp64d
+        description: UX900FD Core(ARCH=rv64imafdc, ABI=lp64d)
+  dsp_present:
+    default_value: 0
+    type: checkbox
+    global: true
+    description: P-Extension(DSP) Present
+  newlibsel:
+    default_value: nano
+    type: choice
+    global: true
+    description: Newlib Selection
+    choices:
+      - name: normal
+        description: Normal Newlib
+      - name: nano_with_printfloat
+        description: Newlib Nano with print float support
+      - name: nano
+        description: Newlib Nano
+
+## Source Code Management
+codemanage:
+  installdir: demosoc
+  copyfiles:
+    - path: ["Source/", "Include/", "demosoc.svd"]
+  incdirs:
+    - path: ["Include/"]
+
+## Set Configuration for other packages
+setconfig:
+  - config: nmsislibarch
+    value: ${nuclei_core.arch}p
+    condition: $( ${dsp_present} == 1 )
+  - config: nmsislibarch
+    value: ${nuclei_core.arch}
+    condition: $( ${dsp_present} == 0 )
+
+## Debug Configuration for this board
+debugconfig:
+  - type: openocd
+    description: Nuclei OpenOCD
+    svd: demosoc.svd
+
+  - type: qemu
+    description: Nuclei QEMU
+    svd: demosoc.svd
+
+## Build Configuration
+buildconfig:
+  - type: gcc
+    description: Nuclei GNU Toolchain
+    cross_prefix: riscv-nuclei-elf- # optional
+    common_flags: # flags need to be combined together across all packages
+      - flags: -g -fno-common -ffunction-sections -fdata-sections
+      - flags: -march=${nuclei_core.arch} -mabi=${nuclei_core.abi} -mcmodel=medany
+    ldflags:
+      - flags: -lstdc++ -nostartfiles --specs=nosys.specs
+      - flags: --specs=nano.specs
+        condition: $( ${newlibsel} != "normal" )
+      - flags: -u _printf_float
+        condition: $( ${newlibsel} != "nano_with_printfloat" )
+      - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
+    cflags:
+    asmflags:
+    cxxflags:
+    common_defines:
+      - defines: __RISCV_FEATURE_DSP=1
+        condition: $( ${dsp_present} == 1 )
+    prebuild_steps: # could be override by app/bsp type
+      command:
+      description:
+    postbuild_steps: # could be override by app/bsp type
+      command:
+      description:

@@ -1,0 +1,25 @@
+## Package Base Information
+name: sdk-nuclei_sdk
+owner: nuclei
+version: 0.3.2
+description: Nuclei N/NX/UX Embedded Software Development Kit
+type: sdk
+keywords:
+  - framework
+  - sdk
+  - risc-v
+license: Apache-2.0
+homepage: https://github.com/Nuclei-Software/nuclei-sdk
+contributors:
+  - Huaqi Fang, 578567190@qq.com
+
+## Source Code Management
+codemanage:
+  installdir: nuclei_sdk
+
+## Package Configurations
+configuration:
+
+## Package Dependencies
+dependencies:
+

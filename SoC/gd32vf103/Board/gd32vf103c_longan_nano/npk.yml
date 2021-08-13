@@ -1,0 +1,80 @@
+## Package Base Information
+name: bsp-nsdk_gd32vf103c_longan_nano
+owner: nuclei
+description: Sipeed Longan Nano Board Support Package
+type: bsp
+keywords:
+  - board
+  - risc-v
+  - nuclei
+license: Apache-2.0
+homepage: https://longan.sipeed.com/en/
+
+packinfo:
+  vendor: Sipeed
+  name: Sipeed Longan Nano Board
+  doc:
+    website: https://longan.sipeed.com/en/
+    sch: http://dl.sipeed.com/shareURL/LONGAN/Nano/HDK/Longan%20Nano%202663
+    usermanual: https://doc.nucleisys.com/nuclei_sdk/design/board/gd32vf103c_longan_nano.html
+    extra:
+      - uri: # file path or web link
+        description: # description
+
+## Package Dependency
+dependencies:
+  - name: ssp-nsdk_gd32vf103
+    version:
+
+## Package Configurations
+configuration:
+  board_variant:
+    default_value: normal
+    type: choice
+    global: true
+    description: Board Variant
+    choices:
+      - name: normal
+        description: GD32VF103CBT6 with 128k Flash / 32k RAM
+      - name: lite
+        description: GD32VF103C8T6 with 64k Flash / 20k RAM
+  download_mode:
+    default_value: flashxip
+    type: choice
+    global: true
+    description: Download/Run Mode
+    choices:
+      - name: flashxip
+        description: FLASHXIP download mode, program will to be download into flash and run directly in Flash
+
+## Source Code Management
+codemanage:
+  installdir: gd32vf103c_longan_nano
+  copyfiles:
+    - path: ["Source/", "Include/", "openocd_gd32vf103.cfg"]
+  incdirs:
+    - path: ["Include/"]
+
+## Set Configuration for other packages
+setconfig:
+
+## Debug Configuration for this board
+debugconfig:
+  - type: openocd
+    description: Nuclei OpenOCD
+    configs:
+      - key: config
+        value: "openocd_gd32vf103.cfg"
+
+buildconfig:
+  - type: gcc
+    linkscript:
+      - script: "Source/GCC/gcc_gd32vf103xb_flashxip.ld"
+        condition: $( ${board_variant} == "normal" )
+      - script: "Source/GCC/gcc_gd32vf103x8_flashxip.ld"
+        condition: $( ${board_variant} == "lite" )
+    common_flags:
+      - flags:
+    common_defines:
+      - defines: DOWNLOAD_MODE=DOWNLOAD_MODE_$(upper(${download_mode}))
+      - defines: DOWNLOAD_MODE_STRING=\"$(upper(${download_mode}))\"

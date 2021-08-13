@@ -1,0 +1,110 @@
+## Package Base Information
+name: ssp-nsdk_gd32vf103
+owner: nuclei
+description: GD32VF103 SoC Support Package
+type: ssp
+keywords:
+  - soc
+  - risc-v
+  - nuclei
+license: Apache-2.0
+homepage: https://rvmcu.com/site/gd32vf103/
+
+packinfo:
+  core_vendor: Nuclei
+  vendor: GigaDevice
+  name: GD32VF103
+  doc:
+    website: https://www.gigadevice.com/products/microcontrollers/gd32/risc-v/mainstream-line/gd32vf103-series/ # Website
+    datasheet: http://www.gd32mcu.com/en/download/0?kw=GD32VF1 # SoC datasheet
+    usermanual: http://www.gd32mcu.com/en/download/0?kw=GD32VF1 # User Manual
+    extra:
+
+## Package Dependency
+dependencies:
+  - name: csp-nsdk_nmsis
+    version:
+
+## Package Configurations
+configuration:
+  gd32vf103_usb:
+    default_value: 0
+    global: true
+    type: checkbox
+    description: USB Driver Present
+  nuclei_core:
+    default_value: n205
+    type: choice
+    global: true
+    description: Nuclei RISC-V Core
+    choices:
+      - name: n205
+        arch: rv32imac
+        abi: ilp32
+        description: N205/Bumblebee Core(ARCH=rv32imac, ABI=ilp32)
+  newlibsel:
+    default_value: nano
+    type: choice
+    global: true
+    description: Newlib Selection
+    choices:
+      - name: normal
+        description: Normal Newlib
+      - name: nano_with_printfloat
+        description: Newlib Nano with print float support
+      - name: nano
+        description: Newlib Nano
+
+## Source Code Management
+codemanage:
+  installdir: gd32vf103
+  copyfiles:
+    - path: ["Source/*.c", "Source/Drivers/*.c", "Source/GCC/", "Source/Stubs/", "Include/*.h", "gd32vf103.svd"]
+    - path: ["Source/Drivers/Usb/*.c", "Include/Usb/*.h"]
+      condition: $( ${gd32vf103_usb} == 1 )
+  incdirs:
+    - path: ["Include"]
+    - path: ["Include/Usb/"]
+      condition: $( ${gd32vf103_usb} == 1 )
+
+## Set Configuration for other packages
+setconfig:
+  - config: nmsislibarch
+    value: ${nuclei_core.arch}
+
+## Debug Configuration for this board
+debugconfig:
+  - type: openocd
+    description: Nuclei OpenOCD
+    svd: gd32vf103.svd
+
+  - type: qemu
+    description: Nuclei QEMU
+    svd: gd32vf103.svd
+
+## Build Configuration
+buildconfig:
+  - type: gcc
+    description: Nuclei RISC-V GNU Toolchain #must
+    cross_prefix: riscv-nuclei-elf- # optional
+    common_flags: # flags need to be combined together across all packages
+      - flags: -g -fno-common -ffunction-sections -fdata-sections
+      - flags: -march=${nuclei_core.arch} -mabi=${nuclei_core.abi} -mcmodel=medany
+    ldflags:
+      - flags: -lstdc++ -nostartfiles --specs=nosys.specs
+      - flags: --specs=nano.specs
+        condition: $( ${newlibsel} != "normal" )
+      - flags: -u _printf_float
+        condition: $( ${newlibsel} != "nano_with_printfloat" )
+      - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
+    cflags:
+    asmflags:
+    cxxflags:
+    common_defines:
+      - defines:
+    prebuild_steps: # could be override by app/bsp type
+      command:
+      description:
+    postbuild_steps: # could be override by app/bsp type
+      command:
+      description:
