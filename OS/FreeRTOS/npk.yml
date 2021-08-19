@@ -28,3 +28,9 @@ codemanage:
     - path: ["Source/include", "Source/portable/GCC"]
   libdirs:
   ldlibs:
+
+## Build Configuration
+buildconfig:
+  - type: gcc
+    common_defines:
+      - defines: RTOS_FREERTOS

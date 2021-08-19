@@ -72,7 +72,7 @@ setconfig:
   - config: nmsislibarch
     value: ${nuclei_core.arch}
 
-## Debug Configuration for this board
+## Debug Configuration for this SoC
 debugconfig:
   - type: openocd
     description: Nuclei OpenOCD
