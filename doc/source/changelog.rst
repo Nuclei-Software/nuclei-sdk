@@ -3,6 +3,18 @@
 Changelog
 =========
 
+V0.3.3
+------
+
+This is release version ``0.3.3`` of Nuclei SDK.
+
+* NPK
+
+    - Fix NPK issues related to QEMU for demosoc and gd32vf103, and RTOS macro definitions in NPK
+    - This SDK release required Nuclei Studio 2021.09-ENG1, 2021.08.18 build version
+
+For detailed changes, please check commit histories since 0.3.2 release.
+
 V0.3.2
 ------
 
