@@ -84,6 +84,7 @@ deploy_website:
   image: $IMAGE:$IMAGE_TAG
   stage: build
   before_script:
+    - apt update
     - apt install -y python3 make python3-pip
     - pip3 install -r tools/scripts/requirements.txt
     - which riscv-nuclei-elf-gcc && riscv-nuclei-elf-gcc --version
