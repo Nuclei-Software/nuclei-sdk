@@ -68,7 +68,7 @@ debugconfig:
        - key: riscv_abi
          value: ${nuclei_core.abi}
        - key: machine
-         value: gd32vf103_eval
+         value: gd32vf103v_eval
 
 buildconfig:
   - type: gcc
