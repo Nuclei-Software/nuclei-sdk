@@ -3,6 +3,23 @@
 Changelog
 =========
 
+V0.3.4-dev
+----------
+
+This is version ``0.3.4-dev`` of Nuclei SDK, which is still in development.
+
+* CI
+
+    - Fix gitlab ci fail during install required software
+
+* Tools
+
+    - Fix tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json description issue for dsp enabled build configs
+
+
+For detailed changes, please check commit histories since 0.3.3 release.
+
+
 V0.3.3
 ------
 
