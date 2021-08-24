@@ -154,17 +154,21 @@ SECTIONS
   } >rom AT>rom
 
 
+  /* NOTICE:
+   * The following data section VMA and LMA are the same,
+   * so there is no need to copy when startup
+   */
   .lalign         :
   {
     . = ALIGN(4);
     PROVIDE( _data_lma = . );
-  } >rom AT>rom
+  } >ram AT>ram
 
   .dalign         :
   {
     . = ALIGN(4);
     PROVIDE( _data = . );
-  } >ram AT>rom
+  } >ram AT>ram
 
   .data          :
   {
@@ -180,7 +184,7 @@ SECTIONS
     *(.srodata.cst4)
     *(.srodata.cst2)
     *(.srodata .srodata.*)
-  } >ram AT>rom
+  } >ram AT>ram
 
   . = ALIGN(4);
   PROVIDE( _edata = . );
