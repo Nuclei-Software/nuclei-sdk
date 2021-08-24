@@ -72,7 +72,6 @@ class nsdk_executor(nsdk_runner):
                 found_cfg = find_local_appconfig(appdir, appconfigs)
                 if found_cfg:
                     appcfg = appconfigs[found_cfg]
-                    appcfg = appconfigs[appdir]
                     # merge_global is True if not present
                     merge_global = appcfg.get("merge_global", True)
                     # Merge global config when merge_global is True
