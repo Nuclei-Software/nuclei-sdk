@@ -63,29 +63,6 @@ SECTIONS
     *(.gnu.linkonce.t.*)
   } >rom AT>rom
 
-  .rodata : ALIGN(4)
-  {
-    . = ALIGN(4);
-    *(.rdata)
-    *(.rodata .rodata.*)
-    /* section information for initial. */
-    . = ALIGN(4);
-    __rt_init_start = .;
-    KEEP(*(SORT(.rti_fn*)))
-    __rt_init_end = .;
-    /* section information for finsh shell */
-    . = ALIGN(4);
-    __fsymtab_start = .;
-    KEEP(*(FSymTab))
-    __fsymtab_end = .;
-    . = ALIGN(4);
-    __vsymtab_start = .;
-    KEEP(*(VSymTab))
-    __vsymtab_end = .;
-    *(.gnu.linkonce.r.*)
-
-  } >rom AT>rom
-
   .fini           :
   {
     KEEP (*(SORT_NONE(.fini)))
@@ -157,6 +134,7 @@ SECTIONS
   /* NOTICE:
    * The following data section VMA and LMA are the same,
    * so there is no need to copy when startup
+   * rodata is also placed in ram now.
    */
   .lalign         :
   {
@@ -168,6 +146,28 @@ SECTIONS
   {
     . = ALIGN(4);
     PROVIDE( _data = . );
+  } >ram AT>ram
+
+  .rodata : ALIGN(4)
+  {
+    . = ALIGN(4);
+    *(.rdata)
+    *(.rodata .rodata.*)
+    /* section information for initial. */
+    . = ALIGN(4);
+    __rt_init_start = .;
+    KEEP(*(SORT(.rti_fn*)))
+    __rt_init_end = .;
+    /* section information for finsh shell */
+    . = ALIGN(4);
+    __fsymtab_start = .;
+    KEEP(*(FSymTab))
+    __fsymtab_end = .;
+    . = ALIGN(4);
+    __vsymtab_start = .;
+    KEEP(*(VSymTab))
+    __vsymtab_end = .;
+    *(.gnu.linkonce.r.*)
   } >ram AT>ram
 
   .data          :
