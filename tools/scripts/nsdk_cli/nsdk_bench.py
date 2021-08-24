@@ -125,7 +125,7 @@ class nsdk_bench(nsdk_runner):
         global_parallel = config.get("parallel", "")
         global_cpobjs = config.get("copy_objects", False)
         global_run_config = config.get("run_config", dict())
-        global_checks = config.get("checks", None)
+        global_checks = config.get("checks", dict())
         rootdirs = config.get("appdirs", [])
         ignored_rootdirs = config.get("appdirs_ignore", [])
         if (isinstance(rootdirs, list) and isinstance(ignored_rootdirs, list)) == False:
