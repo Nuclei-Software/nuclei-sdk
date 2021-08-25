@@ -9,6 +9,15 @@ import serial
 import tempfile
 import json
 import argparse
+
+MARKDOWN_PLUGIN=True
+try:
+    import markdown
+except:
+    print("python markdown plugin not installed, please install it using pip install markdown")
+    MARKDOWN_PLUGIN=False
+
+
 from prettytable import *
 
 from nsdk_utils import *
@@ -185,14 +194,24 @@ def get_app_runresult(apprst):
         rstval = "-"
     return rsttype, rstval
 
-def generate_report(config, result, rptfile, logdir, runapp=False):
+def md2html(mdfile, htmlfile):
+    if MARKDOWN_PLUGIN == False or os.path.isfile(mdfile) == False:
+        return
+    with open(mdfile) as mdf:
+        mdtxt = mdf.read()
+        mdhtml = markdown.markdown(mdtxt, extensions=["extra"])
+        with open(htmlfile, 'w') as htf:
+            htf.write(mdhtml)
+
+def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
     if not(isinstance(config, dict) and isinstance(result, dict) and isinstance(rptfile, str)):
         return False
     report = analyze_report(config, result, runapp)
+    # generate markdown file
     with open(rptfile, "w") as rf:
-        rf.write("# Tested Nuclei SDK Applications/Test Cases\r\n")
+        rf.write("# Tested Nuclei SDK Applications/Test Cases\n\n")
         if len(report["passed"]) > 0:
-            rf.write("## Passed\r\n")
+            rf.write("\n## Passed\n\n")
             x = PrettyTable()
             x.set_style(MARKDOWN)
             x.field_names = ["App/Test Case", "All as Expected", "Build As Expected", "Run As Expected", "Build Status", "Run Status"]
@@ -201,8 +220,9 @@ def generate_report(config, result, rptfile, logdir, runapp=False):
                 x.add_row([app, app_sts["expected"], app_sts["exp_build"], app_sts["exp_run"], \
                     app_sts["build"], app_sts["run"]])
             rf.write(str(x))
+            rf.write("\n")
         if len(report["failed"]) > 0:
-            rf.write("\r\n## Failed\r\n")
+            rf.write("\n## Failed\n\n")
             x = PrettyTable()
             x.set_style(MARKDOWN)
             x.field_names = ["App/Test Case", "All as Expected", "Build As Expected", "Run As Expected", "Build Status", "Run Status"]
@@ -211,7 +231,8 @@ def generate_report(config, result, rptfile, logdir, runapp=False):
                 x.add_row([app, app_sts["expected"], app_sts["exp_build"], app_sts["exp_run"], \
                     app_sts["build"], app_sts["run"]])
             rf.write(str(x))
-        rf.write("\r\n# Build configurations\r\n")
+            rf.write("\n")
+        rf.write("\n# Build configurations\n\n")
         x = PrettyTable()
         x.set_style(MARKDOWN)
         x.field_names = ["Case Name", "Make Options"]
@@ -219,7 +240,8 @@ def generate_report(config, result, rptfile, logdir, runapp=False):
             make_options = " ".join([ "%s=%s"%(key, value) for key, value in report["configs"][cfgname].items() ])
             x.add_row([cfgname, make_options])
         rf.write(str(x))
-        rf.write("\r\n# Build and run status\r\n")
+        rf.write("\n")
+        rf.write("\n# Build and run status\n\n")
         x = PrettyTable()
         x.set_style(MARKDOWN)
         x.field_names = ["App/Test Case", "Case Name", "Build Status", "Run Status", "Type", "Value", "Total", "Text", "Data", "Bss"]
@@ -233,6 +255,7 @@ def generate_report(config, result, rptfile, logdir, runapp=False):
                 x.add_row([app, cfgname, bsts_md, rsts_md, apprsttype, apprstval, \
                     size["total"], size["text"], size["data"], size["bss"]])
         rf.write(str(x))
+        rf.write("\n")
         x = PrettyTable()
         x.set_style(MARKDOWN)
         x.field_names = ["App/Test Case", "Case Name", "Expected Build", "Expected Run"]
@@ -248,8 +271,12 @@ def generate_report(config, result, rptfile, logdir, runapp=False):
                     with_expect = True
                     x.add_row([app, cfgname, expected_build, expected_run])
         if with_expect:
-            rf.write("\r\n# Expected Build or Run Failed Cases\r\n")
+            rf.write("\n# Expected Build or Run Failed Cases\n\n")
             rf.write(str(x))
+            rf.write("\n")
+    # generate html from markdown
+    md2html(rptfile, rpthtml)
+    pass
 
 # check whether the result json is generate by nsdk_bench.py
 def is_bench_result(result):
@@ -295,6 +322,7 @@ def merge_all_config_and_result(logdir):
 def generate_report_for_logs(logdir, run=False):
     if logdir and os.path.isdir(logdir):
         reportfile =  os.path.join(logdir, "report.md")
+        reporthtml =  os.path.join(logdir, "report.html")
 
         all_mergedcfg, all_result = merge_all_config_and_result(logdir)
         if all_mergedcfg and all_result:
@@ -304,8 +332,10 @@ def generate_report_for_logs(logdir, run=False):
             print("Save all result file to %s" % (result_file))
             save_json(config_file, all_mergedcfg)
             save_json(result_file, all_result)
-            print("Save generated report file to %s" % (reportfile))
-            generate_report(all_mergedcfg, all_result, reportfile, logdir, run)
+            print("Save generated report markdown file to %s" % (reportfile))
+            if MARKDOWN_PLUGIN:
+                print("Save generated report html file to %s" % (reporthtml))
+            generate_report(all_mergedcfg, all_result, reportfile, reporthtml, logdir, run)
         else:
             print("Can't find any valid reports in %s generated by nsdk_bench.py" % (logdir))
     pass
