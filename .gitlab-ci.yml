@@ -12,7 +12,6 @@ default:
 
 stages:
   - build
-  - build
   - deploy
 
 ## Job for build document
@@ -96,6 +95,7 @@ deploy_website:
         IMAGE_TAG:
           - gcc10-ubuntu2004
   artifacts:
+    when: always
     name: "sdk_build-log-${CI_COMMIT_SHA::8}"
     paths:
       - logs
