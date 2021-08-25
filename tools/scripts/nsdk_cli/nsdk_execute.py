@@ -286,11 +286,13 @@ if __name__ == '__main__':
     save_results(appcfg, hwcfg, config, result, args.logdir)
     if result:
         csvfile = os.path.join(args.logdir, "result.csv")
-        csvlines = ["App, Case, build, run, total, text, data, bss"]
+        csvlines = ["App, buildstatus, runstatus, buildtime, runtime, total, text, data, bss"]
         for app in result:
             size = result[app]["size"]
             app_status = result[app]["status"]
-            csvline ="%s, %s, %s, %d, %d, %d, %d" % (app, app_status["build"], app_status.get("run", False), \
+            app_time = result[app]["time"]
+            csvline ="%s, %s, %s, %s, %s, %d, %d, %d, %d" % (app, app_status["build"], \
+                app_status.get("run", False), app_time.get("build", "-"), app_time.get("run", "-"), \
                 size["total"], size["text"], size["data"], size["bss"])
             csvlines.append(csvline)
         # save csv file

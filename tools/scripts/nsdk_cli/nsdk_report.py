@@ -153,14 +153,16 @@ def analyze_report(config, result, runapp=False):
 def generate_build_run_status_md(appresult, logdir, bold_false=True):
     if isinstance(appresult, dict) == False:
         if bold_false:
-            return "**False**", "**False**"
+            return "**False**", "**False**", "-", "-"
         else:
-            return "False", "False"
+            return "False", "False", "-", "-"
     else:
         appblog = appresult["logs"].get("build", None)
         apprlog = appresult["logs"].get("run", None)
         appbsts = appresult["status"].get("build", False)
         apprsts = appresult["status"].get("run", False)
+        appbtm = appresult["time"].get("build", "-")
+        apprtm = appresult["time"].get("run", "-")
         def gen_sts_md(sts, log, bold=True):
             if log:
                 log = os.path.relpath(log, logdir)
@@ -176,7 +178,7 @@ def generate_build_run_status_md(appresult, logdir, bold_false=True):
             return sts_md
         bsts_md = gen_sts_md(appbsts, appblog, bold_false)
         rsts_md = gen_sts_md(apprsts, apprlog, bold_false)
-        return bsts_md, rsts_md
+        return bsts_md, rsts_md, appbtm, apprtm
 
 def get_app_runresult(apprst):
     if not isinstance(apprst, dict):
@@ -244,15 +246,16 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
         rf.write("\n# Build and run status\n\n")
         x = PrettyTable()
         x.set_style(MARKDOWN)
-        x.field_names = ["App/Test Case", "Case Name", "Build Status", "Run Status", "Type", "Value", "Total", "Text", "Data", "Bss"]
+        x.field_names = ["App/Test Case", "Case Name", "Build Status", "Run Status", "Build Time", \
+                    "Run Time", "Type", "Value", "Total", "Text", "Data", "Bss"]
         apps_buildsts = result
         for app in apps_buildsts:
             app_sts = apps_buildsts[app]
             for cfgname in app_sts:
                 size = app_sts[cfgname]["size"]
                 apprsttype, apprstval = get_app_runresult(app_sts[cfgname].get("result", dict()))
-                bsts_md, rsts_md = generate_build_run_status_md(app_sts[cfgname], logdir, True)
-                x.add_row([app, cfgname, bsts_md, rsts_md, apprsttype, apprstval, \
+                bsts_md, rsts_md, appbtm, apprtm = generate_build_run_status_md(app_sts[cfgname], logdir, True)
+                x.add_row([app, cfgname, bsts_md, rsts_md, appbtm, apprtm, apprsttype, apprstval, \
                     size["total"], size["text"], size["data"], size["bss"]])
         rf.write(str(x))
         rf.write("\n")
