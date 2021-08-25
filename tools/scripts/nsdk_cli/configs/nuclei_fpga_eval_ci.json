@@ -49,7 +49,7 @@
     "appconfig": {
         "application/baremetal/demo_dsp": {
             "build_configs" : {
-                "n205-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n205", "DSP_ENABLE": "ON"},
+                "ne05-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n305", "DSP_ENABLE": "ON"},
                 "n307-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n307", "DSP_ENABLE": "ON"},
                 "n307fd-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n307fd", "DSP_ENABLE": "ON"},
                 "ux600-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "ux600", "DSP_ENABLE": "ON"},
