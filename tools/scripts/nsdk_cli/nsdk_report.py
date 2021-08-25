@@ -199,9 +199,24 @@ def get_app_runresult(apprst):
 def md2html(mdfile, htmlfile):
     if MARKDOWN_PLUGIN == False or os.path.isfile(mdfile) == False:
         return
+    css_style = \
+"""
+<style>
+table, th, td {
+    border: 1px solid #1132e791 !important;
+    border-collapse: collapse;
+    padding: 3px;
+    text-align: center;
+}
+td:first-child {
+    text-align: left;
+}
+</style>
+"""
     with open(mdfile) as mdf:
         mdtxt = mdf.read()
         mdhtml = markdown.markdown(mdtxt, extensions=["extra"])
+        mdhtml = css_style + mdhtml
         with open(htmlfile, 'w') as htf:
             htf.write(mdhtml)
 
