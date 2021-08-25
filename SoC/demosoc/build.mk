@@ -70,7 +70,18 @@ ifneq ($(words $(CORE_ARCH_ABI)), 2)
 $(error There is no coresponding ARCH_ABI setting for CORE $(CORE), please check Makefile.core)
 endif
 
+ifeq ($(DSP_ENABLE),ON)
+ifeq ($(VECTOR_ENABLE),ON)
+RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))pv
+else
+RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))p
+endif
+else
+ifeq ($(VECTOR_ENABLE),ON)
+RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))v
+endif
 RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))
+endif
 RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
 
 ##### Put your Source code Management configurations below #####

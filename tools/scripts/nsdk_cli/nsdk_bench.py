@@ -275,7 +275,8 @@ if __name__ == '__main__':
     if result:
         # Generate build or run report
         rptfile = os.path.join(args.logdir, "report.md")
-        generate_report(config, result, rptfile, args.logdir, args.run)
+        rpthtml = os.path.join(args.logdir, "report.html")
+        generate_report(config, result, rptfile, rpthtml, args.logdir, args.run)
         csvfile = os.path.join(args.logdir, "result.csv")
         csvlines = ["App, Case, build, run, total, text, data, bss"]
         for app in result:
