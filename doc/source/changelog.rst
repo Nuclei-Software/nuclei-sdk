@@ -14,12 +14,14 @@ This is version ``0.3.4-dev`` of Nuclei SDK, which is still in development.
 
 * Tools
 
-    - Fix tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json description issue for dsp enabled build configs
+    - Fix ``tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json`` description issue for dsp enabled build configs
+    - Generate html report when run ``tools/scripts/nsdk_cli/nsdk_bench.py``
 
 * SoC
 
     - For demosoc, if you choose ilm and ddr download mode, then the data section's LMA is equal to VMA now, and there
       will be no data copy for data section, bss section still need to set to zero.
+    - For demosoc, if you choose ilm and ddr download mode, The rodata section are now also placed in data section.
 
 
 For detailed changes, please check commit histories since 0.3.3 release.
