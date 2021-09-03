@@ -8,6 +8,7 @@
 *.bin
 *.log
 *.hex
+*.srec
 *.zip
 *.pyc
 .vscode
