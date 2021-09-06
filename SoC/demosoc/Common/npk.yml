@@ -188,6 +188,10 @@ debugconfig:
     description: Nuclei QEMU
     svd: demosoc.svd
 
+  - type: jlink
+    description: Segger Jlink
+    svd: demosoc.svd
+
 ## Build Configuration
 buildconfig:
   - type: gcc
