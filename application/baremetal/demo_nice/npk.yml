@@ -5,8 +5,9 @@ version:
 description: NICE Demo
 type: app
 keywords:
-  - app
-  - risc-v
+  - baremetal
+  - Nuclei NICE
+category: baremetal application
 license:
 homepage:
 

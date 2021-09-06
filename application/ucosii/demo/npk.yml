@@ -5,8 +5,9 @@ version:
 description: UCOSII Task Demo
 type: app
 keywords:
-  - app
-  - risc-v
+  - ucosii
+  - task demo
+category: ucosii application
 license:
 homepage:
 

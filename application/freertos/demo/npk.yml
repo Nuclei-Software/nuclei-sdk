@@ -5,8 +5,9 @@ version:
 description: FreeRTOS Task Demo
 type: app
 keywords:
-  - app
-  - risc-v
+  - freertos
+  - task demo
+category: freertos application
 license:
 homepage:
 

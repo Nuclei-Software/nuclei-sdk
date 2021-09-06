@@ -5,8 +5,9 @@ version:
 description: RISC-V DSP Demo
 type: app
 keywords:
-  - app
-  - risc-v
+  - baremetal
+  - riscv dsp
+category: baremetal application
 license:
 homepage:
 

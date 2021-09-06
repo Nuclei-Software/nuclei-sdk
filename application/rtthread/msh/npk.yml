@@ -5,8 +5,9 @@ version:
 description: RTThread MSH Demo
 type: app
 keywords:
-  - app
-  - risc-v
+  - rtthread
+  - msh demo
+category: rtthread application
 license:
 homepage:
 

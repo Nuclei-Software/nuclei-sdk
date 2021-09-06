@@ -5,8 +5,9 @@ version:
 description: Dhrystone Benchmark
 type: app
 keywords:
-  - app
-  - risc-v
+  - baremetal
+  - benchmark
+category: baremetal application
 license:
 homepage:
 

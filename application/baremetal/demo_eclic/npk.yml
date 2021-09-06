@@ -5,8 +5,9 @@ version:
 description: ECLIC Demo
 type: app
 keywords:
-  - app
-  - risc-v
+  - baremetal
+  - riscv eclic
+category: baremetal application
 license:
 homepage:
 

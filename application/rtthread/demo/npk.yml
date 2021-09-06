@@ -5,8 +5,9 @@ version:
 description: RTThread Task Demo
 type: app
 keywords:
-  - app
-  - risc-v
+  - rtthread
+  - task demo
+category: rtthread application
 license:
 homepage:
 

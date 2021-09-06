@@ -5,8 +5,9 @@ version:
 description: Helloworld
 type: app
 keywords:
-  - app
-  - risc-v
+  - baremetal
+  - get started
+category: baremetal application
 license:
 homepage:
 
