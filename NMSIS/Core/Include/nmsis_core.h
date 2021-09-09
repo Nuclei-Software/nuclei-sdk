@@ -62,13 +62,6 @@
 /* Include core base feature header file */
 #include "core_feature_base.h"
 
-#ifndef __NMSIS_GENERIC
-/* Include core eclic feature header file */
-#include "core_feature_eclic.h"
-/* Include core systimer feature header file */
-#include "core_feature_timer.h"
-#endif
-
 /* Include core fpu feature header file */
 #include "core_feature_fpu.h"
 /* Include core dsp feature header file */
@@ -80,6 +73,13 @@
 
 /* Include compatiable functions header file */
 #include "core_compatiable.h"
+
+#ifndef __NMSIS_GENERIC
+/* Include core eclic feature header file */
+#include "core_feature_eclic.h"
+/* Include core systimer feature header file */
+#include "core_feature_timer.h"
+#endif
 
 #ifdef __cplusplus
 }

@@ -707,18 +707,12 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetPriorityIRQ(IRQn_Type IRQn)
  */
 __STATIC_FORCEINLINE void __ECLIC_SetVector(IRQn_Type IRQn, rv_csr_t vector)
 {
-#if __RISCV_XLEN == 32
-    volatile uint32_t vec_base;
-    vec_base = ((uint32_t)__RV_CSR_READ(CSR_MTVT));
-    (* (unsigned long *) (vec_base + ((int32_t)IRQn) * 4)) = vector;
-#elif __RISCV_XLEN == 64
-    volatile uint64_t vec_base;
-    vec_base = ((uint64_t)__RV_CSR_READ(CSR_MTVT));
-    (* (unsigned long *) (vec_base + ((int32_t)IRQn) * 8)) = vector;
-#else // TODO Need cover for XLEN=128 case in future
-    volatile uint64_t vec_base;
-    vec_base = ((uint64_t)__RV_CSR_READ(CSR_MTVT));
-    (* (unsigned long *) (vec_base + ((int32_t)IRQn) * 8)) = vector;
+    volatile unsigned long vec_base;
+    vec_base = ((unsigned long)__RV_CSR_READ(CSR_MTVT));
+    vec_base += ((unsigned long)IRQn) * sizeof(unsigned long);
+    (* (unsigned long *) vec_base) = vector;
+#if (defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1))
+    MFlushInvalDCacheLine((unsigned long)vec_base);
 #endif
 }
 
