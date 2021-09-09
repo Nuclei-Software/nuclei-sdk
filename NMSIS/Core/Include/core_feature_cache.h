@@ -88,6 +88,16 @@ typedef enum CCM_CMD {
     CCM_IC_INVAL_ALL = 0xd              /*!< Unlock and invalidate all the I-Cache lines */
 } CCM_CMD_Type;
 
+/**
+ * \brief Cache Information Type
+ */
+typedef struct CacheInfo {
+    uint32_t linesize;                  /*!< Cache Line size in bytes */
+    uint32_t ways;                      /*!< Cache ways */
+    uint32_t setperway;                 /*!< Cache set per way */
+    uint32_t size;                      /*!< Cache total size in bytes */
+} CacheInfo_Type;
+
 #define CCM_SUEN_SUEN_Pos               0U                              /*!< CSR CCM_SUEN: SUEN bit Position */
 #define CCM_SUEN_SUEN_Msk               (1UL << CCM_SUEN_SUEN_Pos)      /*!< CSR CCM_SUEN: SUEN Mask */
 
@@ -176,6 +186,60 @@ __STATIC_FORCEINLINE void EnableICache(void)
 __STATIC_FORCEINLINE void DisableICache(void)
 {
     __RV_CSR_CLEAR(CSR_MCACHE_CTL, CSR_MCACHE_CTL_IE);
+}
+
+/**
+ * \brief  Get I-Cache Information
+ * \details
+ * This function get I-Cache Information
+ * \remarks
+ * - This function can be called in M-Mode only.
+ * - You can use this function in combination with cache lines operations
+ * \sa
+ * - \ref GetDCacheInfo
+ */
+__STATIC_FORCEINLINE int32_t GetICacheInfo(CacheInfo_Type *info)
+{
+    if (info == NULL) {
+        return -1;
+    }
+    CSR_MICFGINFO_Type csr_ccfg = (CSR_MICFGINFO_Type)__RV_CSR_READ(CSR_MICFG_INFO);
+    uint32_t info->setperway = (1 << csr_ccfg.b.set) << 3;
+    uint32_t info->ways = (1 + csr_ccfg.b.way);
+    if (csr_ccfg.b.lsize == 0) {
+        info->linesize = 0;
+    } else {
+        info->linesize = (1 << (csr_ccfg.b.lsize - 1)) << 3;
+    }
+    info->size = info->setperway * info->ways * info->linesize;
+    return 0;
+}
+
+/**
+ * \brief  Get D-Cache Information
+ * \details
+ * This function get D-Cache Information
+ * \remarks
+ * - This function can be called in M-Mode only.
+ * - You can use this function in combination with cache lines operations
+ * \sa
+ * - \ref GetICacheInfo
+ */
+__STATIC_FORCEINLINE int32_t GetDCacheInfo(CacheInfo_Type *info)
+{
+    if (info == NULL) {
+        return -1;
+    }
+    CSR_MDCFGINFO_Type csr_ccfg = (CSR_MDCFGINFO_Type)__RV_CSR_READ(CSR_MDCFG_INFO);
+    uint32_t info->setperway = (1 << csr_ccfg.b.set) << 3;
+    uint32_t info->ways = (1 + csr_ccfg.b.way);
+    if (csr_ccfg.b.lsize == 0) {
+        info->linesize = 0;
+    } else {
+        info->linesize = (1 << (csr_ccfg.b.lsize - 1)) << 3;
+    }
+    info->size = info->setperway * info->ways * info->linesize;
+    return 0;
 }
 
 /**
