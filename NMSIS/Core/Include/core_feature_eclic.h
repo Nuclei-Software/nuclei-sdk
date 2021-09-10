@@ -712,7 +712,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetVector(IRQn_Type IRQn, rv_csr_t vector)
     vec_base += ((unsigned long)IRQn) * sizeof(unsigned long);
     (* (unsigned long *) vec_base) = vector;
 #if (defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1))
-    MFlushInvalDCacheLine((unsigned long)vec_base);
+    MFlushDCacheLine((unsigned long)vec_base);
 #endif
 }
 
