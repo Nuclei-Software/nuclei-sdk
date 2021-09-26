@@ -439,7 +439,7 @@ class nsdk_runner(nsdk_builder):
             if qemu_cpu is None:
                 qemu_sel_cpu = "nuclei-%s" % (build_core.lower())
                 if build_dsp_enable == "ON" and "p" not in qemu_sel_cpu[-3:]:
-                    qemu_sel_cpu = qemu_sel_cpu + "p"
+                    qemu_sel_cpu = qemu_sel_cpu + ",ext=p"
             else:
                 qemu_sel_cpu = qemu_cpu
 
