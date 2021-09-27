@@ -95,7 +95,7 @@ buildconfig:
       - flags: --specs=nano.specs
         condition: $( ${newlibsel} != "normal" )
       - flags: -u _printf_float
-        condition: $( ${newlibsel} != "nano_with_printfloat" )
+        condition: $( ${newlibsel} == "nano_with_printfloat" )
       - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
     cflags:
     asmflags:

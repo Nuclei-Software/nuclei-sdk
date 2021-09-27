@@ -72,11 +72,9 @@ debugconfig:
     description: Nuclei QEMU
     configs:
        - key: nuclei_core
-         value: ${nuclei_core}p
-         condition: $( ${dsp_present} == 1 )
-       - key: nuclei_core
          value: ${nuclei_core}
-         condition: $( ${dsp_present} == 0 )
+       - key: dsp_present
+         value: ${dsp_present}
        - key: download_mode
          value: ${download_mode}
        - key: riscv_arch
