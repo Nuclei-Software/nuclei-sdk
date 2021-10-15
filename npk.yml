@@ -1,8 +1,8 @@
 ## Package Base Information
 name: sdk-nuclei_sdk
 owner: nuclei
-version: 0.3.4-dev
-description: Nuclei N/NX/UX Embedded Software Development Kit
+version: 0.3.4
+description: Nuclei Embedded Software Development Kit
 type: sdk
 keywords:
   - framework
