@@ -3,25 +3,34 @@
 Changelog
 =========
 
-V0.3.4-dev
-----------
+V0.3.4
+------
 
-This is version ``0.3.4-dev`` of Nuclei SDK, which is still in development.
+This is release version ``0.3.4`` of Nuclei SDK.
 
 * CI
 
     - Fix gitlab ci fail during install required software
 
+* Build System
+
+    - build asm with -x assembler-with-cpp
+
 * Tools
 
     - Fix ``tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json`` description issue for dsp enabled build configs
     - Generate html report when run ``tools/scripts/nsdk_cli/nsdk_bench.py``
+    - nsdk_builder.py: modify qemu select cpu args,change ``p`` to ``,ext=p``
 
 * SoC
 
     - For demosoc, if you choose ilm and ddr download mode, then the data section's LMA is equal to VMA now, and there
       will be no data copy for data section, bss section still need to set to zero.
     - For demosoc, if you choose ilm and ddr download mode, The rodata section are now also placed in data section.
+
+* NPK
+
+    - add ``-x assembler-with-cpp`` in npk.yml for ssp
 
 
 For detailed changes, please check commit histories since 0.3.3 release.
