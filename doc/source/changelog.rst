@@ -8,7 +8,12 @@ V0.3.5-dev
 
 This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
 
+* SoC
 
+  - Provide correct gd32vf103.svd, the previous one content is messed up.
+
+
+For detailed changes, please check commit histories since 0.3.4 release.
 
 
 V0.3.4
