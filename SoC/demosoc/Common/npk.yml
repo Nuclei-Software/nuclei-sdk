@@ -143,11 +143,18 @@ configuration:
         arch: rv64imafdc
         abi: lp64d
         description: UX900FD Core(ARCH=rv64imafdc, ABI=lp64d)
-  dsp_present:
-    default_value: 0
-    type: checkbox
+  nuclei_ext:
+    default_value: []
+    type: multicheckbox
     global: true
-    description: P-Extension(DSP) Present
+    description: Nuclei ARCH Extensions
+    choices:
+      - name: b
+        description: Bitmainp Extension
+      - name: p
+        description: Packed SIMD Extension
+      - name: v
+        description: Vector Extension
   newlibsel:
     default_value: nano
     type: choice
@@ -172,11 +179,7 @@ codemanage:
 ## Set Configuration for other packages
 setconfig:
   - config: nmsislibarch
-    value: ${nuclei_core.arch}p
-    condition: $( ${dsp_present} == 1 )
-  - config: nmsislibarch
-    value: ${nuclei_core.arch}
-    condition: $( ${dsp_present} == 0 )
+    value: ${nuclei_core.arch}$(join(${nuclei_ext},''))
 
 ## Debug Configuration for this SoC
 debugconfig:
@@ -199,7 +202,7 @@ buildconfig:
     cross_prefix: riscv-nuclei-elf- # optional
     common_flags: # flags need to be combined together across all packages
       - flags: -g -fno-common -ffunction-sections -fdata-sections
-      - flags: -march=${nuclei_core.arch} -mabi=${nuclei_core.abi} -mcmodel=medany
+      - flags: -march=${nuclei_core.arch}$(join(${nuclei_ext},'')) -mabi=${nuclei_core.abi} -mcmodel=medany
     ldflags:
       - flags: -lstdc++ -nostartfiles --specs=nosys.specs
       - flags: --specs=nano.specs
@@ -213,7 +216,9 @@ buildconfig:
     cxxflags:
     common_defines:
       - defines: __RISCV_FEATURE_DSP=1
-        condition: $( ${dsp_present} == 1 )
+        condition: $( ${nuclei_ext.choices.p} == 1 )
+      - defines: __RISCV_FEATURE_VECTOR=1
+        condition: $( ${nuclei_ext.choices.v} == 1 )
     prebuild_steps: # could be override by app/bsp type
       command:
       description:
