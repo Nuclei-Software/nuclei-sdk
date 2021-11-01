@@ -11,8 +11,7 @@
 
 #include <rthw.h>
 #include <rtthread.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include <stdio.h>
 
 #include "cpuport.h"
 
@@ -215,21 +214,16 @@ void SysTick_Handler(void)
     rt_interrupt_leave();
 }
 
-extern ssize_t _write(int fd, const void* ptr, size_t len);
 
 void rt_hw_console_output(const char* str)
 {
-    rt_size_t size = 0;
-
-    size = rt_strlen(str);
-    _write(STDOUT_FILENO, str, size);
+    puts(str);
 }
 
-extern ssize_t _read(int fd, void* ptr, size_t len);
 char rt_hw_console_getchar(void)
 {
-    int ch = -1;
-    _read(STDIN_FILENO, &ch, 1);
+    char ch = -1;
+    ch = (char)getchar();
     return ch;
 }
 
