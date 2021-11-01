@@ -77,8 +77,13 @@ RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
 
 INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include
 
-C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers \
-		$(NUCLEI_SDK_SOC_COMMON)/Source/Stubs
+C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers
+
+ifneq ($(findstring emrun,$(NEWLIB)),)
+C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/emrun
+else
+C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/newlib
+endif
 
 ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_demosoc.S \
 		$(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_demosoc.S
