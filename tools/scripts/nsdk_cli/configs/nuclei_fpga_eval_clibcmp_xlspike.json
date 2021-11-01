@@ -1,0 +1,37 @@
+{
+    "run_config": {
+        "target" : "xlspike",
+        "xlspike" : {
+            "baudrate": 115200,
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "DSP_ENABLE": "OFF",
+        "SIMU": "xlspike",
+        "DOWNLOAD": "ilm"
+    },
+    "build_configs": {
+        "n307fd-newlib": {"CORE": "n307fd", "STDCLIB": ""},
+        "n307fd-emrun-small": {"CORE": "n307fd", "STDCLIB": "emrun_small"},
+        "n307fd-emrun-fast": {"CORE": "n307fd", "STDCLIB": "emrun_fast"},
+        "n307fd-emrun-balanced": {"CORE": "n307fd", "STDCLIB": "emrun_balanced"},
+        "n307-newlib": {"CORE": "n307", "STDCLIB": ""},
+        "n307-emrun-small": {"CORE": "n307", "STDCLIB": "emrun_small"},
+        "n307-emrun-fast": {"CORE": "n307", "STDCLIB": "emrun_fast"},
+        "n307-emrun-balanced": {"CORE": "n307", "STDCLIB": "emrun_balanced"},
+        "n305-newlib": {"CORE": "n305", "STDCLIB": ""},
+        "n305-emrun-small": {"CORE": "n305", "STDCLIB": "emrun_small"},
+        "n305-emrun-fast": {"CORE": "n305", "STDCLIB": "emrun_fast"},
+        "n305-emrun-balanced": {"CORE": "n305", "STDCLIB": "emrun_balanced"}
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "application/rtthread/msh" : {"build": true, "run": false},
+        "test/core": {"build": false, "run": false}
+    }
+}
