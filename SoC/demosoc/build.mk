@@ -70,7 +70,12 @@ ifneq ($(words $(CORE_ARCH_ABI)), 2)
 $(error There is no coresponding ARCH_ABI setting for CORE $(CORE), please check Makefile.core)
 endif
 
-RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))
+# Handle Nuclei RISC-V ARCH and ABI
+## ARCH_EXT could be combination of in order of bkpv, legal combination is list as below:
+## bp: Bitmanip and Packed SIMD Extension present
+## bpv: Bitmanip, Packed SIMD and Vector Extension present
+## bkpv: Bitmanip, Packed SIMD, Scalar Cryptography and Vector Extension present
+RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))$(ARCH_EXT)
 RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
 
 ##### Put your Source code Management configurations below #####
