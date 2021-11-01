@@ -17,7 +17,8 @@ PFLOAT ?= 1
 ifeq ($(DSP_ENABLE),ON)
 $(warning "Use and link with RISC-V DSP enabled library")
 COMMON_FLAGS += -D__RISCV_FEATURE_DSP=1
-LDLIBS = -lnmsis_dsp_$(RISCV_ARCH)p -lm
+ARCH_EXT := p
+LDLIBS = -lnmsis_dsp_$(RISCV_ARCH) -lm
 else
 $(warning "Use and link with RISC-V DSP disabled library")
 LDLIBS = -lnmsis_dsp_$(RISCV_ARCH) -lm
