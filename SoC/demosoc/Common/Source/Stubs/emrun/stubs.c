@@ -3,6 +3,9 @@
 
 int metal_tty_putc(int c)
 {
+    if (c == '\n') {
+        uart_write(SOC_DEBUG_UART, '\r');
+    }
     uart_write(SOC_DEBUG_UART, (uint8_t)c);
     return 0;
 }
