@@ -1,30 +1,48 @@
 {
     "run_config": {
-        "target" : "xlspike",
-        "xlspike" : {
+        "target" : "hardware",
+        "hardware" : {
             "baudrate": 115200,
             "timeout": 240
         }
     },
     "parallel": "-j",
+    "copy_objects": true,
     "build_target": "clean all",
     "build_config": {
         "SOC": "demosoc",
         "BOARD": "nuclei_fpga_eval",
         "DSP_ENABLE": "OFF",
-        "SIMU": "xlspike",
         "DOWNLOAD": "ilm"
     },
     "build_configs": {
-        "n307fd-newlib": {"CORE": "n307fd", "STDCLIB": ""},
+        "n307fd-newlib-default": {"CORE": "n307fd", "STDCLIB": ""},
+        "n307fd-newlib-full": {"CORE": "n307fd", "STDCLIB": "newlib_full"},
+        "n307fd-newlib-fast": {"CORE": "n307fd", "STDCLIB": "newlib_fast"},
+        "n307fd-newlib-small": {"CORE": "n307fd", "STDCLIB": "newlib_small"},
+        "n307fd-newlib-nano": {"CORE": "n307fd", "STDCLIB": "newlib_nano"},
+        "n307fd-emrun-pico": {"CORE": "n307fd", "STDCLIB": "emrun_pico"},
+        "n307fd-emrun-nano": {"CORE": "n307fd", "STDCLIB": "emrun_nano"},
         "n307fd-emrun-small": {"CORE": "n307fd", "STDCLIB": "emrun_small"},
         "n307fd-emrun-fast": {"CORE": "n307fd", "STDCLIB": "emrun_fast"},
         "n307fd-emrun-balanced": {"CORE": "n307fd", "STDCLIB": "emrun_balanced"},
-        "n307-newlib": {"CORE": "n307", "STDCLIB": ""},
+        "n307-newlib-default": {"CORE": "n307", "STDCLIB": ""},
+        "n307-newlib-full": {"CORE": "n307", "STDCLIB": "newlib_full"},
+        "n307-newlib-fast": {"CORE": "n307", "STDCLIB": "newlib_fast"},
+        "n307-newlib-small": {"CORE": "n307", "STDCLIB": "newlib_small"},
+        "n307-newlib-nano": {"CORE": "n307", "STDCLIB": "newlib_nano"},
+        "n307-emrun-pico": {"CORE": "n307", "STDCLIB": "emrun_pico"},
+        "n307-emrun-nano": {"CORE": "n307", "STDCLIB": "emrun_nano"},
         "n307-emrun-small": {"CORE": "n307", "STDCLIB": "emrun_small"},
         "n307-emrun-fast": {"CORE": "n307", "STDCLIB": "emrun_fast"},
         "n307-emrun-balanced": {"CORE": "n307", "STDCLIB": "emrun_balanced"},
-        "n305-newlib": {"CORE": "n305", "STDCLIB": ""},
+        "n305-newlib-default": {"CORE": "n305", "STDCLIB": ""},
+        "n305-newlib-full": {"CORE": "n305", "STDCLIB": "newlib_full"},
+        "n305-newlib-fast": {"CORE": "n305", "STDCLIB": "newlib_fast"},
+        "n305-newlib-small": {"CORE": "n305", "STDCLIB": "newlib_small"},
+        "n305-newlib-nano": {"CORE": "n305", "STDCLIB": "newlib_nano"},
+        "n305-emrun-pico": {"CORE": "n305", "STDCLIB": "emrun_pico"},
+        "n305-emrun-nano": {"CORE": "n305", "STDCLIB": "emrun_nano"},
         "n305-emrun-small": {"CORE": "n305", "STDCLIB": "emrun_small"},
         "n305-emrun-fast": {"CORE": "n305", "STDCLIB": "emrun_fast"},
         "n305-emrun-balanced": {"CORE": "n305", "STDCLIB": "emrun_balanced"}
