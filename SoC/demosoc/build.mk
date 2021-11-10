@@ -84,10 +84,12 @@ INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include
 
 C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers
 
-ifneq ($(findstring emrun,$(NEWLIB)),)
-C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/emrun
-else
+ifneq ($(findstring libncrt,$(STDCLIB)),)
+C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/libncrt
+else ifneq ($(findstring newlib,$(STDCLIB)),)
 C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/newlib
+else
+# no stubs will be used
 endif
 
 ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_demosoc.S \
