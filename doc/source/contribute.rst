@@ -48,28 +48,8 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
             │   ├── intexc_ncstar.S
             │   └── startup_ncstar.S
             ├── Stubs
-            │   ├── clock_getres.c
-            │   ├── clock_gettime.c
-            │   ├── clock_settime.c
-            │   ├── close.c
-            │   ├── execve.c
-            │   ├── exit.c
-            │   ├── fork.c
-            │   ├── fstat.c
-            │   ├── getpid.c
-            │   ├── gettimeofday.c
-            │   ├── isatty.c
-            │   ├── kill.c
-            │   ├── link.c
-            │   ├── lseek.c
-            │   ├── open.c
-            │   ├── read.c
-            │   ├── sbrk.c
-            │   ├── stat.c
-            │   ├── times.c
-            │   ├── unlink.c
-            │   ├── wait.c
-            │   └── write.c
+            │   ├── newlib
+            │   └── libncrt
             ├── ncstar_soc.c
             └── system_ncstar.c
 
@@ -84,9 +64,8 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
          * **peripheral_or_device_headers.h** means the SoC peripheral driver header files,
            such  as uart, gpio, i2c, spi driver headers, usually get from the SoC firmware library,
            it should be placed in **Include** folder.
-         * The **Stubs** folder contains the stub code files for newlib c library porting code,
-           mainly ``_write``, ``_read``, ``_sbrk`` stub function, take ``SoC/demosoc/Common/Stubs``
-           as reference.
+         * The **Stubs** folder contains the stub code files for newlib c library and nuclei c runtime
+           library porting code, take ``SoC/demosoc/Common/Stubs`` as reference.
          * The **GCC** folder contains *startup* and *exeception/interrupt* assemble code,
            if your board share the same linker script files, you can also put link script files here,
            the linker script files name rules can refer to previously supported *demosoc* SoC.
@@ -154,8 +133,15 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
         INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include
 
         C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source \
-                     $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers \
-                     $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs
+                     $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers
+
+        ifneq ($(findstring libncrt,$(STDCLIB)),)
+        C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/libncrt
+        else ifneq ($(findstring newlib,$(STDCLIB)),)
+        C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/newlib
+        else
+        # no stubs will be used
+        endif
 
         ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_ncstar.S \
                      $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_ncstar.S

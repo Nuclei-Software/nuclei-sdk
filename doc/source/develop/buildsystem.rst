@@ -687,8 +687,8 @@ e.g. ``application/baremetal/demo_timer/Makefile``.
 * :ref:`develop_buildsystem_var_nuclei_sdk_root`
 * :ref:`develop_buildsystem_var_middleware`
 * :ref:`develop_buildsystem_var_rtos`
-* :ref:`develop_buildsystem_var_pfloat`
-* :ref:`develop_buildsystem_var_newlib`
+* :ref:`develop_buildsystem_var_stdclib`
+* :ref:`develop_buildsystem_var_archext`
 * :ref:`develop_buildsystem_var_nogc`
 * :ref:`develop_buildsystem_var_rtthread_msh`
 
@@ -764,31 +764,110 @@ You can easily find the available middleware components in the **<NUCLEI_SDK_ROO
 * If **MIDDLEWARE** is defined with more than 1 string, such as ``fatfs tjpgd``, then these two
   middlewares will be selected.
 
+.. _develop_buildsystem_var_stdclib:
+
+STDCLIB
+~~~~~~~
+
+**STDCLIB** variable is used to select which standard c runtime library will be used.
+If not defined, the default value will be ``newlib_small``.
+
+In Nuclei GNU Toolchain, we destributed newlib/newlib-nano/Nuclei c runtime library,
+so user can select different c runtime library according to their requirement.
+
+Newlib is a simple ANSI C library, math library, available for both RV32 and RV64.
+
+Nuclei C runtime library is a highly optimized c library designed for deeply embedded user cases,
+can provided smaller code size and highly optimized floating point support compared to Newlib.
+
+.. list-table:: Available STDCLIB choices
+   :widths: 10 70
+   :header-rows: 1
+   :align: center
+
+   * - **STDCLIB**
+     - Description
+   * - newlib_full
+     - | Normal version of newlib, optimized for speed at cost of size.
+       | It provided full feature of newlib, with file io supported.
+   * - newlib_fast
+     - Newlib nano version, with printf float and scanf float support.
+   * - newlib_small
+     - Newlib nano version, with printf float support.
+   * - newlib_nano
+     - Newlib nano version, without printf/scanf float support.
+   * - libncrt_fast
+     - Nuclei C runtime library optimized for speed, full feature
+   * - libncrt_balanced
+     - Nuclei C runtime library balanced at speed and code size, full feature
+   * - libncrt_small
+     - Nuclei C runtime library optimized for code size, full feature
+   * - libncrt_nano
+     - Nuclei C runtime library optimized for code size, without float/double support
+   * - libncrt_pico
+     - Nuclei C runtime library optimized for code size, without long/long long/float/double support
+
+.. note::
+
+    * About Newlib and Newlib nano difference, please check
+      https://github.com/riscv-collab/riscv-newlib/blob/riscv-newlib-3.2.0/newlib/README
+    * About Nuclei C runtime library, it didn't provided all the features that
+      newlib can do, it is highly optimized for deeply embedded scenery
+    * Nuclei C runtime library is only available in Nuclei GNU Toolchain released after Nov 2021.
+    * Since there are different c runtime library can be chosen now, so developer
+      need to provide different stub functions for different library, please check
+      ``SoC/demosoc/Common/Source/Stubs/`` and ``SoC/demosoc/build.mk`` for example.
+
+.. _develop_buildsystem_var_archext:
+
+ARCH_EXT
+~~~~~~~~
+
+**ARCH_EXT** variable is used to select extra RISC-V arch extensions supported by Nuclei
+RISC-V Processor, except the ``iemafdc``.
+
+Currently, valid arch extension combination should match the order of ``bpv``.
+
+Here is a list of valid arch extensions:
+
+* **ARCH_EXT=b**: RISC-V bitmanipulation extension.
+* **ARCH_EXT=p**: RISC-V packed simd extension.
+* **ARCH_EXT=v**: RISC-V vector extension.
+* **ARCH_EXT=bp**: RISC-V bitmanipulation and packed simd extension.
+* **ARCH_EXT=pv**: RISC-V packed simd and vector extension.
+* **ARCH_EXT=bpv**: RISC-V bitmanipulation, packed simd and vector extension.
+
+It is suggested to use this ARCH_EXT with other arch options like this, can be found in
+``SoC/demosoc/build.mk``:
+
+
+.. code-block:: makefile
+
+    # Set RISCV_ARCH and RISCV_ABI
+    CORE_UPPER := $(call uc, $(CORE))
+    CORE_ARCH_ABI := $($(CORE_UPPER)_CORE_ARCH_ABI)
+    RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))$(ARCH_EXT)
+    RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
+
+
 .. _develop_buildsystem_var_pfloat:
 
 PFLOAT
 ~~~~~~
 
-**PFLOAT** variable is used to enable floating point value print when using the newlib nano(**NEWLIB=nano**).
+.. note::
 
-**PFLOAT=1** will enable float print, it will pass extra ``-u _printf_float`` through link option.
-
-If you don't use newlib nano, this variable will have no affect.
-
-when `
+    * **Deprecated** variable, please use :ref:`develop_buildsystem_var_stdclib` now
+    * ``NEWLIB=nano PFLOAT=1`` can be replaced by ``STDCLIB=newlib_small`` now
 
 .. _develop_buildsystem_var_newlib:
 
 NEWLIB
 ~~~~~~
 
-**NEWLIB** variable is used to select which newlib version will be chosen.
+.. note::
 
-If **NEWLIB=nano**, then newlib nano will be selected. About newlib, please
-visit https://sourceware.org/newlib/README.
-
-If **NEWLIB=**, then normal newlib will be used.
-
+    * **Deprecated** variable, please use :ref:`develop_buildsystem_var_stdclib` now
 
 .. _develop_buildsystem_var_nogc:
 
@@ -803,7 +882,7 @@ When GC is enabled, these options will be added:
 * Adding to compiler options: ``-ffunction-sections -fdata-sections``
 * Adding to linker options: ``-Wl,--gc-sections -Wl,--check-sections``
 
-If you want to enable this GC feature, you can set **NOGC=0**(default), GC feature will
+If you want to enable this GC feature, you can set **NOGC=0** (default), GC feature will
 remove sections for you, but sometimes it might remove sections that are useful,
 e.g. For Nuclei SDK test cases, we use ctest framework, and we need to set **NOGC=1**
 to disable GC feature.

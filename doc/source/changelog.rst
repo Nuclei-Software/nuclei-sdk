@@ -11,7 +11,18 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
 * SoC
 
   - Provide correct gd32vf103.svd, the previous one content is messed up.
+  - Rearrange stub function folder for gd32vf103 and demosoc to support
+    different c runtime library.
 
+* Build System
+
+  - Introduce :ref:`develop_buildsystem_var_stdclib` makefile variable to support different c library.
+  - **NEWLIB** and **PFLOAT** variable is deprecated in this release.
+  - Introduce :ref:`develop_buildsystem_var_archext` makefile variable to support b/p/v extension.
+
+* Contribution
+
+  - Update contribution guide due to runtime library choices provided now.
 
 For detailed changes, please check commit histories since 0.3.4 release.
 
