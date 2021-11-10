@@ -8,7 +8,7 @@ COMMON_FLAGS := $(BENCH_FLAGS)
 
 LDFLAGS := -lm
 
-PFLOAT = 1
+STDCLIB ?= newlib_small
 
 SRCDIRS = .
 

@@ -10,8 +10,8 @@ C_SRCDIRS = .
 
 INCDIRS = .
 
-#Enable Nano Newlib Float Print
-PFLOAT = 1
+STDCLIB ?= newlib_small
+
 # Clean generated *.i and *.s
 CLEAN_OBJS += *.i *.s
 
