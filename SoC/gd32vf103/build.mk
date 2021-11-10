@@ -44,8 +44,15 @@ RISCV_ABI ?= ilp32
 
 INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include
 
-C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers \
-		$(NUCLEI_SDK_SOC_COMMON)/Source/Stubs
+C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers
+
+ifneq ($(findstring libncrt,$(STDCLIB)),)
+C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/libncrt
+else ifneq ($(findstring newlib,$(STDCLIB)),)
+C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/newlib
+else
+# no stubs will be used
+endif
 
 ifeq ($(USB_DRV_SUPPORT), 1)
 INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include/Usb
