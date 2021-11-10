@@ -22,7 +22,8 @@ configuration:
       [ "rv32imac", "rv32imafc", "rv32imafdc",
         "rv32imacp", "rv32imafcp", "rv32imafdcp",
         "rv64imac", "rv64imafc", "rv64imafdc",
-        "rv64imacp", "rv64imafcp", "rv64imafdcp" ]
+        "rv64imacp", "rv64imafcp", "rv64imafdcp",
+        "rv64imafcv", "rv64imafdcv", "rv64imafcpv", "rv64imafdcpv" ]
   nmsislibsel:
     default_value: none
     type: choices
