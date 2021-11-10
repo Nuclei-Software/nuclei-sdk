@@ -1,6 +1,6 @@
 NUCLEI_SDK_BUILD = $(NUCLEI_SDK_ROOT)/Build
 # Include your local and global makefile variables
-# SOC, DOWNLOAD, PFLOAT, NEWLIB etc.
+# SOC, DOWNLOAD, STDCLIB etc.
 # Makefile.global should be placed in $(NUCLEI_SDK_ROOT)/Build
 # Makefile.local should be placed together with application Makefile in your own application folder
 # Sample content for this Makefile.local or Makefile.global
@@ -34,10 +34,19 @@ SILENT ?=
 ## Available choices:
 ## The name of sub directories in $(NUCLEI_SDK_ROOT)/OS/
 RTOS ?=
-## If PFLOAT=1, it will enable float point print when using nano newlib
-PFLOAT ?= 0
-## If NEWLIB=nano, it will use nano newlib, otherwise it will use normal newlib
-NEWLIB ?= nano
+## Available choices:
+##### Using newlib
+### newlib_full: Normal newlib library with full newlib feature, to replace NEWLIB!=nano
+### newlib_fast: Newlib-nano library with printf and scanf float feature
+### newlib_small: Newlib-nano library with printf float feature, to replace NEWLIB=nano PFLOAT=1
+### newlib_nano: Newlib-nano library without float printf/scanf feature, to replace NEWLIB=nano PFLOAT=0
+##### Using Nuclei C Runtime library
+### libncrt_fast: Nuclei C Runtime library, favor speed at the expense of size
+### libncrt_balanced: balanced, full feature
+### libncrt_small: favor size at the expense of speed, but full feature
+### libncrt_nano: favor size at the expense of speed, no float support
+### libncrt_pico: favor size at the expense of speed, no long/long long support
+STDCLIB ?= newlib_nano
 ## If NOGC=1, it will not gc any sections during compiling to save code size
 NOGC ?=
 ## If BANNER=0, it will not display sdk banner when program run
