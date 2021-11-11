@@ -486,6 +486,57 @@ def set_global_variables(config):
         print("Using global variables: %s" % SDK_GLOBAL_VARIABLES)
     return True
 
+def get_app_runresult(apprst):
+    if not isinstance(apprst, dict):
+        return "unknown", "-"
+    if "type" not in apprst:
+        return "unknown", "-"
+    rsttype = apprst["type"]
+    rstvaluedict = apprst.get("value", dict())
+    if rstvaluedict:
+        rstval = ""
+        for key in rstvaluedict:
+            rstval += "%s : %s," %(key, rstvaluedict[key])
+        rstval = rstval.rstrip(',')
+    else:
+        rstval = "-"
+    return rsttype, rstval
+
+def save_execute_csv(result, csvfile):
+    if isinstance(result, dict) == False:
+        return False
+    csvlines = ["App, buildstatus, runstatus, buildtime, runtime, type, value, total, text, data, bss"]
+    for app in result:
+        size = result[app]["size"]
+        app_status = result[app]["status"]
+        app_time = result[app]["time"]
+        apprsttype, apprstval = get_app_runresult(result[app].get("result", dict()))
+        csvline ="%s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d" % (app, app_status["build"], \
+            app_status.get("run", False), app_time.get("build", "-"), app_time.get("run", "-"), \
+            apprsttype, apprstval, size["total"], size["text"], size["data"], size["bss"])
+        csvlines.append(csvline)
+    save_csv(csvfile, csvlines)
+    return True
+
+def save_bench_csv(result, csvfile):
+    if isinstance(result, dict) == False:
+        return False
+    csvlines = ["App, case, buildstatus, runstatus, buildtime, runtime, type, value, total, text, data, bss"]
+    for app in result:
+        appresult = result[app]
+        for case in appresult:
+            size = appresult[case]["size"]
+            app_status = appresult[case]["status"]
+            app_time = appresult[case]["time"]
+            apprsttype, apprstval = get_app_runresult(appresult[case].get("result", dict()))
+            csvline = "%s, %s, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d" % (app, case, app_status["build"], \
+                app_status.get("run", False), app_time.get("build", "-"), app_time.get("run", "-"), \
+                apprsttype, apprstval, size["total"], size["text"], size["data"], size["bss"])
+            csvlines.append(csvline)
+    # save csv file
+    save_csv(csvfile, csvlines)
+    return True
+
 def get_global_variables():
     return SDK_GLOBAL_VARIABLES
 

@@ -180,22 +180,6 @@ def generate_build_run_status_md(appresult, logdir, bold_false=True):
         rsts_md = gen_sts_md(apprsts, apprlog, bold_false)
         return bsts_md, rsts_md, appbtm, apprtm
 
-def get_app_runresult(apprst):
-    if not isinstance(apprst, dict):
-        return "unknown", "-"
-    if "type" not in apprst:
-        return "unknown", "-"
-    rsttype = apprst["type"]
-    rstvaluedict = apprst.get("value", dict())
-    if rstvaluedict:
-        rstval = ""
-        for key in rstvaluedict:
-            rstval += "%s : %s," %(key, rstvaluedict[key])
-        rstval = rstval.rstrip(',')
-    else:
-        rstval = "-"
-    return rsttype, rstval
-
 def md2html(mdfile, htmlfile):
     if MARKDOWN_PLUGIN == False or os.path.isfile(mdfile) == False:
         return

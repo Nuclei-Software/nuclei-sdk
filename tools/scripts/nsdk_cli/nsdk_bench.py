@@ -272,25 +272,14 @@ if __name__ == '__main__':
     ret = check_expected(result, config, args.run)
     print("Application build as expected: %s" % (ret))
     save_results(appcfg, hwcfg, config, result, args.logdir)
+
     if result:
         # Generate build or run report
         rptfile = os.path.join(args.logdir, "report.md")
         rpthtml = os.path.join(args.logdir, "report.html")
         generate_report(config, result, rptfile, rpthtml, args.logdir, args.run)
         csvfile = os.path.join(args.logdir, "result.csv")
-        csvlines = ["App, Case, buildstatus, runstatus, buildtime, runtime, total, text, data, bss"]
-        for app in result:
-            size_of_all_cases = result[app]
-            for case in size_of_all_cases:
-                size = size_of_all_cases[case]["size"]
-                app_status = size_of_all_cases[case]["status"]
-                app_time = size_of_all_cases[case]["time"]
-                csvline = "%s, %s, %s, %s, %s, %s, %d, %d, %d, %d" % (app, case, app_status["build"], \
-                    app_status.get("run", False), app_time.get("build", "-"), app_time.get("run", "-"), \
-                    size["total"], size["text"], size["data"], size["bss"])
-                csvlines.append(csvline)
-        # save csv file
-        save_csv(csvfile, csvlines)
+        save_bench_csv(result, csvfile)
         print("Generate report csv file to %s" % (csvfile))
         print("Generate report markdown file to %s" % (rptfile))
     # Exit with ret value
