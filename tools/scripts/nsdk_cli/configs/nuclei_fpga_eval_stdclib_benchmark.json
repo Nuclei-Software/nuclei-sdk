@@ -1,0 +1,70 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 240
+        },
+        "xlspike" : {
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "copy_objects": true,
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "DSP_ENABLE": "OFF",
+        "DOWNLOAD": "ilm"
+    },
+    "appdirs": [
+        "application/baremetal/benchmark"
+    ],
+    "build_configs": {
+
+    },
+    "appconfig": {
+        "application/baremetal/benchmark/coremark": {
+            "build_configs" : {
+                "n305-newlib-small_default": {"CORE": "n305", "STDCLIB": "newlib_small"},
+                "n305-libncrt-small_default": {"CORE": "n305", "STDCLIB": "libncrt_small"},
+                "n305-libncrt-fast_default": {"CORE": "n305", "STDCLIB": "libncrt_fast"},
+                "n305-libncrt-balanced_default": {"CORE": "n305", "STDCLIB": "libncrt_balanced"},
+                "n305-newlib-small_case1": {"CORE": "n305", "STDCLIB": "newlib_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n305-libncrt-small_case1": {"CORE": "n305", "STDCLIB": "libncrt_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n305-libncrt-fast_case1": {"CORE": "n305", "STDCLIB": "libncrt_fast", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n305-libncrt-balanced_case1": {"CORE": "n305", "STDCLIB": "libncrt_balanced", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "}
+            }
+        },
+        "application/baremetal/benchmark/dhrystone": {
+            "build_configs" : {
+                "n305-newlib-small_default": {"CORE": "n305", "STDCLIB": "newlib_small"},
+                "n305-libncrt-small_default": {"CORE": "n305", "STDCLIB": "libncrt_small"},
+                "n305-libncrt-fast_default": {"CORE": "n305", "STDCLIB": "libncrt_fast"},
+                "n305-libncrt-balanced_default": {"CORE": "n305", "STDCLIB": "libncrt_balanced"},
+                "n305-newlib-small_case1": {"CORE": "n305", "STDCLIB": "newlib_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n305-libncrt-small_case1": {"CORE": "n305", "STDCLIB": "libncrt_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n305-libncrt-fast_case1": {"CORE": "n305", "STDCLIB": "libncrt_fast", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n305-libncrt-balanced_case1": {"CORE": "n305", "STDCLIB": "libncrt_balanced", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "}
+            }
+        },
+        "application/baremetal/benchmark/whetstone": {
+            "build_configs" : {
+                "n305-newlib-small_default": {"CORE": "n305", "STDCLIB": "newlib_small"},
+                "n305-libncrt-small_default": {"CORE": "n305", "STDCLIB": "libncrt_small"},
+                "n305-libncrt-fast_default": {"CORE": "n305", "STDCLIB": "libncrt_fast"},
+                "n305-libncrt-balanced_default": {"CORE": "n305", "STDCLIB": "libncrt_balanced"},
+                "n305-newlib-small_case1": {"CORE": "n305", "STDCLIB": "newlib_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n305-libncrt-small_case1": {"CORE": "n305", "STDCLIB": "libncrt_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n305-libncrt-fast_case1": {"CORE": "n305", "STDCLIB": "libncrt_fast", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n305-libncrt-balanced_case1": {"CORE": "n305", "STDCLIB": "libncrt_balanced", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "}
+            }
+        }
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "application/rtthread/msh" : {"build": true, "run": false},
+        "test/core": {"build": false, "run": false}
+    }
+}
