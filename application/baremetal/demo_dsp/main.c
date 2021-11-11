@@ -320,9 +320,17 @@ static int test_flag_error = 0;
 int main(void)
 {
     printf("\r\nNuclei RISC-V NMSIS-DSP Library Demonstration\r\n");
-#if defined(__RISCV_FEATURE_DSP) && __RISCV_FEATURE_DSP == 1
-    printf("Using Nuclei RISC-V DSP(P-ext) accelerated and optimized NMSIS-DSP library!\r\n");
+#if (defined(__RISCV_FEATURE_DSP) && __RISCV_FEATURE_DSP == 1) || \
+    (defined(__RISCV_FEATURE_VECTOR) && __RISCV_FEATURE_VECTOR == 1)
+    printf("Using Nuclei RISC-V accelerated and optimized NMSIS-DSP library!\r\n");
+#if (defined(__RISCV_FEATURE_DSP) && __RISCV_FEATURE_DSP == 1)
     printf("Warning: Make sure Nuclei RISC-V DSP(P-ext) is present in your CPU core!\r\n");
+#endif
+#if (defined(__RISCV_FEATURE_VECTOR) && __RISCV_FEATURE_VECTOR == 1)
+    printf("Warning: Make sure Nuclei RISC-V Vector is present in your CPU core!\r\n");
+    // Enable Vector Unit
+    __RV_CSR_SET(CSR_MSTATUS, 0x200);
+#endif
     printf("         Otherwise this example will trap to cpu core exception!\r\n\r\n");
 #else
     printf("Using c-only optimized NMSIS-DSP library!\r\n");
