@@ -10,6 +10,21 @@ int metal_tty_putc(int c)
     return 0;
 }
 
+int metal_tty_getc(void)
+{
+    int c = (int)uart_read(SOC_DEBUG_UART);
+    return c;
+}
+
+void exit(int fd)
+{
+    while (1) {
+        __WFI();
+    }
+}
+
+// workaround for newlibc required
+// __libc_fini_array and __libc_init_array function
 __WEAK void __libc_fini_array(void)
 {
 
@@ -19,3 +34,4 @@ __WEAK void __libc_init_array(void)
 {
 
 }
+

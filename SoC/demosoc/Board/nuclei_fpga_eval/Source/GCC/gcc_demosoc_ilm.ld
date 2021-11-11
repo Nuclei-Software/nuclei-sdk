@@ -200,13 +200,19 @@ SECTIONS
     . = ALIGN(4);
   } >ram AT>ram
 
-  . = ALIGN(8);
+  /* Nuclei C Runtime Library requirements:
+   * 1. heap need to be align at 16 bytes
+   * 2. __heap_start and __heap_end symbol need to be defined
+   */
+  . = ALIGN(16);
   PROVIDE( _end = . );
   PROVIDE( end = . );
+  PROVIDE( __heap_start = . );
 
   .stack ORIGIN(ram) + LENGTH(ram) - __stack_size :
   {
     PROVIDE( _heap_end = . );
+    PROVIDE( __heap_end = . );
     . = __stack_size;
     PROVIDE( _sp = . );
   } >ram AT>ram
