@@ -5,6 +5,7 @@ import sys
 import time
 import signal
 import psutil
+import re
 import copy
 import serial
 import serial.tools.list_ports
@@ -142,19 +143,31 @@ def kill_async_subprocess(proc):
             if sys.platform != "win32":
                 kill_sig = signal.SIGKILL
 
+            print("Try to Kill process id %d now" %(proc.pid))
             parent_proc = psutil.Process(proc.pid)
-            child_procs = parent_proc.children(recursive=True)
-            for child_proc in child_procs:
-                print("Kill child process %s, pid %d" %(child_proc.name(), child_proc.pid))
-                try:
-                    os.kill(child_proc.pid, kill_sig) # kill child process
-                except:
-                    continue
-            print("Kill parent process %s, pid %d" %(parent_proc.name(), parent_proc.pid))
+            try:
+                # This might cause PermissionError: [Errno 1] Operation not permitted: '/proc/1/stat' issue
+                child_procs = parent_proc.children(recursive=True)
+                for child_proc in child_procs:
+                    print("Kill child process %s, pid %d" %(child_proc.name(), child_proc.pid))
+                    try:
+                        os.kill(child_proc.pid, kill_sig) # kill child process
+                    except:
+                        continue
+            except Exception as exc:
+                print("Warning: kill child process failed with %s" %(exc))
             if parent_proc.is_running():
-                os.kill(parent_proc.pid, kill_sig) # kill parent process
+                print("Kill parent process %s, pid %d" %(parent_proc.name(), parent_proc.pid))
+                if sys.platform != "win32":
+                    try:
+                        os.killpg(parent_proc.pid, kill_sig) # kill parent process
+                    except:
+                        os.kill(parent_proc.pid, kill_sig) # kill parent process
+                else:
+                    os.kill(parent_proc.pid, kill_sig) # kill parent process
             # kill using process.kill again
-            proc.kill()
+            if parent_proc.is_running():
+                proc.kill()
         except psutil.NoSuchProcess:
             pass
         except Exception as exc:
@@ -254,8 +267,15 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     try:
         if isinstance(logfile, str):
             logfh = open(logfile, "wb")
-        process = await asyncio.create_subprocess_shell(command, \
-                stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT)
+        if sys.platform != "win32":
+            # add exec to running command to avoid create a process called /bin/sh -c
+            # and if you kill that process it will kill this sh process not the really
+            # command process you want to kill
+            process = await asyncio.create_subprocess_shell("exec " + command, \
+                    stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT)
+        else:
+            process = await asyncio.create_subprocess_shell(command, \
+                    stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT)
         while (time.time() - start_time) < timeout:
             try:
                 linebytes = await asyncio.wait_for(process.stdout.readline(), 1)
@@ -345,13 +365,23 @@ def find_files(fndir, pattern, recursive=False):
 
 def get_logfile(appdir, startdir, logdir, logname):
     relpath = os.path.relpath(appdir, startdir)
-    startdir_basename = os.path.basename(startdir)
-    applogdir = os.path.join(logdir, startdir_basename, relpath)
-    applog = os.path.join(applogdir, logname)
+    _, startdir_basename = os.path.splitdrive(startdir)
+    applogdir = os.path.join(os.path.relpath(logdir + os.sep + startdir_basename), relpath)
+    applog = os.path.relpath(os.path.join(applogdir, logname))
     applogdir = os.path.dirname(applog)
     if os.path.isdir(applogdir) == False:
         os.makedirs(applogdir)
     return applog
+
+def strtofloat(value):
+    fval = 0.0
+    try:
+        match = re.search(r'[+-]?\d*\.?\d+([Ee][+-]?\d+)?',  value.strip())
+        if match:
+            fval = float(match.group())
+    except:
+        pass
+    return fval
 
 def check_tool_version(ver_cmd, ver_check):
     vercmd_log = tempfile.mktemp()
@@ -505,20 +535,19 @@ def parse_benchmark_runlog(lines):
         if "Iterations*1000000/total_ticks" in line:
             value = line.split("=")[1].strip().split()[0]
             result = dict()
-            result["CoreMark/MHz"] = (float)(value)
+            result["CoreMark/MHz"] = strtofloat(value)
         # Dhrystone
         if "Dhrystone" in line:
             program_type = PROGRAM_DHRYSTONE
         if "1000000/(User_Cycle/Number_Of_Runs)" in line:
             value = line.split("=")[1].strip().split()[0]
             result = dict()
-            result["DMIPS/MHz"] = (float)(value)
+            result["DMIPS/MHz"] = strtofloat(value)
         # Whetstone
         if "Whetstone" in line:
             program_type = PROGRAM_WHETSTONE
         if "MWIPS/MHz" in line:
-            value = line.split("MWIPS/MHz")[-1].strip().split()
+            value = line.split("MWIPS/MHz")[-1].strip().split()[0]
             result = dict()
-            result["MWIPS/MHz"] = (float)(value[0])
+            result["MWIPS/MHz"] = strtofloat(value)
     return program_type, result
-
