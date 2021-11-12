@@ -46,6 +46,9 @@ RTOS ?=
 ### libncrt_small: favor size at the expense of speed, but full feature
 ### libncrt_nano: favor size at the expense of speed, no float support
 ### libncrt_pico: favor size at the expense of speed, no long/long long support
+##### Using without system library or include
+### nostd: Don't search the standard system directories for header files
+### nospec: Don't pass any --specs options
 STDCLIB ?= newlib_nano
 ## If NOGC=1, it will not gc any sections during compiling to save code size
 NOGC ?=
