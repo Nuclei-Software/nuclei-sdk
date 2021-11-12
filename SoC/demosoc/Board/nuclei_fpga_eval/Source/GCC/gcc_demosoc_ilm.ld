@@ -169,6 +169,7 @@ SECTIONS
 
   .data          :
   {
+    KEEP(*(.data.ctest*))
     *(.data .data.*)
     *(.gnu.linkonce.d.*)
     . = ALIGN(8);
@@ -206,6 +207,7 @@ SECTIONS
   /* Nuclei C Runtime Library requirements:
    * 1. heap need to be align at 16 bytes
    * 2. __heap_start and __heap_end symbol need to be defined
+   * 3. reserved at least __HEAP_SIZE space for heap
    */
   .heap (NOLOAD)   :
   {
