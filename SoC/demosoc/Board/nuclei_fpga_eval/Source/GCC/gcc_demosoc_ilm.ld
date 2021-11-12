@@ -25,18 +25,17 @@ OUTPUT_ARCH( "riscv" )
 
 ENTRY( _start )
 
+__STACK_SIZE = 2K;
+__HEAP_SIZE  = 2K;
+
 MEMORY
 {
-
-  ilm (rxai!w) : ORIGIN = 0x80000000, LENGTH = 64K
-  ram (wxa!ri) : ORIGIN = 0x90000000, LENGTH = 64K
+  ilm (rxa!w) : ORIGIN = 0x80000000, LENGTH = 64K
+  ram (wxa!r) : ORIGIN = 0x90000000, LENGTH = 64K
 }
-
 
 SECTIONS
 {
-  __stack_size = DEFINED(__stack_size) ? __stack_size : 2K;
-
   .init           :
   {
     *(.vtable)
@@ -190,7 +189,7 @@ SECTIONS
 
   PROVIDE( _fbss = . );
   PROVIDE( __bss_start = . );
-  .bss            :
+  .bss (NOLOAD)   :
   {
     *(.sbss*)
     *(.gnu.linkonce.sb.*)
@@ -200,20 +199,33 @@ SECTIONS
     . = ALIGN(4);
   } >ram AT>ram
 
+  . = ALIGN(16);
+  PROVIDE( _end = . );
+  PROVIDE( end = . );
+
   /* Nuclei C Runtime Library requirements:
    * 1. heap need to be align at 16 bytes
    * 2. __heap_start and __heap_end symbol need to be defined
    */
-  . = ALIGN(16);
-  PROVIDE( _end = . );
-  PROVIDE( end = . );
-  PROVIDE( __heap_start = . );
-
-  .stack ORIGIN(ram) + LENGTH(ram) - __stack_size :
+  .heap (NOLOAD)   :
   {
+    . = ALIGN(16);
+    PROVIDE( __heap_start = . );
+    . += __HEAP_SIZE;
+    . = ALIGN(16);
+    PROVIDE( __heap_limit = . );
+  } >ram AT>ram
+
+  .stack ORIGIN(ram) + LENGTH(ram) - __STACK_SIZE (NOLOAD) :
+  {
+    . = ALIGN(16);
     PROVIDE( _heap_end = . );
     PROVIDE( __heap_end = . );
-    . = __stack_size;
+    PROVIDE( __StackLimit = . );
+    PROVIDE( __StackBottom = . );
+    . += __STACK_SIZE;
+    . = ALIGN(16);
+    PROVIDE( __StackTop = . );
     PROVIDE( _sp = . );
   } >ram AT>ram
 }
