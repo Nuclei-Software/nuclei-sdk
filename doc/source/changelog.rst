@@ -40,6 +40,11 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
     - **stdclib** has more options, please see ``SoC/demosoc/Common/npk.yml``
     - **nuclei_archext** is added as new configuration variable, see ``SoC/demosoc/Common/npk.yml``
 
+* tools
+
+  - generate benchmark values in csv files when running nsdk_bench.py or nsdk_execute.py
+  - fix xl_spike processes not really killed in linux environment when running nsdk_bench.py
+
 For detailed changes, please check commit histories since 0.3.4 release.
 
 
