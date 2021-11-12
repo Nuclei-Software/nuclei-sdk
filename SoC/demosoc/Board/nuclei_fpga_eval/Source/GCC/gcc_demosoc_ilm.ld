@@ -184,12 +184,28 @@ SECTIONS
     *(.srodata .srodata.*)
   } >ram AT>ram
 
-  . = ALIGN(4);
+  . = ALIGN(8);
+  .tdata           : ALIGN(8)
+  {
+    PROVIDE( __tls_base = . );
+    *(.tdata .tdata.* .gnu.linkonce.td.*)
+  } >ram AT>ram
+
   PROVIDE( _edata = . );
   PROVIDE( edata = . );
 
+  . = ALIGN(8);
+
   PROVIDE( _fbss = . );
   PROVIDE( __bss_start = . );
+
+  .tbss (NOLOAD)   : ALIGN(8)
+  {
+    *(.tbss .tbss.* .gnu.linkonce.tb.*)
+    *(.tcommon)
+    PROVIDE( __tls_end = . );
+  } >ram AT>ram
+
   .bss (NOLOAD)   :
   {
     *(.sbss*)
