@@ -66,8 +66,8 @@ __HEAP_SIZE  = 0x00000800;
 /* Define base address and length of flash and ram */
 MEMORY
 {
-  flash (rxai!w) : ORIGIN = __ROM_BASE, LENGTH = __ROM_SIZE
-  ram (wxa!ri) : ORIGIN = __RAM_BASE, LENGTH = __RAM_SIZE
+  flash (rxa!w) : ORIGIN = __ROM_BASE, LENGTH = __ROM_SIZE
+  ram (wxa!r) : ORIGIN = __RAM_BASE, LENGTH = __RAM_SIZE
 }
 /* Linker script to place sections and symbol values. Should be used together
  * with other linker script that defines memory regions FLASH,ILM and RAM.
@@ -104,8 +104,6 @@ MEMORY
 ENTRY(_start)
 SECTIONS
 {
-  __STACK_SIZE = DEFINED(__STACK_SIZE) ? __STACK_SIZE : 2K;
-
   .init           :
   {
     /* vector table locate at flash */
@@ -247,6 +245,7 @@ SECTIONS
   /* Define data section virtual address is ram and physical address is flash */
   .data          :
   {
+    KEEP(*(.data.ctest*))
     *(.data .data.*)
     *(.gnu.linkonce.d.*)
     . = ALIGN(8);
@@ -261,7 +260,7 @@ SECTIONS
 
   PROVIDE( _fbss = . );
   PROVIDE( __bss_start = . );
-  .bss            :
+  .bss (NOLOAD)   :
   {
     *(.sbss*)
     *(.gnu.linkonce.sb.*)
@@ -271,14 +270,34 @@ SECTIONS
     . = ALIGN(4);
   } >ram AT>ram
 
-  . = ALIGN(8);
+  . = ALIGN(16);
   PROVIDE( _end = . );
   PROVIDE( end = . );
-  /* Define stack and head location at ram */
-  .stack ORIGIN(ram) + LENGTH(ram) - __STACK_SIZE :
+
+  /* Nuclei C Runtime Library requirements:
+   * 1. heap need to be align at 16 bytes
+   * 2. __heap_start and __heap_end symbol need to be defined
+   * 3. reserved at least __HEAP_SIZE space for heap
+   */
+  .heap (NOLOAD)   :
   {
+    . = ALIGN(16);
+    PROVIDE( __heap_start = . );
+    . += __HEAP_SIZE;
+    . = ALIGN(16);
+    PROVIDE( __heap_limit = . );
+  } >ram AT>ram
+
+  .stack ORIGIN(ram) + LENGTH(ram) - __STACK_SIZE (NOLOAD) :
+  {
+    . = ALIGN(16);
     PROVIDE( _heap_end = . );
-    . = __STACK_SIZE;
+    PROVIDE( __heap_end = . );
+    PROVIDE( __StackLimit = . );
+    PROVIDE( __StackBottom = . );
+    . += __STACK_SIZE;
+    . = ALIGN(16);
+    PROVIDE( __StackTop = . );
     PROVIDE( _sp = . );
   } >ram AT>ram
 }
