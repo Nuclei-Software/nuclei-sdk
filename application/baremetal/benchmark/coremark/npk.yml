@@ -30,8 +30,8 @@ configuration:
 
 ## Set Configuration for other packages
 setconfig:
-  - config: newlibsel
-    value: nano_with_printfloat
+  - config: stdclib
+    value: newlib_small
 
 ## Source Code Management
 codemanage:

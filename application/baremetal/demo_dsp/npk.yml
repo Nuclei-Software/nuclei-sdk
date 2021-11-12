@@ -27,8 +27,8 @@ configuration:
 setconfig:
   - config: nmsislibsel
     value: nmsis_dsp
-  - config: newlibsel
-    value: nano_with_printfloat
+  - config: stdclib
+    value: newlib_small
 
 ## Source Code Management
 codemanage:

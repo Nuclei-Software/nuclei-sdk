@@ -155,24 +155,40 @@ configuration:
         description: Packed SIMD Extension
       - name: v
         description: Vector Extension
-  newlibsel:
-    default_value: nano
+  stdclib:
+    default_value: newlib_nano
     type: choice
     global: true
-    description: Newlib Selection
+    description: Standard C Library
     choices:
-      - name: normal
-        description: Normal Newlib
-      - name: nano_with_printfloat
-        description: Newlib Nano with print float support
-      - name: nano
-        description: Newlib Nano
+      - name: newlib_full
+        description: newlib with full feature
+      - name: newlib_fast
+        description: newlib nano with printf/scanf float
+      - name: newlib_small
+        description: newlib nano with printf float
+      - name: newlib_nano
+        description: newlib nano without printf/scanf float
+      - name: libncrt_fast
+        description: nuclei c runtime library, optimized for speed
+      - name: libncrt_balanced
+        description: nuclei c runtime library, balanced, full feature
+      - name: libncrt_small
+        description: nuclei c runtime library, optimized for size, full feature
+      - name: libncrt_nano
+        description: nuclei c runtime library, optimized for size, no float support
+      - name: libncrt_pico
+        description: nuclei c runtime library, optimized for size, no long/long long support
 
 ## Source Code Management
 codemanage:
   installdir: demosoc
   copyfiles:
-    - path: ["Source/", "Include/", "demosoc.svd"]
+    - path: ["Source/*.c", "Source/Drivers/*.c", "Source/GCC/", "Include/", "demosoc.svd"]
+    - path: ["Source/Stubs/newlib"]
+      condition: $( startswith(${stdclib}, "newlib") )
+    - path: ["Source/Stubs/libncrt"]
+      condition: $( startswith(${stdclib}, "libncrt") )
   incdirs:
     - path: ["Include/"]
 
@@ -203,13 +219,21 @@ buildconfig:
     common_flags: # flags need to be combined together across all packages
       - flags: -g -fno-common -ffunction-sections -fdata-sections
       - flags: -march=${nuclei_core.arch}$(join(${nuclei_archext},'')) -mabi=${nuclei_core.abi} -mcmodel=medany
+      - flags: --specs=nosys.specs
+        condition: $( ${stdclib} == "newlib_full" )
+      - flags: --specs=nano.specs --specs=nosys.specs -u _printf_float -u _scanf_float
+        condition: $( ${stdclib} == "newlib_fast" )
+      - flags: --specs=nano.specs --specs=nosys.specs -u _printf_float
+        condition: $( ${stdclib} == "newlib_small" )
+      - flags: --specs=nano.specs --specs=nosys.specs
+        condition: $( ${stdclib} == "newlib_nano" )
+      - flags: --specs=${stdclib}.specs
+        condition: $( startswith(${stdclib}, "libncrt") )
     ldflags:
-      - flags: -lstdc++ -nostartfiles --specs=nosys.specs
-      - flags: --specs=nano.specs
-        condition: $( ${newlibsel} != "normal" )
-      - flags: -u _printf_float
-        condition: $( ${newlibsel} == "nano_with_printfloat" )
+      - flags: -lstdc++ -nostartfiles
+      - flags: -Wl,--gc-sections -Wl,--check-sections
       - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
+        condition: $( startswith(${stdclib}, "newlib") )
     cflags:
     asmflags:
       - flags: -x assembler-with-cpp
