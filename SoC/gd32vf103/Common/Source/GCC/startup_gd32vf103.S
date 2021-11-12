@@ -242,7 +242,7 @@ _start0800:
     .option push
     .option norelax
     la gp, __global_pointer$
-
+    la tp, __tls_base
     .option pop
     la sp, _sp
 
