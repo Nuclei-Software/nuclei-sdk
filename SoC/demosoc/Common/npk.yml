@@ -179,6 +179,10 @@ configuration:
         description: nuclei c runtime library, optimized for size, no float support
       - name: libncrt_pico
         description: nuclei c runtime library, optimized for size, no long/long long support
+      - name: nostd
+        description: no std c library will be used, and don't search the standard system directories for header files
+      - name: nospec
+        description: no std c library will be used, not pass any --specs options
 
 ## Source Code Management
 codemanage:
@@ -229,6 +233,10 @@ buildconfig:
         condition: $( ${stdclib} == "newlib_nano" )
       - flags: --specs=${stdclib}.specs
         condition: $( startswith(${stdclib}, "libncrt") )
+      - flags: -nostdinc
+        condition: $( ${stdclib} == "nostd" )
+      - flags:
+        condition: $( ${stdclib} == "nospec" )
     ldflags:
       - flags: -lstdc++ -nostartfiles
       - flags: -Wl,--gc-sections -Wl,--check-sections
