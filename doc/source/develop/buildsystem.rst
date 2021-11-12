@@ -806,6 +806,10 @@ can provided smaller code size and highly optimized floating point support compa
      - Nuclei C runtime library optimized for code size, without float/double support
    * - libncrt_pico
      - Nuclei C runtime library optimized for code size, without long/long long/float/double support
+   * - nostd
+     - no std c library will be used, and don't search the standard system directories for header files
+   * - nospec
+     - no std c library will be used, not pass any --specs options
 
 .. note::
 

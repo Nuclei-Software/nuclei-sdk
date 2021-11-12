@@ -11,8 +11,14 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
 * SoC
 
   - Provide correct gd32vf103.svd, the previous one content is messed up.
+  - Added support for newly introduced nuclei c runtime library(libncrt).
   - Rearrange stub function folder for gd32vf103 and demosoc to support
     different c runtime library.
+  - A lot changes happened in link scripts under SoC folder
+    - heap section is added for libncrt, size controlled by ``__HEAP_SIZE``
+    - heap start and end ld symbols are ``__heap_start`` and ``__heap_end``
+    - stub function ``sbrk`` now using new heap start and end ld symbols
+    - tdata/tbss section is added for for libncrt, thread local storage supported
 
 * Build System
 
@@ -23,6 +29,16 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
 * Contribution
 
   - Update contribution guide due to runtime library choices provided now.
+
+* NPK
+
+  - **newlibsel** configuration variable changed to **stdclib**, and is not compatiable.
+
+    - **newlibsel=normal** change to **stdclib=newlib_full**
+    - **newlibsel=nano_with_printfloat** changed to **stdclib=newlib_small**
+    - **newlibsel=nano** changed to **stdclib=newlib_nano**
+    - **stdclib** has more options, please see ``SoC/demosoc/Common/npk.yml``
+    - **nuclei_archext** is added as new configuration variable, see ``SoC/demosoc/Common/npk.yml``
 
 For detailed changes, please check commit histories since 0.3.4 release.
 
