@@ -8,7 +8,7 @@ INCDIRS = .. .
 
 COMMON_FLAGS += -O2
 
-NOGC ?= 1
+#NOGC ?= 1
 
 STDCLIB ?= newlib_small
 
