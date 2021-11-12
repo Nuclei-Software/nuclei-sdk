@@ -6,11 +6,11 @@
 
 __WEAK void* _sbrk(ptrdiff_t incr)
 {
-    extern char _end[];
-    extern char _heap_end[];
-    static char* curbrk = _end;
+    extern char __heap_start[];
+    extern char __heap_end[];
+    static char* curbrk = __heap_start;
 
-    if ((curbrk + incr < _end) || (curbrk + incr > _heap_end)) {
+    if ((curbrk + incr < __heap_start) || (curbrk + incr > __heap_end)) {
         return (void*)(-1);
     }
 
