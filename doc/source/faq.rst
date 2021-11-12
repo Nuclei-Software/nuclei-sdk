@@ -171,10 +171,10 @@ For example, if you want to change linker script for nuclei_fpga_eval ilm downlo
      MEMORY
      {
 
-    -  ilm (rxai!w) : ORIGIN = 0x80000000, LENGTH = 64K
-    -  ram (wxa!ri) : ORIGIN = 0x90000000, LENGTH = 64K
-    +  ilm (rxai!w) : ORIGIN = 0x80000000, LENGTH = 512K
-    +  ram (wxa!ri) : ORIGIN = 0x90000000, LENGTH = 256K
+    -  ilm (rxa!w) : ORIGIN = 0x80000000, LENGTH = 64K
+    -  ram (wxa!r) : ORIGIN = 0x90000000, LENGTH = 64K
+    +  ilm (rxa!w) : ORIGIN = 0x80000000, LENGTH = 512K
+    +  ram (wxa!r) : ORIGIN = 0x90000000, LENGTH = 256K
      }
 
 
