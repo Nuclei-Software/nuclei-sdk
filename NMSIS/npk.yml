@@ -58,8 +58,7 @@ codemanage:
     - path: ["Library/NN/GCC"]
       condition: $( contains(${nmsislibsel}, "nmsis_nn") )
   ldlibs:
-    - libs: ["nmsis_dsp_${nmsislibarch}"]
-      condition: $( contains(${nmsislibsel}, "nmsis_dsp") || contains(${nmsislibsel}, "nmsis_nn") )
     - libs: ["nmsis_nn_${nmsislibarch}"]
       condition: $( contains(${nmsislibsel}, "nmsis_nn") )
-
+    - libs: ["nmsis_dsp_${nmsislibarch}"]
+      condition: $( contains(${nmsislibsel}, "nmsis_dsp") || contains(${nmsislibsel}, "nmsis_nn") )
