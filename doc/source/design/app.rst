@@ -330,9 +330,9 @@ This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
     # cd to the demo_dsp directory
     cd application/baremetal/demo_dsp
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar DSP_ENABLE=OFF clean
+    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar DSP_ENABLE=OFF upload
+    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
 
 **Expected output as below:**
 

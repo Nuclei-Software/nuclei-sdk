@@ -8,6 +8,13 @@ V0.3.5-dev
 
 This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
 
+* Application
+
+  - **DSP_ENABLE** and **VECTOR_ENABLE** are deprecated now in demo_dsp application, please use **ARCH_EXT** to replace it.
+    ``ARCH_EXT=p`` equal to ``DSP_ENABLE=ON``, ``ARCH_EXT=v`` equal to ``VECTOR_ENABLE=ON``.
+  - demo_dsp application no need to set include and libraries for NMSIS DSP library, just use ``NMSIS_LIB = nmsis_dsp`` to
+    select NMSIS DSP library and set include directory.
+
 * SoC
 
   - Provide correct gd32vf103.svd, the previous one content is messed up.
