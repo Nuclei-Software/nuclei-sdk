@@ -421,7 +421,7 @@ class nsdk_runner(nsdk_builder):
             build_board = build_info["BOARD"]
             build_core = build_info["CORE"]
             build_download = build_info["DOWNLOAD"]
-            build_dsp_enable = build_config.get("DSP_ENABLE", "OFF")
+            build_arch_ext = build_config.get("ARCH_EXT", "")
             if qemu_machine is None:
                 if build_soc == "hbird" or build_soc == "demosoc":
                     machine = "nuclei_n"
@@ -438,8 +438,8 @@ class nsdk_runner(nsdk_builder):
                 machine = qemu_machine
             if qemu_cpu is None:
                 qemu_sel_cpu = "nuclei-%s" % (build_core.lower())
-                if build_dsp_enable == "ON" and "p" not in qemu_sel_cpu[-3:]:
-                    qemu_sel_cpu = qemu_sel_cpu + ",ext=p"
+                if build_arch_ext != "":
+                    qemu_sel_cpu = qemu_sel_cpu + ",ext=%s" %(build_arch_ext)
             else:
                 qemu_sel_cpu = qemu_cpu
 
@@ -484,14 +484,13 @@ class nsdk_runner(nsdk_builder):
             xlspike_exe = hwconfig.get("xlspike", "xl_spike")
             build_soc = build_info["SOC"]
             build_board = build_info["BOARD"]
-            build_dsp_enable = build_config.get("DSP_ENABLE", "OFF")
+            build_arch_ext = build_config.get("ARCH_EXT", "")
             if not (build_soc == "hbird" or build_soc == "demosoc"):
                 xlspike_exe = None
                 print("SOC=%s BOARD=%s is not supported by xlspike" % (build_soc, build_board))
             else:
                 riscv_arch = build_info["RISCV_ARCH"]
-            if build_dsp_enable == "ON" and "p" not in riscv_arch[-3:]:
-                riscv_arch = riscv_arch + 'p'
+            riscv_arch = riscv_arch + build_arch_ext
             timeout = hwconfig.get("timeout", 60)
         runner = None
         cmdsts = False

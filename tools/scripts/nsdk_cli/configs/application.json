@@ -13,7 +13,6 @@
     },
     "build_target": "clean all",
     "build_config": {
-        "DSP_ENABLE": "OFF"
     },
     "checks": {
         "PASS": [],

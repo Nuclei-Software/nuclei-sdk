@@ -15,7 +15,7 @@
         "BOARD": "nuclei_fpga_eval",
         "CORE": "ux600",
         "DOWNLOAD": "ilm",
-        "DSP_ENABLE": "OFF"
+        "ARCH_EXT": ""
     },
     "appconfig": {
         "application/baremetal/benchmark/dhrystone": {

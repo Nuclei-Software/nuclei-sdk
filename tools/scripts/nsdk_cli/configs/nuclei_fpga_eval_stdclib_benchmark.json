@@ -15,7 +15,7 @@
     "build_config": {
         "SOC": "demosoc",
         "BOARD": "nuclei_fpga_eval",
-        "DSP_ENABLE": "OFF",
+        "ARCH_EXT": "",
         "DOWNLOAD": "ilm"
     },
     "appdirs": [

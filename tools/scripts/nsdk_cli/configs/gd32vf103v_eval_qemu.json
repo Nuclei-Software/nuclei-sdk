@@ -14,7 +14,7 @@
         "SOC": "gd32vf103",
         "BOARD": "gd32vf103v_eval",
         "DOWNLOAD": "flashxip",
-        "DSP_ENABLE": "OFF"
+        "ARCH_EXT": ""
     },
     "appconfig": {
         "application/rtthread/msh": {

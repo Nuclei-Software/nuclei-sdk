@@ -11,27 +11,22 @@
     "build_config": {
         "SOC": "demosoc",
         "BOARD": "nuclei_fpga_eval",
+        "STDCLIB": "libncrt_small",
         "SIMU": "xlspike"
     },
     "build_configs": {
-        "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": ""},
-        "n305b-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "b"},
-        "n305bp-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "bp"},
-        "n307fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": ""},
-        "n307fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "b"},
-        "n307fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "bp"},
-        "ux600-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": ""},
-        "ux600b-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": "b"},
-        "ux600bp-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": "bp"},
-        "ux600bpv-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": "bpv"},
-        "ux600fd-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": ""},
-        "ux600fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": "b"},
-        "ux600fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": "bp"},
-        "ux600fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": "bpv"}
+        "n201-ilm": {"DOWNLOAD": "ilm", "CORE": "n201"},
+        "n201e-ilm": {"DOWNLOAD": "ilm", "CORE": "n201e"},
+        "n205-ilm": {"DOWNLOAD": "ilm", "CORE": "n205"},
+        "n307-ilm": {"DOWNLOAD": "ilm", "CORE": "n307"},
+        "n307fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd"}
     },
     "appconfig": {
         "application/baremetal/demo_dsp": {
             "build_configs" : {
+                "n305-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "p"},
+                "n307-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n307", "ARCH_EXT": "p"},
+                "n307fd-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "p"}
             },
             "checks": {
                 "PASS": ["all test are passed"],
@@ -65,6 +60,6 @@
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": false},
         "application/rtthread/msh" : {"build": true, "run": false},
-        "test/core": {"build": true, "run": false}
+        "test/core": {"build": false}
     }
 }

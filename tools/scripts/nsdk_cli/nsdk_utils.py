@@ -114,7 +114,7 @@ def dict_merge(dct, merge_dct):
 def get_make_csv(app, config):
     make_options = " "
     SUPPORT_KEYS = ["SOC", "BOARD", "CORE", "DOWNLOAD", "VARIANT", \
-        "BENCH_UNIT", "BENCH_FLAGS", "DSP_ENABLE", "SILENT", "V"]
+        "BENCH_UNIT", "BENCH_FLAGS", "ARCH_EXT", "STDCLIB", "SILENT", "V"]
     csv_print = "CSV, APP=%s" % (app)
     if isinstance(config, dict):
         for key in config:

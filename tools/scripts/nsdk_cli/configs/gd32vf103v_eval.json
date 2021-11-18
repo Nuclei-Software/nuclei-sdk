@@ -12,7 +12,7 @@
         "BOARD": "gd32vf103v_eval",
         "CORE": "n205",
         "DOWNLOAD": "flashxip",
-        "DSP_ENABLE": "OFF"
+        "ARCH_EXT": ""
     },
     "expected": {
         "application/baremetal/demo_nice" : {
