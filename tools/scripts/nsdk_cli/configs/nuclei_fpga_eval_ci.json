@@ -11,7 +11,7 @@
     "build_config": {
         "SOC": "demosoc",
         "BOARD": "nuclei_fpga_eval",
-        "ARCH_EXT": "OFF"
+        "ARCH_EXT": ""
     },
     "build_configs": {
         "n201-ilm": {"DOWNLOAD": "ilm", "CORE": "n201"},
