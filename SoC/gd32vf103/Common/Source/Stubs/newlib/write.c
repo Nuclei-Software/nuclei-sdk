@@ -20,3 +20,11 @@ __WEAK ssize_t _write(int fd, const void* ptr, size_t len)
     }
     return len;
 }
+
+int putchar(int dat)
+{
+    if (dat == '\n') {
+        usart_write(SOC_DEBUG_UART, '\r');
+    }
+    usart_write(SOC_DEBUG_UART, dat);
+}
