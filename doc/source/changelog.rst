@@ -18,7 +18,7 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
 * SoC
 
   - Provide correct gd32vf103.svd, the previous one content is messed up.
-  - putchar is required to be implemented for RT-Thread porting
+  - ``putchar/getchar`` newlib stub are required to be implemented for RT-Thread porting
   - Added support for newly introduced nuclei c runtime library(libncrt).
   - Rearrange stub function folder for gd32vf103 and demosoc to support
     different c runtime library.
