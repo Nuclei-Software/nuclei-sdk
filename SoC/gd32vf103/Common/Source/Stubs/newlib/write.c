@@ -5,21 +5,7 @@
 #include <sys/types.h>
 #include <nuclei_sdk_hal.h>
 
-__WEAK ssize_t _write(int fd, const void* ptr, size_t len)
-{
-    if (!isatty(fd)) {
-        return -1;
-    }
-
-    const uint8_t* writebuf = (const uint8_t*)ptr;
-    for (size_t i = 0; i < len; i++) {
-        if (writebuf[i] == '\n') {
-            usart_write(SOC_DEBUG_UART, '\r');
-        }
-        usart_write(SOC_DEBUG_UART, writebuf[i]);
-    }
-    return len;
-}
+#undef putchar
 
 int putchar(int dat)
 {
@@ -28,3 +14,17 @@ int putchar(int dat)
     }
     usart_write(SOC_DEBUG_UART, dat);
 }
+
+__WEAK ssize_t _write(int fd, const void* ptr, size_t len)
+{
+    if (!isatty(fd)) {
+        return -1;
+    }
+
+    const uint8_t* writebuf = (const uint8_t*)ptr;
+    for (size_t i = 0; i < len; i++) {
+        putchar((int)writebuf[i]);
+    }
+    return len;
+}
+
