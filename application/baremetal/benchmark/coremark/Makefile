@@ -7,7 +7,7 @@ BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fschedule-insns -fschedule-insns2 \
 	-falign-functions=4 -falign-jumps=4 -falign-loops=4 -finline-limit=1000 \
 	-fno-if-conversion -fno-if-conversion2 -fselective-scheduling \
 	-fno-tree-dominator-opts -fno-tree-loop-distribute-patterns \
-	--param fsm-scale-path-stmts=3
+	--param fsm-scale-path-stmts=3 -funroll-all-loops
 
 #BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fschedule-insns -fschedule-insns2 \
 	-fno-tree-vectorize -fno-common -funroll-loops -finline-functions \
