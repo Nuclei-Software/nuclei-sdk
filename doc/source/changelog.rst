@@ -18,6 +18,7 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
 * SoC
 
   - Provide correct gd32vf103.svd, the previous one content is messed up.
+  - putchar is required to be implemented for RT-Thread porting
   - Added support for newly introduced nuclei c runtime library(libncrt).
   - Rearrange stub function folder for gd32vf103 and demosoc to support
     different c runtime library.
@@ -26,6 +27,10 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
     - heap start and end ld symbols are ``__heap_start`` and ``__heap_end``
     - stub function ``sbrk`` now using new heap start and end ld symbols
     - tdata/tbss section is added for for libncrt, thread local storage supported
+
+* OS
+
+  - Change RT-Thread porting to support libncrt and newlibc, mainly using putchar and getchar
 
 * Build System
 
