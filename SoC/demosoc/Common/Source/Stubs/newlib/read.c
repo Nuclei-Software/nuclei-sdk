@@ -29,6 +29,10 @@ __WEAK ssize_t _read(int fd, void* ptr, size_t len)
     uint8_t* readbuf = (uint8_t*)ptr;
     for (cnt = 0; cnt < len; cnt ++) {
         readbuf[cnt] = getchar();
+        /* Return partial buffer if we get EOL */
+        if (readbuf[cnt] == '\n') {
+            return cnt;
+        }
     }
 
     return cnt;
