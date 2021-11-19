@@ -217,7 +217,12 @@ void SysTick_Handler(void)
 
 void rt_hw_console_output(const char* str)
 {
-    puts(str);
+    rt_size_t size = 0;
+
+    size = rt_strlen(str);
+    for (int i = 0; i < size; i ++) {
+        putchar(str[i]);
+    }
 }
 
 char rt_hw_console_getchar(void)
