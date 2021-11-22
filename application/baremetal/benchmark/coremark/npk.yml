@@ -55,7 +55,7 @@ buildconfig:
     cxxflags:
     cdefines:
       - defines: FLAGS_STR=\""${app_commonflags}"\"
-      - defines: ITERATIONS=500
+      - defines: ITERATIONS=600
       - defines: PERFORMANCE_RUN=1
     prebuild_steps: # could be override by app/bsp type
       command:
