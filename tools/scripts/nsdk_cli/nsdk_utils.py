@@ -579,26 +579,29 @@ def parse_benchmark_runlog(lines):
         return False, None
     result = None
     program_type = PROGRAM_UNKNOWN
-    for line in lines:
-        # Coremark
-        if "CoreMark" in line:
-            program_type = PROGRAM_COREMARK
-        if "Iterations*1000000/total_ticks" in line:
-            value = line.split("=")[1].strip().split()[0]
-            result = dict()
-            result["CoreMark/MHz"] = strtofloat(value)
-        # Dhrystone
-        if "Dhrystone" in line:
-            program_type = PROGRAM_DHRYSTONE
-        if "1000000/(User_Cycle/Number_Of_Runs)" in line:
-            value = line.split("=")[1].strip().split()[0]
-            result = dict()
-            result["DMIPS/MHz"] = strtofloat(value)
-        # Whetstone
-        if "Whetstone" in line:
-            program_type = PROGRAM_WHETSTONE
-        if "MWIPS/MHz" in line:
-            value = line.split("MWIPS/MHz")[-1].strip().split()[0]
-            result = dict()
-            result["MWIPS/MHz"] = strtofloat(value)
+    try:
+        for line in lines:
+            # Coremark
+            if "CoreMark" in line:
+                program_type = PROGRAM_COREMARK
+            if "Iterations*1000000/total_ticks" in line:
+                value = line.split("=")[1].strip().split()[0]
+                result = dict()
+                result["CoreMark/MHz"] = strtofloat(value)
+            # Dhrystone
+            if "Dhrystone" in line:
+                program_type = PROGRAM_DHRYSTONE
+            if "1000000/(User_Cycle/Number_Of_Runs)" in line:
+                value = line.split("=")[1].strip().split()[0]
+                result = dict()
+                result["DMIPS/MHz"] = strtofloat(value)
+            # Whetstone
+            if "Whetstone" in line:
+                program_type = PROGRAM_WHETSTONE
+            if "MWIPS/MHz" in line:
+                value = line.split("MWIPS/MHz")[-1].strip().split()[0]
+                result = dict()
+                result["MWIPS/MHz"] = strtofloat(value)
+    except:
+        return program_type, result
     return program_type, result
