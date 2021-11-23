@@ -202,7 +202,7 @@ typedef enum EXCn {
 #define __Vendor_SysTickConfig    0                     /*!< Set to 1 if different SysTick Config is used */
 #define __Vendor_EXCEPTION        0                     /*!< Set to 1 if vendor exception hander is present */
 
-/** @} */ /* End of group Configuration_of_CMSIS */
+/** @} */ /* End of group Configuration_of_NMSIS */
 
 
 

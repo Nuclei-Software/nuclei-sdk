@@ -200,7 +200,29 @@ typedef enum EXCn {
 #define __FPU_PRESENT             2
 #endif
 
-#define __DSP_PRESENT             1                     /*!< Set to 1 if DSP is present */
+/* __riscv_bitmanip/__riscv_dsp/__riscv_vector is introduced
+ * in nuclei gcc 10.2 when b/p/v extension compiler option is selected.
+ * For example:
+ * -march=rv32imacb -mabi=ilp32 : __riscv_bitmanip macro will be defined
+ * -march=rv32imacp -mabi=ilp32 : __riscv_dsp macro will be defined
+ * -march=rv64imacv -mabi=lp64 : __riscv_vector macro will be defined
+ */
+#if defined(__riscv_bitmanip)
+#define __BITMANIP_PRESENT        1                     /*!< Set to 1 if Bitmainpulation extension is present */
+#else
+#define __BITMANIP_PRESENT        0                     /*!< Set to 1 if Bitmainpulation extension is present */
+#endif
+#if defined(__riscv_dsp)
+#define __DSP_PRESENT             1                     /*!< Set to 1 if Partial SIMD(DSP) extension is present */
+#else
+#define __DSP_PRESENT             0                     /*!< Set to 1 if Partial SIMD(DSP) extension is present */
+#endif
+#if defined(__riscv_vector)
+#define __VECTOR_PRESENT          1                     /*!< Set to 1 if Vector extension is present */
+#else
+#define __VECTOR_PRESENT          0                     /*!< Set to 1 if Vector extension is present */
+#endif
+
 #define __PMP_PRESENT             1                     /*!< Set to 1 if PMP is present */
 #define __PMP_ENTRY_NUM           16                    /*!< Set to 8 or 16, the number of PMP entries */
 #define __ICACHE_PRESENT          0                     /*!< Set to 1 if I-Cache is present */
@@ -208,7 +230,7 @@ typedef enum EXCn {
 #define __Vendor_SysTickConfig    0                     /*!< Set to 1 if different SysTick Config is used */
 #define __Vendor_EXCEPTION        0                     /*!< Set to 1 if vendor exception hander is present */
 
-/** @} */ /* End of group Configuration_of_CMSIS */
+/** @} */ /* End of group Configuration_of_NMSIS */
 
 
 #include <nmsis_core.h>                         /*!< Nuclei N/NX class processor and core peripherals */
