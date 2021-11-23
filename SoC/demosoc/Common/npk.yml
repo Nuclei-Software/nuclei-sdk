@@ -150,7 +150,7 @@ configuration:
     description: Nuclei ARCH Extensions
     choices:
       - name: b
-        description: Bitmainp Extension
+        description: Bitmanip Extension
       - name: p
         description: Packed SIMD Extension
       - name: v
