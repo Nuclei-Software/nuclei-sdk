@@ -423,7 +423,7 @@ class nsdk_runner(nsdk_builder):
             build_download = build_info["DOWNLOAD"]
             build_arch_ext = build_config.get("ARCH_EXT", "")
             if qemu_machine is None:
-                if build_soc == "hbird" or build_soc == "demosoc":
+                if build_soc == "hbird" or build_soc == "demosoc" or build_soc == "xlspike":
                     machine = "nuclei_n"
                 else:
                     if build_board == "gd32vf103v_rvstar":
@@ -484,13 +484,11 @@ class nsdk_runner(nsdk_builder):
             xlspike_exe = hwconfig.get("xlspike", "xl_spike")
             build_soc = build_info["SOC"]
             build_board = build_info["BOARD"]
+            riscv_arch = build_info["RISCV_ARCH"]
             build_arch_ext = build_config.get("ARCH_EXT", "")
-            if not (build_soc == "hbird" or build_soc == "demosoc"):
+            if not (build_soc == "hbird" or build_soc == "demosoc" or build_soc == "xlspike"):
                 xlspike_exe = None
                 print("SOC=%s BOARD=%s is not supported by xlspike" % (build_soc, build_board))
-            else:
-                riscv_arch = build_info["RISCV_ARCH"]
-            riscv_arch = riscv_arch + build_arch_ext
             timeout = hwconfig.get("timeout", 60)
         runner = None
         cmdsts = False
