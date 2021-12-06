@@ -272,11 +272,13 @@ _start0800:
     csrs CSR_MTVT2, 0x1
 
     /*
-     * Set Exception Entry MTVEC to exc_entry
+     * Set Exception Entry MTVEC to early_exc_entry
      * Due to settings above, Exception and NMI
      * will share common entry.
+     * This early_exc_entry is only used during early
+     * boot stage before main
      */
-    la t0, exc_entry
+    la t0, early_exc_entry
     csrw CSR_MTVEC, t0
 
     /* Set the interrupt processing mode to ECLIC mode */
@@ -352,6 +354,15 @@ _start0800:
 
     /* do pre-init steps before main */
     call _premain_init
+
+    /*
+     * When all initialization steps done
+     * set exception entry to correct exception
+     * entry and jump to main.
+     */
+    la t0, exc_entry
+    csrw CSR_MTVEC, t0
+
     /* ===== Call Main Function  ===== */
     /* argc = argv = 0 */
     li a0, 0
@@ -368,3 +379,10 @@ _start0800:
 
 1:
     j 1b
+
+/* Early boot exception entry before main */
+.align 6
+.global early_exc_entry
+early_exc_entry:
+    wfi
+    j early_exc_entry
