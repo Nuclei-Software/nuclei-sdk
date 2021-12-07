@@ -37,6 +37,7 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
   - Introduce :ref:`develop_buildsystem_var_stdclib` makefile variable to support different c library.
   - **NEWLIB** and **PFLOAT** variable is deprecated in this release.
   - Introduce :ref:`develop_buildsystem_var_archext` makefile variable to support b/p/v extension.
+  - Only link ``-lstdc++`` library when using **STDCLIB=newlib_xxx**
 
 * Contribution
 
