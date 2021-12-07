@@ -26,6 +26,8 @@
         "n307fd-libncrt-small": {"CORE": "n307fd", "STDCLIB": "libncrt_small"},
         "n307fd-libncrt-fast": {"CORE": "n307fd", "STDCLIB": "libncrt_fast"},
         "n307fd-libncrt-balanced": {"CORE": "n307fd", "STDCLIB": "libncrt_balanced"},
+        "n307fdb-newlib-small": {"CORE": "n307fd", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n307fdb-libncrt-small": {"CORE": "n307fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
         "n307-default": {"CORE": "n307"},
         "n307-newlib-full": {"CORE": "n307", "STDCLIB": "newlib_full"},
         "n307-newlib-fast": {"CORE": "n307", "STDCLIB": "newlib_fast"},
@@ -36,6 +38,8 @@
         "n307-libncrt-small": {"CORE": "n307", "STDCLIB": "libncrt_small"},
         "n307-libncrt-fast": {"CORE": "n307", "STDCLIB": "libncrt_fast"},
         "n307-libncrt-balanced": {"CORE": "n307", "STDCLIB": "libncrt_balanced"},
+        "n307b-newlib-small": {"CORE": "n307", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n307b-libncrt-small": {"CORE": "n307", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
         "n305-default": {"CORE": "n305"},
         "n305-newlib-full": {"CORE": "n305", "STDCLIB": "newlib_full"},
         "n305-newlib-fast": {"CORE": "n305", "STDCLIB": "newlib_fast"},
@@ -45,7 +49,9 @@
         "n305-libncrt-nano": {"CORE": "n305", "STDCLIB": "libncrt_nano"},
         "n305-libncrt-small": {"CORE": "n305", "STDCLIB": "libncrt_small"},
         "n305-libncrt-fast": {"CORE": "n305", "STDCLIB": "libncrt_fast"},
-        "n305-libncrt-balanced": {"CORE": "n305", "STDCLIB": "libncrt_balanced"}
+        "n305-libncrt-balanced": {"CORE": "n305", "STDCLIB": "libncrt_balanced"},
+        "n305b-newlib-small": {"CORE": "n305", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n305b-libncrt-small": {"CORE": "n305", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"}
     },
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": false},
