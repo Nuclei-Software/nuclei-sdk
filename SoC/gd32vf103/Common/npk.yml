@@ -125,7 +125,9 @@ buildconfig:
       - flags:
         condition: $( ${stdclib} == "nospec" )
     ldflags:
-      - flags: -lstdc++ -nostartfiles
+      - flags: -nostartfiles
+      - flags: -lstdc++
+        condition: $( startswith(${stdclib}, "newlib") )
       - flags: -Wl,--gc-sections -Wl,--check-sections
       - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
         condition: $( startswith(${stdclib}, "newlib") )
