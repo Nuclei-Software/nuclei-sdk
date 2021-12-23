@@ -78,6 +78,10 @@ typedef struct {
 
 #define SysTimer_MSFRST_KEY                 (0x80000A5FUL)                              /*!< SysTick Timer Software Reset Request Key */
 
+#define SysTimer_CLINT_MSIP_OFS             (0x1000UL)                                  /*!< Software interrupt register offset of clint mode in SysTick Timer */
+#define SysTimer_CLINT_MTIMECMP_OFS         (0x5000UL)                                  /*!< MTIMECMP register offset of clint mode in SysTick Timer */
+#define SysTimer_CLINT_MTIME_OFS            (0xCFF8UL)                                  /*!< MTIME register offset of clint mode in SysTick Timer */
+
 #ifndef __SYSTIMER_BASEADDR
 /* Base address of SYSTIMER(__SYSTIMER_BASEADDR) should be defined in <Device.h> */
 #error "__SYSTIMER_BASEADDR is not defined, please check!"
@@ -85,6 +89,12 @@ typedef struct {
 /* System Timer Memory mapping of Device  */
 #define SysTimer_BASE                       __SYSTIMER_BASEADDR                         /*!< SysTick Base Address */
 #define SysTimer                            ((SysTimer_Type *) SysTimer_BASE)           /*!< SysTick configuration struct */
+
+/* System Timer Clint register base */
+#define SysTimer_CLINT_MSIP_BASE(hartid)        (unsigned long)((SysTimer_BASE) + (SysTimer_CLINT_MSIP_OFS) + ((hartid) << 2))
+#define SysTimer_CLINT_MTIMECMP_BASE(hartid)    (unsigned long)((SysTimer_BASE) + (SysTimer_CLINT_MTIMECMP_OFS) + ((hartid) << 3))
+#define SysTimer_CLINT_MTIME_BASE               (unsigned long)((SysTimer_BASE) + (SysTimer_CLINT_MTIME_OFS))
+
 /** @} */ /* end of group NMSIS_Core_SysTimer_Registers */
 
 /* ##################################    SysTimer function  ############################################ */
@@ -118,7 +128,24 @@ __STATIC_FORCEINLINE void SysTimer_SetLoadValue(uint64_t value)
  */
 __STATIC_FORCEINLINE uint64_t SysTimer_GetLoadValue(void)
 {
+#if __RISCV_XLEN == 32
+    volatile uint32_t high0, low, high;
+    uint64_t full;
+    void *addr;
+
+    addr = (void *)(&(SysTimer->MTIMER));
+
+    high0 = __LW(addr + 4);
+    low = __LW(addr);
+    high = __LW(addr + 4);
+    if (high0 != high) {
+        low = __LW(addr);
+    }
+    full = (((uint64_t)high) << 32) | low;
+    return full;
+#else
     return SysTimer->MTIMER;
+#endif
 }
 
 /**
@@ -134,7 +161,18 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetLoadValue(void)
  */
 __STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
 {
-    SysTimer->MTIMERCMP = value;
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    if (hartid == 0) {
+        SysTimer->MTIMERCMP = value;
+    } else {
+        void *addr = (void *)(SysTimer_CLINT_MTIMECMP_BASE(hartid));
+#if __RISCV_XLEN == 32
+        __SW(addr, (uint32_t)value);
+        __SW(addr + 4, (uint32_t)(value >> 32));
+#else
+        __SD(addr, value);
+#endif
+    }
 }
 
 /**
@@ -148,7 +186,24 @@ __STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
  */
 __STATIC_FORCEINLINE uint64_t SysTimer_GetCompareValue(void)
 {
-    return SysTimer->MTIMERCMP;
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    if (hartid == 0) {
+        return SysTimer->MTIMERCMP;
+    } else {
+        uint64_t full;
+        void *addr = (void *)(SysTimer_CLINT_MTIMECMP_BASE(hartid));
+#if __RISCV_XLEN == 32
+        // MTIMECMP didn't increase
+        uint32_t high, low;
+
+        high = __LW(addr + 4);
+        low = __LW(addr);
+        full = (((uint64_t)high) << 32) | low;
+#else
+        full = __LD(addr);
+#endif
+        return full;
+    }
 }
 
 /**
@@ -216,7 +271,13 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetControlValue(void)
  */
 __STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
 {
-    SysTimer->MSIP |= SysTimer_MSIP_MSIP_Msk;
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    if (hartid == 0) {
+        SysTimer->MSIP |= SysTimer_MSIP_MSIP_Msk;
+    } else {
+        void *addr = (void *)(SysTimer_CLINT_MSIP_BASE(hartid));
+        __SW(addr, SysTimer_MSIP_MSIP_Msk);
+    }
 }
 
 /**
@@ -230,7 +291,13 @@ __STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
  */
 __STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
 {
-    SysTimer->MSIP &= ~SysTimer_MSIP_MSIP_Msk;
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    if (hartid == 0) {
+        SysTimer->MSIP &= ~SysTimer_MSIP_MSIP_Msk;
+    } else {
+        void *addr = (void *)(SysTimer_CLINT_MSIP_BASE(hartid));
+        __SW(addr, 0);
+    }
 }
 
 /**
@@ -246,7 +313,13 @@ __STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
  */
 __STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
 {
-    return (uint32_t)(SysTimer->MSIP & SysTimer_MSIP_Msk);
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    if (hartid == 0) {
+        return (uint32_t)(SysTimer->MSIP & SysTimer_MSIP_Msk);
+    } else {
+        void *addr = (void *)(SysTimer_CLINT_MSIP_BASE(hartid));
+        return __LW(addr);
+    }
 }
 
 /**
@@ -257,7 +330,13 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
  */
 __STATIC_FORCEINLINE void SysTimer_SetMsipValue(uint32_t msip)
 {
-    SysTimer->MSIP = (msip & SysTimer_MSIP_Msk);
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    if (hartid == 0) {
+        SysTimer->MSIP = (msip & SysTimer_MSIP_Msk);
+    } else {
+        void *addr = (void *)(SysTimer_CLINT_MSIP_BASE(hartid));
+        __SW(addr, msip);
+    }
 }
 
 /**
@@ -273,7 +352,31 @@ __STATIC_FORCEINLINE void SysTimer_SetMsipValue(uint32_t msip)
 __STATIC_FORCEINLINE void SysTimer_SoftwareReset(void)
 {
     SysTimer->MSFTRST = SysTimer_MSFRST_KEY;
-    while(1);
+    while (1);
+}
+
+/**
+ * \brief  send ipi to target hart using Systimer Clint
+ * \details
+ * This function send ipi using clint timer.
+ * \param [in]  hart  target hart
+ */
+__STATIC_FORCEINLINE void SysTimer_SendIPI(uint32_t hartid)
+{
+    void *addr = (void *)(SysTimer_CLINT_MSIP_BASE(hartid));
+    __SW(addr, 1);
+}
+
+/**
+ * \brief  clear ipi to target hart using Systimer Clint
+ * \details
+ * This function clear ipi using Systimer clint timer.
+ * \param [in]  hart  target hart
+ */
+__STATIC_FORCEINLINE void SysTimer_ClearIPI(uint32_t hartid)
+{
+    void *addr = (void *)(SysTimer_CLINT_MSIP_BASE(hartid));
+    __SW(addr, 0);
 }
 
 #if defined (__Vendor_SysTickConfig) && (__Vendor_SysTickConfig == 0U) && defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
@@ -303,8 +406,8 @@ __STATIC_FORCEINLINE void SysTimer_SoftwareReset(void)
  */
 __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
 {
-    SysTimer_SetLoadValue(0);
-    SysTimer_SetCompareValue(ticks);
+    uint64_t loadticks = SysTimer_GetLoadValue();
+    SysTimer_SetCompareValue(ticks + loadticks);
     ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
     ECLIC_SetLevelIRQ(SysTimer_IRQn, 0);
     ECLIC_EnableIRQ(SysTimer_IRQn);
@@ -336,17 +439,17 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
  */
 __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
 {
-    uint64_t cur_ticks = SysTimer->MTIMER;
+    uint64_t cur_ticks = SysTimer_GetLoadValue();
     uint64_t reload_ticks = ticks + cur_ticks;
 
     if (__USUALLY(reload_ticks > cur_ticks)) {
-        SysTimer->MTIMERCMP = reload_ticks;
+        SysTimer_SetCompareValue(reload_ticks);
     } else {
         /* When added the ticks value, then the MTIMERCMP < TIMER,
          * which means the MTIMERCMP is overflowed,
          * so we need to reset the counter to zero */
-        SysTimer->MTIMER = 0;
-        SysTimer->MTIMERCMP = ticks;
+        SysTimer_SetLoadValue(0);
+        SysTimer_SetCompareValue(ticks);
     }
 
     return (0UL);
@@ -361,4 +464,3 @@ __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
 }
 #endif
 #endif /** __CORE_FEATURE_TIMER_H__  */
-
