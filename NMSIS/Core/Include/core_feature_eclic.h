@@ -714,6 +714,9 @@ __STATIC_FORCEINLINE void __ECLIC_SetVector(IRQn_Type IRQn, rv_csr_t vector)
 #if (defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1))
     MFlushDCacheLine((unsigned long)vec_base);
 #endif
+#if (defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1))
+    MInvalICacheLine((unsigned long)vec_base);
+#endif
 }
 
 /**
