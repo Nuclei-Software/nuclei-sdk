@@ -14,6 +14,11 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
     ``ARCH_EXT=p`` equal to ``DSP_ENABLE=ON``, ``ARCH_EXT=v`` equal to ``VECTOR_ENABLE=ON``.
   - demo_dsp application no need to set include and libraries for NMSIS DSP library, just use ``NMSIS_LIB = nmsis_dsp`` to
     select NMSIS DSP library and set include directory.
+  - Update coremark compile options for different Nuclei cpu series, currently
+    900 series options and 200/300/600 series options are provided, and can be selected by ``CPU_SERIES``.
+
+      - ``CPU_SERIES=900``: the compiler options for Nuclei 900 series will be selected.
+      - otherwise, the compiler options for Nuclei 200/300/600 series will be selected, which is by default for 300
 
 * SoC
 
@@ -38,7 +43,8 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
   - **NEWLIB** and **PFLOAT** variable is deprecated in this release.
   - Introduce :ref:`develop_buildsystem_var_archext` makefile variable to support b/p/v extension.
   - Only link ``-lstdc++`` library when using **STDCLIB=newlib_xxx**
-  - **RISCV_CMODEL** variable is added to choose code model, medlow or medany can be chosen, default is medlow for rv32 otherwise rv64
+  - **RISCV_CMODEL** variable is added to choose code model, medlow or medany can be chosen,
+    default is medlow for RV32 otherwise medany.
   - **RISCV_TUNE** variable is added to select riscv tune model, for Nuclei CPU, we added ``nuclei-200-series``,
     ``nuclei-300-series``, ``nuclei-600-series`` and ``nuclei-900-series`` in Nuclei RISC-V GNU toolchain >= 2021.12
 

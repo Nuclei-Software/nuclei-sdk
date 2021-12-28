@@ -451,10 +451,13 @@ In Nuclei SDK, we provided code and Makefile for this ``coremark`` application.
 You can also optimize the ``COMMON_FLAGS`` defined in coremark application Makefile
 to get different score number.
 
-* By default, this application runs for 500 iterations, you can also change this in Makefile.
-  e.g. Change this ``-DITERATIONS=500`` to value such as ``-DITERATIONS=5000``
+* By default, this application runs for 600 iterations, you can also change this in Makefile.
+  e.g. Change this ``-DITERATIONS=600`` to value such as ``-DITERATIONS=5000``
 * macro **PERFORMANCE_RUN=1** is defined
 * **PFLOAT = 1** is added in its Makefile to enable float value print
+* For different Nuclei CPU series, the benchmark options are different, currently
+  you can pass ``CPU_SERIES=900`` to select benchmark options for 900 series, otherwise
+  the benchmark options for 200/300/600/900 will be selected which is also the default value.
 
 .. note::
 
@@ -462,7 +465,7 @@ to get different score number.
      the ``ITERATIONS`` defined in Makefile to proper value to let the coremark run at least
      10 seconds
    * For example, for the ``gd32vf103`` based boards supported in Nuclei SDK, we suggest
-     to change ``-DITERATIONS=500`` to ``-DITERATIONS=5000``
+     to change ``-DITERATIONS=600`` to ``-DITERATIONS=5000``
 
 **How to run this application:**
 
