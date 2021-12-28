@@ -38,6 +38,9 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
   - **NEWLIB** and **PFLOAT** variable is deprecated in this release.
   - Introduce :ref:`develop_buildsystem_var_archext` makefile variable to support b/p/v extension.
   - Only link ``-lstdc++`` library when using **STDCLIB=newlib_xxx**
+  - **RISCV_CMODEL** variable is added to choose code model, medlow or medany can be chosen, default is medlow for rv32 otherwise rv64
+  - **RISCV_TUNE** variable is added to select riscv tune model, for Nuclei CPU, we added ``nuclei-200-series``,
+    ``nuclei-300-series``, ``nuclei-600-series`` and ``nuclei-900-series`` in Nuclei RISC-V GNU toolchain >= 2021.12
 
 * Contribution
 

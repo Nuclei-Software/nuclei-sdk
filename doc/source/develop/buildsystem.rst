@@ -568,32 +568,48 @@ Currently it has these cores supported as described in table
    :widths: 20 20 20
    :align: center
 
-   ========  ========== =======
-   **CORE**  **ARCH**   **ABI**
-   n201      rv32iac    ilp32
-   n201e     rv32eac    ilp32e
-   n203      rv32imac   ilp32
-   n203e     rv32emac   ilp32e
-   n205      rv32imac   ilp32
-   n205e     rv32emac   ilp32e
-   n305      rv32imac   ilp32
-   n307      rv32imafc  ilp32f
-   n307fd    rv32imafdc ilp32d
-   n600      rv32imac   ilp32
-   n600f     rv32imafc  ilp32f
-   n600fd    rv32imafdc ilp32d
-   nx600     rv64imac   lp64
-   nx600f    rv64imafc  lp64f
-   nx600fd   rv64imafdc lp64d
-   ux600     rv64imac   lp64
-   ux600f    rv64imafc  lp64f
-   ux600fd   rv64imafdc lp64d
-   ========  ========== =======
+   ========  ========== =======  =================
+   **CORE**  **ARCH**   **ABI**       **TUNE**
+   n201      rv32iac    ilp32    nuclei-200-series
+   n201e     rv32eac    ilp32e   nuclei-200-series
+   n203      rv32imac   ilp32    nuclei-200-series
+   n203e     rv32emac   ilp32e   nuclei-200-series
+   n205      rv32imac   ilp32    nuclei-200-series
+   n205e     rv32emac   ilp32e   nuclei-200-series
+   n300      rv32imac   ilp32    nuclei-300-series
+   n300f     rv32imafc  ilp32f   nuclei-300-series
+   n300fd    rv32imafdc ilp32d   nuclei-300-series
+   n305      rv32imac   ilp32    nuclei-300-series
+   n307      rv32imafc  ilp32f   nuclei-300-series
+   n307fd    rv32imafdc ilp32d   nuclei-300-series
+   n600      rv32imac   ilp32    nuclei-600-series
+   n600f     rv32imafc  ilp32f   nuclei-600-series
+   n600fd    rv32imafdc ilp32d   nuclei-600-series
+   nx600     rv64imac   lp64     nuclei-600-series
+   nx600f    rv64imafc  lp64f    nuclei-600-series
+   nx600fd   rv64imafdc lp64d    nuclei-600-series
+   ux600     rv64imac   lp64     nuclei-600-series
+   ux600f    rv64imafc  lp64f    nuclei-600-series
+   ux600fd   rv64imafdc lp64d    nuclei-600-series
+   n900      rv32imac   ilp32    nuclei-900-series
+   n900f     rv32imafc  ilp32f   nuclei-900-series
+   n900fd    rv32imafdc ilp32d   nuclei-900-series
+   nx900     rv64imac   lp64     nuclei-900-series
+   nx900f    rv64imafc  lp64f    nuclei-900-series
+   nx900fd   rv64imafdc lp64d    nuclei-900-series
+   ux900     rv64imac   lp64     nuclei-900-series
+   ux900f    rv64imafc  lp64f    nuclei-900-series
+   ux900fd   rv64imafdc lp64d    nuclei-900-series
+   ========  ========== =======  =================
 
-When **CORE** is selected, the **ARCH** and **ABI** are set, and it will affect the
-compiler options, eg. If **CORE=n205**, then ``ARCH=rv32imac, ABI=ilp32``,
+When **CORE** is selected, the **ARCH**, **ABI** and **TUNE**(optional) are set,
+and it will affect the compiler options, eg. If **CORE=n205**, then
+``ARCH=rv32imac, ABI=ilp32 TUNE=nuclei-200-series``,
 riscv arch related compile and link options will be passed, for this case,
-it will be ``-march=rv32imac -mabi=ilp32 -mcmodel=medany``.
+it will be ``-march=rv32imac -mabi=ilp32 -mtune=nuclei-200-series``.
+
+For riscv code model settings, the ``RISCV_CMODEL`` variable will be set to medlow
+for RV32 targets, otherwise it will be medany.
 
 The some SoCs, the CORE is fixed, so the ARCH and ABI will be fixed, such as
 ``gd32vf103`` SoC, in build system, the CORE is fixed to n205, and ARCH=rv32imac, ABI=ilp32.
