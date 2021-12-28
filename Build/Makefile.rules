@@ -27,7 +27,7 @@ endif
 .PHONY: all info help bin size dasm upload run_openocd run_gdb clean debug
 
 info:
-	@$(ECHO) Current Configuration: RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) RISCV_MODEL=$(RISCV_MODEL) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) DOWNLOAD=$(DOWNLOAD) STDCLIB=$(STDCLIB)
+	@$(ECHO) Current Configuration: RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) RISCV_TUNE=$(RISCV_TUNE) RISCV_MODEL=$(RISCV_MODEL) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) DOWNLOAD=$(DOWNLOAD) STDCLIB=$(STDCLIB)
 
 help:
 	@$(ECHO) "Nuclei N/NX-series RISC-V Embedded Processor Software Development Kit "
