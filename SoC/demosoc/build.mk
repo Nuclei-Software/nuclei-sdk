@@ -13,6 +13,7 @@
 # LINKER_SCRIPT: MUST, set this variable to linker script file for selected board and download mode
 # RISCV_ARCH: MUST, set this variable to the riscv arch you are using, see $(NUCLEI_SDK_BUILD)/Makefile.core
 # RISCV_ABI: MUST, set this variable to the riscv abi you are using, see $(NUCLEI_SDK_BUILD)/Makefile.core
+# RISCV_TUNE: Optional, set this variable to the mtune you are using, see $(NUCLEI_SDK_BUILD)/Makefile.core
 # If your SoC used a fixed BOARD, CORE or DOWNLOAD mode, please use override to define a fixed variable value, eg.
 # override CORE := n205
 # override DOWNLOAD := flashxip
@@ -70,7 +71,7 @@ ifneq ($(words $(wordlist 1, 2, $(CORE_ARCH_ABI))), 2)
 $(error No correct CORE_ARCH_ABI setting for CORE=$(CORE) found in $(realpath $(NUCLEI_SDK_BUILD)/Makefile.core))
 endif
 
-# Handle Nuclei RISC-V ARCH and ABI
+# Handle Nuclei RISC-V ARCH/ABI/CMODEL/TUNE
 ## ARCH_EXT could be combination of in order of bkpv, legal combination is list as below:
 ## bp: Bitmanip and Packed SIMD Extension present
 ## bpv: Bitmanip, Packed SIMD and Vector Extension present
