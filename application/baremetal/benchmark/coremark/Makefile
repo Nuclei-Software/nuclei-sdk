@@ -2,7 +2,32 @@ TARGET = coremark
 
 NUCLEI_SDK_ROOT = ../../../..
 
-BENCH_FLAGS ?= -Ofast -msave-restore -fno-code-hoisting -fno-tree-vectorize -fno-common \
+CPU_SERIES ?= 300
+
+ifeq ($(CPU_SERIES),900)
+# Benchmark options for 900
+BENCH_FLAGS ?= -Ofast -fno-tree-vectorize -funroll-all-loops -fno-aggressive-loop-optimizations \
+	-fgcse-las -fno-delete-null-pointer-checks -fno-rename-registers -funroll-all-loops \
+	-fno-tree-vrp -fwrapv -fno-toplevel-reorder -fipa-pta -fno-tree-ter -fno-dce \
+	-fno-tree-loop-ivcanon -fno-tree-loop-distribute-patterns -fno-sched-rank-heuristic \
+	--param=unroll-jam-min-percent=0 --param=large-unit-insns=0 --param=max-loop-header-insns=2 \
+	--param=max-average-unrolled-insns=128 --param=max-inline-insns-size=128 --param=max-cse-path-length=3 \
+	--param=inline-min-speedup=1 --param=max-sched-region-insns=7 --param=max-goto-duplication-insns=0 \
+	--param=max-gcse-insertion-ratio=0 --param=max-partial-antic-length=1 --param=loop-max-datarefs-for-datadeps=0 \
+	--param=hot-bb-frequency-fraction=1 --param=max-jump-thread-duplication-stmts=2 --param=max-tail-merge-iterations=0 \
+	--param=uninlined-function-insns=16 --param max-grow-copy-bb-insns=7 -mbranch-cost=1
+else
+# Benchmark options for 200/300/600
+BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common \
+	-finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 \
+    -finline-limit=200 -fno-if-conversion -fno-if-conversion2 -fno-tree-dominator-opts \
+	-fno-tree-loop-distribute-patterns -funroll-loops -funroll-all-loops \
+	--param fsm-scale-path-stmts=5 --param max-average-unrolled-insns=200 \
+	--param max-grow-copy-bb-insns=16 -mbranch-cost=1
+endif
+
+# Backup options
+#BENCH_FLAGS ?= -Ofast -msave-restore -fno-code-hoisting -fno-tree-vectorize -fno-common \
 	-finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 \
 	-finline-limit=200 -fno-if-conversion -fno-if-conversion2 -fno-tree-dominator-opts \
 	-fno-tree-loop-distribute-patterns -funroll-loops -funroll-all-loops \
