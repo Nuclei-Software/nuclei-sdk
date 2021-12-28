@@ -66,8 +66,8 @@ ifeq ($(filter $(CORE), $(SUPPORTED_CORES)),)
 $(error Here we only support these cores: $(SUPPORTED_CORES))
 endif
 # Check whether CORE_ARCH_ABI is presented for CORE
-ifneq ($(words $(CORE_ARCH_ABI)), 2)
-$(error There is no coresponding ARCH_ABI setting for CORE $(CORE), please check Makefile.core)
+ifneq ($(words $(wordlist 1, 2, $(CORE_ARCH_ABI))), 2)
+$(error No correct CORE_ARCH_ABI setting for CORE=$(CORE) found in $(realpath $(NUCLEI_SDK_BUILD)/Makefile.core))
 endif
 
 # Handle Nuclei RISC-V ARCH and ABI
@@ -77,6 +77,7 @@ endif
 ## bkpv: Bitmanip, Packed SIMD, Scalar Cryptography and Vector Extension present
 RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))$(ARCH_EXT)
 RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
+RISCV_TUNE ?= $(word 3, $(CORE_ARCH_ABI))
 
 ##### Put your Source code Management configurations below #####
 
