@@ -2,7 +2,7 @@ variables:
   DOC_SERVER: doc
   DOC_CENTER: /home/xl_ci/doc_center
   IMAGE: rego.corp.nucleisys.com/software/nmsis_build
-  IMAGE_TAG: gcc10-ubuntu2004
+  IMAGE_TAG: gcc10.2-ubuntu20.04
 
 default:
   tags:
@@ -93,7 +93,7 @@ deploy_website:
     matrix:
       - DISTRO: ubuntu
         IMAGE_TAG:
-          - gcc10-ubuntu2004
+          - gcc10.2-ubuntu20.04
   artifacts:
     when: always
     name: "sdk_build-log-${CI_COMMIT_SHA::8}"
