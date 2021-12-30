@@ -330,9 +330,14 @@ _start:
      * When all initialization steps done
      * set exception entry to correct exception
      * entry and jump to main.
+     * And set the interrupt processing mode to
+     * ECLIC mode
      */
     la t0, exc_entry
     csrw CSR_MTVEC, t0
+    li t0, 0x3f
+    csrc CSR_MTVEC, t0
+    csrs CSR_MTVEC, 0x3
 
     /* ===== Call Main Function  ===== */
     /* argc = argv = 0 */
