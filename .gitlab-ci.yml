@@ -140,3 +140,37 @@ sdk_build_job_nuclei_fpga_eval:
     LOGDIR: logs/nuclei_fpga_eval_ci
   script:
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
+
+sdk_run_newlib_job_nuclei_fpga_eval:
+  <<: *build_job_template_default
+  interruptible: true
+  timeout: 4h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    RUNTARGET: qemu
+  parallel:
+    matrix:
+      - HWCFG: 
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
+  script:
+    - export LOGDIR=$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
+
+sdk_run_libncrt_job_nuclei_fpga_eval:
+  <<: *build_job_template_default
+  interruptible: true
+  timeout: 4h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_libncrt.json
+    RUNTARGET: qemu
+  parallel:
+    matrix:
+      - STDCLIB: 
+        - libncrt_small
+        - libncrt_fast
+        - libncrt_balanced
+  script:
+    - export LOGDIR=$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "STDCLIB=$STDCLIB"
