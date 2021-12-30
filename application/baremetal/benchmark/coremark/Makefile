@@ -6,7 +6,7 @@ CPU_SERIES ?= 300
 
 ifeq ($(CPU_SERIES),900)
 # Benchmark options for 900
-BENCH_FLAGS ?= -Ofast -fno-tree-vectorize -funroll-all-loops -fno-aggressive-loop-optimizations \
+BENCH_FLAGS ?= -Ofast -funroll-all-loops -fno-aggressive-loop-optimizations \
 	-fgcse-las -fno-delete-null-pointer-checks -fno-rename-registers -funroll-all-loops \
 	-fno-tree-vrp -fwrapv -fno-toplevel-reorder -fipa-pta -fno-tree-ter -fno-dce \
 	-fno-tree-loop-ivcanon -fno-tree-loop-distribute-patterns -fno-sched-rank-heuristic \

@@ -39,7 +39,7 @@ configuration:
         info:
           - name: app_commonflags
             value: >-
-              -Ofast -fno-tree-vectorize -funroll-all-loops -fno-aggressive-loop-optimizations
+              -Ofast -funroll-all-loops -fno-aggressive-loop-optimizations
               -fgcse-las -fno-delete-null-pointer-checks -fno-rename-registers -funroll-all-loops
               -fno-tree-vrp -fwrapv -fno-toplevel-reorder -fipa-pta -fno-tree-ter -fno-dce
               -fno-tree-loop-ivcanon -fno-tree-loop-distribute-patterns -fno-sched-rank-heuristic
