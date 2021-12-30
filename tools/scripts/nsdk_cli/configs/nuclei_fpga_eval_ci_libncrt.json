@@ -12,7 +12,8 @@
     "build_target": "clean all",
     "build_config": {
         "SOC": "demosoc",
-        "BOARD": "nuclei_fpga_eval"
+        "BOARD": "nuclei_fpga_eval",
+        "STDCLIB": "libncrt_small"
     },
     "build_configs": {
         "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": ""},
