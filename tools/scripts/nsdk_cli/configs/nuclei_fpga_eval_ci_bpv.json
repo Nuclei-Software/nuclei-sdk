@@ -66,6 +66,7 @@
             "n307fdb-ilm": { "build": false, "run": false },
             "n307fdbp-ilm": { "build": false, "run": false },
             "ux600b-ilm": { "build": false, "run": false },
+            "ux600bp-ilm": { "build": false, "run": false },
             "ux600bpv-ilm": { "build": false, "run": false },
             "ux600fdb-ilm": { "build": false, "run": false },
             "ux600fdbp-ilm": { "build": false, "run": false },
