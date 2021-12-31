@@ -114,7 +114,10 @@ def analyze_report(config, result, runapp=False):
 
     def check_app_status(status, expected, runapp=False):
         app_sts = {"expected": True, "exp_build": True, "exp_run": True, "build": True, "run": True}
+        percase_sts = {"expected": True, "exp_build": True, "exp_run": True, "build": True, "run": True}
+        app_percase_sts = dict()
         for cfgname in status:
+            app_percase_sts[cfgname] = copy.deepcopy(percase_sts)
             app_cfg_expected = get_expected(config, app, cfgname)
             expected_build = app_cfg_expected.get("build", True)
             expected_run = app_cfg_expected.get("run", True)
@@ -122,32 +125,56 @@ def analyze_report(config, result, runapp=False):
             real_run = status[cfgname]["status"].get("run", False)
             if real_build == False and expected_build != real_build:
                 app_sts["exp_build"] = False
+                app_percase_sts[cfgname]["exp_build"] = False
             if real_run == False and expected_run != real_run:
                 app_sts["exp_run"] = False
+                app_percase_sts[cfgname]["exp_run"] = False
             if real_build == False:
                 app_sts["build"] = False
             if real_run == False:
                 app_sts["run"] = False
+            # get per case expected
+            app_percase_sts[cfgname]["expected"] = app_sts["exp_build"]
+            if runapp:
+                app_percase_sts[cfgname]["expected"] = app_percase_sts[cfgname]["exp_build"] and app_percase_sts[cfgname]["exp_run"]
         if runapp:
             app_sts["expected"] = app_sts["exp_build"] and app_sts["exp_run"]
         else:
             app_sts["expected"] = app_sts["exp_build"]
-        return app_sts
+        
+        analayzed_app_status = {"summary": app_sts, "percase": app_percase_sts}
+        return analayzed_app_status
 
     apps_expected = config.get("expected", dict())
 
+
+    apps_percase_status = dict()
+    apps_percase_failed = dict()
+    apps_percase_passed = dict()
     # Get app status compared with expected
     for app in result:
         app_expected = apps_expected.get(app, dict())
         app_status = result[app]
-        apps_status[app] = check_app_status(app_status, app_expected, runapp)
+        analayzed_app_status = check_app_status(app_status, app_expected, runapp)
+        apps_status[app] = analayzed_app_status["summary"]
+        apps_percase_status[app] = analayzed_app_status["percase"]
+        apps_percase_failed[app] = list()
+        apps_percase_passed[app] = list()
+        # per case for 1 app
+        for case in analayzed_app_status["percase"]:
+            if analayzed_app_status["percase"][case]["expected"] == False:
+                apps_percase_failed[app].append(case)
+            else:
+                apps_percase_passed[app].append(case)
+        # per app
         if apps_status[app]["expected"] == True:
             passed_apps[app] = copy.deepcopy(apps_status[app])
         else:
             failed_apps[app] = copy.deepcopy(apps_status[app])
 
     # Create report_dict
-    report_dict = {"passed": passed_apps, "failed": failed_apps, "status": apps_status, "configs": build_cfgs}
+    report_dict = {"passed": passed_apps, "failed": failed_apps, "status": apps_status, "configs": build_cfgs, \
+        "percase": {"status": apps_percase_status, "failed": apps_percase_failed, "passed": apps_percase_passed} }
     return report_dict
 
 def generate_build_run_status_md(appresult, logdir, bold_false=True):
@@ -208,6 +235,8 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
     if not(isinstance(config, dict) and isinstance(result, dict) and isinstance(rptfile, str)):
         return False
     report = analyze_report(config, result, runapp)
+    rpt_passtxt = os.path.join(os.path.dirname(rptfile), "app_passed.txt")
+    rpt_failtxt = os.path.join(os.path.dirname(rptfile), "app_failed.txt")
     # generate markdown file
     with open(rptfile, "w") as rf:
         rf.write("# Tested Nuclei SDK Applications/Test Cases\n\n")
@@ -233,6 +262,7 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
                     app_sts["build"], app_sts["run"]])
             rf.write(str(x))
             rf.write("\n")
+        # Build configurations
         rf.write("\n# Build configurations\n\n")
         x = PrettyTable()
         x.set_style(MARKDOWN)
@@ -242,6 +272,7 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
             x.add_row([cfgname, make_options])
         rf.write(str(x))
         rf.write("\n")
+        # Build and run status
         rf.write("\n# Build and run status\n\n")
         x = PrettyTable()
         x.set_style(MARKDOWN)
@@ -258,6 +289,33 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
                     size["total"], size["text"], size["data"], size["bss"]])
         rf.write(str(x))
         rf.write("\n")
+        # Real expected pass or fail cases
+        percase_status = report["percase"]
+        rf.write("\n# Passed Cases(as expected) Per Applications\n\n")
+        x = PrettyTable()
+        x.set_style(MARKDOWN)
+        x.field_names = ["App", "Passed Cases"]
+        with open(rpt_passtxt, "w") as rpt_pf:
+            for app in percase_status["passed"]:
+                tmptxt = ", ".join(percase_status["passed"][app])
+                if (len(tmptxt) > 0):
+                    rpt_pf.write("- %s : %s\n" % (app, tmptxt))
+                x.add_row([app, tmptxt])
+        rf.write(str(x))
+        rf.write("\n")
+        rf.write("\n# Failed Cases(as expected) Per Applications\n\n")
+        x = PrettyTable()
+        x.set_style(MARKDOWN)
+        x.field_names = ["App", "Failed Cases"]
+        with open(rpt_failtxt, "w") as rpt_ff:
+            for app in percase_status["failed"]:
+                tmptxt = ", ".join(percase_status["failed"][app])
+                if (len(tmptxt) > 0):
+                    rpt_ff.write("- %s : %s\n" % (app, tmptxt))
+                x.add_row([app, tmptxt])
+        rf.write(str(x))
+        rf.write("\n")
+        # expected build or run failed cases
         x = PrettyTable()
         x.set_style(MARKDOWN)
         x.field_names = ["App/Test Case", "Case Name", "Expected Build", "Expected Run"]
