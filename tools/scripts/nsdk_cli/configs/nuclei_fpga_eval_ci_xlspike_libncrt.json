@@ -2,8 +2,7 @@
     "run_config": {
         "target" : "xlspike",
         "xlspike" : {
-            "baudrate": 115200,
-            "timeout": 240
+            "timeout": 120
         }
     },
     "parallel": "-j",

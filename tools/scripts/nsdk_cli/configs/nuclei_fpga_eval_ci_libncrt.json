@@ -2,10 +2,10 @@
     "run_config": {
         "target" : "qemu",
         "xlspike" : {
-            "timeout": 240
+            "timeout": 120
         },
         "qemu" : {
-            "timeout": 240
+            "timeout": 120
         }
     },
     "parallel": "-j",
@@ -43,15 +43,10 @@
     },
     "expecteds": {
         "application/baremetal/demo_dsp" : {
-            "n201-ilm": { "build": false, "run": false },
-            "n201-flash": { "build": false, "run": false },
-            "n201-flashxip": { "build": false, "run": false },
-            "n205e-ilm": { "build": false, "run": false },
-            "n205e-flash": { "build": false, "run": false },
-            "n205e-flashxip": { "build": false, "run": false },
-            "n201e-ilm": { "build": false, "run": false },
-            "n201e-flash": { "build": false, "run": false },
-            "n201e-flashxip": { "build": false, "run": false }
+            "n305b-ilm": { "build": false, "run": false },
+            "n305bp-ilm": { "build": false, "run": false },
+            "n307fdb-ilm": { "build": false, "run": false },
+            "n307fdbp-ilm": { "build": false, "run": false }
         },
         "application/baremetal/benchmark/whetstone" : {
             "n201-ilm": { "build": true, "run": false },
