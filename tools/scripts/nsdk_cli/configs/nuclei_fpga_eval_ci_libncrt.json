@@ -16,20 +16,15 @@
         "STDCLIB": "libncrt_small"
     },
     "build_configs": {
+        "n201-ilm": {"DOWNLOAD": "ilm", "CORE": "n201", "ARCH_EXT": ""},
+        "n201e-ilm": {"DOWNLOAD": "ilm", "CORE": "n201e", "ARCH_EXT": ""},
+        "n205e-ilm": {"DOWNLOAD": "ilm", "CORE": "n205e", "ARCH_EXT": ""},
         "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": ""},
         "n305b-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "b"},
         "n305bp-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "bp"},
         "n307fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": ""},
         "n307fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "b"},
-        "n307fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "bp"},
-        "ux600-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": ""},
-        "ux600b-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": "b"},
-        "ux600bp-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": "bp"},
-        "ux600bpv-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": "bpv"},
-        "ux600fd-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": ""},
-        "ux600fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": "b"},
-        "ux600fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": "bp"},
-        "ux600fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": "bpv"}
+        "n307fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "bp"}
     },
     "appconfig": {
         "application/baremetal/demo_dsp": {
@@ -38,6 +33,11 @@
             "checks": {
                 "PASS": ["all test are passed"],
                 "FAIL": ["test error apprears", "MEPC"]
+            }
+        },
+        "application/baremetal/benchmark/dhrystone": {
+            "checks": {
+                "PASS": ["1000000/(User_Cycle/Number_Of_Runs)", "Measured time too small"]
             }
         }
     },
