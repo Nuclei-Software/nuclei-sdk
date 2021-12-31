@@ -5,7 +5,7 @@
             "timeout": 240
         },
         "qemu" : {
-            "timeout": 240
+            "timeout": 40
         }
     },
     "parallel": "-j",
@@ -44,6 +44,12 @@
             "checks": {
                 "PASS": ["all test are passed"],
                 "FAIL": ["test error apprears", "MEPC"]
+            }
+        },
+        "application/rtthread/msh": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["msh >", "Hello RT-Thread!"]
             }
         },
         "application/baremetal/benchmark/dhrystone": {

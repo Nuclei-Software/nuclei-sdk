@@ -3,6 +3,9 @@
         "target" : "xlspike",
         "xlspike" : {
             "timeout": 120
+        },
+        "qemu" : {
+            "timeout": 40
         }
     },
     "parallel": "-j",
