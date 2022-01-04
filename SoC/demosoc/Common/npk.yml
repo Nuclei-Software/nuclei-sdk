@@ -35,113 +35,191 @@ configuration:
     global: true
     description: Nuclei RISC-V Core
     choices:
+      - name: n200
+        arch: rv32imc
+        abi: ilp32
+        cmodel: medlow
+        tune: nuclei-200-series
+        description: N200 Core(ARCH=rv32imc, ABI=ilp32)
       - name: n201
         arch: rv32iac
         abi: ilp32
+        cmodel: medlow
+        tune: nuclei-200-series
         description: N201 Core(ARCH=rv32iac, ABI=ilp32)
       - name: n201e
         arch: rv32eac
         abi: ilp32e
+        cmodel: medlow
+        tune: nuclei-200-series
         description: N201E Core(ARCH=rv32eac, ABI=ilp32e)
       - name: n203
         arch: rv32imac
         abi: ilp32
+        cmodel: medlow
+        tune: nuclei-200-series
         description: N203 Core(ARCH=rv32imac, ABI=ilp32)
       - name: n203e
         arch: rv32emac
         abi: ilp32e
+        cmodel: medlow
+        tune: nuclei-200-series
         description: N203E Core(ARCH=rv32emac, ABI=ilp32e)
       - name: n205
         arch: rv32imac
         abi: ilp32
+        cmodel: medlow
+        tune: nuclei-200-series
         description: N205 Core(ARCH=rv32imac, ABI=ilp32)
       - name: n205e
         arch: rv32emac
         abi: ilp32e
+        cmodel: medlow
+        tune: nuclei-200-series
         description: N205E Core(ARCH=rv32emac, ABI=ilp32e)
+      - name: n300
+        arch: rv32imac
+        abi: ilp32
+        cmodel: medlow
+        tune: nuclei-300-series
+        description: N300 Core(ARCH=rv32imac, ABI=ilp32)
+      - name: n300f
+        arch: rv32imafc
+        abi: ilp32f
+        cmodel: medlow
+        tune: nuclei-300-series
+        description: N300F Core(ARCH=rv32imafc, ABI=ilp32f)
+      - name: n300fd
+        arch: rv32imafdc
+        abi: ilp32d
+        cmodel: medlow
+        tune: nuclei-300-series
+        description: N300FD Core(ARCH=rv32imafdc, ABI=ilp32d)
       - name: n305
         arch: rv32imac
         abi: ilp32
+        cmodel: medlow
+        tune: nuclei-300-series
         description: N305 Core(ARCH=rv32imac, ABI=ilp32)
       - name: n307
         arch: rv32imafc
         abi: ilp32f
+        cmodel: medlow
+        tune: nuclei-300-series
         description: N307 Core(ARCH=rv32imafc, ABI=ilp32f)
       - name: n307fd
         arch: rv32imafdc
         abi: ilp32d
+        cmodel: medlow
+        tune: nuclei-300-series
         description: N307FD Core(ARCH=rv32imafdc, ABI=ilp32d)
       - name: n600
         arch: rv32imac
         abi: ilp32
+        cmodel: medlow
+        tune: nuclei-300-series
         description: N600 Core(ARCH=rv32imac, ABI=ilp32)
       - name: n600f
         arch: rv32imafc
         abi: ilp32f
+        cmodel: medlow
+        tune: nuclei-600-series
         description: N600F Core(ARCH=rv32imafc, ABI=ilp32f)
       - name: n600fd
         arch: rv32imafdc
         abi: ilp32d
+        cmodel: medlow
+        tune: nuclei-600-series
         description: N600FD Core(ARCH=rv32imafdc, ABI=ilp32d)
       - name: nx600
         arch: rv64imac
         abi: lp64
+        cmodel: medany
+        tune: nuclei-600-series
         description: NX600 Core(ARCH=rv64imac, ABI=lp64)
       - name: nx600f
         arch: rv64imafc
         abi: lp64f
+        cmodel: medany
+        tune: nuclei-600-series
         description: NX600F Core(ARCH=rv64imafc, ABI=lp64f)
       - name: nx600fd
         arch: rv64imafdc
         abi: lp64d
+        cmodel: medany
+        tune: nuclei-600-series
         description: NX600FD Core(ARCH=rv64imafdc, ABI=lp64d)
       - name: ux600
         arch: rv64imac
         abi: lp64
+        cmodel: medany
+        tune: nuclei-600-series
         description: UX600 Core(ARCH=rv64imac, ABI=lp64)
       - name: ux600f
         arch: rv64imafc
         abi: lp64f
+        cmodel: medany
+        tune: nuclei-600-series
         description: UX600F Core(ARCH=rv64imafc, ABI=lp64f)
       - name: ux600fd
         arch: rv64imafdc
         abi: lp64d
+        cmodel: medany
+        tune: nuclei-600-series
         description: UX600FD Core(ARCH=rv64imafdc, ABI=lp64d)
       - name: n900
         arch: rv32imac
         abi: ilp32
+        cmodel: medlow
+        tune: nuclei-900-series
         description: N900 Core(ARCH=rv32imac, ABI=ilp32)
       - name: n900f
         arch: rv32imafc
         abi: ilp32f
+        cmodel: medlow
+        tune: nuclei-900-series
         description: N900F Core(ARCH=rv32imafc, ABI=ilp32f)
       - name: n900fd
         arch: rv32imafdc
         abi: ilp32d
+        cmodel: medlow
+        tune: nuclei-900-series
         description: N900FD Core(ARCH=rv32imafdc, ABI=ilp32d)
       - name: nx900
         arch: rv64imac
         abi: lp64
+        cmodel: medany
+        tune: nuclei-900-series
         description: NX900 Core(ARCH=rv64imac, ABI=lp64)
       - name: nx900f
         arch: rv64imafc
         abi: lp64f
+        cmodel: medany
+        tune: nuclei-900-series
         description: NX900F Core(ARCH=rv64imafc, ABI=lp64f)
       - name: nx900fd
         arch: rv64imafdc
         abi: lp64d
+        cmodel: medany
+        tune: nuclei-900-series
         description: NX900FD Core(ARCH=rv64imafdc, ABI=lp64d)
       - name: ux900
         arch: rv64imac
         abi: lp64
+        cmodel: medany
+        tune: nuclei-900-series
         description: UX900 Core(ARCH=rv64imac, ABI=lp64)
       - name: ux900f
         arch: rv64imafc
         abi: lp64f
+        cmodel: medany
+        tune: nuclei-900-series
         description: UX900F Core(ARCH=rv64imafc, ABI=lp64f)
       - name: ux900fd
         arch: rv64imafdc
         abi: lp64d
+        cmodel: medany
+        tune: nuclei-900-series
         description: UX900FD Core(ARCH=rv64imafdc, ABI=lp64d)
   nuclei_archext:
     default_value: []
@@ -222,7 +300,10 @@ buildconfig:
     cross_prefix: riscv-nuclei-elf- # optional
     common_flags: # flags need to be combined together across all packages
       - flags: -g -fno-common -ffunction-sections -fdata-sections
-      - flags: -march=${nuclei_core.arch}$(join(${nuclei_archext},'')) -mabi=${nuclei_core.abi} -mcmodel=medany
+      - flags: -march=${nuclei_core.arch}$(join(${nuclei_archext},'')) -mabi=${nuclei_core.abi}
+      - flags: -mtune=${nuclei_core.tune}
+        condition: $( ${nuclei_core.tune} != "" )
+      - flags: -mcmodel=${nuclei_core.cmodel}
       - flags: --specs=nosys.specs
         condition: $( ${stdclib} == "newlib_full" )
       - flags: --specs=nano.specs --specs=nosys.specs -u _printf_float -u _scanf_float
