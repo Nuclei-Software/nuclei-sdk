@@ -71,6 +71,6 @@
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": false},
         "application/rtthread/msh" : {"build": true, "run": false},
-        "test/core": {"build": true, "run": false}
+        "test/core": {"build": false, "run": false}
     }
 }
