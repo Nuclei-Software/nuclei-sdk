@@ -49,6 +49,9 @@
     },
     "expecteds": {
         "application/baremetal/demo_dsp" : {
+            "n201-ilm": { "build": false, "run": false },
+            "n201e-ilm": { "build": false, "run": false },
+            "n205e-ilm": { "build": false, "run": false },
             "n305b-ilm": { "build": false, "run": false },
             "n305bp-ilm": { "build": false, "run": false },
             "n307fdb-ilm": { "build": false, "run": false },
