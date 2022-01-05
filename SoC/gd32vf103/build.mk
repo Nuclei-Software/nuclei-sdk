@@ -40,6 +40,10 @@ CORE_UPPER := $(call uc, $(CORE))
 RISCV_ARCH ?= rv32imac
 RISCV_ABI ?= ilp32
 
+# Handle QEMU Emulation
+QEMU_MACHINE := ${BOARD}
+QEMU_CPU := nuclei-n205
+
 ##### Put your Source code Management configurations below #####
 
 INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include

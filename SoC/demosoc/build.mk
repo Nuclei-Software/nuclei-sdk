@@ -80,6 +80,14 @@ RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))$(ARCH_EXT)
 RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
 RISCV_TUNE ?= $(word 3, $(CORE_ARCH_ABI))
 
+# Handle QEMU Emulation
+ifneq ($(findstring u,$(CORE)),)
+QEMU_MACHINE := nuclei_u,download=$(DOWNLOAD)
+else
+QEMU_MACHINE := nuclei_n,download=$(DOWNLOAD)
+endif
+QEMU_CPU := nuclei-$(CORE),ext=$(ARCH_EXT)
+
 ##### Put your Source code Management configurations below #####
 
 INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include
