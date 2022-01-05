@@ -118,6 +118,11 @@ debug: $(TARGET).elf
 	$(GDB) $< -ex "set remotetimeout 240" \
 	-ex "target remote $(GDBREMOTE)"
 
+# just for demo purpose
+run_qemu: $(TARGET).elf
+	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) \
+		-nodefaults -nographic -serial stdio -kernel $<
+
 clean:
 	@$(ECHO) "Clean all build objects"
 	$(Q)$(RM) $(REAL_CLEAN_OBJS)
