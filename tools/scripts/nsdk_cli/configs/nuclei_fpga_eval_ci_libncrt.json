@@ -5,7 +5,7 @@
             "timeout": 120
         },
         "qemu" : {
-            "timeout": 40
+            "timeout": 60
         }
     },
     "parallel": "-j",
@@ -62,9 +62,6 @@
             "n201e-ilm" : {"build": true, "run": false}
         },
         "application" : {
-            "n201e-ilm" : {"build": true, "run": false}
-        },
-        "test" : {
             "n201e-ilm" : {"build": true, "run": false}
         }
     },
