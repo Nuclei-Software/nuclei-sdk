@@ -330,10 +330,6 @@ buildconfig:
       - flags: -x assembler-with-cpp
     cxxflags:
     common_defines:
-      - defines: __RISCV_FEATURE_DSP=1
-        condition: $( ${nuclei_archext.choices.p} == 1 )
-      - defines: __RISCV_FEATURE_VECTOR=1
-        condition: $( ${nuclei_archext.choices.v} == 1 )
     prebuild_steps: # could be override by app/bsp type
       command:
       description:
