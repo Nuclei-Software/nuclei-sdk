@@ -6,6 +6,10 @@ SRCDIRS = .
 INCDIRS = .
 
 COMMON_FLAGS ?=
+# Select NMSIS Library
+## - nmsis_dsp : select dsp library
+## - nmsis_dsp nmsis_nn : select nn library
+## see NMSIS/build.mk
 NMSIS_LIB ?= nmsis_dsp
 
 STDCLIB ?= newlib_small
