@@ -34,6 +34,8 @@
 
 #if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
 
+#include <rvp_intrinsic.h>
+
 /* ###########################  CPU SIMD DSP Intrinsic Functions ########################### */
 /**
  * \defgroup NMSIS_Core_DSP_Intrinsic   Intrinsic Functions for SIMD Instructions

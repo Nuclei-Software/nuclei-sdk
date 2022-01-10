@@ -202,7 +202,7 @@ __STATIC_FORCEINLINE riscv_status riscv_sqrt_f32(
     if (in >= 0.0f)
     {
 
-#if defined ( __RISCV_FLEN )
+#if defined ( __riscv_flen ) && (__riscv_flen > 0)
       __ASM volatile("fsqrt.s %0, %1" : "=f"(*pOut) : "f"(in));
 
 #else

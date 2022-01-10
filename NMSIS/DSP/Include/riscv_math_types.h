@@ -63,21 +63,26 @@ extern "C"
 #elif defined (__GNUC_PYTHON__)
 #include <stdint.h>
 #define  __ALIGNED(x) __attribute__((aligned(x)))
-#define __STATIC_FORCEINLINE static inline __attribute__((always_inline)) 
+#define __STATIC_FORCEINLINE static inline __attribute__((always_inline))
 #define __STATIC_INLINE static inline
 
 #else
+
 #define __NMSIS_GENERIC
-#if (defined (__RISCV_FEATURE_DSP) && (__RISCV_FEATURE_DSP == 1))
-    #define __DSP_PRESENT   1
+#if (defined (__riscv_dsp))
+    #define __DSP_PRESENT       1
+    #undef __RISCV_FEATURE_DSP
+    #define __RISCV_FEATURE_DSP 1
 #endif
-#include "nmsis_core.h"
-#undef __NMSIS_GENERIC
+#if (defined (__riscv_vector))
+    #define __VECTOR_PRESENT       1
+    #undef __RISCV_FEATURE_VECTOR
+    #define __RISCV_FEATURE_VECTOR 1
 #endif
 
-#if (defined (__RISCV_FEATURE_VECTOR) && (__RISCV_FEATURE_VECTOR == 1))
-#define RISCV_VECTOR                  1
-#include <riscv_vector.h> 
+#include "nmsis_core.h"
+#undef __NMSIS_GENERIC
+
 #endif
 
 #include <string.h>
@@ -87,21 +92,14 @@ extern "C"
 
 /* evaluate RISCV DSP feature */
 #if (defined (__RISCV_FEATURE_DSP) && (__RISCV_FEATURE_DSP == 1))
-  #define RISCV_MATH_DSP                   1
+  #define RISCV_MATH_DSP                    1
 #endif
 
-
-
-
-#if (__RISCV_FEATURE_MVE & 2)
-    #define RISCV_MATH_MVEF
-       #define RISCV_MATH_MVE_FLOAT16
+/* evaluate RISCV Vector feature */
+#if (defined(__riscv_vector))
+  /* previous RISCV_VECTOR is replaced by RISCV_MATH_VECTOR  */
+  #define RISCV_MATH_VECTOR                 1
 #endif
-
-
-
-
-
 
 #if   defined ( __GNUC__ )
   #define LOW_OPTIMIZATION_ENTER \
@@ -196,11 +194,6 @@ extern "C"
   /**
    * @brief vector types
    */
-
-
-
-
-
 
 
 #define F64_MAX   ((float64_t)DBL_MAX)

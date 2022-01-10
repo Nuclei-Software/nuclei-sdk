@@ -15,11 +15,3 @@ INCDIRS += $(NUCLEI_SDK_NMSIS)/DSP/Include \
 LIBDIRS += $(NUCLEI_SDK_NMSIS)/Library/DSP/GCC
 LDLIBS += -lnmsis_dsp_$(NMSIS_LIB_ARCH)
 endif
-
-ifneq ($(findstring p,$(ARCH_EXT)),)
-COMMON_FLAGS += -D__RISCV_FEATURE_DSP=1
-endif
-
-ifneq ($(findstring v,$(ARCH_EXT)),)
-COMMON_FLAGS += -D__RISCV_FEATURE_VECTOR=1
-endif

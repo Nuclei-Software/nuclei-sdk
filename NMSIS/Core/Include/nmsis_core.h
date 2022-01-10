@@ -66,6 +66,10 @@
 #include "core_feature_fpu.h"
 /* Include core dsp feature header file */
 #include "core_feature_dsp.h"
+/* Include core vector feature header file */
+#include "core_feature_vector.h"
+/* Include core bitmanip feature header file */
+#include "core_feature_bitmanip.h"
 /* Include core pmp feature header file */
 #include "core_feature_pmp.h"
 /* Include core cache feature header file */
