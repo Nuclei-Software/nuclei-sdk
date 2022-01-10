@@ -19,6 +19,6 @@ fi
 echo "Start deploy local $LOCAL to remote $REMOTE"
 
 lftp -u$FTPUSER,$FTPPWD $FTPSERVER \
-    -e "set net:timeout 5; set net:max-retries 1; \
+    -e "set net:timeout 5; set net:max-retries 2; \
     set net:reconnect-interval-base 3; \
-    mirror --parallel=4 -p -e -R $LOCAL $REMOTE ; bye"
+    mirror --parallel=2 -p -e -R $LOCAL $REMOTE ; bye"
