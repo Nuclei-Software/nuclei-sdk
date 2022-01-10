@@ -179,10 +179,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "stdatomic.h"
+#include "nuclei_sdk_soc.h"
 
 #include "config.h"
 #include "cpuidh.h"
-#include "nuclei_sdk_soc.h"
 
 /*PRECISION PRECISION PRECISION PRECISION PRECISION PRECISION PRECISION*/
 
