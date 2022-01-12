@@ -588,12 +588,6 @@
 #define CSR_SPMPADDR14          0x1BE
 #define CSR_SPMPADDR15          0x1BF
 
-#define CSR_JALSNXTI            0x947
-#define CSR_STVT2               0x948
-#define CSR_PUSHSCAUSE          0x949
-#define CSR_PUSHSEPC            0x94A
-
-
 /* === CLIC CSR Registers === */
 #define CSR_MTVT                0x307
 #define CSR_MNXTI               0x345
@@ -633,10 +627,19 @@
 #define CSR_PUSHMEPC            0x7EF
 #define CSR_MPPICFG_INFO        0x7F0
 #define CSR_MFIOCFG_INFO        0x7F1
+#define CSR_MDEVB               0x7F3
+#define CSR_MDEVM               0x7F4
+#define CSR_MNOCB               0x7F5
+#define CSR_MNOCM               0x7F6
 #define CSR_MSMPCFG_INFO        0x7F7
 #define CSR_SLEEPVALUE          0x811
 #define CSR_TXEVT               0x812
 #define CSR_WFE                 0x810
+#define CSR_JALSNXTI            0x947
+#define CSR_STVT2               0x948
+#define CSR_PUSHSCAUSE          0x949
+#define CSR_PUSHSEPC            0x94A
+#define CSR_SDCAUSE             0x9C0
 #define CSR_MICFG_INFO          0xFC0
 #define CSR_MDCFG_INFO          0xFC1
 #define CSR_MCFG_INFO           0xFC2
