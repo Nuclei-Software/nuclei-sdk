@@ -486,7 +486,7 @@ typedef struct {
 #define ONCHIP_ROM_BASE         (0x00001000UL)      /*!< (ROM       ) Base Address */
 #define ONCHIP_ILM_BASE         (0x80000000UL)      /*!< (ILM       ) Base Address */
 #define ONCHIP_DLM_BASE         (0x90000000UL)      /*!< (DLM       ) Base Address */
-#define DEMOSOC_PERIPH_BASE       (0x10000000UL)      /*!< (Peripheral) Base Address */
+#define DEMOSOC_PERIPH_BASE     (0x10000000UL)      /*!< (Peripheral) Base Address */
 
 /* Peripheral memory map */
 /* Fast-IO Interfaced IP */
