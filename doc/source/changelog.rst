@@ -12,13 +12,14 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
 
   - **DSP_ENABLE** and **VECTOR_ENABLE** are deprecated now in demo_dsp application, please use **ARCH_EXT** to replace it.
     ``ARCH_EXT=p`` equal to ``DSP_ENABLE=ON``, ``ARCH_EXT=v`` equal to ``VECTOR_ENABLE=ON``.
-  - demo_dsp application no need to set include and libraries for NMSIS DSP library, just use ``NMSIS_LIB = nmsis_dsp`` to
+  - ``demo_dsp`` application no need to set include and libraries for NMSIS DSP library, just use ``NMSIS_LIB = nmsis_dsp`` to
     select NMSIS DSP library and set include directory.
   - Update coremark compile options for different Nuclei cpu series, currently
     900 series options and 200/300/600 series options are provided, and can be selected by ``CPU_SERIES``.
 
       - ``CPU_SERIES=900``: the compiler options for Nuclei 900 series will be selected.
       - otherwise, the compiler options for Nuclei 200/300/600 series will be selected, which is by default for 300
+  - Fix ``whetstone`` application compiling issue when compiled with v extension present
 
 * SoC
 
@@ -33,6 +34,13 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
     - stub function ``sbrk`` now using new heap start and end ld symbols
     - tdata/tbss section is added for for libncrt, thread local storage supported
 
+* NMSIS
+
+  - Update NMSIS Core/DSP/NN to version 1.0.3, see `NMSIS 1.0.3 Changelog`_
+  - Update prebuilt NMSIS DSP/NN library to version 1.0.3 built by risc-v gcc 10.2
+  - For NMSIS Core 1.0.3, no need to define ``__RISCV_FEATURE_DSP`` and ``__RISCV_FEATURE_VECTOR``
+    for ``riscv_math.h`` now, it is now auto-defined in ``riscv_math_types.h``
+
 * OS
 
   - Change RT-Thread porting to support libncrt and newlibc, mainly using putchar and getchar
@@ -44,7 +52,7 @@ This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
   - Introduce :ref:`develop_buildsystem_var_archext` makefile variable to support b/p/v extension.
   - Only link ``-lstdc++`` library when using **STDCLIB=newlib_xxx**
   - **RISCV_CMODEL** variable is added to choose code model, medlow or medany can be chosen,
-    default is medlow for RV32 otherwise medany.
+    default is ``medlow`` for RV32 otherwise ``medany`` for RV64.
   - **RISCV_TUNE** variable is added to select riscv tune model, for Nuclei CPU, we added ``nuclei-200-series``,
     ``nuclei-300-series``, ``nuclei-600-series`` and ``nuclei-900-series`` in Nuclei RISC-V GNU toolchain >= 2021.12
 
@@ -182,7 +190,6 @@ This is official version ``0.3.1`` of Nuclei SDK.
     - We are using ``demosoc`` to represent the Nuclei Evaluation SoC for customer to replace the old name ``hbird``.
     - The ``hbird`` SoC is renamed to ``demosoc``, so the ``SoC/hbird`` folder is renamed to ``SoC/demosoc``,
       and the ``SoC/hbird/Board/hbird_eval`` is renamed to ``SoC/demosoc/Board/nuclei_fpga_eval``.
-
 
 * SoC
 
@@ -557,3 +564,4 @@ Here are the main features of this release:
 .. _tuupola: https://github.com/tuupola
 .. _RomanBuchert: https://github.com/RomanBuchert
 .. _michahoiting: https://github.com/michahoiting
+.. _NMSIS 1.0.3 Changelog: https://doc.nucleisys.com/nmsis/changelog.html#v1-0-3

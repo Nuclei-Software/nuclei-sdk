@@ -603,10 +603,15 @@ Currently it has these cores supported as described in table
    ========  ========== =======  =================
 
 When **CORE** is selected, the **ARCH**, **ABI** and **TUNE**(optional) are set,
-and it will affect the compiler options, eg. If **CORE=n205**, then
-``ARCH=rv32imac, ABI=ilp32 TUNE=nuclei-200-series``,
+and it might affect the compiler options in combination with :ref:`develop_buildsystem_var_archext`
+depended on the implementation of SoC build.mk.
+
+Take ``SOC=demosoc`` as example.
+
+- If **CORE=n205 ARCH_EXT=**, then ``ARCH=rv32imac, ABI=ilp32 TUNE=nuclei-200-series``,
 riscv arch related compile and link options will be passed, for this case,
 it will be ``-march=rv32imac -mabi=ilp32 -mtune=nuclei-200-series``.
+- If **CORE=n205 ARCH_EXT=b**, it will be ``-march=rv32imacb -mabi=ilp32 -mtune=nuclei-200-series``.
 
 For riscv code model settings, the ``RISCV_CMODEL`` variable will be set to medlow
 for RV32 targets, otherwise it will be medany.
@@ -705,6 +710,10 @@ e.g. ``application/baremetal/demo_timer/Makefile``.
 * :ref:`develop_buildsystem_var_rtos`
 * :ref:`develop_buildsystem_var_stdclib`
 * :ref:`develop_buildsystem_var_archext`
+* :ref:`develop_buildsystem_var_riscv_arch`
+* :ref:`develop_buildsystem_var_riscv_abi`
+* :ref:`develop_buildsystem_var_riscv_cmodel`
+* :ref:`develop_buildsystem_var_riscv_tune`
 * :ref:`develop_buildsystem_var_nogc`
 * :ref:`develop_buildsystem_var_rtthread_msh`
 
@@ -869,6 +878,53 @@ It is suggested to use this ARCH_EXT with other arch options like this, can be f
     RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))$(ARCH_EXT)
     RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
 
+
+
+.. _develop_buildsystem_var_riscv_arch:
+
+RISCV_ARCH
+~~~~~~~~~~
+
+**RISCV_ARCH** variable is used to control compiler option ``-mcmodel=$(RISCV_ARCH)``.
+
+It might override RISCV_ARCH defined in SoC build.mk, according to your build.mk implementation.
+
+**RISCV_ARCH** might directly affect the gcc compiler option depended on the implementation of SoC build.mk.
+
+Take ``SOC=demosoc`` for example.
+
+* **CORE=n305 RISCV_ARCH=rv32imafdcp RISCV_ABI=ilp32d ARCH_EXT=bp**, then final compiler options will be
+  ``-march=rv32imafdcp -mabi=ilp32d -mtune=nuclei-300-series``. The **ARCH_EXT** is ignored.
+
+.. _develop_buildsystem_var_riscv_abi:
+
+RISCV_ABI
+~~~~~~~~~
+
+**RISCV_ABI** variable is used to control compiler option ``-mcmodel=$(RISCV_ABI)``.
+
+It might override RISCV_ABI defined in SoC build.mk, according to your build.mk implementation.
+
+.. _develop_buildsystem_var_riscv_cmodel:
+
+RISCV_CMODEL
+~~~~~~~~~~~~
+
+**RISCV_CMODEL** is used to control compiler option ``-mcmodel=$(RISCV_CMODEL)``.
+
+For RV32, default value is ``medlow``, otherwise ``medany`` for RV64.
+
+You can set ``RISCV_CMODEL`` to override predefined value.
+
+.. _develop_buildsystem_var_riscv_tune:
+
+RISCV_TUNE
+~~~~~~~~~~
+
+**RISCV_TUNE** is used to control compiler option ``-mtune=$(RISCV_TUNE)``.
+
+It is defined in SoC build.mk, you can override it if your implementation
+allow it.
 
 .. _develop_buildsystem_var_pfloat:
 
