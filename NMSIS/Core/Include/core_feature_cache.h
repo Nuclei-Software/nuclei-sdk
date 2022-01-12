@@ -98,8 +98,11 @@ typedef struct CacheInfo {
     uint32_t size;                      /*!< Cache total size in bytes */
 } CacheInfo_Type;
 
-#define CCM_SUEN_SUEN_Pos               0U                              /*!< CSR CCM_SUEN: SUEN bit Position */
-#define CCM_SUEN_SUEN_Msk               (1UL << CCM_SUEN_SUEN_Pos)      /*!< CSR CCM_SUEN: SUEN Mask */
+#if __riscv_xlen == 32
+#define CCM_SUEN_SUEN_Msk               (0xFFFFFFFFUL)              /*!< CSR CCM_SUEN: SUEN Mask */
+#else
+#define CCM_SUEN_SUEN_Msk               (0xFFFFFFFFFFFFFFFFUL)      /*!< CSR CCM_SUEN: SUEN Mask */
+#endif
 
 /**
  * \brief  Enable CCM operation in Supervisor/User Mode
