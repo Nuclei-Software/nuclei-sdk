@@ -36,7 +36,7 @@ static void thread_entry(void* parameter)
 /* Thread demo */
 int create_thread_demo(void)
 {
-    int i;
+    unsigned long i;
     for (i = 0; i < THREAD_NUM; i ++) {
         /* Create static threads */
         rt_thread_init(&tid[i], "thread", thread_entry, (void*)i, thread_stack[i],
