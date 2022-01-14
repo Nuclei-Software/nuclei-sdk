@@ -20,7 +20,7 @@ else
 # Benchmark options for 200/300/600
 BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common \
 	-finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 \
-	-finline-limit=200 -fno-if-conversion -fno-if-conversion2 -fno-tree-dominator-opts \
+	-finline-limit=200 -fno-if-conversion -fno-if-conversion2 \
 	-fno-tree-loop-distribute-patterns -funroll-loops -funroll-all-loops \
 	--param fsm-scale-path-stmts=5 --param max-average-unrolled-insns=200 \
 	--param max-grow-copy-bb-insns=16 -mbranch-cost=1
