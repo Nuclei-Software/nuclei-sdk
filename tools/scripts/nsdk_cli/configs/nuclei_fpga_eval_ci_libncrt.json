@@ -45,6 +45,14 @@
             "checks": {
                 "PASS": ["1000000/(User_Cycle/Number_Of_Runs)", "Measured time too small"]
             }
+        },
+        "application/baremetal/benchmark/coremark": {
+            "build_configs" : {
+                "n205-optimized": {"CORE": "n205", "CPU_SERIES": "200"},
+                "n305-optimized": {"CORE": "n305", "CPU_SERIES": "300"},
+                "n600f-optimized": {"CORE": "n600f", "CPU_SERIES": "600"},
+                "n900fd-optimized": {"CORE": "n900fd", "CPU_SERIES": "900"}
+            }
         }
     },
     "expecteds": {
