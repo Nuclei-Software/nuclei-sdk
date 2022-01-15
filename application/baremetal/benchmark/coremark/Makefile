@@ -4,26 +4,45 @@ NUCLEI_SDK_ROOT = ../../../..
 
 CPU_SERIES ?= 300
 
+$(info Using Nuclei $(CPU_SERIES) series optimization compiling flags!)
+
 ifeq ($(CPU_SERIES),900)
 # Benchmark options for 900
-BENCH_FLAGS ?= -Ofast -funroll-all-loops -fno-aggressive-loop-optimizations \
-	-fgcse-las -fno-delete-null-pointer-checks -fno-rename-registers -funroll-all-loops \
-	-fno-tree-vrp -fwrapv -fno-toplevel-reorder -fipa-pta -fno-tree-ter -fno-dce \
-	-fno-tree-loop-ivcanon -fno-tree-loop-distribute-patterns -fno-sched-rank-heuristic \
-	--param=unroll-jam-min-percent=0 --param=large-unit-insns=0 --param=max-loop-header-insns=2 \
-	--param=max-average-unrolled-insns=128 --param=max-inline-insns-size=128 --param=max-cse-path-length=3 \
-	--param=inline-min-speedup=1 --param=max-sched-region-insns=7 --param=max-goto-duplication-insns=0 \
-	--param=max-gcse-insertion-ratio=0 --param=max-partial-antic-length=1 --param=loop-max-datarefs-for-datadeps=0 \
-	--param=hot-bb-frequency-fraction=1 --param=max-jump-thread-duplication-stmts=2 --param=max-tail-merge-iterations=0 \
-	--param=uninlined-function-insns=16 --param max-grow-copy-bb-insns=7 -mbranch-cost=1
+BENCH_FLAGS ?= -Ofast -funroll-loops -funroll-all-loops -fno-aggressive-loop-optimizations -fgcse-las \
+	-fno-delete-null-pointer-checks -fno-rename-registers -fno-tree-vrp -fwrapv -fno-toplevel-reorder \
+	-fipa-pta -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 -fno-if-conversion \
+	-fno-if-conversion2 -fno-tree-loop-distribute-patterns -fno-sched-rank-heuristic -fselective-scheduling \
+	--param unroll-jam-min-percent=0 --param large-unit-insns=0 --param max-loop-header-insns=2 \
+	--param max-average-unrolled-insns=128 --param max-inline-insns-size=128 --param max-cse-path-length=3 \
+	--param inline-min-speedup=1 --param max-sched-region-insns=7 --param max-goto-duplication-insns=0 \
+	--param max-gcse-insertion-ratio=0 --param max-partial-antic-length=1 --param loop-max-datarefs-for-datadeps=0 \
+	--param hot-bb-frequency-fraction=1 --param max-jump-thread-duplication-stmts=2 --param max-tail-merge-iterations=0 \
+	--param uninlined-function-insns=16 --param max-grow-copy-bb-insns=16 -mbranch-cost=1
+else ifeq ($(CPU_SERIES),600)
+# Benchmark options for 600
+BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions \
+	-falign-functions=4 -falign-jumps=4 -falign-loops=4 -finline-limit=200  -fno-if-conversion \
+	-fno-if-conversion2 -fipa-pta -fselective-scheduling -fno-tree-loop-distribute-patterns \
+	-funroll-loops -funroll-all-loops -fno-delete-null-pointer-checks -fno-rename-registers \
+	-mbranch-cost=1 --param fsm-scale-path-stmts=5 --param max-average-unrolled-insns=200 \
+	--param max-grow-copy-bb-insns=16 --param max-jump-thread-duplication-stmts=14 \
+	--param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
+else ifeq ($(CPU_SERIES),300)
+# Benchmark options for 300
+BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions -falign-functions=4 \
+	-falign-jumps=4 -falign-loops=4 -finline-limit=200 -fno-if-conversion -fno-if-conversion2 -fipa-pta \
+	-fselective-scheduling -fno-tree-loop-distribute-patterns -funroll-loops -funroll-all-loops \
+	-fno-delete-null-pointer-checks -fno-rename-registers -mbranch-cost=1 --param fsm-scale-path-stmts=5 \
+	--param max-average-unrolled-insns=200 --param max-grow-copy-bb-insns=16 --param max-jump-thread-duplication-stmts=8 \
+	--param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
 else
-# Benchmark options for 200/300/600
-BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common \
-	-finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 \
-	-finline-limit=200 -fno-if-conversion -fno-if-conversion2 \
-	-fno-tree-loop-distribute-patterns -funroll-loops -funroll-all-loops \
-	--param fsm-scale-path-stmts=5 --param max-average-unrolled-insns=200 \
-	--param max-grow-copy-bb-insns=16 -mbranch-cost=1
+# Benchmark options for 200
+BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions -falign-functions=4 \
+	-falign-jumps=4 -falign-loops=4 -finline-limit=200 -fno-if-conversion -fno-if-conversion2 -fipa-pta \
+	-fselective-scheduling -fno-tree-loop-distribute-patterns -funroll-loops -funroll-all-loops \
+	-fno-delete-null-pointer-checks -fno-rename-registers -mbranch-cost=1 --param fsm-scale-path-stmts=5 \
+	--param max-average-unrolled-insns=200 --param max-grow-copy-bb-insns=16 --param max-jump-thread-duplication-stmts=8 \
+	--param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
 endif
 
 # Backup options
@@ -52,7 +71,7 @@ endif
 #BENCH_FLAGS ?= -Os
 
 COMMON_FLAGS := $(BENCH_FLAGS)
-COMMON_FLAGS += -DITERATIONS=600 -DPERFORMANCE_RUN=1
+COMMON_FLAGS += -DITERATIONS=800 -DPERFORMANCE_RUN=1
 COMMON_FLAGS += -DFLAGS_STR=\""$(COMMON_FLAGS)"\"
 
 STDCLIB ?= newlib_small
