@@ -3,10 +3,16 @@
 Changelog
 =========
 
-V0.3.5-dev
-----------
+V0.3.5
+------
 
-This is version ``0.3.5-dev`` of Nuclei SDK, which is still in development.
+This is release version ``0.3.5`` of Nuclei SDK.
+
+.. caution::
+
+    - This version introduce a lot of new featues, and required Nuclei GNU Toolchain 2022.01
+    - If you want to import as NPK zip package into Nuclei Studio, 2022.01 version is required.
+
 
 * Application
 
