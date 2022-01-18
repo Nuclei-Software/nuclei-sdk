@@ -51,7 +51,9 @@
  */
 /** @} */ /* End of Doxygen Group NMSIS_Core_Bitmanip_Intrinsic */
 
+#if defined(__INC_INTRINSIC_API) && (__INC_INTRINSIC_API == 1)
 #include <rvintrin.h>
+#endif
 
 #endif /* defined(__BITMANIP_PRESENT) && (__BITMANIP_PRESENT == 1) */
 

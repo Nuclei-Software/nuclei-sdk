@@ -55,7 +55,9 @@
  */
 /** @} */ /* End of Doxygen Group NMSIS_Core_Vector_Intrinsic */
 
+#if defined(__INC_INTRINSIC_API) && (__INC_INTRINSIC_API == 1)
 #include <riscv_vector.h>
+#endif
 
 #endif /* defined(__VECTOR_PRESENT) && (__VECTOR_PRESENT == 1) */
 
