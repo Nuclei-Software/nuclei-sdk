@@ -35,17 +35,7 @@
 #endif
 .endm
 
-    /*
-     * Put the interrupt vectors in this section according to vector remapped or not:
-     * .vtable: vector table's LMA and VMA are the same, it is not remapped
-     * .vtable_ilm: vector table's LMA and VMA are different, it is remapped, and
-     *              VECTOR_TABLE_REMAPPED need to be defined
-     */
-#if defined(VECTOR_TABLE_REMAPPED)
-    .section .vtable_ilm
-#else
     .section .vtable
-#endif
 
     .weak  eclic_msip_handler
     .weak  eclic_mtip_handler
@@ -116,12 +106,8 @@
     .globl vector_base
     .type vector_base, @object
 vector_base:
-#ifndef VECTOR_TABLE_REMAPPED
     j _start                                                /* 0: Reserved, Jump to _start when reset for vector table not remapped cases.*/
     .align LOG_REGBYTES                                     /*    Need to align 4 byte for RV32, 8 Byte for RV64 */
-#else
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 0: Reserved, default handler for vector table remapped cases */
-#endif
     DECLARE_INT_HANDLER     default_intexc_handler          /* 1: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 2: Reserved */
     DECLARE_INT_HANDLER     eclic_msip_handler              /* 3: Machine software interrupt */

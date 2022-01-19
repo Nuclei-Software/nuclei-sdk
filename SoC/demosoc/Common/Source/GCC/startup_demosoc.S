@@ -34,17 +34,7 @@
 #endif
 .endm
 
-    /*
-     * Put the interrupt vectors in this section according to vector remapped or not:
-     * .vtable: vector table's LMA and VMA are the same, it is not remapped
-     * .vtable_ilm: vector table's LMA and VMA are different, it is remapped, and
-     *              VECTOR_TABLE_REMAPPED need to be defined
-     */
-#if defined(VECTOR_TABLE_REMAPPED)
-    .section .vtable_ilm
-#else
     .section .vtable
-#endif
 
     .weak  eclic_msip_handler
     .weak  eclic_mtip_handler
