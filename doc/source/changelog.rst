@@ -39,6 +39,8 @@ This is release version ``0.3.5`` of Nuclei SDK.
     - heap start and end ld symbols are ``__heap_start`` and ``__heap_end``
     - stub function ``sbrk`` now using new heap start and end ld symbols
     - tdata/tbss section is added for for libncrt, thread local storage supported
+  - For **flash** download mode, vector table are now placed in ``.vtable`` section now instead of ``.vtable_ilm``,
+    ``VECTOR_TABLE_REMAPPED`` macro is still required in **DOWNLOAD=flash** mode
 
 * NMSIS
 
