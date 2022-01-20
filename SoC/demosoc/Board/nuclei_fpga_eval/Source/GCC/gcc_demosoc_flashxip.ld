@@ -21,91 +21,19 @@
  * @version  V1.0.0
  * @date     17. Dec 2019
  ******************************************************************************/
-
-/*********** Use Configuration Wizard in Context Menu *************************/
-
 OUTPUT_ARCH( "riscv" )
-/********************* Flash Configuration ************************************
- * <h> Flash Configuration
- * <o0> Flash Base Address <0x0-0xFFFFFFFF:8>
- * <o1> Flash Size (in Bytes) <0x0-0xFFFFFFFF:8>
- * </h>
- */
-__ROM_BASE = 0x20000000;
-__ROM_SIZE = 0x00400000;
 
-/*--------------------- ILM RAM Configuration ---------------------------
- * <h> ILM RAM Configuration
- * <o0> ILM RAM Base Address    <0x0-0xFFFFFFFF:8>
- * <o1> ILM RAM Size (in Bytes) <0x0-0xFFFFFFFF:8>
- * </h>
- */
-__ILM_RAM_BASE = 0x80000000;
-__ILM_RAM_SIZE = 0x00010000;
+ENTRY( _start )
 
-/*--------------------- Embedded RAM Configuration ---------------------------
- * <h> RAM Configuration
- * <o0> RAM Base Address    <0x0-0xFFFFFFFF:8>
- * <o1> RAM Size (in Bytes) <0x0-0xFFFFFFFF:8>
- * </h>
-*/
-__RAM_BASE = 0x90000000;
-__RAM_SIZE = 0x00010000;
+__STACK_SIZE = 2K;
+__HEAP_SIZE  = 2K;
 
-/********************* Stack / Heap Configuration ****************************
- * <h> Stack / Heap Configuration
- * <o0> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
- * <o1> Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
- * </h>
- */
-__STACK_SIZE = 0x00000800;
-__HEAP_SIZE  = 0x00000800;
-
-/**************************** end of configuration section ********************/
-
-/* Define base address and length of flash and ram */
 MEMORY
 {
-  flash (rxa!w) : ORIGIN = __ROM_BASE, LENGTH = __ROM_SIZE
-  ram (wxa!r) : ORIGIN = __RAM_BASE, LENGTH = __RAM_SIZE
+  flash (rxa!w) : ORIGIN = 0x20000000, LENGTH = 4M
+  ram (wxa!r) : ORIGIN = 0x90000000, LENGTH = 64K
 }
-/* Linker script to place sections and symbol values. Should be used together
- * with other linker script that defines memory regions FLASH,ILM and RAM.
- * It references following symbols, which must be defined in code:
- *   _Start : Entry of reset handler
- *
- * It defines following symbols, which code can use without definition:
- *   _ilm_lma
- *   _ilm
- *   __etext
- *   _etext
- *   etext
- *   _eilm
- *   __preinit_array_start
- *   __preinit_array_end
- *   __init_array_start
- *   __init_array_end
- *   __fini_array_start
- *   __fini_array_end
- *   _data_lma
- *   _edata
- *   edata
- *   __data_end__
- *   __bss_start
- *   __fbss
- *   _end
- *   end
- *   __heap_start
- *   __heap_end
- *   __heap_limit
- *   __StackLimit
- *   __StackBottom
- *   __StackTop
- *   __HEAP_SIZE
- *   __STACK_SIZE
- */
-/* Define entry label of program */
-ENTRY(_start)
+
 SECTIONS
 {
   .init           :
