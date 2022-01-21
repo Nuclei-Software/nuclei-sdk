@@ -1,9 +1,9 @@
 @echo off
-set NUCLEI_TOOL_ROOT=C:\Nuclei
+set NUCLEI_TOOL_ROOT=D:\NucleiStudio\toolchain
 
 REM Create your setup_config.bat
 REM and define NUCLEI_TOOL_ROOT like below
-REM set NUCLEI_TOOL_ROOT=D:\Software\Nuclei
+REM set NUCLEI_TOOL_ROOT=D:\NucleiStudio_IDE_202201\NucleiStudio\toolchain
 set SETUP_CONFIG=setup_config.bat
 
 if exist %SETUP_CONFIG% call %SETUP_CONFIG%

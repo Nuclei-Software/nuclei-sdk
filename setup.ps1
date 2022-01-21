@@ -1,8 +1,8 @@
-$NUCLEI_TOOL_ROOT="C:\Nuclei"
+$NUCLEI_TOOL_ROOT="D:\NucleiStudio\toolchain"
 
 # Create your setup_config.ps1 before run .\setup.ps1
 # and define $NUCLEI_TOOL_ROOT like below
-# $NUCLEI_TOOL_ROOT="D:\Software\Nuclei"
+# $NUCLEI_TOOL_ROOT="D:\NucleiStudio_IDE_202201\NucleiStudio\toolchain"
 # Start Windows PowerShell with the "Run as Administrator" option
 # Run the following command below to enable running unsigned scripts:
 # set-executionpolicy remotesigned
