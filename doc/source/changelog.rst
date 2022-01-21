@@ -12,6 +12,9 @@ This is release version ``0.3.5`` of Nuclei SDK.
 
     - This version introduce a lot of new featues, and required Nuclei GNU Toolchain 2022.01
     - If you want to import as NPK zip package into Nuclei Studio, 2022.01 version is required.
+    - If you want to have smaller code size for Nuclei RISC-V 32bit processors, please define ``STDCLIB=libncrt_small`
+      in your application Makefile, or change **STDCLIB** defined in ``Build/Makefile.base** to make it available
+      globally.
 
 
 * Application
@@ -41,6 +44,7 @@ This is release version ``0.3.5`` of Nuclei SDK.
     - tdata/tbss section is added for for libncrt, thread local storage supported
   - For **flash** download mode, vector table are now placed in ``.vtable`` section now instead of ``.vtable_ilm``,
     ``VECTOR_TABLE_REMAPPED`` macro is still required in **DOWNLOAD=flash** mode
+  - flash program algo used in openocd for demosoc changed to nuspi, see changes in openocd_demosoc.cfg
 
 * NMSIS
 
