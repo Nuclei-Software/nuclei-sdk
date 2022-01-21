@@ -177,6 +177,12 @@ For example, if you want to change linker script for nuclei_fpga_eval ilm downlo
     +  ram (wxa!r) : ORIGIN = 0x90000000, LENGTH = 256K
      }
 
+cc1: error: unknown cpu 'nuclei-300-series' for '-mtune'
+---------------------------------------------------------
+
+This `mtune` option is introduced in Nuclei SDK 0.3.5, used to select optimized gcc pipeline model
+for Nuclei RISC-V Core series such as 200/300/600/900 series, and this feature required Nuclei GNU
+Toolchain 2022.01, please upgrade to this version or later ones.
 
 .. _debugger kit manual: https://www.nucleisys.com/theme/package/Nuclei_FPGA_DebugKit_Intro.pdf
 .. _ftdi_device_desc: http://openocd.org/doc/html/Debug-Adapter-Configuration.html

@@ -8,6 +8,11 @@ Quick Startup
 Use Nuclei SDK in Nuclei Studio
 -------------------------------
 
+.. caution::
+
+   For Nuclei SDK 0.3.5 version and later ones, please use Nuclei Studio 2022.01 or
+   Nuclei GNU Toolchain/OpenOCD/QEMU 2022.01.
+
 From **2020.08** release version of Nuclei Studio IDE, the nuclei-sdk **released**
 version will be deeply integrated with Nuclei Studio, and you can directly create
 nuclei-sdk project in Nuclei Studio IDE.
@@ -26,7 +31,7 @@ Setup Tools and Environment
 To start to use Nuclei SDK, you need to install the following tools:
 
 From **2020.10** release version of Nuclei Studio, you can directly use the prebuilt tools
-provided in Nuclei Studio, please check :ref:`quickstart_setup_tools_env_nside`.
+provided in Nuclei Studio(**strongly suggested**), please check :ref:`quickstart_setup_tools_env_nside`.
 
 If you want to use latest toolchain, you can follow guides below:
 
