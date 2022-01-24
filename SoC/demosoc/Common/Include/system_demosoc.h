@@ -33,7 +33,7 @@ extern "C" {
 
 #include <stdint.h>
 
-extern uint32_t SystemCoreClock;     /*!< System Clock Frequency (Core Clock)  */
+extern volatile uint32_t SystemCoreClock;     /*!< System Clock Frequency (Core Clock)  */
 
 typedef struct EXC_Frame {
     unsigned long ra;                /* ra: x1, return address for jump */

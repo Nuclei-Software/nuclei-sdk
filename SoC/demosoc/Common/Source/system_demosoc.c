@@ -86,7 +86,7 @@
  * program is not using it. Debugging systems require the variable to be physically
  * present in memory so that it can be examined to configure the debugger.
  */
-uint32_t SystemCoreClock = SYSTEM_CLOCK;  /* System Clock Frequency (Core Clock) */
+volatile uint32_t SystemCoreClock = SYSTEM_CLOCK;  /* System Clock Frequency (Core Clock) */
 
 /*----------------------------------------------------------------------------
   Clock functions
