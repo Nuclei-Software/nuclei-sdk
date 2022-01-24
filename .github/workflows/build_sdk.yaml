@@ -51,7 +51,7 @@ jobs:
       run: |
           mkdir -p prebuilt_tools
           cd prebuilt_tools
-          toolzip=nuclei_riscv_newlibc_prebuilt_linux64_2020.08.tar.bz2
+          toolzip=nuclei_riscv_newlibc_prebuilt_linux64_2022.01.tar.bz2
           if [ ! -e $toolzip ] ; then
             wget https://nucleisys.com/upload/files/toochain/gcc/$toolzip
           fi
