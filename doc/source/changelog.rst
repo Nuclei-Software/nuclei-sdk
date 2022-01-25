@@ -12,8 +12,8 @@ This is release version ``0.3.5`` of Nuclei SDK.
 
     - This version introduce a lot of new featues, and required Nuclei GNU Toolchain 2022.01
     - If you want to import as NPK zip package into Nuclei Studio, 2022.01 version is required.
-    - If you want to have smaller code size for Nuclei RISC-V 32bit processors, please define ``STDCLIB=libncrt_small`
-      in your application Makefile, or change **STDCLIB** defined in ``Build/Makefile.base** to make it available
+    - If you want to have smaller code size for Nuclei RISC-V 32bit processors, please define ``STDCLIB=libncrt_small``
+      in your application Makefile, or change **STDCLIB** defined in ``Build/Makefile.base`` to make it available
       globally.
 
 
