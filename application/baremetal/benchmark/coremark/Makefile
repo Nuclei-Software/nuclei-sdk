@@ -8,9 +8,12 @@ $(info Using Nuclei $(CPU_SERIES) series optimization compiling flags!)
 
 ifeq ($(CPU_SERIES),900)
 # Benchmark options for 900
-BENCH_FLAGS ?= -Ofast -funroll-all-loops -finline-limit=600 -ftree-dominator-opts \
-	-fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common \
-	-funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4
+BENCH_FLAGS ?= -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=1000 \
+	-ftree-dominator-opts -fselective-scheduling -funroll-loops -finline-functions -falign-functions=4 \
+	-falign-jumps=4 -falign-loops=4 -fipa-pta -fno-code-hoisting -fno-common -fno-if-conversion \
+	-fno-if-conversion2 -fno-tree-loop-distribute-patterns -fno-tree-vectorize -fno-tree-loop-ivcanon \
+	-fno-tree-vrp -fgcse-las --param=max-loop-header-insns=4 --param loop-max-datarefs-for-datadeps=0 \
+	--param=unroll-jam-min-percent=0 --param=max-goto-duplication-insns=0
 else ifeq ($(CPU_SERIES),600)
 # Benchmark options for 600
 BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions \

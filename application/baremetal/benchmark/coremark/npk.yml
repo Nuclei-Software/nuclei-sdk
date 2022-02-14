@@ -62,9 +62,12 @@ configuration:
         info:
           - name: app_commonflags
             value: >-
-              -Ofast -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2
-              -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions
-              -falign-functions=4 -falign-jumps=4 -falign-loops=4
+              -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=1000
+              -ftree-dominator-opts -fselective-scheduling -funroll-loops -finline-functions -falign-functions=4
+              -falign-jumps=4 -falign-loops=4 -fipa-pta -fno-code-hoisting -fno-common -fno-if-conversion
+              -fno-if-conversion2 -fno-tree-loop-distribute-patterns -fno-tree-vectorize -fno-tree-loop-ivcanon
+              -fno-tree-vrp -fgcse-las --param=max-loop-header-insns=4 --param loop-max-datarefs-for-datadeps=0
+              --param=unroll-jam-min-percent=0 --param=max-goto-duplication-insns=0
 
 ## Set Configuration for other packages
 setconfig:
