@@ -8,16 +8,9 @@ $(info Using Nuclei $(CPU_SERIES) series optimization compiling flags!)
 
 ifeq ($(CPU_SERIES),900)
 # Benchmark options for 900
-BENCH_FLAGS ?= -Ofast -funroll-loops -funroll-all-loops -fno-aggressive-loop-optimizations -fgcse-las \
-	-fno-delete-null-pointer-checks -fno-rename-registers -fno-tree-vrp -fwrapv -fno-toplevel-reorder \
-	-fipa-pta -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 -fno-if-conversion \
-	-fno-if-conversion2 -fno-tree-loop-distribute-patterns -fno-sched-rank-heuristic -fselective-scheduling \
-	--param unroll-jam-min-percent=0 --param large-unit-insns=0 --param max-loop-header-insns=2 \
-	--param max-average-unrolled-insns=128 --param max-inline-insns-size=128 --param max-cse-path-length=3 \
-	--param inline-min-speedup=1 --param max-sched-region-insns=7 --param max-goto-duplication-insns=0 \
-	--param max-gcse-insertion-ratio=0 --param max-partial-antic-length=1 --param loop-max-datarefs-for-datadeps=0 \
-	--param hot-bb-frequency-fraction=1 --param max-jump-thread-duplication-stmts=2 --param max-tail-merge-iterations=0 \
-	--param uninlined-function-insns=16 --param max-grow-copy-bb-insns=16 -mbranch-cost=1
+BENCH_FLAGS ?= -Ofast -funroll-all-loops -finline-limit=600 -ftree-dominator-opts \
+	-fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common \
+	-funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4
 else ifeq ($(CPU_SERIES),600)
 # Benchmark options for 600
 BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions \
