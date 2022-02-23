@@ -34,6 +34,9 @@
  extern "C" {
 #endif
 
+#include "core_feature_base.h"
+
+
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
 
 /* ##########################  Cache functions  #################################### */

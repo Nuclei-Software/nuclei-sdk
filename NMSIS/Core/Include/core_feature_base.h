@@ -23,11 +23,12 @@
  * @brief    Base core feature API for Nuclei N/NX Core
  */
 #include <stdint.h>
-#include "riscv_encoding.h"
 
 #ifdef __cplusplus
  extern "C" {
 #endif
+
+#include "nmsis_compiler.h"
 
 /**
  * \defgroup NMSIS_Core_Registers     Register Define and Type Definitions

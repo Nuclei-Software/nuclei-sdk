@@ -32,6 +32,8 @@
  extern "C" {
 #endif
 
+#include "core_feature_base.h"
+
 #if defined(__VECTOR_PRESENT) && (__VECTOR_PRESENT == 1)
 
 /* ###########################  CPU Vector Intrinsic Functions ########################### */

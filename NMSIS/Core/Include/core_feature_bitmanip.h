@@ -32,6 +32,8 @@
  extern "C" {
 #endif
 
+#include "core_feature_base.h"
+
 #if defined(__BITMANIP_PRESENT) && (__BITMANIP_PRESENT == 1)
 
 /* ###########################  CPU Bitmanipulation Intrinsic Functions ########################### */

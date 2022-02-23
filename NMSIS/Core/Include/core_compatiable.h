@@ -25,6 +25,8 @@
  extern "C" {
 #endif
 
+#include "core_feature_base.h"
+
 /* ===== ARM Compatiable Functions ===== */
 /**
  * \defgroup NMSIS_Core_ARMCompatiable_Functions   ARM Compatiable Functions

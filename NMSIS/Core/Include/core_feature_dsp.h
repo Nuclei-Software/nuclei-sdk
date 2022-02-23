@@ -32,6 +32,8 @@
  extern "C" {
 #endif
 
+#include "core_feature_base.h"
+
 #if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
 
 #if defined(__INC_INTRINSIC_API) && (__INC_INTRINSIC_API == 1)

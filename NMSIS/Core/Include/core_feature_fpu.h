@@ -32,6 +32,8 @@
  extern "C" {
 #endif
 
+#include "core_feature_base.h"
+
 /* ===== FPU Operations ===== */
 /**
  * \defgroup NMSIS_Core_FPU_Functions   FPU Functions

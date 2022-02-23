@@ -32,6 +32,8 @@
  extern "C" {
 #endif
 
+#include "core_feature_base.h"
+
 #if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
 /**
  * \defgroup NMSIS_Core_SysTimer_Registers     Register Define and Type Definitions Of System Timer

@@ -23,11 +23,12 @@
  * @brief    NMSIS compiler GCC header file
  */
 #include <stdint.h>
-#include "riscv_encoding.h"
 
 #ifdef __cplusplus
  extern "C" {
 #endif
+
+#include "riscv_encoding.h"
 
 /* #########################  Startup and Lowlevel Init  ######################## */
 /**

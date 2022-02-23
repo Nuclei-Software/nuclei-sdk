@@ -36,6 +36,8 @@
  extern "C" {
 #endif
 
+#include "core_feature_base.h"
+
 #if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
 /**
  * \defgroup NMSIS_Core_ECLIC_Registers     Register Define and Type Definitions Of ECLIC

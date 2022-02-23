@@ -32,6 +32,8 @@
  extern "C" {
 #endif
 
+#include "core_feature_base.h"
+
 #if defined(__PMP_PRESENT) && (__PMP_PRESENT == 1)
 /* ===== PMP Operations ===== */
 /**

@@ -18,10 +18,12 @@
 #ifndef __RISCV_ENCODING_H__
 #define __RISCV_ENCODING_H__
 
-#include "riscv_bits.h"
 #ifdef __cplusplus
  extern "C" {
 #endif
+
+#include "riscv_bits.h"
+
 /**
  * \defgroup NMSIS_Core_CSR_Encoding    Core CSR Encodings
  * \ingroup  NMSIS_Core
