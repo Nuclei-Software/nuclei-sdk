@@ -34,8 +34,7 @@
  extern "C" {
 #endif
 
-#if (defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1)) \
-    || (defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1))
+#if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
 
 /* ##########################  Cache functions  #################################### */
 /**
@@ -191,6 +190,7 @@ __STATIC_FORCEINLINE void DisableICache(void)
     __RV_CSR_CLEAR(CSR_MCACHE_CTL, CSR_MCACHE_CTL_IE);
 }
 
+#if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
 /**
  * \brief  Get I-Cache Information
  * \details
@@ -207,33 +207,6 @@ __STATIC_FORCEINLINE int32_t GetICacheInfo(CacheInfo_Type *info)
         return -1;
     }
     CSR_MICFGINFO_Type csr_ccfg = (CSR_MICFGINFO_Type)__RV_CSR_READ(CSR_MICFG_INFO);
-    info->setperway = (1 << csr_ccfg.b.set) << 3;
-    info->ways = (1 + csr_ccfg.b.way);
-    if (csr_ccfg.b.lsize == 0) {
-        info->linesize = 0;
-    } else {
-        info->linesize = (1 << (csr_ccfg.b.lsize - 1)) << 3;
-    }
-    info->size = info->setperway * info->ways * info->linesize;
-    return 0;
-}
-
-/**
- * \brief  Get D-Cache Information
- * \details
- * This function get D-Cache Information
- * \remarks
- * - This function can be called in M-Mode only.
- * - You can use this function in combination with cache lines operations
- * \sa
- * - \ref GetICacheInfo
- */
-__STATIC_FORCEINLINE int32_t GetDCacheInfo(CacheInfo_Type *info)
-{
-    if (info == NULL) {
-        return -1;
-    }
-    CSR_MDCFGINFO_Type csr_ccfg = (CSR_MDCFGINFO_Type)__RV_CSR_READ(CSR_MDCFG_INFO);
     info->setperway = (1 << csr_ccfg.b.set) << 3;
     info->ways = (1 + csr_ccfg.b.way);
     if (csr_ccfg.b.lsize == 0) {
@@ -640,7 +613,7 @@ __STATIC_FORCEINLINE void UInvalICache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_INVAL_ALL);
 }
-
+#endif /* defined(__CCM_PRESENT) && (__CCM_PRESENT == 1) */
 /** @} */ /* End of Doxygen Group NMSIS_Core_ICache */
 #endif /* defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1) */
 
@@ -679,6 +652,34 @@ __STATIC_FORCEINLINE void EnableDCache(void)
 __STATIC_FORCEINLINE void DisableDCache(void)
 {
     __RV_CSR_CLEAR(CSR_MCACHE_CTL, CSR_MCACHE_CTL_DE);
+}
+
+#if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
+/**
+ * \brief  Get D-Cache Information
+ * \details
+ * This function get D-Cache Information
+ * \remarks
+ * - This function can be called in M-Mode only.
+ * - You can use this function in combination with cache lines operations
+ * \sa
+ * - \ref GetICacheInfo
+ */
+__STATIC_FORCEINLINE int32_t GetDCacheInfo(CacheInfo_Type *info)
+{
+    if (info == NULL) {
+        return -1;
+    }
+    CSR_MDCFGINFO_Type csr_ccfg = (CSR_MDCFGINFO_Type)__RV_CSR_READ(CSR_MDCFG_INFO);
+    info->setperway = (1 << csr_ccfg.b.set) << 3;
+    info->ways = (1 + csr_ccfg.b.way);
+    if (csr_ccfg.b.lsize == 0) {
+        info->linesize = 0;
+    } else {
+        info->linesize = (1 << (csr_ccfg.b.lsize - 1)) << 3;
+    }
+    info->size = info->setperway * info->ways * info->linesize;
+    return 0;
 }
 
 /**
@@ -1384,6 +1385,7 @@ __STATIC_FORCEINLINE void UFlushInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WBINVAL_ALL);
 }
+#endif /* defined(__CCM_PRESENT) && (__CCM_PRESENT == 1) */
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_DCache */
 #endif /* defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1) */
