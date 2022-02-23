@@ -754,7 +754,8 @@ __STATIC_FORCEINLINE rv_csr_t __ECLIC_GetVector(IRQn_Type IRQn)
  * This function set exception handler address to 'CSR_MTVEC'.
  * \param [in]      addr  Exception handler address
  * \remarks
- * - This function use to set exception handler address to 'CSR_MTVEC'. Address is 4 bytes align.
+ * - This function use to set exception handler address to 'CSR_MTVEC'.
+ *   Address need to be aligned to 64 bytes.
  * \sa
  * - \ref __get_exc_entry
  */
@@ -771,7 +772,8 @@ __STATIC_FORCEINLINE void __set_exc_entry(rv_csr_t addr)
  * This function get exception handler address from 'CSR_MTVEC'.
  * \return       Exception handler address
  * \remarks
- * - This function use to get exception handler address from 'CSR_MTVEC'. Address is 4 bytes align
+ * - This function use to get exception handler address from 'CSR_MTVEC'.
+ *   Address need to be aligned to 64 bytes.
  * \sa
  * - \ref __set_exc_entry
  */
