@@ -13,6 +13,8 @@
 
 #define TIMER_TICKS             (2 * SOC_TIMER_FREQ)
 
+static volatile uint32_t int_check_cnt = 0;
+
 // setup timer
 void setup_timer(void)
 {
@@ -57,10 +59,12 @@ __INTERRUPT void eclic_msip_handler(void)
     printf("[IN SOFTWARE INTERRUPT]software interrupt hit %d times\r\n", int_sw_cnt++);
     printf("[IN SOFTWARE INTERRUPT]software interrupt end\r\n");
 
+    int_check_cnt ++;
     // restore CSR context
     RESTORE_IRQ_CSR_CONTEXT();
 }
 
+#define RUN_LOOPS   20
 int main(int argc, char** argv)
 {
     uint8_t timer_intlevel, swirq_intlevel;
@@ -92,6 +96,7 @@ int main(int argc, char** argv)
 
     // Wait for timer interrupt and software interrupt
     // triggered periodly
-    while (1);
+    while (int_check_cnt < RUN_LOOPS);
+    printf("ECLIC Demo finished sucessfully in %d loops\n", RUN_LOOPS);
     return 0;
 }

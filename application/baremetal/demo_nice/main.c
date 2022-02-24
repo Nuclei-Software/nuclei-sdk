@@ -4,6 +4,7 @@
 
 int main(void)
 {
+    int ret = 0;
     unsigned int array[ROW_LEN][COL_LEN] = {
         {10, 30, 90},
         {20, 40, 80},
@@ -63,6 +64,7 @@ int main(void)
         printf("PASS\r\n");
     } else {
         printf("FAIL\r\n");
+        ret = 1;
     }
 
     printf("4. Performance summary\r\n");
@@ -72,5 +74,5 @@ int main(void)
     printf("\t nice  : \r\n");
     printf("\t      instret: %u, cycle: %u\r\n", instret_nice, cycle_nice);
 
-    return 0;
+    return ret;
 }
