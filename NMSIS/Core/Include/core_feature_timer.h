@@ -116,7 +116,15 @@ typedef struct {
  */
 __STATIC_FORCEINLINE void SysTimer_SetLoadValue(uint64_t value)
 {
+#if __RISCV_XLEN == 32
+    void *addr;
+    addr = (void *)(&(SysTimer->MTIMER));
+    __SW(addr, 0);      // prevent carry
+    __SW(addr + 4, (uint32_t)(value >> 32));
+    __SW(addr, (uint32_t)(value));
+#else
     SysTimer->MTIMER = value;
+#endif
 }
 
 /**
@@ -165,12 +173,21 @@ __STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
 {
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
     if (hartid == 0) {
+#if __RISCV_XLEN == 32
+        void *addr;
+        addr = (void *)(&(SysTimer->MTIMERCMP));
+        __SW(addr, -1U);      // prevent load > timecmp
+        __SW(addr + 4, (uint32_t)(value >> 32));
+        __SW(addr, (uint32_t)(value));
+#else
         SysTimer->MTIMERCMP = value;
+#endif
     } else {
         void *addr = (void *)(SysTimer_CLINT_MTIMECMP_BASE(hartid));
 #if __RISCV_XLEN == 32
-        __SW(addr, (uint32_t)value);
+        __SW(addr, -1U);      // prevent load > timecmp
         __SW(addr + 4, (uint32_t)(value >> 32));
+        __SW(addr, (uint32_t)value);
 #else
         __SD(addr, value);
 #endif
