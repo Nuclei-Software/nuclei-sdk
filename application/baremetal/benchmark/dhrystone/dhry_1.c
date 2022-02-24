@@ -275,27 +275,25 @@ int main(void)
         printf("Measured time too small to obtain meaningful results\n");
         printf("Please increase number of runs\n");
         printf("\n");
-    } else {
-#ifdef TIME
-        Microseconds = (float) User_Time * Mic_secs_Per_Second
-                       / (float) Number_Of_Runs;
-        Dhrystones_Per_Second = (float) Number_Of_Runs / (float) User_Time;
-#else
-        Microseconds = (float) User_Time * Mic_secs_Per_Second
-                       / ((float) HZ * ((float) Number_Of_Runs));
-        Dhrystones_Per_Second = ((float) HZ * (float) Number_Of_Runs)
-                                / (float) User_Time;
-#endif
-        Instret =  User_Instret / Number_Of_Runs;
-
-        DMIPS_MHZ = (1000000 / ((float)User_Cycle / (float)Number_Of_Runs)) / 1757;
-
-        printf(" (*) User_Cycle for total run through Dhrystone with loops %d: \n", Number_Of_Runs);
-        printf("%ld \n", User_Cycle);
-        printf("       So the DMIPS/MHz can be caculated by: \n");
-        printf("       1000000/(User_Cycle/Number_Of_Runs)/1757 = %2.6f DMIPS/MHz\n", DMIPS_MHZ);
-        printf("\n");
     }
+#ifdef TIME
+    Microseconds = (float) User_Time * Mic_secs_Per_Second / (float) Number_Of_Runs;
+    Dhrystones_Per_Second = (float) Number_Of_Runs / (float) User_Time;
+#else
+    Microseconds = (float) User_Time * Mic_secs_Per_Second
+                    / ((float) HZ * ((float) Number_Of_Runs));
+    Dhrystones_Per_Second = ((float) HZ * (float) Number_Of_Runs)
+                            / (float) User_Time;
+#endif
+    Instret =  User_Instret / Number_Of_Runs;
+
+    DMIPS_MHZ = (1000000 / ((float)User_Cycle / (float)Number_Of_Runs)) / 1757;
+
+    printf(" (*) User_Cycle for total run through Dhrystone with loops %d: \n", Number_Of_Runs);
+    printf("%ld \n", User_Cycle);
+    printf("       So the DMIPS/MHz can be caculated by: \n");
+    printf("       1000000/(User_Cycle/Number_Of_Runs)/1757 = %2.6f DMIPS/MHz\n", DMIPS_MHZ);
+    printf("\n");
 
     uint32_t dhry_dmips = (uint32_t)(DMIPS_MHZ * 1000);
     printf("\nCSV, Benchmark, Iterations, Cycles, DMIPS/MHz\n");
