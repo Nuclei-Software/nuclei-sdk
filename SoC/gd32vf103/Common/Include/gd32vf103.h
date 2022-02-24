@@ -55,6 +55,11 @@ typedef enum {
     DOWNLOAD_MODE_MAX,
 } DownloadMode_Type;
 
+/* Simulation mode macros */
+#define SIMULATION_MODE_XLSPIKE   0     /*!< xlspike simulation mode */
+#define SIMULATION_MODE_QEMU      1     /*!< qemu simulation mode */
+
+
 /* =========================================================================================================================== */
 /* ================                                Interrupt Number Definition                                ================ */
 /* =========================================================================================================================== */

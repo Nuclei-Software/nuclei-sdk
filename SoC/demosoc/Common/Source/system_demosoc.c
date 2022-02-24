@@ -388,9 +388,9 @@ void _premain_init(void)
 void _postmain_fini(int status)
 {
     /* TODO: Add your own finishing code here, called after main */
-#ifdef SIMULATION_XLSPIKE
-    extern void xlspike_exit(int status);
-    xlspike_exit(status);
+#if defined(SIMULATION_MODE)
+    extern void simulation_exit(int status);
+    simulation_exit(status);
 #endif
 }
 

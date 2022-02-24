@@ -58,12 +58,17 @@ void delay_1ms(uint32_t count)
     } while (delta_mtime < delay_ticks);
 }
 
-#ifdef SIMULATION_XLSPIKE
-// never return for xlspike
-void xlspike_exit(int status)
+#if defined(SIMULATION_MODE)
+void simulation_exit(int status)
 {
+#if SIMULATION_MODE == SIMULATION_MODE_XLSPIKE
     // pass exit status via rxfifo register
     UART0->RXFIFO = status;
     uart_write(UART0, 4);
+#elif SIMULATION_MODE == SIMULATION_MODE_QEMU
+    #define QEMU_VIRT_TEST_BASE 0x100000
+    #define QEMU_SIG_EXIT      0x3333
+    REG32(QEMU_VIRT_TEST_BASE) = (status << 16) | QEMU_SIG_EXIT;
+#endif
 }
 #endif
