@@ -121,11 +121,13 @@ debug: $(TARGET).elf
 
 # just for demo purpose
 run_qemu: $(TARGET).elf
+	@$(ECHO) "Run program $< on $(QEMU)"
 	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) \
 		-nodefaults -nographic -serial stdio -kernel $<
 
 # just works on demosoc purpose, experimental support
 run_xlspike: $(TARGET).elf
+	@$(ECHO) "Run program $< on $(XLSPIKE)"
 	$(XLSPIKE) --isa $(RISCV_ARCH) $<
 
 clean:
