@@ -3,6 +3,36 @@
 Changelog
 =========
 
+V0.3.6-dev
+----------
+
+This is version ``0.3.6-dev`` of Nuclei SDK, which is still in development.
+
+* Application
+
+  - update coremark benchmark options for n900/nx900, which can provide better score number
+  - benchmark value will be print in float even printf with float is not supported in c library
+  - baremetal applications will exit with an return value in main
+
+* NMSIS
+
+  - add ``__CCM_PRESENT`` macro in NMSIS-Core, if CCM hardware unit is present in your CPU,
+    ``__CCM_PRESENT`` macro need to be set to 1 in ``<Device>.h``
+  - Fixed mtvec related api comment in ``core_feature_eclic.h``
+  - rearrage #include header files for all NMSIS Core header files
+  - removed some not good #pragma gcc diagnostic lines in ``nmsis_gcc.h``
+
+* Build
+
+  - Add experimental run_xlspike and run_qemu make target support
+  - SIMU=xlspike or SIMU=qemu passed in make will auto exit qemu if main function returned
+
+* SoC
+
+  - Add qemu auto-exit support for gd32vf103 and demosoc, required next version after Nuclei QEMU 2022.01
+
+For detailed changes, please check commit histories since 0.3.5 release.
+
 V0.3.5
 ------
 
