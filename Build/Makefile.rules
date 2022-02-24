@@ -24,7 +24,7 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(ALL_DEPS)
 endif
 
-.PHONY: all info help bin size dasm upload run_openocd run_gdb clean debug
+.PHONY: all info help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike clean debug
 
 info:
 	@$(ECHO) Current Configuration: RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) RISCV_TUNE=$(RISCV_TUNE) RISCV_CMODEL=$(RISCV_CMODEL) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) DOWNLOAD=$(DOWNLOAD) STDCLIB=$(STDCLIB)
@@ -123,6 +123,10 @@ debug: $(TARGET).elf
 run_qemu: $(TARGET).elf
 	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) \
 		-nodefaults -nographic -serial stdio -kernel $<
+
+# just works on demosoc purpose, experimental support
+run_xlspike: $(TARGET).elf
+	$(XLSPIKE) --isa $(RISCV_ARCH) $<
 
 clean:
 	@$(ECHO) "Clean all build objects"
