@@ -199,11 +199,11 @@ static SPDP loop_time[9];
 static SPDP loop_mops[9];
 static SPDP loop_mflops[9];
 static SPDP TimeUsed;
-static SPDP mwips;
+static SPDP mwips, mwips_mhz;
 static char headings[9][18];
 static SPDP Check;
 static SPDP results[9];
-int main()
+int main(void)
 {
     int count = 10, calibrate = 1;
     long xtra = 1;
@@ -277,9 +277,16 @@ int main()
 
     printf("\nMWIPS/MHz        ");
 
-    printf("%39.3f%19.3f\n\n", mwips / SystemCoreClock * 1000000, TimeUsed);
+    mwips_mhz = mwips / SystemCoreClock * 1000000;
+    printf("%39.3f%19.3f\n\n", mwips_mhz, TimeUsed);
+
+    uint32_t whet_mwips = (uint32_t)(mwips_mhz * 1000);
+    printf("\nCSV, Benchmark, MWIPS/MHz\n");
+    printf("CSV, Whetstone, %u.%u\n", (whet_mwips/1000), (whet_mwips%1000));
+
     if (Check == 0) {
-        printf("Wrong answer  ");
+        printf("Wrong answer  \n");
+        return -1;
     }
 
     return 0;

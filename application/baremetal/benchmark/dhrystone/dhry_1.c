@@ -75,7 +75,7 @@ float           DMIPS_MHZ;
 /* end of variables for time measurement */
 
 
-main()
+int main(void)
 /*****/
 
 /* main program, corresponds to procedures        */
@@ -296,6 +296,12 @@ main()
         printf("\n");
     }
 
+    uint32_t dhry_dmips = (uint32_t)(DMIPS_MHZ * 1000);
+    printf("\nCSV, Benchmark, Iterations, Cycles, DMIPS/MHz\n");
+    printf("CSV, Dhrystone, %u, %u, %u.%u\n", \
+        Number_Of_Runs, User_Cycle, (dhry_dmips/1000), (dhry_dmips%1000));
+
+    return 0;
 }
 
 

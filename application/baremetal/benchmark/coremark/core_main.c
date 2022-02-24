@@ -398,7 +398,10 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     ee_printf("\n");
 #endif
 
+    uint32_t cmk_dmips = (uint32_t)(coremark_dmips * 1000);
+    ee_printf("\nCSV, Benchmark, Iterations, Cycles, CoreMark/MHz\n");
+    ee_printf("CSV, CoreMark, %u, %u, %u.%u\n", \
+        results[0].iterations, (ee_u32)total_time, (cmk_dmips/1000), (cmk_dmips%1000));
+
     return MAIN_RETURN_VAL;
 }
-
-
