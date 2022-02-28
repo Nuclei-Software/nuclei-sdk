@@ -3,10 +3,10 @@
 Changelog
 =========
 
-V0.3.6-dev
-----------
+V0.3.6
+------
 
-This is version ``0.3.6-dev`` of Nuclei SDK, which is still in development.
+This is release version ``0.3.6`` of Nuclei SDK.
 
 * Application
 
@@ -19,17 +19,18 @@ This is version ``0.3.6-dev`` of Nuclei SDK, which is still in development.
   - add ``__CCM_PRESENT`` macro in NMSIS-Core, if CCM hardware unit is present in your CPU,
     ``__CCM_PRESENT`` macro need to be set to 1 in ``<Device>.h``
   - Fixed mtvec related api comment in ``core_feature_eclic.h``
+  - Add safely write mtime/mtimecmp register for 32bit risc-v processor
   - rearrage #include header files for all NMSIS Core header files
   - removed some not good #pragma gcc diagnostic lines in ``nmsis_gcc.h``
 
 * Build
 
-  - Add experimental run_xlspike and run_qemu make target support
-  - SIMU=xlspike or SIMU=qemu passed in make will auto exit qemu if main function returned
+  - Add experimental ``run_xlspike`` and ``run_qemu`` make target support
+  - ``SIMU=xlspike`` or ``SIMU=qemu`` passed in make will auto exit xlspike/qemu if main function returned
 
 * SoC
 
-  - Add qemu auto-exit support for gd32vf103 and demosoc, required next version after Nuclei QEMU 2022.01
+  - Add xlspike/qemu auto-exit support for gd32vf103 and demosoc, required next version after Nuclei QEMU 2022.01
 
 For detailed changes, please check commit histories since 0.3.5 release.
 
