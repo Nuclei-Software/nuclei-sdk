@@ -3,6 +3,26 @@
 Changelog
 =========
 
+
+V0.3.7-dev
+----------
+
+This is version ``0.3.7-dev`` of Nuclei SDK, which is in development.
+
+* Application
+
+
+* NMSIS
+
+
+* Build
+
+
+* SoC
+
+
+For detailed changes, please check commit histories since 0.3.6 release.
+
 V0.3.6
 ------
 
