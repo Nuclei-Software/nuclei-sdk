@@ -229,7 +229,7 @@ int main(void)
         calibrate++;
         count--;
 
-#if CFG_SIMU
+#if CFG_SIMULATION
         if (TimeUsed > 0.02)
 #else
         if (TimeUsed > 2.0)
