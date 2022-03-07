@@ -604,9 +604,8 @@ PROGRAM_UNKNOWN="unknown"
 PROGRAM_COREMARK="coremark"
 PROGRAM_DHRYSTONE="dhrystone"
 PROGRAM_WHETSTONE="whetstone"
-def parse_benchmark_runlog(lines):
-    if isinstance(lines, list) == False:
-        return False, None
+
+def parse_benchmark_compatiable(lines):
     result = None
     program_type = PROGRAM_UNKNOWN
     try:
@@ -636,6 +635,100 @@ def parse_benchmark_runlog(lines):
         return program_type, result
     return program_type, result
 
+def parse_benchmark_baremetal(lines):
+    result = None
+    program_type = PROGRAM_UNKNOWN
+    try:
+        unit = "unknown"
+        for line in lines:
+            stripline = line.strip()
+            if "csv," in stripline.lower():
+                csv_values = stripline.split(',')
+                if len(csv_values) >= 3:
+                    key = csv_values[1].lower().strip()
+                    value = csv_values[-1].lower().strip()
+                    if key == "benchmark":
+                        unit = value
+                    else:
+                        program_type = key
+                        result = dict()
+                        result[unit] = strtofloat(value)
+                        break
+    except:
+        return program_type, result
+    return program_type, result
+
+def parse_benchmark_baremetal_csv(lines):
+    result = None
+    program_type = PROGRAM_UNKNOWN
+    try:
+        result = dict()
+        for line in lines:
+            stripline = line.strip()
+            if "csv," in stripline.lower():
+                csv_values = stripline.split(',')
+                if len(csv_values) >= 3:
+                    key = csv_values[1].lower().strip()
+                    value = csv_values[-1].lower().strip()
+                    if "BENCH" not in key:
+                        result[key] = value
+    except:
+        return program_type, result
+    return program_type, result
+
+def find_index(key, arr):
+    try:
+        index = arr.index(key)
+    except:
+        index = -1
+    return index
+
+def parse_benchmark_runlog(lines, lgf=""):
+    if isinstance(lines, list) == False:
+        return PROGRAM_UNKNOWN, PROGRAM_UNKNOWN, None
+    subtype = ""
+    if lgf.strip() == "": # old style
+        program_type, result = parse_benchmark_compatiable(lines)
+    else:
+        lgf = lgf.replace("\\", "/")
+        appnormdirs = os.path.dirname(os.path.normpath(lgf)).replace('\\', '/').split('/')
+        if "baremetal/benchmark" in lgf:
+            # baremetal benchmark
+            program_type, result = parse_benchmark_baremetal(lines)
+        elif "baremetal/demo_dsp" in lgf:
+            program_type, result = parse_benchmark_baremetal_csv(lines)
+            program_type = "demo_dsp"
+        elif "DSP/Examples/RISCV" in lgf:
+            program_type, result = parse_benchmark_baremetal_csv(lines)
+            program_type = "nmsis_dsp_example"
+            index = find_index("RISCV", appnormdirs)
+            if index >= 0:
+                subtype = appnormdirs[index + 1]
+        elif "DSP/Test" in lgf:
+            program_type, result = parse_benchmark_baremetal_csv(lines)
+            program_type = "nmsis_dsp_tests"
+            index = find_index("Test", appnormdirs)
+            if index >= 0:
+                subtype = appnormdirs[index + 1]
+        elif "NN/Examples/RISCV" in lgf:
+            program_type, result = parse_benchmark_baremetal_csv(lines)
+            program_type = "nmsis_nn_example"
+            index = find_index("RISCV", appnormdirs)
+            if index >= 0:
+                subtype = appnormdirs[index + 1]
+        elif "NN/Tests" in lgf:
+            program_type, result = parse_benchmark_baremetal_csv(lines)
+            if "full" in appnormdirs:
+                program_type = "nmsis_nn_test_full"
+                subtype = "full"
+            else:
+                program_type = "nmsis_nn_test_percase"
+                index = find_index("percase", appnormdirs)
+                if index >= 0:
+                    subtype = appnormdirs[index + 1]
+        else:
+            program_type, result = parse_benchmark_compatiable(lines)
+    return program_type, subtype, result
 
 def program_fpga(bit, target):
     print("Try to program fpga bitstream %s to target board %s" % (bit, target))

@@ -139,9 +139,11 @@ class nsdk_runner(object):
                     print("FDTI Serial %s not found!" % (ftdi_serial))
                     continue
                 if check_serial_port(serport) == False:
+                    print("Serial port %s not found!" % (serport))
                     continue
                 # program fpga
                 if program_fpga(bitstream, fpga_serial) == False:
+                    print("Failed to program fpga using bit %s to target %s" % (bitstream, fpga_serial))
                     continue
                 else:
                     print("Successfully program fpga using bit %s to target %s" % (bitstream, fpga_serial))

@@ -350,9 +350,9 @@ class nsdk_runner(nsdk_builder):
         result = {"type": "unknown", "value": {}}
         if os.path.isfile(logfile):
             result_lines = open(logfile).readlines()
-            program_found, result_parsed = parse_benchmark_runlog(result_lines)
+            program_found, subtype, result_parsed = parse_benchmark_runlog(result_lines, lgf=logfile)
             if program_found != PROGRAM_UNKNOWN:
-                result = {"type": program_found, "value": result_parsed}
+                result = {"type": program_found, "subtype": subtype, "value": result_parsed}
         return result
 
     def run_app_onhw(self, appdir, runcfg:dict(), show_output=True, logfile=None, uploadlog=None):
