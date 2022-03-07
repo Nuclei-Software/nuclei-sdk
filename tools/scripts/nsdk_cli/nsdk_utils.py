@@ -645,12 +645,12 @@ def parse_benchmark_baremetal(lines):
             if "csv," in stripline.lower():
                 csv_values = stripline.split(',')
                 if len(csv_values) >= 3:
-                    key = csv_values[1].lower().strip()
-                    value = csv_values[-1].lower().strip()
-                    if key == "benchmark":
+                    key = csv_values[1].strip()
+                    value = csv_values[-1].strip()
+                    if key.lower() == "benchmark":
                         unit = value
                     else:
-                        program_type = key
+                        program_type = key.lower()
                         result = dict()
                         result[unit] = strtofloat(value)
                         break
@@ -668,9 +668,9 @@ def parse_benchmark_baremetal_csv(lines):
             if "csv," in stripline.lower():
                 csv_values = stripline.split(',')
                 if len(csv_values) >= 3:
-                    key = csv_values[1].lower().strip()
-                    value = csv_values[-1].lower().strip()
-                    if "BENCH" not in key:
+                    key = csv_values[1].strip()
+                    value = csv_values[-1].strip()
+                    if "BENCH" not in key.upper():
                         result[key] = value
     except:
         return program_type, result
