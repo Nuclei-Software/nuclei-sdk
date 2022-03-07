@@ -2,3 +2,6 @@ prettytable==2.1.0
 psutil==5.8.0
 pyserial==3.5
 markdown
+pyusb
+yamale
+pyyaml

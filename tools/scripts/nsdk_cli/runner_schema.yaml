@@ -1,0 +1,40 @@
+runcfg: include('rcfg')
+environment: include('env')
+fpga_runners: 
+  map(include('fpgarunner'), key=str())
+ncycm_runners:
+  map(include('ncycmrunner'), key=str())
+cpus:
+  map(include('cpucore'), key=str())
+configs:
+  map(include('config'), key=str())
+---
+
+rcfg:
+  runner: enum('fpga', 'ncycm')
+
+env:
+  fpgaloc: str()
+  ncycmloc: str()
+
+fpgarunner:
+  board_type: enum('ku060', 'ddr200t', 'mcu200t', 'vcu118', 'vu19p')
+  fpga_serial: str()
+  ftdi_serial: str()
+  serial_port: str()
+
+ncycmrunner:
+  model: str()
+
+cpucore:
+  soc: str()
+  arch: str()
+  nsdk_makeopts:
+    map(str(), key=str())
+
+config:
+  bitstream: str()
+  fpga: enum('ku060', 'ddr200t', 'mcu200t', 'vcu118', 'vu19p')
+  ncycm: str()
+  cpu: str()
+  openocd_cfg: str()

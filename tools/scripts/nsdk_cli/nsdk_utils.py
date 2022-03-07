@@ -3,6 +3,7 @@
 import os
 import sys
 import time
+import shutil
 import signal
 import psutil
 import re
@@ -16,6 +17,7 @@ import subprocess
 import asyncio
 import glob
 import json
+import yaml
 
 SDK_GLOBAL_VARIABLES = {
     "sdk_checktag": "Nuclei SDK Build Time:",
@@ -36,6 +38,30 @@ class NThread(Thread):
             return self.result
         except Exception:
             return None
+
+YAML_OK=0
+YAML_NOFILE=1
+YAML_INVAILD=2
+def load_yaml(file):
+    if isinstance(file, str) == False or os.path.isfile(file) == False:
+        return YAML_NOFILE, None
+    try:
+        data = yaml.load(open(file, 'r'), Loader=yaml.FullLoader)
+        return YAML_OK, data
+    except:
+        print("Error: %s is an invalid yaml file!" % (file))
+        return YAML_INVAILD, None
+
+def save_yaml(file, data):
+    if isinstance(file, str) == False:
+        return False
+    try:
+        with open(file, "w") as cf:
+            yaml.dump(data, cf, indent=4)
+        return True
+    except:
+        print("Error: Data can't be serialized to yaml file!")
+        return False
 
 JSON_OK=0
 JSON_NOFILE=1
@@ -416,6 +442,23 @@ def get_elfsize(elf):
     os.remove(sizelog)
     return sizeinfo
 
+def merge_config_with_makeopts(config, make_options):
+    opt_splits=make_options.strip().split()
+    passed_buildcfg = dict()
+    for opt in opt_splits:
+        if "=" in opt:
+            values = opt.split("=")
+            # Make new build config
+            if (len(values) == 2):
+                passed_buildcfg[values[0]] = values[1]
+    build_cfg = config.get("build_config", None)
+    if build_cfg is None:
+        config["build_config"] = passed_buildcfg
+    else:
+        # update build_config using parsed config via values specified in make_options
+        config["build_config"].update(passed_buildcfg)
+    return config
+
 # merge config dict and args dict
 # args will overwrite config
 def merge_config_with_args(config, args_dict):
@@ -449,20 +492,7 @@ def merge_config_with_args(config, args_dict):
     if parallel is not None:
         new_config["parallel"] = parallel
     if make_options:
-        opt_splits=make_options.strip().split()
-        passed_buildcfg = dict()
-        for opt in opt_splits:
-            if "=" in opt:
-                values = opt.split("=")
-                # Make new build config
-                if (len(values) == 2):
-                    passed_buildcfg[values[0]] = values[1]
-        build_cfg = new_config.get("build_config", None)
-        if build_cfg is None:
-            new_config["build_config"] = passed_buildcfg
-        else:
-            # update build_config using parsed config via values specified in make_options
-            new_config["build_config"].update(passed_buildcfg)
+        new_config = merge_config_with_makeopts(new_config, make_options)
     return new_config
 
 # merge two config, now is appcfg, another is hwcfg
@@ -605,3 +635,57 @@ def parse_benchmark_runlog(lines):
     except:
         return program_type, result
     return program_type, result
+
+
+def program_fpga(bit, target):
+    print("Try to program fpga bitstream %s to target board %s" % (bit, target))
+    found_vivado = False
+    if sys.platform == 'win32':
+        if os.system("where vivado") == 0:
+            found_vivado = True
+    else:
+        if os.system("which vivado") == 0:
+            found_vivado = True
+    if found_vivado == False:
+        print("vivado is not found in PATH, please check!")
+        return False
+    tcl = os.path.join(os.path.realpath(__file__), "program_bit.tcl")
+    ret = os.system("vivado -mode tcl -nolog -nojournal -source %s -tclargs %s %s" % (tcl, bit, target))
+    if ret != 0:
+        printf("Program fpga bit failed, error code %d", ret)
+        return False
+    return False
+
+def check_serial_port(serport):
+    if serport in find_possible_serports():
+        return True
+    return False
+
+def modify_openocd_cfg(cfg, ftdi_serial):
+    cfg_bk = cfg + ".backup"
+    if (os.path.isfile(cfg)) == False:
+        return False
+    if os.path.isfile(cfg_bk) == True:
+        print("Restore openocd cfg")
+        shutil.copyfile(cfg_bk, cfg)
+    else:
+        print("Backup openocd cfg")
+        shutil.copyfile(cfg, cfg_bk)
+    found = False
+    contents = []
+    index = 0
+    with open(cfg, 'r') as cf:
+        contents = cf.readlines()
+        for line in contents:
+            if line.strip().startswith("transport select"):
+                found = True
+                break
+            index += 1
+    if found == False:
+        return False
+    contents.insert(index, "ftdi_serial %s\ntcl_port disabled\ntelnet_port disabled\n" %(ftdi_serial))
+    with open(cfg, 'w') as cf:
+        contents = "".join(contents)
+        cf.write(contents)
+    return True
+

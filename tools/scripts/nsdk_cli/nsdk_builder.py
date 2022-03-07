@@ -514,6 +514,45 @@ class nsdk_runner(nsdk_builder):
         final_status = cmdsts
         return final_status, runner
 
+    def run_app_onncycm(self, appdir, runcfg:dict(), show_output=True, logfile=None):
+        app_runcfg = runcfg.get("run_config", dict())
+        app_runchecks = runcfg.get("checks", dict())
+        build_info = runcfg["misc"]["build_info"]
+        build_config = runcfg["misc"]["build_config"]
+        build_objects = runcfg["misc"]["build_objects"]
+        checktime = runcfg["misc"]["build_time"]
+        hwconfig = app_runcfg.get("ncycm", dict())
+
+        timeout = 60
+        ncycm_exe = None
+        if hwconfig is not None:
+            ncycm_exe = hwconfig.get("ncycm", "ncycm")
+            timeout = hwconfig.get("timeout", 240)
+        runner = None
+        cmdsts = False
+        sdk_check = get_sdk_check()
+        if ncycm_exe:
+            if os.path.isfile(build_objects["elf"]):
+                vercmd = "%s -v" % (ncycm_exe)
+                verchk = "version:"
+                ret, verstr = check_tool_version(vercmd, verchk)
+                if ret:
+                    command = "%s %s" % (ncycm_exe, build_objects["elf"])
+                    print("Run command: %s" %(command))
+                    runner = {"cmd": command, "version": verstr}
+                    cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
+                        sdk_check, logfile, show_output)
+                else:
+                    print("%s doesn't exist in PATH, please check!" % ncycm_exe)
+            else:
+                print("ELF file %s doesn't exist, can't run on xlspike" % (build_objects["elf"]))
+        else:
+            print("Can't run on xlspike due to run config not exist or config not supported")
+
+        final_status = cmdsts
+        return final_status, runner
+
+
     def build_app_with_config(self, appdir, appconfig:dict, show_output=True, logfile=None):
         build_config = appconfig.get("build_config", None)
         target = appconfig.get("build_target", "all")
@@ -594,6 +633,15 @@ class nsdk_runner(nsdk_builder):
             appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
             if runner:
                 appsts["app"]["xlspike"] = runner
+        elif app_runtarget == "ncycm":
+            runstatus, runner = self.run_app_onncycm(appdir, runcfg, show_output, runlog)
+            # If run successfully, then do log analyze
+            if runlog and runstatus:
+                appsts["result"] = self.analyze_runlog(runlog)
+            appsts["logs"]["run"] = runlog
+            appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
+            if runner:
+                appsts["app"]["ncycm"] = runner
         else:
             print("Unsupported run target %s" %(app_runtarget))
 
