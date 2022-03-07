@@ -640,21 +640,28 @@ def parse_benchmark_runlog(lines):
 def program_fpga(bit, target):
     print("Try to program fpga bitstream %s to target board %s" % (bit, target))
     found_vivado = False
-    if sys.platform == 'win32':
-        if os.system("where vivado") == 0:
-            found_vivado = True
-    else:
-        if os.system("which vivado") == 0:
-            found_vivado = True
+    vivado_cmd = "vivado"
+    for vivado_cmd in ("vivado", "vivado_lab"):
+        if sys.platform == 'win32':
+            if os.system("where %s" % (vivado_cmd)) == 0:
+                found_vivado = True
+                break
+        else:
+            if os.system("which %s" % (vivado_cmd)) == 0:
+                found_vivado = True
+                break
+    # check vivado is found or not            
     if found_vivado == False:
         print("vivado is not found in PATH, please check!")
         return False
-    tcl = os.path.join(os.path.realpath(__file__), "program_bit.tcl")
-    ret = os.system("vivado -mode tcl -nolog -nojournal -source %s -tclargs %s %s" % (tcl, bit, target))
+    tcl = os.path.join(os.path.dirname(os.path.realpath(__file__)), "program_bit.tcl")
+    target = "*%s" % (target)
+    ret = os.system("%s -mode tcl -nolog -nojournal -source %s -tclargs %s %s" % (vivado_cmd, tcl, bit, target))
     if ret != 0:
-        printf("Program fpga bit failed, error code %d", ret)
+        print("Program fpga bit failed, error code %d" % ret)
         return False
-    return False
+    print("Program fpga bit successfully")
+    return True
 
 def check_serial_port(serport):
     if serport in find_possible_serports():

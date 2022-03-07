@@ -42,7 +42,7 @@ class nsdk_runner(object):
         if os.path.isdir(sdk) == False:
             print("Invalid sdk path %s" % (sdk))
             sys.exit(1)
-        runner_schema = os.path.join(os.path.realpath(__file__), "runner_schema.yaml")
+        runner_schema = os.path.join(os.path.dirname(os.path.realpath(__file__)), "runner_schema.yaml")
         if yaml_validate(runner_schema, runyaml):
             print("Invalid runner yaml file %s" % (runyaml))
             sys.exit(1)
@@ -67,7 +67,7 @@ class nsdk_runner(object):
         cur_runcfg = self.runcfg["configs"][config]
         fpga = cur_runcfg.get("fpga", None)
         bitstream = cur_runcfg.get("bitstream", None)
-        openocdcfg = cur_runcfg.get("openocdcfg", None)
+        openocdcfg = cur_runcfg.get("openocd_cfg", None)
         ncycm = cur_runcfg.get("ncycm", None)
         cpu = cur_runcfg.get("cpu", None)
 
@@ -76,7 +76,7 @@ class nsdk_runner(object):
             if self.runcfg["fpga_runners"][runner]["board_type"] == fpga:
                 fpgas2run[runner] = self.runcfg["fpga_runners"][runner]
                 fpgas2run[runner]["bitstream"] = bitstream
-                fpgas2run[runner]["openocdcfg"] = openocdcfg
+                fpgas2run[runner]["openocd_cfg"] = openocdcfg
         ncycm2run = dict()
         for runner in self.runcfg["ncycm_runners"]:
             if runner == ncycm:
@@ -113,20 +113,20 @@ class nsdk_runner(object):
             return False
         # check fpga/ncycm runner
         if runon == "fpga":
-            if len(cpu2run["fpga"] == 0):
+            if len(runcfg["fpga"]) == 0:
                 print("ERROR: No fpga board available for this cpu")
                 return False
 
             fpgaready = False
             ftdi_serial = serport = ""
-            for fpga in cpu2run["fpga"]:
+            for fpga in runcfg["fpga"]:
                 # check fpga and bitstream, serial port, ftdi_serial
-                ftdi_serial = cpu2run["fpga"][fpga]["ftdi_serial"]
-                fpga_serial = cpu2run["fpga"][fpga]["fpga_serial"]
-                bitstream = cpu2run["fpga"][fpga]["bitstream"]
+                ftdi_serial = runcfg["fpga"][fpga]["ftdi_serial"]
+                fpga_serial = runcfg["fpga"][fpga]["fpga_serial"]
+                bitstream = runcfg["fpga"][fpga]["bitstream"]
                 fpgaloc = self.runcfg["environment"]["fpgaloc"]
-                serport = cpu2run["fpga"][fpga]["serial_port"]
-                openocdcfg = os.path.join(self.sdk, cpu2run["fpga"][fpga]["openocdcfg"])
+                serport = runcfg["fpga"][fpga]["serial_port"]
+                openocdcfg = os.path.join(self.sdk, runcfg["fpga"][fpga]["openocd_cfg"])
                 if (os.path.isfile(openocdcfg)) == False:
                     print("OpenOCD Configuration File %s not found" % (openocdcfg))
                     continue
@@ -161,10 +161,10 @@ class nsdk_runner(object):
             self.appcfg["run_config"]["hardware"]["serport"] = serport
         elif runon == "ncycm":
             # check ncycm
-            if len(cpu2run["ncycm"] == 0):
+            if len(runcfg["ncycm"]) == 0:
                 print("ERROR: No cycle model available for this cpu")
                 return False
-            ncycm_path = cpu2run["ncycm"]["model"]
+            ncycm_path = runcfg["ncycm"]["model"]
             ncycm_loc = self.runcfg["environment"]["ncycmloc"]
             if os.path.isfile(ncycm_path) == False:
                 ncycm_path = os.path.join(ncycm_loc, ncycm_path)
@@ -183,17 +183,17 @@ class nsdk_runner(object):
             subappcfg = merge_config_with_makeopts(subappcfg, runcfg["cpu"]["nsdk_makeopts"][subcfg])
             sublogdir = os.path.join(logdir, subcfg)
             start_time = time.time()
-            cmdsts, result = nsdk_ext.run_apps(subappcfg, True, sublogdir, False)
+            cmdsts, result = nsdk_ext.run_apps(subappcfg, False, sublogdir, False)
             runtime = round(time.time() - start_time, 2)
             print("Run application for config %s run status: %s, time cost %s seconds" % (subcfg, cmdsts, runtime))
-            ret = check_expected(result, config, args.run)
+            ret = check_expected(result, subappcfg, True)
             print("Application build as expected: %s" % (ret))
             save_results(subappcfg, None, subappcfg, result, sublogdir)
             if result:
                 # Generate build or run report
                 rptfile = os.path.join(sublogdir, "report.md")
                 rpthtml = os.path.join(sublogdir, "report.html")
-                generate_report(config, result, rptfile, rpthtml, sublogdir, True)
+                generate_report(subappcfg, result, rptfile, rpthtml, sublogdir, True)
                 csvfile = os.path.join(sublogdir, "result.csv")
                 save_bench_csv(result, csvfile)
                 print("Generate report csv file to %s" % (csvfile))
@@ -220,7 +220,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.sdk is None:
-        args.sdk =  os.path.abspath(os.path.join(os.path.realpath(__file__), "../../../"))
+        args.sdk =  os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../../"))
     if (os.path.isfile(args.appcfg) == False) or (os.path.isfile(args.appyaml) == False):
         print("Invalid application cfg/yaml, please check!")
         sys.exit(1)
