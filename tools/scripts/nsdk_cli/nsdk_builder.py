@@ -40,13 +40,18 @@ class nsdk_builder(object):
             objects = appsts["objects"]
             if "saved_objects" not in appsts:
                 appsts["saved_objects"] = dict()
+            cp_keys = os.environ.get("SDK_COPY_OBJECTS")
+            if cp_keys != None:
+                cp_keys = cp_keys.strip().split(",")
             for obj in objects:
                 obj_file = objects[obj]
                 if os.path.isfile(obj_file): # only copy when exist
                     filename = os.path.basename(obj_file)
+                    filesuffix = os.path.splitext(filename)[-1]
                     newfile = os.path.join(copydir, filename)
-                    shutil.copyfile(obj_file, newfile)
-                    appsts["saved_objects"][obj] = newfile
+                    if cp_keys is None or filesuffix in cp_keys:
+                        shutil.copyfile(obj_file, newfile)
+                        appsts["saved_objects"][obj] = newfile
         pass
 
     @staticmethod
