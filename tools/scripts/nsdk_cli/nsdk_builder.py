@@ -47,7 +47,7 @@ class nsdk_builder(object):
                 obj_file = objects[obj]
                 if os.path.isfile(obj_file): # only copy when exist
                     filename = os.path.basename(obj_file)
-                    filesuffix = os.path.splitext(filename)[-1]
+                    filesuffix = os.path.splitext(filename)[-1].strip(".")
                     newfile = os.path.join(copydir, filename)
                     if cp_keys is None or filesuffix in cp_keys:
                         shutil.copyfile(obj_file, newfile)
