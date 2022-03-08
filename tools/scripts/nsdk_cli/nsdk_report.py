@@ -422,6 +422,8 @@ def generate_report_for_logs(logdir, run=False, split=False):
             print("Save all result file to %s" % (result_file))
             save_json(config_file, all_mergedcfg)
             save_json(result_file, all_result)
+            csvfile = os.path.join(logdir, "report.csv")
+            save_bench_csv(all_result, csvfile)
             print("Save generated report markdown file to %s" % (reportfile))
             if MARKDOWN_PLUGIN:
                 print("Save generated report html file to %s" % (reporthtml))
