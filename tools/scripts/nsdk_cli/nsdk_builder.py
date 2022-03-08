@@ -50,7 +50,7 @@ class nsdk_builder(object):
         pass
 
     @staticmethod
-    def get_objects(appdir, timestamp=None):
+    def get_objects(appdir, target=None, timestamp=None):
         if nsdk_builder.is_app(appdir) == False:
             return None
 
@@ -71,11 +71,18 @@ class nsdk_builder(object):
                         found_file = fl
             return found_file
         build_objects = dict()
-        build_objects["elf"] = find_app_object("*.elf")
-        build_objects["map"] = find_app_object("*.map")
-        build_objects["dump"] = find_app_object("*.dump")
-        build_objects["dasm"] = find_app_object("*.dasm")
-        build_objects["verilog"] = find_app_object("*.verilog")
+        if target:
+            build_objects["elf"] = find_app_object("*%s.elf" % (target))
+            build_objects["map"] = find_app_object("*%s.map" % (target))
+            build_objects["dump"] = find_app_object("*%s.dump" % (target) )
+            build_objects["dasm"] = find_app_object("*%s.dasm" % (target))
+            build_objects["verilog"] = find_app_object("*%s.verilog" % (target))
+        else:
+            build_objects["elf"] = find_app_object("*.elf")
+            build_objects["map"] = find_app_object("*.map")
+            build_objects["dump"] = find_app_object("*.dump")
+            build_objects["dasm"] = find_app_object("*.dasm")
+            build_objects["verilog"] = find_app_object("*.verilog")
         return build_objects
 
     def build_target_only(self, appdir, make_options="", target="clean", show_output=True, logfile=None, parallel=""):
@@ -118,19 +125,40 @@ class nsdk_builder(object):
         if ret != COMMAND_RUNOK:
             os.remove(infolog)
             return build_info
+        build_info = dict()
         with open(infolog, "r") as inf:
             for line in inf.readlines():
                 line = line.strip()
                 INFO_TAG = "Current Configuration:"
                 if line.startswith(INFO_TAG):
-                    build_info = dict()
                     infos = line.replace(INFO_TAG, "").strip().split()
                     for info in infos:
                         splits = info.split("=")
                         if len(splits) == 2:
                             build_info[splits[0]] = splits[1]
+
         os.remove(infolog)
         return build_info
+
+    def get_build_flags(self, appdir, make_options=""):
+        flagslog = tempfile.mktemp()
+        ret, _ = self.build_target_only(appdir, make_options, "showflags", False, flagslog)
+        build_flags = None
+        if ret != COMMAND_RUNOK:
+            os.remove(flagslog)
+            return build_flags
+        build_flags = dict()
+        with open(flagslog, "r") as inf:
+            for line in inf.readlines():
+                line = line.strip()
+                if re.match(r".*FLAGS", line) or re.match(r"TARGET", line):
+                    key, value = line.split(":")
+                    key = key.strip()
+                    value = value.strip()
+                    build_flags[key] = value
+
+        os.remove(flagslog)
+        return build_flags
 
     def build_target(self, appdir, make_options="", target="clean", show_output=True, logfile=None, parallel=""):
         if self.is_app(appdir) == False:
@@ -153,8 +181,12 @@ class nsdk_builder(object):
         build_status["status_code"] = {"build": ret}
         build_status["logs"] = {"build": logfile}
         build_status["time"] = {"build": round(ticks, 2)}
-        build_status["objects"] = nsdk_builder.get_objects(appdir)
         build_status["info"] = self.get_build_info(appdir, make_options)
+        build_status["flags"] = self.get_build_flags(appdir, make_options)
+        apptarget = None
+        if build_status["flags"]:
+            apptarget = build_status["flags"].get("TARGET", None)
+        build_status["objects"] = nsdk_builder.get_objects(appdir, apptarget)
         build_status["size"] = get_elfsize(build_status["objects"].get("elf", ""))
         return cmdsts, build_status
 

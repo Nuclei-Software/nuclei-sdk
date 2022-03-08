@@ -54,7 +54,7 @@ class nsdk_runner(object):
         if jret != JSON_OK or yret != YAML_OK:
             print("Invalid json file or yaml file")
             sys.exit(1)
-        
+
         self.cpuruncfgs = dict()
         for key in self.runcfg["configs"]:
             self.cpuruncfgs[key] = self.get_runcfg(key)
@@ -93,7 +93,7 @@ class nsdk_runner(object):
         for key in self.cpuruncfgs:
             configs[key] = list(self.cpuruncfgs[key]["cpu"]["nsdk_makeopts"].keys())
         return configs
-    
+
     def run_config(self, config, logdir, subcfgs="", runon=""):
         runcfg = self.cpuruncfgs.get(config, None)
         if runcfg is None:
@@ -183,7 +183,7 @@ class nsdk_runner(object):
         for subcfg in selcpucfgs:
             subappcfg = copy.deepcopy(self.appcfg)
             subappcfg = merge_config_with_makeopts(subappcfg, runcfg["cpu"]["nsdk_makeopts"][subcfg])
-            sublogdir = os.path.join(logdir, subcfg)
+            sublogdir = os.path.join(logdir, config, subcfg)
             start_time = time.time()
             cmdsts, result = nsdk_ext.run_apps(subappcfg, False, sublogdir, False)
             runtime = round(time.time() - start_time, 2)
