@@ -180,12 +180,12 @@ class nsdk_builder(object):
                 if line.startswith("Show"):
                     toolname = line.split()[1].strip()
                     buildout[toolname] = ""
-                else:
+                elif line.startswith("make:") == False:
                     if toolname != "":
-                        buildout[toolname] += line
+                        buildout[toolname] += line + "\n"
 
         os.remove(log)
-        return build_flags
+        return buildout
 
     def build_target(self, appdir, make_options="", target="clean", show_output=True, logfile=None, parallel=""):
         if self.is_app(appdir) == False:
