@@ -24,7 +24,7 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(ALL_DEPS)
 endif
 
-.PHONY: all info showflags help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike clean debug
+.PHONY: all info showflags showtoolver help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike clean debug
 
 info:
 	@$(ECHO) Current Configuration: RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) RISCV_TUNE=$(RISCV_TUNE) RISCV_CMODEL=$(RISCV_CMODEL) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) DOWNLOAD=$(DOWNLOAD) STDCLIB=$(STDCLIB)
@@ -35,6 +35,14 @@ showflags:
 	@$(ECHO) CFLAGS: $(CFLAGS)
 	@$(ECHO) CXXFLAGS: $(CXXFLAGS)
 	@$(ECHO) LDFLAGS: $(LDFLAGS)
+
+showtoolver:
+	@$(ECHO) Show $(CC) version
+	@$(CC) -v
+	@$(ECHO) Show $(OPENOCD) version
+	@$(OPENOCD) -v
+	@$(ECHO) Show $(QEMU) version
+	@$(QEMU) --version
 
 help:
 	@$(ECHO) "Nuclei N/NX-series RISC-V Embedded Processor Software Development Kit "
