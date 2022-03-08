@@ -165,6 +165,28 @@ class nsdk_builder(object):
         os.remove(flagslog)
         return build_flags
 
+    def get_build_toolver(self, appdir, make_options=""):
+        log = tempfile.mktemp()
+        ret, _ = self.build_target_only(appdir, make_options, "showtoolver", False, log)
+        buildout = None
+        if ret != COMMAND_RUNOK:
+            os.remove(log)
+            return buildout
+        buildout = dict()
+        toolname = ""
+        with open(log, "r") as inf:
+            for line in inf.readlines():
+                line = line.strip()
+                if line.startswith("Show"):
+                    toolname = line.split()[1].strip()
+                    buildout[toolname] = ""
+                else:
+                    if toolname != "":
+                        buildout[toolname] += line
+
+        os.remove(log)
+        return build_flags
+
     def build_target(self, appdir, make_options="", target="clean", show_output=True, logfile=None, parallel=""):
         if self.is_app(appdir) == False:
             return False, None
@@ -187,6 +209,7 @@ class nsdk_builder(object):
         build_status["logs"] = {"build": logfile}
         build_status["time"] = {"build": round(ticks, 2)}
         build_status["info"] = self.get_build_info(appdir, make_options)
+        build_status["toolver"] = self.get_build_toolver(appdir, make_options)
         build_status["flags"] = self.get_build_flags(appdir, make_options)
         apptarget = None
         if build_status["flags"]:
