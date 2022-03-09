@@ -749,7 +749,7 @@ def program_fpga(bit, target):
         return False
     tcl = os.path.join(os.path.dirname(os.path.realpath(__file__)), "program_bit.tcl")
     target = "*%s" % (target)
-    ret = os.system("%s -mode tcl -nolog -nojournal -source %s -tclargs %s %s" % (vivado_cmd, tcl, bit, target))
+    ret = os.system("%s -mode batch -nolog -nojournal -source %s -tclargs %s %s" % (vivado_cmd, tcl, bit, target))
     if ret != 0:
         print("Program fpga bit failed, error code %d" % ret)
         return False
