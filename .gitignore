@@ -1,25 +1,25 @@
-*.i
-*.o
-*.d
-*.elf
-*.diss
-*.dasm
-*.map
-*.bin
-*.log
-*.hex
-*.srec
+*.i*
+*.o*
+*.d*
+*.elf*
+*.diss*
+*.dasm*
+*.map*
+*.bin*
+*.log*
+*.hex*
+*.srec*
 *.zip
 *.pyc
 .vscode
 
 software/*/*.s
 
-*.dump
-*.verilog
+*.dump*
+*.verilog*
 
-*.swp
-*.swo
+*.swp*
+*.swo*
 
 prebuilt_tools/
 setup_config.sh
