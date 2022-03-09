@@ -18,7 +18,7 @@ RUNNER_LIST = ["fpga", "ncycm"]
 def yaml_validate(sf, yf):
     try:
         schema = yamale.make_schema(sf)
-        data = yamale.make_data(df)
+        data = yamale.make_data(yf)
         yamale.validate(schema, data)
         return True
     except:
@@ -43,7 +43,7 @@ class nsdk_runner(object):
             print("Invalid sdk path %s" % (sdk))
             sys.exit(1)
         runner_schema = os.path.join(os.path.dirname(os.path.realpath(__file__)), "runner_schema.yaml")
-        if yaml_validate(runner_schema, runyaml):
+        if yaml_validate(runner_schema, runyaml) == False:
             print("Invalid runner yaml file %s" % (runyaml))
             sys.exit(1)
 
