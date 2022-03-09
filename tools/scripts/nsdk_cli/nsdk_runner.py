@@ -193,13 +193,7 @@ class nsdk_runner(object):
             save_results(subappcfg, None, subappcfg, result, sublogdir)
             if result:
                 # Generate build or run report
-                rptfile = os.path.join(sublogdir, "report.md")
-                rpthtml = os.path.join(sublogdir, "report.html")
-                generate_report(subappcfg, result, rptfile, rpthtml, sublogdir, True)
-                csvfile = os.path.join(sublogdir, "result.csv")
-                save_bench_csv(result, csvfile)
-                print("Generate report csv file to %s" % (csvfile))
-                print("Generate report markdown file to %s" % (rptfile))
+                save_report_files(sublogdir, subappcfg, result, True)
         return True
         pass
 
