@@ -80,7 +80,8 @@ class nsdk_runner(object):
         ncycm2run = dict()
         for runner in self.runcfg["ncycm_runners"]:
             if runner == ncycm:
-                ncycm2run[runner] = self.runcfg["ncycm_runners"][runner]
+                ncycm2run = self.runcfg["ncycm_runners"][runner]
+                break
         cpu2run = dict()
         for selcpu in self.runcfg["cpus"]:
             if cpu == selcpu:
@@ -176,33 +177,38 @@ class nsdk_runner(object):
             # set run target to ncycm
             self.appcfg["run_config"]["target"] = "ncycm"
             if "ncycm" not in self.appcfg["run_config"]:
-                self.appcfg["run_config"]["ncycm"] = {"timeout": 240, "ncycm": "ncycm"}
+                self.appcfg["run_config"]["ncycm"] = {"timeout": 600, "ncycm": "ncycm"}
             self.appcfg["run_config"]["ncycm"]["ncycm"] = ncycm_path
         # run on fpga/ncycm
         nsdk_ext = nsdk_bench()
+        ret = True
         for subcfg in selcpucfgs:
             subappcfg = copy.deepcopy(self.appcfg)
-            subappcfg = merge_config_with_makeopts(subappcfg, runcfg["cpu"]["nsdk_makeopts"][subcfg])
+            mkopts = runcfg["cpu"]["nsdk_makeopts"][subcfg]
+            if runon == "ncycm":
+                for opts in ("SIMULATION=1", "SIMU=xlspike"):
+                    if opts not in mkopts:
+                        mkopts = "%s %s" % (mkopts, opts)
+
+            subappcfg = merge_config_with_makeopts(subappcfg, mkopts)
             sublogdir = os.path.join(logdir, config, subcfg)
             start_time = time.time()
             cmdsts, result = nsdk_ext.run_apps(subappcfg, False, sublogdir, False)
             runtime = round(time.time() - start_time, 2)
             print("Run application for config %s run status: %s, time cost %s seconds" % (subcfg, cmdsts, runtime))
-            ret = check_expected(result, subappcfg, True)
-            print("Application build as expected: %s" % (ret))
+            locret = check_expected(result, subappcfg, True)
+            print("Application build as expected: %s" % (locret))
+            if locret == False:
+                ret = False
             save_results(subappcfg, None, subappcfg, result, sublogdir)
             if result:
                 # Generate build or run report
                 save_report_files(sublogdir, subappcfg, result, True)
-        return True
+        # generate total results for all the runs
+        print("Generate all the reports for this run")
+        generate_report_for_logs(logdir, True, True)
+        return ret
         pass
-
-#runner = nsdk_runner(".", "nmsis_hw.json", "nmsis_hw.yaml")
-
-#runner.run_config(1,2)
-#print(runner.get_configs())
-
-#modify_openocd_cfg('SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg', 'FT6JGAXS')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Nuclei SDK Benchmark and Report Tool")
@@ -227,7 +233,17 @@ if __name__ == '__main__':
         print("Here are the supported configs:")
         pp.pprint(nsdk_ext.get_configs())
     else:
-        ret = nsdk_ext.run_config(args.config, args.logdir, runon=args.runon)
+        if args.config:
+            print("Run only selected configuration: %s" % (args.config))
+            ret = nsdk_ext.run_config(args.config, args.logdir, runon=args.runon)
+        else:
+            print("Run all the configurations as below:")
+            pp.pprint(nsdk_ext.get_configs())
+            for config in nsdk_ext.get_configs():
+                if nsdk_ext.run_config(config, args.logdir, runon=args.runon) == False:
+                    print("Configuration %s failed" % (config))
+                    ret = False
+
     # Exit with ret value
     if ret:
         sys.exit(0)

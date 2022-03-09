@@ -1,9 +1,9 @@
 runcfg:
-    runner: fpga
+    runner: ncycm
 
 environment:
-    fpgaloc: /home/xlsw/workspace/nuclei-sdk
-    ncycmloc: /home/xlsw/workspace/nuclei-sdk
+    fpgaloc: /home/share/devtools/fpgabit/latest
+    ncycmloc: /home/share/devtools/ncycm/linux64/latest
 
 # fpga runners
 fpga_runners:
@@ -20,7 +20,11 @@ fpga_runners:
 ncycm_runners:
     n200b:
         # model path
-        model: model
+        model: n200_high_perf_config_cymodel_v2.4.0
+    n300fdbp:
+        model: n300_high_perf_config_cymodel_latest
+    n900fdbp:
+        model: n900_fpga_config_cymodel_latest
 
 cpus:
     n200b:
@@ -74,13 +78,13 @@ configs:
     n300:
         fpga: ddr200t
         bitstream: bit
-        ncycm: n300
+        ncycm: n300fdbp
         cpu: n300fdbp
         openocd_cfg: abc.cfg
     # cpu core name
     n900:
         fpga: ddr200t
         bitstream: tmp/n900_config_32_bmu_ddr200t_16M_54204dd18_edd52003a_202203041158.bit
-        ncycm: n900
+        ncycm: n900fdbp
         cpu: n900fdbp
         openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg

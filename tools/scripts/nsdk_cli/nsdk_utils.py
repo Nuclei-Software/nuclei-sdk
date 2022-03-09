@@ -265,7 +265,7 @@ def run_command(command, show_output=True, logfile=None, append=False):
     cmd_elapsed_ticks = time.time() - startticks
     return ret, cmd_elapsed_ticks
 
-async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False):
+async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False, banner_timeout=3):
     logfh = None
     ret = COMMAND_FAIL
     cmd_elapsed_ticks = 0
@@ -288,7 +288,7 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     check_finished = False
     start_time = time.time()
     serial_log = ""
-    nsdk_check_timeout = 3
+    nsdk_check_timeout = banner_timeout
     sdk_checkstarttime = time.time()
     try:
         if isinstance(logfile, str):
@@ -370,11 +370,11 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     cmd_elapsed_ticks = time.time() - startticks
     return check_status, cmd_elapsed_ticks
 
-def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False):
+def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False, banner_timeout=3):
     loop = asyncio.get_event_loop()
     try:
         ret, cmd_elapsed_ticks = loop.run_until_complete( \
-            run_cmd_and_check_async(command, timeout, checks, checktime, sdk_check, logfile, show_output))
+            run_cmd_and_check_async(command, timeout, checks, checktime, sdk_check, logfile, show_output, banner_timeout))
     except KeyboardInterrupt:
         print("Key CTRL-C pressed, command executing stopped!")
         ret, cmd_elapsed_ticks = False, 0
@@ -599,6 +599,19 @@ def find_local_appconfig(appdir, localcfgs):
             return foundcfg
     else:
         return None
+
+def fix_demosoc_verilog_ncycm(verilog):
+    if os.path.isfile(verilog) == False:
+        return ""
+    vfct = ""
+    with open(verilog, "r") as vf:
+        for line in vf.readlines():
+            line = line.replace("@80", "@00").replace("@90", "@08")
+            vfct += line
+    verilog_new = verilog + ".ncycm"
+    with open(verilog_new, "w") as vf:
+        vf.write(vfct)
+    return verilog_new
 
 PROGRAM_UNKNOWN="unknown"
 PROGRAM_COREMARK="coremark"

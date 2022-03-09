@@ -587,7 +587,7 @@ class nsdk_runner(nsdk_builder):
         ncycm_exe = None
         if hwconfig is not None:
             ncycm_exe = hwconfig.get("ncycm", "ncycm")
-            timeout = hwconfig.get("timeout", 240)
+            timeout = hwconfig.get("timeout", 600)
         runner = None
         cmdsts = False
         sdk_check = get_sdk_check()
@@ -596,12 +596,27 @@ class nsdk_runner(nsdk_builder):
                 vercmd = "%s -v" % (ncycm_exe)
                 verchk = "version:"
                 ret, verstr = check_tool_version(vercmd, verchk)
+                if ret == False:
+                    verstr = "v1"
+                ret = os.path.isfile(ncycm_exe)
                 if ret:
-                    command = "%s %s" % (ncycm_exe, build_objects["elf"])
-                    print("Run command: %s" %(command))
-                    runner = {"cmd": command, "version": verstr}
-                    cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
-                        sdk_check, logfile, show_output)
+                    if (verstr == "v1"):
+                        ncycm_verilog = fix_demosoc_verilog_ncycm(build_objects["verilog"])
+                        if ncycm_verilog == "":
+                            command = ""
+                        else:
+                            command = "%s +TESTCASE=%s" % (ncycm_exe, ncycm_verilog)
+                    else:
+                        command = "%s %s" % (ncycm_exe, build_objects["elf"])
+                    
+                    if command != "":
+                        print("Run command: %s" %(command))
+                        runner = {"cmd": command, "version": verstr}
+                        cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
+                            sdk_check, logfile, show_output, 20)
+                    else:
+                        print("Unable to run cycle model with %s" % (build_objects["elf"]))
+                        cmdsts = False
                 else:
                     print("%s doesn't exist in PATH, please check!" % ncycm_exe)
             else:
