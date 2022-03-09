@@ -30,6 +30,7 @@ build_doc:
   before_script:
     - apt update
     - apt install -y lftp python3 make latexmk texlive-base texlive-latex-extra python3-pip
+    - python3 -m pip install --upgrade pip
     - pip3 install -r doc/requirements.txt
   script:
     - cd doc
@@ -85,6 +86,7 @@ deploy_website:
   before_script:
     - apt update
     - apt install -y python3 make python3-pip
+    - python3 -m pip install --upgrade pip
     - pip3 install -r tools/scripts/requirements.txt
     - which riscv-nuclei-elf-gcc && riscv-nuclei-elf-gcc --version
     - which make && make --version
