@@ -68,13 +68,6 @@ SECTIONS
     KEEP (*(SORT_NONE(.fini)))
   } >rom AT>rom
 
-  . = ALIGN(4);
-
-  PROVIDE (__etext = .);
-  PROVIDE (_etext = .);
-  PROVIDE (etext = .);
-  PROVIDE( _eilm = . );
-
   .preinit_array  :
   {
     PROVIDE_HIDDEN (__preinit_array_start = .);
@@ -129,6 +122,10 @@ SECTIONS
     KEEP (*(.dtors))
   } >rom AT>rom
 
+  PROVIDE (__etext = .);
+  PROVIDE (_etext = .);
+  PROVIDE (etext = .);
+  PROVIDE( _eilm = . );
 
   /* NOTICE:
    * The following data section VMA and LMA are the same,
@@ -186,7 +183,6 @@ SECTIONS
     *(.srodata .srodata.*)
   } >ram AT>ram
 
-  . = ALIGN(8);
   .tdata           : ALIGN(8)
   {
     PROVIDE( __tls_base = . );
@@ -195,8 +191,6 @@ SECTIONS
 
   PROVIDE( _edata = . );
   PROVIDE( edata = . );
-
-  . = ALIGN(8);
 
   PROVIDE( _fbss = . );
   PROVIDE( __bss_start = . );
@@ -208,7 +202,12 @@ SECTIONS
     PROVIDE( __tls_end = . );
   } >ram AT>ram
 
-  .bss (NOLOAD)   :
+  .tbss_space (NOLOAD) : ALIGN(8)
+  {
+    . = . + SIZEOF(.tbss);
+  } >ram AT>ram
+
+  .bss (NOLOAD)   : ALIGN(8)
   {
     *(.sbss*)
     *(.gnu.linkonce.sb.*)
@@ -218,7 +217,6 @@ SECTIONS
     . = ALIGN(4);
   } >ram AT>ram
 
-  . = ALIGN(16);
   PROVIDE( _end = . );
   PROVIDE( end = . );
 
@@ -227,7 +225,7 @@ SECTIONS
    * 2. __heap_start and __heap_end symbol need to be defined
    * 3. reserved at least __HEAP_SIZE space for heap
    */
-  .heap (NOLOAD)   :
+  .heap (NOLOAD)   : ALIGN(16)
   {
     . = ALIGN(16);
     PROVIDE( __heap_start = . );
