@@ -708,6 +708,9 @@ def parse_benchmark_runlog(lines, lgf=""):
         if "baremetal/benchmark" in lgf:
             # baremetal benchmark
             program_type, result = parse_benchmark_baremetal(lines)
+            if program_type == PROGRAM_UNKNOWN:
+                # fallback to previous parser
+                program_type, result = parse_benchmark_compatiable(lines)
         elif "baremetal/demo_dsp" in lgf:
             program_type, result = parse_benchmark_baremetal_csv(lines)
             program_type = "demo_dsp"

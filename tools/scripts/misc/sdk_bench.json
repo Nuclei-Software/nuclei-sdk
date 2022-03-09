@@ -36,19 +36,19 @@
         "application/baremetal/benchmark/dhrystone": {
             "build_config" : {},
             "checks": {
-                "PASS": ["1000000/(User_Cycle/Number_Of_Runs)"]
+                "PASS": ["CSV, Dhrystone"]
             }
         },
         "application/baremetal/benchmark/whetstone": {
             "build_config" : {},
             "checks": {
-                "PASS": ["MWIPS/MHz"]
+                "PASS": ["CSV, Whetstone"]
             }
         },
         "application/baremetal/benchmark/coremark": {
             "build_config" : {},
             "checks": {
-                "PASS": ["Iterations*1000000/total_ticks"]
+                "PASS": ["CSV, CoreMark"]
             }
         },
         "application/baremetal/demo_timer": {
