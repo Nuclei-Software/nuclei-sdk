@@ -50,6 +50,7 @@ SECTIONS
 
   .ialign         :
   {
+    . = ALIGN(4);
     PROVIDE( _ilm = . );
   } >ilm AT>ilm
 

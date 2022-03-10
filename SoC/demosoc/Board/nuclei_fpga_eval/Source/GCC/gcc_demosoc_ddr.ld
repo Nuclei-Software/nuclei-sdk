@@ -52,6 +52,7 @@ SECTIONS
 
   .ialign         :
   {
+    . = ALIGN(4);
     PROVIDE( _ilm = . );
   } >rom AT>rom
 

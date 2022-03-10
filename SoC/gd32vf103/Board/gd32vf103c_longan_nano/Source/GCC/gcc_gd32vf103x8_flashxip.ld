@@ -120,6 +120,7 @@ SECTIONS
 
   .ialign         :
   {
+    . = ALIGN(4);
     /* Create a section label as _ilm which located at flash */
     PROVIDE( _ilm = . );
   } >flash AT>flash

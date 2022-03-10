@@ -50,6 +50,7 @@ SECTIONS
 
   .ialign         :
   {
+    . = ALIGN(4);
     PROVIDE( _ilm = . );
   } >ilm AT>flash
 
@@ -77,7 +78,7 @@ SECTIONS
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array))
     PROVIDE_HIDDEN (__preinit_array_end = .);
-  } >flash AT>flash
+  } >ilm AT>flash
 
   .init_array     :
   {
@@ -85,7 +86,7 @@ SECTIONS
     KEEP (*(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*)))
     KEEP (*(.init_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .ctors))
     PROVIDE_HIDDEN (__init_array_end = .);
-  } >flash AT>flash
+  } >ilm AT>flash
 
   .fini_array     :
   {
@@ -93,7 +94,7 @@ SECTIONS
     KEEP (*(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*)))
     KEEP (*(.fini_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .dtors))
     PROVIDE_HIDDEN (__fini_array_end = .);
-  } >flash AT>flash
+  } >ilm AT>flash
 
   .ctors          :
   {
@@ -115,7 +116,7 @@ SECTIONS
     KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .ctors))
     KEEP (*(SORT(.ctors.*)))
     KEEP (*(.ctors))
-  } >flash AT>flash
+  } >ilm AT>flash
 
   .dtors          :
   {
@@ -124,7 +125,7 @@ SECTIONS
     KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .dtors))
     KEEP (*(SORT(.dtors.*)))
     KEEP (*(.dtors))
-  } >flash AT>flash
+  } >ilm AT>flash
 
   PROVIDE (__etext = .);
   PROVIDE (_etext = .);
