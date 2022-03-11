@@ -62,6 +62,11 @@ void delay_1ms(uint32_t count)
 void simulation_exit(int status)
 {
 #if SIMULATION_MODE == SIMULATION_MODE_XLSPIKE
+    // workaround for fix cycle model exit with some message not print
+    for (int i = 0; i < 10; i ++) {
+        uart_write(UART0, '\r');
+    }
+    uart_write(UART0, '\n');
     // pass exit status via rxfifo register
     UART0->RXFIFO = status;
     uart_write(UART0, 4);
