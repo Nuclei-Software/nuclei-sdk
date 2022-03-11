@@ -2,7 +2,16 @@ TARGET := dhrystone
 
 NUCLEI_SDK_ROOT = ../../../..
 
+# supported mode
+## ground: ground rules for dhrystone
+## best: best effort rules for dhrystone
+DHRY_MODE ?= ground
+
+ifeq ($(DHRY_MODE),ground)
 BENCH_FLAGS ?= -O2 -flto -fno-inline -funroll-loops -Wno-implicit -mexplicit-relocs  -fno-builtin-printf -fno-common -falign-functions=4 -falign-jumps=4 -falign-loops=4
+else if ($(DHRY_MODE),best)
+BENCH_FLAGS ?= -O2 -flto -finline -funroll-loops -Wno-implicit -mexplicit-relocs  -fno-builtin-printf -fno-common -falign-functions=4 -falign-jumps=4 -falign-loops=4
+endif
 
 COMMON_FLAGS := $(BENCH_FLAGS)
 

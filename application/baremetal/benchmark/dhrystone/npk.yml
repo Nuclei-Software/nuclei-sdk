@@ -18,13 +18,26 @@ dependencies:
 
 ## Package Configurations
 configuration:
-  # https://yaml-multiline.info/
-  app_commonflags:
-    value: >-
-      -O2 -flto -fno-inline -funroll-loops -Wno-implicit -mexplicit-relocs
-      -fno-builtin-printf -fno-common -falign-functions=4 -falign-jumps=4 -falign-loops=4
-    type: text
-    description: Application Compile Flags
+configuration:
+  dhry_mode:
+    default_value: ground
+    type: choice
+    description: Dhrystone Options
+    choices:
+      - name: ground
+        description: Ground Rules
+        info:
+          - name: app_commonflags
+            value: >-
+              -O2 -flto -fno-inline -funroll-loops -Wno-implicit -mexplicit-relocs
+              -fno-builtin-printf -fno-common -falign-functions=4 -falign-jumps=4 -falign-loops=4
+      - name: best
+        description: Best Effort
+        info:
+          - name: app_commonflags
+            value: >-
+              -O2 -flto -finline -funroll-loops -Wno-implicit -mexplicit-relocs
+              -fno-builtin-printf -fno-common -falign-functions=4 -falign-jumps=4 -falign-loops=4
 
 ## Set Configuration for other packages
 setconfig:
@@ -44,7 +57,7 @@ codemanage:
 buildconfig:
   - type: gcc
     common_flags: # flags need to be combined together across all packages
-      - flags: ${app_commonflags}
+      - flags: ${dhry_mode.info.app_commonflags}
     ldflags:
     cflags:
     asmflags:
