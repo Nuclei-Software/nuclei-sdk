@@ -533,7 +533,7 @@ def get_app_runresult(apprst):
     if rstvaluedict and len(rstvaluedict) < 3:
         rstval = ""
         for key in rstvaluedict:
-            rstval += "%s : %s," %(key, rstvaluedict[key])
+            rstval += "%s : %s;" %(key, rstvaluedict[key])
         rstval = rstval.rstrip(';')
     else:
         rstval = "-"
