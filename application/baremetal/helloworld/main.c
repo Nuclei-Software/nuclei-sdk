@@ -93,9 +93,10 @@ int main(void)
 {
     srand(__get_rv_cycle()  | __get_rv_instret() | __RV_CSR_READ(CSR_MCYCLE));
     uint32_t rval = rand();
+    uint32_t hartid = __RV_CSR_READ(CSR_MHARTID);
     rv_csr_t misa = __RV_CSR_READ(CSR_MISA);
 
-    printf("MISA: 0x%lx\r\n", misa);
+    printf("Hart %d, MISA: 0x%lx\r\n", hartid, misa);
     print_misa();
 
     for (int i = 0; i < RUN_LOOPS; i ++) {
