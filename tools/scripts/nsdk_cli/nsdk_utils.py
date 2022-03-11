@@ -534,7 +534,7 @@ def get_app_runresult(apprst):
         rstval = ""
         for key in rstvaluedict:
             rstval += "%s : %s," %(key, rstvaluedict[key])
-        rstval = rstval.rstrip(',')
+        rstval = rstval.rstrip(';')
     else:
         rstval = "-"
     return rsttype, rstval
