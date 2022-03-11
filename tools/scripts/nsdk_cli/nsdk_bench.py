@@ -5,11 +5,9 @@ import sys
 import time
 import copy
 import glob
-import serial
 import tempfile
 import json
 import argparse
-from prettytable import *
 
 from nsdk_builder import *
 from nsdk_utils import *

@@ -5,23 +5,24 @@ import sys
 import time
 import copy
 import glob
-import serial
 import tempfile
-import json
 import argparse
+
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.txt"))
 
 MARKDOWN_PLUGIN=True
 try:
+    import serial
+    import json
     import markdown
+    from prettytable import *
 except:
-    print("python markdown plugin not installed, please install it using pip install markdown")
     MARKDOWN_PLUGIN=False
-
-
-from prettytable import *
+    print("Please install requried packages using: pip3 install -r %s" % (requirement_file))
+    sys.exit(1)
 
 from nsdk_utils import *
-
 
 def get_expected(config, app, cfg_name):
     if isinstance(config, dict) == False:

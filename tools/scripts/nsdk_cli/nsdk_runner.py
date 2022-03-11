@@ -1,17 +1,26 @@
 #!/bin/env python3
 
 import os
-import json
-import pyexcel as pe
-import argparse
-import pprint
-import glob
-import yaml
-import yamale
+import sys
+
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.txt"))
+try:
+    import json
+    import pyexcel as pe
+    import argparse
+    import pprint
+    import glob
+    import yaml
+    import usb
+    import yamale
+except:
+    print("Please install requried packages using: pip3 install -r %s" % (requirement_file))
+    sys.exit(1)
+
 from nsdk_utils import *
 from nsdk_report import *
 from nsdk_bench import nsdk_bench
-import usb
 
 RUNNER_LIST = ["fpga", "ncycm"]
 

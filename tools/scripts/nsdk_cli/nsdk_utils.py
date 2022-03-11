@@ -2,22 +2,29 @@
 
 import os
 import sys
-import time
-import shutil
-import signal
-import psutil
-import re
-import copy
-import serial
-import serial.tools.list_ports
-import tempfile
-import collections
-from threading import Thread
-import subprocess
-import asyncio
-import glob
-import json
-import yaml
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.txt"))
+
+try:
+    import time
+    import shutil
+    import signal
+    import psutil
+    import re
+    import copy
+    import serial
+    import serial.tools.list_ports
+    import tempfile
+    import collections
+    from threading import Thread
+    import subprocess
+    import asyncio
+    import glob
+    import json
+    import yaml
+except:
+    print("Please install requried packages using: pip3 install -r %s" % (requirement_file))
+    sys.exit(1)
 
 SDK_GLOBAL_VARIABLES = {
     "sdk_checktag": "Nuclei SDK Build Time:",

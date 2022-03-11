@@ -5,14 +5,12 @@ import sys
 import time
 import copy
 import glob
-import serial
 import tempfile
 import json
 import argparse
 
 from nsdk_builder import *
 from nsdk_utils import *
-
 
 class nsdk_executor(nsdk_runner):
     def __init__(self):

@@ -6,17 +6,24 @@ import time
 import copy
 import shutil
 import glob
-import serial
-import tempfile
-import json
-import argparse
-from threading import Thread
-import subprocess
+
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.txt"))
+
+try:
+    import serial
+    import tempfile
+    import json
+    import argparse
+    from threading import Thread
+    import subprocess
+except:
+    print("Please install requried packages using: pip3 install -r %s" % (requirement_file))
+    sys.exit(1)
 
 from nsdk_utils import *
 
 VALID_MAKEFILE_NAMES = ['Makefile', 'makefile', "GNUMakefile"]
-
 
 class nsdk_builder(object):
     def __init__(self):
