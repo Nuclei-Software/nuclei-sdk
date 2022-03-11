@@ -530,7 +530,7 @@ def get_app_runresult(apprst):
         return "unknown", "-"
     rsttype = apprst["type"]
     rstvaluedict = apprst.get("value", dict())
-    if rstvaluedict:
+    if rstvaluedict and len(rstvaluedict) < 3:
         rstval = ""
         for key in rstvaluedict:
             rstval += "%s : %s," %(key, rstvaluedict[key])
