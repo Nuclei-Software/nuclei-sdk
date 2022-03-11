@@ -54,7 +54,14 @@
     },
     "appconfig": {
         "application/baremetal/benchmark/dhrystone": {
-            "build_config" : {},
+            "build_configs" : {
+                "n205-best": {"CORE": "n205", "DHRY_MODE": "best"},
+                "n305-best": {"CORE": "n305", "DHRY_MODE": "best"},
+                "n600f-best": {"CORE": "n600f", "DHRY_MODE": "best"},
+                "n900fd-best": {"CORE": "n900fd", "DHRY_MODE": "best"},
+                "nx600f-best": {"CORE": "nx600f", "DHRY_MODE": "best"},
+                "nx900fd-best": {"CORE": "nx900fd", "DHRY_MODE": "best"}
+            },
             "checks": {
                 "PASS": ["1000000/(User_Cycle/Number_Of_Runs)", "Please increase number"]
             }
