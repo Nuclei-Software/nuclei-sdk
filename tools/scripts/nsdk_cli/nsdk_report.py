@@ -452,6 +452,35 @@ def merge_all_config_and_result(logdir):
 
     return all_mergedcfg, all_result
 
+def parse_result2dict(result):
+    if not(isinstance(result, dict)):
+        return None
+    csvdict = dict()
+    for app in result:
+        appresult = result[app]
+        for cfg in appresult:
+            if cfg not in csvdict:
+                csvdict[cfg] = dict()
+            runsts = appresult[cfg]["status"].get("run", False)
+            if runsts == False:
+                continue
+            apptype = appresult[cfg]["result"]["type"]
+            appsubtype = appresult[cfg]["result"].get("subtype", "")
+            if appsubtype == "":
+                appsubtype = "default"
+            if apptype == "unknown":
+                continue
+            if apptype not in csvdict[cfg]:
+                csvdict[cfg][apptype] = dict()
+            if appsubtype not in csvdict[cfg][apptype]:
+                csvdict[cfg][apptype][appsubtype] = dict()
+            csvdict[cfg][apptype][appsubtype]["meta"] = appresult[cfg].get("toolver", dict())
+            csvdict[cfg][apptype][appsubtype]["meta"].update(appresult[cfg].get("flags", dict()))
+            if "value" not in csvdict[cfg][apptype][appsubtype]:
+                csvdict[cfg][apptype][appsubtype]["value"] = dict()
+            csvdict[cfg][apptype][appsubtype]["value"].update(appresult[cfg]["result"]["value"])
+    return csvdict
+
 def save_report_files(logdir, config, result, run=False):
     if os.path.isdir(logdir) == False:
         os.makedirs(logdir)
@@ -460,8 +489,12 @@ def save_report_files(logdir, config, result, run=False):
     generate_report(config, result, rptfile, rpthtml, logdir, run)
     csvfile = os.path.join(logdir, "result.csv")
     save_bench_csv(result, csvfile)
+    csvdata = parse_result2dict(result)
+    csvdatafile = os.path.join(logdir, "runresult.json")
+    save_json(csvdatafile, csvdata)
     print("Generate report csv file to %s" % (csvfile))
     print("Generate report markdown file to %s" % (rptfile))
+    pass
 
 
 def generate_report_for_logs(logdir, run=False, split=False):
