@@ -499,7 +499,6 @@ def save_report_files(logdir, config, result, run=False):
         save_json(csvdatafile, csvdata)
         runresultexcel = os.path.join(logdir, "runresult.xlsx")
         save_runresult(csvdata, runresultexcel)
-        print("Generate run result excel file to %s" % (runresultexcel))
 
     pass
 
@@ -539,7 +538,17 @@ def save_runresult(runresult, excelfile):
                 csvlist.extend(csvdict[apptype][key])
                 csvtable[apptype].append(csvlist)
     # Save to excel
-    pe.isave_book_as(bookdict=csvtable, dest_file_name=excelfile)
+    try:
+        csvtable_jf = excelfile + ".csvtable.json"
+        csvdict_jf = excelfile + ".csvdict.json"
+        save_json(csvtable_jf, csvtable)
+        save_json(csvdict_jf, csvdict)
+        pe.isave_book_as(bookdict=csvtable, dest_file_name=excelfile)
+        print("Generate run result excel file to %s" % (excelfile))
+    except:
+        print("pyexcel package is not installed.!")
+        return False
+
     return True
 
 def generate_report_for_logs(logdir, run=False, split=False):
