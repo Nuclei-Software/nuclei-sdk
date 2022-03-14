@@ -479,6 +479,8 @@ def merge_config_with_args(config, args_dict):
     parallel = args_dict.get("parallel", None)
     build_target = args_dict.get("build_target", None)
     run_target = args_dict.get("run_target", None)
+    timeout = args_dict.get("timeout", None)
+    ncycm = args_dict.get("ncycm", None)
     if isinstance(config, dict) == False:
         return None
     new_config = copy.deepcopy(config)
@@ -494,6 +496,20 @@ def merge_config_with_args(config, args_dict):
         new_config["run_config"]["hardware"]["serport"] = int(baudrate)
     if run_target:
         new_config["run_config"]["target"] = str(run_target)
+    run_target = new_config["run_config"].get("target", "hardware")
+    if run_target not in new_config["run_config"]:
+        new_config["run_config"][run_target] = dict()
+    if ncycm:
+        if "ncycm" not in new_config["run_config"]:
+            new_config["run_config"]["ncycm"] = dict()
+        new_config["run_config"]["ncycm"]["ncycm"] = os.path.abspath(ncycm)
+
+    if timeout: # set timeout
+        try:
+            timeout = int(timeout)
+        except:
+            timeout = 60
+        new_config["run_config"][run_target]["timeout"] = timeout
     if build_target is not None:
         new_config["build_target"] = build_target
     if parallel is not None:

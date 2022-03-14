@@ -241,6 +241,8 @@ if __name__ == '__main__':
     parser.add_argument('--run_target', help="Run target which program will run, such as hardware, qemu or xlspike")
     parser.add_argument('--parallel', help="parallel value, such as -j4 or -j or -j8, default None")
     parser.add_argument('--run', action='store_true', help="If specified, will do run not build process")
+    parser.add_argument('--ncycm',  help="If specified, will use cycle model specified here")
+    parser.add_argument("--timeout", help="If specified, will use timeout value specified here")
     parser.add_argument('--verbose', action='store_true', help="If specified, will show detailed build/run messsage")
     args = parser.parse_args()
 
@@ -254,6 +256,9 @@ if __name__ == '__main__':
     ret, hwcfg = load_json(args.hwcfg)
     # Merge appcfg and hwcfg, hwcfg has higher priority
     config = merge_config(appcfg, hwcfg)
+    if args.ncycm and os.path.isfile(args.ncycm) == False:
+        print("ERROR: cycle model %s doesn't exist, please check!" % (args.ncycm))
+        sys.exit(0)
     # Merge options passed by serport, baudrate, make_options
     config = merge_cmd_config(config, vars(args))
 
