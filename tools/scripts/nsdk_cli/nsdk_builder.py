@@ -605,7 +605,8 @@ class nsdk_runner(nsdk_builder):
                 ret, verstr = check_tool_version(vercmd, verchk)
                 if ret == False:
                     verstr = "v1"
-                ret = os.path.isfile(ncycm_exe)
+                
+                ret = check_tool_exist(ncycm_exe) or os.path.isfile(ncycm_exe)
                 if ret:
                     if (verstr == "v1"):
                         ncycm_verilog = fix_demosoc_verilog_ncycm(build_objects["verilog"])

@@ -776,6 +776,16 @@ def parse_benchmark_runlog(lines, lgf=""):
             program_type, subtype, result = parse_benchmark_compatiable(lines)
     return program_type, subtype, result
 
+def check_tool_exist(tool):
+    exist = False
+    if sys.platform == 'win32':
+        if os.system("where %s" % (tool)) == 0:
+            exist = True
+    else:
+        if os.system("which %s" % (tool)) == 0:
+            exist = True
+    return exist
+
 def program_fpga(bit, target):
     print("Try to program fpga bitstream %s to target board %s" % (bit, target))
     found_vivado = False
