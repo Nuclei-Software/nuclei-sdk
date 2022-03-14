@@ -6,3 +6,5 @@ pyusb
 yamale
 pyyaml
 pyexcel
+pyexcel-xlsx
+pyexcel-xlsxw
