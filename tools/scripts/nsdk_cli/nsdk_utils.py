@@ -721,7 +721,7 @@ def parse_benchmark_runlog(lines, lgf=""):
         appnormdirs = os.path.dirname(os.path.normpath(lgf)).replace('\\', '/').split('/')
         if "baremetal/benchmark" in lgf:
             # baremetal benchmark
-            program_type, result = parse_benchmark_baremetal(lines)
+            program_type, subtype, result = parse_benchmark_baremetal(lines)
             if program_type == PROGRAM_UNKNOWN:
                 # fallback to previous parser
                 program_type, subtype, result = parse_benchmark_compatiable(lines)
