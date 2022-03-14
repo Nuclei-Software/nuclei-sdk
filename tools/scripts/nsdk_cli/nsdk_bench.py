@@ -273,13 +273,7 @@ if __name__ == '__main__':
 
     if result:
         # Generate build or run report
-        rptfile = os.path.join(args.logdir, "report.md")
-        rpthtml = os.path.join(args.logdir, "report.html")
-        generate_report(config, result, rptfile, rpthtml, args.logdir, args.run)
-        csvfile = os.path.join(args.logdir, "result.csv")
-        save_bench_csv(result, csvfile)
-        print("Generate report csv file to %s" % (csvfile))
-        print("Generate report markdown file to %s" % (rptfile))
+        save_report_files(args.logdir, config, result, args.run)
     # Exit with ret value
     if ret:
         sys.exit(0)
