@@ -7,7 +7,6 @@ SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.txt"))
 try:
     import json
-    import pyexcel as pe
     import argparse
     import pprint
     import glob

@@ -621,6 +621,7 @@ def fix_demosoc_verilog_ncycm(verilog):
     return verilog_new
 
 PROGRAM_UNKNOWN="unknown"
+PROGRAM_BAREBENCH="barebench"
 PROGRAM_COREMARK="coremark"
 PROGRAM_DHRYSTONE="dhrystone"
 PROGRAM_WHETSTONE="whetstone"
@@ -628,36 +629,41 @@ PROGRAM_WHETSTONE="whetstone"
 def parse_benchmark_compatiable(lines):
     result = None
     program_type = PROGRAM_UNKNOWN
+    subtype = PROGRAM_UNKNOWN
     try:
         for line in lines:
             # Coremark
             if "CoreMark" in line:
-                program_type = PROGRAM_COREMARK
+                program_type = PROGRAM_BAREBENCH
+                subtype = PROGRAM_COREMARK
             if "Iterations*1000000/total_ticks" in line:
                 value = line.split("=")[1].strip().split()[0]
                 result = dict()
                 result["CoreMark/MHz"] = strtofloat(value)
             # Dhrystone
             if "Dhrystone" in line:
-                program_type = PROGRAM_DHRYSTONE
+                program_type = PROGRAM_BAREBENCH
+                subtype = PROGRAM_DHRYSTONE
             if "1000000/(User_Cycle/Number_Of_Runs)" in line:
                 value = line.split("=")[1].strip().split()[0]
                 result = dict()
                 result["DMIPS/MHz"] = strtofloat(value)
             # Whetstone
             if "Whetstone" in line:
-                program_type = PROGRAM_WHETSTONE
+                program_type = PROGRAM_BAREBENCH
+                subtype = PROGRAM_WHETSTONE
             if "MWIPS/MHz" in line:
                 value = line.split("MWIPS/MHz")[-1].strip().split()[0]
                 result = dict()
                 result["MWIPS/MHz"] = strtofloat(value)
     except:
-        return program_type, result
-    return program_type, result
+        return program_type, subtype, result
+    return program_type, subtype, result
 
 def parse_benchmark_baremetal(lines):
     result = None
     program_type = PROGRAM_UNKNOWN
+    subtype = PROGRAM_UNKNOWN
     try:
         unit = "unknown"
         for line in lines:
@@ -668,15 +674,16 @@ def parse_benchmark_baremetal(lines):
                     key = csv_values[1].strip()
                     value = csv_values[-1].strip()
                     if key.lower() == "benchmark":
+                        program_type = PROGRAM_BAREBENCH
                         unit = value
                     else:
-                        program_type = key.lower()
+                        subtype = key.lower()
                         result = dict()
                         result[unit] = strtofloat(value)
                         break
     except:
-        return program_type, result
-    return program_type, result
+        return program_type, subtype, result
+    return program_type, subtype, result
 
 def parse_benchmark_baremetal_csv(lines):
     result = None
@@ -708,7 +715,7 @@ def parse_benchmark_runlog(lines, lgf=""):
         return PROGRAM_UNKNOWN, PROGRAM_UNKNOWN, None
     subtype = ""
     if lgf.strip() == "": # old style
-        program_type, result = parse_benchmark_compatiable(lines)
+        program_type, subtype, result = parse_benchmark_compatiable(lines)
     else:
         lgf = lgf.replace("\\", "/")
         appnormdirs = os.path.dirname(os.path.normpath(lgf)).replace('\\', '/').split('/')
@@ -717,7 +724,7 @@ def parse_benchmark_runlog(lines, lgf=""):
             program_type, result = parse_benchmark_baremetal(lines)
             if program_type == PROGRAM_UNKNOWN:
                 # fallback to previous parser
-                program_type, result = parse_benchmark_compatiable(lines)
+                program_type, subtype, result = parse_benchmark_compatiable(lines)
         elif "baremetal/demo_dsp" in lgf:
             program_type, result = parse_benchmark_baremetal_csv(lines)
             program_type = "demo_dsp"
@@ -750,7 +757,7 @@ def parse_benchmark_runlog(lines, lgf=""):
                 if index >= 0:
                     subtype = appnormdirs[index + 1]
         else:
-            program_type, result = parse_benchmark_compatiable(lines)
+            program_type, subtype, result = parse_benchmark_compatiable(lines)
     return program_type, subtype, result
 
 def program_fpga(bit, target):

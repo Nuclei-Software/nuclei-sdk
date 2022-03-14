@@ -16,6 +16,7 @@ try:
     import serial
     import json
     import markdown
+    import pyexcel as pe
     from prettytable import *
 except:
     MARKDOWN_PLUGIN=False
@@ -479,6 +480,7 @@ def parse_result2dict(result):
             if "value" not in csvdict[cfg][apptype][appsubtype]:
                 csvdict[cfg][apptype][appsubtype]["value"] = dict()
             csvdict[cfg][apptype][appsubtype]["value"].update(appresult[cfg]["result"]["value"])
+            csvdict[cfg][apptype][appsubtype]["size"] = appresult[cfg]["size"]
     return csvdict
 
 def save_report_files(logdir, config, result, run=False):
@@ -489,13 +491,56 @@ def save_report_files(logdir, config, result, run=False):
     generate_report(config, result, rptfile, rpthtml, logdir, run)
     csvfile = os.path.join(logdir, "result.csv")
     save_bench_csv(result, csvfile)
-    csvdata = parse_result2dict(result)
-    csvdatafile = os.path.join(logdir, "runresult.json")
-    save_json(csvdatafile, csvdata)
     print("Generate report csv file to %s" % (csvfile))
     print("Generate report markdown file to %s" % (rptfile))
+    if run:
+        csvdata = parse_result2dict(result)
+        csvdatafile = os.path.join(logdir, "runresult.json")
+        save_json(csvdatafile, csvdata)
+        runresultexcel = os.path.join(logdir, "runresult.xlsx")
+        save_runresult(csvdata, runresultexcel)
+        print("Generate run result excel file to %s" % (runresultexcel))
+
     pass
 
+def save_runresult(runresult, excelfile):
+    if not(isinstance(runresult, dict)):
+        return False
+    csvdict = dict()
+    csvtable = dict()
+    for cfg in runresult:
+        splitcfgs = cfg.split('/')
+        pretype = ""
+        if len(splitcfgs) > 1:
+            pretype = '-'.join(splitcfgs[:-1])
+
+        runcfg = splitcfgs[-1]
+        for apptype in runresult[cfg]:
+            for subtype in runresult[cfg][apptype]:
+                if pretype != "":
+                    final_apptype = pretype + "_" + apptype
+                else:
+                    final_apptype = apptype
+                if final_apptype not in csvdict:
+                    csvdict[final_apptype]= {"RUNCONFIG": ["SUBTYPE"]}
+                    csvtable[final_apptype] = [["RUNCONFIG", "SUBTYPE"]]
+                if runcfg not in csvdict[final_apptype]['RUNCONFIG']:
+                    csvdict[final_apptype]['RUNCONFIG'].append(runcfg)
+                    csvtable[final_apptype][0].append(runcfg)
+                for key in runresult[cfg][apptype][subtype]["value"]:
+                    if key not in csvdict[final_apptype]:
+                        csvdict[final_apptype][key] = [subtype]
+                    csvdict[final_apptype][key].append(runresult[cfg][apptype][subtype]["value"][key])
+
+    for apptype in csvdict:
+        for key in csvdict[apptype]:
+            if key != "RUNCONFIG":
+                csvlist = [key]
+                csvlist.extend(csvdict[apptype][key])
+                csvtable[apptype].append(csvlist)
+    # Save to excel
+    pe.isave_book_as(bookdict=csvtable, dest_file_name=excelfile)
+    return True
 
 def generate_report_for_logs(logdir, run=False, split=False):
     if logdir and os.path.isdir(logdir):
