@@ -621,7 +621,7 @@ class nsdk_runner(nsdk_builder):
                         print("Run command: %s" %(command))
                         runner = {"cmd": command, "version": verstr}
                         cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
-                            sdk_check, logfile, show_output, 120)
+                            sdk_check, logfile, show_output, 240)
                     else:
                         print("Unable to run cycle model with %s" % (build_objects["elf"]))
                         cmdsts = False
