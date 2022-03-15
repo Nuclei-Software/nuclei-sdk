@@ -385,9 +385,9 @@ def merge_runconfig(all_mergedcfg, config, reldir):
         all_mergedcfg["appdirs_ignore"] = config.get("appdirs_ignore", [])
     if "appconfig" not in all_mergedcfg:
         all_mergedcfg["appconfig"] = config.get("appconfig", dict())
-    
+
     # TODO handle expecteds and expected
-    
+
     def merge_buildcfgs(dstcfg, srccfg, rel):
         if "build_configs" in srccfg:
             for bcfg in srccfg["build_configs"]:
@@ -404,7 +404,7 @@ def merge_runconfig(all_mergedcfg, config, reldir):
         if app not in all_mergedcfg["appconfig"]:
             all_mergedcfg["appconfig"][app] = {"build_config": {}, "build_configs": {}, "checks": appconfigs[app].get("checks", dict())}
         merge_buildcfgs(all_mergedcfg["appconfig"][app], appconfigs[app], reldir)
-    return 
+    return
 
 def merge_split_config_and_result(logdir):
     mergedcfg_files = find_files(logdir, "**/mergedcfg.json", True)
@@ -476,6 +476,8 @@ def parse_result2dict(result):
             if appsubtype not in csvdict[cfg][apptype]:
                 csvdict[cfg][apptype][appsubtype] = dict()
             csvdict[cfg][apptype][appsubtype]["meta"] = appresult[cfg].get("toolver", dict())
+            if csvdict[cfg][apptype][appsubtype]["meta"] == None:
+                csvdict[cfg][apptype][appsubtype]["meta"] = dict()
             csvdict[cfg][apptype][appsubtype]["meta"].update(appresult[cfg].get("flags", dict()))
             if "value" not in csvdict[cfg][apptype][appsubtype]:
                 csvdict[cfg][apptype][appsubtype]["value"] = dict()

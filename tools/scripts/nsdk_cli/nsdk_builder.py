@@ -133,7 +133,7 @@ class nsdk_builder(object):
     def get_build_info(self, appdir, make_options=""):
         infolog = tempfile.mktemp()
         ret, _ = self.build_target_only(appdir, make_options, "info", False, infolog)
-        build_info = None
+        build_info = dict()
         if ret != COMMAND_RUNOK:
             os.remove(infolog)
             return build_info
@@ -155,7 +155,7 @@ class nsdk_builder(object):
     def get_build_flags(self, appdir, make_options=""):
         flagslog = tempfile.mktemp()
         ret, _ = self.build_target_only(appdir, make_options, "showflags", False, flagslog)
-        build_flags = None
+        build_flags = dict()
         if ret != COMMAND_RUNOK:
             os.remove(flagslog)
             return build_flags
@@ -175,7 +175,7 @@ class nsdk_builder(object):
     def get_build_toolver(self, appdir, make_options=""):
         log = tempfile.mktemp()
         ret, _ = self.build_target_only(appdir, make_options, "showtoolver", False, log)
-        buildout = None
+        buildout = dict()
         if ret != COMMAND_RUNOK:
             os.remove(log)
             return buildout
@@ -605,7 +605,7 @@ class nsdk_runner(nsdk_builder):
                 ret, verstr = check_tool_version(vercmd, verchk)
                 if ret == False:
                     verstr = "v1"
-                
+
                 ret = check_tool_exist(ncycm_exe) or os.path.isfile(ncycm_exe)
                 if ret:
                     if (verstr == "v1"):
@@ -616,7 +616,7 @@ class nsdk_runner(nsdk_builder):
                             command = "%s +TESTCASE=%s" % (ncycm_exe, ncycm_verilog)
                     else:
                         command = "%s %s" % (ncycm_exe, build_objects["elf"])
-                    
+
                     if command != "":
                         print("Run command: %s" %(command))
                         runner = {"cmd": command, "version": verstr}
