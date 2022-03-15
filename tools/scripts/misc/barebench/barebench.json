@@ -9,16 +9,13 @@
             "qemu32": "qemu-system-riscv32",
             "qemu64": "qemu-system-riscv64",
             "timeout": 60
+        },
+        "ncycm": {
+            "timeout": 1200
         }
     },
     "build_target": "clean all",
     "build_config": {
-    },
-    "build_configs": {
-        "newlib_small": {"STDCLIB": "newlib_small"},
-        "libncrt_small": {"STDCLIB": "libncrt_small"},
-        "libncrt_balanced": {"STDCLIB": "libncrt_balanced"},
-        "libncrt_fast": {"STDCLIB": "libncrt_fast"}
     },
     "parallel" : "-j",
     "checks": {

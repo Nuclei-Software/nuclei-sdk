@@ -1,0 +1,21 @@
+{
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "DOWNLOAD": "ilm",
+        "CPU_SERIES": "900"
+    },
+    "build_configs": {
+        "rv64imac": {"CORE":"nx900"},
+        "rv64imacb": {"CORE":"nx900", "ARCH_EXT":"b"},
+        "rv64imacbp": {"CORE":"nx900", "ARCH_EXT":"bp"},
+        "rv64imafc": {"CORE":"nx900f", "ARCH_EXT":""},
+        "rv64imafcb": {"CORE":"nx900f", "ARCH_EXT":"b"},
+        "rv64imafcp": {"CORE":"nx900f", "ARCH_EXT":"p"},
+        "rv64imafcbp": {"CORE":"nx900f", "ARCH_EXT":"bp"},
+        "rv64imafdc": {"CORE":"nx900fd", "ARCH_EXT":""},
+        "rv64imafdcb": {"CORE":"nx900fd", "ARCH_EXT":"b"},
+        "rv64imafdcp": {"CORE":"nx900fd", "ARCH_EXT":"p"},
+        "rv64imafdcbp": {"CORE":"nx900fd", "ARCH_EXT":"bp"}
+    }
+}

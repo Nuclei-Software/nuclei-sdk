@@ -4,8 +4,6 @@ fpga_runners:
   map(include('fpgarunner'), key=str())
 ncycm_runners:
   map(include('ncycmrunner'), key=str())
-cpus:
-  map(include('cpucore'), key=str())
 configs:
   map(include('config'), key=str())
 ---
@@ -16,6 +14,7 @@ rcfg:
 env:
   fpgaloc: str()
   ncycmloc: str()
+  cfgloc: str()
 
 fpgarunner:
   board_type: enum('ku060', 'ddr200t', 'mcu200t', 'vcu118', 'vu19p')
@@ -26,15 +25,10 @@ fpgarunner:
 ncycmrunner:
   model: str()
 
-cpucore:
-  soc: str()
-  arch: str()
-  nsdk_makeopts:
-    map(str(), key=str())
-
 config:
   bitstream: str()
   fpga: enum('ku060', 'ddr200t', 'mcu200t', 'vcu118', 'vu19p')
   ncycm: str()
-  cpu: str()
   openocd_cfg: str()
+  appcfg: str()
+  hwcfg: str()
