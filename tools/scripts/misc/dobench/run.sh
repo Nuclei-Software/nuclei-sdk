@@ -5,7 +5,7 @@ NSDK_ROOT=${NSDK_ROOT:-}
 NSDK_VER=${NSDK_VER:-}
 LOGROOT=${LOGROOT:-gen}
 DRYRUN=${DRYRUN:-0}
-RUNTARGET=${RUNTARGET:xlspike}
+RUNTARGET=${RUNTARGET-xlspike}
 
 DEVTOOL_ENV=${DEVTOOL_ENV:-/home/share/devtools/env.sh}
 
