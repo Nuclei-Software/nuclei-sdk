@@ -397,9 +397,9 @@ def merge_runconfig(all_mergedcfg, config, reldir):
 
     merge_buildcfgs(all_mergedcfg, config, reldir)
 
-    all_mergedcfg["appdirs"] = update_list_items(all_mergedcfg["appdirs"], config["appdirs"])
-    all_mergedcfg["appdirs_ignore"] = update_list_items(all_mergedcfg["appdirs_ignore"], config["appdirs_ignore"])
-    appconfigs = config["appconfig"]
+    all_mergedcfg["appdirs"] = update_list_items(all_mergedcfg.get("appdirs", []), config.get("appdirs", []))
+    all_mergedcfg["appdirs_ignore"] = update_list_items(all_mergedcfg.get("appdirs_ignore", []), config.get("appdirs_ignore", []))
+    appconfigs = config.get("appconfig", dict())
     for app in appconfigs:
         if app not in all_mergedcfg["appconfig"]:
             all_mergedcfg["appconfig"][app] = {"build_config": {}, "build_configs": {}, "checks": appconfigs[app].get("checks", dict())}
