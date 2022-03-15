@@ -42,7 +42,7 @@ showtoolver:
 	@$(ECHO) Show $(OPENOCD) version
 	@$(OPENOCD) -v
 	@$(ECHO) Show $(QEMU) version
-	@$(QEMU) --version
+	-@$(QEMU) --version
 
 help:
 	@$(ECHO) "Nuclei N/NX-series RISC-V Embedded Processor Software Development Kit "
