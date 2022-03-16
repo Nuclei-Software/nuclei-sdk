@@ -36,6 +36,9 @@
 
     .section .vtable
 
+    .weak eclic_msip_handler
+    .weak eclic_mtip_handler
+
     .globl vector_base
     .type vector_base, @object
 vector_base:
