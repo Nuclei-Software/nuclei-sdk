@@ -36,59 +36,6 @@
 
     .section .vtable
 
-    .weak  eclic_msip_handler
-    .weak  eclic_mtip_handler
-    .weak  eclic_irq19_handler
-    .weak  eclic_irq20_handler
-    .weak  eclic_irq21_handler
-    .weak  eclic_irq22_handler
-    .weak  eclic_irq23_handler
-    .weak  eclic_irq24_handler
-    .weak  eclic_irq25_handler
-    .weak  eclic_irq26_handler
-    .weak  eclic_irq27_handler
-    .weak  eclic_irq28_handler
-    .weak  eclic_irq29_handler
-    .weak  eclic_irq30_handler
-    .weak  eclic_irq31_handler
-    .weak  eclic_irq32_handler
-    .weak  eclic_irq33_handler
-    .weak  eclic_irq34_handler
-    .weak  eclic_irq35_handler
-    .weak  eclic_irq36_handler
-    .weak  eclic_irq37_handler
-    .weak  eclic_irq38_handler
-    .weak  eclic_irq39_handler
-    .weak  eclic_irq40_handler
-    .weak  eclic_irq41_handler
-    .weak  eclic_irq42_handler
-    .weak  eclic_irq43_handler
-    .weak  eclic_irq44_handler
-    .weak  eclic_irq45_handler
-    .weak  eclic_irq46_handler
-    .weak  eclic_irq47_handler
-    .weak  eclic_irq48_handler
-    .weak  eclic_irq49_handler
-    .weak  eclic_irq50_handler
-    .weak  eclic_irq51_handler
-    .weak  eclic_irq52_handler
-    .weak  eclic_irq53_handler
-    .weak  eclic_irq54_handler
-    .weak  eclic_irq55_handler
-    .weak  eclic_irq56_handler
-    .weak  eclic_irq57_handler
-    .weak  eclic_irq58_handler
-    .weak  eclic_irq59_handler
-    .weak  eclic_irq60_handler
-    .weak  eclic_irq61_handler
-    .weak  eclic_irq62_handler
-    .weak  eclic_irq63_handler
-    .weak  eclic_irq64_handler
-    .weak  eclic_irq65_handler
-    .weak  eclic_irq66_handler
-    .weak  eclic_irq67_handler
-    .weak  eclic_irq68_handler
-
     .globl vector_base
     .type vector_base, @object
 vector_base:
@@ -120,69 +67,69 @@ vector_base:
     DECLARE_INT_HANDLER     default_intexc_handler          /* 16: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 17: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 18: Reserved */
-    DECLARE_INT_HANDLER     eclic_irq19_handler             /* 19: Interrupt 19 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 19: Interrupt 19 */
 
-    DECLARE_INT_HANDLER     eclic_irq20_handler             /* 20: Interrupt 20 */
-    DECLARE_INT_HANDLER     eclic_irq21_handler             /* 21: Interrupt 21 */
-    DECLARE_INT_HANDLER     eclic_irq22_handler             /* 22: Interrupt 22 */
-    DECLARE_INT_HANDLER     eclic_irq23_handler             /* 23: Interrupt 23 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 20: Interrupt 20 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 21: Interrupt 21 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 22: Interrupt 22 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 23: Interrupt 23 */
 
-    DECLARE_INT_HANDLER     eclic_irq24_handler             /* 24: Interrupt 24 */
-    DECLARE_INT_HANDLER     eclic_irq25_handler             /* 25: Interrupt 25 */
-    DECLARE_INT_HANDLER     eclic_irq26_handler             /* 26: Interrupt 26 */
-    DECLARE_INT_HANDLER     eclic_irq27_handler             /* 27: Interrupt 27 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 24: Interrupt 24 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 25: Interrupt 25 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 26: Interrupt 26 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 27: Interrupt 27 */
 
-    DECLARE_INT_HANDLER     eclic_irq28_handler             /* 28: Interrupt 28 */
-    DECLARE_INT_HANDLER     eclic_irq29_handler             /* 29: Interrupt 29 */
-    DECLARE_INT_HANDLER     eclic_irq30_handler             /* 30: Interrupt 30 */
-    DECLARE_INT_HANDLER     eclic_irq31_handler             /* 31: Interrupt 31 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 28: Interrupt 28 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 29: Interrupt 29 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 30: Interrupt 30 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 31: Interrupt 31 */
 
-    DECLARE_INT_HANDLER     eclic_irq32_handler             /* 32: Interrupt 32 */
-    DECLARE_INT_HANDLER     eclic_irq33_handler             /* 33: Interrupt 33 */
-    DECLARE_INT_HANDLER     eclic_irq34_handler             /* 34: Interrupt 34 */
-    DECLARE_INT_HANDLER     eclic_irq35_handler             /* 35: Interrupt 35 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 32: Interrupt 32 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 33: Interrupt 33 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 34: Interrupt 34 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 35: Interrupt 35 */
 
-    DECLARE_INT_HANDLER     eclic_irq36_handler             /* 36: Interrupt 36 */
-    DECLARE_INT_HANDLER     eclic_irq37_handler             /* 37: Interrupt 37 */
-    DECLARE_INT_HANDLER     eclic_irq38_handler             /* 38: Interrupt 38 */
-    DECLARE_INT_HANDLER     eclic_irq39_handler             /* 39: Interrupt 39 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 36: Interrupt 36 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 37: Interrupt 37 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 38: Interrupt 38 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 39: Interrupt 39 */
 
-    DECLARE_INT_HANDLER     eclic_irq40_handler             /* 40: Interrupt 40 */
-    DECLARE_INT_HANDLER     eclic_irq41_handler             /* 41: Interrupt 41 */
-    DECLARE_INT_HANDLER     eclic_irq42_handler             /* 42: Interrupt 42 */
-    DECLARE_INT_HANDLER     eclic_irq43_handler             /* 43: Interrupt 43 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 40: Interrupt 40 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 41: Interrupt 41 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 42: Interrupt 42 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 43: Interrupt 43 */
 
-    DECLARE_INT_HANDLER     eclic_irq44_handler             /* 44: Interrupt 44 */
-    DECLARE_INT_HANDLER     eclic_irq45_handler             /* 45: Interrupt 45 */
-    DECLARE_INT_HANDLER     eclic_irq46_handler             /* 46: Interrupt 46 */
-    DECLARE_INT_HANDLER     eclic_irq47_handler             /* 47: Interrupt 47 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 44: Interrupt 44 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 45: Interrupt 45 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 46: Interrupt 46 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 47: Interrupt 47 */
 
-    DECLARE_INT_HANDLER     eclic_irq48_handler             /* 48: Interrupt 48 */
-    DECLARE_INT_HANDLER     eclic_irq49_handler             /* 49: Interrupt 49 */
-    DECLARE_INT_HANDLER     eclic_irq50_handler             /* 50: Interrupt 50 */
-    DECLARE_INT_HANDLER     eclic_irq51_handler             /* 51: Interrupt 51 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 48: Interrupt 48 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 49: Interrupt 49 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 50: Interrupt 50 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 51: Interrupt 51 */
 
-    DECLARE_INT_HANDLER     eclic_irq52_handler             /* 52: Interrupt 52 */
-    DECLARE_INT_HANDLER     eclic_irq53_handler             /* 53: Interrupt 53 */
-    DECLARE_INT_HANDLER     eclic_irq54_handler             /* 54: Interrupt 54 */
-    DECLARE_INT_HANDLER     eclic_irq55_handler             /* 55: Interrupt 55 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 52: Interrupt 52 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 53: Interrupt 53 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 54: Interrupt 54 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 55: Interrupt 55 */
 
-    DECLARE_INT_HANDLER     eclic_irq56_handler             /* 56: Interrupt 56 */
-    DECLARE_INT_HANDLER     eclic_irq57_handler             /* 57: Interrupt 57 */
-    DECLARE_INT_HANDLER     eclic_irq58_handler             /* 58: Interrupt 58 */
-    DECLARE_INT_HANDLER     eclic_irq59_handler             /* 59: Interrupt 59 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 56: Interrupt 56 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 57: Interrupt 57 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 58: Interrupt 58 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 59: Interrupt 59 */
 
-    DECLARE_INT_HANDLER     eclic_irq60_handler             /* 60: Interrupt 60 */
-    DECLARE_INT_HANDLER     eclic_irq61_handler             /* 61: Interrupt 61 */
-    DECLARE_INT_HANDLER     eclic_irq62_handler             /* 62: Interrupt 62 */
-    DECLARE_INT_HANDLER     eclic_irq63_handler             /* 63: Interrupt 63 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 60: Interrupt 60 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 61: Interrupt 61 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 62: Interrupt 62 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 63: Interrupt 63 */
 
-    DECLARE_INT_HANDLER     eclic_irq64_handler             /* 64: Interrupt 64 */
-    DECLARE_INT_HANDLER     eclic_irq65_handler             /* 65: Interrupt 65 */
-    DECLARE_INT_HANDLER     eclic_irq66_handler             /* 66: Interrupt 66 */
-    DECLARE_INT_HANDLER     eclic_irq67_handler             /* 67: Interrupt 67 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 64: Interrupt 64 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 65: Interrupt 65 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 66: Interrupt 66 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 67: Interrupt 67 */
 
-    DECLARE_INT_HANDLER     eclic_irq68_handler             /* 68: Interrupt 68 */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 68: Interrupt 68 */
 
     .section .init
 
