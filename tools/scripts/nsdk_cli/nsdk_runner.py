@@ -259,6 +259,7 @@ if __name__ == '__main__':
         print("Here are the supported configs:")
         pp.pprint(nsdk_ext.get_configs())
     else:
+        start_time = time.time()
         if args.config:
             print("Run only selected configuration: %s" % (args.config))
             ret = nsdk_ext.run_config(args.config, args.logdir, runon=args.runon)
@@ -272,7 +273,8 @@ if __name__ == '__main__':
             # generate total results for all the configs
             print("Generate all the reports for this run")
             generate_report_for_logs(args.logdir, True, True)
-
+        runtime = round(time.time() - start_time, 2)
+        print("Cost about %s seconds to do this running!" % (runtime))
     # Exit with ret value
     if ret:
         sys.exit(0)

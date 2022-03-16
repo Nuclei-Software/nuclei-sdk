@@ -279,6 +279,7 @@ if __name__ == '__main__':
     if result:
         # Generate build or run report
         save_report_files(args.logdir, config, result, args.run)
+    print("This bench cost about %s seconds" % (runtime))
     # Exit with ret value
     if ret:
         sys.exit(0)
