@@ -20,6 +20,9 @@ This is version ``0.3.7-dev`` of Nuclei SDK, which is in development.
 
 * SoC
 
+  * Change all un-registered interrupt default handler to ``default_intexc_handler``, which means user need to register
+    the interrupt handler using ``ECLIC_SetVector`` before enable it.
+
 
 For detailed changes, please check commit histories since 0.3.6 release.
 
