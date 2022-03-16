@@ -21,6 +21,21 @@ El Dorado Hills, CA, 95762
 */
 #include "coremark.h"
 
+/* Only support dec number < 1000 */
+static char *dec2str(int32_t val)
+{
+    static char str[4];
+    val = val % 1000;
+    int decnum = 100;
+    for (int i = 0; i < 3; i ++) {
+        str[i] = val / decnum + '0';
+        val = val % decnum;
+        decnum = decnum / 10;
+    }
+    str[3] = '\0';
+    return str;
+}
+
 /* Function: iterate
     Run the benchmark for a specified number of iterations.
 
@@ -399,9 +414,10 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
 #endif
 
     uint32_t cmk_dmips = (uint32_t)(coremark_dmips * 1000);
+    char *pstr = dec2str(cmk_dmips);
     ee_printf("\nCSV, Benchmark, Iterations, Cycles, CoreMark/MHz\n");
-    ee_printf("CSV, CoreMark, %u, %u, %u.%u\n", \
-        results[0].iterations, (ee_u32)total_time, (cmk_dmips/1000), (cmk_dmips%1000));
+    ee_printf("CSV, CoreMark, %u, %u, %u.%s\n", \
+        results[0].iterations, (ee_u32)total_time, (cmk_dmips/1000), pstr);
 
     return MAIN_RETURN_VAL;
 }

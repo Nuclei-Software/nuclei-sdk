@@ -203,6 +203,22 @@ static SPDP mwips, mwips_mhz;
 static char headings[9][18];
 static SPDP Check;
 static SPDP results[9];
+
+/* Only support dec number < 1000 */
+static char *dec2str(int32_t val)
+{
+    static char str[4];
+    val = val % 1000;
+    int decnum = 100;
+    for (int i = 0; i < 3; i ++) {
+        str[i] = val / decnum + '0';
+        val = val % decnum;
+        decnum = decnum / 10;
+    }
+    str[3] = '\0';
+    return str;
+}
+
 int main(void)
 {
     int count = 10, calibrate = 1;
@@ -281,8 +297,9 @@ int main(void)
     printf("%39.3f%19.3f\n\n", mwips_mhz, TimeUsed);
 
     uint32_t whet_mwips = (uint32_t)(mwips_mhz * 1000);
+    char *pstr = dec2str(whet_mwips);
     printf("\nCSV, Benchmark, MWIPS/MHz\n");
-    printf("CSV, Whetstone, %u.%u\n", (whet_mwips/1000), (whet_mwips%1000));
+    printf("CSV, Whetstone, %u.%s\n", (whet_mwips/1000), pstr);
 
     if (Check == 0) {
         printf("Wrong answer  \n");

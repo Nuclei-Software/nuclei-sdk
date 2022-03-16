@@ -74,7 +74,20 @@ float           Microseconds,
 float           DMIPS_MHZ;
 
 /* end of variables for time measurement */
-
+/* Only support dec number < 1000 */
+static char *dec2str(int32_t val)
+{
+    static char str[4];
+    val = val % 1000;
+    int decnum = 100;
+    for (int i = 0; i < 3; i ++) {
+        str[i] = val / decnum + '0';
+        val = val % decnum;
+        decnum = decnum / 10;
+    }
+    str[3] = '\0';
+    return str;
+}
 
 int main(void)
 /*****/
@@ -296,9 +309,10 @@ int main(void)
     printf("\n");
 
     uint32_t dhry_dmips = (uint32_t)(DMIPS_MHZ * 1000);
+    char *pstr = dec2str(dhry_dmips);
     printf("\nCSV, Benchmark, Iterations, Cycles, DMIPS/MHz\n");
-    printf("CSV, Dhrystone, %u, %u, %u.%u\n", \
-        Number_Of_Runs, User_Cycle, (dhry_dmips/1000), (dhry_dmips%1000));
+    printf("CSV, Dhrystone, %u, %u, %u.%s\n", \
+        Number_Of_Runs, User_Cycle, (dhry_dmips/1000), pstr);
 
     return 0;
 }
