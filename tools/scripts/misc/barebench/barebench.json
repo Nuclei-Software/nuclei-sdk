@@ -11,7 +11,7 @@
             "timeout": 60
         },
         "ncycm": {
-            "timeout": 1200
+            "timeout": 600
         }
     },
     "build_target": "clean all",
@@ -23,7 +23,8 @@
         "FAIL": ["MEPC"]
     },
     "appdirs": [
-        "application/baremetal/benchmark"
+        "application/baremetal/benchmark/coremark",
+        "application/baremetal/benchmark/dhrystone"
     ],
     "appdirs_ignore": [
         "application/baremetal/dsp_examples",
