@@ -11,6 +11,8 @@ This is version ``0.3.7-dev`` of Nuclei SDK, which is in development.
 
 * Application
 
+  - **CAUTION**: Fix benchmark value not correct printed when print without float c library,
+    which means the CSV printed value in previous release is not correct, please take care
 
 * NMSIS
 
@@ -20,8 +22,14 @@ This is version ``0.3.7-dev`` of Nuclei SDK, which is in development.
 
 * SoC
 
-  * Change all un-registered interrupt default handler to ``default_intexc_handler``, which means user need to register
+  - Change all un-registered interrupt default handler to ``default_intexc_handler``, which means user need to register
     the interrupt handler using ``ECLIC_SetVector`` before enable it.
+
+* Tools
+
+  - Update ``nsdk_report.py`` script to support generate benchmark run result in excel.
+  - Add ``ncycm`` cycle model runner support in ``nsdk_bench.py``
+  - Add ``nsdk_runner.py`` script for running directly on different fpga board with feature of programing fpga bitstream using vivado
 
 
 For detailed changes, please check commit histories since 0.3.6 release.
