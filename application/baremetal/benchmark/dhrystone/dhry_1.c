@@ -75,7 +75,7 @@ float           DMIPS_MHZ;
 
 /* end of variables for time measurement */
 /* Only support dec number < 1000 */
-static char *dec2str(int32_t val)
+static char *dec2str(uint32_t val)
 {
     static char str[4];
     val = val % 1000;
@@ -161,8 +161,8 @@ int main(void)
 #ifdef TIME
     Begin_Time = time((long*) 0);
 #endif
-    Begin_Instret =  csr_instret((long*) 0);
-    Begin_Cycle =  csr_cycle((long*) 0);
+    Begin_Instret =  csr_instret();
+    Begin_Cycle =  csr_cycle();
 
     for (Run_Index = 1; Run_Index <= Number_Of_Runs; ++Run_Index) {
 
@@ -211,7 +211,8 @@ int main(void)
     /**************/
     /* Stop timer */
     /**************/
-    End_Cycle = csr_cycle((long*) 0);
+    End_Cycle = csr_cycle();
+    End_Instret = csr_instret();
 
 #ifdef TIMES
     times(&time_info);
@@ -220,7 +221,6 @@ int main(void)
 #ifdef TIME
     End_Time = time((long*) 0);
 #endif
-    End_Instret = csr_instret((long*) 0);
 
     printf("Execution ends\n");
     printf("\n");
@@ -312,7 +312,7 @@ int main(void)
     char *pstr = dec2str(dhry_dmips);
     printf("\nCSV, Benchmark, Iterations, Cycles, DMIPS/MHz\n");
     printf("CSV, Dhrystone, %u, %u, %u.%s\n", \
-        Number_Of_Runs, User_Cycle, (dhry_dmips/1000), pstr);
+        (unsigned int)Number_Of_Runs, (unsigned int)User_Cycle, (unsigned int)(dhry_dmips/1000), pstr);
 
     return 0;
 }

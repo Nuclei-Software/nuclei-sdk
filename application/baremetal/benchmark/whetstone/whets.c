@@ -205,7 +205,7 @@ static SPDP Check;
 static SPDP results[9];
 
 /* Only support dec number < 1000 */
-static char *dec2str(int32_t val)
+static char *dec2str(uint32_t val)
 {
     static char str[4];
     val = val % 1000;
@@ -299,7 +299,7 @@ int main(void)
     uint32_t whet_mwips = (uint32_t)(mwips_mhz * 1000);
     char *pstr = dec2str(whet_mwips);
     printf("\nCSV, Benchmark, MWIPS/MHz\n");
-    printf("CSV, Whetstone, %u.%s\n", (whet_mwips/1000), pstr);
+    printf("CSV, Whetstone, %u.%s\n", (unsigned int)(whet_mwips/1000), pstr);
 
     if (Check == 0) {
         printf("Wrong answer  \n");

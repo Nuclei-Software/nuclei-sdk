@@ -22,13 +22,13 @@ El Dorado Hills, CA, 95762
 #include "coremark.h"
 
 /* Only support dec number < 1000 */
-static char *dec2str(int32_t val)
+static char *dec2str(uint32_t val)
 {
     static char str[4];
     val = val % 1000;
     int decnum = 100;
     for (int i = 0; i < 3; i ++) {
-        str[i] = val / decnum + '0';
+        str[i] = (val / decnum) + '0';
         val = val % decnum;
         decnum = decnum / 10;
     }
@@ -142,7 +142,7 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     results[0].iterations = ITERATIONS;
 #endif
 
-    ee_printf("Start to run coremark for %d iterations\r\n", results[0].iterations);
+    ee_printf("Start to run coremark for %u iterations\r\n", (unsigned int)results[0].iterations);
 
     results[0].execs = get_seed_32(5);
     if (results[0].execs == 0) { /* if not supplied, execute all algorithms */
@@ -319,8 +319,8 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     }
     total_errors += check_data_types();
     /* and report results */
-    ee_printf("CoreMark Size    : %lu\n", (ee_u32)results[0].size);
-    ee_printf("Total ticks      : %lu\n", (ee_u32)total_time);
+    ee_printf("CoreMark Size    : %u\n", (unsigned int)results[0].size);
+    ee_printf("Total ticks      : %u\n", (unsigned int)total_time);
 #if HAS_FLOAT
     ee_printf("Total time (secs): %f\n", time_in_secs(total_time));
     if (time_in_secs(total_time) > 0) {
@@ -341,7 +341,7 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     }
 #endif
 
-    ee_printf("Iterations       : %lu\n", (ee_u32)default_num_contexts * results[0].iterations);
+    ee_printf("Iterations       : %u\n", (unsigned int)(default_num_contexts * results[0].iterations));
     ee_printf("Compiler version : %s\n", COMPILER_VERSION);
     ee_printf("Compiler flags   : %s\n", COMPILER_FLAGS);
 #if (MULTITHREAD>1)
@@ -405,8 +405,8 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     ee_printf("\n");
     ee_printf("Print Personal Added Addtional Info to Easy Visual Analysis\n");
     ee_printf("\n");
-    ee_printf("     (Iterations is: %u\n", results[0].iterations);
-    ee_printf("     (total_ticks is: %u\n", (ee_u32)total_time);
+    ee_printf("     (Iterations is: %u\n", (unsigned int)results[0].iterations);
+    ee_printf("     (total_ticks is: %u\n", (unsigned int)total_time);
     ee_printf(" (*) Assume the core running at 1 MHz\n");
     ee_printf("     So the CoreMark/MHz can be caculated by: \n");
     ee_printf("     (Iterations*1000000/total_ticks) = %2.6f CoreMark/MHz\n", coremark_dmips);
@@ -417,7 +417,7 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     char *pstr = dec2str(cmk_dmips);
     ee_printf("\nCSV, Benchmark, Iterations, Cycles, CoreMark/MHz\n");
     ee_printf("CSV, CoreMark, %u, %u, %u.%s\n", \
-        results[0].iterations, (ee_u32)total_time, (cmk_dmips/1000), pstr);
+        (unsigned int)results[0].iterations, (unsigned int)total_time, (unsigned int)(cmk_dmips/1000), pstr);
 
     return MAIN_RETURN_VAL;
 }
