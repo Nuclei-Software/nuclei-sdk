@@ -13,6 +13,7 @@ int putchar(int dat)
         usart_write(SOC_DEBUG_UART, '\r');
     }
     usart_write(SOC_DEBUG_UART, dat);
+    return dat;
 }
 
 __WEAK ssize_t _write(int fd, const void* ptr, size_t len)
