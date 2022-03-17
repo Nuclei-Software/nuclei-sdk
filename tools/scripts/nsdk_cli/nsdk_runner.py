@@ -71,7 +71,7 @@ class nsdk_runner(object):
             self.runcfg["environment"]["cfgloc"] = locations["cfgloc"]
         self.cpuruncfgs = dict()
         for key in self.runcfg["configs"]:
-            self.cpuruncfgs[key] = self.get_runcfg(key)
+            self.cpuruncfgs[key] = copy.deepcopy(self.get_runcfg(key))
         pass
 
     def get_runcfg(self, config):
