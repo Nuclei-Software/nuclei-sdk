@@ -261,15 +261,21 @@ if __name__ == '__main__':
     else:
         start_time = time.time()
         if args.config:
-            print("Run only selected configuration: %s" % (args.config))
-            ret = nsdk_ext.run_config(args.config, args.logdir, runon=args.runon)
+            sel_configs = list(set([ key.strip() for key in args.config.split(',')]))
+            print("Run selected configurations: %s" % (sel_configs))
         else:
+            sel_configs = nsdk_ext.get_configs()
             print("Run all the configurations as below:")
-            pp.pprint(nsdk_ext.get_configs())
-            for config in nsdk_ext.get_configs():
+            pp.pprint(sel_configs)
+        runcnt = 0
+        for config in sel_configs:
+            if config in nsdk_ext.get_configs():
+                runcnt += 1
+                print("Run for configuration %s now" % (config))
                 if nsdk_ext.run_config(config, args.logdir, runon=args.runon) == False:
                     print("Configuration %s failed" % (config))
                     ret = False
+        if runcnt > 1:
             # generate total results for all the configs
             print("Generate all the reports for this run")
             generate_report_for_logs(args.logdir, True, True)
