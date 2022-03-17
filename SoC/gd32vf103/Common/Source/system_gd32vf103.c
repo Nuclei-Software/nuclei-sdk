@@ -453,7 +453,7 @@ void SystemBannerPrint(void)
 #ifdef DOWNLOAD_MODE_STRING
     printf("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
 #endif
-    printf("CPU Frequency %d Hz\r\n", SystemCoreClock);
+    printf("CPU Frequency %u Hz\r\n", (unsigned int)SystemCoreClock);
 #endif
 }
 
