@@ -111,8 +111,8 @@ class nsdk_runner(object):
         if runcfg is None:
             return False
         if runon not in RUNNER_LIST:
-            runon = self.runcfg["runcfg"]["runner"]
-            print("Use default runner %s" % (runon))
+            runon = "NOTRUN"
+            print("No need to run on any target")
         benchcfg = runcfg["benchcfg"]
         appcfg_file = benchcfg["appcfg"]
         hwcfg_file = benchcfg["hwcfg"]
@@ -132,6 +132,7 @@ class nsdk_runner(object):
         if ret != JSON_OK:
             print("ERROR: hwcfg json file is not a valid configuration file!")
         final_appcfg = merge_two_config(run_appcfg, run_hwcfg)
+        need2run = True
         # check fpga/ncycm runner
         if runon == "fpga":
             if len(runcfg["fpga"]) == 0:
@@ -199,6 +200,9 @@ class nsdk_runner(object):
             if "ncycm" not in final_appcfg["run_config"]:
                 final_appcfg["run_config"]["ncycm"] = {"timeout": 600, "ncycm": "ncycm"}
             final_appcfg["run_config"]["ncycm"]["ncycm"] = ncycm_path
+        else:
+            # don't need to run
+            need2run = False
         # run on fpga/ncycm
         nsdk_ext = nsdk_bench()
         ret = True
@@ -217,17 +221,21 @@ class nsdk_runner(object):
             subappcfg = merge_config_with_makeopts(subappcfg, mkopts)
         sublogdir = os.path.join(logdir, config)
         start_time = time.time()
-        cmdsts, result = nsdk_ext.run_apps(subappcfg, False, sublogdir, False)
+        if need2run:
+            cmdsts, result = nsdk_ext.run_apps(subappcfg, False, sublogdir, False)
+        else:
+            cmdsts, result = nsdk_ext.build_apps(subappcfg, False, sublogdir, False)
+
         runtime = round(time.time() - start_time, 2)
-        print("Run application for config %s run status: %s, time cost %s seconds" % (config, cmdsts, runtime))
-        locret = check_expected(result, subappcfg, True)
+        print("Build or Run application for config %s run status: %s, time cost %s seconds" % (config, cmdsts, runtime))
+        locret = check_expected(result, subappcfg, need2run)
         print("Application build as expected: %s" % (locret))
         if locret == False:
             ret = False
         save_results(subappcfg, None, subappcfg, result, sublogdir)
         if result:
             # Generate build or run report
-            save_report_files(sublogdir, subappcfg, result, True)
+            save_report_files(sublogdir, subappcfg, result, need2run)
 
         return ret
         pass
@@ -278,7 +286,10 @@ if __name__ == '__main__':
         if runcnt > 1:
             # generate total results for all the configs
             print("Generate all the reports for this run")
-            generate_report_for_logs(args.logdir, True, True)
+            need2run = False
+            if args.runon in RUNNER_LIST:
+                need2run = True
+            generate_report_for_logs(args.logdir, True, need2run)
         runtime = round(time.time() - start_time, 2)
         print("Cost about %s seconds to do this running!" % (runtime))
     # Exit with ret value
