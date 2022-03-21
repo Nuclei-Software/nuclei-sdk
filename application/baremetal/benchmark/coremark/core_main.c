@@ -137,7 +137,7 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
 #endif
     // Bob: change the interation times to make it faster
 #ifdef CFG_SIMULATION
-    results[0].iterations = 2; // For simulation we make it small
+    results[0].iterations = 20; // For simulation we make it small
 #else
     results[0].iterations = ITERATIONS;
 #endif
