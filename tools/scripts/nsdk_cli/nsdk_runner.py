@@ -21,7 +21,7 @@ from nsdk_utils import *
 from nsdk_report import *
 from nsdk_bench import nsdk_bench
 
-RUNNER_LIST = ["fpga", "ncycm"]
+RUNNER_LIST = ["fpga", "ncycm", "qemu", "xlspike"]
 
 def yaml_validate(sf, yf):
     try:
@@ -200,6 +200,11 @@ class nsdk_runner(object):
             if "ncycm" not in final_appcfg["run_config"]:
                 final_appcfg["run_config"]["ncycm"] = {"timeout": 600, "ncycm": "ncycm"}
             final_appcfg["run_config"]["ncycm"]["ncycm"] = ncycm_path
+        elif runon == "qemu" or runon == "xlspike":
+            # set run target to ncycm
+            final_appcfg["run_config"]["target"] = runon
+            if runon not in final_appcfg["run_config"]:
+                final_appcfg["run_config"][runon] = {"timeout": 600}
         else:
             # don't need to run
             need2run = False
@@ -212,8 +217,12 @@ class nsdk_runner(object):
         else:
             mkopts = self.makeopts
 
-        if runon == "ncycm":
+        if runon == "ncycm" or runon == "xlspike":
             for opts in ("SIMULATION=1", "SIMU=xlspike"):
+                if opts not in mkopts:
+                    mkopts = "%s %s" % (mkopts, opts)
+        elif runon == "qemu":
+            for opts in ("SIMULATION=1", "SIMU=qemu"):
                 if opts not in mkopts:
                     mkopts = "%s %s" % (mkopts, opts)
         subappcfg = final_appcfg

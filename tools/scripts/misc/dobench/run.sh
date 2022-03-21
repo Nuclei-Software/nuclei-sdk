@@ -9,12 +9,12 @@ RUNTARGET=${RUNTARGET-xlspike}
 
 DEVTOOL_ENV=${DEVTOOL_ENV:-/home/share/devtools/env.sh}
 
-SCRIPTDIR=$(readlink -f $(dirname $0))
+SCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
 if [ "x$NSDK_ROOT" == "x" ] ; then
     NSDK_ROOT=$(readlink -f $SCRIPTDIR/../../../..)
 fi
 
-if [ -d $LOGROOT ] ; then
+if [ ! -d $LOGROOT ] ; then
     mkdir -p $LOGROOT
 fi
 
