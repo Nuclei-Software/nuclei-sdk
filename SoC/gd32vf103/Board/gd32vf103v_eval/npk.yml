@@ -70,6 +70,18 @@ debugconfig:
        - key: machine
          value: gd32vf103v_eval
 
+  - type: jlink
+    description: Segger Jlink
+    configs:
+       - key: GD32VF103VBT6
+         value: # if leave empty, it will try riscv_arch conversion, otherwise it will directly using this value
+       - key: riscv_arch
+         value: ${nuclei_core.arch} # arch to device name conversion happened in IDE, eg. rv32imac -> N305
+       - key: interface
+         value: jtag # jtag or cjtag
+       - key: speed
+         value: auto  # auto, adaptive, fixed value(KHz) such as 1000
+
 buildconfig:
   - type: gcc
     linkscript:

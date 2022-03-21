@@ -102,6 +102,10 @@ debugconfig:
     description: Nuclei QEMU
     svd: gd32vf103.svd
 
+  - type: jlink
+    description: Segger Jlink
+    svd: gd32vf103.svd
+
 ## Build Configuration
 buildconfig:
   - type: gcc
