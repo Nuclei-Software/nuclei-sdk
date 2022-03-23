@@ -170,7 +170,13 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
     printf("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
     printf("MTVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
     Exception_DumpFrame(sp);
+#if defined(SIMULATION_MODE)
+    // directly exit if in SIMULATION
+    extern void simulation_exit(int status);
+    simulation_exit(1);
+#else
     while (1);
+#endif
 }
 
 /**
