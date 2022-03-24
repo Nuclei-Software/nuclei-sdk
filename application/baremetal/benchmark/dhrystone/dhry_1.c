@@ -134,7 +134,7 @@ int main(void)
         printf("Program compiled without 'register' attribute\n");
         printf("\n");
     }
-    printf("Please give the number of runs through the benchmark: ");
+    printf("Please give the number of runs through the benchmark: \n");
     {
         int n;
         //Bob: We dont use scanf
@@ -145,7 +145,6 @@ int main(void)
         Number_Of_Runs = 500000;
 #endif
     }
-    printf("\n");
 
     printf("Execution starts, %d runs through Dhrystone\n", Number_Of_Runs);
 
