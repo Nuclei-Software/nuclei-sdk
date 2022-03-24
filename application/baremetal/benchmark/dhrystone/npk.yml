@@ -36,65 +36,16 @@ configuration:
         info:
           - name: app_commonflags
             value: >-
-              -O2 -flto -finline -funroll-loops -Wno-implicit -mexplicit-relocs
-              -fno-builtin-printf -fno-common -falign-functions=4 -falign-jumps=4 -falign-loops=4
+              -O2 -flto -finline -funroll-loops -Wno-implicit -mexplicit-relocs -fno-builtin-printf
+              -fno-common -falign-functions=4 -falign-jumps=4 -falign-loops=4 -finline-functions
       - name: best
         description: Best Effort
         info:
           - name: app_commonflags
             value: >-
-              -flto -finline -fwhole-program
-
-  cpu_series:
-    default_value: 300
-    type: choice
-    description: Select Benchmark Options
-    choices:
-      - name: 200
-        description: Options for Nuclei 200 Series
-        info:
-          - name: app_commonflags
-            value: >-
-              -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions -falign-functions=4
-              -falign-jumps=4 -falign-loops=4 -finline-limit=200 -fno-if-conversion -fno-if-conversion2 -fipa-pta
-              -fselective-scheduling -fno-tree-loop-distribute-patterns -funroll-loops -funroll-all-loops
-              -fno-delete-null-pointer-checks -fno-rename-registers -mbranch-cost=1 --param fsm-scale-path-stmts=5
-              --param max-average-unrolled-insns=200 --param max-grow-copy-bb-insns=16 --param max-jump-thread-duplication-stmts=8
-              --param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
-      - name: 300
-        description: Options for Nuclei 300 Series
-        info:
-          - name: app_commonflags
-            value: >-
-              -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions -falign-functions=4
-              -falign-jumps=4 -falign-loops=4 -finline-limit=200 -fno-if-conversion -fno-if-conversion2 -fipa-pta
-              -fselective-scheduling -fno-tree-loop-distribute-patterns -funroll-loops -funroll-all-loops
-              -fno-delete-null-pointer-checks -fno-rename-registers -mbranch-cost=1 --param fsm-scale-path-stmts=5
-              --param max-average-unrolled-insns=200 --param max-grow-copy-bb-insns=16 --param max-jump-thread-duplication-stmts=8
-              --param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
-      - name: 600
-        description: Options for Nuclei 600 Series
-        info:
-          - name: app_commonflags
-            value: >-
-              -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions
-              -falign-functions=4 -falign-jumps=4 -falign-loops=4 -finline-limit=200  -fno-if-conversion
-              -fno-if-conversion2 -fipa-pta -fselective-scheduling -fno-tree-loop-distribute-patterns
-              -funroll-loops -funroll-all-loops -fno-delete-null-pointer-checks -fno-rename-registers
-              -mbranch-cost=1 --param fsm-scale-path-stmts=5 --param max-average-unrolled-insns=200
-              --param max-grow-copy-bb-insns=16 --param max-jump-thread-duplication-stmts=14
-              --param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
-      - name: 900
-        description: Options for Nuclei 900 Series
-        info:
-          - name: app_commonflags
-            value: >-
-              -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=1000
-              -ftree-dominator-opts -fselective-scheduling -funroll-loops -finline-functions -falign-functions=4
-              -falign-jumps=4 -falign-loops=4 -fipa-pta -fno-code-hoisting -fno-common -fno-if-conversion
-              -fno-if-conversion2 -fno-tree-loop-distribute-patterns -fno-tree-vectorize -fno-tree-loop-ivcanon
-              -fno-tree-vrp -fgcse-las --param=max-loop-header-insns=4 --param loop-max-datarefs-for-datadeps=0
-              --param=unroll-jam-min-percent=0 --param=max-goto-duplication-insns=0
+              -Ofast -flto -fwhole-program -finline -funroll-loops -Wno-implicit -mexplicit-relocs
+              -fno-builtin-printf -fno-common -falign-functions=4 -falign-jumps=4 -falign-loops=4
+              -finline-functions
 
 ## Set Configuration for other packages
 setconfig:
@@ -115,8 +66,6 @@ buildconfig:
   - type: gcc
     common_flags: # flags need to be combined together across all packages
       - flags: ${dhry_mode.info.app_commonflags}
-      - flags: ${cpu_series.info.app_commonflags}
-        condition: $( ${dhry_mode} == "best" )
     ldflags:
     cflags:
     asmflags:
