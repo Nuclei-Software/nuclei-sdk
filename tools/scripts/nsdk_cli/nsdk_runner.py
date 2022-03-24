@@ -298,7 +298,7 @@ if __name__ == '__main__':
             need2run = False
             if args.runon in RUNNER_LIST:
                 need2run = True
-            generate_report_for_logs(args.logdir, True, need2run)
+            generate_report_for_logs(args.logdir, need2run, True)
         runtime = round(time.time() - start_time, 2)
         print("Cost about %s seconds to do this running!" % (runtime))
     # Exit with ret value
