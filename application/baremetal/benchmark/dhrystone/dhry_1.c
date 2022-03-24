@@ -303,7 +303,7 @@ int main(void)
 
     printf(" (*) User_Cycle for total run through Dhrystone with loops %d: \n", Number_Of_Runs);
     printf("%ld \n", User_Cycle);
-    printf("       So the DMIPS/MHz can be caculated by: \n");
+    printf("       So the DMIPS/MHz can be calculated by: \n");
     printf("       1000000/(User_Cycle/Number_Of_Runs)/1757 = %2.6f DMIPS/MHz\n", DMIPS_MHZ);
     printf("\n");
 

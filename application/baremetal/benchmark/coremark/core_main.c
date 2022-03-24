@@ -408,7 +408,7 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     ee_printf("     (Iterations is: %u\n", (unsigned int)results[0].iterations);
     ee_printf("     (total_ticks is: %u\n", (unsigned int)total_time);
     ee_printf(" (*) Assume the core running at 1 MHz\n");
-    ee_printf("     So the CoreMark/MHz can be caculated by: \n");
+    ee_printf("     So the CoreMark/MHz can be calculated by: \n");
     ee_printf("     (Iterations*1000000/total_ticks) = %2.6f CoreMark/MHz\n", coremark_dmips);
     ee_printf("\n");
 #endif
