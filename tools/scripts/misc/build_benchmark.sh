@@ -1,6 +1,7 @@
 #!/bin/env bash
 
 simulation=${simulation:-1}
+simu=${simu:-xlspike}
 silent=${silent:-1}
 parallel=${parallel:-"-j"}
 gen_elf_loc=${gen_elf_loc:-"gen"}
@@ -26,29 +27,38 @@ function env_setup {
     fi
 }
 
+function pushd {
+    command pushd "$@" > /dev/null
+}
+
+function popd {
+    command popd  "$@" > /dev/null
+}
+
 function do_bench {
-    bench=$1
-    core=$2
-    series=$3
-    stdclib=$4
-    bench_rstloc=$5
+    local bench=$1
+    local core=$2
+    local series=$3
+    local stdclib=$4
+    local bench_rstloc=$5
 
     if [[ "x$bench_rstloc" != "x" ]] ; then
         bench_rstloc=$(readlink -f $bench_rstloc)
     fi
     pushd $bench
 
-    export CORE=$core CPU_SERIES=$series STDCLIB=$stdclib SIMULATION=$simulation SILENT=$silent
-    echo "Build $bench for CORE=$core CPU_SERIES=$series STDCLIB=$stdclib SIMULATION=$simulation SILENT=$silent"
+    export CORE=$core CPU_SERIES=$series STDCLIB=$stdclib SIMULATION=$simulation SILENT=$silent SIMU=$simu
+    echo "Build $bench for CORE=$core CPU_SERIES=$series STDCLIB=$stdclib SIMULATION=$simulation SIMU=$simu SILENT=$silent"
     if [ "x$DRYRUN" == "x0" ] ; then
         make clean
-        make $parallel info dasm > $bench_rstloc/build.log
+        echo "record build log in $bench_rstloc/build.log"
+        make $parallel info showflags dasm > $bench_rstloc/build.log 2>&1
         if [ $? == 0 ] && [[ "x$bench_rstloc" != "x" ]] ; then
             cp -f $bench.verilog $bench_rstloc
             cp -f $bench.elf $bench_rstloc
         fi
     fi
-    unset CORE CPU_SERIES STDCLIB SIMULATION SILENT
+    unset CORE CPU_SERIES STDCLIB SIMULATION SILENT SIMU
     popd
 }
 
@@ -67,9 +77,21 @@ function do_all_benches {
                     echo "Do build for $bench: CORE=$core CPU_SERIES=$series STDCLIB=$stdclib"
                     bench_rstloc=$gen_elf_loc/$bench/${core}_${stdclib}
                     mkdir -p $bench_rstloc
-                    pushd application/baremetal/benchmark > /dev/null
-                    do_bench $bench $core $series $stdclib $bench_rstloc
-                    popd > /dev/null
+                    pushd application/baremetal/benchmark
+                    if [[ "$bench" == "dhrystone" ]] ; then
+                        for dhry_mode in ground inline best
+                        do
+                            export DHRY_MODE=$dhry_mode
+                            echo "Do build for dhrystone DHRY_MODE=$dhry_mode"
+                            dhry_bench_rstloc=${bench_rstloc}/${dhry_mode}
+                            mkdir -p $dhry_bench_rstloc
+                            do_bench $bench $core $series $stdclib $dhry_bench_rstloc
+                            unset DHRY_MODE
+                        done
+                    else
+                        do_bench $bench $core $series $stdclib $bench_rstloc
+                    fi
+                    popd
                 fi
             done
         done
@@ -77,7 +99,7 @@ function do_all_benches {
 }
 
 function collect_buildinfo {
-    benchbuild=$1
+    local benchbuild=$1
     date -u +"Build time: %Y-%m-%d, %H:%M:%S" > $benchbuild
     echo "Nuclei SDK Version: on $(git rev-parse --abbrev-ref HEAD) branch, $(git describe --always --abbrev=10 --dirty --tags 2>&1)" >> $benchbuild
     echo -n "GCC Version: " >> $benchbuild
