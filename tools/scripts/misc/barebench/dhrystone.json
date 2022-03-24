@@ -23,7 +23,7 @@
         "FAIL": ["MEPC"]
     },
     "appdirs": [
-        "application/baremetal/benchmark"
+        "application/baremetal/benchmark/dhrystone"
     ],
     "appdirs_ignore": [
         "application/baremetal/dsp_examples",
