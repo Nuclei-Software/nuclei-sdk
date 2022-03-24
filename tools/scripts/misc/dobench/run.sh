@@ -87,30 +87,73 @@ describe_build $LOGDIR/build.txt
 describe_sdk $LOGDIR/build.txt
 describe_repo $NSDK_ROOT $LOGDIR/build.txt
 
+function runbench {
+    local appcfg=$1
+    local hwcfg=$2
+    local logdir=$3
+    local mkopts=${@:4}
+
+    RUN_OPTS=""
+    if [ "x$RUNTARGET" != "x" ] ; then
+        RUN_OPTS="--run --run_target $RUNTARGET"
+    fi
+    local BENCH_CMD="python3 $NSDK_BENCH_PY --appcfg $appcfg --hwcfg $hwcfg --parallel=-j --logdir $logdir --make_options \"$SIMU_OPTS $mkopts\" $RUN_OPTS"
+    echo $BENCH_CMD
+    if [[ $DRYRUN == 0 ]] ; then
+        eval $BENCH_CMD
+    fi
+}
+
+echo "Run for all benchmark scripts"
 pushd $NSDK_ROOT
 for core in n200 n300 n600 n900 nx600 nx900
 do
     echo "Build for CORE: $core"
     appcfg=$SCRIPTDIR/app.json
     hwcfg=$SCRIPTDIR/bench_${core}.json
-    logdir=$LOGDIR/$core
-    RUN_OPTS=""
-    if [ "x$RUNTARGET" != "x" ] ; then
-        RUN_OPTS="--run --run_target $RUNTARGET"
-    fi
-    BENCH_CMD="python3 $NSDK_BENCH_PY --appcfg $appcfg --hwcfg $hwcfg --parallel=-j --logdir $logdir --make_options \"$SIMU_OPTS\" $RUN_OPTS"
-    echo $BENCH_CMD
-    if [[ $DRYRUN == 0 ]] ; then
-        eval $BENCH_CMD
-    fi
+    logdir=$LOGDIR/barebench/$core
+
+    runbench $appcfg $hwcfg $logdir
 done
-REPORT_CMD="python3 $NSDK_REPORT_PY --logdir $LOGDIR --split"
+
+REPORT_CMD="python3 $NSDK_REPORT_PY --logdir $LOGDIR/barebench --split"
 if [ "x$RUNTARGET" != "x" ] ; then
     REPORT_CMD="$REPORT_CMD --run"
 fi
 echo $REPORT_CMD
 if [[ $DRYRUN == 0 ]] ; then
-    eval $BENCH_CMD
+    eval $REPORT_CMD
+fi
+
+echo "Run for dhrystone different modes"
+for core in n200 n300 n600 n900 nx600 nx900
+do
+    for dhrymode in ground inline best
+    do
+        echo "Build for CORE: $core DHRY_MODE=$dhrymode"
+        appcfg=$SCRIPTDIR/dhry.json
+        hwcfg=$SCRIPTDIR/bench_${core}.json
+        logdir=$LOGDIR/dhrystone/$dhrymode/$core
+        mkopts="DHRY_MODE=$dhrymode"
+
+        runbench $appcfg $hwcfg $logdir $mkopts
+    done
+done
+
+REPORT_CMD="python3 $NSDK_REPORT_PY --logdir $LOGDIR/dhrystone --split"
+if [ "x$RUNTARGET" != "x" ] ; then
+    REPORT_CMD="$REPORT_CMD --run"
+fi
+echo $REPORT_CMD
+if [[ $DRYRUN == 0 ]] ; then
+    eval $REPORT_CMD
 fi
 
 popd
+
+benchzip=barebench_$NSDK_VER.zip
+echo "collect all generated elf and verilog files to $benchzip"
+zip -q -r $benchzip $LOGDIR
+echo "Copy to your local machine using command below"
+echo "scp $(whoami)@$(hostname):$(pwd)/$benchzip ."
+
