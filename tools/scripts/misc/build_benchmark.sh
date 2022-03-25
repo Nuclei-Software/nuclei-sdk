@@ -4,36 +4,16 @@ simulation=${simulation:-1}
 simu=${simu:-xlspike}
 silent=${silent:-1}
 parallel=${parallel:-"-j"}
-gen_elf_loc=${gen_elf_loc:-"gen"}
-DRYRUN=${DRYRUN:-0}
-TOOL_VER=${TOOL_VER:-2022.01}
 
-NSDK_ROOT=${NSDK_ROOT:-}
-
-DEVTOOL_ENV=${DEVTOOL_ENV:-/home/share/devtools/env.sh}
 
 SCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
-if [ "x$NSDK_ROOT" == "x"  ] ; then
-    NSDK_ROOT=$(readlink -f $SCRIPTDIR/../../..)
-fi
+SCRIPTDIR=$(readlink -f $SCRIPTDIR)
+COMMON_ENV=$(readlink -f $SCRIPTDIR/env.sh)
 
-function env_setup {
-    if [ -f $DEVTOOL_ENV  ] ; then
-        TOOL_VER=$TOOL_VER source $DEVTOOL_ENV
-    else
-        pushd $NSDK_ROOT
-        source setup.sh
-        popd
-    fi
-}
+source $COMMON_ENV
 
-function pushd {
-    command pushd "$@" > /dev/null
-}
-
-function popd {
-    command popd  "$@" > /dev/null
-}
+gen_logdir benchmark
+describe_env
 
 function do_bench {
     local bench=$1
@@ -63,6 +43,7 @@ function do_bench {
 }
 
 function do_all_benches {
+    local genloc=${1:-$gen_elf_loc}
     for core_series in n205-200 n305-300 n300fd-300 n600-600 n600fd-600 n900-900 n900fd-900 nx600-600 nx600fd-600 nx900-900 nx900fd-900
     do
         for stdclib in newlib_small libncrt_small
@@ -75,7 +56,7 @@ function do_all_benches {
                     echo "Ignore build for $bench: CORE=$core CPU_SERIES=$series STDCLIB=$stdclib"
                 else
                     echo "Do build for $bench: CORE=$core CPU_SERIES=$series STDCLIB=$stdclib"
-                    bench_rstloc=$gen_elf_loc/$bench/${core}_${stdclib}
+                    bench_rstloc=$genloc/$bench/${core}_${stdclib}
                     mkdir -p $bench_rstloc
                     pushd application/baremetal/benchmark
                     if [[ "$bench" == "dhrystone" ]] ; then
@@ -98,38 +79,45 @@ function do_all_benches {
     done
 }
 
+function dobench_for_runmode {
+    local genloc=${1:-$gen_elf_loc}
+    for runmode in "" lm icdlm dcilm cache bus clm
+    do
+        echo "Generate RUNMODE=$runmode"
+        export RUNMODE=$runmode
+        if [ "x$RUNMODE" == "x" ] ; then
+            runmode=default
+        fi
+        do_all_benches $genloc/$runmode
+        unset RUNMODE
+    done
+}
+
 function collect_buildinfo {
     local benchbuild=$1
-    date -u +"Build time: %Y-%m-%d, %H:%M:%S" > $benchbuild
+    date -u +"Build time: %Y-%m-%d, %H:%M:%S" >> $benchbuild
     echo "Nuclei SDK Version: on $(git rev-parse --abbrev-ref HEAD) branch, $(git describe --always --abbrev=10 --dirty --tags 2>&1)" >> $benchbuild
     echo -n "GCC Version: " >> $benchbuild
     riscv-nuclei-elf-gcc -v >> $benchbuild 2>&1
 }
 
+gen_elf_loc=${LOGDIR}
+
 gen_elf_loc=$(readlink -f $gen_elf_loc)
-benchzip=genbench_$(date -u +"%Y%m%d-%H%M%S").zip
 benchbuild=$gen_elf_loc/build.txt
 benchlog=$gen_elf_loc/build.log
 
-echo "Remove previous build ${gen_elf_loc}"
-rm -rf $gen_elf_loc
-mkdir $gen_elf_loc
-
-echo "Nuclei SDK location: $NSDK_ROOT"
-
 pushd $NSDK_ROOT
 
-env_setup
-
-echo "Do all benchmarks and generate bench to folder ${gen_elf_loc}"
-do_all_benches | tee ${benchlog}
+#echo "Do all benchmarks and generate bench to folder ${gen_elf_loc}"
+#do_all_benches | tee ${benchlog}
+echo "Do all benchmarks and generate bench for various RUNMODE to folder ${gen_elf_loc}"
+dobench_for_runmode | tee ${benchlog}
 
 echo "Collect bench build information"
 collect_buildinfo $benchbuild
 popd
 
-echo "collect all generated elf and verilog files to $benchzip"
-zip -q -r $benchzip $gen_elf_loc
-echo "Copy to your local machine using command below"
-echo "scp $(whoami)@$(hostname):$(pwd)/$benchzip ."
+echo "collect all generated elf and verilog files to $LOGZIP"
+zip_logdir
 
