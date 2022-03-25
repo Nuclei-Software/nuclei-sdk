@@ -30,16 +30,22 @@ function runbench {
     fi
 }
 
-pushd $NSDK_ROOT
-runbench barebench barebench ""
+function do_barebench {
+    pushd $NSDK_ROOT
+    echo "Run all baremetal benchmark for all cores"
+    runbench barebench barebench ""
 
-for dhrymode in ground inline best
-do
-    MKOPTS="DHRY_MODE=$dhrymode"
-    dhrylogdir=dhrystone/$dhrymode
-    runbench dhrystone $dhrylogdir "$MKOPTS"
-done
+    echo "Run dhrystone for different options for all cores"
+    for dhrymode in ground inline best
+    do
+        MKOPTS="DHRY_MODE=$dhrymode"
+        local dhrylogdir=dhrystone/$dhrymode
+        runbench dhrystone $dhrylogdir "$MKOPTS"
+    done
 
-popd
+    popd
+}
+
+do_barebench | tee $LOGDIR/build.log
 
 zip_logdir
