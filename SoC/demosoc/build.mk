@@ -50,6 +50,8 @@ ifeq ($(wildcard $(LINKER_SCRIPT)),)
 $(error The link script file $(LINKER_SCRIPT) for $(SOC) doesn't exist, please check!)
 endif
 
+-include $(NUCLEI_SDK_SOC)/runmode.mk
+
 # Add extra cflags for SoC related
 ifeq ($(DOWNLOAD), flash)
 COMMON_FLAGS += -DVECTOR_TABLE_REMAPPED

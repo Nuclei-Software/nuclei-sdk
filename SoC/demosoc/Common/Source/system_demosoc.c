@@ -364,6 +364,17 @@ int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_
 void _premain_init(void)
 {
     /* TODO: Add your own initialization code here, called before main */
+    // This code located in RUNMODE_CONTROL ifdef endif block just for internal usage
+    // No need to use in your code
+#ifdef RUNMODE_CONTROL
+#if defined(RUNMODE_ILM_EN) && RUNMODE_ILM_EN == 0
+    __RV_CSR_CLEAR(CSR_MILM_CTL, MILM_CTL_ILM_EN);
+#endif
+#if defined(RUNMODE_DLM_EN) && RUNMODE_DLM_EN == 0
+    __RV_CSR_CLEAR(CSR_MDLM_CTL, MDLM_CTL_DLM_EN);
+#endif
+#endif
+
     /* __ICACHE_PRESENT and __DCACHE_PRESENT are defined in demosoc.h */
 #if defined(__ICACHE_PRESENT) && __ICACHE_PRESENT == 1
     EnableICache();
@@ -371,6 +382,11 @@ void _premain_init(void)
 #if defined(__DCACHE_PRESENT) && __DCACHE_PRESENT == 1
     EnableDCache();
 #endif
+
+    /* Do fence and fence.i to make sure previous ilm/dlm/icache/dcache control done */
+    __RWMB();
+    __FENCE_I();
+
     SystemCoreClock = get_cpu_freq();
     gpio_iof_config(GPIO, IOF0_UART0_MASK, IOF_SEL_0);
     uart_init(SOC_DEBUG_UART, 115200);
@@ -380,6 +396,15 @@ void _premain_init(void)
     Exception_Init();
     /* ECLIC initialization, mainly MTH and NLBIT */
     ECLIC_Init();
+
+#ifdef RUNMODE_CONTROL
+    printf("Current RUNMODE=%s, ilm:%d, dlm %d, icache %d, dcache %d, ccm %d\n", \
+            RUNMODE_STRING, RUNMODE_ILM_EN, RUNMODE_DLM_EN, \
+            RUNMODE_IC_EN, RUNMODE_DC_EN, RUNMODE_CCM_EN);
+    printf("CSR: MILM_CTL 0x%x, MDLM_CTL 0x%x, MCACHE_CTL 0x%x\n", \
+            __RV_CSR_READ(CSR_MILM_CTL), __RV_CSR_READ(CSR_MDLM_CTL), \
+            __RV_CSR_READ(CSR_MCACHE_CTL));
+#endif
 }
 
 /**
