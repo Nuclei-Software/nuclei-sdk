@@ -41,4 +41,7 @@ __pycache__
 *.pyc
 logs*
 
-gen
+gen/
+tmp*/
+Scratch*
+scratch*
