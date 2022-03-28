@@ -33,6 +33,8 @@ def yaml_validate(sf, yf):
         return False
 
 def check_usb_serial(serno):
+    return True
+    # TODO: pyusb will make usb in virtualbox lost, disable it for now
     busses = usb.busses()
     for bus in busses:
         devices = bus.devices
