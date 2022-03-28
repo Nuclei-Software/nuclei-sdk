@@ -1,6 +1,7 @@
 #!/bin/env bash
 MAKE_OPTS=${MAKE_OPTS:-""}
-RUNON=${RUNON-ncycm}
+RUNON=${RUNON-fpga}
+CONFIG=${CONFIG-}
 
 SCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
 SCRIPTDIR=$(readlink -f $SCRIPTDIR)
@@ -19,6 +20,9 @@ function runbench {
     local mkoptions=${@:3}
 
     local RUNNER_CMD="python3 $NSDK_RUNNER_PY --appyaml $CONFLOC/$yfn.yaml --logdir $LOGDIR/$logdir --runon $RUNON --cfgloc $CONFLOC --fpgaloc $FPGALOC"
+    if [ "x$CONFIG" != "x" ] ; then
+        RUNNER_CMD="${RUNNER_CMD} --config \"$CONFIG\""
+    fi
 
     if [ "x$mkoptions" != "x" ] ; then
         RUNNER_CMD="${RUNNER_CMD} --make_options \"$mkoptions\""

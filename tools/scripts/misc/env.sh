@@ -88,7 +88,7 @@ LOGZIP=${LOGZIPNAME}.zip
 function gen_logdir {
     local logdirname=${1:-}
     LOGDIR=$LOGDIR/$logdirname
-    LOGZIPNAME=${logdirname}_$LOGZIPNAME
+    LOGZIPNAME=${logdirname}_${LOGZIPNAME}_$(date -u +"%Y%m%dT%H%M%S")
     LOGZIP=${LOGZIPNAME}.zip
     if [ -d $LOGDIR ] ; then
         echo "WARNING: Removed existing $LOGDIR"

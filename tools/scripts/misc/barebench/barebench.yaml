@@ -1,5 +1,5 @@
 runcfg:
-    runner: ncycm
+    runner: fpga
 
 environment:
     fpgaloc: /home/share/devtools/fpgabit/latest
@@ -17,24 +17,15 @@ fpga_runners:
         ftdi_serial: FT4JUVF6
         # serial_port number, such as /dev/ttyUSB1
         serial_port: /dev/ttyUSB1
-    vcu118_1:
-        # ddr200t/mcu200t/ku060/vcu118
-        board_type: vcu118
-        # serial number, such as Digilent/210308AC59C6
-        fpga_serial: Digilent/210251A08870
-        # ftdi_serial number, such as FT4JUVF6
-        ftdi_serial: FT4JUVF6
-        # serial_port number, such as /dev/ttyUSB1
-        serial_port: /dev/ttyUSB1
     ku060_1:
         # ddr200t/mcu200t/ku060/vcu118
         board_type: ku060
         # serial number, such as Digilent/210308AC59C6
-        fpga_serial: Digilent/210251A08870
+        fpga_serial: Xilinx/13724327082c01
         # ftdi_serial number, such as FT4JUVF6
-        ftdi_serial: FT4JUVF6
+        ftdi_serial: FT6JGAXS
         # serial_port number, such as /dev/ttyUSB1
-        serial_port: /dev/ttyUSB1
+        serial_port: /dev/ttyUSB4
 
 ncycm_runners:
     n200b:
@@ -64,11 +55,34 @@ configs:
         appcfg: barebench.json
         hwcfg: n300.json
     # cpu core name
+    n600:
+        fpga: ku060
+        bitstream: n600_best_config_ku060_16M.bit
+        ncycm: n600fdbp
+        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        appcfg: barebench.json
+        hwcfg: n600.json
+    # cpu core name
+    ux600:
+        fpga: ku060
+        bitstream: ux600_best_config_ku060_16M.bit
+        ncycm: ux600fdbp
+        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        appcfg: barebench.json
+        hwcfg: ux600.json
+    # cpu core name
     n900:
-        fpga: ddr200t
-        bitstream: n900_best_config_vcu118_16M.bit
+        fpga: ku060
+        bitstream: n900_best_config_ku060_16M.bit
         ncycm: n900fdbp
         openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
         appcfg: barebench.json
         hwcfg: n900.json
-
+    # cpu core name
+    ux900:
+        fpga: ku060
+        bitstream: ux900_best_config_ku060_16M.bit
+        ncycm: ux900fdbp
+        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        appcfg: barebench.json
+        hwcfg: ux900.json
