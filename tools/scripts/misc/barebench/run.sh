@@ -2,6 +2,7 @@
 MAKE_OPTS=${MAKE_OPTS:-""}
 RUNON=${RUNON-fpga}
 CONFIG=${CONFIG-}
+RUNMODE=${RUNMODE-bare}
 
 SCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
 SCRIPTDIR=$(readlink -f $SCRIPTDIR)
@@ -36,16 +37,21 @@ function runbench {
 
 function do_barebench {
     pushd $NSDK_ROOT
-    echo "Run all baremetal benchmark for all cores"
-    runbench barebench barebench ""
 
-    echo "Run dhrystone for different options for all cores"
-    for dhrymode in ground inline best
-    do
-        MKOPTS="DHRY_MODE=$dhrymode"
-        local dhrylogdir=dhrystone/$dhrymode
-        runbench dhrystone $dhrylogdir "$MKOPTS"
-    done
+    if [ "x${RUNMODE}" == "xall" ] || [ "x${RUNMODE}" == "xbare" ] ; then
+        echo "Run all baremetal benchmark for all cores"
+        runbench barebench barebench ""
+    fi
+
+    if [ "x${RUNMODE}" == "xall" ] || [ "x${RUNMODE}" == "xdhry" ] ; then
+        echo "Run dhrystone for different options for all cores"
+        for dhrymode in ground inline best
+        do
+            MKOPTS="DHRY_MODE=$dhrymode"
+            local dhrylogdir=dhrystone/$dhrymode
+            runbench dhrystone $dhrylogdir "$MKOPTS"
+        done
+    fi
 
     popd
 }
