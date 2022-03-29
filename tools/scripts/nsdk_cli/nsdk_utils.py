@@ -790,6 +790,7 @@ def program_fpga(bit, target):
     print("Try to program fpga bitstream %s to target board %s" % (bit, target))
     found_vivado = False
     vivado_cmd = "vivado"
+    sys.stdout.flush()
     for vivado_cmd in ("vivado", "vivado_lab"):
         if sys.platform == 'win32':
             if os.system("where %s" % (vivado_cmd)) == 0:
@@ -799,13 +800,15 @@ def program_fpga(bit, target):
             if os.system("which %s" % (vivado_cmd)) == 0:
                 found_vivado = True
                 break
-    # check vivado is found or not            
+    # check vivado is found or not
     if found_vivado == False:
         print("vivado is not found in PATH, please check!")
         return False
     tcl = os.path.join(os.path.dirname(os.path.realpath(__file__)), "program_bit.tcl")
     target = "*%s" % (target)
+    sys.stdout.flush()
     ret = os.system("%s -mode batch -nolog -nojournal -source %s -tclargs %s %s" % (vivado_cmd, tcl, bit, target))
+    sys.stdout.flush()
     if ret != 0:
         print("Program fpga bit failed, error code %d" % ret)
         return False
