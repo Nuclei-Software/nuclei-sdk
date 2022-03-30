@@ -3,27 +3,33 @@
 Changelog
 =========
 
+V0.3.7
+------
 
-V0.3.7-dev
-----------
-
-This is version ``0.3.7-dev`` of Nuclei SDK, which is in development.
+This is release version ``0.3.7`` of Nuclei SDK.
 
 * Application
 
   - **CAUTION**: Fix benchmark value not correct printed when print without float c library,
     which means the CSV printed value in previous release is not correct, please take care
+  - Add **DHRY_MODE** variable to support different dhrystone run options in dhrystone benchmark, ``ground``, ``inline`` and ``best`` are supported
 
 * NMSIS
 
+  - Bump to v1.0.4
+  - Add B-extension support for NMSIS
+  - Fix various issues reported in github
 
 * Build
-
+  - add ``showflags`` target to show compiling information and flags
+  - add ``showtoolver`` target to show tool version used
 
 * SoC
 
   - Change all un-registered interrupt default handler to ``default_intexc_handler``, which means user need to register
     the interrupt handler using ``ECLIC_SetVector`` before enable it.
+  - Add **RUNMODE** support only in ``demosoc``, internal usage
+  - Add jlink debug configuration for gd32vf103 soc
 
 * Tools
 
