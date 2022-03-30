@@ -40,3 +40,8 @@ __WEAK void __libc_init_array(void)
     __SEGGER_RTL_init_heap((void *)__heap_start, heapsz);
 }
 
+// weak symbol for back compatiable with previous toolchain
+__WEAK void __SEGGER_RTL_init_heap(void *ptr, size_t size)
+{
+
+}
