@@ -19,6 +19,7 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
 
 * SoC
 
+  - Add libncrt 2.0.0 support for demosoc and gd32vf103, libncrt stub functions need to be adapted, see 2e09b6b0 and 2e09b6b0
 
 * Tools
 
