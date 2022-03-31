@@ -3,6 +3,31 @@
 Changelog
 =========
 
+V0.3.8-dev
+----------
+
+This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
+
+* Application
+
+
+* NMSIS
+
+
+* Build
+
+
+* SoC
+
+
+* Tools
+
+  - Record more flags in ``nsdk_report.py`` such as ``NUCLEI_SDK_ROOT``, ``OPENOCD_CFG`` and ``LINKER_SCRIPT``.
+
+
+For detailed changes, please check commit histories since 0.3.7 release.
+
+
 V0.3.7
 ------
 
