@@ -179,13 +179,30 @@ sdk_run_libncrt_job_nuclei_fpga_eval:
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "STDCLIB=$STDCLIB"
 
-#sdk_run_on_ncycm:
-#  <<: *build_job_template_default
-#  timeout: 4h
-#  variables:
-#    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-#    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ncycm_bench.json
-#    RUNTARGET: ncycm
-#  script:
-#    - export LOGDIR=logs/$(basename ${HWCFG%.json})
-#    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --verbose
+sdk_run_on_ncycm:
+  <<: *build_job_template_default
+  timeout: 4h
+  tags:
+    - env::docker
+    - net::outside
+    - hardware::high-freq
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    RUNTARGET: ncycm
+  parallel:
+    matrix:
+      - CORE: 
+        - n300
+        - n900
+  script:
+    - export LOGROOT=logs/ncycm
+    - echo "Run for CORE=$CORE, evaluate dhrystone and coremark"
+    - export LOGDIR=$LOGROOT/$CORE/cmkdhry
+    - export HWCFG=tools/scripts/nsdk_cli/configs/ncycm/cmkdhry_$CORE.json
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --verbose
+    - echo "Run for CORE=$CORE, evaluate whetstone"
+    - export LOGDIR=$LOGROOT/$CORE/whet
+    - export HWCFG=tools/scripts/nsdk_cli/configs/ncycm/whet_$CORE.json
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --verbose
+    - echo "Show final results"
+    - find $LOGROOT -name "result.csv" | xargs cat
