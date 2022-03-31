@@ -163,8 +163,11 @@ class nsdk_builder(object):
         with open(flagslog, "r") as inf:
             for line in inf.readlines():
                 line = line.strip()
-                if re.match(r".*FLAGS", line) or re.match(r"TARGET", line):
-                    key, value = line.split(":")
+                if ":" in line:
+                    splits = line.split(":")
+                    if len(splits) != 2:
+                        continue
+                    key, value = splits
                     key = key.strip()
                     value = value.strip()
                     build_flags[key] = value
