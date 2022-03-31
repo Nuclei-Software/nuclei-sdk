@@ -1,0 +1,40 @@
+{
+    "run_config": {
+        "target" : "ncycm",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 60
+        },
+        "xlspike" : {
+            "timeout": 120
+        },
+        "qemu" : {
+            "timeout": 60
+        },
+        "ncycm": {
+            "ncycm": "n900_best_config_cymodel_latest",
+            "timeout": 10000
+        }
+    },
+    "parallel": "-j",
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "SIMU": "xlspike",
+        "SIMULATION": "1",
+        "ARCH_EXT": "",
+        "DOWNLOAD": "ilm",
+        "CORE": "n900fd",
+        "CPU_SERIES": "900"
+    },
+    "appdirs": [
+        "application/baremetal/benchmark/whetstone"
+    ],
+    "build_configs": {
+        "n900-newlib_small": {"STDCLIB": "newlib_small"},
+        "n900-libncrt_small": {"STDCLIB": "libncrt_small"},
+        "n900-libncrt_balanced": {"STDCLIB": "libncrt_balanced"},
+        "n900-libncrt_fast": {"STDCLIB": "libncrt_fast"}
+    }
+}

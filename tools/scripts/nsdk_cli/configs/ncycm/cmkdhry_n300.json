@@ -1,0 +1,53 @@
+{
+    "run_config": {
+        "target" : "ncycm",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 60
+        },
+        "xlspike" : {
+            "timeout": 120
+        },
+        "qemu" : {
+            "timeout": 60
+        },
+        "ncycm": {
+            "ncycm": "n300_best_config_cymodel_latest",
+            "timeout": 6000
+        }
+    },
+    "parallel": "-j",
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "SIMU": "xlspike",
+        "SIMULATION": "1",
+        "ARCH_EXT": "",
+        "DOWNLOAD": "ilm",
+        "CORE": "n300",
+        "CPU_SERIES": "300"
+    },
+    "appdirs": [
+        "application/baremetal/benchmark/coremark",
+        "application/baremetal/benchmark/dhrystone"
+    ],
+    "build_configs": {
+        "n300-newlib_small": {"STDCLIB": "newlib_small"},
+        "n300b-newlib_small": {"STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n300p-newlib_small": {"STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "n300bp-newlib_small": {"STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "n300-libncrt_small": {"STDCLIB": "libncrt_small"},
+        "n300-libncrt_balanced": {"STDCLIB": "libncrt_balanced"},
+        "n300-libncrt_fast": {"STDCLIB": "libncrt_fast"},
+        "n300b-libncrt_small": {"STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
+        "n300b-libncrt_balanced": {"STDCLIB": "libncrt_balanced", "ARCH_EXT": "b"},
+        "n300b-libncrt_fast": {"STDCLIB": "libncrt_fast", "ARCH_EXT": "b"},
+        "n300p-libncrt_small": {"STDCLIB": "libncrt_small", "ARCH_EXT": "p"},
+        "n300p-libncrt_balanced": {"STDCLIB": "libncrt_balanced", "ARCH_EXT": "p"},
+        "n300p-libncrt_fast": {"STDCLIB": "libncrt_fast", "ARCH_EXT": "p"},
+        "n300bp-libncrt_small": {"STDCLIB": "libncrt_small", "ARCH_EXT": "bp"},
+        "n300bp-libncrt_balanced": {"STDCLIB": "libncrt_balanced", "ARCH_EXT": "bp"},
+        "n300bp-libncrt_fast": {"STDCLIB": "libncrt_fast", "ARCH_EXT": "bp"}
+    }
+}
