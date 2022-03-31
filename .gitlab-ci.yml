@@ -2,7 +2,7 @@ variables:
   DOC_SERVER: doc
   DOC_CENTER: /home/xl_ci/doc_center
   IMAGE: rego.corp.nucleisys.com/software/sdkbuild
-  IMAGE_TAG: latest
+  IMAGE_TAG: 2022.05-eng2
 
 default:
   tags:
