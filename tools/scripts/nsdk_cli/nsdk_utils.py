@@ -28,7 +28,9 @@ except:
 
 SDK_GLOBAL_VARIABLES = {
     "sdk_checktag": "Nuclei SDK Build Time:",
-    "sdk_check": True
+    "sdk_check": True,
+    "sdk_banner_tmout": 15,
+    "sdk_copy_objects": "elf,map,dasm,verilog"
     }
 
 class NThread(Thread):
@@ -377,7 +379,7 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     cmd_elapsed_ticks = time.time() - startticks
     return check_status, cmd_elapsed_ticks
 
-def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False, banner_timeout=3):
+def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False, banner_timeout=10):
     loop = asyncio.get_event_loop()
     try:
         ret, cmd_elapsed_ticks = loop.run_until_complete( \
@@ -594,10 +596,31 @@ def get_global_variables():
     return SDK_GLOBAL_VARIABLES
 
 def get_sdk_checktag():
-    return SDK_GLOBAL_VARIABLES.get("sdk_checktag")
+    checktag = os.environ.get("SDK_CHECKTAG")
+    if checktag is None:
+        checktag = SDK_GLOBAL_VARIABLES.get("sdk_checktag")
+    return checktag
+
+def get_sdk_copyobjects():
+    cpobjs = os.environ.get("SDK_COPY_OBJECTS")
+    if cpobjs is None:
+        cpobjs = SDK_GLOBAL_VARIABLES.get("sdk_copy_objects")
+    return cpobjs
 
 def get_sdk_check():
-    return SDK_GLOBAL_VARIABLES.get("sdk_check")
+    check = os.environ.get("SDK_CHECK")
+    if check is None:
+        check = SDK_GLOBAL_VARIABLES.get("sdk_check")
+    return check
+
+def get_sdk_banner_tmout():
+    tmout = os.environ.get("SDK_BANNER_TMOUT")
+    if tmout is not None:
+        tmout = int(tmout)
+    else:
+        tmout = SDK_GLOBAL_VARIABLES.get("sdk_banner_tmout")
+
+    return tmout
 
 def find_local_appconfig(appdir, localcfgs):
     if isinstance(appdir, str) and isinstance(localcfgs, dict):

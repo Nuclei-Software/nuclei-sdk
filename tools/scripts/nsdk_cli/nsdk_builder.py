@@ -47,7 +47,7 @@ class nsdk_builder(object):
             objects = appsts["objects"]
             if "saved_objects" not in appsts:
                 appsts["saved_objects"] = dict()
-            cp_keys = os.environ.get("SDK_COPY_OBJECTS")
+            cp_keys = get_sdk_copyobjects()
             if cp_keys != None:
                 cp_keys = cp_keys.strip().split(",")
             for obj in objects:
@@ -442,6 +442,7 @@ class nsdk_runner(nsdk_builder):
         ser_thread = None
         uploader = None
         sdk_check = get_sdk_check()
+        banner_tmout = get_sdk_banner_tmout()
         try:
             if serport: # only monitor serial port when port found
                 ser_thread = MonitorThread(serport, baudrate, timeout, app_runchecks, checktime, \
@@ -456,7 +457,7 @@ class nsdk_runner(nsdk_builder):
                 if cmdsts == False:
                     ser_thread.exit_request()
                 else:
-                    ser_thread.set_check_sdk_timeout(5)
+                    ser_thread.set_check_sdk_timeout(banner_tmout)
                 while ser_thread.is_alive():
                     ser_thread.join(1)
                 status = ser_thread.get_result()
