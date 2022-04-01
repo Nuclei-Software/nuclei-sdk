@@ -51,6 +51,10 @@ function do_barebench {
             local dhrylogdir=dhrystone/$dhrymode
             runbench dhrystone $dhrylogdir "$MKOPTS"
         done
+        RUNCMD="python3 $NSDK_REPORT_PY --logdir $LOGDIR/dhrystone --split --run"
+        if [[ $DRYRUN == 0 ]] ; then
+            eval $RUNCMD
+        fi
     fi
 
     popd
