@@ -1,0 +1,49 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "copy_objects": true,
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "ARCH_EXT": "",
+        "DOWNLOAD": "ilm"
+    },
+    "build_configs": {
+        "n900-newlib-small": {"CORE": "n900", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "n900-libncrt-small": {"CORE": "n900", "STDCLIB": "libncrt_small", "ARCH_EXT": ""},
+        "n900b-newlib-small": {"CORE": "n900", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n900b-libncrt-small": {"CORE": "n900", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
+        "n900p-newlib-small": {"CORE": "n900", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "n900p-libncrt-small": {"CORE": "n900", "STDCLIB": "libncrt_small", "ARCH_EXT": "p"},
+        "n900bp-newlib-small": {"CORE": "n900", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "n900bp-libncrt-small": {"CORE": "n900", "STDCLIB": "libncrt_small", "ARCH_EXT": "bp"},
+        "n900f-newlib-small": {"CORE": "n900f", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "n900f-libncrt-small": {"CORE": "n900f", "STDCLIB": "libncrt_small", "ARCH_EXT": ""},
+        "n900fb-newlib-small": {"CORE": "n900f", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n900fb-libncrt-small": {"CORE": "n900f", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
+        "n900fp-newlib-small": {"CORE": "n900f", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "n900fp-libncrt-small": {"CORE": "n900f", "STDCLIB": "libncrt_small", "ARCH_EXT": "p"},
+        "n900fbp-newlib-small": {"CORE": "n900f", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "n900fbp-libncrt-small": {"CORE": "n900f", "STDCLIB": "libncrt_small", "ARCH_EXT": "bp"},
+        "n900fd-newlib-small": {"CORE": "n900fd", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "n900fd-libncrt-small": {"CORE": "n900fd", "STDCLIB": "libncrt_small", "ARCH_EXT": ""},
+        "n900fdb-newlib-small": {"CORE": "n900fd", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n900fdb-libncrt-small": {"CORE": "n900fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
+        "n900fdp-newlib-small": {"CORE": "n900fd", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "n900fdp-libncrt-small": {"CORE": "n900fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "p"},
+        "n900fdbp-newlib-small": {"CORE": "n900fd", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "n900fdbp-libncrt-small": {"CORE": "n900fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "bp"}
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "application/rtthread/msh" : {"build": true, "run": false},
+        "test/core": {"build": false, "run": false}
+    }
+}

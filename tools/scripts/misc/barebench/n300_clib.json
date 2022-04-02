@@ -1,0 +1,49 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "copy_objects": true,
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "ARCH_EXT": "",
+        "DOWNLOAD": "ilm"
+    },
+    "build_configs": {
+        "n305-newlib-small": {"CORE": "n305", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "n305-libncrt-small": {"CORE": "n305", "STDCLIB": "libncrt_small", "ARCH_EXT": ""},
+        "n305b-newlib-small": {"CORE": "n305", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n305b-libncrt-small": {"CORE": "n305", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
+        "n305p-newlib-small": {"CORE": "n305", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "n305p-libncrt-small": {"CORE": "n305", "STDCLIB": "libncrt_small", "ARCH_EXT": "p"},
+        "n305bp-newlib-small": {"CORE": "n305", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "n305bp-libncrt-small": {"CORE": "n305", "STDCLIB": "libncrt_small", "ARCH_EXT": "bp"},
+        "n307-newlib-small": {"CORE": "n307", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "n307-libncrt-small": {"CORE": "n307", "STDCLIB": "libncrt_small", "ARCH_EXT": ""},
+        "n307b-newlib-small": {"CORE": "n307", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n307b-libncrt-small": {"CORE": "n307", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
+        "n307p-newlib-small": {"CORE": "n307", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "n307p-libncrt-small": {"CORE": "n307", "STDCLIB": "libncrt_small", "ARCH_EXT": "p"},
+        "n307bp-newlib-small": {"CORE": "n307", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "n307bp-libncrt-small": {"CORE": "n307", "STDCLIB": "libncrt_small", "ARCH_EXT": "bp"},
+        "n307fd-newlib-small": {"CORE": "n307fd", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "n307fd-libncrt-small": {"CORE": "n307fd", "STDCLIB": "libncrt_small", "ARCH_EXT": ""},
+        "n307fdb-newlib-small": {"CORE": "n307fd", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n307fdb-libncrt-small": {"CORE": "n307fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
+        "n307fdp-newlib-small": {"CORE": "n307fd", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "n307fdp-libncrt-small": {"CORE": "n307fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "p"},
+        "n307fdbp-newlib-small": {"CORE": "n307fd", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "n307fdbp-libncrt-small": {"CORE": "n307fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "bp"}
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "application/rtthread/msh" : {"build": true, "run": false},
+        "test/core": {"build": false, "run": false}
+    }
+}

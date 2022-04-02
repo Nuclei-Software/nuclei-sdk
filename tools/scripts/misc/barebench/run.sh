@@ -31,7 +31,11 @@ function runbench {
 
     echo $RUNNER_CMD
     if [[ $DRYRUN == 0 ]] ; then
+        export OLDRUNMODE=$RUNMODE
+        unset RUNMODE
         eval $RUNNER_CMD
+        export RUNMODE=$OLDRUNMODE
+        unset OLDRUNMODE
     fi
 }
 
@@ -41,6 +45,11 @@ function do_barebench {
     if [ "x${RUNMODE}" == "xall" ] || [ "x${RUNMODE}" == "xbare" ] ; then
         echo "Run all baremetal benchmark for all cores"
         runbench barebench barebench ""
+    fi
+
+    if [ "x${RUNMODE}" == "xall" ] || [ "x${RUNMODE}" == "xclib" ] ; then
+        echo "Run all baremetal benchmark for all cores"
+        runbench clibbench clibbench ""
     fi
 
     if [ "x${RUNMODE}" == "xall" ] || [ "x${RUNMODE}" == "xdhry" ] ; then
