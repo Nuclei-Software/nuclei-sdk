@@ -10,8 +10,6 @@ DOBENCH_CONFLOC=$SCRIPTDIR
 
 source $COMMON_ENV
 
-gen_logdir dobench
-describe_env
 
 function genreport {
     local logdir=${1:-$LOGDIR}
@@ -99,11 +97,11 @@ function run_for_allmodes {
 }
 
 function run_for_one {
-    echo "Generate only for default run mode"
-    unset RUNMODE
+    echo "Generate only for run mode=$RUNMODE"
+    export RUNMODE=$RUNMODE
     local logdir=${1:-$LOGDIR}
-    runbench_for_allcores $logdir/default
-    rundhry_for_allcores $logdir/default
+    runbench_for_allcores $logdir/$RUNMODE
+    rundhry_for_allcores $logdir/$RUNMODE
 
 }
 
@@ -118,12 +116,23 @@ function prebench {
 function postbench {
     echo "Do post-bench steps"
     if [ "x$DATALOC" == "xilm" ] ; then
+        local stashmsg=$(git stash)
         git reset --hard HEAD~1
+        if [[ "x$stashmsg" == *"xSaved"* ]] ; then
+            git stash pop
+        fi
     fi
 }
 
 prebench
-run_for_allmodes | tee $LOGDIR/build.log
+
+gen_logdir dobench
+describe_env
+if [ "x$RUNMODE" == "xall" ] ; then
+    run_for_allmodes | tee $LOGDIR/build.log
+else
+    run_for_one | tee $LOGDIR/build.log
+fi
 postbench
 
 zip_logdir
