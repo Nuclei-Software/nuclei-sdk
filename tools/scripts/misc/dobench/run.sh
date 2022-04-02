@@ -111,7 +111,6 @@ function prebench {
     echo "Do pre-bench steps"
     if [ "x$DATALOC" == "xilm" ] ; then
         local patch=$DOBENCH_CONFLOC/data_in_ilm.patch
-        git stash
         git am $patch
     fi
 }
@@ -120,7 +119,6 @@ function postbench {
     echo "Do post-bench steps"
     if [ "x$DATALOC" == "xilm" ] ; then
         git reset --hard HEAD~1
-        git stash pop
     fi
 }
 
