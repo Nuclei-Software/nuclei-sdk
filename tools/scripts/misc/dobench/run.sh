@@ -1,6 +1,7 @@
 #!/bin/env bash
 SIMU_OPTS=${SIMU_OPTS:-"SIMULATION=1 SIMU=xlspike"}
 RUNTARGET=${RUNTARGET-xlspike}
+DATALOC=${DATALOC:-dlm}
 
 SCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
 SCRIPTDIR=$(readlink -f $SCRIPTDIR)
@@ -106,6 +107,25 @@ function run_for_one {
 
 }
 
+function prebench {
+    echo "Do pre-bench steps"
+    if [ "x$DATALOC" == "xilm" ] ; then
+        local patch=$DOBENCH_CONFLOC/data_in_ilm.patch
+        git stash
+        git am $patch
+    fi
+}
+
+function postbench {
+    echo "Do post-bench steps"
+    if [ "x$DATALOC" == "xilm" ] ; then
+        git reset --hard HEAD~1
+        git stash pop
+    fi
+}
+
+prebench
 run_for_allmodes | tee $LOGDIR/build.log
+postbench
 
 zip_logdir

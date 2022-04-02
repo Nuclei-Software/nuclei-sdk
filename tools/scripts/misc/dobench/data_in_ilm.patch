@@ -1,0 +1,58 @@
+From 466390943d5cd73d39914cb446ebf88e795d9399 Mon Sep 17 00:00:00 2001
+From: Huaqi Fang <578567190@qq.com>
+Date: Wed, 23 Mar 2022 14:28:11 +0800
+Subject: [PATCH] SoC: make rodata/data stored in ilm first
+
+Signed-off-by: Huaqi Fang <578567190@qq.com>
+---
+ .../nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld     | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld b/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
+index ef34edcb..70c3dfae 100644
+--- a/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
++++ b/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
+@@ -135,13 +135,13 @@ SECTIONS
+   {
+     . = ALIGN(4);
+     PROVIDE( _data_lma = . );
+-  } >ram AT>ram
++  } >ilm AT>ilm
+ 
+   .dalign         :
+   {
+     . = ALIGN(4);
+     PROVIDE( _data = . );
+-  } >ram AT>ram
++  } >ram AT>ilm
+ 
+   .rodata : ALIGN(4)
+   {
+@@ -163,7 +163,7 @@ SECTIONS
+     KEEP(*(VSymTab))
+     __vsymtab_end = .;
+     *(.gnu.linkonce.r.*)
+-  } >ram AT>ram
++  } >ram AT>ilm
+ 
+   .data          : ALIGN_WITH_INPUT
+   {
+@@ -180,13 +180,13 @@ SECTIONS
+     *(.srodata.cst4)
+     *(.srodata.cst2)
+     *(.srodata .srodata.*)
+-  } >ram AT>ram
++  } >ram AT>ilm
+ 
+   .tdata           : ALIGN(8)
+   {
+     PROVIDE( __tls_base = . );
+     *(.tdata .tdata.* .gnu.linkonce.td.*)
+-  } >ram AT>ram
++  } >ram AT>ilm
+ 
+   PROVIDE( _edata = . );
+   PROVIDE( edata = . );
+-- 
+2.25.1
+
