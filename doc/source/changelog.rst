@@ -24,6 +24,8 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
 * Tools
 
   - Record more flags in ``nsdk_report.py`` such as ``NUCLEI_SDK_ROOT``, ``OPENOCD_CFG`` and ``LINKER_SCRIPT``.
+  - Fix nsdk_report.py generated runresult.xls file content is not correct when some application failed
+  - Add benchmark c standard script in tools/misc/barebench
 
 
 For detailed changes, please check commit histories since 0.3.7 release.
