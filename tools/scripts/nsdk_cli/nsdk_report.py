@@ -507,8 +507,11 @@ def save_report_files(logdir, config, result, run=False):
 def save_runresult(runresult, excelfile):
     if not(isinstance(runresult, dict)):
         return False
-    csvdict = dict()
-    csvtable = dict()
+
+    # Get csv header for each header and column 1 & column 2
+    csv_headers = dict()
+    csv_col1 = dict()
+    csv_col2 = dict()
     for cfg in runresult:
         splitcfgs = cfg.split('/')
         pretype = ""
@@ -522,23 +525,57 @@ def save_runresult(runresult, excelfile):
                     final_apptype = pretype + "_" + apptype
                 else:
                     final_apptype = apptype
-                if final_apptype not in csvdict:
-                    csvdict[final_apptype]= {"RUNCONFIG": ["SUBTYPE"]}
-                    csvtable[final_apptype] = [["RUNCONFIG", "SUBTYPE"]]
-                if runcfg not in csvdict[final_apptype]['RUNCONFIG']:
-                    csvdict[final_apptype]['RUNCONFIG'].append(runcfg)
-                    csvtable[final_apptype][0].append(runcfg)
-                for key in runresult[cfg][apptype][subtype]["value"]:
-                    if key not in csvdict[final_apptype]:
-                        csvdict[final_apptype][key] = [subtype]
-                    csvdict[final_apptype][key].append(runresult[cfg][apptype][subtype]["value"][key])
+                if final_apptype not in csv_headers:
+                    csv_headers[final_apptype] = ["RUNCONFIG", "SUBTYPE"]
+                    csv_col1[final_apptype] = []
+                    csv_col2[final_apptype] = []
+                # fill header and col1 / col2
+                if runcfg not in csv_headers[final_apptype]:
+                    csv_headers[final_apptype].append(runcfg)
+                rstvalues = runresult[cfg][apptype][subtype]["value"]
+                for key in rstvalues:
+                    if key not in csv_col1[final_apptype]:
+                        csv_col1[final_apptype].append(key)
+                        csv_col2[final_apptype].append(subtype)
 
-    for apptype in csvdict:
-        for key in csvdict[apptype]:
-            if key != "RUNCONFIG":
-                csvlist = [key]
-                csvlist.extend(csvdict[apptype][key])
-                csvtable[apptype].append(csvlist)
+    # Fill the csvtable with -
+    csvtable = dict()
+    for cfg in csv_headers:
+        csvtable[cfg] = [csv_headers[cfg]]
+        for i in range(0, len(csv_col1[cfg])):
+            rowlist = [csv_col1[cfg][i], csv_col2[cfg][i]]
+            for j in range(0, len(csv_headers[cfg]) - 2):
+                rowlist.append('-')
+            csvtable[cfg].append(rowlist)
+    # Fill the csvtable with real value if key found
+    for cfg in runresult:
+        splitcfgs = cfg.split('/')
+        pretype = ""
+        if len(splitcfgs) > 1:
+            pretype = '-'.join(splitcfgs[:-1])
+
+        runcfg = splitcfgs[-1]
+        for apptype in runresult[cfg]:
+            for subtype in runresult[cfg][apptype]:
+                if pretype != "":
+                    final_apptype = pretype + "_" + apptype
+                else:
+                    final_apptype = apptype
+                rstvalues = runresult[cfg][apptype][subtype]["value"]
+                header = csvtable[final_apptype][0]
+                index = header.index(runcfg)
+                for key in rstvalues:
+                    for i in range(0, len(csvtable[final_apptype])):
+                        if key == csvtable[final_apptype][i][0]:
+                            csvtable[final_apptype][i][index] = rstvalues[key]
+                            break
+
+    # Fill csvdict using csvtable
+    csvdict = dict()
+    for cfg in csvtable:
+        csvdict[cfg] = dict()
+        for csvlist in csvtable[cfg]:
+            csvdict[cfg][csvlist[0]] = csvlist[1:]
     # Save to excel
     try:
         csvtable_jf = excelfile + ".csvtable.json"
