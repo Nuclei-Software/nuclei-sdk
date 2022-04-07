@@ -379,7 +379,7 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     cmd_elapsed_ticks = time.time() - startticks
     return check_status, cmd_elapsed_ticks
 
-def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False, banner_timeout=10):
+def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False, banner_timeout=30):
     loop = asyncio.get_event_loop()
     try:
         ret, cmd_elapsed_ticks = loop.run_until_complete( \
