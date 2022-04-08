@@ -181,7 +181,7 @@ sdk_run_libncrt_job_nuclei_fpga_eval:
 
 sdk_run_on_ncycm:
   <<: *build_job_template_default
-  timeout: 8h
+  timeout: 12h
   tags:
     - hardware::high-freq-linux
   variables:
