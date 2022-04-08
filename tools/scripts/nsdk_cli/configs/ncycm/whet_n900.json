@@ -13,7 +13,7 @@
         },
         "ncycm": {
             "ncycm": "n900_best_config_cymodel_latest",
-            "timeout": 10000
+            "timeout": 20000
         }
     },
     "parallel": "-j",
