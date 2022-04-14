@@ -634,6 +634,7 @@
 #define CSR_MNOCB               0x7F5
 #define CSR_MNOCM               0x7F6
 #define CSR_MSMPCFG_INFO        0x7F7
+#define CSR_MIRGB_INFO          0x7F7
 #define CSR_SLEEPVALUE          0x811
 #define CSR_TXEVT               0x812
 #define CSR_WFE                 0x810
