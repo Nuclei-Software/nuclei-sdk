@@ -353,6 +353,26 @@ int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_
 }
 /** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
 
+volatile IRegion_Info_Type SystemIRegionInfo;
+static void _get_iregion_info(IRegion_Info_Type *iregion)
+{
+    unsigned long mcfg_info;
+    if (iregion == NULL) {
+        return;
+    }
+    mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
+    if (mcfg_info & (1<<16)) { // IRegion Info present
+        iregion->iregion_base = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
+        iregion->eclic_base = iregion->iregion_base + 0x20000;
+        iregion->systimer_base = iregion->iregion_base + 0x30000;
+        iregion->smp_base = iregion->iregion_base + 0x40000;
+        iregion->idu_base = iregion->iregion_base + 0x50000;
+    } else {
+        iregion->eclic_base = 0x0C000000UL;
+        iregion->systimer_base = 0x02000000UL;
+    }
+}
+
 /**
  * \brief early init function before main
  * \details
@@ -363,6 +383,8 @@ int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_
  */
 void _premain_init(void)
 {
+    // IREGION INFO MUST BE SET BEFORE ANY PREMAIN INIT STEPS
+    _get_iregion_info((IRegion_Info_Type *)(&SystemIRegionInfo));
     /* TODO: Add your own initialization code here, called before main */
     // This code located in RUNMODE_CONTROL ifdef endif block just for internal usage
     // No need to use in your code

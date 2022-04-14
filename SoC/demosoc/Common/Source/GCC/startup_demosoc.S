@@ -251,6 +251,9 @@ _start:
     bltu a0, a1, 1b
 2:
 
+.globl _start_premain
+.type _start_premain, @function
+_start_premain:
     /*
      * Call vendor defined SystemInit to
      * initialize the micro-controller system

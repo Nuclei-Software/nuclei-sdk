@@ -55,6 +55,15 @@ typedef enum {
     DOWNLOAD_MODE_MAX,
 } DownloadMode_Type;
 
+/** \brief CPU Internal Region Information */
+typedef struct IRegion_Info {
+    unsigned long iregion_base;         /*!< Internal region base address */
+    unsigned long eclic_base;           /*!< eclic base address */
+    unsigned long systimer_base;        /*!< system timer base address */
+    unsigned long smp_base;             /*!< smp base address */
+    unsigned long idu_base;             /*!< idu base address */
+} IRegion_Info_Type;
+
 /* Simulation mode macros */
 #define SIMULATION_MODE_XLSPIKE   0     /*!< xlspike simulation mode */
 #define SIMULATION_MODE_QEMU      1     /*!< qemu simulation mode */
@@ -187,14 +196,16 @@ typedef enum EXCn {
 
 #endif /* __riscv_xlen == 64 */
 
+extern volatile IRegion_Info_Type SystemIRegionInfo;
+
 /* ToDo: define the correct core features for the demosoc */
 #define __ECLIC_PRESENT           1                     /*!< Set to 1 if ECLIC is present */
-#define __ECLIC_BASEADDR          0x0C000000UL          /*!< Set to ECLIC baseaddr of your device */
+#define __ECLIC_BASEADDR          SystemIRegionInfo.eclic_base          /*!< Set to ECLIC baseaddr of your device */
 
 //#define __ECLIC_INTCTLBITS        3                     /*!< Set to 1 - 8, the number of hardware bits are actually implemented in the clicintctl registers. */
 #define __ECLIC_INTNUM            51                    /*!< Set to 1 - 1024, total interrupt number of ECLIC Unit */
 #define __SYSTIMER_PRESENT        1                     /*!< Set to 1 if System Timer is present */
-#define __SYSTIMER_BASEADDR       0x02000000UL          /*!< Set to SysTimer baseaddr of your device */
+#define __SYSTIMER_BASEADDR       SystemIRegionInfo.systimer_base          /*!< Set to SysTimer baseaddr of your device */
 
 /*!< Set to 0, 1, or 2, 0 not present, 1 single floating point unit present, 2 double floating point unit present */
 #if !defined(__riscv_flen)
