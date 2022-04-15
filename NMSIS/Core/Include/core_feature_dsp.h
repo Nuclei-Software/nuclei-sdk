@@ -18536,7 +18536,6 @@ __STATIC_FORCEINLINE unsigned long __RV_EXPD83(unsigned long a)
 /* ===== Inline Function End for A11.4. EXPD83 ===== */
 #endif /* __RISCV_XLEN == 32 */
 
-#if defined(__RISCV_FEATURE_DSP) && (__RISCV_FEATURE_DSP == 1)
 /* XXXXX ARM Compatiable SIMD API XXXXX */
 /** \brief Q setting quad 8-bit saturating addition. */
 #define __QADD8(x, y)               __RV_KADD8(x, y)
@@ -18661,8 +18660,6 @@ __STATIC_FORCEINLINE int32_t __SMMLA(int32_t op1, int32_t op2, int32_t op3)
 
 /** first rotate then extract. This is more suitable for arm compiler for it can rotate and extract in one command*/
 #define __SXTB16_RORn(ARG1, ARG2)   __RV_SUNPKD820(__ROR(ARG1, ARG2))
-
-#endif /* (__RISCV_FEATURE_DSP == 1) */
 
 #endif /* defined(__DSP_PRESENT) && (__DSP_PRESENT == 1) */
 
