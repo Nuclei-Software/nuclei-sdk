@@ -17,9 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __NMSIS_CORE_H__
-#define __NMSIS_CORE_H__
-
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -88,4 +85,3 @@
 #ifdef __cplusplus
 }
 #endif
-#endif /* __NMSIS_CORE_H__ */
