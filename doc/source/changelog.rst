@@ -13,6 +13,9 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
 
 * NMSIS
 
+  - Some macros used in NMSIS need to expose when DSP present
+  - nmsis_core.h might be included twice, it might be included by <Device.h> and <riscv_math.h>
+
 
 * Build
 
@@ -20,6 +23,8 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
 * SoC
 
   - Add libncrt 2.0.0 support for demosoc and gd32vf103, libncrt stub functions need to be adapted, see 2e09b6b0 and 2e09b6b0
+  - Fix ram size from 20K to 32K for gd32vf103v_eval and gd32vf103v_rvstar
+  - Change demosoc eclic/timer baseaddr to support future cpu iregion feature, see eab28320d and 18109d04
 
 * Tools
 
@@ -27,6 +32,10 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
   - Fix nsdk_report.py generated runresult.xls file content is not correct when some application failed
   - Add benchmark c standard script in tools/misc/barebench
 
+* OS
+
+  - RT_HEAP_SIZE defined in cpuport.c is small, need to be 2048 for msh example when RT_USING_HEAP is enabled
+  - Application can define RT_HEAP_SIZE in rtconfig.h to change the size
 
 For detailed changes, please check commit histories since 0.3.7 release.
 
