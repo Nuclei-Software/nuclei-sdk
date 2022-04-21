@@ -34,15 +34,6 @@ OUTPUT_ARCH( "riscv" )
 __ROM_BASE = 0x08000000;
 __ROM_SIZE = 0x00020000;
 
-/*--------------------- ILM RAM Configuration ---------------------------
- * <h> ILM RAM Configuration
- * <o0> ILM RAM Base Address    <0x0-0xFFFFFFFF:8>
- * <o1> ILM RAM Size (in Bytes) <0x0-0xFFFFFFFF:8>
- * </h>
- */
-__ILM_RAM_BASE = 0x80000000;
-__ILM_RAM_SIZE = 0x00010000;
-
 /*--------------------- Embedded RAM Configuration ---------------------------
  * <h> RAM Configuration
  * <o0> RAM Base Address    <0x0-0xFFFFFFFF:8>
@@ -50,7 +41,7 @@ __ILM_RAM_SIZE = 0x00010000;
  * </h>
 */
 __RAM_BASE = 0x20000000;
-__RAM_SIZE = 0x00005000;
+__RAM_SIZE = 0x00008000;
 
 /********************* Stack / Heap Configuration ****************************
  * <h> Stack / Heap Configuration
