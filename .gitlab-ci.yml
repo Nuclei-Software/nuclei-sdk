@@ -182,6 +182,7 @@ sdk_run_libncrt_job_nuclei_fpga_eval:
 sdk_run_on_ncycm:
   <<: *build_job_template_default
   timeout: 12h
+  when: manual
   tags:
     - hardware::high-freq-linux
   variables:
@@ -204,3 +205,19 @@ sdk_run_on_ncycm:
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --verbose
     - echo "Show final results"
     - find $LOGROOT -name "result.csv" | xargs cat
+
+sdk_gen_benchmark:
+  <<: *build_job_template_default
+  script:
+    - export LOGROOT=gen
+    - export RUNTARGET=
+    - bash tools/scripts/misc/dobench/run.sh
+    - bash tools/scripts/misc/build_benchmark.sh
+  artifacts:
+    when: always
+    name: "nsdk_benchmark-${CI_COMMIT_SHA::8}"
+    paths:
+      - gen
+    expire_in: 2 day
+
+
