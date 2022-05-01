@@ -80,7 +80,7 @@ uint32_t USBD_OTG_EP1OUT_ISR_Handler(usb_core_driver* udev)
 
             /* ToDo : handle more than one single MPS size packet */
             udev->dev.transc_out[1].xfer_count = udev->dev.transc_out[1].usb_transc - \
-                                                 oeplen & DEPLEN_TLEN;
+                                                 (oeplen & DEPLEN_TLEN);
         }
 
         /* RX COMPLETE */
@@ -274,7 +274,7 @@ static uint32_t usbd_int_epout(usb_core_driver* udev)
                     __IO uint32_t eplen = udev->regs.er_out[ep_num]->DOEPLEN;
 
                     udev->dev.transc_out[ep_num].xfer_count = udev->dev.transc_out[ep_num].max_len - \
-                                                              eplen & DEPLEN_TLEN;
+                                                              (eplen & DEPLEN_TLEN);
                 }
 
                 /* inform upper layer: data ready */
