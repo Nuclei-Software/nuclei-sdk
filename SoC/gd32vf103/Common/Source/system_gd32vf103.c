@@ -23,6 +23,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
 #include "nuclei_sdk_hal.h"
@@ -453,7 +454,7 @@ void SystemBannerPrint(void)
 #ifdef DOWNLOAD_MODE_STRING
     printf("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
 #endif
-    printf("CPU Frequency %u Hz\r\n", (unsigned int)SystemCoreClock);
+    printf("CPU Frequency %" PRIu32 " Hz\r\n", SystemCoreClock);
 #endif
 }
 
