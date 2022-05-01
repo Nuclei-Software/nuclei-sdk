@@ -29,8 +29,14 @@
 #include <stddef.h>
 
 #ifdef __cplusplus
-extern "C" {
+#define GD32VF103_BEGIN_DECLS extern "C" {
+#define GD32VF103_END_DECLS   }
+#else
+#define GD32VF103_BEGIN_DECLS
+#define GD32VF103_END_DECLS
 #endif
+
+GD32VF103_BEGIN_DECLS
 
 /** @addtogroup gd32
   * @{
@@ -442,8 +448,6 @@ extern void delay_1ms(uint32_t count);
 
 /** @} */ /* End of group gd32vf103 */
 
-#ifdef __cplusplus
-}
-#endif
+GD32VF103_END_DECLS
 
 #endif  /* __GD32VF103_SOC_H__ */

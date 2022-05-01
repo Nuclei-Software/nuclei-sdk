@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 /* I2Cx(x=0,1) definitions */
 #define I2C0                          I2C_BASE                   /*!< I2C0 base address */
 #define I2C1                          (I2C_BASE + 0x00000400U)   /*!< I2C1 base address */
@@ -340,5 +342,7 @@ void i2c_interrupt_disable(uint32_t i2c_periph, i2c_interrupt_enum interrupt);
 FlagStatus i2c_interrupt_flag_get(uint32_t i2c_periph, i2c_interrupt_flag_enum int_flag);
 /* clear I2C interrupt flag */
 void i2c_interrupt_flag_clear(uint32_t i2c_periph, i2c_interrupt_flag_enum int_flag);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_I2C_H */

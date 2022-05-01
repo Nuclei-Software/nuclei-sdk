@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 /* TIMERx(x=0..13) definitions */
 #define TIMER0                           (TIMER_BASE + 0x00012C00U)
 #define TIMER1                           (TIMER_BASE + 0x00000000U)
@@ -716,5 +718,7 @@ void timer_interrupt_flag_clear(uint32_t timer_periph, uint32_t interrupt);
 FlagStatus timer_flag_get(uint32_t timer_periph, uint32_t flag);
 /* clear TIMER flag */
 void timer_flag_clear(uint32_t timer_periph, uint32_t flag);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_TIMER_H */

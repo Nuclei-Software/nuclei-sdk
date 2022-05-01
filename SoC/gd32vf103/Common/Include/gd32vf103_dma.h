@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 
 /* DMA definitions */
 #define DMA0                            (DMA_BASE)               /*!< DMA0 base address */
@@ -279,5 +281,7 @@ void dma_interrupt_flag_clear(uint32_t dma_periph, dma_channel_enum channelx, ui
 void dma_interrupt_enable(uint32_t dma_periph, dma_channel_enum channelx, uint32_t source);
 /* disable DMA interrupt */
 void dma_interrupt_disable(uint32_t dma_periph, dma_channel_enum channelx, uint32_t source);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_DMA_H */

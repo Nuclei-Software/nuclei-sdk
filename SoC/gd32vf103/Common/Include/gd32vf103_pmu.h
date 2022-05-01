@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 /* PMU definitions */
 #define PMU                           PMU_BASE                 /*!< PMU base address */
 
@@ -123,5 +125,7 @@ void pmu_backup_write_disable(void);
 FlagStatus pmu_flag_get(uint32_t flag);
 /* clear flag bit */
 void pmu_flag_clear(uint32_t flag_reset);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_PMU_H */

@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 
 /* FMC and option byte definition */
 #define FMC                        FMC_BASE                        /*!< FMC register base address */
@@ -306,5 +308,7 @@ void fmc_interrupt_flag_clear(fmc_interrupt_flag_enum flag);
 fmc_state_enum fmc_state_get(void);
 /* check FMC ready or not */
 fmc_state_enum fmc_ready_wait(uint32_t timeout);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_FMC_H */

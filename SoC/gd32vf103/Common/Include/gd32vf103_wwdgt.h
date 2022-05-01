@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 /* WWDGT definitions */
 #define WWDGT                       WWDGT_BASE                                /*!< WWDGT base address */
 
@@ -84,5 +86,7 @@ void wwdgt_interrupt_enable(void);
 FlagStatus wwdgt_flag_get(void);
 /* clear early wakeup interrupt state of WWDGT */
 void wwdgt_flag_clear(void);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_WWDGT_H */

@@ -37,6 +37,8 @@ OF SUCH DAMAGE.
 
 #include "gd32vf103.h"
 
+GD32VF103_BEGIN_DECLS
+
 /* RCU definitions */
 #define RCU                             RCU_BASE
 
@@ -756,5 +758,7 @@ void rcu_deepsleep_voltage_set(uint32_t dsvol);
 
 /* get the system clock, bus and peripheral clock frequency */
 uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_RCU_H */

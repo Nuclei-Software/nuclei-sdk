@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 /* BKP definitions */
 #define BKP                             BKP_BASE                 /*!< BKP base address */
 
@@ -224,5 +226,7 @@ void bkp_flag_clear(void);
 FlagStatus bkp_interrupt_flag_get(void);
 /* clear tamper interrupt flag state */
 void bkp_interrupt_flag_clear(void);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_BKP_H */

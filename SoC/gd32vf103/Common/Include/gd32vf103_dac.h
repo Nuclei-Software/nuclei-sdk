@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 /* DACx(x=0,1) definitions */
 #define DAC                     DAC_BASE
 #define DAC0                    (0U)
@@ -240,5 +242,7 @@ void dac_concurrent_output_buffer_enable(void);
 void dac_concurrent_output_buffer_disable(void);
 /* set DAC concurrent mode data holding register value */
 void dac_concurrent_data_set(uint32_t dac_align, uint16_t data0, uint16_t data1);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_DAC_H */
