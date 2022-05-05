@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 
 /* EXTI definitions */
 #define EXTI                         EXTI_BASE
@@ -244,5 +246,7 @@ void exti_interrupt_flag_clear(exti_line_enum linex);
 void exti_software_interrupt_enable(exti_line_enum linex);
 /* disable the EXTI software interrupt event  */
 void exti_software_interrupt_disable(exti_line_enum linex);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_EXTI_H */

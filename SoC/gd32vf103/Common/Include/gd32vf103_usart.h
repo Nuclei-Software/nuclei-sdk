@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 /* USARTx(x=0,1,2)/UARTx(x=3,4) definitions */
 #define USART1                        USART_BASE                        /*!< USART1 base address */
 #define USART2                        (USART_BASE+(0x00000400U))        /*!< USART2 base address */
@@ -372,4 +374,6 @@ FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, uint32_t int_flag);
 void usart_interrupt_flag_clear(uint32_t usart_periph, uint32_t flag);
 int usart_write(uint32_t usart_periph, int ch);
 uint8_t usart_read(uint32_t usart_periph);
+GD32VF103_END_DECLS
+
 #endif /* GD32VF103_USART_H */

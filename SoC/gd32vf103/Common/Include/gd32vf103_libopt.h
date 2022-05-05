@@ -56,4 +56,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_usart.h"
 #include "gd32vf103_wwdgt.h"
 
+GD32VF103_BEGIN_DECLS
+
+GD32VF103_END_DECLS
+
 #endif /* GD32VF103_LIBOPT_H */

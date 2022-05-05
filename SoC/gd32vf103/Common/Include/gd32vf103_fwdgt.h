@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 
 /* FWDGT definitions */
 #define FWDGT                       FWDGT_BASE                                /*!< FWDGT base address */
@@ -103,5 +105,7 @@ ErrStatus fwdgt_config(uint16_t reload_value, uint8_t prescaler_div);
 
 /* get flag state of FWDGT */
 FlagStatus fwdgt_flag_get(uint16_t flag);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_FWDGT_H */

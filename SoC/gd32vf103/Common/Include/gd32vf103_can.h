@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 /* CAN definitions */
 #define CAN0                               CAN_BASE                      /*!< CAN0 base address */
 #define CAN1                               (CAN0 + 0x00000400U)          /*!< CAN1 base address */
@@ -716,5 +718,7 @@ FlagStatus can_interrupt_flag_get(uint32_t can_periph,
                                   can_interrupt_flag_enum flag);
 /* CAN clear interrupt flag state */
 void can_interrupt_flag_clear(uint32_t can_periph, can_interrupt_flag_enum flag);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_CAN_H */

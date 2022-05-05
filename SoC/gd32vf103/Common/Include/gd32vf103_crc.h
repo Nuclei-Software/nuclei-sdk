@@ -40,6 +40,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 /* CRC definitions */
 #define CRC                            CRC_BASE
 
@@ -76,5 +78,7 @@ void crc_free_data_register_write(uint8_t free_data);
 uint32_t crc_single_data_calculate(uint32_t sdata);
 /* calculate the CRC value of an array of 32-bit values */
 uint32_t crc_block_data_calculate(uint32_t array[], uint32_t size);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_CRC_H */

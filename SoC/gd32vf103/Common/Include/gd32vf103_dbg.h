@@ -38,6 +38,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103.h"
 #include "gd32vf103_rcu.h"
 
+GD32VF103_BEGIN_DECLS
+
 
 /* DBG definitions */
 #define DBG                      DBG_BASE
@@ -106,5 +108,7 @@ void dbg_low_power_disable(uint32_t dbg_low_power);
 void dbg_periph_enable(dbg_periph_enum dbg_periph);
 /* disable peripheral behavior when the MCU is in debug mode */
 void dbg_periph_disable(dbg_periph_enum dbg_periph);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_DBG_H */

@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 /* SPIx(x=0,1,2) definitions */
 #define SPI0                            (SPI_BASE + 0x0000F800U)
 #define SPI1                            SPI_BASE
@@ -338,5 +340,7 @@ FlagStatus spi_i2s_interrupt_flag_get(uint32_t spi_periph, uint8_t interrupt);
 FlagStatus spi_i2s_flag_get(uint32_t spi_periph, uint32_t flag);
 /* clear SPI CRC error flag status */
 void spi_crc_error_clear(uint32_t spi_periph);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_SPI_H */

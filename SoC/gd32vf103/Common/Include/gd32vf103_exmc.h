@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #include "gd32vf103_rcu.h"
 #include "gd32vf103_dbg.h"
 
+GD32VF103_BEGIN_DECLS
+
 
 /* EXMC definitions */
 #define EXMC                              (EXMC_BASE)                   /*!< EXMC register base address */
@@ -123,5 +125,7 @@ void exmc_norsram_init(exmc_norsram_parameter_struct* exmc_norsram_init_struct);
 void exmc_norsram_enable(uint32_t norsram_region);
 /* EXMC NOR/SRAM bank disable */
 void exmc_norsram_disable(uint32_t norsram_region);
+
+GD32VF103_END_DECLS
 
 #endif /* GD32VF103_EXMC_H */
