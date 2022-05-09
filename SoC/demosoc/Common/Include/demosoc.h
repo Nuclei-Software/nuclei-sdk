@@ -405,7 +405,8 @@ typedef struct {
     __IOM uint32_t CSID;
     __IOM uint32_t CSDEF;
     __IOM uint32_t CSMODE;
-    __IOM uint32_t RESERVED1[3];
+    __IOM uint32_t VERSION;
+    __IOM uint32_t RESERVED1[2];
     __IOM uint32_t DELAY0;
     __IOM uint32_t DELAY1;
     __IOM uint32_t RESERVED2[4];
@@ -421,6 +422,8 @@ typedef struct {
     __IOM uint32_t RESERVED5[2];
     __IOM uint32_t IE;
     __IOM uint32_t IP;
+    __IOM uint32_t FFMT1;
+    __IOM uint32_t STATUS;
 } QSPI_TypeDef;
 
 /**
