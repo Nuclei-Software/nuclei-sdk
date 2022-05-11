@@ -98,7 +98,7 @@ void pmu_lvd_disable(void)
 void pmu_to_sleepmode(uint8_t sleepmodecmd)
 {
     /* clear sleepdeep bit of RISC-V system control register */
-    __RV_CSR_CLEAR(CSR_WFE, WFE_WFE);
+    __set_wfi_sleepmode(WFI_SHALLOW_SLEEP);
 
     /* select WFI or WFE command to enter sleep mode */
     if (WFI_CMD == sleepmodecmd) {
@@ -130,7 +130,7 @@ void pmu_to_deepsleepmode(uint32_t ldo, uint8_t deepsleepmodecmd)
     /* set ldolp bit according to pmu_ldo */
     PMU_CTL |= ldo;
     /* set CSR_SLEEPVALUE bit of RISC-V system control register */
-    __RV_CSR_SET(CSR_WFE, WFE_WFE);
+    __set_wfi_sleepmode(WFI_DEEP_SLEEP);
     /* select WFI or WFE command to enter deepsleep mode */
     if (WFI_CMD == deepsleepmodecmd) {
         __WFI();
@@ -140,7 +140,7 @@ void pmu_to_deepsleepmode(uint32_t ldo, uint8_t deepsleepmodecmd)
         __enable_irq();
     }
     /* reset sleepdeep bit of RISC-V system control register */
-    __RV_CSR_CLEAR(CSR_WFE, WFE_WFE);
+    __set_wfi_sleepmode(WFI_SHALLOW_SLEEP);
 }
 
 /*!
@@ -155,7 +155,7 @@ void pmu_to_deepsleepmode(uint32_t ldo, uint8_t deepsleepmodecmd)
 void pmu_to_standbymode(uint8_t standbymodecmd)
 {
     /* set CSR_SLEEPVALUE bit of RISC-V system control register */
-    __RV_CSR_SET(CSR_WFE, WFE_WFE);
+    __set_wfi_sleepmode(WFI_DEEP_SLEEP);
 
     /* set stbmod bit */
     PMU_CTL |= PMU_CTL_STBMOD;
@@ -166,12 +166,12 @@ void pmu_to_standbymode(uint8_t standbymodecmd)
     /* select WFI or WFE command to enter standby mode */
     if (WFI_CMD == standbymodecmd) {
         __WFI();
+        // system resets on wakeup
     } else {
         __disable_irq();
         __WFE();
-        __enable_irq();
+        // system resets on wakeup
     }
-    __RV_CSR_CLEAR(CSR_WFE, WFE_WFE);
 }
 
 /*!
