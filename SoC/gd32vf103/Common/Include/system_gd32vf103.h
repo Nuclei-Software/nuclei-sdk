@@ -74,6 +74,11 @@ extern void SystemInit(void);
 extern void SystemCoreClockUpdate(void);
 
 /**
+ * \brief Configure the system clock
+ */
+extern void system_clock_config(void);
+
+/**
  * \brief Dump Exception Frame
  */
 void Exception_DumpFrame(unsigned long sp);

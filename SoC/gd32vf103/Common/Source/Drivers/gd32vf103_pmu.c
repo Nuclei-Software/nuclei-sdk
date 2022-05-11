@@ -112,6 +112,9 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
 
 /*!
     \brief      PMU work at deepsleep mode
+
+    NB: Deep sleep mode sets the clock to IRC8M. Thus, you may need to restore
+        your original clock settings. For example, by calling system_clock_config().
     \param[in]  ldo:
                 only one parameter can be selected which is shown as below:
       \arg        PMU_LDO_NORMAL: LDO work at normal power mode when pmu enter deepsleep mode

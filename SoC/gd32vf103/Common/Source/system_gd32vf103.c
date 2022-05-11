@@ -185,7 +185,7 @@ static void system_clock_108m_hxtal(void)
     \param[out] none
     \retval     none
 */
-static void system_clock_config(void)
+void system_clock_config(void)
 {
     system_clock_108m_hxtal();
 }
