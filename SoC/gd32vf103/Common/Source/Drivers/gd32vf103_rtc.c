@@ -147,11 +147,16 @@ void rtc_alarm_config(uint32_t alarm)
 */
 uint32_t rtc_counter_get(void)
 {
-    uint32_t temp = 0x0U;
-
-    temp = RTC_CNTL;
-    temp |= (RTC_CNTH << RTC_HIGH_BITS_OFFSET);
-    return temp;
+    uint32_t prev_h = RTC_CNTH;
+    for (;;) {
+        uint32_t temp = RTC_CNTL;
+        uint32_t h = RTC_CNTH;
+        if (h == prev_h) {
+            temp |= (h << RTC_HIGH_BITS_OFFSET);
+            return temp;
+        }
+        prev_h = h;
+    }
 }
 
 /*!
