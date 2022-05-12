@@ -209,8 +209,8 @@ buildconfig:
       - flags: -x assembler-with-cpp
     cxxflags:
     common_defines:
-      - defines: -DSYSTEM_CLOCK=${sysclk.info.hz}
-      - defines: -DSYSCLK_USING_$(upper(${sysclk.info.src}))
+      - defines: SYSTEM_CLOCK=${sysclk.info.hz}
+      - defines: SYSCLK_USING_$(upper(${sysclk.info.src}))
     prebuild_steps: # could be override by app/bsp type
       command:
       description:
