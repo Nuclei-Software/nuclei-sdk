@@ -96,11 +96,20 @@ configuration:
             value: 108000000
           - name: src
             value: irc8m
-  gd32vf103_usb:
-    default_value: 0
+  usbdriver:
+    default_value: none
     global: true
-    type: checkbox
-    description: USB Driver Present
+    type: choice
+    description: Select USB Driver Code
+    choices:
+      - name: none
+        description: No USB Driver Code
+      - name: device
+        description: USB Device Driver Code
+      - name: host
+        description: USB Host Driver Code
+      - name: both
+        description: USB Host and Device Driver Code
   nuclei_core:
     default_value: n205
     type: choice
@@ -149,12 +158,16 @@ codemanage:
       condition: $( startswith(${stdclib}, "newlib") )
     - path: ["Source/Stubs/libncrt"]
       condition: $( startswith(${stdclib}, "libncrt") )
+    - path: ["Source/Drivers/Usb/drv_usb_core.c", "Source/Drivers/Usb/drv_usb_host.c", "Source/Drivers/Usb/drv_usbh_int.c", "Source/Drivers/Usb/usbh_*.c", "Include/Usb/*.h"]
+      condition: $( ${usbdriver} == "host" )
+    - path: ["Source/Drivers/Usb/drv_usb_core.c", "Source/Drivers/Usb/drv_usb_dev.c", "Source/Drivers/Usb/drv_usbd_int.c", "Source/Drivers/Usb/usbd_*.c", "Include/Usb/*.h"]
+      condition: $( ${usbdriver} == "device" )
     - path: ["Source/Drivers/Usb/*.c", "Include/Usb/*.h"]
-      condition: $( ${gd32vf103_usb} == 1 )
+      condition: $( ${usbdriver} == "both" )
   incdirs:
     - path: ["Include"]
     - path: ["Include/Usb/"]
-      condition: $( ${gd32vf103_usb} == 1 )
+      condition: $( ${usbdriver} != "none" )
 
 ## Set Configuration for other packages
 setconfig:

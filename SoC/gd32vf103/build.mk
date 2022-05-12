@@ -3,6 +3,7 @@
 BOARD ?= gd32vf103v_rvstar
 # Variant for Board or SoC
 VARIANT ?=
+# Please overwrite following variable in Makefile of your application
 # System Clock Frequency
 # 108MHz in pure int value
 SYSCLK ?= 108000000
@@ -12,6 +13,11 @@ CLKSRC ?= hxtal
 # when not empty it will define macro HXTAL_VALUE
 # see SoC/gd32vf103/Common/Include/gd32vf103_rcu.h
 HXTAL_VALUE ?=
+# Select USB host or device driver
+# host: select host driver
+# device: select device driver
+# both: select both
+USB_DRIVER ?=
 
 # override DOWNLOAD and CORE variable for GD32VF103 SoC
 # even though it was set with a command argument
@@ -74,9 +80,23 @@ else
 # no stubs will be used
 endif
 
-ifeq ($(USB_DRV_SUPPORT), 1)
+# GD32VF103 USB Driver Handling
+USBDRV_ROOT := $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers/Usb
+ifeq ($(USB_DRIVER),both)
 INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include/Usb
-C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Drivers/Usb
+C_SRCDIRS += $(USBDRV_ROOT)
+else ifeq ($(USB_DRIVER),host)
+INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include/Usb
+C_SRCS += $(USBDRV_ROOT)/drv_usb_core.c \
+		  $(USBDRV_ROOT)/drv_usb_host.c \
+		  $(USBDRV_ROOT)/drv_usbh_int.c \
+		  $(USBDRV_ROOT)/usbh_*.c
+else ifeq ($(USB_DRIVER),device)
+INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include/Usb
+C_SRCS += $(USBDRV_ROOT)/drv_usb_core.c \
+		  $(USBDRV_ROOT)/drv_usb_dev.c \
+		  $(USBDRV_ROOT)/drv_usbd_int.c \
+		  $(USBDRV_ROOT)/usbd_*.c
 endif
 
 ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_gd32vf103.S \
