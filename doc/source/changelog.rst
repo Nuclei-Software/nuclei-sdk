@@ -18,6 +18,7 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
 
 
 * Build
+  - Add ``SYSCLK`` and ``CLKSRC`` make variable for gd32vf103 SoC to set system clock in hz and clock source, such as ``SYSCLK=72000000 CLKSRC=hxtal``
 
 
 * SoC
@@ -25,6 +26,8 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
   - Add libncrt 2.0.0 support for demosoc and gd32vf103, libncrt stub functions need to be adapted, see 2e09b6b0 and 2e09b6b0
   - Fix ram size from 20K to 32K for gd32vf103v_eval and gd32vf103v_rvstar
   - Change demosoc eclic/timer baseaddr to support future cpu iregion feature, see eab28320d and 18109d04
+  - Adapt system_gd32vf103.c to support control system clock in hz and clock source via macro **SYSTEM_CLOCK** and **CLOCK_USING_IRC8M** or **CLOCK_USING_HXTAL**
+  - Merge various changes for gd32vf103 support from ``gsauthof@github``, see PR #37, #38, #40
 
 * Tools
 
