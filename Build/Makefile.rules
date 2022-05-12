@@ -1,8 +1,8 @@
 TARGET_ELF = $(TARGET).elf
 
-ALL_CSRCS = $(sort $(C_SRCS) $(call get_csrcs, $(SRCDIRS) $(C_SRCDIRS)))
-ALL_CXXSRCS = $(sort $(CXX_SRCS) $(call get_cxxsrcs, $(SRCDIRS) $(CXX_SRCDIRS)))
-ALL_ASMSRCS = $(sort $(ASM_SRCS) $(call get_asmsrcs, $(SRCDIRS) $(ASM_SRCDIRS)))
+ALL_CSRCS = $(filter-out $(wildcard $(EXCLUDE_SRCS)), $(sort $(wildcard $(C_SRCS)) $(call get_csrcs, $(SRCDIRS) $(C_SRCDIRS))))
+ALL_CXXSRCS = $(filter-out $(wildcard $(EXCLUDE_SRCS)), $(sort $(wildcard $(CXX_SRCS)) $(call get_cxxsrcs, $(SRCDIRS) $(CXX_SRCDIRS))))
+ALL_ASMSRCS = $(filter-out $(wildcard $(EXCLUDE_SRCS)), $(sort $(wildcard $(ASM_SRCS)) $(call get_asmsrcs, $(SRCDIRS) $(ASM_SRCDIRS))))
 
 ALL_ASM_OBJS := $(ALL_ASMSRCS:=.o)
 ALL_C_OBJS := $(ALL_CSRCS:=.o)
