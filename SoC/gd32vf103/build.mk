@@ -3,6 +3,15 @@
 BOARD ?= gd32vf103v_rvstar
 # Variant for Board or SoC
 VARIANT ?=
+# System Clock Frequency
+# 108MHz in pure int value
+SYSCLK ?= 108000000
+# Clock source
+CLKSRC ?= hxtal
+# Don't set HXTAL_VALUE unless you know what you are doing
+# when not empty it will define macro HXTAL_VALUE
+# see SoC/gd32vf103/Common/Include/gd32vf103_rcu.h
+HXTAL_VALUE ?=
 
 # override DOWNLOAD and CORE variable for GD32VF103 SoC
 # even though it was set with a command argument
@@ -43,6 +52,13 @@ RISCV_ABI ?= ilp32
 # Handle QEMU Emulation
 QEMU_MACHINE := ${BOARD}
 QEMU_CPU := nuclei-n205
+
+##### Extra compiler options
+COMMON_FLAGS += -DSYSTEM_CLOCK=$(SYSCLK)
+COMMON_FLAGS += -DSYSCLK_USING_$(call uc, $(CLKSRC))
+ifneq ($(HXTAL_VALUE),)
+COMMON_FLAGS += -DHXTAL_VALUE=$(HXTAL_VALUE)
+endif
 
 ##### Put your Source code Management configurations below #####
 

@@ -232,18 +232,8 @@ typedef enum EXCn {
 #endif
 
 
-/* system frequency define */
-#define __IRC8M           (IRC8M_VALUE)            /* internal 8 MHz RC oscillator frequency */
-#define __HXTAL           (HXTAL_VALUE)            /* high speed crystal oscillator frequency */
-#define __SYS_OSC_CLK     (__IRC8M)                /* main oscillator frequency */
-
-#define __SYSTEM_CLOCK_108M_PLL_HXTAL           (uint32_t)(108000000)
-
-
-#define RTC_FREQ LXTAL_VALUE
 // The TIMER frequency is just the RTC frequency
-#define SOC_TIMER_FREQ     ((uint32_t)SystemCoreClock/4)  //LXTAL_VALUE units HZ
-
+#define SOC_TIMER_FREQ     ((uint32_t)SystemCoreClock >> 2)  //LXTAL_VALUE units HZ
 
 /* enum definitions */
 typedef enum {

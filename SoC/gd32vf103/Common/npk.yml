@@ -27,6 +27,75 @@ dependencies:
 
 ## Package Configurations
 configuration:
+  sysclk:
+    default_value: hxtal_108mhz
+    global: true
+    type: choice
+    description: System Clock in Hz
+    choices:
+      - name: hxtal_108mhz
+        description: 108MHz HXTAL PLL
+        info:
+          - name: hz
+            value: 108000000
+          - name: src
+            value: hxtal
+      - name: hxtal_96mhz
+        description: 96MHz HXTAL PLL
+        info:
+          - name: hz
+            value: 96000000
+          - name: src
+            value: hxtal
+      - name: hxtal_72mhz
+        description: 72MHz HXTAL PLL
+        info:
+          - name: hz
+            value: 72000000
+          - name: src
+            value: hxtal
+      - name: hxtal_56mhz
+        description: 56MHz HXTAL PLL
+        info:
+          - name: hz
+            value: 56000000
+          - name: src
+            value: hxtal
+      - name: hxtal_48mhz
+        description: 48MHz HXTAL PLL
+        info:
+          - name: hz
+            value: 48000000
+          - name: src
+            value: hxtal
+      - name: hxtal_24mhz
+        description: 24MHz HXTAL PLL
+        info:
+          - name: hz
+            value: 24000000
+          - name: src
+            value: hxtal
+      - name: irc8m_48mhz
+        description: 48MHz IRC8M PLL
+        info:
+          - name: hz
+            value: 48000000
+          - name: src
+            value: irc8m
+      - name: irc8m_72mhz
+        description: 72MHz IRC8M PLL
+        info:
+          - name: hz
+            value: 72000000
+          - name: src
+            value: irc8m
+      - name: irc8m_108mhz
+        description: 108MHz IRC8M PLL
+        info:
+          - name: hz
+            value: 108000000
+          - name: src
+            value: irc8m
   gd32vf103_usb:
     default_value: 0
     global: true
@@ -140,7 +209,8 @@ buildconfig:
       - flags: -x assembler-with-cpp
     cxxflags:
     common_defines:
-      - defines:
+      - defines: -DSYSTEM_CLOCK=${sysclk.info.hz}
+      - defines: -DSYSCLK_USING_$(upper(${sysclk.info.src}))
     prebuild_steps: # could be override by app/bsp type
       command:
       description:
