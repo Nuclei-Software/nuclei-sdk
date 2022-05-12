@@ -58,10 +58,15 @@ To add all the source code in directories, recursive search is not supported.
   * :ref:`develop_buildsystem_var_asm_srcdirs`: Add ASM only source code located
     in the directories defined by this variable.
 
-To add only selected source code in directory
+
+To add only selected c/cxx/asm source files
   * :ref:`develop_buildsystem_var_c_srcs`: Add C only source code files defined by this variable.
   * :ref:`develop_buildsystem_var_cxx_srcs`: Add CPP only source code files defined by this variable.
   * :ref:`develop_buildsystem_var_asm_srcs`: Add ASM only source code files defined by this variable.
+
+
+To exclude some source files
+  * :ref:`develop_buildsystem_var_exclude_srcs`: Exclude source files defined by this variable.
 
 .. _develop_appdev_addinc:
 

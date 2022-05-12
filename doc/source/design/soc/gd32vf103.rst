@@ -52,8 +52,8 @@ Supported Boards
 
 In Nuclei SDK, we support the following four boards based on **GD32VF103** SoC, see:
 
+* :ref:`design_board_gd32vf103v_rvstar`, default Board when this SoC selected.
 * :ref:`design_board_gd32vf103v_eval`
-* :ref:`design_board_gd32vf103v_rvstar`
 * :ref:`design_board_sipeed_longan_nano`
 * :ref:`design_board_ttgo_t_display`
 
@@ -64,6 +64,12 @@ Usage
 
 If you want to use this **GD32VF103** SoC in Nuclei SDK, you need to set the
 :ref:`develop_buildsystem_var_soc` Makefile variable to ``gd32vf103``.
+
+Extra make variables supported only in this SoC:
+* **SYSCLK**: ``108000000`` by default, means 108MHz system clock will be selected during SystemInit function,
+  it will define macro ``SYSTEM_CLOCK=$(SYSCLK)`` which is used in ``system_gd32vf103.c``, such as SYSTEM_CLOCK=108000000.
+* **CLKSRC**: hxtal by default, available choices are ``hxtal`` and ``irc8m``, means select to use HXTAL PLL
+  or IRC8M PLL, it will define macro ``CLOCK_USING_$(CLKSRC)``, such as ``CLOCK_USING_HXTAL``
 
 .. code-block:: shell
 

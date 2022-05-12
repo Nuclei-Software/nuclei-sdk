@@ -365,11 +365,15 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
    * - upload
      - build and upload application with selected configuration
    * - run_openocd
-     - run openocd server with selected configuration
+     - run openocd server with selected configuration, and wait for gdb at port specified by $(GDB_PORT)
    * - run_gdb
-     - build and start gdb process with selected configuration
+     - build and start gdb process with selected configuration, and connect to localhost:$(GDB_PORT)
    * - debug
      - build and debug application with selected configuration
+   * - run_qemu
+     - run application on qemu machine with selected configuration
+   * - run_xlspike
+     - run application on xlspike with selected configuration
    * - size
      - show program size
 
@@ -380,7 +384,12 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
    * For ``run_openocd`` and ``run_gdb`` target, if you want to
      change a new gdb port, you can pass the variable
      :ref:`develop_buildsystem_var_gdb_port`
-
+   * For ``run_qemu``, only ``SOC=demosoc or SOC=gd32vf103`` supported,
+     when do this target, you can pass ``SIMU=qemu`` to support auto-exit,
+     project recompiling is required.
+   * For ``run_xlspike``, only ``SOC=demosoc`` supported,
+     when do this target, you can pass ``SIMU=xlspike`` to support auto-exit,
+     project recompiling is required.
 
 .. _develop_buildsystem_exposed_make_vars:
 
@@ -392,6 +401,7 @@ which can be passed via make command.
 
 * :ref:`develop_buildsystem_var_soc`
 * :ref:`develop_buildsystem_var_board`
+* :ref:`develop_buildsystem_var_variant`
 * :ref:`develop_buildsystem_var_download`
 * :ref:`develop_buildsystem_var_core`
 * :ref:`develop_buildsystem_var_simulation`
@@ -494,6 +504,18 @@ Currently we support the following SoCs.
       the board supported list in **<NUCLEI_SDK_ROOT>/<SOC>/Board/**, take ``SOC=gd32vf103 BOARD=gd32vf103v_rvstar``
       as example, the board source code located **<NUCLEI_SDK_ROOT>/gd32vf103/Board/gd32vf103v_rvstar** will be used.
 
+.. _develop_buildsystem_var_variant:
+
+VARIANT
+~~~~~~~
+
+**VARIANT** variable is used to declare which variant of board is used in application during compiling.
+
+It might only affect on only small piece of board, and this is SoC and Board dependent.
+
+This variable only affect the selected board or soc, and it is target dependent.
+
+
 .. _develop_buildsystem_var_download:
 
 DOWNLOAD
@@ -526,6 +548,8 @@ currently it has these modes supported as described in table
 
 .. note::
 
+    * This variable now target dependent, and its meaning depending on how this
+      variable is implemented in SoC's build.mk
     * :ref:`design_soc_gd32vf103` only support **DOWNLOAD=flashxip**
     * :ref:`design_soc_demosoc` support all the download modes.
     * **flashxip** mode in :ref:`design_soc_demosoc` is very slow due to
@@ -1002,6 +1026,7 @@ build options or flags.
 * :ref:`develop_buildsystem_var_c_srcs`
 * :ref:`develop_buildsystem_var_cxx_srcs`
 * :ref:`develop_buildsystem_var_asm_srcs`
+* :ref:`develop_buildsystem_var_exclude_srcs`
 * :ref:`develop_buildsystem_var_common_flags`
 * :ref:`develop_buildsystem_var_cflags`
 * :ref:`develop_buildsystem_var_cxxflags`
@@ -1133,7 +1158,7 @@ C_SRCS
 ~~~~~~
 
 If you just want to include a few of C source files in directories, you can use this
-**C_SRCS** variable.
+**C_SRCS** variable, makefile wildcard pattern supported.
 
 e.g. To include ``main.c`` and ``src/hello.c``
 
@@ -1147,7 +1172,7 @@ CXX_SRCS
 ~~~~~~~~
 
 If you just want to include a few of CPP source files in directories, you can use this
-**CXX_SRCS** variable.
+**CXX_SRCS** variable, makefile wildcard pattern supported.
 
 e.g. To include ``main.cpp`` and ``src/hello.cpp``
 
@@ -1162,13 +1187,27 @@ ASM_SRCS
 ~~~~~~~~
 
 If you just want to include a few of ASM source files in directories, you can use this
-**ASM_SRCS** variable.
+**ASM_SRCS** variable, makefile wildcard pattern supported.
 
 e.g. To include ``asm.s`` and ``src/test.s``
 
 .. code-block:: makefile
 
     ASM_SRCS = asm.s src/test.s
+
+.. _develop_buildsystem_var_exclude_srcs:
+
+EXCLUDE_SRCS
+~~~~~~~~~~~~
+
+If you just want to exclude a few of c/asm/cpp source files in directories,
+you can use this **EXCLUDE_SRCS** variable, makefile wildcard pattern supported.
+
+e.g. To exclude ``test2.c`` and ``src/test3.c``
+
+.. code-block:: makefile
+
+    EXCLUDE_SRCS = test2.c src/test3.c
 
 .. _develop_buildsystem_var_common_flags:
 

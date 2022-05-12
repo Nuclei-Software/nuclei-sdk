@@ -19,6 +19,8 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
 
 * Build
   - Add ``SYSCLK`` and ``CLKSRC`` make variable for gd32vf103 SoC to set system clock in hz and clock source, such as ``SYSCLK=72000000 CLKSRC=hxtal``
+  - Exclude source files using ``EXCLUDE_SRCS`` make variable in Makefile
+  - ``C_SRCS/ASM_SRCS/CXX_SRCS`` now support wildcard pattern
 
 
 * SoC

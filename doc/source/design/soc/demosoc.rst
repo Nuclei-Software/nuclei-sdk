@@ -62,9 +62,9 @@ If you want to learn more about this evaluation SoC, please get the
 Supported Boards
 ----------------
 
-In Nuclei SDK, we support the following two boards based on **Nuclei demosoc** SoC, see:
+In Nuclei SDK, we support the following boards based on **Nuclei demosoc** SoC, see:
 
-* :ref:`design_board_nuclei_fpga_eval`
+* :ref:`design_board_nuclei_fpga_eval`, default Board when this SoC selected.
 
 .. _design_soc_demosoc_usage:
 
@@ -73,6 +73,10 @@ Usage
 
 If you want to use this **Nuclei demosoc SoC** in Nuclei SDK, you need to set the
 :ref:`develop_buildsystem_var_soc` Makefile variable to ``demosoc``.
+
+Extra make variables supported only in this SoC:
+* **RUNMODE**: it is used internally by Nuclei CPU team, used to control ILM/DLM/ICache/DCache enable or disable
+  via make variable, please check ``SoC/demosoc/runmode.mk`` for details. It is not functional by default, unless you set a non-empty variable to this RUNMODE variable.
 
 .. code-block:: shell
 
