@@ -158,12 +158,18 @@ codemanage:
       condition: $( startswith(${stdclib}, "newlib") )
     - path: ["Source/Stubs/libncrt"]
       condition: $( startswith(${stdclib}, "libncrt") )
-    - path: ["Source/Drivers/Usb/drv_usb_core.c", "Source/Drivers/Usb/drv_usb_host.c", "Source/Drivers/Usb/drv_usbh_int.c", "Source/Drivers/Usb/usbh_*.c", "Include/Usb/*.h"]
-      condition: $( ${usbdriver} == "host" )
-    - path: ["Source/Drivers/Usb/drv_usb_core.c", "Source/Drivers/Usb/drv_usb_dev.c", "Source/Drivers/Usb/drv_usbd_int.c", "Source/Drivers/Usb/usbd_*.c", "Include/Usb/*.h"]
-      condition: $( ${usbdriver} == "device" )
+    - path: ["Source/Drivers/Usb/drv_usb_core.c", "Include/Usb/*.h",
+             "Source/Drivers/Usb/drv_usb_host.c", "Source/Drivers/Usb/drv_usbh_int.c",
+             "Source/Drivers/Usb/usbh_core.c", "Source/Drivers/Usb/usbh_enum.c",
+             "Source/Drivers/Usb/usbh_pipe.c", "Source/Drivers/Usb/usbh_transc.c"]
+      condition: $( ${usbdriver} == "host"  )
+    - path: ["Source/Drivers/Usb/drv_usb_core.c", "Include/Usb/*.h",
+             "Source/Drivers/Usb/drv_usb_dev.c", "Source/Drivers/Usb/drv_usbd_int.c",
+             "Source/Drivers/Usb/usbd_core.c", "Source/Drivers/Usb/usbd_enum.c",
+             "Source/Drivers/Usb/usbd_transc.c" ]
+      condition: $( ${usbdriver} == "device"  )
     - path: ["Source/Drivers/Usb/*.c", "Include/Usb/*.h"]
-      condition: $( ${usbdriver} == "both" )
+      condition: $( ${usbdriver} == "both"  )
   incdirs:
     - path: ["Include"]
     - path: ["Include/Usb/"]
