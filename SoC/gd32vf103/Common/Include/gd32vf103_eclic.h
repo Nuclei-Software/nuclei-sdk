@@ -1,8 +1,8 @@
 /*!
-    \file  gd32vf103_libopt.h
-    \brief library optional for gd32vf103
+    \file  gd32vf103_eclic.h
+    \brief definitions for the ECLIC(Enhancement Core-Local Interrupt Controller)
 
-    \version 2019-6-5, V1.0.0, demo for GD32VF103
+    \version 2019-6-5, V1.0.0, firmware for GD32VF103
 */
 
 /*
@@ -32,33 +32,35 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef GD32VF103_LIBOPT_H
-#define GD32VF103_LIBOPT_H
+#ifndef GD32VF103_ECLIC_H
+#define GD32VF103_ECLIC_H
+
 #include "gd32vf103.h"
-#include "gd32vf103_adc.h"
-#include "gd32vf103_bkp.h"
-#include "gd32vf103_can.h"
-#include "gd32vf103_crc.h"
-#include "gd32vf103_dac.h"
-#include "gd32vf103_dma.h"
-#include "gd32vf103_exmc.h"
-#include "gd32vf103_eclic.h"
-#include "gd32vf103_exti.h"
-#include "gd32vf103_fmc.h"
-#include "gd32vf103_gpio.h"
-#include "gd32vf103_i2c.h"
-#include "gd32vf103_fwdgt.h"
-#include "gd32vf103_dbg.h"
-#include "gd32vf103_pmu.h"
-#include "gd32vf103_rcu.h"
-#include "gd32vf103_rtc.h"
-#include "gd32vf103_spi.h"
-#include "gd32vf103_timer.h"
-#include "gd32vf103_usart.h"
-#include "gd32vf103_wwdgt.h"
 
-GD32VF103_BEGIN_DECLS
+/* constants definitions */
+#define ECLIC_PRIGROUP_LEVEL0_PRIO4        0    /*!< 0 bits for level 4 bits for priority */
+#define ECLIC_PRIGROUP_LEVEL1_PRIO3        1    /*!< 1 bits for level 3 bits for priority */
+#define ECLIC_PRIGROUP_LEVEL2_PRIO2        2    /*!< 2 bits for level 2 bits for priority */
+#define ECLIC_PRIGROUP_LEVEL3_PRIO1        3    /*!< 3 bits for level 1 bits for priority */
+#define ECLIC_PRIGROUP_LEVEL4_PRIO0        4    /*!< 4 bits for level 0 bits for priority */
 
-GD32VF103_END_DECLS
+#define __SEV           eclic_send_event
 
-#endif /* GD32VF103_LIBOPT_H */
+/* function declarations */
+/* enable the global interrupt */
+void eclic_global_interrupt_enable(void);
+/* disable the global interrupt */
+void eclic_global_interrupt_disable(void);
+/* set the priority group */
+void eclic_priority_group_set(uint32_t prigroup);
+/* enable the interrupt request */
+void eclic_irq_enable(uint32_t source, uint8_t level, uint8_t priority);
+/* disable the interrupt request */
+void eclic_irq_disable(uint32_t source);
+
+/* reset system */
+void eclic_system_reset(void);
+/* send event(SEV) */
+void eclic_send_event(void);
+
+#endif /* GD32VF103_ECLIC_H */
