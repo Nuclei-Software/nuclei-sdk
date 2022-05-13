@@ -141,7 +141,7 @@ __STATIC_FORCEINLINE uint32_t __REV16(uint32_t value)
 {
     uint32_t result;
     result =  ((value & 0xff000000) >> 8)
-        | ((value & 0x00ff00000) << 8 )
+        | ((value & 0x00ff0000) << 8 )
         | ((value & 0x0000ff00) >> 8 )
         | ((value & 0x000000ff) << 8) ;
 
