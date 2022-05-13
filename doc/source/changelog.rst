@@ -21,7 +21,8 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
   - Add ``SYSCLK`` and ``CLKSRC`` make variable for gd32vf103 SoC to set system clock in hz and clock source, such as ``SYSCLK=72000000 CLKSRC=hxtal``
   - Exclude source files using ``EXCLUDE_SRCS`` make variable in Makefile
   - ``C_SRCS/ASM_SRCS/CXX_SRCS`` now support wildcard pattern
-
+  - ``USB_DRV_SUPPORT`` in gd32vf103 is removed, new ``USB_DRIVER`` is introduced, ``USB_DRIVER=device/host/both`` to choose device,
+    host or both driver code.
 
 * SoC
 
@@ -30,6 +31,7 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
   - Change demosoc eclic/timer baseaddr to support future cpu iregion feature, see eab28320d and 18109d04
   - Adapt system_gd32vf103.c to support control system clock in hz and clock source via macro **SYSTEM_CLOCK** and **CLOCK_USING_IRC8M** or **CLOCK_USING_HXTAL**
   - Merge various changes for gd32vf103 support from ``gsauthof@github``, see PR #37, #38, #40
+  - Remove usb config header files and usb config source code for gd32vf103
 
 * Tools
 
