@@ -75,8 +75,9 @@ If you want to use this **Nuclei demosoc SoC** in Nuclei SDK, you need to set th
 :ref:`develop_buildsystem_var_soc` Makefile variable to ``demosoc``.
 
 Extra make variables supported only in this SoC:
-* **RUNMODE**: it is used internally by Nuclei CPU team, used to control ILM/DLM/ICache/DCache enable or disable
-  via make variable, please check ``SoC/demosoc/runmode.mk`` for details. It is not functional by default, unless you set a non-empty variable to this RUNMODE variable.
+  * **RUNMODE**: it is used internally by Nuclei CPU team, used to control ILM/DLM/ICache/DCache enable or disable
+    via make variable, please check ``SoC/demosoc/runmode.mk`` for details. It is not functional by default,
+    unless you set a non-empty variable to this RUNMODE variable.
 
 .. code-block:: shell
 

@@ -66,13 +66,13 @@ If you want to use this **GD32VF103** SoC in Nuclei SDK, you need to set the
 :ref:`develop_buildsystem_var_soc` Makefile variable to ``gd32vf103``.
 
 Extra make variables supported only in this SoC:
-* **SYSCLK**: ``108000000`` by default, means 108MHz system clock will be selected during SystemInit function,
-  it will define macro ``SYSTEM_CLOCK=$(SYSCLK)`` which is used in ``system_gd32vf103.c``, such as SYSTEM_CLOCK=108000000.
-* **CLKSRC**: hxtal by default, available choices are ``hxtal`` and ``irc8m``, means select to use HXTAL PLL
-  or IRC8M PLL, it will define macro ``CLOCK_USING_$(CLKSRC)``, such as ``CLOCK_USING_HXTAL``
-* **USB_DRIVER**: none usb driver is selected by default. You can choose ``device`` or ``host`` or ``both``
-  to select device, host or both driver source code, and in application code, user need to provide usb host
-  or device initialization code and header files.
+  * **SYSCLK**: ``108000000`` by default, means 108MHz system clock will be selected during SystemInit function,
+    it will define macro ``SYSTEM_CLOCK=$(SYSCLK)`` which is used in ``system_gd32vf103.c``, such as SYSTEM_CLOCK=108000000.
+  * **CLKSRC**: hxtal by default, available choices are ``hxtal`` and ``irc8m``, means select to use HXTAL PLL
+    or IRC8M PLL, it will define macro ``CLOCK_USING_$(CLKSRC)``, such as ``CLOCK_USING_HXTAL``
+  * **USB_DRIVER**: none usb driver is selected by default. You can choose ``device`` or ``host`` or ``both``
+    to select device, host or both driver source code, and in application code, user need to provide usb host
+    or device initialization code and header files.
 
 .. code-block:: shell
 
