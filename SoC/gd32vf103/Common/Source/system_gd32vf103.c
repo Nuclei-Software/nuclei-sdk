@@ -181,7 +181,7 @@ static void system_clock_config(void);
     \param[out] none
     \retval     none
 */
-static void system_clock_config(void)
+void system_clock_config(void)
 {
 #ifdef __SYSTEM_CLOCK_HXTAL
     system_clock_hxtal();
