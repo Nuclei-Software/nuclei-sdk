@@ -74,7 +74,7 @@ extern void SystemInit(void);
 extern void SystemCoreClockUpdate(void);
 
 /**
- * \brief Configure the system clock
+ * \brief Configure the System Clock
  */
 extern void system_clock_config(void);
 

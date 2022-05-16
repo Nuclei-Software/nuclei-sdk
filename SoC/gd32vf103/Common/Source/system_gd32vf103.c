@@ -172,9 +172,6 @@ static void system_clock_108m_hxtal(void);
 volatile uint32_t SystemCoreClock = IRC8M_VALUE;
 #endif /* __SYSTEM_CLOCK_48M_PLL_IRC8M */
 
-/* configure the system clock */
-static void system_clock_config(void);
-
 /*!
     \brief      configure the system clock
     \param[in]  none
