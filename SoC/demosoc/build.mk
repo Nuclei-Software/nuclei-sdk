@@ -30,6 +30,10 @@
 
 BOARD ?= nuclei_fpga_eval
 CORE ?= n307fd
+# SMP must be a number, and above 1
+# it will define c macro SMP_CPU_CNT to be SMP value
+# and define a ld symbol __SMP_CPU_CNT to be used by linker script
+SMP ?=
 
 ifeq ($(BOARD),hbird_eval)
 $(warning BOARD hbird_eval is renamed to nuclei_fpga_eval since Nuclei SDK 0.3.1, please use BOARD=nuclei_fpga_eval now)
@@ -55,6 +59,12 @@ endif
 # Add extra cflags for SoC related
 ifeq ($(DOWNLOAD), flash)
 COMMON_FLAGS += -DVECTOR_TABLE_REMAPPED
+endif
+
+ifneq ($(SMP),)
+$(call assert,$(call gt,$(SMP),1),SMP must be a integer number >= 2)
+COMMON_FLAGS += -DSMP_CPU_CNT=$(SMP)
+LDFLAGS += -Wl,--defsym=__SMP_CPU_CNT=$(SMP)
 endif
 
 # Set RISCV_ARCH and RISCV_ABI

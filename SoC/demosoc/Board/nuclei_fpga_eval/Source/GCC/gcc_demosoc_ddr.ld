@@ -25,9 +25,6 @@ OUTPUT_ARCH( "riscv" )
 
 ENTRY( _start )
 
-__STACK_SIZE = 2K;
-__HEAP_SIZE  = 2K;
-
 MEMORY
 {
   /* Emulate ROM using DDR */
@@ -38,6 +35,12 @@ MEMORY
 
 SECTIONS
 {
+  /* To provide symbol __STACK_SIZE, __HEAP_SIZE and __SMP_CPU_CNT */
+  PROVIDE(__STACK_SIZE = 2K);
+  PROVIDE(__HEAP_SIZE = 2K);
+  PROVIDE(__SMP_CPU_CNT = 1);
+  __TOT_STACK_SIZE = __STACK_SIZE * __SMP_CPU_CNT;
+
   .init           :
   {
     *(.vtable)
@@ -235,14 +238,14 @@ SECTIONS
     PROVIDE( __heap_limit = . );
   } >ram AT>ram
 
-  .stack ORIGIN(ram) + LENGTH(ram) - __STACK_SIZE (NOLOAD) :
+  .stack ORIGIN(ram) + LENGTH(ram) - __TOT_STACK_SIZE (NOLOAD) :
   {
     . = ALIGN(16);
     PROVIDE( _heap_end = . );
     PROVIDE( __heap_end = . );
     PROVIDE( __StackLimit = . );
     PROVIDE( __StackBottom = . );
-    . += __STACK_SIZE;
+    . += __TOT_STACK_SIZE;
     . = ALIGN(16);
     PROVIDE( __StackTop = . );
     PROVIDE( _sp = . );

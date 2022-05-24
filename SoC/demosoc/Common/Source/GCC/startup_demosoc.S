@@ -147,13 +147,27 @@ _start:
     /* Disable Global Interrupt */
     csrc CSR_MSTATUS, MSTATUS_MIE
 
-    /* Initialize GP and Stack Pointer SP */
+    /* Initialize GP and TP */
     .option push
     .option norelax
     la gp, __global_pointer$
     la tp, __tls_base
     .option pop
+ 
+    /* Set correct sp for each cpu
+     * each stack size is __STACK_SIZE
+     * defined in linker script */
+    la t0, _sp
+    la t1, __STACK_SIZE
     la sp, _sp
+    csrr a0, CSR_MHARTID
+    li a1, 0
+1:
+    beq a0, a1, 1f
+    sub sp, sp, t1
+    addi a1, a1, 1
+    j 1b
+1:
 
     /*
      * Set the the NMI base mnvec to share
@@ -206,7 +220,13 @@ _start:
 
     /* Enable mcycle and minstret counter */
     csrci CSR_MCOUNTINHIBIT, 0x5
+ 
+    csrr a0, CSR_MHARTID
+    /* TODO: make boot hard id configurable */
+    li a1, 0
+    bne a0, a1, __skip_init
 
+__init_common:
     /* ===== Startup Stage 3 ===== */
     /*
      * Load code section from FLASH to ILM
@@ -257,6 +277,7 @@ _start_premain:
     /*
      * Call vendor defined SystemInit to
      * initialize the micro-controller system
+     * SystemInit will just be called by boot cpu
      */
     call SystemInit
 
@@ -266,7 +287,15 @@ _start_premain:
     /* Call C/C++ constructor start up code */
     call __libc_init_array
 
+__skip_init:
+    /* Sync all harts at this function */
+    call __sync_harts
+
     /* do pre-init steps before main */
+    /* _premain_init will be called by each cpu
+     * please make sure the implementation of __premain_int
+     * considered this
+     */
     call _premain_init
 
     /*
@@ -282,26 +311,51 @@ _start_premain:
     csrc CSR_MTVEC, t0
     csrs CSR_MTVEC, 0x3
 
-    /* ===== Call Main Function  ===== */
+    /* ===== Call SMP Main Function  ===== */
     /* argc = argv = 0 */
     li a0, 0
     li a1, 0
+    /* The weak implementation of smp_main is in this file */
+    call smp_main
+    /* do post-main steps after main
+     * this function will be called by each cpu */
+    call _postmain_fini
 
+1:
+    j 1b
+
+/*
+ * You can re-implement smp_main function in your code
+ * to do smp boot process and handle multi harts
+ */
+.weak smp_main
+.type smp_main, @function
+smp_main:
+    addi sp, sp, -2*REGBYTES
+    STORE ra, 0*REGBYTES(sp)
+    /* only boot hart goto main, other harts do wfi */
+    csrr t0, mhartid
+    li t1, 0
+    beq t0, t1, 2f
+1:
+    wfi
+    j 1b
+2:
 #ifdef RTOS_RTTHREAD
     // Call entry function when using RT-Thread
     call entry
 #else
     call main
 #endif
-    /* do post-main steps after main */
-    call _postmain_fini
+    LOAD ra, 0*REGBYTES(sp)
+    addi sp, sp, 2*REGBYTES
+    ret
 
-1:
-    j 1b
 
 /* Early boot exception entry before main */
 .align 6
 .global early_exc_entry
+.type early_exc_entry, @function
 early_exc_entry:
     wfi
     j early_exc_entry

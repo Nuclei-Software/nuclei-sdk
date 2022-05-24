@@ -374,6 +374,61 @@ static void _get_iregion_info(IRegion_Info_Type *iregion)
 }
 
 /**
+ * \brief Synchronize all harts
+ * \details
+ * This function is used to synchronize all the harts,
+ * especially to wait the boot hart finish initialization of
+ * data section, bss section and c runtines initialization
+ * This function must be placed in .init section, since
+ * section initialization is not ready, global variable
+ * and static variable should be avoid to use in this function,
+ * and avoid to call other functions
+ */
+#define CLINT_MSIP(base, hartid)    (*(volatile uint32_t *)((uintptr_t)((base) + ((hartid) * 4))))
+#define SMP_CTRLREG(base, ofs)      (*(volatile uint32_t *)((uintptr_t)((base) + (ofs))))
+
+__attribute__((section(".init"))) void __sync_harts(void)
+{
+// Only do synchronize when SMP_CPU_CNT is defined and number > 0
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long clint_base, irgb_base, smp_base;
+    unsigned long mcfg_info;
+
+    mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
+    if (mcfg_info & (1<<16)) { // IRegion Info present
+        // clint base = system timer base + 0x1000
+        irgb_base = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
+        clint_base = irgb_base + 0x30000 + 0x1000;
+        smp_base = irgb_base + 0x40000; 
+    } else {
+        // system timer base for demosoc is 0x02000000
+        clint_base = 0x02000000 + 0x1000;
+        smp_base = (__RV_CSR_READ(CSR_MSMPCFG_INFO) >> 4) << 4;
+    }
+    // Enable SMP and L2
+    SMP_CTRLREG(smp_base, 0xc) = 0xFFFFFFFF;
+    SMP_CTRLREG(smp_base, 0x10) = 0x1;
+    __SMP_RWMB();
+    
+    // pre-condition: interrupt must be disabled, this is done before calling this function
+    if (hartid == 0) { // boot hart
+        // clear msip pending
+        for (int i = 0; i < SMP_CPU_CNT; i ++) {
+            CLINT_MSIP(clint_base, i) = 0;
+        }
+        __SMP_RWMB();
+    } else {
+        // Set machine software interrupt pending to 1
+        CLINT_MSIP(clint_base, hartid) = 1;
+        __SMP_RWMB();
+        // wait for pending bit cleared by boot hart
+        while (CLINT_MSIP(clint_base, hartid) == 1);
+    }
+#endif
+}
+
+/**
  * \brief early init function before main
  * \details
  * This function is executed right before main function.
@@ -383,8 +438,13 @@ static void _get_iregion_info(IRegion_Info_Type *iregion)
  */
 void _premain_init(void)
 {
-    // IREGION INFO MUST BE SET BEFORE ANY PREMAIN INIT STEPS
-    _get_iregion_info((IRegion_Info_Type *)(&SystemIRegionInfo));
+    // TODO to make it possible for configurable boot hartid
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+
+    if (hartid == 0) { // only done in boot hart
+        // IREGION INFO MUST BE SET BEFORE ANY PREMAIN INIT STEPS
+        _get_iregion_info((IRegion_Info_Type *)(&SystemIRegionInfo));
+    }
     /* TODO: Add your own initialization code here, called before main */
     // This code located in RUNMODE_CONTROL ifdef endif block just for internal usage
     // No need to use in your code
@@ -409,24 +469,25 @@ void _premain_init(void)
     __RWMB();
     __FENCE_I();
 
-    SystemCoreClock = get_cpu_freq();
-    gpio_iof_config(GPIO, IOF0_UART0_MASK, IOF_SEL_0);
-    uart_init(SOC_DEBUG_UART, 115200);
-    /* Display banner after UART initialized */
-    SystemBannerPrint();
-    /* Initialize exception default handlers */
-    Exception_Init();
-    /* ECLIC initialization, mainly MTH and NLBIT */
-    ECLIC_Init();
-
+    if (hartid == 0) { // only required for boot hartid
+        SystemCoreClock = get_cpu_freq();
+        gpio_iof_config(GPIO, IOF0_UART0_MASK, IOF_SEL_0);
+        uart_init(SOC_DEBUG_UART, 115200);
+        /* Display banner after UART initialized */
+        SystemBannerPrint();
+        /* Initialize exception default handlers */
+        Exception_Init();
+        /* ECLIC initialization, mainly MTH and NLBIT */
+        ECLIC_Init();
 #ifdef RUNMODE_CONTROL
-    printf("Current RUNMODE=%s, ilm:%d, dlm %d, icache %d, dcache %d, ccm %d\n", \
+        printf("Current RUNMODE=%s, ilm:%d, dlm %d, icache %d, dcache %d, ccm %d\n", \
             RUNMODE_STRING, RUNMODE_ILM_EN, RUNMODE_DLM_EN, \
             RUNMODE_IC_EN, RUNMODE_DC_EN, RUNMODE_CCM_EN);
-    printf("CSR: MILM_CTL 0x%x, MDLM_CTL 0x%x, MCACHE_CTL 0x%x\n", \
+        printf("CSR: MILM_CTL 0x%x, MDLM_CTL 0x%x, MCACHE_CTL 0x%x\n", \
             __RV_CSR_READ(CSR_MILM_CTL), __RV_CSR_READ(CSR_MDLM_CTL), \
             __RV_CSR_READ(CSR_MCACHE_CTL));
 #endif
+    }
 }
 
 /**
