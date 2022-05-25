@@ -43,7 +43,12 @@ endif
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
 
+ifneq ($(SMP),)
+OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_demosoc_smp.cfg
+OPENOCD_CMD_ARGS += set SMP $(SMP);
+else
 OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_demosoc.cfg
+endif
 LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_demosoc_$(DOWNLOAD).ld
 
 # File existence check for OPENOCD_CFG and LINKER_SCRIPT
