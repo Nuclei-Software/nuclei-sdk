@@ -68,6 +68,7 @@ endif
 
 ifneq ($(SMP),)
 $(call assert,$(call gt,$(SMP),1),SMP must be a integer number >= 2)
+QEMU_OPT += -smp $(SMP)
 COMMON_FLAGS += -DSMP_CPU_CNT=$(SMP)
 LDFLAGS += -Wl,--defsym=__SMP_CPU_CNT=$(SMP)
 endif
