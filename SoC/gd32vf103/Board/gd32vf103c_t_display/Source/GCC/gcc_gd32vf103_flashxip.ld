@@ -43,15 +43,6 @@ __ROM_SIZE = 0x00020000;
 __RAM_BASE = 0x20000000;
 __RAM_SIZE = 0x00008000;
 
-/********************* Stack / Heap Configuration ****************************
- * <h> Stack / Heap Configuration
- * <o0> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
- * <o1> Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
- * </h>
- */
-__STACK_SIZE = 0x00000800;
-__HEAP_SIZE  = 0x00000800;
-
 /**************************** end of configuration section ********************/
 
 /* Define base address and length of flash and ram */
@@ -60,41 +51,15 @@ MEMORY
   flash (rxa!w) : ORIGIN = __ROM_BASE, LENGTH = __ROM_SIZE
   ram (wxa!r) : ORIGIN = __RAM_BASE, LENGTH = __RAM_SIZE
 }
-/* Linker script to place sections and symbol values. Should be used together
- * with other linker script that defines memory regions FLASH,ILM and RAM.
- * It references following symbols, which must be defined in code:
- *   _Start : Entry of reset handler
- *
- * It defines following symbols, which code can use without definition:
- *   _ilm_lma
- *   _ilm
- *   __etext
- *   _etext
- *   etext
- *   _eilm
- *   __preinit_array_start
- *   __preinit_array_end
- *   __init_array_start
- *   __init_array_end
- *   __fini_array_start
- *   __fini_array_end
- *   _data_lma
- *   _edata
- *   edata
- *   __data_end__
- *   __bss_start
- *   __fbss
- *   _end
- *   end
- *   __heap_end
- *   __StackLimit
- *   __StackTop
- *   __STACK_SIZE
- */
+
 /* Define entry label of program */
 ENTRY(_start)
 SECTIONS
 {
+  /* To provide symbol __STACK_SIZE, __HEAP_SIZE */
+  PROVIDE(__STACK_SIZE = 2K);
+  PROVIDE(__HEAP_SIZE = 2K);
+
   .init           :
   {
     /* vector table locate at flash */
