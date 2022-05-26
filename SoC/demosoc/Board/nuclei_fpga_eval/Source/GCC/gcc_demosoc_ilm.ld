@@ -168,7 +168,7 @@ SECTIONS
     *(.gnu.linkonce.r.*)
   } >ram AT>ram
 
-  .data          : ALIGN_WITH_INPUT
+  .data          : ALIGN(8)
   {
     KEEP(*(.data.ctest*))
     *(.data .data.*)
