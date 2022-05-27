@@ -482,6 +482,7 @@ class nsdk_runner(nsdk_builder):
 
         timeout = 60
         qemu_exe = None
+        qemu_extraopt = ""
         if hwconfig is not None:
             qemu32_exe = hwconfig.get("qemu32", "qemu-system-riscv32")
             qemu64_exe = hwconfig.get("qemu64", "qemu-system-riscv64")
@@ -492,7 +493,10 @@ class nsdk_runner(nsdk_builder):
             build_board = build_info["BOARD"]
             build_core = build_info["CORE"]
             build_download = build_info["DOWNLOAD"]
+            build_smp = build_info["SMP"]
             build_arch_ext = build_config.get("ARCH_EXT", "")
+            if build_smp != "":
+                qemu_extraopt = "%s -smp %s" % (qemu_extraopt, build_smp)
             if qemu_machine is None:
                 if build_soc == "hbird" or build_soc == "demosoc" or build_soc == "xlspike":
                     machine = "nuclei_n"
@@ -526,8 +530,8 @@ class nsdk_runner(nsdk_builder):
                 verchk = "QEMU emulator version"
                 ret, verstr = check_tool_version(vercmd, verchk)
                 if ret:
-                    command = "%s -M %s -cpu %s -nodefaults -nographic -serial stdio -kernel %s" \
-                        % (qemu_exe, machine, qemu_sel_cpu, build_objects["elf"])
+                    command = "%s %s -M %s -cpu %s -nodefaults -nographic -icount shift=0 -serial stdio -kernel %s" \
+                        % (qemu_exe, qemu_extraopt, machine, qemu_sel_cpu, build_objects["elf"])
                     print("Run command: %s" %(command))
                     runner = {"cmd": command, "version": verstr}
                     cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
@@ -551,12 +555,16 @@ class nsdk_runner(nsdk_builder):
 
         timeout = 60
         xlspike_exe = None
+        xlspike_extraopt = ""
         if hwconfig is not None:
             xlspike_exe = hwconfig.get("xlspike", "xl_spike")
             build_soc = build_info["SOC"]
             build_board = build_info["BOARD"]
             riscv_arch = build_info["RISCV_ARCH"]
             build_arch_ext = build_config.get("ARCH_EXT", "")
+            build_smp = build_config.get("SMP", "")
+            if build_smp != "":
+                xlspike_extraopt = "%s -p%s" % (xlspike_extraopt, build_smp)
             if not (build_soc == "hbird" or build_soc == "demosoc" or build_soc == "xlspike"):
                 xlspike_exe = None
                 print("SOC=%s BOARD=%s is not supported by xlspike" % (build_soc, build_board))
@@ -570,7 +578,7 @@ class nsdk_runner(nsdk_builder):
                 verchk = "RISC-V ISA Simulator"
                 ret, verstr = check_tool_version(vercmd, verchk)
                 if ret:
-                    command = "%s --isa %s %s" % (xlspike_exe, riscv_arch, build_objects["elf"])
+                    command = "%s %s --isa %s %s" % (xlspike_exe, xlspike_extraopt, riscv_arch, build_objects["elf"])
                     print("Run command: %s" %(command))
                     runner = {"cmd": command, "version": verstr}
                     cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \

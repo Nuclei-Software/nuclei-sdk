@@ -1,0 +1,36 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 60
+        },
+        "qemu": {
+            "qemu32": "qemu-system-riscv32",
+            "qemu64": "qemu-system-riscv64",
+            "timeout": 60
+        }
+    },
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval"
+    },
+    "checks": {
+        "PASS": [],
+        "FAIL": ["MEPC"]
+    },
+    "appdirs": [
+        "application/baremetal/smphello"
+    ],
+    "appdirs_ignore": [
+    ],
+    "appconfig": {
+        "application/baremetal/smphello": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["All harts boot successfully!"]
+            }
+        }
+    }
+}
