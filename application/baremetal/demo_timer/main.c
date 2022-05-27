@@ -9,7 +9,7 @@ static uint32_t int0_cnt = 0;    /* msip timer interrupt test counter */
 static uint32_t int1_cnt = 0;    /* mtip timer interrupt test counter */
 unsigned int msip_trig_flag = 1; /* sw trigger mtimer sw interrupt flag */
 
-void wait_seconds(size_t n)
+void wait_mseconds(size_t n)
 {
     uint64_t start_mtime, delta_mtime;
 
@@ -20,16 +20,15 @@ void wait_seconds(size_t n)
 
     do {
         delta_mtime = SysTimer_GetLoadValue() - start_mtime;
-    } while (delta_mtime < (n * SOC_TIMER_FREQ));
+    } while (delta_mtime < (n * (SOC_TIMER_FREQ / 1000)));
 }
 
 void mtimer_irq_handler(void)
 {
     int0_cnt++;
-    wait_seconds(1);
     printf("MTimer IRQ handler %d\n\r", int0_cnt);
     uint64_t now = SysTimer_GetLoadValue();
-    SysTimer_SetCompareValue(now + 0.5 * SOC_TIMER_FREQ);
+    SysTimer_SetCompareValue(now + SOC_TIMER_FREQ / 10);
 }
 
 void mtimer_sw_irq_handler(void)
@@ -44,7 +43,7 @@ void setup_timer()
 {
     printf("init timer and start\n\r");
     uint64_t now = SysTimer_GetLoadValue();
-    uint64_t then = now + 0.5 * SOC_TIMER_FREQ;
+    uint64_t then = now + SOC_TIMER_FREQ / 10;
     SysTimer_SetCompareValue(then);
 }
 
@@ -72,7 +71,7 @@ int main(void)
         if (msip_trig_flag == 1) {
             msip_trig_flag = 0;
             SysTimer_SetSWIRQ(); /* trigger timer sw interrupt */
-            wait_seconds(1);
+            wait_mseconds(100);
         }
     } while (int1_cnt < 10); /* check test end condition */
 

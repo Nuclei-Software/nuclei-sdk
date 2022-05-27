@@ -11,7 +11,8 @@
 #define HIGHER_INTLEVEL         2
 #define LOWER_INTLEVEL          1
 
-#define TIMER_TICKS             (2 * SOC_TIMER_FREQ)
+// 100ms
+#define TIMER_TICKS             (SOC_TIMER_FREQ / 10)
 
 static volatile uint32_t int_check_cnt = 0;
 
@@ -97,6 +98,7 @@ int main(int argc, char** argv)
     // Wait for timer interrupt and software interrupt
     // triggered periodly
     while (int_check_cnt < RUN_LOOPS);
+    __disable_irq();
     printf("ECLIC Demo finished sucessfully in %d loops\n", RUN_LOOPS);
     return 0;
 }
