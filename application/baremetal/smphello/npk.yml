@@ -2,7 +2,7 @@
 name: app-nsdk_smphello
 owner: nuclei
 version:
-description: Baremetal SMP Helloworld
+description: SMP Helloworld in baremetal environment
 type: app
 keywords:
   - baremetal
@@ -15,6 +15,7 @@ homepage:
 dependencies:
   - name: sdk-nuclei_sdk
     version:
+  - name: ssp-nsdk_demosoc
 
 ## Package Configurations
 configuration:
