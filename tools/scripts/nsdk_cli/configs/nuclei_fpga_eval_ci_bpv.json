@@ -5,7 +5,7 @@
             "timeout": 240
         },
         "qemu" : {
-            "timeout": 120
+            "timeout": 240
         }
     },
     "parallel": "-j",
