@@ -561,6 +561,8 @@ class nsdk_runner(nsdk_builder):
             build_soc = build_info["SOC"]
             build_board = build_info["BOARD"]
             riscv_arch = build_info["RISCV_ARCH"]
+            # replace e with i for xlspike
+            riscv_arch = riscv_arch.replace("e", "i")
             #build_arch_ext = build_config.get("ARCH_EXT", "")
             build_smp = build_info.get("SMP", "")
             if build_smp != "":
