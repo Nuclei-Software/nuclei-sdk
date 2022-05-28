@@ -493,7 +493,7 @@ class nsdk_runner(nsdk_builder):
             build_board = build_info["BOARD"]
             build_core = build_info["CORE"]
             build_download = build_info["DOWNLOAD"]
-            build_smp = build_info["SMP"]
+            build_smp = build_info.get("SMP", "")
             build_arch_ext = build_config.get("ARCH_EXT", "")
             if build_smp != "":
                 qemu_extraopt = "%s -smp %s" % (qemu_extraopt, build_smp)
@@ -561,8 +561,8 @@ class nsdk_runner(nsdk_builder):
             build_soc = build_info["SOC"]
             build_board = build_info["BOARD"]
             riscv_arch = build_info["RISCV_ARCH"]
-            build_arch_ext = build_config.get("ARCH_EXT", "")
-            build_smp = build_config.get("SMP", "")
+            #build_arch_ext = build_config.get("ARCH_EXT", "")
+            build_smp = build_info.get("SMP", "")
             if build_smp != "":
                 xlspike_extraopt = "%s -p%s" % (xlspike_extraopt, build_smp)
             if not (build_soc == "hbird" or build_soc == "demosoc" or build_soc == "xlspike"):
