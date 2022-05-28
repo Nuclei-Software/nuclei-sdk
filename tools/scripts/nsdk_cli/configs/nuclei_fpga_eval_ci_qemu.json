@@ -101,6 +101,9 @@
             }
         }
     },
+    "expected": {
+        "test/core": {"build": true, "run": false}
+    },
     "expecteds": {
         "application/baremetal/demo_dsp" : {
             "n201-ilm": { "build": false, "run": false },

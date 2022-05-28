@@ -35,6 +35,7 @@
         "application/baremetal/demo_nice" : {
             "run": false,
             "build": true
-        }
+        },
+        "test/core": {"build": true, "run": false}
     }
 }
