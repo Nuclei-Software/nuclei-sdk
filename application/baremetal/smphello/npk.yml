@@ -15,8 +15,6 @@ homepage:
 dependencies:
   - name: sdk-nuclei_sdk
     version:
-  - name: ssp-nsdk_demosoc
-  - name: ssp-nsdk_ns
 
 ## Package Configurations
 configuration:
