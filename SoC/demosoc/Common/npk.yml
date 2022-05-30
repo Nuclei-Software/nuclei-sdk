@@ -233,6 +233,38 @@ configuration:
         description: Packed SIMD Extension
       - name: v
         description: Vector Extension
+  nuclei_smp:
+    default_value: 1
+    type: choice
+    global: true
+    description: Nuclei SMP Count
+    choices:
+      - name: 1
+        description: 1 Core
+      - name: 2
+        description: 2 Core
+      - name: 4
+        description: 4 Core
+      - name: 6
+        description: 6 Core
+      - name: 8
+        description: 8 Core
+      - name: 10
+        description: 10 Core
+      - name: 12
+        description: 12 Core
+      - name: 14
+        description: 14 Core
+      - name: 16
+        description: 16 Core
+  heapsz:
+      value: ""
+      type: text
+      description: Heap Size
+  stacksz:
+      value: ""
+      type: text
+      description: Stack Size Per CPU
   stdclib:
     default_value: newlib_nano
     type: choice
@@ -261,6 +293,11 @@ configuration:
         description: no std c library will be used, and don't search the standard system directories for header files
       - name: nospec
         description: no std c library will be used, not pass any --specs options
+  linker_script:
+    default_value: ""
+    type: text
+    global: false
+    description: Alternative linker script
 
 ## Source Code Management
 codemanage:
@@ -325,11 +362,19 @@ buildconfig:
       - flags: -Wl,--gc-sections -Wl,--check-sections
       - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
         condition: $( startswith(${stdclib}, "newlib") )
+      - flags: -Wl,--defsym=__SMP_CPU_CNT=${nuclei_smp}
+        condition: $( ${nuclei_smp} > 1 )
+      - flags: -Wl,--defsym=__HEAP_SIZE=${heapsz}
+        condition: $( ${heapsz} != "" )
+      - flags: -Wl,--defsym=__STACK_SIZE=${stacksz}
+        condition: $( ${stacksz} != "" )
     cflags:
     asmflags:
       - flags: -x assembler-with-cpp
     cxxflags:
     common_defines:
+      - defines: SMP_CPU_CNT=${nuclei_smp}
+        condition: $( ${nuclei_smp} > 1 )
     prebuild_steps: # could be override by app/bsp type
       command:
       description:

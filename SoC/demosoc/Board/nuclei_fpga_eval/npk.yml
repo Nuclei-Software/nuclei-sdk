@@ -53,7 +53,7 @@ configuration:
 codemanage:
   installdir: nuclei_fpga_eval
   copyfiles:
-    - path: ["Source/", "Include/", "openocd_demosoc.cfg"]
+    - path: ["Source/", "Include/", "*.cfg"]
   incdirs:
     - path: ["Include/"]
 
@@ -66,7 +66,11 @@ debugconfig:
     description: Nuclei OpenOCD
     configs:
       - key: config
+        value: "openocd_demosoc_smp.cfg"
+        condition: $( ${nuclei_smp} > 1 )
+      - key: config
         value: "openocd_demosoc.cfg"
+        condition: $( ${nuclei_smp} <= 1 )
 
   - type: qemu
     description: Nuclei QEMU
@@ -83,6 +87,8 @@ debugconfig:
          value: ${nuclei_core.abi}
        - key: machine
          value: nuclei_n
+       - key: smp
+         value: ${nuclei_smp}
 
   - type: jlink
     description: Segger Jlink
@@ -101,6 +107,9 @@ buildconfig:
   - type: gcc
     linkscript:
       - script: "Source/GCC/gcc_demosoc_${download_mode}.ld"
+        condition: $( "x${linker_script}" == "x" )
+      - script: ${linker_script}
+        condition: $( "x${linker_script}" != "x" )
     common_flags:
       - flags:
     common_defines:
