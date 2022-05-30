@@ -160,8 +160,7 @@ sdk_run_newlib_job_nuclei_fpga_eval:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
   script:
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET"
---run --run_target $RUNTARGET
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
 
 sdk_run_libncrt_job_nuclei_fpga_eval:
   <<: *build_job_template_default
@@ -194,8 +193,7 @@ sdk_run_smp_job_nuclei_fpga_eval:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_libncrt.json
   script:
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET"
---run --run_target $RUNTARGET
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
 
 sdk_run_on_ncycm:
   <<: *build_job_template_default
