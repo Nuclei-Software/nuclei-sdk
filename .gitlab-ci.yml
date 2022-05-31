@@ -1,8 +1,8 @@
 variables:
   DOC_SERVER: doc
-  DOC_CENTER: /home/xl_ci/doc_center
+  DOC_CENTER: /Local/xl_ci/doc_center
   IMAGE: rego.corp.nucleisys.com/software/sdkbuild
-  IMAGE_TAG: 2022.05-eng2
+  IMAGE_TAG: 2022.05-eng4
 
 default:
   tags:
@@ -147,7 +147,7 @@ sdk_build_job_nuclei_fpga_eval:
   script:
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
 
-sdk_run_newlib_job_nuclei_fpga_eval:
+sdk_run_newlib_nano_job_nuclei_fpga_eval:
   <<: *build_job_template_default
   timeout: 4h
   variables:
@@ -159,7 +159,28 @@ sdk_run_newlib_job_nuclei_fpga_eval:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
   script:
-    - export LOGDIR=logs/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
+
+sdk_run_newlib_job_nuclei_fpga_eval:
+  <<: *build_job_template_default
+  timeout: 4h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    RUNTARGET: qemu
+  parallel:
+    matrix:
+      - HWCFG:
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_newlib.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv_newlib.json
+        IMAGE_TAG:
+        - "2022.05-eng2"
+        - "2022.05-eng4"
+  script:
+    - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
+    # change ilm/dlm size from 64K to 128K for demosoc to be able to build with newlib full library
+    - sed -i "s/64K/128K/g" SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
+    - sed -i "s/64K/128K/g" SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_flash.ld
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
 
 sdk_run_libncrt_job_nuclei_fpga_eval:
