@@ -10,6 +10,9 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
 
 * Application
 
+  - Add ``smphello`` application to test baremetal smp support, this will do demostration
+    to boot default 2 core and each hart print hello world.
+
 
 * NMSIS
 
@@ -23,6 +26,8 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
   - ``C_SRCS/ASM_SRCS/CXX_SRCS`` now support wildcard pattern
   - ``USB_DRV_SUPPORT`` in gd32vf103 is removed, new ``USB_DRIVER`` is introduced, ``USB_DRIVER=device/host/both`` to choose device,
     host or both driver code.
+  - ``SMP``, ``HEAPSZ`` and ``STACKSZ`` make variable are introduced to control stack/heap
+    size and smp cpu count used in SDK
 
 * SoC
 
@@ -32,12 +37,16 @@ This is version ``0.3.8-dev`` of Nuclei SDK, which is still in development.
   - Adapt system_gd32vf103.c to support control system clock in hz and clock source via macro **SYSTEM_CLOCK** and **CLOCK_USING_IRC8M** or **CLOCK_USING_HXTAL**
   - Merge various changes for gd32vf103 support from ``gsauthof@github``, see PR #37, #38, #40
   - Remove usb config header files and usb config source code for gd32vf103
+  - Change gd32vf103 linker scripts to support ``HEAPSZ`` and ``STACKSZ``
+  - Change demosoc linker scripts to support ``HEAPSZ``, ``STACKSZ`` and ``SMP``
+  - Add baremetal SMP support for demosoc, user can pass ``SMP=2`` to build for 2 smp cpu.
 
 * Tools
 
   - Record more flags in ``nsdk_report.py`` such as ``NUCLEI_SDK_ROOT``, ``OPENOCD_CFG`` and ``LINKER_SCRIPT``.
   - Fix nsdk_report.py generated runresult.xls file content is not correct when some application failed
   - Add benchmark c standard script in tools/misc/barebench
+  - Change to support ``SMP`` variable
 
 * OS
 

@@ -367,6 +367,71 @@ This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
     SUCCESS, riscv_conv_fast_opt_q15
     all test are passed. Well done!
 
+smphello
+~~~~~~~~
+
+This `smphello application`_ is used to demostrate how to use baremetal SMP feature.
+
+This demo request the SMP cores share the same RAM and ROM, for example, in current
+demosoc system, ilm/dlm are private resource for cpu, only the DDR memory are shared
+resource for all the cpu.
+
+And `RVA` atomic extension is required to run this application, this extension is used
+to do spinlock in this example.
+
+.. note::
+
+    * If didn't work with gd32vf103 processor.
+    * Need to enable I/D Cache in <Device.h> if I/D Cache present in CPU.
+
+Need to change ``__ICACHE_PRESENT``, ``__DCACHE_PRESENT`` and ``__CCM_PRESENT`` to 1 in
+``SoC/demosoc/Common/Include/demosoc.h`` before run this application.
+
+.. code-block:: diff
+
+    diff --git a/SoC/demosoc/Common/Include/demosoc.h b/SoC/demosoc/Common/Include/demosoc.h
+    index 256cc614..fc9934ae 100644
+    --- a/SoC/demosoc/Common/Include/demosoc.h
+    +++ b/SoC/demosoc/Common/Include/demosoc.h
+    @@ -243,9 +243,9 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
+     #define __PMP_ENTRY_NUM           16                    /*!< Set to 8 or 16, the number of PMP entries */
+
+     #ifndef RUNMODE_CONTROL
+     -#define __ICACHE_PRESENT          0                     /*!< Set to 1 if I-Cache is present */
+     -#define __DCACHE_PRESENT          0                     /*!< Set to 1 if D-Cache is present */
+     -#define __CCM_PRESENT             0                     /*!< Set to 1 if Cache Control and Mantainence Unit is present */
+     +#define __ICACHE_PRESENT          1                     /*!< Set to 1 if I-Cache is present */
+     +#define __DCACHE_PRESENT          1                     /*!< Set to 1 if D-Cache is present */
+     +#define __CCM_PRESENT             1                     /*!< Set to 1 if Cache Control and Mantainence Unit is present */
+     #else // RUNMODE_CONTROL is defined in SoC/demosoc/runmode.mk, for internal usage not intend for widely usage
+     #define __ICACHE_PRESENT          RUNMODE_IC_EN         /*!< Set to 1 if I-Cache is present */
+     #define __DCACHE_PRESENT          RUNMODE_DC_EN         /*!< Set to 1 if D-Cache is present */
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei UX600 SMP 2 Core RISC-V processor as example
+    # application need to run in ddr memory not in ilm memory
+    # cd to the smphello directory
+    cd application/baremetal/smphello
+    # Clean the application first
+    make SOC=demosoc BOARD=nuclei_fpga_eval SMP=2 DOWNLOAD=ddr CORE=ux600 clean
+    # Build and upload the application
+    make SOC=demosoc BOARD=nuclei_fpga_eval SMP=2 DOWNLOAD=ddr CORE=ux600 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: May 30 2022, 15:38:00
+    Download Mode: DDR
+    CPU Frequency 15998648 Hz
+    Hello world from hart 0
+    Hello world from hart 1
+    All harts boot successfully!
+
 demo_nice
 ~~~~~~~~~
 
@@ -963,6 +1028,7 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 .. _demo_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_timer
 .. _demo_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic
 .. _demo_dsp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_dsp
+.. _smphello application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/smphello
 .. _demo_nice application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_nice
 .. _coremark benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/coremark
 .. _dhrystone benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/dhrystone

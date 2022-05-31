@@ -871,6 +871,58 @@ can provided smaller code size and highly optimized floating point support compa
       need to provide different stub functions for different library, please check
       ``SoC/demosoc/Common/Source/Stubs/`` and ``SoC/demosoc/build.mk`` for example.
 
+.. _develop_buildsystem_var_smp:
+
+SMP
+~~~
+
+**SMP** variable is used to control smp cpu core count, valid number must > 1.
+
+When **SMP** variable is defined, extra gcc options for ld is passed
+``-Wl,--defsym=__SMP_CPU_CNT=$(SMP)``, and extra c macro ``-DSMP_CPU_CNT=$(SMP)``
+is defined this is passed in each SoC's build.mk, such as ``SoC/demosoc/build.mk``.
+
+And for demosoc, we use a different openocd configuration file for SMP named
+``SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc_smp.cfg``.
+
+When SMP variable is defined, extra openocd command ``set SMP $(SMP)`` will also
+be passed when run openocd upload or create a openocd server.
+
+.. _develop_buildsystem_var_stacksz:
+
+STACKSZ
+~~~~~~~
+
+**STACKSZ** variable is used to control the per core stack size reserved in linker script,
+this need to cooperate with link script file and linker options.
+
+In link script file, ``__STACK_SIZE`` symbol need to use ``PROVIDE`` feature of ld
+to define a weak version, such as ``PROVIDE(__STACK_SIZE = 2K);``, and gcc will pass
+ld options ``-Wl,--defsym=__STACK_SIZE=$(STACKSZ)`` to overwrite the default value if
+**STACKSZ** is defined.
+
+**STACKSZ** variable must be a valid value accepted by ld, such as 0x2000, 2K, 4K, 8192.
+
+For SMP version, stack size space need to reserve **STACKSZ** x SMP Core Count size.
+
+You can refer to ``SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld`` for smp version.
+
+.. _develop_buildsystem_var_heapsz:
+
+HEAPSZ
+~~~~~~
+
+**HEAPSZ** variable is used to control the heap size reserved in linker script,
+this need to cooperate with link script file and linker options.
+
+In link script file, ``__HEAP_SIZE`` symbol need to use ``PROVIDE`` feature of ld
+to define a weak version, such as ``PROVIDE(__HEAP_SIZE = 2K);``, and gcc will pass
+ld options ``-Wl,--defsym=__HEAP_SIZE=$(HEAPSZ)`` to overwrite the default value if
+**HEAPSZ** is defined.
+
+**HEAPSZ** variable must be a valid value accepted by ld, such as 0x2000, 2K, 4K, 8192.
+
+
 .. _develop_buildsystem_var_archext:
 
 ARCH_EXT
