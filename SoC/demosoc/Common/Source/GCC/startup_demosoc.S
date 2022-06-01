@@ -154,20 +154,24 @@ _start:
     la tp, __tls_base
     .option pop
  
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     /* Set correct sp for each cpu
      * each stack size is __STACK_SIZE
      * defined in linker script */
-    la t0, _sp
-    la t1, __STACK_SIZE
+    la t0, __STACK_SIZE
     la sp, _sp
     csrr a0, CSR_MHARTID
     li a1, 0
 1:
-    beq a0, a1, 1f
-    sub sp, sp, t1
+    beq a0, a1, 2f
+    sub sp, sp, t0
     addi a1, a1, 1
     j 1b
-1:
+2:
+#else
+    /* Set correct sp for current cpu */
+    la sp, _sp
+#endif
 
     /*
      * Set the the NMI base mnvec to share
@@ -221,10 +225,12 @@ _start:
     /* Enable mcycle and minstret counter */
     csrci CSR_MCOUNTINHIBIT, 0x5
  
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     csrr a0, CSR_MHARTID
     /* TODO: make boot hard id configurable */
     li a1, 0
     bne a0, a1, __skip_init
+#endif
 
 __init_common:
     /* ===== Startup Stage 3 ===== */
@@ -315,8 +321,17 @@ __skip_init:
     /* argc = argv = 0 */
     li a0, 0
     li a1, 0
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     /* The weak implementation of smp_main is in this file */
     call smp_main
+#else
+#ifdef RTOS_RTTHREAD
+    // Call entry function when using RT-Thread
+    call entry
+#else
+    call main
+#endif
+#endif
     /* do post-main steps after main
      * this function will be called by each cpu */
     call _postmain_fini
@@ -324,6 +339,7 @@ __skip_init:
 1:
     j 1b
 
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
 /*
  * You can re-implement smp_main function in your code
  * to do smp boot process and handle multi harts
@@ -350,7 +366,7 @@ smp_main:
     LOAD ra, 0*REGBYTES(sp)
     addi sp, sp, 2*REGBYTES
     ret
-
+#endif
 
 /* Early boot exception entry before main */
 .align 6
