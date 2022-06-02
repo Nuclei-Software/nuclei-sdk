@@ -445,7 +445,7 @@ Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
 .. note::
 
    If you are our SoC subsystem customer, in the SDK delivered to you, you can find your soc name
-   in this **<NUCLEI_SDK_ROOT>/SoC** directory, take ``gd32vf103`` SoC as example, when **SOC=gd32vf103``,
+   in this **<NUCLEI_SDK_ROOT>/SoC** directory, take ``gd32vf103`` SoC as example, when ``SOC=gd32vf103``,
    the SoC source code in **<NUCLEI_SDK_ROOT>/SoC/gd32vf103/Common** will be used.
 
    This documentation just document the open source version of Nuclei SDK's supported SOC and Board.
@@ -626,15 +626,16 @@ Currently it has these cores supported as described in table
    ux900fd   rv64imafdc lp64d    nuclei-900-series
    ========  ========== =======  =================
 
-When **CORE** is selected, the **ARCH**, **ABI** and **TUNE**(optional) are set,
+When **CORE** is selected, the **ARCH**, **ABI** and **TUNE** (optional) are set,
 and it might affect the compiler options in combination with :ref:`develop_buildsystem_var_archext`
 depended on the implementation of SoC build.mk.
 
 Take ``SOC=demosoc`` as example.
 
-- If **CORE=n205 ARCH_EXT=**, then ``ARCH=rv32imac, ABI=ilp32 TUNE=nuclei-200-series``,
-riscv arch related compile and link options will be passed, for this case,
-it will be ``-march=rv32imac -mabi=ilp32 -mtune=nuclei-200-series``.
+- If **CORE=n205 ARCH_EXT=**, then ``ARCH=rv32imac, ABI=ilp32 TUNE=nuclei-200-series``. 
+  riscv arch related compile and link options will be passed, for this case, it will be
+  ``-march=rv32imac -mabi=ilp32 -mtune=nuclei-200-series``.
+
 - If **CORE=n205 ARCH_EXT=b**, it will be ``-march=rv32imacb -mabi=ilp32 -mtune=nuclei-200-series``.
 
 For riscv code model settings, the ``RISCV_CMODEL`` variable will be set to medlow
