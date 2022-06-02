@@ -84,7 +84,7 @@ jobs:
         python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
 
     - name: Upload Build Log for ${{ matrix.soc }}
-      uses: actions/upload-artifact@v2.2.0
+      uses: actions/upload-artifact@v3
       with:
         name: build_${{ matrix.soc }}
         path: |
