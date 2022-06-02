@@ -1,6 +1,6 @@
 {
   "name": "framework-nuclei-sdk",
-  "version": "0.3.8-dev",
+  "version": "0.3.8",
   "description": "Nuclei Embedded Software Development Kit",
   "keywords": [
     "framework",
