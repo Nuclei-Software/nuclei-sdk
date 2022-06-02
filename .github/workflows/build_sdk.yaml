@@ -49,9 +49,12 @@ jobs:
     - name: Prepare Tools for Ubuntu
       if: startsWith(matrix.os, 'ubuntu')
       run: |
+          sudo apt-get update
+          sudo apt install -y python3 python3-pip
+          pip3 install -r tools/scripts/requirements.txt
           mkdir -p prebuilt_tools
           cd prebuilt_tools
-          toolzip=nuclei_riscv_newlibc_prebuilt_linux64_2022.01.tar.bz2
+          toolzip=nuclei_riscv_newlibc_prebuilt_linux64_2022.04.tar.bz2
           if [ ! -e $toolzip ] ; then
             wget https://nucleisys.com/upload/files/toochain/gcc/$toolzip
           fi
@@ -64,61 +67,24 @@ jobs:
       run: |
         echo "Setup build environment"
         source setup.sh
-        source .ci/build_sdk.sh
-        source .ci/build_applications.sh
-        touch build.log
-        export CORE=n305
-        export DOWNLOAD=ilm
-        echo "Build For Board nuclei_fpga_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
-        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    application  >> build.log
-        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    test         >> build.log
-        export CORE=ux600
-        export DOWNLOAD=ddr
-        echo "Build For Board nuclei_fpga_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
-        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    application  >> build.log
-        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    test         >> build.log
-        export CORE=ux600fd
-        export DOWNLOAD=flash
-        echo "Build For Board nuclei_fpga_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
-        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    application  >> build.log
-        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    test         >> build.log
-        export CORE=n307fd
-        export DOWNLOAD=flashxip
-        echo "Build For Board nuclei_fpga_eval, CORE=$CORE, DOWNLOAD=$DOWNLOAD"
-        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    application  >> build.log
-        SOC=demosoc BOARD=nuclei_fpga_eval nsdk_build_directory    test         >> build.log
-
-        mv build.log build_${{ matrix.soc }}.log
+        export APPCFG=tools/scripts/nsdk_cli/configs/application.json
+        export HWCFG=tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
+        export LOGDIR=logs/nuclei_fpga_eval_ci
+        python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
 
     - name: Build SDK for GD32VF103 SoC
       if: matrix.soc == 'gd32vf103'
       run: |
         echo "Setup build environment"
         source setup.sh
-        source .ci/build_sdk.sh
-        source .ci/build_applications.sh
-        touch build.log
-        export CORE=n205
-        export DOWNLOAD=flashxip
-        echo "Build For Board gd32vf103v_eval"
-        SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    application >> build.log
-        SOC=gd32vf103 BOARD=gd32vf103v_eval nsdk_build_directory    test        >> build.log
-        echo "Build For Board gd32vf103v_rvstar"
-        SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    application   >> build.log
-        SOC=gd32vf103 BOARD=gd32vf103v_rvstar nsdk_build_directory    test          >> build.log
-        mv build.log build_${{ matrix.soc }}.log
-        echo "Build For Board gd32vf103c_longan_nano"
-        SOC=gd32vf103 BOARD=gd32vf103c_longan_nano nsdk_build_directory    application   >> build.log
-        SOC=gd32vf103 BOARD=gd32vf103c_longan_nano nsdk_build_directory    test          >> build.log
-        mv build.log build_${{ matrix.soc }}.log
-        echo "Build For Board gd32vf103c_t_display"
-        SOC=gd32vf103 BOARD=gd32vf103c_t_display nsdk_build_directory    application   >> build.log
-        SOC=gd32vf103 BOARD=gd32vf103c_t_display nsdk_build_directory    test          >> build.log
-        mv build.log build_${{ matrix.soc }}.log
+        export APPCFG=tools/scripts/nsdk_cli/configs/application.json
+        export HWCFG=tools/scripts/nsdk_cli/configs/gd32vf103v_rvstar.json
+        export LOGDIR=logs/gd32vf103v_rvstar
+        python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
 
     - name: Upload Build Log for ${{ matrix.soc }}
       uses: actions/upload-artifact@v2.2.0
       with:
         name: build_${{ matrix.soc }}
         path: |
-          build*.log
+          logs/*
