@@ -35,6 +35,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install lftp python3 make latexmk \
           texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
+          sudo python3 -m pip install --upgrade pip
           sudo pip3 install -r doc/requirements.txt
     - name: Build Documentation
       run: |
