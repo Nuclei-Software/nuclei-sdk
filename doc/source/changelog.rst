@@ -10,6 +10,8 @@ This is development version ``0.3.9-dev`` of Nuclei SDK, which is still in devel
 
 * Application
 
+  - Add ``lowpower`` application to demostrate lowpower feature of Nuclei Processor.
+
 * NMSIS
 
 * Build System

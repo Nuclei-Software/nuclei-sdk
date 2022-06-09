@@ -367,6 +367,39 @@ This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
     SUCCESS, riscv_conv_fast_opt_q15
     all test are passed. Well done!
 
+lowpower
+~~~~~~~~
+
+This `lowpower application`_ is used to demostrate how to use lowpower feature of RISC-V
+processor.
+
+Timer interrupt is setup before enter to wfi mode, and global interrupt will be disabled,
+so interrupt handler will not be entered, and will directly resume to next pc of wfi.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Assume your processor has enabled lowpower feature
+    # cd to the lowpower directory
+    cd application/baremetal/lowpower
+    # Clean the application first
+    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
+    # Build and upload the application
+    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jun  9 2022, 11:23:14
+    Download Mode: ILM
+    CPU Frequency 15996354 Hz
+    CSV, WFI Start/End, 178264/178289
+    CSV, WFI Cost, 25
+
+
 smphello
 ~~~~~~~~
 
@@ -481,7 +514,7 @@ For more about **NICE** feature, please click `Nuclei User Extended Introduction
             20      40      80
             30      90      120
 
-    2. Do reference matrix column sum and row sum
+    1. Do reference matrix column sum and row sum
     2. Do nice matrix column sum and row sum
     3. Compare reference and nice result
       1) Reference result:
@@ -489,13 +522,13 @@ For more about **NICE** feature, please click `Nuclei User Extended Introduction
                     130     140     240
     the sum of each col is :
                     60      160     290
-      2) Nice result:
+      1) Nice result:
     the sum of each row is :
                     130     140     240
     the sum of each col is :
                     60      160     290
-      3) Compare reference vs nice: PASS
-    4. Performance summary
+      1) Compare reference vs nice: PASS
+    1. Performance summary
              normal:
                   instret: 511, cycle: 790
              nice  :
@@ -1029,6 +1062,7 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 .. _demo_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic
 .. _demo_dsp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_dsp
 .. _smphello application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/smphello
+.. _lowpower application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/lowpower
 .. _demo_nice application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_nice
 .. _coremark benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/coremark
 .. _dhrystone benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/dhrystone
