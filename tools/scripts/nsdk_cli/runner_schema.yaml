@@ -1,6 +1,6 @@
 runcfg: include('rcfg')
 environment: include('env')
-fpga_runners: 
+fpga_runners:
   map(include('fpgarunner'), key=str())
 ncycm_runners:
   map(include('ncycmrunner'), key=str())
@@ -20,7 +20,7 @@ fpgarunner:
   board_type: enum('ku060', 'ddr200t', 'mcu200t', 'vcu118', 'vu19p')
   fpga_serial: str()
   ftdi_serial: str()
-  serial_port: str()
+  serial_port: any(str(),null())
 
 ncycmrunner:
   model: str()

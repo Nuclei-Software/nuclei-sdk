@@ -162,17 +162,26 @@ class nsdk_runner(object):
                 if check_usb_serial(ftdi_serial) == False:
                     print("FDTI Serial %s not found!" % (ftdi_serial))
                     continue
-                if check_serial_port(serport) == False:
-                    print("Serial port %s not found!" % (serport))
-                    continue
                 # program fpga
                 if program_fpga(bitstream, fpga_serial) == False:
                     print("Failed to program fpga using bit %s to target %s" % (bitstream, fpga_serial))
                     continue
                 else:
                     print("Successfully program fpga using bit %s to target %s" % (bitstream, fpga_serial))
-                    fpgaready = True
-                    break
+                # after program bit, serial port might change, view in virtual machine
+                # so just check the serial port after program fpga
+                if serport is None or serport.strip() == "":
+                    serport = find_serport_by_no(ftdi_serial)
+                    if serport is None:
+                        continue
+                if check_serial_port(serport) == False:
+                    print("Serial port %s not found!" % (serport))
+                    continue
+                print("Using Serial Port %s" %(serport))
+                # only fpga programmed and serial port ready make this fpgaready to true
+                fpgaready = True
+                break
+            # check fpga and serial port is ready or not
             if fpgaready == False:
                 print("FPGA is not ready for running, please check!")
                 return False

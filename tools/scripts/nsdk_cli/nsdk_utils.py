@@ -117,6 +117,30 @@ def find_possible_serports():
     serports = [ port.device for port in comports ]
     return serports
 
+def find_serport_by_no(serno):
+    comports = serial.tools.list_ports.comports()
+    serport = None
+    for port in comports:
+        cur_serno = port.serial_number
+        cur_dev = port.device
+        cur_loc = port.location
+        if cur_serno is None:
+            continue
+        if sys.platform == "win32":
+            if (serno + 'B') == cur_serno:
+                serport = cur_dev
+                break
+        else:
+            if serno != cur_serno:
+                continue
+            # serial is the second device of the composite device
+            if cur_loc.endswith(".1"):
+                serport = cur_dev
+                break
+    # serport founded
+    return serport
+
+
 def find_most_possible_serport():
     serports = find_possible_serports()
     if len(serports) > 0:
