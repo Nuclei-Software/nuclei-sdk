@@ -1,6 +1,6 @@
 variables:
   DOC_SERVER: doc
-  DOC_CENTER: /Local/xl_ci/doc_center
+  DOC_CENTER: /home/xl_ci/doc_center
   IMAGE: rego.corp.nucleisys.com/software/sdkbuild
   IMAGE_TAG: "2022.05"
 
