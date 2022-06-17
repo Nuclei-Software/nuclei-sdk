@@ -111,10 +111,16 @@ def parse_usb_devices():
 
 if __name__ == '__main__':
     usb_infos, fpga_runner_dict = parse_usb_devices()
+    if len(usb_infos) == 0:
+        print("No usb found, please check!")
+        sys.exit(1)
     # save as json
+    pprint.pprint(usb_infos)
     with open("usb_info.json", "w") as uf:
         json.dump(usb_infos, uf, indent=4)
-    save_yaml("fpga_runner.yaml", fpga_runner_dict)
-    pprint.pprint(usb_infos)
-    print("Save usb information into usb_info.json")
-    print("Save fpga runner information into fpga_runners.yaml")
+        print("Save usb information into usb_info.json")
+    if len(fpga_runner_dict["fpga_runners"]) == 0:
+        print("No fpga devices found, please check!")
+    else:
+        save_yaml("fpga_runner.yaml", fpga_runner_dict)
+        print("Save fpga runner information into fpga_runners.yaml")

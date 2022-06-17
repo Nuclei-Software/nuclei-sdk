@@ -62,7 +62,7 @@ class nsdk_runner(object):
         self.makeopts = makeopts
 
         if yret != YAML_OK:
-            print("Invalid yaml configuration file")
+            print("Invalid yaml configuration file %s" % (runyaml))
             sys.exit(1)
 
         if locations["fpgaloc"]:
@@ -260,9 +260,26 @@ class nsdk_runner(object):
         return ret
         pass
 
+def merge_cfgyaml(appyaml, runyaml):
+    yret, appcfg = load_yaml(appyaml)
+    if yret != YAML_OK:
+        print("Invalid yaml configuration file %s" % (appyaml))
+        sys.exit(1)
+    yret, runcfg = load_yaml(runyaml)
+    if yret != YAML_OK:
+        print("Invalid yaml configuration file %s" % (runyaml))
+        sys.exit(1)
+    for runner in ["ncycm_runners", "fpga_runners"]:
+        if runner in appcfg and runner in runcfg:
+            appcfg[runner] = runcfg[runner]
+
+    return merge_two_config(appcfg, runcfg)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Nuclei SDK Benchmark and Report Tool")
     parser.add_argument('--appyaml', required=True, help="Application YAML Configuration File")
+    parser.add_argument('--runyaml', help="Runner YAML Configuration File")
     parser.add_argument('--logdir', default='logs', help="logs directory, default logs")
     parser.add_argument('--fpgaloc', help="Where fpga bitstream located in")
     parser.add_argument('--ncycmloc', help="Where nuclei cycle model located in")
@@ -279,10 +296,18 @@ if __name__ == '__main__':
     if (os.path.isfile(args.appyaml) == False):
         print("Invalid application yaml, please check!")
         sys.exit(1)
+    runneryaml = args.appyaml
+    if args.runyaml:
+        rundict = merge_cfgyaml(args.appyaml, args.runyaml)
+        if os.path.isdir(args.logdir) == False:
+            os.makedirs(args.logdir)
+        runneryaml = os.path.join(args.logdir, "runner.yaml")
+        save_yaml(runneryaml, rundict)
+
     pp = pprint.PrettyPrinter(compact=True)
     ret = True
     locations = {"fpgaloc": args.fpgaloc, "ncycmloc": args.ncycmloc, "cfgloc": args.cfgloc }
-    nsdk_ext = nsdk_runner(args.sdk, args.make_options, args.appyaml, locations)
+    nsdk_ext = nsdk_runner(args.sdk, args.make_options, runneryaml, locations)
     if args.show:
         print("Here are the supported configs:")
         pp.pprint(nsdk_ext.get_configs())
