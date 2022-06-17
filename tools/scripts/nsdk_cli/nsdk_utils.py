@@ -267,6 +267,9 @@ def run_command(command, show_output=True, logfile=None, append=False):
                 logfh = open(logfile, "ab")
             else:
                 logfh = open(logfile, "wb")
+        if logfh:
+            # record command run in log file
+            logfh.write(("Execute Command %s\n" % (command)).encode())
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, \
                             stderr=subprocess.STDOUT)
         while True:
@@ -467,7 +470,7 @@ def get_elfsize(elf):
     if ret == COMMAND_RUNOK:
         with open(sizelog, "r") as sf:
             lines = sf.readlines()
-            datas = lines[1].strip().split()
+            datas = lines[-1].strip().split()
             sizeinfo["text"] = int(datas[0])
             sizeinfo["data"] = int(datas[1])
             sizeinfo["bss"] = int(datas[2])
@@ -833,22 +836,22 @@ def check_tool_exist(tool):
             exist = True
     return exist
 
-def program_fpga(bit, target):
-    print("Try to program fpga bitstream %s to target board %s" % (bit, target))
-    found_vivado = False
-    vivado_cmd = "vivado"
-    sys.stdout.flush()
+def find_vivado_cmd():
     for vivado_cmd in ("vivado", "vivado_lab"):
         if sys.platform == 'win32':
             if os.system("where %s" % (vivado_cmd)) == 0:
-                found_vivado = True
-                break
+                return vivado_cmd
         else:
             if os.system("which %s" % (vivado_cmd)) == 0:
-                found_vivado = True
-                break
+                return vivado_cmd
+    return None
+
+def program_fpga(bit, target):
+    print("Try to program fpga bitstream %s to target board %s" % (bit, target))
+    sys.stdout.flush()
+    vivado_cmd = find_vivado_cmd()
     # check vivado is found or not
-    if found_vivado == False:
+    if vivado_cmd == None:
         print("vivado is not found in PATH, please check!")
         return False
     tcl = os.path.join(os.path.dirname(os.path.realpath(__file__)), "program_bit.tcl")
@@ -861,6 +864,29 @@ def program_fpga(bit, target):
         return False
     print("Program fpga bit successfully")
     return True
+
+def find_fpgas():
+    vivado_cmd = find_vivado_cmd()
+    if vivado_cmd == None:
+        print("vivado is not found in PATH, please check!")
+        return dict()
+    tcl = os.path.join(os.path.dirname(os.path.realpath(__file__)), "find_devices.tcl")
+    sys.stdout.flush()
+    tmp_log = tempfile.mktemp()
+    os.system("%s -mode batch -nolog -nojournal -source %s -notrace > %s" % (vivado_cmd, tcl, tmp_log))
+    sys.stdout.flush()
+    fpgadevices = dict()
+    with open(tmp_log, "r") as tf:
+        for line in tf.readlines():
+            line = line.strip()
+            if line.startswith("CSV,") == False:
+                continue
+            splits = line.split(",")
+            if len(splits) != 3:
+                continue
+            fpga_serial = "/".join(splits[1].split("/")[2:])
+            fpgadevices[fpga_serial] = splits[2].strip()
+    return fpgadevices
 
 def check_serial_port(serport):
     if serport in find_possible_serports():
