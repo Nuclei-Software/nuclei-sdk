@@ -24,7 +24,7 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(ALL_DEPS)
 endif
 
-.PHONY: all info showflags showtoolver help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike clean debug
+.PHONY: all info showflags showtoolver help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike run_qemu_debug run_xlspike_rbb run_xlspike_openocd clean debug
 
 info:
 	@$(ECHO) Current Configuration: RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) RISCV_TUNE=$(RISCV_TUNE) RISCV_CMODEL=$(RISCV_CMODEL) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) DOWNLOAD=$(DOWNLOAD) STDCLIB=$(STDCLIB) SMP=$(SMP)
@@ -138,16 +138,33 @@ debug: $(TARGET).elf
 	$(GDB) $< -ex "set remotetimeout 240" \
 	-ex "target remote $(GDBREMOTE)"
 
-# just for demo purpose
+# just for demosoc purpose
 run_qemu: $(TARGET).elf
 	@$(ECHO) "Run program $< on $(QEMU)"
 	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) \
 		-nodefaults -nographic -serial stdio -kernel $<
 
+# just for demosoc purpose
+run_qemu_debug: $(TARGET).elf
+	@$(ECHO) "Run program $< on $(QEMU), and waiting for gdb connection on port $(GDB_PORT)"
+	@$(ECHO) "Then you can open a new terminal in the same directory and run make target: run_gdb to connect to this gdb connection"
+	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) \
+		-nodefaults -nographic -serial stdio -kernel $< -S -gdb tcp::$(GDB_PORT)
+
 # just works on demosoc purpose, experimental support
 run_xlspike: $(TARGET).elf
 	@$(ECHO) "Run program $< on $(XLSPIKE)"
 	$(XLSPIKE) $(XLSPIKE_OPT) --isa $(RISCV_ARCH) $<
+
+run_xlspike_rbb: $(TARGET).elf
+	@$(ECHO) "Run program $< on $(XLSPIKE), and waiting for remote bitbang connection on port $(RBB_PORT)"
+	@$(ECHO) "Then you need open a new terminal in the same directory and run make target: run_xlspike_openocd to connect to this remote bitbang connection"
+	$(XLSPIKE) $(XLSPIKE_OPT) --rbb-port=$(RBB_PORT) -H --isa $(RISCV_ARCH) $<
+
+run_xlspike_openocd:
+	@$(ECHO) "Run openocd to connect to remote bitbang connection"
+	@$(ECHO) "Then you can open a new terminal in the same directory and run make target: run_gdb to connect to this gdb connection"
+	$(OPENOCD) $(OPENOCD_PORT_ARGS) -f $(OPENOCD_XLSPIKE_CFG)
 
 clean:
 	@$(ECHO) "Clean all build objects"
