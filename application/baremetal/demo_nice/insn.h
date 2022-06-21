@@ -12,7 +12,7 @@ extern "C" {
  ******************************************************************************************
  * NICE Extension Instruction Format:
  *  .insn and r indicates this is a pseudo and R-type instruction.
- *  0x7b is the value of the opcode field, which means it is a
+ *  0x5b is the value of the opcode field, which means it is a
  *  NICE instruction belonging to custom3.
  * Supported format: only R type here
  * This NICE Demo implements the following 3 instructions for NICE-Core:
@@ -20,13 +20,13 @@ extern "C" {
  * * CSW or sbuf: Store 12-byte data from row buffer to memory.
  * * CACC or rowsum: Sums a row of the matrix, and columns are accumulated automatically.
  * Supported instructions for this nice demo:
- *  1. custom3 lbuf: burst 4 load(4 cycles) data in memory to row_buf
+ *  1. custom2 lbuf: burst 4 load(4 cycles) data in memory to row_buf
  *     lbuf (a1)
  *     .insn r opcode, func3, func7, rd, rs1, rs2
- *  2. custom3 sbuf: burst 4 store(4 cycles) row_buf to memory
+ *  2. custom2 sbuf: burst 4 store(4 cycles) row_buf to memory
  *     sbuf (a1)
  *     .insn r opcode, func3, func7, rd, rs1, rs2
- *  3. custom3 acc rowsum: load data from memory(@a1), accumulate row data and write back
+ *  3. custom2 acc rowsum: load data from memory(@a1), accumulate row data and write back
  *     rowsum rd, a1, x0(N cycles)
  *     .insn r opcode, func3, func7, rd, rs1, rs2
  ******************************************************************************************
@@ -35,12 +35,15 @@ extern "C" {
 #define ROW_LEN     3
 #define COL_LEN     3
 
+// In latest Nuclei CPU, 0x7b changed to 0x5b
+// custom2 reserved for nice instructions now
+
 /** custom nice instruction lbuf */
 __STATIC_FORCEINLINE void custom_lbuf(unsigned long* addr)
 {
     int zero = 0;
 
-    asm volatile(".insn r 0x7b, 2, 1, x0, %1, x0" : "=r"(zero) : "r"(addr));
+    asm volatile(".insn r 0x5b, 2, 1, x0, %1, x0" : "=r"(zero) : "r"(addr));
 }
 
 /** custom nice instruction sbuf */
@@ -48,7 +51,7 @@ __STATIC_FORCEINLINE void custom_sbuf(unsigned long* addr)
 {
     int zero = 0;
 
-    asm volatile(".insn r 0x7b, 2, 2, x0, %1, x0" : "=r"(zero) : "r"(addr));
+    asm volatile(".insn r 0x5b, 2, 2, x0, %1, x0" : "=r"(zero) : "r"(addr));
 }
 
 /** custom nice instruction rowsum */
@@ -56,7 +59,7 @@ __STATIC_FORCEINLINE int custom_rowsum(unsigned long* addr)
 {
     int rowsum;
 
-    asm volatile(".insn r 0x7b, 6, 6, %0, %1, x0" : "=r"(rowsum) : "r"(addr));
+    asm volatile(".insn r 0x5b, 6, 6, %0, %1, x0" : "=r"(rowsum) : "r"(addr));
 
     return rowsum;
 }
