@@ -443,11 +443,15 @@ class nsdk_runner(nsdk_builder):
         serport = None
         timeout = 60
         baudrate = 115200
+        fpgabit = None
+        fpgaserial = None
         if hwconfig is not None:
             most_possible_serport = find_most_possible_serport()
             serport = hwconfig.get("serport", most_possible_serport)
             baudrate = hwconfig.get("baudrate", 115200)
             timeout = hwconfig.get("timeout", 60)
+            fpgabit = hwconfig.get("fpgabit", None)
+            fpgaserial = hwconfig.get("fpgaserial", None)
         ser_thread = None
         uploader = None
         sdk_check = get_sdk_check()
@@ -479,12 +483,19 @@ class nsdk_runner(nsdk_builder):
                     del ser_thread
                 if uploader.get("cpustatus", "") == "hang": # cpu hangs then call cpu hangup action and retry this application
                     if self.hangup_action is not None:
-                        print("Execute hangup processing for hangup case!")
+                        print("Execute hangup action for hangup case!")
                         if self.hangup_action() == True:
                             print("hangup action success!")
                             continue
                         else:
                             print("hangup action failed!")
+                    elif fpgabit and fpgaserial:
+                        print("Reprogram fpga bit %s on fpga board serial number %s" % (fpgabit, fpgaserial))
+                        if program_fpga(fpgabit, fpgaserial) == True:
+                            print("Reprogram fpga sucessfully!")
+                            continue
+                        else:
+                            print("Reprogram fpga failed!")
                 # exit with upload status
                 break
             except (KeyboardInterrupt, SystemExit):

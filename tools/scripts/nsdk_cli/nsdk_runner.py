@@ -211,8 +211,10 @@ class nsdk_runner(object):
             if "hardware" not in final_appcfg["run_config"]:
                 final_appcfg["run_config"]["hardware"] = {"baudrate": 115200, "timeout": 60, "serport": ""}
             final_appcfg["run_config"]["hardware"]["serport"] = serport
+            final_appcfg["run_config"]["hardware"]["fpgabit"] = bitstream
+            final_appcfg["run_config"]["hardware"]["fpgaserial"] = fpga_serial
             # set bitstream and fpga serial
-            set_fpga_bit(bitstream, fpga_serial)
+            #set_fpga_bit(bitstream, fpga_serial)
         elif runon == "ncycm":
             # check ncycm
             if len(runcfg["ncycm"]) == 0:
@@ -261,8 +263,8 @@ class nsdk_runner(object):
         sublogdir = os.path.join(logdir, config)
         start_time = time.time()
         if need2run:
-            if runon == "fpga":
-                nsdk_ext.set_cpu_hangup_action(global_program_bit)
+            #if runon == "fpga":
+            #    nsdk_ext.set_cpu_hangup_action(global_program_bit)
             cmdsts, result = nsdk_ext.run_apps(subappcfg, False, sublogdir, False)
         else:
             cmdsts, result = nsdk_ext.build_apps(subappcfg, False, sublogdir, False)

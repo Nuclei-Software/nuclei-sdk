@@ -847,6 +847,9 @@ def find_vivado_cmd():
     return None
 
 def program_fpga(bit, target):
+    if os.path.isfile(bit) == False:
+        print("Can't find bitstream in %s" % (bit))
+        return False
     print("Try to program fpga bitstream %s to target board %s" % (bit, target))
     sys.stdout.flush()
     vivado_cmd = find_vivado_cmd()
