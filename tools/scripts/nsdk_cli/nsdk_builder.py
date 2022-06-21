@@ -260,6 +260,10 @@ class nsdk_builder(object):
                     uf.write("\n=====OpenOCD log content dumped as below:=====\n")
                     with open(openocd_log, "r") as of:
                         for line in of.readlines():
+                            if "Error: Target not examined yet" in line:
+                                uploader["cpustatus"] = "hang"
+                            if "Examined RISC-V core" in line:
+                                uploader["cpustatus"] = "ok"
                             uf.write(line)
             if upload_sts == False: # actually not upload successfully
                 cmdsts = False
@@ -377,6 +381,7 @@ class MonitorThread(Thread):
 class nsdk_runner(nsdk_builder):
     def __init__(self):
         super().__init__()
+        self.hangup_action = None
         pass
 
     @staticmethod
@@ -387,6 +392,10 @@ class nsdk_runner(nsdk_builder):
             if nsdk_runner.is_app(subdir):
                 appdirs.append(os.path.normpath(subdir))
         return appdirs
+
+    def set_cpu_hangup_action(self, hangaction):
+        self.hangup_action = hangaction
+        pass
 
     def build_target_in_directory(self, rootdir, make_options="", target="", \
                                 show_output=True, logdir=None, stoponfail=False):
@@ -443,30 +452,46 @@ class nsdk_runner(nsdk_builder):
         uploader = None
         sdk_check = get_sdk_check()
         banner_tmout = get_sdk_banner_tmout()
-        try:
-            if serport: # only monitor serial port when port found
-                ser_thread = MonitorThread(serport, baudrate, timeout, app_runchecks, checktime, \
-                    sdk_check, logfile, show_output)
-                ser_thread.start()
-            else:
-                print("Warning: No available serial port found, please check!")
-            cmdsts, upload_sts = self.upload_app(appdir, make_options, show_output, uploadlog)
-            uploader = upload_sts.get("app", dict()).get("uploader", None)
-            status = True
-            if ser_thread:
-                if cmdsts == False:
-                    ser_thread.exit_request()
+        retry_cnt = 0
+        while True:
+            try:
+                if retry_cnt > 1: # only retry once
+                    break
+                retry_cnt += 1
+                if serport: # only monitor serial port when port found
+                    ser_thread = MonitorThread(serport, baudrate, timeout, app_runchecks, checktime, \
+                        sdk_check, logfile, show_output)
+                    ser_thread.start()
                 else:
-                    ser_thread.set_check_sdk_timeout(banner_tmout)
-                while ser_thread.is_alive():
-                    ser_thread.join(1)
-                status = ser_thread.get_result()
-                del ser_thread
-        except (KeyboardInterrupt, SystemExit):
-            print("%s: Exit program due to CTRL - C pressed or SystemExit" % (sys._getframe().f_code.co_name))
-            if ser_thread:
-                ser_thread.exit_request()
-            sys.exit(1)
+                    print("Warning: No available serial port found, please check!")
+                cmdsts, upload_sts = self.upload_app(appdir, make_options, show_output, uploadlog)
+                uploader = upload_sts.get("app", dict()).get("uploader", None)
+                uploader["retried"] = retry_cnt
+                status = True
+                if ser_thread:
+                    if cmdsts == False:
+                        ser_thread.exit_request()
+                    else:
+                        ser_thread.set_check_sdk_timeout(banner_tmout)
+                    while ser_thread.is_alive():
+                        ser_thread.join(1)
+                    status = ser_thread.get_result()
+                    del ser_thread
+                if uploader.get("cpustatus", "") == "hang": # cpu hangs then call cpu hangup action and retry this application
+                    if self.hangup_action is not None:
+                        print("Execute hangup processing for hangup case!")
+                        if self.hangup_action() == True:
+                            print("hangup action success!")
+                            continue
+                        else:
+                            print("hangup action failed!")
+                # exit with upload status
+                break
+            except (KeyboardInterrupt, SystemExit):
+                print("%s: Exit program due to CTRL - C pressed or SystemExit" % (sys._getframe().f_code.co_name))
+                if ser_thread:
+                    ser_thread.exit_request()
+                sys.exit(1)
 
         final_status = cmdsts and status
         return final_status, uploader
