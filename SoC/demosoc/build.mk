@@ -43,6 +43,7 @@ endif
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
 
+OPENOCD_XLSPIKE_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_xlspike.cfg
 ifneq ($(SMP),)
 OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_demosoc_smp.cfg
 OPENOCD_CMD_ARGS += set SMP $(SMP);
