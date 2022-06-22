@@ -18,8 +18,9 @@ try:
     import markdown
     import pyexcel as pe
     from prettytable import *
-except:
+except Exception as exc:
     MARKDOWN_PLUGIN=False
+    print("Import Error: %s" % (exc))
     print("Please install requried packages using: pip3 install -r %s" % (requirement_file))
     sys.exit(1)
 
@@ -485,6 +486,18 @@ def parse_result2dict(result):
             csvdict[cfg][apptype][appsubtype]["size"] = appresult[cfg]["size"]
     return csvdict
 
+def show_failed_apps(logdir):
+    rpt_failtxt = os.path.join(logdir, "app_failed.txt")
+    if os.path.isfile(rpt_failtxt) == False:
+        return
+    with open(rpt_failtxt, "r") as rpt_ff:
+        failed_lines = rpt_ff.readlines()
+        if len(failed_lines) > 0:
+            print("Here are the failed applications list below")
+            for line in failed_lines:
+                print(line)
+    return
+
 def save_report_files(logdir, config, result, run=False):
     if os.path.isdir(logdir) == False:
         os.makedirs(logdir)
@@ -501,7 +514,8 @@ def save_report_files(logdir, config, result, run=False):
         save_json(csvdatafile, csvdata)
         runresultexcel = os.path.join(logdir, "runresult.xlsx")
         save_runresult(csvdata, runresultexcel)
-
+    # show failed apps
+    show_failed_apps(logdir)
     pass
 
 def save_runresult(runresult, excelfile):

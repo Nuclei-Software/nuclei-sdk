@@ -22,7 +22,8 @@ try:
     import glob
     import json
     import yaml
-except:
+except Exception as exc:
+    print("Import Error: %s" % (exc))
     print("Please install requried packages using: pip3 install -r %s" % (requirement_file))
     sys.exit(1)
 
