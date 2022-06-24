@@ -502,10 +502,8 @@ void _premain_init(void)
 void _postmain_fini(int status)
 {
     /* TODO: Add your own finishing code here, called after main */
-#if defined(SIMULATION_MODE)
     extern void simulation_exit(int status);
     simulation_exit(status);
-#endif
 }
 
 /**

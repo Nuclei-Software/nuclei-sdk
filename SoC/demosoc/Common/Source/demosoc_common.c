@@ -58,7 +58,6 @@ void delay_1ms(uint32_t count)
     } while (delta_mtime < delay_ticks);
 }
 
-#if defined(SIMULATION_MODE)
 void simulation_exit(int status)
 {
     // Both xlspike and qemu will write RXFIFO to make it works for xlspike even SIMU=qemu
@@ -76,4 +75,3 @@ void simulation_exit(int status)
     REG32(QEMU_VIRT_TEST_BASE) = (status << 16) | QEMU_SIG_EXIT;
 #endif
 }
-#endif
