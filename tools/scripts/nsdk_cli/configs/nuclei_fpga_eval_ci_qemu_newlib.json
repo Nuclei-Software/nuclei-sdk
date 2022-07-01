@@ -103,7 +103,8 @@
         }
     },
     "expected": {
-        "test/core": {"build": true, "run": false}
+        "test/core": {"build": true, "run": false},
+        "application/baremetal/demo_nice": {"build": true, "run": false}
     },
     "expecteds": {
         "application/baremetal/demo_dsp" : {
