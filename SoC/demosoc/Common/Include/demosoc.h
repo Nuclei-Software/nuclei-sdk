@@ -247,9 +247,21 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 #define __DCACHE_PRESENT          0                     /*!< Set to 1 if D-Cache is present */
 #define __CCM_PRESENT             0                     /*!< Set to 1 if Cache Control and Mantainence Unit is present */
 #else // RUNMODE_CONTROL is defined in SoC/demosoc/runmode.mk, for internal usage not intend for widely usage
+#ifdef RUNMODE_IC_EN
 #define __ICACHE_PRESENT          RUNMODE_IC_EN         /*!< Set to 1 if I-Cache is present */
+#else
+#define __ICACHE_PRESENT          0                     /*!< Set to 1 if I-Cache is present */
+#endif
+#ifdef RUNMODE_DC_EN
 #define __DCACHE_PRESENT          RUNMODE_DC_EN         /*!< Set to 1 if D-Cache is present */
+#else
+#define __DCACHE_PRESENT          0                     /*!< Set to 1 if D-Cache is present */
+#endif
+#ifdef RUNMODE_CCM_EN
 #define __CCM_PRESENT             RUNMODE_CCM_EN        /*!< Set to 1 if Cache Control and Mantainence Unit is present */
+#else
+#define __CCM_PRESENT             0                     /*!< Set to 1 if Cache Control and Mantainence Unit is present */
+#endif
 #endif
 
 #ifndef __INC_INTRINSIC_API

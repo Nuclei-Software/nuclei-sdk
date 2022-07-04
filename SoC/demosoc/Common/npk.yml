@@ -233,6 +233,18 @@ configuration:
         description: Packed SIMD Extension
       - name: v
         description: Vector Extension
+  nuclei_cache:
+    default_value: []
+    type: multicheckbox
+    global: true
+    description: Nuclei Cache Extensions
+    choices:
+      - name: ic
+        description: ICache Extension
+      - name: dc
+        description: DCache Extension
+      - name: ccm
+        description: CCM Extension
   nuclei_smp:
     default_value: 1
     type: choice
@@ -375,6 +387,26 @@ buildconfig:
     common_defines:
       - defines: SMP_CPU_CNT=${nuclei_smp}
         condition: $( ${nuclei_smp} > 1 )
+      - defines: RUNMODE_IC_EN=1
+        condition: $( contains(${nuclei_cache}, "ic"))
+      - defines: RUNMODE_IC_EN=0
+        condition: $( ! contains(${nuclei_cache}, "ic"))
+      - defines: RUNMODE_DC_EN=1
+        condition: $( contains(${nuclei_cache}, "dc"))
+      - defines: RUNMODE_DC_EN=0
+        condition: $( ! contains(${nuclei_cache}, "dc"))
+      - defines: RUNMODE_CCM_EN=1
+        condition: $( contains(${nuclei_cache}, "ccm"))
+      - defines: RUNMODE_CCM_EN=0
+        condition: $( ! contains(${nuclei_cache}, "ccm"))
+      - defines: RUNMODE_STRING=\"$(join(${nuclei_cache},''))\"
+        condition: $( join(${nuclei_cache},'') != "" )
+      - defines: RUNMODE_ILM_EN=1
+        condition: $( join(${nuclei_cache},'') != "" )
+      - defines: RUNMODE_DLM_EN=1
+        condition: $( join(${nuclei_cache},'') != "" )
+      - defines: RUNMODE_CONTROL
+        condition: $( join(${nuclei_cache},'') != "" )
     prebuild_steps: # could be override by app/bsp type
       command:
       description:

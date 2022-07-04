@@ -31,6 +31,10 @@ setconfig:
     value: 2K
   - config: stacksz
     value: 2K
+  - config: download_mode
+    value: ddr
+  - config: nuclei_cache
+    value: ["ic", "dc", "ccm"]
 
 ## Source Code Management
 codemanage:
