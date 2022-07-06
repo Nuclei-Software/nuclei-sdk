@@ -413,7 +413,8 @@ typedef struct {
 typedef struct {
     __IOM uint32_t SCKDIV;
     __IOM uint32_t SCKMODE;
-    __IOM uint32_t RESERVED0[2];
+    __IOM uint32_t RESERVED0[1];
+    __IOM uint32_t FORCE;
     __IOM uint32_t CSID;
     __IOM uint32_t CSDEF;
     __IOM uint32_t CSMODE;
