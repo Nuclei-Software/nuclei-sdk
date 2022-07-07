@@ -55,12 +55,32 @@
  *
  *   @{
  */
-/** @} */ /* End of Doxygen Group NMSIS_Core_Vector_Intrinsic */
 
 #if defined(__INC_INTRINSIC_API) && (__INC_INTRINSIC_API == 1)
 #include <riscv_vector.h>
 #endif
 
+/**
+ * \brief   Enable Vector Unit
+ * \details
+ * Set vector context status bits to enable vector unit
+ */
+__STATIC_FORCEINLINE void __enable_vector(void)
+{
+    __RV_CSR_SET(CSR_MSTATUS, MSTATUS_VS);
+}
+
+/**
+ * \brief   Disable Vector Unit
+ * \details
+ * Clear vector context status bits to disable vector unit
+ */
+__STATIC_FORCEINLINE void __disable_vector(void)
+{
+    __RV_CSR_CLEAR(CSR_MSTATUS, MSTATUS_VS);
+}
+
+/** @} */ /* End of Doxygen Group NMSIS_Core_Vector_Intrinsic */
 #endif /* defined(__VECTOR_PRESENT) && (__VECTOR_PRESENT == 1) */
 
 #ifdef __cplusplus
