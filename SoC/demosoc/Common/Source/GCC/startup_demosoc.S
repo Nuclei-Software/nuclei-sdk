@@ -215,11 +215,18 @@ _start:
 
     /* ===== Startup Stage 2 ===== */
 
+    /* Enable FPU and Vector Unit if f/d/v exist in march */
 #if defined(__riscv_flen) && __riscv_flen > 0
     /* Enable FPU */
     li t0, MSTATUS_FS
     csrs mstatus, t0
     csrw fcsr, x0
+#endif
+
+#if defined(__riscv_vector)
+    /* Enable Vector */
+    li t0, MSTATUS_VS
+    csrs mstatus, t0
 #endif
 
     /* Enable mcycle and minstret counter */
