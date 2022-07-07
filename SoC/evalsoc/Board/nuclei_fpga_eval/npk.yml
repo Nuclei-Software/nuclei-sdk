@@ -1,0 +1,119 @@
+## Package Base Information
+name: bsp-nsdk_nuclei_fpga_eval
+owner: nuclei
+description: Nuclei FPGA Evaluation Board Support Package
+type: bsp
+keywords:
+  - board
+  - risc-v
+  - nuclei
+license: Apache-2.0
+homepage: https://nucleisys.com/developboard.php#ddr200t
+
+packinfo:
+  vendor: Nuclei
+  name: Nuclei FPGA Evaluation Board
+  doc:
+    website: https://nucleisys.com/developboard.php#ddr200t # Website
+    sch: https://nucleisys.com/upload/files/fpga/doc/Nuclei_DDR200T.pdf # Circuit diagram
+    usermanual: https://nucleisys.com/upload/files/fpga/doc/Nuclei_FPGA_DebugKit_Intro_20210421.pdf # User Manual
+    extra:
+      - uri: https://nucleisys.com/developboard.php#mcu200t # file path or web link
+        description: MCU200T SCH # description
+      - uri: https://nucleisys.com/developboard.php#ddr200t # file path or web link
+        description: DDR200T SCH # description
+      - uri: https://www.rvmcu.com/video.html#cateid43 # file path or web link
+        description: Video Introduction For MCU200T Board # description
+      - uri: https://www.rvmcu.com/video.html#cateid8
+        description: Video Introduction For DDR200T Board # description
+
+## Package Dependency
+dependencies:
+  - name: ssp-nsdk_evalsoc
+    version:
+
+## Package Configurations
+configuration:
+  download_mode:
+    default_value: ilm
+    type: choice
+    global: true
+    description: Download/Run Mode
+    choices:
+      - name: ilm
+        description: ILM download mode, program will be download into ilm/ram and run directly in ilm/ram, program lost when poweroff
+      - name: flash
+        description: FLASH download mode, program will be download into flash, when running, program will be copied to ilm/ram and run in ilm/ram
+      - name: flashxip
+        description: FLASHXIP download mode, program will to be download into flash and run directly in Flash
+      - name: ddr
+        description: DDR download mode, program will be download into ddr and run directly in ddr, program lost when poweroff
+
+## Source Code Management
+codemanage:
+  installdir: nuclei_fpga_eval
+  copyfiles:
+    - path: ["Source/", "Include/", "*.cfg"]
+  incdirs:
+    - path: ["Include/"]
+
+## Set Configuration for other packages
+setconfig:
+
+## Debug Configuration for this board
+debugconfig:
+  - type: openocd
+    description: Nuclei OpenOCD
+    configs:
+      - key: config
+        value: "openocd_evalsoc_smp.cfg"
+        condition: $( ${nuclei_smp} > 1 )
+      - key: config
+        value: "openocd_evalsoc.cfg"
+        condition: $( ${nuclei_smp} <= 1 )
+
+  - type: qemu
+    description: Nuclei QEMU
+    configs:
+       - key: nuclei_core
+         value: ${nuclei_core}
+       - key: dsp_present
+         value: ${dsp_present}
+       - key: download_mode
+         value: ${download_mode}
+       - key: riscv_arch
+         value: ${nuclei_core.arch}
+       - key: riscv_abi
+         value: ${nuclei_core.abi}
+       - key: machine
+         value: nuclei_n
+       - key: smp
+         value: ${nuclei_smp}
+
+  - type: jlink
+    description: Segger Jlink
+    configs:
+       - key: device_name
+         value: # if leave empty, it will try riscv_arch conversion, otherwise it will directly using this value
+       - key: riscv_arch
+         value: ${nuclei_core.arch} # arch to device name conversion happened in IDE, eg. rv32imac -> N305
+       - key: interface
+         value: jtag # jtag or cjtag
+       - key: speed
+         value: auto  # auto, adaptive, fixed value(KHz) such as 1000
+
+## Build Configuration
+buildconfig:
+  - type: gcc
+    linkscript:
+      - script: "Source/GCC/gcc_evalsoc_${download_mode}.ld"
+        condition: $( "x${linker_script}" == "x" )
+      - script: ${linker_script}
+        condition: $( "x${linker_script}" != "x" )
+    common_flags:
+      - flags:
+    common_defines:
+      - defines: DOWNLOAD_MODE=DOWNLOAD_MODE_$(upper(${download_mode}))
+      - defines: DOWNLOAD_MODE_STRING=\"$(upper(${download_mode}))\"
+      - defines: VECTOR_TABLE_REMAPPED
+        condition: $( ${download_mode} == "flash" )
