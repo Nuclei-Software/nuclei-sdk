@@ -3,9 +3,9 @@
   <vendor>Nuclei</vendor>
   <vendorID>Nuclei</vendorID>
   <name>evalsoc</name>
-  <series>Nuclei Evaluation Eval SoC</series>
+  <series>Nuclei Evaluation SoC</series>
   <version></version>
-  <description>Nuclei Evaluation Eval SoC using Nuclei N/NX Core
+  <description>Nuclei Evaluation SoC using Nuclei N/NX Core
   </description>
 
   <addressUnitBits>8</addressUnitBits>

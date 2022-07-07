@@ -28,17 +28,12 @@
 
 ##### Put your SoC build configurations below #####
 
-BOARD ?= nuclei_fpga_eval
+override BOARD := nuclei_fpga_eval
 CORE ?= n307fd
 # SMP must be a number, and above 1
 # it will define c macro SMP_CPU_CNT to be SMP value
 # and define a ld symbol __SMP_CPU_CNT to be used by linker script
 SMP ?=
-
-ifeq ($(BOARD),hbird_eval)
-$(warning BOARD hbird_eval is renamed to nuclei_fpga_eval since Nuclei SDK 0.3.1, please use BOARD=nuclei_fpga_eval now)
-override BOARD := nuclei_fpga_eval
-endif
 
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common

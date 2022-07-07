@@ -471,7 +471,6 @@ void _premain_init(void)
 
     if (hartid == 0) { // only required for boot hartid
         SystemCoreClock = get_cpu_freq();
-        gpio_iof_config(GPIO, IOF0_UART0_MASK, IOF_SEL_0);
         uart_init(SOC_DEBUG_UART, 115200);
         /* Display banner after UART initialized */
         SystemBannerPrint();

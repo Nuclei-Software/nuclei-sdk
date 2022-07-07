@@ -8,10 +8,6 @@ extern "C" {
 
 #include "evalsoc.h"
 #include "evalsoc_uart.h"
-#include "evalsoc_gpio.h"
-#include "evalsoc_i2c.h"
-#include "evalsoc_spi.h"
-#include "evalsoc_pwm.h"
 
 #ifdef __cplusplus
 }

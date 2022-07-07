@@ -1,7 +1,7 @@
 ## Package Base Information
 name: ssp-nsdk_evalsoc
 owner: nuclei
-description: Nuclei Evalsoc Support Package
+description: Nuclei EvalSoC Support Package
 type: ssp
 keywords:
   - soc
@@ -13,7 +13,7 @@ homepage: https://nucleisys.com/developboard.php#ddr200t
 packinfo:
   core_vendor: Nuclei
   vendor: Nuclei
-  name: Nuclei FPGA Evaluation Eval SoC
+  name: Nuclei FPGA Evaluation SoC
   doc:
     website: https://nucleisys.com/developboard.php#ddr200t # Website
     datasheet: https://nucleisys.com/developboard.php#ddr200t # SoC datasheet
