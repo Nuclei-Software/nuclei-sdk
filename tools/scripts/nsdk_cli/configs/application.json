@@ -71,6 +71,18 @@
                 "FAIL": ["FAIL", "MEPC"]
             }
         },
+        "application/baremetal/smphello": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["All harts boot successfully!"]
+            }
+        },
+        "application/baremetal/lowpower": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CSV, WFI Cost,"]
+            }
+        },
         "application/baremetal/demo_dsp": {
             "build_config" : {},
             "checks": {
