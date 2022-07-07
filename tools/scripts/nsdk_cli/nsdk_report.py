@@ -242,6 +242,27 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
     rpt_failtxt = os.path.join(os.path.dirname(rptfile), "app_failed.txt")
     # generate markdown file
     with open(rptfile, "w") as rf:
+        # generate overall status
+        rf.write("# Overall Status\n\n")
+        passcnt = len(report["passed"])
+        failcnt = len(report["failed"])
+        totalcnt = passcnt + failcnt
+        passrate = str(round(((passcnt / totalcnt) * 100), 2)) + "%"
+        x = PrettyTable()
+        x.set_style(MARKDOWN)
+        x.field_names = ["Total", "Pass", "Fail", "PassRate"]
+        x.add_row([totalcnt, passcnt, failcnt, passrate])
+        rf.write(str(x))
+        rf.write("\n\n")
+
+        passed_appsstr = "* **Passed**: %s\n" % (",".join(report["passed"].keys()))
+        failed_appsstr = "* **Failed**: %s\n" % (",".join(report["failed"].keys()))
+        #rf.write(passed_appsstr)
+        if failcnt > 0:
+            rf.write(failed_appsstr)
+            rf.write("\n\n")
+
+        # generate detailed status
         rf.write("# Tested Nuclei SDK Applications/Test Cases\n\n")
         if len(report["passed"]) > 0:
             rf.write("\n## Passed\n\n")
