@@ -2,6 +2,15 @@
 SOC=${1:-demosoc}
 NEWSOC=${2:-evalsoc}
 
+SCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
+SCRIPTDIR=$(readlink -f $SCRIPTDIR)
+if [ "x$NSDK_ROOT" == "x"  ] ; then
+    NSDK_ROOT=$(readlink -f $SCRIPTDIR/../../..)
+fi
+
+# cd to SoC folder
+pushd $NSDK_ROOT/SoC
+
 if [ -d $NEWSOC ] ; then
     echo "$NEWSOC already exist, exit!"
     exit
@@ -28,4 +37,6 @@ do
     sed -i -e "s/${SOC^^}/${NEWSOC^^}/g" $fl
     sed -i -e "s/Demo/Eval/g" $fl
 done
+popd
+
 popd
