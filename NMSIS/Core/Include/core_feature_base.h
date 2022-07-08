@@ -829,23 +829,498 @@ __STATIC_FORCEINLINE void __disable_minstret_counter(void)
 }
 
 /**
- * \brief   Enable MCYCLE & MINSTRET counter
+ * \brief   Enable selected hardware performance monitor counter
+ * \param [in]    idx   the index of the hardware performance monitor counter
  * \details
- * Clear the IR and CY bit of MCOUNTINHIBIT to 1 to enable MINSTRET & MCYCLE Counter
+ * enable selected hardware performance monitor counter mhpmcounterx.
  */
-__STATIC_FORCEINLINE void __enable_all_counter(void)
+__STATIC_FORCEINLINE void __enable_mhpm_counter(unsigned long idx)
 {
-    __RV_CSR_CLEAR(CSR_MCOUNTINHIBIT, MCOUNTINHIBIT_IR|MCOUNTINHIBIT_CY);
+    __RV_CSR_CLEAR(CSR_MCOUNTINHIBIT, (1 << idx));
 }
 
 /**
- * \brief   Disable MCYCLE & MINSTRET counter
+ * \brief   Disable selected hardware performance monitor counter
+ * \param [in]    idx   the index of the hardware performance monitor counter
  * \details
- * Set the IR and CY bit of MCOUNTINHIBIT to 1 to disable MINSTRET & MCYCLE Counter
+ * Disable selected hardware performance monitor counter mhpmcounterx.
+ */
+__STATIC_FORCEINLINE void __disable_mhpm_counter(unsigned long idx)
+{
+    __RV_CSR_SET(CSR_MCOUNTINHIBIT, (1 << idx));
+}
+
+/**
+ * \brief   Enable hardware performance counters with mask
+ * \param [in]    mask   mask of selected hardware performance monitor counters
+ * \details
+ * enable mhpmcounterx with mask, only the masked ones will be enabled.
+ * mhpmcounter3-mhpmcount31 are for high performance monitor counters.
+ */
+__STATIC_FORCEINLINE void __enable_mhpm_counters(unsigned long mask)
+{
+    __RV_CSR_CLEAR(CSR_MCOUNTINHIBIT, mask);
+}
+
+/**
+ * \brief   Disable hardware performance counters with mask
+ * \param [in]    mask   mask of selected hardware performance monitor counters
+ * \details
+ * Disable mhpmcounterx with mask, only the masked ones will be disabled.
+ * mhpmcounter3-mhpmcount31 are for high performance monitor counters.
+ */
+__STATIC_FORCEINLINE void __disable_mhpm_counters(unsigned long mask)
+{
+    __RV_CSR_SET(CSR_MCOUNTINHIBIT, mask);
+}
+
+/**
+ * \brief   Enable all MCYCLE & MINSTRET & MHPMCOUNTER counter
+ * \details
+ * Clear all to zero to enable all counters,
+ * such as cycle, instret, high performance monitor counters
+ */
+__STATIC_FORCEINLINE void __enable_all_counter(void)
+{
+    __RV_CSR_CLEAR(CSR_MCOUNTINHIBIT, 0xFFFFFFFF);
+}
+
+/**
+ * \brief   Disable all MCYCLE & MINSTRET & MHPMCOUNTER counter
+ * \details
+ * Set all to one to disable all counters,
+ * such as cycle, instret, high performance monitor counters
  */
 __STATIC_FORCEINLINE void __disable_all_counter(void)
 {
-    __RV_CSR_SET(CSR_MCOUNTINHIBIT, MCOUNTINHIBIT_IR|MCOUNTINHIBIT_CY);
+    __RV_CSR_SET(CSR_MCOUNTINHIBIT, 0xFFFFFFFF);
+}
+
+/**
+ * \brief   Set event for selected high performance monitor event
+ * \param [in]    idx     HPMEVENTx CSR index(3-31)
+ * \param [in]    event   HPMEVENTx Register value to set
+ * \details
+ * Set event for high performance monitor event register
+ */
+__STATIC_FORCEINLINE void __set_hpm_event(unsigned long idx, unsigned long event)
+{
+    switch (idx) {
+        case 3: __RV_CSR_WRITE(CSR_MHPMEVENT3, event);
+        case 4: __RV_CSR_WRITE(CSR_MHPMEVENT4, event);
+        case 5: __RV_CSR_WRITE(CSR_MHPMEVENT5, event);
+        case 6: __RV_CSR_WRITE(CSR_MHPMEVENT6, event);
+        case 7: __RV_CSR_WRITE(CSR_MHPMEVENT7, event);
+        case 8: __RV_CSR_WRITE(CSR_MHPMEVENT8, event);
+        case 9: __RV_CSR_WRITE(CSR_MHPMEVENT9, event);
+        case 10: __RV_CSR_WRITE(CSR_MHPMEVENT10, event);
+        case 11: __RV_CSR_WRITE(CSR_MHPMEVENT11, event);
+        case 12: __RV_CSR_WRITE(CSR_MHPMEVENT12, event);
+        case 13: __RV_CSR_WRITE(CSR_MHPMEVENT13, event);
+        case 14: __RV_CSR_WRITE(CSR_MHPMEVENT14, event);
+        case 15: __RV_CSR_WRITE(CSR_MHPMEVENT15, event);
+        case 16: __RV_CSR_WRITE(CSR_MHPMEVENT16, event);
+        case 17: __RV_CSR_WRITE(CSR_MHPMEVENT17, event);
+        case 18: __RV_CSR_WRITE(CSR_MHPMEVENT18, event);
+        case 19: __RV_CSR_WRITE(CSR_MHPMEVENT19, event);
+        case 20: __RV_CSR_WRITE(CSR_MHPMEVENT20, event);
+        case 21: __RV_CSR_WRITE(CSR_MHPMEVENT21, event);
+        case 22: __RV_CSR_WRITE(CSR_MHPMEVENT22, event);
+        case 23: __RV_CSR_WRITE(CSR_MHPMEVENT23, event);
+        case 24: __RV_CSR_WRITE(CSR_MHPMEVENT24, event);
+        case 25: __RV_CSR_WRITE(CSR_MHPMEVENT25, event);
+        case 26: __RV_CSR_WRITE(CSR_MHPMEVENT26, event);
+        case 27: __RV_CSR_WRITE(CSR_MHPMEVENT27, event);
+        case 28: __RV_CSR_WRITE(CSR_MHPMEVENT28, event);
+        case 29: __RV_CSR_WRITE(CSR_MHPMEVENT29, event);
+        case 30: __RV_CSR_WRITE(CSR_MHPMEVENT30, event);
+        case 31: __RV_CSR_WRITE(CSR_MHPMEVENT31, event);
+        default: break;
+    }
+}
+
+/**
+ * \brief   Get event for selected high performance monitor event
+ * \param [in]    idx     HPMEVENTx CSR index(3-31)
+ * \param [in]    event   HPMEVENTx Register value to set
+ * \details
+ * Get high performance monitor event register value
+ * \return               HPMEVENTx Register value
+ */
+__STATIC_FORCEINLINE unsigned long __get_hpm_event(unsigned long idx)
+{
+    switch (idx) {
+        case 3: return __RV_CSR_READ(CSR_MHPMEVENT3);
+        case 4: return __RV_CSR_READ(CSR_MHPMEVENT4);
+        case 5: return __RV_CSR_READ(CSR_MHPMEVENT5);
+        case 6: return __RV_CSR_READ(CSR_MHPMEVENT6);
+        case 7: return __RV_CSR_READ(CSR_MHPMEVENT7);
+        case 8: return __RV_CSR_READ(CSR_MHPMEVENT8);
+        case 9: return __RV_CSR_READ(CSR_MHPMEVENT9);
+        case 10: return __RV_CSR_READ(CSR_MHPMEVENT10);
+        case 11: return __RV_CSR_READ(CSR_MHPMEVENT11);
+        case 12: return __RV_CSR_READ(CSR_MHPMEVENT12);
+        case 13: return __RV_CSR_READ(CSR_MHPMEVENT13);
+        case 14: return __RV_CSR_READ(CSR_MHPMEVENT14);
+        case 15: return __RV_CSR_READ(CSR_MHPMEVENT15);
+        case 16: return __RV_CSR_READ(CSR_MHPMEVENT16);
+        case 17: return __RV_CSR_READ(CSR_MHPMEVENT17);
+        case 18: return __RV_CSR_READ(CSR_MHPMEVENT18);
+        case 19: return __RV_CSR_READ(CSR_MHPMEVENT19);
+        case 20: return __RV_CSR_READ(CSR_MHPMEVENT20);
+        case 21: return __RV_CSR_READ(CSR_MHPMEVENT21);
+        case 22: return __RV_CSR_READ(CSR_MHPMEVENT22);
+        case 23: return __RV_CSR_READ(CSR_MHPMEVENT23);
+        case 24: return __RV_CSR_READ(CSR_MHPMEVENT24);
+        case 25: return __RV_CSR_READ(CSR_MHPMEVENT25);
+        case 26: return __RV_CSR_READ(CSR_MHPMEVENT26);
+        case 27: return __RV_CSR_READ(CSR_MHPMEVENT27);
+        case 28: return __RV_CSR_READ(CSR_MHPMEVENT28);
+        case 29: return __RV_CSR_READ(CSR_MHPMEVENT29);
+        case 30: return __RV_CSR_READ(CSR_MHPMEVENT30);
+        case 31: return __RV_CSR_READ(CSR_MHPMEVENT31);
+        default: return 0;
+    }
+}
+
+/**
+ * \brief   Set value for selected high performance monitor counter
+ * \param [in]    idx     HPMCOUNTERx CSR index(3-31)
+ * \param [in]    value   HPMCOUNTERx Register value to set
+ * \details
+ * Set value for high performance monitor couner register
+ */
+__STATIC_FORCEINLINE void __set_hpm_counter(unsigned long idx, uint64_t value)
+{
+    switch (idx) {
+#if __RISCV_XLEN == 32
+        case 3: __RV_CSR_WRITE(CSR_MHPMCOUNTER3, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER3H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER3, (uint32_t)(value)); break;
+        case 4: __RV_CSR_WRITE(CSR_MHPMCOUNTER4, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER4H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER4, (uint32_t)(value)); break;
+        case 5: __RV_CSR_WRITE(CSR_MHPMCOUNTER5, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER5H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER5, (uint32_t)(value)); break;
+        case 6: __RV_CSR_WRITE(CSR_MHPMCOUNTER6, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER6H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER6, (uint32_t)(value)); break;
+        case 7: __RV_CSR_WRITE(CSR_MHPMCOUNTER7, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER7H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER7, (uint32_t)(value)); break;
+        case 8: __RV_CSR_WRITE(CSR_MHPMCOUNTER8, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER8H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER8, (uint32_t)(value)); break;
+        case 9: __RV_CSR_WRITE(CSR_MHPMCOUNTER9, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER9H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER9, (uint32_t)(value)); break;
+        case 10: __RV_CSR_WRITE(CSR_MHPMCOUNTER10, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER10H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER10, (uint32_t)(value)); break;
+        case 11: __RV_CSR_WRITE(CSR_MHPMCOUNTER11, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER11H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER11, (uint32_t)(value)); break;
+        case 12: __RV_CSR_WRITE(CSR_MHPMCOUNTER12, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER12H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER12, (uint32_t)(value)); break;
+        case 13: __RV_CSR_WRITE(CSR_MHPMCOUNTER13, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER13H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER13, (uint32_t)(value)); break;
+        case 14: __RV_CSR_WRITE(CSR_MHPMCOUNTER14, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER14H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER14, (uint32_t)(value)); break;
+        case 15: __RV_CSR_WRITE(CSR_MHPMCOUNTER15, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER15H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER15, (uint32_t)(value)); break;
+        case 16: __RV_CSR_WRITE(CSR_MHPMCOUNTER16, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER16H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER16, (uint32_t)(value)); break;
+        case 17: __RV_CSR_WRITE(CSR_MHPMCOUNTER17, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER17H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER17, (uint32_t)(value)); break;
+        case 18: __RV_CSR_WRITE(CSR_MHPMCOUNTER18, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER18H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER18, (uint32_t)(value)); break;
+        case 19: __RV_CSR_WRITE(CSR_MHPMCOUNTER19, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER19H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER19, (uint32_t)(value)); break;
+        case 20: __RV_CSR_WRITE(CSR_MHPMCOUNTER20, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER20H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER20, (uint32_t)(value)); break;
+        case 21: __RV_CSR_WRITE(CSR_MHPMCOUNTER21, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER21H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER21, (uint32_t)(value)); break;
+        case 22: __RV_CSR_WRITE(CSR_MHPMCOUNTER22, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER22H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER22, (uint32_t)(value)); break;
+        case 23: __RV_CSR_WRITE(CSR_MHPMCOUNTER23, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER23H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER23, (uint32_t)(value)); break;
+        case 24: __RV_CSR_WRITE(CSR_MHPMCOUNTER24, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER24H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER24, (uint32_t)(value)); break;
+        case 25: __RV_CSR_WRITE(CSR_MHPMCOUNTER25, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER25H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER25, (uint32_t)(value)); break;
+        case 26: __RV_CSR_WRITE(CSR_MHPMCOUNTER26, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER26H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER26, (uint32_t)(value)); break;
+        case 27: __RV_CSR_WRITE(CSR_MHPMCOUNTER27, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER27H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER27, (uint32_t)(value)); break;
+        case 28: __RV_CSR_WRITE(CSR_MHPMCOUNTER28, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER28H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER28, (uint32_t)(value)); break;
+        case 29: __RV_CSR_WRITE(CSR_MHPMCOUNTER29, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER29H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER29, (uint32_t)(value)); break;
+        case 30: __RV_CSR_WRITE(CSR_MHPMCOUNTER30, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER30H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER30, (uint32_t)(value)); break;
+        case 31: __RV_CSR_WRITE(CSR_MHPMCOUNTER31, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER31H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER31, (uint32_t)(value)); break;
+
+#elif __RISCV_XLEN == 64
+        case 3: __RV_CSR_WRITE(CSR_MHPMCOUNTER3, (value)); break;
+        case 4: __RV_CSR_WRITE(CSR_MHPMCOUNTER4, (value)); break;
+        case 5: __RV_CSR_WRITE(CSR_MHPMCOUNTER5, (value)); break;
+        case 6: __RV_CSR_WRITE(CSR_MHPMCOUNTER6, (value)); break;
+        case 7: __RV_CSR_WRITE(CSR_MHPMCOUNTER7, (value)); break;
+        case 8: __RV_CSR_WRITE(CSR_MHPMCOUNTER8, (value)); break;
+        case 9: __RV_CSR_WRITE(CSR_MHPMCOUNTER9, (value)); break;
+        case 10: __RV_CSR_WRITE(CSR_MHPMCOUNTER10, (value)); break;
+        case 11: __RV_CSR_WRITE(CSR_MHPMCOUNTER11, (value)); break;
+        case 12: __RV_CSR_WRITE(CSR_MHPMCOUNTER12, (value)); break;
+        case 13: __RV_CSR_WRITE(CSR_MHPMCOUNTER13, (value)); break;
+        case 14: __RV_CSR_WRITE(CSR_MHPMCOUNTER14, (value)); break;
+        case 15: __RV_CSR_WRITE(CSR_MHPMCOUNTER15, (value)); break;
+        case 16: __RV_CSR_WRITE(CSR_MHPMCOUNTER16, (value)); break;
+        case 17: __RV_CSR_WRITE(CSR_MHPMCOUNTER17, (value)); break;
+        case 18: __RV_CSR_WRITE(CSR_MHPMCOUNTER18, (value)); break;
+        case 19: __RV_CSR_WRITE(CSR_MHPMCOUNTER19, (value)); break;
+        case 20: __RV_CSR_WRITE(CSR_MHPMCOUNTER20, (value)); break;
+        case 21: __RV_CSR_WRITE(CSR_MHPMCOUNTER21, (value)); break;
+        case 22: __RV_CSR_WRITE(CSR_MHPMCOUNTER22, (value)); break;
+        case 23: __RV_CSR_WRITE(CSR_MHPMCOUNTER23, (value)); break;
+        case 24: __RV_CSR_WRITE(CSR_MHPMCOUNTER24, (value)); break;
+        case 25: __RV_CSR_WRITE(CSR_MHPMCOUNTER25, (value)); break;
+        case 26: __RV_CSR_WRITE(CSR_MHPMCOUNTER26, (value)); break;
+        case 27: __RV_CSR_WRITE(CSR_MHPMCOUNTER27, (value)); break;
+        case 28: __RV_CSR_WRITE(CSR_MHPMCOUNTER28, (value)); break;
+        case 29: __RV_CSR_WRITE(CSR_MHPMCOUNTER29, (value)); break;
+        case 30: __RV_CSR_WRITE(CSR_MHPMCOUNTER30, (value)); break;
+        case 31: __RV_CSR_WRITE(CSR_MHPMCOUNTER31, (value)); break;
+
+#else
+#endif
+        default: break;
+    }
+}
+
+/**
+ * \brief   Get value of selected high performance monitor couner
+ * \param [in]    idx     HPMCOUNTERx CSR index(3-31)
+ * \param [in]    event   HPMCOUNTERx Register value to set
+ * \details
+ * Get high performance monitor counter register value
+ * \return               HPMCOUNTERx Register value
+ */
+__STATIC_FORCEINLINE unsigned long __get_hpm_counter(unsigned long idx)
+{
+#if __RISCV_XLEN == 32
+    volatile uint32_t high0, low, high;
+    uint64_t full;
+
+    switch (idx) {
+        case 0: return __get_rv_cycle();
+        case 2: return __get_rv_instret();
+        case 3: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER3H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER3);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER3H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER3); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 4: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER4H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER4);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER4H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER4); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 5: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER5H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER5);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER5H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER5); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 6: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER6H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER6);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER6H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER6); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 7: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER7H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER7);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER7H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER7); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 8: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER8H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER8);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER8H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER8); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 9: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER9H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER9);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER9H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER9); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 10: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER10H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER10);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER10H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER10); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 11: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER11H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER11);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER11H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER11); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 12: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER12H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER12);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER12H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER12); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 13: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER13H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER13);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER13H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER13); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 14: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER14H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER14);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER14H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER14); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 15: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER15H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER15);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER15H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER15); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 16: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER16H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER16);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER16H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER16); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 17: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER17H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER17);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER17H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER17); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 18: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER18H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER18);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER18H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER18); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 19: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER19H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER19);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER19H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER19); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 20: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER20H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER20);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER20H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER20); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 21: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER21H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER21);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER21H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER21); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 22: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER22H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER22);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER22H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER22); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 23: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER23H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER23);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER23H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER23); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 24: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER24H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER24);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER24H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER24); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 25: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER25H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER25);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER25H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER25); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 26: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER26H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER26);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER26H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER26); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 27: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER27H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER27);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER27H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER27); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 28: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER28H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER28);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER28H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER28); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 29: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER29H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER29);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER29H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER29); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 30: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER30H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER30);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER30H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER30); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        case 31: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER31H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER31);
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER31H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER31); }
+            full = (((uint64_t)high) << 32) | low; return full;
+
+#elif __RISCV_XLEN == 64
+    switch (idx) {
+        case 0: return __get_rv_cycle();
+        case 2: return __get_rv_instret();
+        case 3: return __RV_CSR_READ(CSR_MHPMCOUNTER3);
+        case 4: return __RV_CSR_READ(CSR_MHPMCOUNTER4);
+        case 5: return __RV_CSR_READ(CSR_MHPMCOUNTER5);
+        case 6: return __RV_CSR_READ(CSR_MHPMCOUNTER6);
+        case 7: return __RV_CSR_READ(CSR_MHPMCOUNTER7);
+        case 8: return __RV_CSR_READ(CSR_MHPMCOUNTER8);
+        case 9: return __RV_CSR_READ(CSR_MHPMCOUNTER9);
+        case 10: return __RV_CSR_READ(CSR_MHPMCOUNTER10);
+        case 11: return __RV_CSR_READ(CSR_MHPMCOUNTER11);
+        case 12: return __RV_CSR_READ(CSR_MHPMCOUNTER12);
+        case 13: return __RV_CSR_READ(CSR_MHPMCOUNTER13);
+        case 14: return __RV_CSR_READ(CSR_MHPMCOUNTER14);
+        case 15: return __RV_CSR_READ(CSR_MHPMCOUNTER15);
+        case 16: return __RV_CSR_READ(CSR_MHPMCOUNTER16);
+        case 17: return __RV_CSR_READ(CSR_MHPMCOUNTER17);
+        case 18: return __RV_CSR_READ(CSR_MHPMCOUNTER18);
+        case 19: return __RV_CSR_READ(CSR_MHPMCOUNTER19);
+        case 20: return __RV_CSR_READ(CSR_MHPMCOUNTER20);
+        case 21: return __RV_CSR_READ(CSR_MHPMCOUNTER21);
+        case 22: return __RV_CSR_READ(CSR_MHPMCOUNTER22);
+        case 23: return __RV_CSR_READ(CSR_MHPMCOUNTER23);
+        case 24: return __RV_CSR_READ(CSR_MHPMCOUNTER24);
+        case 25: return __RV_CSR_READ(CSR_MHPMCOUNTER25);
+        case 26: return __RV_CSR_READ(CSR_MHPMCOUNTER26);
+        case 27: return __RV_CSR_READ(CSR_MHPMCOUNTER27);
+        case 28: return __RV_CSR_READ(CSR_MHPMCOUNTER28);
+        case 29: return __RV_CSR_READ(CSR_MHPMCOUNTER29);
+        case 30: return __RV_CSR_READ(CSR_MHPMCOUNTER30);
+        case 31: return __RV_CSR_READ(CSR_MHPMCOUNTER31);
+
+#else
+    switch (idx) {
+#endif
+        default: return 0;
+    }
 }
 
 /**
