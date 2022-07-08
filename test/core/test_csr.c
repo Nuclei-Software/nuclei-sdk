@@ -434,3 +434,31 @@ CTEST(core, csrcontext)
     SAVE_IRQ_CSR_CONTEXT();
     RESTORE_IRQ_CSR_CONTEXT();
 }
+
+CTEST(core, hpmevent)
+{
+    for (unsigned long i = 0; i < 32; i ++) {
+        __set_hpm_event(i, 0xA5A5A5A5);
+        __get_hpm_event(i);
+    }
+}
+
+CTEST(core, hpmcounter)
+{
+    for (unsigned long i = 0; i < 32; i ++) {
+        __set_hpm_counter(i, 0xA5A5A5A5A5A5A5A5ULL);
+        __get_hpm_counter(i);
+        __enable_mhpm_counter(i);
+        __disable_mhpm_counter(i);
+        __enable_mhpm_counters(1<<i);
+        __disable_mhpm_counters(1<<i);
+    }
+}
+
+CTEST(core, vector)
+{
+#ifdef __riscv_vector
+    __enable_vector();
+    __disable_vector();
+#endif
+}
