@@ -1,0 +1,57 @@
+{# note: jinja2 hpm.tmpl > hmp.h#}
+
+    switch (idx) {
+#if __RISCV_XLEN == 32
+        {% for item in range(3, 32) -%}
+        case {{item}}: __RV_CSR_WRITE(CSR_MHPMCOUNTER{{item}}, 0); // prevent carry
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER{{item}}H, (uint32_t)(value >> 32));
+            __RV_CSR_WRITE(CSR_MHPMCOUNTER{{item}}, (uint32_t)(value)); break;
+        {% endfor %}
+#elif __RISCV_XLEN == 64
+        {% for item in range(3, 32) -%}
+        case {{item}}: __RV_CSR_WRITE(CSR_MHPMCOUNTER{{item}}, (value)); break;
+        {% endfor %}
+#else
+#endif
+        default: break;
+    }
+
+#if __RISCV_XLEN == 32
+    volatile uint32_t high0, low, high;
+    uint64_t full;
+
+    switch (idx) {
+        case 0: return __get_rv_cycle();
+        case 2: return __get_rv_instret();
+        {% for item in range(3, 32) -%}
+        case {{item}}: high0 = __RV_CSR_READ(CSR_MHPMCOUNTER{{item}}H);
+            low = __RV_CSR_READ(CSR_MHPMCOUNTER{{item}});
+            high = __RV_CSR_READ(CSR_MHPMCOUNTER{{item}}H);
+            if (high0 != high) { low = __RV_CSR_READ(CSR_MHPMCOUNTER{{item}}); }
+            full = (((uint64_t)high) << 32) | low; return full;
+        {% endfor %}
+#elif __RISCV_XLEN == 64
+    switch (idx) {
+        case 0: return __get_rv_cycle();
+        case 2: return __get_rv_instret();
+        {% for item in range(3, 32) -%}
+        case {{item}}: return __RV_CSR_READ(CSR_MHPMCOUNTER{{item}});
+        {% endfor %}
+#else
+    switch (idx) {
+#endif
+        default: return 0;
+    }
+
+switch (idx) {
+    {% for item in range(3, 32) -%}
+    case {{item}}: __RV_CSR_WRITE(CSR_MHPMEVENT{{item}}, event); break;
+    {% endfor %}default: break;
+}
+
+
+switch (idx) {
+    {% for item in range(3, 32) -%}
+    case {{item}}: return __RV_CSR_READ(CSR_MHPMEVENT{{item}});
+    {% endfor %}default: return 0;
+}
