@@ -5,50 +5,7 @@
 #include "ref_conv.h"
 #include "riscv_math.h"
 
-#ifndef READ_CYCLE
-#define READ_CYCLE      __get_rv_cycle
-#endif
-
-static uint64_t enter_cycle;
-static uint64_t exit_cycle;
-static uint64_t start_cycle;
-static uint64_t end_cycle;
-static uint64_t cycle;
-static uint64_t extra_cost = 0;
-static uint32_t bench_ercd;
-
-#define BENCH_TRST()
-
-#define BENCH_INIT()                                                           \
-    printf("Benchmark Initialized\n");                                         \
-    BENCH_TRST();                                                              \
-    start_cycle = READ_CYCLE();                                                \
-    end_cycle = READ_CYCLE();                                                  \
-    extra_cost = end_cycle - start_cycle;                                      \
-    enter_cycle = READ_CYCLE();
-
-#define BENCH_START(func)                                                      \
-    bench_ercd = 0;                                                            \
-    BENCH_TRST();                                                              \
-    start_cycle = READ_CYCLE();
-
-#define BENCH_END(func)                                                        \
-    end_cycle = READ_CYCLE();                                                  \
-    cycle = end_cycle - start_cycle - extra_cost;                              \
-    printf("CSV, %s, %lu\n", #func, cycle);
-
-#define BENCH_ERROR(func) bench_ercd = 1;
-#define BENCH_STATUS(func)                                                     \
-    if (bench_ercd) {                                                          \
-        printf("ERROR, %s\n", #func);                                          \
-    } else {                                                                   \
-        printf("SUCCESS, %s\n", #func);                                        \
-    }
-
-#define BENCH_FINISH()                                                         \
-    exit_cycle = READ_CYCLE();                                                 \
-    cycle = exit_cycle - enter_cycle - extra_cost;                             \
-    printf("CSV, BENCH END, %llu\n", cycle);
+#include "nmsis_bench.h"
 
 static float32_t test_conv_input_f32_A[300] = {
     0.240707035480160,    0.676122303863752,   0.289064571674477,
@@ -317,6 +274,8 @@ static int test_flag_error = 0;
 #define DELTAQ15 (2)
 #define DELTAQ7 (2)
 
+BENCH_DECLARE_VAR();
+
 int main(void)
 {
     printf("\r\nNuclei RISC-V NMSIS-DSP Library Demonstration\r\n");
@@ -329,7 +288,7 @@ int main(void)
 #if (defined(__RISCV_FEATURE_VECTOR) && __RISCV_FEATURE_VECTOR == 1)
     printf("Warning: Make sure Nuclei RISC-V Vector is present in your CPU core!\r\n");
     // Enable Vector Unit
-    __RV_CSR_SET(CSR_MSTATUS, 0x200);
+    __enable_vector();
 #endif
     printf("         Otherwise this example will trap to cpu core exception!\r\n\r\n");
 #else
@@ -483,9 +442,11 @@ int main(void)
     BENCH_STATUS(riscv_conv_fast_opt_q15);
     if (test_flag_error) {
         printf("test error apprears, please recheck.\n");
+        NMSIS_TEST_FAIL();
         return 1;
     } else {
         printf("all test are passed. Well done!\n");
+        NMSIS_TEST_PASS();
     }
     return 0;
 }
