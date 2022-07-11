@@ -1,26 +1,49 @@
 #!/bin/env bash
 MAKE_OPTS=${MAKE_OPTS:-""}
 RUNON=${RUNON-fpga}
-CONFIG=${CONFIG-}
-RUNMODE=${RUNMODE-bare}
+CONFIG=${CONFIG-"n900,ux900"}
+BACKUP=${BACKUP:-Backups}
+CFGSET=${CFGSET:-full}
+BITSET=${BITSET:-latest}
+RUNMODE=${RUNMODE-all}
 
-SCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
-SCRIPTDIR=$(readlink -f $SCRIPTDIR)
-COMMON_ENV=$(readlink -f $SCRIPTDIR/../env.sh)
-FPGALOC=${FPGALOC:-$SCRIPTDIR}
-CONFLOC=${CONFLOC:-$SCRIPTDIR}
+MYSCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
+MYSCRIPTDIR=$(readlink -f $MYSCRIPTDIR)
+COMMON_ENV=$(readlink -f $MYSCRIPTDIR/../env.sh)
+FPGALOC=
+CFGLOC=
 
 source $COMMON_ENV
 
 gen_logdir barebench
 describe_env
 
+function setup_suite {
+    local cfgloc=${1:-mini}
+    local fpgaloc=${2:-latest}
+    local configpath=${MYSCRIPTDIR}/configs/${cfgloc}
+    local fpgapath=${MYSCRIPTDIR}/bitstreams/$fpgaloc
+
+    if [ ! -d $configpath ] ; then
+        echo "Can't find proper test suite $cfgloc located in $configpath"
+        echo "Please pass correct CFGSET value, such as CFGSET=mini or CFGSET=full"
+        exit 1
+    fi
+    if [ ! -d $fpgapath ] ; then
+        echo "Can't find proper test suite $fpgaloc located in $fpgapath"
+        echo "Please pass correct FPGASET value, such as FPGASET=latest or FPGASET=202206"
+        exit 1
+    fi
+    CFGLOC=$configpath
+    FPGALOC=$fpgapath
+}
+
 function runbench {
     local yfn=$1
     local logdir=$2
     local mkoptions=${@:3}
 
-    local RUNNER_CMD="python3 $NSDK_RUNNER_PY --appyaml $CONFLOC/$yfn.yaml --logdir $LOGDIR/$logdir --runon $RUNON --cfgloc $CONFLOC --fpgaloc $FPGALOC"
+    local RUNNER_CMD="python3 $NSDK_RUNNER_PY --appyaml ${MYSCRIPTDIR}/$yfn.yaml --logdir $LOGDIR/$logdir --runon $RUNON --cfgloc $CFGLOC --fpgaloc $FPGALOC"
     if [ "x$CONFIG" != "x" ] ; then
         RUNNER_CMD="${RUNNER_CMD} --config \"$CONFIG\""
     fi
@@ -69,6 +92,7 @@ function do_barebench {
     popd
 }
 
+setup_suite ${CFGSET} ${FPGASET}
 do_barebench | tee $LOGDIR/build.log
 
 zip_logdir
