@@ -47,3 +47,7 @@ Scratch*
 scratch*
 bitstream*
 Backup*
+
+usb_info.json
+fpga_runner.yaml
+*.back*
