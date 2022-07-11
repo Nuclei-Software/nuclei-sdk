@@ -27,6 +27,11 @@ except Exception as exc:
     print("Please install requried packages using: pip3 install -r %s" % (requirement_file))
     sys.exit(1)
 
+try:
+    from collections.abc import Mapping
+except ImportError: # Python 2.7 compatibility
+    from collections import Mapping
+
 SDK_GLOBAL_VARIABLES = {
     "sdk_checktag": "Nuclei SDK Build Time:",
     "sdk_check": True,
@@ -166,7 +171,7 @@ def dict_merge(dct, merge_dct):
     """
     for k, v in merge_dct.items():
         if (k in dct and isinstance(dct[k], dict)
-                and isinstance(merge_dct[k], collections.Mapping)):
+                and isinstance(merge_dct[k], Mapping)):
             dict_merge(dct[k], merge_dct[k])
         else:
             dct[k] = merge_dct[k]
