@@ -45,3 +45,5 @@ gen/
 tmp*/
 Scratch*
 scratch*
+bitstream*
+Backup*
