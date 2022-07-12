@@ -89,6 +89,11 @@ function do_barebench {
         fi
     fi
 
+    # generate report for all baremetal benchmark/libncrt/dhrystone benchmarks
+    RUNCMD="python3 $NSDK_REPORT_PY --logdir $LOGDIR --split --run"
+    if [[ $DRYRUN == 0 ]] ; then
+       eval $RUNCMD
+    fi
     popd
 }
 
