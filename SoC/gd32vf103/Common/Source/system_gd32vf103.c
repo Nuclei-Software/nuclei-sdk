@@ -1105,7 +1105,7 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
     /* TODO: Uncomment this if you have implement printf function */
     printf("MCAUSE: 0x%lx\r\n", mcause);
     printf("MEPC  : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
-    printf("MTVAL : 0x%lx\r\n", __RV_CSR_READ(CSR_MBADADDR));
+    printf("MTVAL : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
     Exception_DumpFrame(sp);
     while (1);
 }
