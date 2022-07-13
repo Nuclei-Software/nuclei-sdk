@@ -516,6 +516,7 @@
 #define CSR_MEPC 0x341
 #define CSR_MCAUSE 0x342
 #define CSR_MTVAL 0x343
+#define CSR_MBADADDR 0x343
 #define CSR_MIP 0x344
 #define CSR_MTINST 0x34a
 #define CSR_MTVAL2 0x34b
