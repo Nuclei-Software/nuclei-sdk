@@ -83,7 +83,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #define BENCH_DECLARE_VAR()     static volatile uint64_t _bc_sttcyc, _bc_endcyc, _bc_usecyc, _bc_extcst, _bc_ercd;
 
 /** Initialize benchmark environment, need to called in before other BENCH_xxx macros are called */
-#define BENCH_INIT()            printf("Benchmark Initialized\n"); \
+#define BENCH_INIT()            printf("Benchmark initialized\n"); \
                                 __prepare_bench_env(); \
                                 _bc_sttcyc = READ_CYCLE(); \
                                 _bc_endcyc = READ_CYCLE(); \
@@ -119,6 +119,42 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
                                     printf("SUCCESS, %s\n", #proc); \
                                 }
 
+#endif
+
+// High performance monitor bench helpers
+#ifndef DISABLE_NMSIS_HPM
+/** Declare high performance monitor counter idx benchmark required variables, need to be placed above all HPM_xxx macros in each c source code if HPM_xxx used */
+#define HPM_DECLARE_VAR(idx)    static volatile uint64_t __hpm_sttcyc##idx, __hpm_endcyc##idx, __hpm_usecyc##idx, __hpm_val##idx;
+
+#define HPM_SEL_ENABLE(ena)         (ena << 28)
+#define HPM_SEL_EVENT(sel, idx)     ((sel) | (idx << 4))
+
+/** Construct a event variable to be set(sel -> event_sel, idx -> event_idx, ena -> m/s/u_enable) */
+#define HPM_EVENT(sel, idx, ena)    (HPM_SEL_ENABLE(ena) | HPM_SEL_EVENT(sel, idx))
+
+/** Initialize high performance monitor environment, need to called in before other HPM_xxx macros are called */
+#define HPM_INIT()              printf("High performance monitor initialized\n"); \
+                                __prepare_bench_env();
+
+/** Start to do high performance benchmark for proc, and record start hpm counter */
+#define HPM_START(idx, proc, event)                  \
+                                __hpm_val##idx = (event);                                   \
+                                __set_hpm_event(idx, __hpm_val##idx);                       \
+                                __set_hpm_counter(idx, 0);                                  \
+                                __hpm_sttcyc##idx = __get_hpm_counter(idx);
+
+/** Mark end of high performance benchmark for proc, and calc used hpm counter value */
+#define HPM_END(idx, proc, event)                    \
+                                __hpm_endcyc##idx = __get_hpm_counter(idx);                 \
+                                __hpm_usecyc##idx = __hpm_endcyc##idx - __hpm_sttcyc##idx;  \
+                                printf("HPM%d:0x%x, %s, %lu\n", idx, event, #proc, __hpm_usecyc##idx);
+
+#else
+#define HPM_DECLARE_VAR(idx)
+#define HPM_EVENT(sel, idx, ena)
+#define HPM_INIT(idx, proc, event)
+#define HPM_START(idx, proc, event)
+#define HPM_END(idx, proc, event)
 #endif
 
 // NMSIS Helpers
