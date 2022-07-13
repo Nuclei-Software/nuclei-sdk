@@ -11,12 +11,29 @@ This is development version ``0.3.9-dev`` of Nuclei SDK, which is still in devel
 * Application
 
   - Add ``lowpower`` application to demostrate lowpower feature of Nuclei Processor.
+  - Update ``demo_nice`` application due to RTL change in cpu.
 
 * NMSIS
 
+  - Update riscv_encoding.h, a lot of changes in the CSRs and macros, VPU are added.
+  - Add nmsis_bench.h, this header file will not be included in nmsis_core.h, if you want to
+    use it, please directly include in your source code. It is used to help provide NMSIS
+    benchmark and high performance monitor macro helpers.
+  - Add hpm related API in core_feature_base.h
+  - Add enable/disable vector API only when VPU available
+
 * Build System
 
+  - Fix upload program the pc is not set correctly to _start when cpu is reset in flash programming mode.
+  - Add run_qemu_debug/run_xlspike_rbb/run_xlspike_openocd make targets
+
 * SoC
+
+  - Add npk support for smp, required to update ide plugin in Nuclei Studio 2022.04. And also a new version
+    of qemu is required, if you want to run in qemu.
+  - Add ``evalsoc`` in Nuclei SDK, ``evalsoc`` is a new evaluation SoC for Nuclei RISC-V Core, for next generation
+    of cpu evaluation with iregion feature support. ``demosoc`` will be deprecated in future, when all our CPU IP
+    provide iregion support.
 
 
 V0.3.8

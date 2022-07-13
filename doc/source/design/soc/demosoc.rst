@@ -8,9 +8,11 @@ Nuclei Demo SoC
     Since Hummingbird is already taken by the opensource
     Hummingbird E203 SoC, we just rename Hummingbird SoC in Nuclei SDK
     to Nuclei Demo SoC to make it more clear.
+    For newer version of Nuclei CPU IP from 2022.07, which might has iregion
+    feature, please use Eval SoC instead of Demo SoC.
 
 
-Nuclei Demo SoC is an evaluation FPGA SoC from Nuclei
+Nuclei Demo SoC is an demostration FPGA SoC from Nuclei
 for customer to evaluate Nuclei RISC-V Process Core.
 
 .. _design_soc_demosoc_overview:
@@ -54,7 +56,7 @@ The SoC memory map for SoC resources is as below :ref:`figure_design_soc_demosoc
     Nuclei Demo SoC Memory Map
 
 If you want to learn more about this evaluation SoC, please get the
-``<Nuclei_Eval_SoC_Intro.pdf>`` from `Nuclei`_.
+``<Nuclei_Demo_SoC_Intro.pdf>`` from `Nuclei`_.
 
 
 .. _design_soc_demosoc_boards:

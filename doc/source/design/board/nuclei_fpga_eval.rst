@@ -87,10 +87,13 @@ How to use
 
 For **Nuclei FPGA Evaluation board**:
 
+* ``evalsoc`` and ``demosoc`` can run on this fpga board, please choose the correct SoC.
+
 * **DOWNLOAD** support all the modes list in :ref:`develop_buildsystem_var_download`
 
-  - You can find default used linker scripts for different download modes in ``SoC/nuclei/Board/nuclei_fpga_eval/Source/GCC/``
+  - You can find default used linker scripts for different download modes in ``SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/`` or ``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/``.
 
+    - The following ``demosoc`` can be changed to ``evalsoc`` if you want to use ``evalsoc``.
     - ``gcc_demosoc_ilm.ld``: Linker script file for ``DOWNLOAD=ilm``
     - ``gcc_demosoc_flash.ld``: Linker script file for ``DOWNLOAD=flash``
     - ``gcc_demosoc_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip``
@@ -110,6 +113,7 @@ you just need to use this **SOC** and **BOARD** variables.
 
 .. code-block:: shell
 
+    ### For demosoc
     # Clean the application with DOWNLOAD=ilm CORE=n307
     make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 clean
     # Build the application with DOWNLOAD=ilm CORE=n307
@@ -118,9 +122,15 @@ you just need to use this **SOC** and **BOARD** variables.
     make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 upload
     # Debug the application using openocd and gdb with DOWNLOAD=ilm CORE=n307
     make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 debug
+    ### For evalsoc
+    # Clean the application with DOWNLOAD=ilm CORE=n307
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 clean
+    # Upload the application using openocd and gdb with DOWNLOAD=ilm CORE=n307
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 upload
 
 .. note::
 
+   * If you want to run on ``evalsoc``, please change ``demosoc`` above to ``evalsoc``.
    * You can change the value passed to **CORE** according to
      the Nuclei Demo SoC Evaluation Core the Nuclei FPGA SoC you have.
    * You can also change the value passed to **DOWNLOAD** to run
