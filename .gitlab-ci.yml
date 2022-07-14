@@ -149,7 +149,7 @@ sdk_build_job_nuclei_fpga_eval:
 
 sdk_run_newlib_nano_job_nuclei_fpga_eval:
   <<: *build_job_template_default
-  timeout: 4h
+  timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
     RUNTARGET: qemu
@@ -164,7 +164,7 @@ sdk_run_newlib_nano_job_nuclei_fpga_eval:
 
 sdk_run_newlib_job_nuclei_fpga_eval:
   <<: *build_job_template_default
-  timeout: 4h
+  timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
     RUNTARGET: qemu
@@ -227,7 +227,7 @@ sdk_build_job_evalsoc:
 
 sdk_run_newlib_job_evalsoc:
   <<: *build_job_template_default
-  timeout: 4h
+  timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
     RUNTARGET: qemu
