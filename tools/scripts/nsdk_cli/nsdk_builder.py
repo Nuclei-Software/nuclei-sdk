@@ -715,6 +715,7 @@ class nsdk_runner(nsdk_builder):
             nsdk_builder.copy_objects(appsts, objs_copydir)
         buildtime = appsts["time"]["build"]
         print("Build application %s, time cost %s seconds, passed: %s" %(appdir, buildtime, appcmdsts))
+        sys.stdout.flush()
 
         appsts["config"] = appconfig
         return appcmdsts, appsts
@@ -786,6 +787,7 @@ class nsdk_runner(nsdk_builder):
 
         runtime = round(time.time() - runstarttime, 2)
         print("Run application %s on %s, time cost %s seconds, passed: %s" %(appdir, app_runtarget, runtime, runstatus))
+        sys.stdout.flush()
         appsts["status"]["run"] = runstatus
         appsts["time"]["run"] = runtime
         return runstatus, appsts

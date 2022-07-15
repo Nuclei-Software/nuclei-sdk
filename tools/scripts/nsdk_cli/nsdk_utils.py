@@ -202,8 +202,8 @@ def try_decode_bytes(bytes):
     return destr
 
 def kill_async_subprocess(proc):
+    startticks = time.time()
     if proc is not None:
-        startticks = time.time()
         try:
             kill_sig = signal.SIGTERM
             if sys.platform != "win32":
@@ -234,12 +234,12 @@ def kill_async_subprocess(proc):
             # kill using process.kill again
             if parent_proc.is_running():
                 proc.kill()
-        # show time cost for kill process
-        print("process id %d killed in %s seconds" %(proc.pid, (time.time() - startticks)))
         except psutil.NoSuchProcess:
             pass
         except Exception as exc:
             print("Warning: kill process failed with %s" %(exc))
+    # show time cost for kill process
+    print("kill process used %.2f seconds" %((time.time() - startticks)))
     sys.stdout.flush()
     pass
 
@@ -331,6 +331,7 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     NSDK_CHECK_TAG = get_sdk_checktag()
     print("Checker used: ", checks)
     print("SDK Checker Tag \"%s\", checker enable %s" % (NSDK_CHECK_TAG, sdk_check))
+    print("SDK run timeout %s, banner timeout %s" % (timeout, banner_timeout))
     check_finished = False
     start_time = time.time()
     serial_log = ""
