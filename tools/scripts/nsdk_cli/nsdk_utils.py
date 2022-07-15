@@ -203,6 +203,7 @@ def try_decode_bytes(bytes):
 
 def kill_async_subprocess(proc):
     if proc is not None:
+        startticks = time.time()
         try:
             kill_sig = signal.SIGTERM
             if sys.platform != "win32":
@@ -233,10 +234,13 @@ def kill_async_subprocess(proc):
             # kill using process.kill again
             if parent_proc.is_running():
                 proc.kill()
+        # show time cost for kill process
+        print("process id %d killed in %s seconds" %(proc.pid, (time.time() - startticks)))
         except psutil.NoSuchProcess:
             pass
         except Exception as exc:
             print("Warning: kill process failed with %s" %(exc))
+    sys.stdout.flush()
     pass
 
 def kill_subprocess(proc):
