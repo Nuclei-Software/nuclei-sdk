@@ -19,8 +19,7 @@
         "FAIL": ["MEPC"]
     },
     "appdirs": [
-        "application",
-        "test"
+        "application"
     ],
     "appdirs_ignore": [
         "application/baremetal/smphello",

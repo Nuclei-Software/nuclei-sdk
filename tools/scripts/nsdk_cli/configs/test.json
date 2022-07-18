@@ -1,0 +1,38 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 60
+        },
+        "qemu": {
+            "qemu32": "qemu-system-riscv32",
+            "qemu64": "qemu-system-riscv64",
+            "timeout": 60
+        }
+    },
+    "build_target": "clean all",
+    "build_config": {
+    },
+    "checks": {
+        "PASS": [],
+        "FAIL": ["MEPC"]
+    },
+    "appdirs": [
+        "test"
+    ],
+    "appdirs_ignore": [
+        "application/baremetal/smphello",
+        "application/baremetal/dsp_examples",
+        "application/baremetal/Internal"
+    ],
+    "appconfig": {
+        "test/core": {
+            "build_config" : {},
+            "checks": {
+                "PASS": [", 0 failed"],
+                "FAIL": ["[FAIL]", "MEPC"]
+            }
+        }
+    }
+}
