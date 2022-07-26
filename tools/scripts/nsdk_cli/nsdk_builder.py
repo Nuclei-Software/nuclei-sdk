@@ -349,6 +349,9 @@ class MonitorThread(Thread):
                             break
                     if NSDK_CHECK_TAG in line:
                         timestr = line.split(NSDK_CHECK_TAG)[-1].strip()
+                        if "Download" in timestr:
+                            print("Warning: Download and SDK tag in same line which should not happen!")
+                            #timestr = timestr.split("Download")[0].strip()
                         cur_time = time.mktime(time.strptime(timestr, "%b %d %Y, %H:%M:%S"))
                         if int(cur_time) >= int(self.checktime):
                             self.sdk_check = False
