@@ -373,8 +373,8 @@ class MonitorThread(Thread):
         except serial.serialutil.SerialException:
             # https://stackoverflow.com/questions/21050671/how-to-check-if-device-is-connected-pyserial
             print("serial port %s might not exist or in use" % self.port)
-        except:
-            print("Some error happens during serial operations")
+        except Exception as exc:
+            print("Some error happens during serial operations, %s" % (str(exc)))
         finally:
             if ser:
                 ser.close()
