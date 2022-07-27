@@ -2,6 +2,7 @@
 SIMU_OPTS=${SIMU_OPTS:-"SIMULATION=1 SIMU=xlspike"}
 RUNTARGET=${RUNTARGET-xlspike}
 DATALOC=${DATALOC:-dlm}
+SOC=${SOC:-demosoc}
 
 SCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
 SCRIPTDIR=$(readlink -f $SCRIPTDIR)
@@ -10,6 +11,9 @@ DOBENCH_CONFLOC=$SCRIPTDIR
 
 source $COMMON_ENV
 
+MAKEOPTS="SOC=$SOC"
+
+LINKSCRIPT="SoC/${SOC}/Board/nuclei_fpga_eval/Source/GCC/gcc_${SOC}_ilm.ld"
 
 function genreport {
     local logdir=${1:-$LOGDIR}
@@ -33,7 +37,7 @@ function runbench {
     if [ "x$RUNTARGET" != "x" ] ; then
         RUN_OPTS="--run --run_target $RUNTARGET"
     fi
-    local BENCH_CMD="python3 $NSDK_BENCH_PY --appcfg $appcfg --hwcfg $hwcfg --parallel=-j --logdir $logdir --make_options \"$SIMU_OPTS $mkopts\" $RUN_OPTS"
+    local BENCH_CMD="python3 $NSDK_BENCH_PY --appcfg $appcfg --hwcfg $hwcfg --parallel=-j --logdir $logdir --make_options \"$MAKEOPTS $SIMU_OPTS $mkopts\" $RUN_OPTS"
     echo $BENCH_CMD
     if [[ $DRYRUN == 0 ]] ; then
         eval $BENCH_CMD
@@ -108,19 +112,14 @@ function run_for_one {
 function prebench {
     echo "Do pre-bench steps"
     if [ "x$DATALOC" == "xilm" ] ; then
-        local patch=$DOBENCH_CONFLOC/data_in_ilm.patch
-        git am $patch
+        sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' ${NSDK_ROOT}/${LINKSCRIPT}
     fi
 }
 
 function postbench {
     echo "Do post-bench steps"
     if [ "x$DATALOC" == "xilm" ] ; then
-        local stashmsg=$(git stash)
-        git reset --hard HEAD~1
-        if [[ "x$stashmsg" == *"xSaved"* ]] ; then
-            git stash pop
-        fi
+        git stash
     fi
 }
 
