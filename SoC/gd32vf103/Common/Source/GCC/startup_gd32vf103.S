@@ -286,14 +286,15 @@ _start0800:
 
     /* ===== Startup Stage 3 ===== */
     /*
-     * Load code section from FLASH to ILM
-     * when code LMA is different with VMA
+     * Load text section from CODE ROM to CODE RAM
+     * when text LMA is different with VMA
      */
-    la a0, _ilm_lma
-    la a1, _ilm
-    /* If the ILM phy-address same as the logic-address, then quit */
+    la a0, _text_lma
+    la a1, _text
+    /* If text LMA and VMA are equal
+     * then no need to copy text section */
     beq a0, a1, 2f
-    la a2, _eilm
+    la a2, _etext
     bgeu a1, a2, 2f
 
 1:
