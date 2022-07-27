@@ -217,15 +217,18 @@ _start:
 
     /* Enable FPU and Vector Unit if f/d/v exist in march */
 #if defined(__riscv_flen) && __riscv_flen > 0
-    /* Enable FPU */
+    /* Enable FPU, and set state to initial */
     li t0, MSTATUS_FS
+    csrc mstatus, t0
+    li t0, MSTATUS_FS_INITIAL
     csrs mstatus, t0
-    csrw fcsr, x0
 #endif
 
 #if defined(__riscv_vector)
-    /* Enable Vector */
+    /* Enable Vector, and set state to initial */
     li t0, MSTATUS_VS
+    csrc mstatus, t0
+    li t0, MSTATUS_VS_INITIAL
     csrs mstatus, t0
 #endif
 
@@ -324,6 +327,10 @@ __skip_init:
     li t0, 0x3f
     csrc CSR_MTVEC, t0
     csrs CSR_MTVEC, 0x3
+
+    /* BPU cold bringup need time, so enable BPU before enter to main */
+    li t0, MMISC_CTL_BPU
+    csrs CSR_MMISC_CTL, t0
 
     /* ===== Call SMP Main Function  ===== */
     /* argc = argv = 0 */

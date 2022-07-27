@@ -275,10 +275,11 @@ _start0800:
     /* ===== Startup Stage 2 ===== */
 
 #if defined(__riscv_flen) && __riscv_flen > 0
-    /* Enable FPU */
+    /* Enable FPU, and set state to initial */
     li t0, MSTATUS_FS
+    csrc mstatus, t0
+    li t0, MSTATUS_FS_INITIAL
     csrs mstatus, t0
-    csrw fcsr, x0
 #endif
 
     /* Enable mcycle and minstret counter */
