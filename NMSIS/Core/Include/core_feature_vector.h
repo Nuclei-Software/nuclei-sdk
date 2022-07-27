@@ -63,11 +63,13 @@
 /**
  * \brief   Enable Vector Unit
  * \details
- * Set vector context status bits to enable vector unit
+ * Set vector context status bits to enable vector unit,
+ * and set state to initial
  */
 __STATIC_FORCEINLINE void __enable_vector(void)
 {
-    __RV_CSR_SET(CSR_MSTATUS, MSTATUS_VS);
+    __RV_CSR_CLEAR(CSR_MSTATUS, MSTATUS_VS);
+    __RV_CSR_SET(CSR_MSTATUS, MSTATUS_VS_INITIAL);
 }
 
 /**

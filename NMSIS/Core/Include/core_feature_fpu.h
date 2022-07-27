@@ -76,8 +76,10 @@
 /** \brief Set FFLAGS CSR Register with val */
 #define __set_FFLAGS(val)       __RV_CSR_WRITE(CSR_FFLAGS, (val))
 
-/** \brief Enable FPU Unit */
-#define __enable_FPU()          __RV_CSR_SET(CSR_MSTATUS, MSTATUS_FS)
+/** \brief Enable FPU Unit, and set state to initial */
+#define __enable_FPU()          { __RV_CSR_CLEAR(CSR_MSTATUS, MSTATUS_FS); \
+                                  __RV_CSR_SET(CSR_MSTATUS, MSTATUS_FS_INITIAL); \
+                                }
 /**
  * \brief Disable FPU Unit
  * \details
