@@ -178,7 +178,7 @@ _start:
      * with mtvec by setting CSR_MMISC_CTL
      * bit 9 NMI_CAUSE_FFF to 1
      */
-    li t0, MMISC_CTL_NMI_CAUSE_FFF
+    li t0, MMISC_CTL_NMI_CAUSE_FFF | MMISC_CTL_BPU 
     csrs CSR_MMISC_CTL, t0
 
     /*
