@@ -455,10 +455,3 @@ CTEST(core, hpmcounter)
     }
 }
 
-CTEST(core, vector)
-{
-#ifdef __riscv_vector
-    __enable_vector();
-    __disable_vector();
-#endif
-}
