@@ -300,9 +300,11 @@ sdk_run_datalma_inilm:
   script:
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
+    - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", rom)/' SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ddr.ld
+    - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", rom)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ddr.ld
     - git diff
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
-    - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes 1 --run_target ${RUNTARGET} --socs ${SOCS} --downloads "ilm"
+    - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes 2 --run_target ${RUNTARGET} --socs ${SOCS} --downloads "ilm,ddr"
 
 sdk_run_on_ncycm:
   <<: *build_job_template_default
