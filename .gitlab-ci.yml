@@ -85,6 +85,7 @@ deploy_website:
 .build_job_template: &build_job_template_default
   image: $IMAGE:$IMAGE_TAG
   interruptible: true
+  when: manual
   stage: build
   before_script:
     - apt update
@@ -286,7 +287,7 @@ sdk_run_sanity_check:
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
     - git diff
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
-    - python3 tools/scripts/misc/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes ${RANDTIMES} --run_target ${RUNTARGET}
+    - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes ${RANDTIMES} --run_target ${RUNTARGET}
 
 sdk_run_on_ncycm:
   <<: *build_job_template_default
