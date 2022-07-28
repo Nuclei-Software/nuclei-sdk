@@ -63,6 +63,6 @@ if __name__ == '__main__':
         else:
             print("Choice %s Passed!" % (makeopts))
     # Sanity check exit
-    if ret:
+    if ret == False:
         sys.exit(1)
     sys.exit(0)
