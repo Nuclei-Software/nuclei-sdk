@@ -1,0 +1,67 @@
+{
+    "run_config": {
+        "target" : "qemu",
+        "xlspike" : {
+            "timeout": 240
+        },
+        "qemu" : {
+            "timeout": 480
+        }
+    },
+    "parallel": "-j",
+    "build_target": "clean all",
+    "build_config": {
+    },
+    "appdirs_ignore": [
+        "application/baremetal/demo_nice"
+    ],
+    "build_configs": {
+        "n201e": {"CORE": "n201e", "ARCH_EXT": ""},
+        "n205": {"CORE": "n205", "ARCH_EXT": ""},
+        "n305bp": {"CORE": "n305", "ARCH_EXT": "bp"},
+        "n307fd": {"CORE": "n307fd", "ARCH_EXT": ""},
+        "n307fdbp": {"CORE": "n307fd", "ARCH_EXT": "bp"}
+    },
+    "appconfig": {
+        "application/baremetal/demo_dsp": {
+            "build_configs" : {
+            },
+            "checks": {
+                "PASS": ["all test are passed"],
+                "FAIL": ["test error apprears", "MEPC"]
+            }
+        },
+        "application/rtthread/msh": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["msh >", "Hello RT-Thread!"]
+            }
+        },
+        "application/baremetal/benchmark/dhrystone": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["1000000/(User_Cycle/Number_Of_Runs)", "Please increase number"]
+            }
+        }
+    },
+    "expecteds": {
+        "application/baremetal/demo_dsp" : {
+            "n201e": { "build": false, "run": false }
+        },
+        "application/baremetal/benchmark/whetstone" : {
+            "n201": { "build": true, "run": false },
+            "n201e" : {"build": true, "run": false}
+        },
+        "application" : {
+            "n201e" : {"build": true, "run": false}
+        },
+        "test" : {
+            "n201e" : {"build": true, "run": false}
+        }
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "application/rtthread/msh" : {"build": true, "run": false},
+        "test/core": {"build": true, "run": false}
+    }
+}
