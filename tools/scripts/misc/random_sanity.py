@@ -16,6 +16,7 @@ def run_nsdk_bench(appcfg, hwcfg, logdir, makeopts, runtarget):
     benchcmd = "%s %s --appcfg %s --hwcfg %s --logdir %s --make_options \"%s\" --run_target %s --run" \
             % (sys.executable, nsdk_benchpy, appcfg, hwcfg, logdir, makeopts, runtarget)
     print("Run command: %s" % (benchcmd))
+    sys.stdout.flush()
     ret = os.system(benchcmd)
     sys.stdout.flush()
     if ret != 0:
@@ -47,6 +48,7 @@ if __name__ == '__main__':
         makeopts = "SOC=%s DOWNLOAD=%s STDCLIB=%s" % (soc, download, stdclib)
         logdir = args.logdir + "/%s/%s/%s" % (soc, download, stdclib)
         print("Random select choice: %s" % (makeopts))
+        sys.stdout.flush()
         appcfg = args.appcfg
         hwcfg = args.hwcfg
         if "libncrt" in stdclib:
