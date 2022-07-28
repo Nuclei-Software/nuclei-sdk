@@ -289,6 +289,21 @@ sdk_run_sanity_check:
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
     - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes ${RANDTIMES} --run_target ${RUNTARGET}
 
+sdk_run_datalma_inilm:
+  <<: *build_job_template_default
+  timeout: 4h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_sanity.json
+    RUNTARGET: qemu
+    SOCS: "evalsoc,demosoc"
+  script:
+    - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
+    - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
+    - git diff
+    - export LOGDIR=logs/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes 1 --run_target ${RUNTARGET} --socs ${SOCS} --downloads "ilm"
+
 sdk_run_on_ncycm:
   <<: *build_job_template_default
   timeout: 12h
