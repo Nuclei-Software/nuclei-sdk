@@ -11,7 +11,10 @@
     "parallel": "-j",
     "build_target": "clean all",
     "appdirs_ignore": [
-        "application/baremetal/demo_nice"
+        "application/baremetal/demo_nice",
+        "application/baremetal/smphello",
+        "application/baremetal/dsp_examples",
+        "application/baremetal/Internal"
     ],
     "build_config": {
     },

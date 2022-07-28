@@ -44,6 +44,9 @@ if __name__ == '__main__':
         soc = random.choice(soc_choices)
         download = random.choice(download_choices)
         stdclib = random.choice(stdclib_choices)
+        # when use newlib full, some case might link fail due size issue, so change to other download mode
+        if stdclib == "newlib_full" and download in ("ilm", "flash"):
+            download = random("ddr", "flashxip")
 
         makeopts = "SOC=%s DOWNLOAD=%s STDCLIB=%s" % (soc, download, stdclib)
         logdir = args.logdir + "/%s/%s/%s" % (soc, download, stdclib)
@@ -55,5 +58,11 @@ if __name__ == '__main__':
             hwcfg = hwcfg + ".libncrt"
         ret = run_nsdk_bench(appcfg, hwcfg, logdir, makeopts, args.run_target)
         if ret == False:
-            sys.exit(1)
+            print("Choice %s Failed!" % (makeopts))
+            break
+        else:
+            print("Choice %s Passed!" % (makeopts))
+    # Sanity check exit
+    if ret:
+        sys.exit(1)
     sys.exit(0)
