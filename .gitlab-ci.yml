@@ -85,7 +85,7 @@ deploy_website:
 .build_job_template: &build_job_template_default
   image: $IMAGE:$IMAGE_TAG
   interruptible: true
-  when: manual
+  #when: manual
   stage: build
   before_script:
     - apt update
