@@ -153,7 +153,7 @@ _start:
     la gp, __global_pointer$
     la tp, __tls_base
     .option pop
- 
+
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     /* Set correct sp for each cpu
      * each stack size is __STACK_SIZE
@@ -234,7 +234,7 @@ _start:
 
     /* Enable mcycle and minstret counter */
     csrci CSR_MCOUNTINHIBIT, 0x5
- 
+
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     csrr a0, CSR_MHARTID
     /* TODO: make boot hard id configurable */

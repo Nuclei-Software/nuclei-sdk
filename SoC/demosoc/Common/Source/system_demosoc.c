@@ -361,7 +361,7 @@ static void _get_iregion_info(IRegion_Info_Type *iregion)
         return;
     }
     mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
-    if (mcfg_info & (1<<16)) { // IRegion Info present
+    if (mcfg_info & MCFG_INFO_IREGION_EXIST) { // IRegion Info present
         iregion->iregion_base = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
         iregion->eclic_base = iregion->iregion_base + 0x20000;
         iregion->systimer_base = iregion->iregion_base + 0x30000;
@@ -396,11 +396,11 @@ __attribute__((section(".init"))) void __sync_harts(void)
     unsigned long mcfg_info;
 
     mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
-    if (mcfg_info & (1<<16)) { // IRegion Info present
+    if (mcfg_info & MCFG_INFO_IREGION_EXIST) { // IRegion Info present
         // clint base = system timer base + 0x1000
         irgb_base = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
         clint_base = irgb_base + 0x30000 + 0x1000;
-        smp_base = irgb_base + 0x40000; 
+        smp_base = irgb_base + 0x40000;
     } else {
         // system timer base for demosoc is 0x02000000
         clint_base = 0x02000000 + 0x1000;
@@ -410,7 +410,7 @@ __attribute__((section(".init"))) void __sync_harts(void)
     SMP_CTRLREG(smp_base, 0xc) = 0xFFFFFFFF;
     SMP_CTRLREG(smp_base, 0x10) = 0x1;
     __SMP_RWMB();
-    
+
     // pre-condition: interrupt must be disabled, this is done before calling this function
     if (hartid == 0) { // boot hart
         // clear msip pending
