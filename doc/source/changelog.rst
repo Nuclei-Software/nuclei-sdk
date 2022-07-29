@@ -12,6 +12,7 @@ This is development version ``0.3.9-dev`` of Nuclei SDK, which is still in devel
 
   - Add ``lowpower`` application to demostrate lowpower feature of Nuclei Processor.
   - Update ``demo_nice`` application due to RTL change in cpu.
+  - Change dhrystone compiling options to match better with Nuclei CPU IP.
 
 * NMSIS
 
@@ -34,6 +35,16 @@ This is development version ``0.3.9-dev`` of Nuclei SDK, which is still in devel
   - Add ``evalsoc`` in Nuclei SDK, ``evalsoc`` is a new evaluation SoC for Nuclei RISC-V Core, for next generation
     of cpu evaluation with iregion feature support. ``demosoc`` will be deprecated in future, when all our CPU IP
     provide iregion support.
+  - **Important**: A lot of changes are maded to linker script of SDK.
+
+    - rodata are placed in data section for ilm/flash/ddrdownload mode, but placed in text section for flashxip download mode.
+    - For ilm download mode, if you want to make the generated binary smaller, you can change REGION_ALIAS of DATA_LMA from ``ram`` to ``ilm``.
+    - Add ``_text_lma/_text/_etext`` to replace ``_ilm_lma/_ilm/_eilm``, and startup code now using new ld symbols.
+    - Use REGION_ALIAS to make linker script portable
+    - Linker scripts of gd32vf103/evalsoc/demosoc are all changed.
+  - FPU state are set to initial state when startup, not previous dirty state.
+  - Vector are enabled and set to initial state when startup, when vector are enabled during compiling.
+  - For latest version of Nuclei CPU IP, BPU cold init need many cycles, so we placed bpu enable before enter to main.
 
 
 V0.3.8
