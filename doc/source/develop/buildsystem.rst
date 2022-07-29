@@ -404,6 +404,7 @@ which can be passed via make command.
 * :ref:`develop_buildsystem_var_variant`
 * :ref:`develop_buildsystem_var_download`
 * :ref:`develop_buildsystem_var_core`
+* :ref:`develop_buildsystem_var_archext`
 * :ref:`develop_buildsystem_var_simulation`
 * :ref:`develop_buildsystem_var_gdb_port`
 * :ref:`develop_buildsystem_var_v`
@@ -644,6 +645,38 @@ for RV32 targets, otherwise it will be medany.
 The some SoCs, the CORE is fixed, so the ARCH and ABI will be fixed, such as
 ``gd32vf103`` SoC, in build system, the CORE is fixed to n205, and ARCH=rv32imac, ABI=ilp32.
 
+.. _develop_buildsystem_var_archext:
+
+ARCH_EXT
+~~~~~~~~
+
+**ARCH_EXT** variable is used to select extra RISC-V arch extensions supported by Nuclei
+RISC-V Processor, except the ``iemafdc``.
+
+Currently, valid arch extension combination should match the order of ``bpv``.
+
+Here is a list of valid arch extensions:
+
+* **ARCH_EXT=b**: RISC-V bitmanipulation extension.
+* **ARCH_EXT=p**: RISC-V packed simd extension.
+* **ARCH_EXT=v**: RISC-V vector extension.
+* **ARCH_EXT=bp**: RISC-V bitmanipulation and packed simd extension.
+* **ARCH_EXT=pv**: RISC-V packed simd and vector extension.
+* **ARCH_EXT=bpv**: RISC-V bitmanipulation, packed simd and vector extension.
+
+It is suggested to use this ARCH_EXT with other arch options like this, can be found in
+``SoC/demosoc/build.mk``:
+
+
+.. code-block:: makefile
+
+    # Set RISCV_ARCH and RISCV_ABI
+    CORE_UPPER := $(call uc, $(CORE))
+    CORE_ARCH_ABI := $($(CORE_UPPER)_CORE_ARCH_ABI)
+    RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))$(ARCH_EXT)
+    RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
+
+
 .. _develop_buildsystem_var_simulation:
 
 SIMULATION
@@ -734,7 +767,7 @@ e.g. ``application/baremetal/demo_timer/Makefile``.
 * :ref:`develop_buildsystem_var_middleware`
 * :ref:`develop_buildsystem_var_rtos`
 * :ref:`develop_buildsystem_var_stdclib`
-* :ref:`develop_buildsystem_var_archext`
+* :ref:`develop_buildsystem_var_nmsis_lib`
 * :ref:`develop_buildsystem_var_riscv_arch`
 * :ref:`develop_buildsystem_var_riscv_abi`
 * :ref:`develop_buildsystem_var_riscv_cmodel`
@@ -813,6 +846,21 @@ You can easily find the available middleware components in the **<NUCLEI_SDK_ROO
 * If **MIDDLEWARE** is not defined, not leave empty, no middlware package will be selected.
 * If **MIDDLEWARE** is defined with more than 1 string, such as ``fatfs tjpgd``, then these two
   middlewares will be selected.
+
+.. _develop_buildsystem_var_nmsis_lib:
+
+NMSIS_LIB
+~~~~~~~~~
+
+**NMSIS_LIB** variable is used to select which NMSIS libraries should be used in this application.
+
+Currently you can select the following libraries:
+
+* **nmsis_dsp**: NMSIS DSP prebuilt library.
+* **nmsis_nn**: NMSIS NN prebuilt library.
+
+You can select more than libraries of NMSIS. For example, if you want to use NMSIS NN library,
+NMSIS DSP library is also required. so you need to set **NMSIS_LIB** like this ``NMSIS_LIB := nmsis_nn nmsis_dsp``
 
 .. _develop_buildsystem_var_stdclib:
 
@@ -922,40 +970,6 @@ ld options ``-Wl,--defsym=__HEAP_SIZE=$(HEAPSZ)`` to overwrite the default value
 **HEAPSZ** is defined.
 
 **HEAPSZ** variable must be a valid value accepted by ld, such as 0x2000, 2K, 4K, 8192.
-
-
-.. _develop_buildsystem_var_archext:
-
-ARCH_EXT
-~~~~~~~~
-
-**ARCH_EXT** variable is used to select extra RISC-V arch extensions supported by Nuclei
-RISC-V Processor, except the ``iemafdc``.
-
-Currently, valid arch extension combination should match the order of ``bpv``.
-
-Here is a list of valid arch extensions:
-
-* **ARCH_EXT=b**: RISC-V bitmanipulation extension.
-* **ARCH_EXT=p**: RISC-V packed simd extension.
-* **ARCH_EXT=v**: RISC-V vector extension.
-* **ARCH_EXT=bp**: RISC-V bitmanipulation and packed simd extension.
-* **ARCH_EXT=pv**: RISC-V packed simd and vector extension.
-* **ARCH_EXT=bpv**: RISC-V bitmanipulation, packed simd and vector extension.
-
-It is suggested to use this ARCH_EXT with other arch options like this, can be found in
-``SoC/demosoc/build.mk``:
-
-
-.. code-block:: makefile
-
-    # Set RISCV_ARCH and RISCV_ABI
-    CORE_UPPER := $(call uc, $(CORE))
-    CORE_ARCH_ABI := $($(CORE_UPPER)_CORE_ARCH_ABI)
-    RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))$(ARCH_EXT)
-    RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
-
-
 
 .. _develop_buildsystem_var_riscv_arch:
 
