@@ -200,7 +200,6 @@
 
 #define MDCAUSE_MDCAUSE             (0x3)
 
-#define MMISC_CTL_IREGION_EXIST     (1<<16)
 #define MMISC_CTL_LDSPEC_ENABLE     (1<<12)
 #define MMISC_CTL_SIJUMP_ENABLE     (1<<11)
 #define MMISC_CTL_IMRETURN_ENABLE   (1<<10)
@@ -240,6 +239,7 @@
 #define MCFG_INFO_SMP               (1<<11)
 #define MCFG_INFO_DSP_N1            (1<<12)
 #define MCFG_INFO_DSP_N2            (1<<13)
+#define MCFG_INFO_IREGION_EXIST     (1<<16)
 
 #define MICFG_IC_SET                (0xF<<0)
 #define MICFG_IC_WAY                (0x7<<4)
