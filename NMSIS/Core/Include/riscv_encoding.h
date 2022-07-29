@@ -200,7 +200,12 @@
 
 #define MDCAUSE_MDCAUSE             (0x3)
 
+#define MMISC_CTL_IREGION_EXIST     (1<<16)
+#define MMISC_CTL_LDSPEC_ENABLE     (1<<12)
+#define MMISC_CTL_SIJUMP_ENABLE     (1<<11)
+#define MMISC_CTL_IMRETURN_ENABLE   (1<<10)
 #define MMISC_CTL_NMI_CAUSE_FFF     (1<<9)
+#define MMISC_CTL_CODE_BUS_ERR      (1<<8)
 #define MMISC_CTL_MISALIGN          (1<<6)
 #define MMISC_CTL_BPU               (1<<3)
 
@@ -210,6 +215,8 @@
 #define MCACHE_CTL_IC_ECC_EXCP_EN   (1<<3)
 #define MCACHE_CTL_IC_RWTECC        (1<<4)
 #define MCACHE_CTL_IC_RWDECC        (1<<5)
+#define MCACHE_CTL_IC_PF_EN         (1<<6)
+#define MCACHE_CTL_IC_CANCEL_EN     (1<<7)
 #define MCACHE_CTL_DC_EN            (1<<16)
 #define MCACHE_CTL_DC_ECC_EN        (1<<17)
 #define MCACHE_CTL_DC_ECC_EXCP_EN   (1<<18)
@@ -230,6 +237,9 @@
 #define MCFG_INFO_DLM               (1<<8)
 #define MCFG_INFO_ICACHE            (1<<9)
 #define MCFG_INFO_DCACHE            (1<<10)
+#define MCFG_INFO_SMP               (1<<11)
+#define MCFG_INFO_DSP_N1            (1<<12)
+#define MCFG_INFO_DSP_N2            (1<<13)
 
 #define MICFG_IC_SET                (0xF<<0)
 #define MICFG_IC_WAY                (0x7<<4)
