@@ -8,3 +8,4 @@ pyyaml
 pyexcel
 pyexcel-xlsx
 pyexcel-xlsxw
+grip
