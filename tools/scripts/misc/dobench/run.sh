@@ -1,5 +1,10 @@
 #!/bin/env bash
-SIMU_OPTS=${SIMU_OPTS:-"SIMULATION=1 SIMU=xlspike"}
+
+## Sample runs:
+### Build for fpga: SIMU_OPTS= LOGROOT=gen/fpga RUNTARGET= ./run.sh
+### Build for cycle model or rtl sim: LOGROOT=gen/rtl RUNTARGET= ./run.sh
+
+SIMU_OPTS=${SIMU_OPTS-"SIMULATION=1 SIMU=xlspike"}
 RUNTARGET=${RUNTARGET-xlspike}
 DATALOC=${DATALOC:-dlm}
 SOC=${SOC:-demosoc}
