@@ -338,7 +338,7 @@ sdk_gen_benchmark:
   script:
     - export LOGROOT=gen
     - export RUNTARGET=
-    - bash tools/scripts/misc/dobench/run.sh
+    - bash tools/scripts/misc/dobench/dobench.sh $LOGROOT
     - bash tools/scripts/misc/build_benchmark.sh
   artifacts:
     when: always
