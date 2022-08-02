@@ -33,7 +33,7 @@ extern "C" {
 
 #include <stdint.h>
 
-extern volatile uint32_t SystemCoreClock;     /*!< System Clock Frequency (Core Clock)  */
+extern volatile uint32_t SystemCoreClock;     /*!< System Clock Frequency (Core Clock) */
 
 typedef struct EXC_Frame {
     unsigned long ra;                /* ra: x1, return address for jump */
@@ -101,6 +101,27 @@ extern void ECLIC_Init(void);
  * assign handler for specific IRQn.
  */
 extern int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler);
+
+#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+/**
+ * \brief Register an exception handler for exception code EXCn of supervisor mode
+ */
+extern void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler);
+
+/**
+ * \brief Get current exception handler for exception code EXCn of supervisor mode
+ */
+extern unsigned long Exception_Get_EXC_S(uint32_t EXCn);
+
+/**
+ * \brief  Initialize a specific IRQ and register the handler of supervisor mode
+ * \details
+ * This function set vector mode, trigger mode and polarity, interrupt level and priority,
+ * assign handler for specific IRQn.
+ */
+extern int32_t ECLIC_Register_IRQ_S(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler);
+
+#endif
 
 #ifdef __cplusplus
 }

@@ -242,6 +242,10 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 #define __PMP_PRESENT             1                     /*!< Set to 1 if PMP is present */
 #define __PMP_ENTRY_NUM           16                    /*!< Set to 8 or 16, the number of PMP entries */
 
+#ifndef __TEE_PRESENT
+#define __TEE_PRESENT             0                     /*!< Set to 1 if TEE is present */
+#endif
+
 #ifndef RUNMODE_CONTROL
 #define __ICACHE_PRESENT          0                     /*!< Set to 1 if I-Cache is present */
 #define __DCACHE_PRESENT          0                     /*!< Set to 1 if D-Cache is present */
@@ -261,6 +265,13 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 #define __CCM_PRESENT             RUNMODE_CCM_EN        /*!< Set to 1 if Cache Control and Mantainence Unit is present */
 #else
 #define __CCM_PRESENT             0                     /*!< Set to 1 if Cache Control and Mantainence Unit is present */
+#endif
+#endif
+
+/* TEE feature depends on PMP */
+#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if !defined(__PMP_PRESENT) || (__PMP_PRESENT != 1)
+#error "__PMP_PRESENT must be defined as 1!"
 #endif
 #endif
 

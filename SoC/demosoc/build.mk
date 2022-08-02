@@ -122,7 +122,8 @@ else
 endif
 
 ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_demosoc.S \
-		$(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_demosoc.S
+		$(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_demosoc.S      \
+		$(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_demosoc_s.S
 
 # Add extra board related source files and header files
 VALID_NUCLEI_SDK_SOC_BOARD := $(wildcard $(NUCLEI_SDK_SOC_BOARD))
