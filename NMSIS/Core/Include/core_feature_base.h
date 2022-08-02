@@ -578,6 +578,36 @@ typedef union {
 #endif /* __ASSEMBLY__ */
 
 /**
+ * \brief switch privilege from machine mode to others.
+ * \details
+ *  Execute into \ref entry_point in \ref mode(supervisor or user) with given stack
+ * \param mode   privilege mode
+ * \param stack   predefined stack, size should set enough
+ * \param entry_point   a function pointer to execute
+ */
+__STATIC_FORCEINLINE void __switch_mode(uint8_t mode, uintptr_t stack, void(*entry_point)(void))
+{
+    unsigned long val = 0;
+
+    /* Set MPP to the requested privilege mode */
+    val = __RV_CSR_READ(CSR_MSTATUS);
+    val = __RV_INSERT_FIELD(val, MSTATUS_MPP, mode);
+
+    /* Set previous MIE disabled */
+    val = __RV_INSERT_FIELD(val, MSTATUS_MPIE, 0);
+
+    __RV_CSR_WRITE(CSR_MSTATUS, val);
+
+    /* Set the entry point in MEPC */
+    __RV_CSR_WRITE(CSR_MEPC, entry_point);
+
+    /* Set the register file */
+    __asm__ volatile("mv sp, %0" ::"r"(stack));
+
+    __asm__ volatile("mret");
+}
+
+/**
  * \brief   Enable IRQ Interrupts
  * \details Enables IRQ interrupts by setting the MIE-bit in the MSTATUS Register.
  * \remarks
@@ -597,6 +627,28 @@ __STATIC_FORCEINLINE void __enable_irq(void)
 __STATIC_FORCEINLINE void __disable_irq(void)
 {
     __RV_CSR_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
+}
+
+/**
+ * \brief   Enable IRQ Interrupts in supervisor mode
+ * \details Enables IRQ interrupts by setting the SIE-bit in the SSTATUS Register.
+ * \remarks
+ *          Can only be executed in Privileged modes.
+ */
+__STATIC_FORCEINLINE void __enable_irq_s(void)
+{
+    __RV_CSR_SET(CSR_SSTATUS, SSTATUS_SIE);
+}
+
+/**
+ * \brief   Disable IRQ Interrupts in supervisor mode
+ * \details Disables IRQ interrupts by clearing the SIE-bit in the SSTATUS Register.
+ * \remarks
+ *          Can only be executed in Privileged modes.
+ */
+__STATIC_FORCEINLINE void __disable_irq_s(void)
+{
+    __RV_CSR_CLEAR(CSR_SSTATUS, SSTATUS_SIE);
 }
 
 /**

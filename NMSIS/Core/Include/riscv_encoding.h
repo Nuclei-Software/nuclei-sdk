@@ -450,6 +450,7 @@
 #define CSR_SIDELEG 0x103
 #define CSR_SIE 0x104
 #define CSR_STVEC 0x105
+#define CSR_STVT 0x107
 #define CSR_SCOUNTEREN 0x106
 #define CSR_SENVCFG 0x10a
 #define CSR_SSTATEEN0 0x10c

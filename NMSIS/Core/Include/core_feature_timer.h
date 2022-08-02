@@ -159,19 +159,20 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetLoadValue(void)
 }
 
 /**
- * \brief  Set system timer compare value
+ * \brief  Set system timer compare value by hartid
  * \details
  * This function set the system Timer compare value in MTIMERCMP register.
  * \param [in]  value   compare value to set system timer MTIMERCMP register.
+ * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
  * \remarks
  * - Compare value is 64bits wide.
  * - If compare value is larger than current value timer interrupt generate.
  * - Modify the load value or compare value less to clear the interrupt.
- * - \ref SysTimer_GetCompareValue
+ * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - \ref SysTimer_GetHartCompareValue
  */
-__STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
+__STATIC_FORCEINLINE void SysTimer_SetHartCompareValue(uint64_t value, uint32_t hartid)
 {
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
     if (hartid == 0) {
 #if __RISCV_XLEN == 32
         uint8_t *addr;
@@ -195,17 +196,36 @@ __STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
 }
 
 /**
- * \brief  Get system timer compare value
+ * \brief  Set system timer compare value in machined mode
+ * \details
+ * This function set the system Timer compare value in MTIMERCMP register.
+ * \param [in]  value   compare value to set system timer MTIMERCMP register.
+ * \remarks
+ * - Compare value is 64bits wide.
+ * - If compare value is larger than current value timer interrupt generate.
+ * - Modify the load value or compare value less to clear the interrupt.
+ * - CSR_MHARTID can only be accessed in machined mode, or else exception will occur.
+ * - \ref SysTimer_GetCompareValue
+ */
+__STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
+{
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    SysTimer_SetHartCompareValue(value, hartid);
+}
+
+/**
+ * \brief  Get system timer compare value by hartid
  * \details
  * This function get the system timer compare value in MTIMERCMP register.
+ * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
  * \return  compare value of system timer MTIMERCMP register.
  * \remarks
  * - Compare value is 64bits wide.
- * - \ref SysTimer_SetCompareValue
+ * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - \ref SysTimer_SetHartCompareValue
  */
-__STATIC_FORCEINLINE uint64_t SysTimer_GetCompareValue(void)
+__STATIC_FORCEINLINE uint64_t SysTimer_GetHartCompareValue(uint32_t hartid)
 {
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
     if (hartid == 0) {
         return SysTimer->MTIMERCMP;
     } else {
@@ -223,6 +243,21 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetCompareValue(void)
 #endif
         return full;
     }
+}
+
+/**
+ * \brief  Get system timer compare value in machine mode
+ * \details
+ * This function get the system timer compare value in MTIMERCMP register.
+ * \return  compare value of system timer MTIMERCMP register.
+ * \remarks
+ * - Compare value is 64bits wide.
+ * - \ref SysTimer_SetCompareValue
+ */
+__STATIC_FORCEINLINE uint64_t SysTimer_GetCompareValue(void)
+{
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    SysTimer_GetHartCompareValue(hartid);
 }
 
 /**
@@ -280,7 +315,28 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetControlValue(void)
 }
 
 /**
- * \brief  Trigger or set software interrupt via system timer
+ * \brief  Trigger or set software interrupt via system timer by hartid
+ * \details
+ * This function set the system timer MSIP bit in MSIP register.
+ * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
+ * \remarks
+ * - Set system timer MSIP bit and generate a SW interrupt.
+ * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - \ref SysTimer_ClearHartSWIRQ
+ * - \ref SysTimer_GetHartMsipValue
+ */
+__STATIC_FORCEINLINE void SysTimer_SetHartSWIRQ(uint32_t hartid)
+{
+    if (hartid == 0) {
+        SysTimer->MSIP |= SysTimer_MSIP_MSIP_Msk;
+    } else {
+        uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
+        __SW(addr, SysTimer_MSIP_MSIP_Msk);
+    }
+}
+
+/**
+ * \brief  Trigger or set software interrupt via system timer in machine mode
  * \details
  * This function set the system timer MSIP bit in MSIP register.
  * \remarks
@@ -291,16 +347,32 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetControlValue(void)
 __STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
 {
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    SysTimer_SetHartSWIRQ(hartid);
+}
+
+/**
+ * \brief  Clear system timer software interrupt pending request by hartid
+ * \details
+ * This function clear the system timer MSIP bit in MSIP register.
+ * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
+ * \remarks
+ * - Clear system timer MSIP bit in MSIP register to clear the software interrupt pending.
+ * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - \ref SysTimer_SetHartSWIRQ
+ * - \ref SysTimer_GetHartMsipValue
+ */
+__STATIC_FORCEINLINE void SysTimer_ClearHartSWIRQ(uint32_t hartid)
+{
     if (hartid == 0) {
-        SysTimer->MSIP |= SysTimer_MSIP_MSIP_Msk;
+        SysTimer->MSIP &= ~SysTimer_MSIP_MSIP_Msk;
     } else {
         uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
-        __SW(addr, SysTimer_MSIP_MSIP_Msk);
+        __SW(addr, 0);
     }
 }
 
 /**
- * \brief  Clear system timer software interrupt pending request
+ * \brief  Clear system timer software interrupt pending request in machine mode
  * \details
  * This function clear the system timer MSIP bit in MSIP register.
  * \remarks
@@ -311,28 +383,25 @@ __STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
 __STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
 {
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
-    if (hartid == 0) {
-        SysTimer->MSIP &= ~SysTimer_MSIP_MSIP_Msk;
-    } else {
-        uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
-        __SW(addr, 0);
-    }
+    SysTimer_ClearHartSWIRQ(hartid);
 }
 
 /**
- * \brief  Get system timer MSIP register value
+ * \brief  Get system timer MSIP register value by hartid
  * \details
  * This function get the system timer MSIP register value.
+ * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
  * \return    Value of Timer MSIP register.
  * \remarks
  * - Bit0 is SW interrupt flag.
  *   Bit0 is 1 then SW interrupt set. Bit0 is 0 then SW interrupt clear.
- * - \ref SysTimer_SetSWIRQ
- * - \ref SysTimer_ClearSWIRQ
+ * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - \ref SysTimer_SetHartSWIRQ
+ * - \ref SysTimer_ClearHartSWIRQ
+ * - \ref SysTimer_SetHartMsipValue
  */
-__STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
+__STATIC_FORCEINLINE uint32_t SysTimer_GetHartMsipValue(uint32_t hartid)
 {
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
     if (hartid == 0) {
         return (uint32_t)(SysTimer->MSIP & SysTimer_MSIP_Msk);
     } else {
@@ -342,20 +411,54 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
 }
 
 /**
- * \brief  Set system timer MSIP register value
+ * \brief  Get system timer MSIP register value in machine mode
+ * \details
+ * This function get the system timer MSIP register value.
+ * \return    Value of Timer MSIP register.
+ * \remarks
+ * - Bit0 is SW interrupt flag.
+ *   Bit0 is 1 then SW interrupt set. Bit0 is 0 then SW interrupt clear.
+ * - \ref SysTimer_SetSWIRQ
+ * - \ref SysTimer_ClearSWIRQ
+ * - \ref SysTimer_SetMsipValue
+ */
+__STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
+{
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    SysTimer_GetHartMsipValue(hartid);
+}
+
+/**
+ * \brief  Set system timer MSIP register value by hartid
  * \details
  * This function set the system timer MSIP register value.
  * \param [in]  msip   value to set MSIP register
+ * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
+ * \remarks
+ * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - \ref SysTimer_GetHartMsipValue
  */
-__STATIC_FORCEINLINE void SysTimer_SetMsipValue(uint32_t msip)
+__STATIC_FORCEINLINE void SysTimer_SetHartMsipValue(uint32_t msip, uint32_t hartid)
 {
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
     if (hartid == 0) {
         SysTimer->MSIP = (msip & SysTimer_MSIP_Msk);
     } else {
         uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
         __SW(addr, msip);
     }
+}
+
+/**
+ * \brief  Set system timer MSIP register value in machine mode
+ * \details
+ * This function set the system timer MSIP register value.
+ * \param [in]  msip   value to set MSIP register
+ * - \ref SysTimer_GetMsipValue
+ */
+__STATIC_FORCEINLINE void SysTimer_SetMsipValue(uint32_t msip)
+{
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    SysTimer_SetHartMsipValue(msip, hartid);
 }
 
 /**
@@ -434,6 +537,42 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
 }
 
 /**
+ * \brief   System Tick Configuration By hartid
+ * \details Initializes the System Timer and its non-vector interrupt, and starts the System Tick Timer.
+ *
+ *  In our default implementation, the timer counter will be set to zero, and it will start a timer compare non-vector interrupt
+ *  when it matchs the ticks user set, during the timer interrupt user should reload the system tick using \ref SysTick_Reload function
+ *  or similar function written by user, so it can produce period timer interrupt.
+ * \param [in]  ticks  Number of ticks between two interrupts.
+ * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
+ * \return          0  Function succeeded.
+ * \return          1  Function failed.
+ * \remarks
+ * - For \ref __NUCLEI_N_REV >= 0x0104, the CMPCLREN bit in MTIMECTL is introduced,
+ *   but we assume that the CMPCLREN bit is set to 0, so MTIMER register will not be
+ *   auto cleared to 0 when MTIMER >= MTIMERCMP.
+ * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
+ *   function \ref SysTick_Config is not included.
+ * - In this case, the file <b><Device>.h</b> must contain a vendor-specific implementation
+ *   of this function.
+ * - If user need this function to start a period timer interrupt, then in timer interrupt handler
+ *   routine code, user should call \ref SysTick_Reload with ticks to reload the timer.
+ * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
+ * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * \sa
+ * - \ref SysTimer_SetCompareValue; SysTimer_SetLoadValue
+ */
+__STATIC_INLINE uint32_t SysTick_HartConfig(uint64_t ticks, uint32_t hartid)
+{
+    uint64_t loadticks = SysTimer_GetLoadValue();
+    SysTimer_SetHartCompareValue(ticks + loadticks, hartid);
+    ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
+    ECLIC_SetLevelIRQ(SysTimer_IRQn, 0);
+    ECLIC_EnableIRQ(SysTimer_IRQn);
+    return (0UL);
+}
+
+/**
  * \brief   System Tick Reload
  * \details Reload the System Timer Tick when the MTIMECMP reached TIME value
  *
@@ -469,6 +608,49 @@ __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
          * so we need to reset the counter to zero */
         SysTimer_SetLoadValue(0);
         SysTimer_SetCompareValue(ticks);
+    }
+
+    return (0UL);
+}
+
+/**
+ * \brief   System Tick Reload 
+ * \details Reload the System Timer Tick when the MTIMECMP reached TIME value
+ *
+ * \param [in]  ticks  Number of ticks between two interrupts.
+ * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
+ * \return          0  Function succeeded.
+ * \return          1  Function failed.
+ * \remarks
+ * - For \ref __NUCLEI_N_REV >= 0x0104, the CMPCLREN bit in MTIMECTL is introduced,
+ *   but for this \ref SysTick_Config function, we assume this CMPCLREN bit is set to 0,
+ *   so in interrupt handler function, user still need to set the MTIMERCMP or MTIMER to reload
+ *   the system tick, if vendor want to use this timer's auto clear feature, they can define
+ *   \ref __Vendor_SysTickConfig to 1, and implement \ref SysTick_Config and \ref SysTick_Reload functions.
+ * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
+ *   function \ref SysTick_Reload is not included.
+ * - In this case, the file <b><Device>.h</b> must contain a vendor-specific implementation
+ *   of this function.
+ * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
+ * - Since the MTIMERCMP value might overflow, if overflowed, MTIMER will be set to 0, and MTIMERCMP set to ticks
+ * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * \sa
+ * - \ref SysTimer_SetCompareValue
+ * - \ref SysTimer_SetLoadValue
+ */
+__STATIC_FORCEINLINE uint32_t SysTick_HartReload(uint64_t ticks, uint32_t hartid)
+{
+    uint64_t cur_ticks = SysTimer_GetLoadValue();
+    uint64_t reload_ticks = ticks + cur_ticks;
+
+    if (__USUALLY(reload_ticks > cur_ticks)) {
+        SysTimer_SetHartCompareValue(reload_ticks, hartid);
+    } else {
+        /* When added the ticks value, then the MTIMERCMP < TIMER,
+         * which means the MTIMERCMP is overflowed,
+         * so we need to reset the counter to zero */
+        SysTimer_SetLoadValue(0);
+        SysTimer_SetHartCompareValue(ticks, hartid);
     }
 
     return (0UL);
