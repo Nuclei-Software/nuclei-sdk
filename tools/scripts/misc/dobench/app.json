@@ -11,7 +11,7 @@
             "timeout": 60
         }
     },
-    "build_target": "clean all",
+    "build_target": "clean dasm",
     "build_config": {
         "SOC": "demosoc"
     },

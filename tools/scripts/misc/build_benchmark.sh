@@ -35,6 +35,7 @@ function do_bench {
         make $parallel info showflags dasm > $bench_rstloc/build.log 2>&1
         if [ $? == 0 ] && [[ "x$bench_rstloc" != "x" ]] ; then
             cp -f $bench.verilog $bench_rstloc
+            cp -f $bench.dump $bench_rstloc
             cp -f $bench.elf $bench_rstloc
         fi
     fi
