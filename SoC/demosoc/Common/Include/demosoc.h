@@ -242,6 +242,9 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 #define __PMP_PRESENT             1                     /*!< Set to 1 if PMP is present */
 #define __PMP_ENTRY_NUM           16                    /*!< Set to 8 or 16, the number of PMP entries */
 
+#define __SPMP_PRESENT            1                     /*!< Set to 1 if PMP is present */
+#define __SPMP_ENTRY_NUM          16                    /*!< Set to 8 or 16, the number of PMP entries */
+
 #ifndef __TEE_PRESENT
 #define __TEE_PRESENT             0                     /*!< Set to 1 if TEE is present */
 #endif
@@ -273,6 +276,10 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 #if !defined(__PMP_PRESENT) || (__PMP_PRESENT != 1)
 #error "__PMP_PRESENT must be defined as 1!"
 #endif
+#if !defined(__SPMP_PRESENT) || (__SPMP_PRESENT != 1)
+#error "__SPMP_PRESENT must be defined as 1!"
+#endif
+
 #endif
 
 #ifndef __INC_INTRINSIC_API

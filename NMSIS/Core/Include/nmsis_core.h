@@ -69,6 +69,8 @@
 #include "core_feature_bitmanip.h"
 /* Include core pmp feature header file */
 #include "core_feature_pmp.h"
+/* Include core spmp feature header file */
+ #include "core_feature_spmp.h"
 /* Include core cache feature header file */
 #include "core_feature_cache.h"
 

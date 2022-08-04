@@ -359,6 +359,20 @@
 #define PMP_SHIFT            2
 #define PMP_COUNT            16
 
+/* === sPMP CFG Bits === */
+#define SPMP_R               PMP_R
+#define SPMP_W               PMP_W
+#define SPMP_X               PMP_X
+#define SPMP_A               PMP_A
+#define SPMP_A_TOR           PMP_A_TOR
+#define SPMP_A_NA4           PMP_A_NA4
+#define SPMP_A_NAPOT         PMP_A_NAPOT
+#define SPMP_U               0x40
+#define SPMP_L               PMP_L
+
+#define SPMP_SHIFT           PMP_SHIFT
+#define SPMP_COUNT           16
+
 // page table entry (PTE) fields
 #define PTE_V     0x001 // Valid
 #define PTE_R     0x002 // Read
