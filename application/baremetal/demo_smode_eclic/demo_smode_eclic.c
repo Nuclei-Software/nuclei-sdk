@@ -24,20 +24,20 @@
 /* Create a stack for supervisor mode execution */
 uint8_t smode_stack[SMODE_STACK_SIZE] __attribute__((aligned(16)));
 
-uintptr_t sp = (uintptr_t) (smode_stack + sizeof(smode_stack));
+uintptr_t smode_sp = (uintptr_t) (smode_stack + sizeof(smode_stack));
 
-void print_sp_judge_privilege_mode ()
+void print_sp_judge_privilege_mode(void)
 {
     uintptr_t sp;
 
     __asm__ volatile("add  %0, x0, sp" :"=r"(sp));
 
-    printf("Current sp is %p,  ", sp);
+    printf("Current sp is %p, ", sp);
 
-    if( (uint8_t *) sp <= & (smode_stack[SMODE_STACK_SIZE - 1]) && (uint8_t *) sp >= & (smode_stack[0])) {
-        printf("So it is in Supervisor Mode! \r\n");
+    if ( ((uint8_t *)sp <= &(smode_stack[SMODE_STACK_SIZE - 1])) && ((uint8_t *)sp >= &(smode_stack[0])) ) {
+        printf("so it is in Supervisor Mode!\r\n");
     } else {
-        printf("So it is in Machine Mode! \r\n");
+        printf("so it is in Machine Mode!\r\n");
     }
 }
 
@@ -53,6 +53,7 @@ void setup_timer(void)
 void eclic_stip_handler(void)
 {
     static uint32_t int_t_cnt = 0;    /* timer interrupt counter */
+
     print_sp_judge_privilege_mode();
     printf("-------------------\r\n");
     printf("[IN S-MODE TIMER INTERRUPT]timer interrupt hit %d times\r\n", int_t_cnt++);
@@ -74,7 +75,7 @@ void eclic_stip_handler(void)
 
 // timer software interrupt S-mode handler
 // vector mode interrupt
-void __attribute__ ((interrupt ("supervisor"))) eclic_ssip_handler(void)
+void __attribute__ ((interrupt("supervisor"))) eclic_ssip_handler(void)
 {
     static uint32_t int_sw_cnt = 0;   /* software interrupt counter */
 
@@ -92,7 +93,7 @@ void __attribute__ ((interrupt ("supervisor"))) eclic_ssip_handler(void)
 }
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-void supervisor_mode_entry_point()
+void supervisor_mode_entry_point(void)
 {
     // setup timer and software interrupt , then register the S mode irq
     uint8_t timer_intlevel, swirq_intlevel = 0;
@@ -109,10 +110,10 @@ void supervisor_mode_entry_point()
     timer_intlevel = HIGHER_INTLEVEL;
     swirq_intlevel = LOWER_INTLEVEL;
 #endif
-     // initialize timer
+    // initialize timer
     setup_timer();
 
-     // initialize software interrupt as vector interrupt
+    // initialize software interrupt as vector interrupt
     returnCode = ECLIC_Register_IRQ_S(SysTimerSW_IRQn, ECLIC_VECTOR_INTERRUPT,
                                         ECLIC_LEVEL_TRIGGER, swirq_intlevel, 0, eclic_ssip_handler);
 
@@ -141,10 +142,11 @@ int main(int argc, char** argv)
     ECLIC_SetModeIRQ(SysTimerSW_IRQn, PRV_S);
     ECLIC_SetModeIRQ(SysTimer_IRQn, PRV_S);
 
+    printf("Drop to S-Mode now\n\r");
     /* Drop to S mode */
-    __switch_mode(PRV_S, sp, supervisor_mode_entry_point);
+    __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
 #else
-    printf("[ERROR]__TEE_PRESENT must be defined as 1!\r\n");
+    printf("[ERROR]__TEE_PRESENT must be defined as 1 in <Device.h>!\r\n");
 #endif
     while (1);
     return 0;
