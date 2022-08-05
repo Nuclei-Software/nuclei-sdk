@@ -46,7 +46,7 @@ if __name__ == '__main__':
         stdclib = random.choice(stdclib_choices)
         # when use newlib full, some case might link fail due size issue, so change to other download mode
         if stdclib == "newlib_full" and download in ("ilm", "flash"):
-            download = random("ddr", "flashxip")
+            download = random.choice("ddr", "flashxip")
 
         makeopts = "SOC=%s DOWNLOAD=%s STDCLIB=%s" % (soc, download, stdclib)
         logdir = args.logdir + "/%s/%s/%s" % (soc, download, stdclib)
