@@ -73,7 +73,14 @@ function download_bits_202207 {
     wget2dir http://doc/cpu_signoff/_downloads/b89fcf1200314a5465117b6b8ad3506a/ux900_best_config_vcu118_100M_cddf72b59_cecbe311c_202207071844_v2.4.0.bit ${UX900_BIT} $bitprefix
 }
 
+function download_bits_202208 {
+    local bitprefix=$FPGABITS/202208
+    wget2dir http://doc/cpu_signoff/_downloads/e98209e045802d57b98c0530e7f0113c/n900_best_config_vcu118_100M_7c0b82ce2_439fa315f_202208051729_v2.5.0.bit ${N900_BIT} $bitprefix
+    wget2dir http://doc/cpu_signoff/_downloads/e59efa9ad3b746eff4acad26cb177a19/ux900_best_config_vcu118_100M_6effcd3ae_439fa315f_202208061048_v2.5.0.bit ${UX900_BIT} $bitprefix
+}
+
 download_bits_202206
 download_bits_202207
+download_bits_202208
 
-make_link_latest 202207
+make_link_latest 202208
