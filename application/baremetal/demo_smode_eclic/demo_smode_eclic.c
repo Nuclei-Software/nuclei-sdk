@@ -103,7 +103,7 @@ void supervisor_mode_entry_point(void)
     print_sp_judge_privilege_mode();
     // Set TIMER Interrupt and Software Interrupt Level
     // According to the macro SWIRQ_INTLEVEL_HIGHER setting
-#if SWIRQ_INTLEVEL_HIGHER == 0
+#if SWIRQ_INTLEVEL_HIGHER == 1
     timer_intlevel = LOWER_INTLEVEL;
     swirq_intlevel = HIGHER_INTLEVEL;
 #else
