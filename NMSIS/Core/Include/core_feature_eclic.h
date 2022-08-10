@@ -1358,7 +1358,6 @@ __STATIC_FORCEINLINE rv_csr_t __get_nmi_entry(void)
 /*! Restore necessary CSRs from variables for vector interrupt nesting in supervisor mode */
 #define RESTORE_IRQ_CSR_CONTEXT_S()                                         \
         __disable_irq_s();                                                  \
-        /*__RV_CSR_WRITE(CSR_MSUBM, __msubm);*/                             \
         __RV_CSR_WRITE(CSR_SEPC, __sepc);                                   \
         __RV_CSR_WRITE(CSR_SCAUSE, __scause);
 /** @} */ /* End of Doxygen Group NMSIS_Core_IntExc */

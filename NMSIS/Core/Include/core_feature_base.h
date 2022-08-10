@@ -602,9 +602,9 @@ __STATIC_FORCEINLINE void __switch_mode(uint8_t mode, uintptr_t stack, void(*ent
     __RV_CSR_WRITE(CSR_MEPC, entry_point);
 
     /* Set the register file */
-    __asm__ volatile("mv sp, %0" ::"r"(stack));
+    __ASM volatile("mv sp, %0" ::"r"(stack));
 
-    __asm__ volatile("mret");
+    __ASM volatile("mret");
 }
 
 /**
