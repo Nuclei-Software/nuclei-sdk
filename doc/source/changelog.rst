@@ -10,6 +10,8 @@ This is development version ``0.4.0`` of Nuclei SDK.
 
 * Application
 
+  - Add ``demo_smode_eclic`` application to demonstrate ECLIC interrupt with TEE feature of Nuclei Processor.
+
 * NMSIS
 
 * Build System
@@ -24,7 +26,7 @@ This is release version ``0.3.9`` of Nuclei SDK.
 
 * Application
 
-  - Add ``lowpower`` application to demostrate lowpower feature of Nuclei Processor.
+  - Add ``lowpower`` application to demonstrate low-power feature of Nuclei Processor.
   - Update ``demo_nice`` application due to RTL change in cpu.
   - Change dhrystone compiling options to match better with Nuclei CPU IP.
 
@@ -49,7 +51,7 @@ This is release version ``0.3.9`` of Nuclei SDK.
   - Add ``evalsoc`` in Nuclei SDK, ``evalsoc`` is a new evaluation SoC for Nuclei RISC-V Core, for next generation
     of cpu evaluation with iregion feature support. ``demosoc`` will be deprecated in future, when all our CPU IP
     provide iregion support.
-  - **Important**: A lot of changes are maded to linker script of SDK.
+  - **Important**: A lot of changes are made to linker script of SDK.
 
     - rodata are placed in data section for ilm/flash/ddrdownload mode, but placed in text section for flashxip download mode.
     - For ilm download mode, if you want to make the generated binary smaller, you can change REGION_ALIAS of DATA_LMA from ``ram`` to ``ilm``.
@@ -68,7 +70,7 @@ This is release version ``0.3.8`` of Nuclei SDK.
 
 * Application
 
-  - Add ``smphello`` application to test baremetal smp support, this will do demostration
+  - Add ``smphello`` application to test baremetal smp support, this will do demonstration
     to boot default 2 core and each hart print hello world.
 
 
@@ -189,7 +191,7 @@ This is release version ``0.3.5`` of Nuclei SDK.
 
 .. caution::
 
-    - This version introduce a lot of new featues, and required Nuclei GNU Toolchain 2022.01
+    - This version introduce a lot of new features, and required Nuclei GNU Toolchain 2022.01
     - If you want to import as NPK zip package into Nuclei Studio, 2022.01 version is required.
     - If you want to have smaller code size for Nuclei RISC-V 32bit processors, please define ``STDCLIB=libncrt_small``
       in your application Makefile, or change **STDCLIB** defined in ``Build/Makefile.base`` to make it available

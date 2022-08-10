@@ -10,7 +10,7 @@ Overview
 
 In Nuclei SDK, we just provided applications which can
 run in different boards without any changes in code to
-demostrate the baremetal service, freertos service and
+demonstrate the baremetal service, freertos service and
 ucosii service features.
 
 The provided applications can be divided into three categories:
@@ -83,7 +83,7 @@ will check this RISC-V CSR **MISA** register value.
 demo_timer
 ~~~~~~~~~~
 
-This `demo_timer application`_ is used to demostrate how to use
+This `demo_timer application`_ is used to demonstrate how to use
 the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
 
 * Both interrupts are registered as non-vector interrupt.
@@ -137,7 +137,7 @@ the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
 demo_eclic
 ~~~~~~~~~~
 
-This `demo_eclic application`_ is used to demostrate how to use
+This `demo_eclic application`_ is used to demonstrate how to use
 the ECLIC API and Interrupt.
 
 .. note::
@@ -193,19 +193,19 @@ the ECLIC API and Interrupt.
 * The timer software interrupt is registered as vector interrupt,
   and we enable its preemptive feature by using ``SAVE_IRQ_CSR_CONTEXT``
   and ``RESTORE_IRQ_CSR_CONTEXT`` in timer software interrupt handler
-* The timer interrupt is triggered periodly
+* The timer interrupt is triggered periodically
 * The timer software interrupt is triggered in timer interrupt handler using
-  ``SysTimer_SetSWIRQ`` function.
+  ``SysTimer_SetSWIRQ`` function
 * In the application code, there is a macro called ``SWIRQ_INTLEVEL_HIGHER`` to
   control the timer software interrupt working feature:
 
-  - If **SWIRQ_INTLEVEL_HIGHER=1**, the timer software interrupt level is higher then
-    timer interrupt level, so when timer software interrupt is triggerred, then timer
+  - If **SWIRQ_INTLEVEL_HIGHER=1**, the timer software interrupt level is higher than
+    timer interrupt level, so when timer software interrupt is triggered, then timer
     software interrupt will be processed immediately, and timer interrupt will be preempted
     by timer software interrupt.
 
-  - If **SWIRQ_INTLEVEL_HIGHER=0**, the timer software interrupt level is lower then
-    timer interrupt level, so when timer software interrupt is triggerred, then timer
+  - If **SWIRQ_INTLEVEL_HIGHER=0**, the timer software interrupt level is lower than
+    timer interrupt level, so when timer software interrupt is triggered, then timer
     software interrupt will be processed after timer interrupt, and timer interrupt will
     not be preempted by timer software interrupt.
 
@@ -230,7 +230,7 @@ the ECLIC API and Interrupt.
     Nuclei SDK Build Time: Feb 21 2020, 16:35:58
     Download Mode: FLASHXIP
     CPU Frequency 108794117 Hz
-    Initialize timer and start timer interrupt periodly
+    Initialize timer and start timer interrupt periodically
     -------------------
     [IN TIMER INTERRUPT]timer interrupt hit 0 times
     [IN TIMER INTERRUPT]trigger software interrupt
@@ -268,7 +268,7 @@ the ECLIC API and Interrupt.
     Nuclei SDK Build Time: Feb 21 2020, 16:35:58
     Download Mode: FLASHXIP
     CPU Frequency 108794117 Hz
-    Initialize timer and start timer interrupt periodly
+    Initialize timer and start timer interrupt periodically
     -------------------
     [IN TIMER INTERRUPT]timer interrupt hit 0 times
     [IN TIMER INTERRUPT]trigger software interrupt
@@ -302,7 +302,7 @@ the ECLIC API and Interrupt.
 demo_dsp
 ~~~~~~~~
 
-This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
+This `demo_dsp application`_ is used to demonstrate how to NMSIS-DSP API.
 
 * Mainly show how we can use DSP library and header files.
 * It mainly demo the ``riscv_conv_xx`` functions and its reference functions
@@ -315,7 +315,7 @@ This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
     * From version 0.2.4, this demo is upgraded to a more complex version which
       shows the usage of ``riscv_conv_xx`` functions, and ``DSP_ENABLE`` is changed
       from ``OFF`` to ``ON`` by default.
-    * The GD32VF103 SoC didn't has DSP enabled, so this SoC can only use NMSIS-DSP
+    * The GD32VF103 SoC doesn't has DSP enabled, so this SoC can only use NMSIS-DSP
       library with DSP disabled, so please pass extra ``DSP_ENABLE=OFF`` when run make.
     * For other Nuclei Processor Core based SoC, please check whether it has DSP
       feature enabled to decide which kind of **NMSIS-DSP** library to use.
@@ -370,7 +370,7 @@ This `demo_dsp application`_ is used to demostrate how to NMSIS-DSP API.
 lowpower
 ~~~~~~~~
 
-This `lowpower application`_ is used to demostrate how to use lowpower feature of RISC-V
+This `lowpower application`_ is used to demonstrate how to use low-power feature of RISC-V
 processor.
 
 Timer interrupt is setup before enter to wfi mode, and global interrupt will be disabled,
@@ -381,8 +381,8 @@ so interrupt handler will not be entered, and will directly resume to next pc of
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # Assume your processor has enabled lowpower feature
-    # cd to the lowpower directory
+    # Assume your processor has enabled low-power feature
+    # cd to the low-power directory
     cd application/baremetal/lowpower
     # Clean the application first
     make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
@@ -403,7 +403,7 @@ so interrupt handler will not be entered, and will directly resume to next pc of
 smphello
 ~~~~~~~~
 
-This `smphello application`_ is used to demostrate how to use baremetal SMP feature.
+This `smphello application`_ is used to demonstrate how to use baremetal SMP feature.
 
 This demo request the SMP cores share the same RAM and ROM, for example, in current
 demosoc system, ilm/dlm are private resource for cpu, only the DDR memory are shared
@@ -414,7 +414,7 @@ to do spinlock in this example.
 
 .. note::
 
-    * If didn't work with gd32vf103 processor.
+    * It doesn't work with gd32vf103 processor.
     * Need to enable I/D Cache in <Device.h> if I/D Cache present in CPU.
 
 Need to change ``__ICACHE_PRESENT``, ``__DCACHE_PRESENT`` and ``__CCM_PRESENT`` to 1 in
@@ -468,7 +468,7 @@ Need to change ``__ICACHE_PRESENT``, ``__DCACHE_PRESENT`` and ``__CCM_PRESENT`` 
 demo_nice
 ~~~~~~~~~
 
-This `demo_nice application`_ is used to demostrate how to Nuclei NICE feature.
+This `demo_nice application`_ is used to demonstrate how to Nuclei NICE feature.
 
 **NICE** is short for Nuclei Instruction Co-unit Extension, which is used to
 support extensive customization and specialization.
@@ -480,18 +480,18 @@ performance while reducing power consumption.
 For more about **NICE** feature, please click `Nuclei User Extended Introduction`_.
 
 * Mainly show how to use NICE intrinsic function with compiler.
-* It only works with Nuclei RISC-V Processor with the hardware NICE demo intergated.
+* It only works with Nuclei RISC-V Processor with the hardware NICE demo integrated.
 
 .. note::
 
-    * If didn't work with gd32vf103 processor.
+    * It doesn't work with gd32vf103 processor.
 
 **How to run this application:**
 
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # Use Nuclei UX607 RISC-V processor as example, hardware NICE demo intergated
+    # Use Nuclei UX607 RISC-V processor as example, hardware NICE demo integrated
     # cd to the demo_dsp directory
     cd application/baremetal/demo_nice
     # Clean the application first
@@ -783,6 +783,159 @@ to get different score number.
     MWIPS/MHz                                          0.046              9.825
 
 
+demo_smode_eclic
+~~~~~~~~~~~~~~~~
+
+This `demo_smode_eclic application`_ is used to demostrate how to use
+the ECLIC API and Interrupt in supervisor mode with TEE.
+
+.. note:: 
+
+    * In this application's Makefile, we provided comments in Makefile about optimization
+      for code size, please refer to chapter :ref:`design_app_demo_eclic` for details.
+    * It doesn't work with gd32vf103 processor.
+    * Need to enable TEE in <Device.h> if TEE present in CPU.
+
+* The timer interrupt and timer software interrupt are used
+* The timer interrupt is registered as non-vector interrupt
+* The timer software interrupt is registered as vector interrupt,
+  and we enable its preemptive feature by using ``SAVE_IRQ_CSR_CONTEXT_S``
+  and ``RESTORE_IRQ_CSR_CONTEXT_S`` in timer software interrupt handler
+* The timer interrupt is triggered periodically
+* The timer software interrupt is triggered in timer interrupt handler using
+  ``SysTimer_SetHartSWIRQ`` function
+* Interrupts occur in supervisor mode to which it drops from machine mode, and you can 
+  observe the difference from :ref:`design_app_demo_eclic` by console output
+* In the application code, there is a macro called ``SWIRQ_INTLEVEL_HIGHER`` to
+  control the timer software interrupt working feature:
+
+  - If **SWIRQ_INTLEVEL_HIGHER=1**, the timer software interrupt level is higher than
+    timer interrupt level, so when timer software interrupt is triggered, then timer
+    software interrupt will be processed immediately, and timer interrupt will be preempted
+    by timer software interrupt.
+
+  - If **SWIRQ_INTLEVEL_HIGHER=0**, the timer software interrupt level is lower than
+    timer interrupt level, so when timer software interrupt is triggered, then timer
+    software interrupt will be processed after timer interrupt, and timer interrupt will
+    not be preempted by timer software interrupt.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_smode_eclic directory
+    cd application/baremetal/demo_smode_eclic
+    # Change macro __TEE_PRESENT to 1 in <Device.h>,here CORE=n300 is
+    # equipped with TEE
+    #define __TEE_PRESENT             1
+    # Change macro SWIRQ_INTLEVEL_HIGHER value in demo_smode_eclic.c
+    # to see different working mode of this demo
+    # Clean the application first
+    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
+    # Build and upload the application
+    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
+
+**Expected output(SWIRQ_INTLEVEL_HIGHER=1) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug  5 2022, 15:05:52
+    Download Mode: ILM
+    CPU Frequency 15989145 Hz
+    Current sp is 0x9000ffa0, so it is in Machine Mode!
+    Drop to S-Mode now
+    [IN S-MODE ENTRY POINT] Hello Supervisor Mode!!!
+    Current sp is 0x90000f40, so it is in Supervisor Mode!
+    Initialize timer and start timer interrupt periodically
+    Current sp is 0x90000d80, so it is in Supervisor Mode!
+    -------------------
+    [IN S-MODE TIMER INTERRUPT]timer interrupt hit 0 times
+    [IN S-MODE TIMER INTERRUPT]trigger software interrupt
+    [IN S-MODE TIMER INTERRUPT]software interrupt will run during timer interrupt
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 0 times
+    Current sp is 0x90000d10, so it is in Supervisor Mode!
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
+    [IN S-MODE TIMER INTERRUPT]timer interrupt end
+    Current sp is 0x90000d80, so it is in Supervisor Mode!
+    -------------------
+    [IN S-MODE TIMER INTERRUPT]timer interrupt hit 1 times
+    [IN S-MODE TIMER INTERRUPT]trigger software interrupt
+    [IN S-MODE TIMER INTERRUPT]software interrupt will run during timer interrupt
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 1 times
+    Current sp is 0x90000d10, so it is in Supervisor Mode!
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
+    [IN S-MODE TIMER INTERRUPT]timer interrupt end
+    Current sp is 0x90000d80, so it is in Supervisor Mode!
+    -------------------
+    [IN S-MODE TIMER INTERRUPT]timer interrupt hit 2 times
+    [IN S-MODE TIMER INTERRUPT]trigger software interrupt
+    [IN S-MODE TIMER INTERRUPT]software interrupt will run during timer interrupt
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 2 times
+    Current sp is 0x90000d10, so it is in Supervisor Mode!
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
+    [IN S-MODE TIMER INTERRUPT]timer interrupt end
+    Current sp is 0x90000d80, so it is in Supervisor Mode!
+    -------------------
+    [IN S-MODE TIMER INTERRUPT]timer interrupt hit 3 times
+    [IN S-MODE TIMER INTERRUPT]trigger software interrupt
+    [IN S-MODE TIMER INTERRUPT]software interrupt will run during timer interrupt
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 3 times
+    Current sp is 0x90000d10, so it is in Supervisor Mode!
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
+    [IN S-MODE TIMER INTERRUPT]timer interrupt end
+
+
+**Expected output(SWIRQ_INTLEVEL_HIGHER=0) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug  5 2022, 15:09:46
+    Download Mode: ILM
+    CPU Frequency 15989145 Hz
+    Current sp is 0x9000ffa0, so it is in Machine Mode!
+    Drop to S-Mode now
+    [IN S-MODE ENTRY POINT] Hello Supervisor Mode!!!
+    Current sp is 0x90000f50, so it is in Supervisor Mode!
+    Initialize timer and start timer interrupt periodically
+    Current sp is 0x90000d90, so it is in Supervisor Mode!
+    -------------------
+    [IN S-MODE TIMER INTERRUPT]timer interrupt hit 0 times
+    [IN S-MODE TIMER INTERRUPT]trigger software interrupt
+    [IN S-MODE TIMER INTERRUPT]software interrupt will run when timer interrupt finished
+    [IN S-MODE TIMER INTERRUPT]timer interrupt end
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 0 times
+    Current sp is 0x90000ee0, so it is in Supervisor Mode!
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
+    Current sp is 0x90000d90, so it is in Supervisor Mode!
+    -------------------
+    [IN S-MODE TIMER INTERRUPT]timer interrupt hit 1 times
+    [IN S-MODE TIMER INTERRUPT]trigger software interrupt
+    [IN S-MODE TIMER INTERRUPT]software interrupt will run when timer interrupt finished
+    [IN S-MODE TIMER INTERRUPT]timer interrupt end
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 1 times
+    Current sp is 0x90000ee0, so it is in Supervisor Mode!
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
+    Current sp is 0x90000d90, so it is in Supervisor Mode!
+    -------------------
+    [IN S-MODE TIMER INTERRUPT]timer interrupt hit 2 times
+    [IN S-MODE TIMER INTERRUPT]trigger software interrupt
+    [IN S-MODE TIMER INTERRUPT]software interrupt will run when timer interrupt finished
+    [IN S-MODE TIMER INTERRUPT]timer interrupt end
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 2 times
+    Current sp is 0x90000ee0, so it is in Supervisor Mode!
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
+    Current sp is 0x90000d90, so it is in Supervisor Mode!
+    -------------------
+    [IN S-MODE TIMER INTERRUPT]timer interrupt hit 3 times
+    [IN S-MODE TIMER INTERRUPT]trigger software interrupt
+    [IN S-MODE TIMER INTERRUPT]software interrupt will run when timer interrupt finished
+    [IN S-MODE TIMER INTERRUPT]timer interrupt end
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 3 times
+    Current sp is 0x90000ee0, so it is in Supervisor Mode!
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
+
+
 FreeRTOS applications
 ---------------------
 
@@ -1071,4 +1224,5 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 .. _ucosii demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/ucosii/demo
 .. _rt-thread demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo
 .. _rt-thread msh application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/msh
+.. _demo_smode_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_eclic
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html
