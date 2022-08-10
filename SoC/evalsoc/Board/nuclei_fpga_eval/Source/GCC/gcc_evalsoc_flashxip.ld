@@ -46,6 +46,7 @@ SECTIONS
   {
     /* vector table locate at ROM */
     *(.vtable)
+    *(.vtable_s)
     KEEP (*(SORT_NONE(.init)))
     . = ALIGN(4);
   } >ROM AT>ROM

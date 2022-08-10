@@ -275,12 +275,11 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
 #if !defined(__PMP_PRESENT) || (__PMP_PRESENT != 1)
 #error "__PMP_PRESENT must be defined as 1!"
-#endif
+#endif /* !defined(__PMP_PRESENT) || (__PMP_PRESENT != 1) */
 #if !defined(__SPMP_PRESENT) || (__SPMP_PRESENT != 1)
 #error "__SPMP_PRESENT must be defined as 1!"
-#endif
-
-#endif
+#endif /* !defined(__SPMP_PRESENT) || (__SPMP_PRESENT != 1) */
+#endif /* defined(__TEE_PRESENT) && (__TEE_PRESENT == 1) */
 
 #ifndef __INC_INTRINSIC_API
 #define __INC_INTRINSIC_API       0                     /*!< Set to 1 if intrinsic api header files need to be included */
