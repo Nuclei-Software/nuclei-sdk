@@ -25,6 +25,7 @@
         "application/baremetal/smphello",
         "application/baremetal/demo_smode_eclic",
         "application/baremetal/dsp_examples",
+        "application/baremetal/demo_spmp",
         "application/baremetal/Internal"
     ],
     "appconfig": {
@@ -68,6 +69,19 @@
             "build_config" : {},
             "checks": {
                 "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times"]
+            }
+        },
+        "application/baremetal/demo_spmp": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Won't run here if violates L U\\R\\W\\X permission check!"]
+            }
+        },
+        "application/baremetal/demo_pmp": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Won't run here if violates L R\\W\\X permission check!"],
+                "FAIL": ["MEPC"]
             }
         },
         "application/baremetal/demo_nice": {
