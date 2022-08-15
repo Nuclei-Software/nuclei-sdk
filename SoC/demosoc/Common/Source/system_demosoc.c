@@ -263,7 +263,7 @@ void SystemInit(void)
  * @{
  */
 /** \brief Max exception handler number, don't include the NMI(0xFFF) one */
-#define MAX_SYSTEM_EXCEPTION_NUM        12
+#define MAX_SYSTEM_EXCEPTION_NUM        16
 /**
  * \brief      Store the exception handlers for each exception ID
  * \note
