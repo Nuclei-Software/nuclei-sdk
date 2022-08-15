@@ -93,7 +93,7 @@ void __attribute__ ((interrupt("supervisor"))) eclic_ssip_handler(void)
 }
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-void supervisor_mode_entry_point(void)
+static void supervisor_mode_entry_point(void)
 {
     // setup timer and software interrupt , then register the S mode irq
     uint8_t timer_intlevel, swirq_intlevel = 0;
@@ -132,9 +132,16 @@ void supervisor_mode_entry_point(void)
 int main(int argc, char** argv)
 {
     // set pmp, S mode can access all address range
-    __set_PMPxCFG(0, 0x1f);
-    __set_PMPADDRx(0, 0xffffffff);
-    // pmp set done
+    pmp_configs pmp_config = {
+         /* M mode grants S and U mode with full permission of the whole address range */
+        .protection = PMP_L | PMP_R | PMP_W | PMP_X,
+        /* Memory region range 2^__RISCV_XLEN bytes */
+        .order = __RISCV_XLEN,
+        /* Initial base address is 0 */
+        .base_addr = 0,
+    };
+
+    __set_PMPENTRYx(0, &pmp_config);
 
     print_sp_judge_privilege_mode();
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
