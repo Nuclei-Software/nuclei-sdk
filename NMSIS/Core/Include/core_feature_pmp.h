@@ -55,12 +55,14 @@
 #error "__PMP_ENTRY_NUM is not defined, please check!"
 #endif
 
-typedef struct PMP_CONFIG_S{
-
-    /* set locking bit, addressing mode, read, write, and instruction execution permissions */
+typedef struct PMP_CONFIG {
+    /**
+     * set locking bit, addressing mode, read, write, and instruction execution permissions,
+     * see \ref PMP_L, \ref PMP_R, \ref PMP_W, \ref PMP_X, .etc in <riscv_encoding.h>
+     */
     unsigned int protection;
     /**
-     * Size of memory region as power of 2, it has to be minimum 2 and maxium __RISCV_XLEN according to the 
+     * Size of memory region as power of 2, it has to be minimum 2 and maxium \ref __RISCV_XLEN according to the 
      * hard-wired granularity 2^N bytes, if N = 12, then order has to be at least 12; if not, the order read out
      * is N though you configure less than N.
      */
@@ -70,7 +72,7 @@ typedef struct PMP_CONFIG_S{
      * It must be 2^order aligned address
      */
     unsigned long base_addr;
-}pmp_configs;
+} pmp_config;
 
 /**
  * \brief   Get PMPCFGx Register by csr index
@@ -264,7 +266,7 @@ __STATIC_INLINE void __set_PMPADDRx(uint32_t csr_idx, rv_csr_t pmpaddr)
  * - Suppose the size of memory region is 2^X bytes range, if X >=3, the NA4 mode is not selectable, NAPOT is selected.
  * - TOR of A field in PMP configuration register is not considered here.
  */
-__STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_configs *pmp_config)
+__STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_config *pmp_config)
 {
     unsigned int cfg_shift, cfg_csr_idx, addr_csr_idx = 0;
     unsigned long cfgmask, addrmask = 0;
@@ -327,7 +329,7 @@ __STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_configs *pmp_
  * - If the size of memory region is 2^12(4KB) range, pmp_config->order makes 12, and the like.
  * - TOR of A field in PMP configuration register is not considered here.
  */
-__STATIC_INLINE int __get_PMPENTRYx(unsigned int entry_idx, pmp_configs *pmp_config)
+__STATIC_INLINE int __get_PMPENTRYx(unsigned int entry_idx, pmp_config *pmp_config)
 {
     int cfg_shift, cfg_csr_idx, addr_csr_idx = 0;
     unsigned long cfgmask, pmpcfg, prot = 0;
