@@ -18,7 +18,7 @@
 #define RUN_WITH_NO_SPMP_CHECK               6
 
 /* Just choose one from above defines to test sPMP */
-#define TRIGGER_SPMP_VIOLATION_MODE    STORE_USERMODE_MEMORY_EXCEPTION
+#define TRIGGER_SPMP_VIOLATION_MODE          RUN_WITH_NO_SPMP_CHECK
 
 // 2048 is enough
 #define SMODE_STACK_SIZE      2048
@@ -29,7 +29,26 @@ uintptr_t smode_sp = (uintptr_t) (smode_stack + sizeof(smode_stack));
 volatile uint8_t protected_data[0x2000] __attribute__((aligned(0x2000))) =    \
     {0xaa, 0x1, 0x02, 0x03, 0x04, 0x05, 0x06, 0xaa};
 
-static void __attribute__((section (".text"), aligned(0x2000))) protected_execute()
+static void spmp_violation_fault_handler(unsigned long scause, unsigned long sp)
+{
+    EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
+
+    switch (scause & SCAUSE_CAUSE) {
+        case InsPageFault_EXCn: 
+            printf("Instruction page fault occurs, cause: 0x%lx, epc: 0x%lx\r\n", exc_frame->cause, exc_frame->epc);
+            break;
+        case LdPageFault_EXCn:
+            printf("Load page fault occurs, cause: 0x%lx, epc: 0x%lx\r\n", exc_frame->cause, exc_frame->epc);
+            break;
+        case StPageFault_EXCn:
+            printf("Store/AMO page fault occurs, cause: 0x%lx, epc: 0x%lx\r\n", exc_frame->cause, exc_frame->epc);
+            break;
+        default: break;
+    }
+    while(1);
+}
+
+static void __attribute__((section (".text"), aligned(0x2000))) protected_execute(void)
 {
     printf("----protected_execute succeed!----\r\n");
 }
@@ -62,7 +81,7 @@ static void __attribute__((section (".text"), aligned(0x1000))) supervisor_mode_
 int main(void)
 {
     /* The sPMP values are checked after the physical address to be accessed pass PMP checks */
-    pmp_configs pmp_config = {
+    pmp_config pmp_config = {
          /* M mode grants S and U mode with full permission of the whole address range */
         .protection = PMP_L | PMP_R | PMP_W | PMP_X,
         /* Memory region range 2^__RISCV_XLEN bytes */
@@ -72,7 +91,7 @@ int main(void)
     };
 
     /* Configuration of execution region*/
-    spmp_configs spmp_config_x = {
+    spmp_config spmp_config_x = {
         /* Locking bit is set, means you can't modify corresponding spmp csrs in S-mode */
         .protection = SPMP_L | SPMP_R | SPMP_W | SPMP_X,
         /* Initial protected excutable address range is 2^12 = 4K bytes */
@@ -82,7 +101,7 @@ int main(void)
     };
 
     /* configuration of read/write region*/
-    spmp_configs spmp_config_rw = {
+    spmp_config spmp_config_rw = {
         /* Locking bit is set, means you can't modify spmp csrs in S-mode */
         .protection = SPMP_L | SPMP_R | SPMP_W,
         /* Initial protected readable/writable address range is 2^12 = 4K bytes */
@@ -95,7 +114,7 @@ int main(void)
 
     __set_PMPENTRYx(0, &pmp_config);
     /* Verify the configuration takes effect */
-    memset(&pmp_config, 0, sizeof(pmp_configs));
+    memset(&pmp_config, 0, sizeof(pmp_config));
     __get_PMPENTRYx(0, &pmp_config);
     printf("Get pmp entry: index %d, prot_out: %0x, addr_out: %x, order_out: %d\r\n", \
         0, pmp_config.protection, pmp_config.base_addr, pmp_config.order);
@@ -104,6 +123,11 @@ int main(void)
     /* Corresponding exceptions occurs in S/U-mode will be delegated to S-mode */
     __set_medeleg(FETCH_PAGE_FAULT | LOAD_PAGE_FAULT | STORE_PAGE_FAULT);
 
+    /* register corresponding exception */
+    Exception_Register_EXC_S(InsPageFault_EXCn, (unsigned long)spmp_violation_fault_handler);
+    Exception_Register_EXC_S(LdPageFault_EXCn, (unsigned long)spmp_violation_fault_handler);
+    Exception_Register_EXC_S(StPageFault_EXCn, (unsigned long)spmp_violation_fault_handler);
+ 
     /* Must align by 2^order */
     spmp_config_x.base_addr = (unsigned long)protected_execute;
     spmp_config_rw.base_addr = (unsigned long)protected_data;
@@ -149,14 +173,14 @@ int main(void)
 
     __set_sPMPENTRYx(0, &spmp_config_x);
     /* Verify the configuration takes effect */
-    memset(&spmp_config_x, 0, sizeof(spmp_configs));
+    memset(&spmp_config_x, 0, sizeof(spmp_config));
     __get_sPMPENTRYx(0, &spmp_config_x);
     printf("Get spmp entry: index %d, prot_out: %0x, addr_out: %x, order_out: %d\r\n", \
         0, spmp_config_x.protection, spmp_config_x.base_addr, spmp_config_x.order);
 
     __set_sPMPENTRYx(1, &spmp_config_rw);
     /* Verify the configuration takes effect */
-    memset(&spmp_config_rw, 0, sizeof(spmp_configs));
+    memset(&spmp_config_rw, 0, sizeof(spmp_config));
     __get_sPMPENTRYx(1, &spmp_config_rw);
     printf("Get spmp entry: index %d, prot_out: %0x, addr_out: %x, order_out: %d\r\n", \
         1, spmp_config_rw.protection, spmp_config_rw.base_addr, spmp_config_rw.order);
