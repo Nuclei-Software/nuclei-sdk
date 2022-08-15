@@ -298,6 +298,8 @@ typedef void (*EXC_HANDLER)(unsigned long cause, unsigned long sp);
  * \details
  * This function provides a default exception and NMI handler for all exception ids.
  * By default, It will just print some information for debug, Vendor can customize it according to its requirements.
+ * \param [in]  mcause    code indicating the reason that caused the trap in machine mode
+ * \param [in]  sp        stack pointer
  */
 static void system_default_exception_handler(unsigned long mcause, unsigned long sp)
 {
@@ -306,7 +308,7 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
     printf("MDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_MDCAUSE));
     printf("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
     printf("MTVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
-    Exception_DumpFrame(sp);
+    Exception_DumpFrame(sp, PRV_M);
 #if defined(SIMULATION_MODE)
     // directly exit if in SIMULATION
     extern void simulation_exit(int status);
@@ -339,25 +341,32 @@ static void Exception_Init(void)
  * \brief      Dump Exception Frame
  * \details
  * This function provided feature to dump exception frame stored in stack.
+ * \param [in]  sp    stackpoint
+ * \param [in]  mode  privileged mode to decide whether to dump msubm CSR
  */
-void Exception_DumpFrame(unsigned long sp)
+void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 {
     EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
 
 #ifndef __riscv_32e
     printf("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx, t3: 0x%lx, t4: 0x%lx, t5: 0x%lx, t6: 0x%lx\n" \
            "a0: 0x%lx, a1: 0x%lx, a2: 0x%lx, a3: 0x%lx, a4: 0x%lx, a5: 0x%lx, a6: 0x%lx, a7: 0x%lx\n" \
-           "mcause: 0x%lx, mepc: 0x%lx, msubm: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
+           "cause: 0x%lx, epc: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
            exc_frame->t1, exc_frame->t2, exc_frame->t3, exc_frame->t4, exc_frame->t5, exc_frame->t6, \
            exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, exc_frame->a4, exc_frame->a5, \
-           exc_frame->a6, exc_frame->a7, exc_frame->mcause, exc_frame->mepc, exc_frame->msubm);
+           exc_frame->a6, exc_frame->a7, exc_frame->cause, exc_frame->epc);
 #else
     printf("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx\n" \
            "a0: 0x%lx, a1: 0x%lx, a2: 0x%lx, a3: 0x%lx, a4: 0x%lx, a5: 0x%lx\n" \
-           "mcause: 0x%lx, mepc: 0x%lx, msubm: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
+           "cause: 0x%lx, epc: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
            exc_frame->t1, exc_frame->t2, exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, \
-           exc_frame->a4, exc_frame->a5, exc_frame->mcause, exc_frame->mepc, exc_frame->msubm);
+           exc_frame->a4, exc_frame->a5, exc_frame->cause, exc_frame->epc);
 #endif
+
+    if (PRV_M == mode) {
+        /* msubm is exclusive to machine mode */
+        printf("msubm: 0x%lx\n", exc_frame->msubm);
+    }
 }
 
 /**
@@ -365,8 +374,8 @@ void Exception_DumpFrame(unsigned long sp)
  * \details
  * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers[EXCn-1].
  * - For EXCn == NMI_EXCn, it will be registered into SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM].
- * \param   EXCn    See \ref EXCn_Type
- * \param   exc_handler     The exception handler for this exception code EXCn
+ * \param [in]  EXCn    See \ref EXCn_Type
+ * \param [in]  exc_handler     The exception handler for this exception code EXCn
  */
 void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
 {
@@ -381,8 +390,8 @@ void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
  * \brief       Get current exception handler for exception code EXCn
  * \details
  * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers[EXCn-1].
- * -For EXCn == NMI_EXCn, it will return SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM].
- * \param   EXCn    See \ref EXCn_Type
+ * - For EXCn == NMI_EXCn, it will return SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM].
+ * \param [in]  EXCn    See \ref EXCn_Type
  * \return  Current exception handler for exception code EXCn, if not found, return 0.
  */
 unsigned long Exception_Get_EXC(uint32_t EXCn)
@@ -401,6 +410,8 @@ unsigned long Exception_Get_EXC(uint32_t EXCn)
  * \details
  * This function provided a command entry for NMI and exception. Silicon Vendor could modify
  * this template implementation according to requirement.
+ * \param [in]  mcause    code indicating the reason that caused the trap in machine mode
+ * \param [in]  sp        stack pointer
  * \remarks
  * - RISCV provided common entry for all types of exception. This is proposed code template
  *   for exception entry function, Silicon Vendor could modify the implementation.
@@ -505,6 +516,8 @@ int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_
  * \details
  * This function provided a default supervisor mode exception and NMI handling code for all exception ids.
  * By default, It will just print some information for debug, Vendor can customize it according to its requirements.
+ * \param [in]  scause    code indicating the reason that caused the trap in supervisor mode
+ * \param [in]  sp        stack pointer
  */
 static void system_default_exception_handler_s(unsigned long scause, unsigned long sp)
 {
@@ -513,7 +526,7 @@ static void system_default_exception_handler_s(unsigned long scause, unsigned lo
     printf("SDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_SDCAUSE));
     printf("SEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_SEPC));
     printf("STVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_STVAL));
-    Exception_DumpFrame(sp);
+    Exception_DumpFrame(sp, PRV_S);
 #if defined(SIMULATION_MODE)
     // directly exit if in SIMULATION
     extern void simulation_exit(int status);
@@ -529,8 +542,8 @@ static void system_default_exception_handler_s(unsigned long scause, unsigned lo
  * -For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers_S[EXCn-1].
  * -For EXCn == NMI_EXCn, The NMI (Non-maskable-interrupt) cannot be trapped to the supervisor-mode or user-mode for any
  *    configuration, so NMI won't be registered into SystemExceptionHandlers_S.
- * \param   EXCn    See \ref EXCn_Type
- * \param   exc_handler     The exception handler for this exception code EXCn
+ * \param [in]  EXCn            See \ref EXCn_Type
+ * \param [in]  exc_handler     The exception handler for this exception code EXCn
  */
 void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler)
 {
@@ -543,7 +556,7 @@ void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler)
  * \brief       Get current exception handler for exception code EXCn of supervisor mode
  * \details
  * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers_S[EXCn-1].
- * \param   EXCn    See \ref EXCn_Type
+ * \param [in]  EXCn    See \ref EXCn_Type
  * \return  Current exception handler for exception code EXCn, if not found, return 0.
  */
 unsigned long Exception_Get_EXC_S(uint32_t EXCn)
@@ -560,6 +573,8 @@ unsigned long Exception_Get_EXC_S(uint32_t EXCn)
  * \details
  * This function provided a supervisor mode common entry for exception. Silicon Vendor could modify
  * this template implementation according to requirement.
+ * \param [in]  scause    code indicating the reason that caused the trap in supervisor mode
+ * \param [in]  sp        stack pointer
  * \remarks
  * - RISCV provided supervisor mode common entry for all types of exception. This is proposed code template
  *   for exception entry function, Silicon Vendor could modify the implementation.

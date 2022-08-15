@@ -47,9 +47,9 @@ typedef struct EXC_Frame {
     unsigned long a3;                /* a3: x13, function argument 3 */
     unsigned long a4;                /* a4: x14, function argument 4 */
     unsigned long a5;                /* a5: x15, function argument 5 */
-    unsigned long mcause;            /* mcause: machine cause csr register */
-    unsigned long mepc;              /* mepc: machine exception program counter csr register */
-    unsigned long msubm;             /* msubm: machine sub-mode csr register, nuclei customized */
+    unsigned long cause;     /* cause: machine/supervisor mode cause csr register */
+    unsigned long epc;       /* epc: machine/ supervisor mode exception program counter csr register */
+    unsigned long msubm;     /* msubm: machine sub-mode csr register, nuclei customized, exclusive to machine mode */
 #ifndef __riscv_32e
     unsigned long a6;                /* a6: x16, function argument 6 */
     unsigned long a7;                /* a7: x17, function argument 7 */
@@ -77,7 +77,7 @@ extern void SystemCoreClockUpdate(void);
 /**
  * \brief Dump Exception Frame
  */
-void Exception_DumpFrame(unsigned long sp);
+void Exception_DumpFrame(unsigned long sp, uint8_t mode);
 
 /**
  * \brief Register an exception handler for exception code EXCn
