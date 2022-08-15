@@ -936,13 +936,419 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
     [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
 
 
+demo_spmp
+~~~~~~~~~~~~~~~~
+This `demo_spmp_application`_ is used to demonstrate how to grant physical memory privileges
+(read, write, execute) on each physical memory region by supervisor-mode control CSRs.
+
+.. note:: 
+
+    * It doesn't work with gd32vf103 processor.
+    * Need to enable PMP in <Device.h> if PMP present in CPU.
+    * Need to enable TEE in <Device.h> if TEE present in CPU.
+    * Need to enable SPMP in <Device.h> if SPMP present in CPU.
+
+* The sPMP values are checked after the physical address to be accessed passes PMP checks
+* There're three config structures, ``pmp_config`` inits that M-mode grants full permission 
+  of the whole address range on S and U mode; ``spmp_config_x`` sets protected executable 
+  address range as 2^12 bytes; ``spmp_config_rw`` sets protected readable/writable address 
+  range as 2^12 bytes, and you can change the ``protection``, ``order``, ``base_addr`` 
+  according to your memory assignments
+* Exception delegation from default M mode to S mode is also provided in this demo, when
+  it violates sPMP check.When exception occurs, the dump info including ``scause``, ``sdcause``,
+  and ``sepc`` can be observed by serial console, which explains the exception cause of 
+  SPMP permission violation, and shows which asm instruction triggers the violation
+* In the application code, there is a macro called ``TRIGGER_SPMP_VIOLATION_MODE`` to control the
+  sPMP working feature:
+
+  - If **TRIGGER_SPMP_VIOLATION_MODE=INSTRUCTION_FETCH_PAGE_EXCEPTION**, the unallowed memory is to
+    excute, which triggers ``Instruction page fault``, whose scause.EXCCODE = 12 and sdcause = 6
+
+  - If **TRIGGER_SPMP_VIOLATION_MODE=LOAD_PAGE_EXCEPTION**, the unallowed memory is to read,
+    which triggers ``Load page fault``, whose scause.EXCODE = 13 and sdcause = 6
+
+  - If **TRIGGER_SPMP_VIOLATION_MODE=STORE_PAGE_EXCEPTION**, the unallowed memory is to write,
+    which triggers ``Store/AMO page fault``, whose scause.EXCODE = 15 and sdcause = 6
+
+  - If **TRIGGER_SPMP_VIOLATION_MODE=EXECUTE_USERMODE_MEMORY_EXCEPTION**, the U-Mode accessiable 
+    memory is to execute, which triggers ``Instruction page fault``. By the way, S-mode can never
+    execute instructions from user pages, regardless of the state of ``SUM(permit Supervisor User Memory access)``
+  
+  - If **TRIGGER_SPMP_VIOLATION_MODE=LOAD_USERMODE_MEMORY_EXCEPTION**, the the U-Mode accessiable
+    memory is to read, which triggers ``Load page fault``. When SUM=1, read access is permitted
+
+  - If **TRIGGER_SPMP_VIOLATION_MODE=STORE_USERMODE_MEMORY_EXCEPTION**, the the U-Mode accessiable
+    memory is to write, which triggers ``Store/AMO page fault``. When SUM=1, write access is permitted
+
+  - If **TRIGGER_SPMP_VIOLATION_MODE=RUN_WITH_NO_SPMP_CHECK**, supervisor mode access succeed, no 
+    violation occurs
+
+**How to run this application:**
+
+.. code-block::shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_spmp directory
+    cd application/baremetal/demo_spmp
+    # Change macro __TEE_PRESENT to 1 in <Device.h>,here CORE=n300 is
+    # equipped with TEE
+    #define __TEE_PRESENT             1
+    # Change macro TRIGGER_SPMP_VIOLATION_MODE value in demo_spmp.c
+    # to see different working mode of this demo
+    # Clean the application first
+    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
+    # Build and upload the application
+    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
+
+**Expected output(TRIGGER_SPMP_VIOLATION_MODE=INSTRUCTION_FETCH_PAGE_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Download Mode: ILM
+    CPU Frequency 16005529 Hz
+    ------sPMP demo------
+    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
+    Get spmp entry: index 0, prot_out: 9b, addr_out: 80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 9b, addr_out: 90000000, order_out: 12
+    Attempting to fetch instruction from protected address
+    SCAUSE : 0x1000000c
+    SDCAUSE: 0x6
+    SEPC   : 0x80004000
+    STVAL  : 0x80004000
+    ra: 0x80005016, tp: 0x900025f8, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
+    a0: 0xa, a1: 0xa, a2: 0x37, a3: 0x37, a4: 0xffffefff, a5: 0xffffffff, a6: 0xa, a7: 0xc800
+    cause: 0x1000000c, epc: 0x80004000
+
+From disassembly code, SEPC refers to 
+
+.. code-block:: console
+
+    80004000:	90002537          	lui	a0,0x90002
+
+
+**Expected output(TRIGGER_SPMP_VIOLATION_MODE=LOAD_PAGE_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug 12 2022, 15:28:58
+    Download Mode: ILM
+    CPU Frequency 15998648 Hz
+    ------sPMP demo------
+    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
+    Get spmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 9a, addr_out: 90000000, order_out: 12
+    Attempting to fetch instruction from protected address
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0] 
+    SCAUSE : 0x1000000d
+    SDCAUSE: 0x6
+    SEPC   : 0x80005026
+    STVAL  : 0x90000000
+    ra: 0x80005022, tp: 0x90002608, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
+    a0: 0xa, a1: 0xa, a2: 0x27, a3: 0x27, a4: 0xffffefff, a5: 0xffffffff, a6: 0xa, a7: 0xc800
+    cause: 0x1000000d, epc: 0x80005026
+
+From disassembly code, SEPC refers to
+
+.. code-block:: console
+
+    80005026:	00044583          	lbu	a1,0(s0) # 90000000 <_sp+0xffff0000>
+
+
+**Expected output(TRIGGER_SPMP_VIOLATION_MODE=STORE_PAGE_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug 12 2022, 15:28:58
+    Download Mode: ILM
+    CPU Frequency 15998648 Hz
+    ------sPMP demo------
+    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
+    Get spmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 99, addr_out: 90000000, order_out: 12
+    Attempting to fetch instruction from protected address
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0] 
+    protected_data[0]: 0xAA succeed 
+    Attempting to write protected_data[0] 
+    SCAUSE : 0x1000000f
+    SDCAUSE: 0x6
+    SEPC   : 0x80005050
+    STVAL  : 0x90000000
+    ra: 0x80005046, tp: 0x90002608, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
+    a0: 0x90002330, a1: 0xa, a2: 0x28, a3: 0x28, a4: 0xffffefff, a5: 0xffffffff, a6: 0x10, a7: 0xc800
+    cause: 0x1000000f, epc: 0x80005050
+
+From disassembly code, SEPC refers to
+
+.. code-block:: console
+
+    80005050:	00f40023          	sb	a5,0(s0)
+  
+
+**Expected output(TRIGGER_SPMP_VIOLATION_MODE=EXECUTE_USERMODE_MEMORY_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug 12 2022, 15:28:58
+    Download Mode: ILM
+    CPU Frequency 15998648 Hz
+    ------sPMP demo------
+    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
+    Get spmp entry: index 0, prot_out: df, addr_out: 80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 9b, addr_out: 90000000, order_out: 12
+    Attempting to fetch instruction from protected address
+    SCAUSE : 0x1000000c
+    SDCAUSE: 0x6
+    SEPC   : 0x80004000
+    STVAL  : 0x80004000
+    ra: 0x80005016, tp: 0x90002608, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
+    a0: 0xa, a1: 0xa, a2: 0x37, a3: 0x37, a4: 0xffffefff, a5: 0xffffffff, a6: 0xa, a7: 0xc800
+    cause: 0x1000000c, epc: 0x80004000
+
+From disassembly code, SEPC refers to 
+
+.. code-block:: console
+
+    80004000:	90002537          	lui	a0,0x90002
+
+
+**Expected output(TRIGGER_SPMP_VIOLATION_MODE=LOAD_USERMODE_MEMORY_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug 15 2022, 09:02:39
+    Download Mode: ILM
+    CPU Frequency 16005529 Hz
+    ------sPMP demo------
+    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
+    Get spmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: d9, addr_out: 90000000, order_out: 12
+    Attempting to fetch instruction from protected address
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0]
+    SCAUSE : 0x1000000d
+    SDCAUSE: 0x6
+    SEPC   : 0x80005024
+    STVAL  : 0x90000000
+    ra: 0x80005020, tp: 0x900025e0, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
+    a0: 0xa, a1: 0xa, a2: 0x27, a3: 0x27, a4: 0xffffefff, a5: 0x90000000, a6: 0xa, a7: 0xc800
+    cause: 0x1000000d, epc: 0x80005024
+
+From disassembly code, SEPC refers to 
+
+.. code-block:: console
+
+    80005024:	0007c583          	lbu	a1,0(a5) # 90000000 <_sp+0xffff0000>
+
+
+**Expected output(TRIGGER_SPMP_VIOLATION_MODE=STORE_USERMODE_MEMORY_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug 15 2022, 09:02:39
+    Download Mode: ILM
+    CPU Frequency 16005529 Hz
+    ------sPMP demo------
+    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
+    Get spmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: da, addr_out: 90000000, order_out: 12
+    Attempting to fetch instruction from protected address
+    ----protected_execute succeed!----
+    Attempting to write protected_data[0]
+    SCAUSE : 0x1000000f
+    SDCAUSE: 0x6
+    SEPC   : 0x8000502e
+    STVAL  : 0x90000000
+    ra: 0x80005020, tp: 0x900025c0, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
+    a0: 0x900022e4, a1: 0xa, a2: 0x28, a3: 0x28, a4: 0xffffffff, a5: 0x90000000, a6: 0xa, a7: 0xc800
+    cause: 0x1000000f, epc: 0x8000502e
+
+From disassembly code, SEPC refers to 
+
+.. code-block:: console
+
+    8000502e:	00e78023          	sb	a4,0(a5) # 90000000 <_sp+0xffff0000>
+    
+
+**Expected output(TRIGGER_SPMP_VIOLATION_MODE=RUN_WITH_NO_SPMP_CHECK) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug 12 2022, 15:28:58
+    Download Mode: ILM
+    CPU Frequency 15998648 Hz
+    ------sPMP demo------
+    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
+    Get spmp entry: index 0, prot_out: 1f, addr_out: 80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 1b, addr_out: 90000000, order_out: 12
+    Attempting to fetch instruction from protected address
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0] 
+    protected_data[0]: 0xAA succeed 
+    Attempting to write protected_data[0] 
+    Won't run here if violates L U\R\W\X permission check! 
+
+
+demo_pmp
+~~~~~~~~~~~~~~~
+
+This `demo_pmp_application`_ is used to demonstrate how to grant physical memory privileges
+(read, write, execute) on each physical memory region by machine mode control CSRs.
+
+.. note:: 
+
+    * Need to enable PMP in <Device.h> if PMP present in CPU.
+
+* There're two config structures, ``pmp_config_x`` sets protected executable address range 
+  as 2^12 bytes; ``pmp_config_rw`` sets protected readable/writable address range as 2^12 
+  bytes, and you can change the ``protection``, ``order``, ``base_addr`` according to your 
+  memory assignments
+* When exception occurs, the dump info including mcause, mdcause, and mepc can be observed 
+  by serial console, which explains the exception cause of PMP permission violation, and 
+  shows which asm instruction triggers the violation
+* In the application code, there is a macro called ``TRIGGER_PMP_VIOLATION_MODE`` to control the
+  PMP working feature:
+
+  - If **TRIGGER_PMP_VIOLATION_MODE=INSTRUCTION_FETCH_EXCEPTION**, the unallowed memory is to
+    excute, which triggers ``Instruction access fault``, whose mcause.EXCCODE = 1 and mdcause = 1
+
+  - If **TRIGGER_PMP_VIOLATION_MODE=LOAD_EXCEPTION**, the unallowed memory is to read,
+    which triggers ``Load access fault``, whose mcause.EXCODE = 5 and mdcause = 1
+
+  - If **TRIGGER_PMP_VIOLATION_MODE=STORE_EXCEPTION**, the unallowed memory is to write,
+    which triggers ``Store/AMO access fault``, whose mcause.EXCODE = 7 and mdcause = 1
+
+  - If **TRIGGER_PMP_VIOLATION_MODE=RUN_WITH_NO_PMP_CHECK**,  no violation occurs
+
+**How to run this application:**
+
+.. code-block::shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_pmp directory
+    cd application/baremetal/demo_pmp
+    # Change macro __PMP_PRESENT to 1 in <Device.h>
+    #define __PMP_PRESENT             1
+    # Change macro TRIGGER_PMP_VIOLATION_MODE value in demo_pmp.c
+    # to see different working mode of this demo
+    # Clean the application first
+    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
+    # Build and upload the application
+    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
+
+**Expected output(TRIGGER_PMP_VIOLATION_MODE=INSTRUCTION_FETCH_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug 12 2022, 16:04:33
+    Download Mode: ILM
+    CPU Frequency 15996682 Hz
+    ------PMP demo------
+    Get pmp entry: index 0, prot_out: 9b, addr_out: 80004000, order_out: 12
+    Get pmp entry: index 1, prot_out: 9b, addr_out: 90000000, order_out: 12
+    Attempting to fetch instruction from protected address
+    MCAUSE : 0x30000001
+    MDCAUSE: 0x1
+    MEPC   : 0x80004000
+    MTVAL  : 0x80004000
+    ra: 0x80002142, tp: 0x900025c0, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
+    a0: 0xa, a1: 0xa, a2: 0x37, a3: 0x37, a4: 0xffffefff, a5: 0xffffffff, a6: 0xa, a7: 0xc800
+    cause: 0x30000001, epc: 0x80004000
+    msubm: 0x80
+
+From disassembly code, MEPC refers to
+
+.. code-block:: console
+
+    80004000:	90002537          	lui	a0,0x90002
+
+
+**Expected output(TRIGGER_PMP_VIOLATION_MODE=LOAD_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug 12 2022, 16:18:18
+    Download Mode: ILM
+    CPU Frequency 15996682 Hz
+    ------PMP demo------
+    Get pmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
+    Get pmp entry: index 1, prot_out: 9a, addr_out: 90000000, order_out: 12
+    Attempting to fetch instruction from protected address
+    ----protected_execute success!----
+    Attempting to read protected_data[0] 
+    MCAUSE : 0x30000005
+    MDCAUSE: 0x1
+    MEPC   : 0x80004022
+    MTVAL  : 0x90000000
+    ra: 0x8000401e, tp: 0x900025c0, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
+    a0: 0xa, a1: 0xa, a2: 0x27, a3: 0x27, a4: 0xffffefff, a5: 0xffffffff, a6: 0xa, a7: 0xc800
+    cause: 0x30000005, epc: 0x80004022
+    msubm: 0x80
+
+From disassembly code, MEPC refers to
+
+.. code-block:: console
+
+    80004022:	00044583          	lbu	a1,0(s0) # 90000000 <_sp+0xffff0000>
+
+
+**Expected output(TRIGGER_PMP_VIOLATION_MODE=STORE_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug 12 2022, 16:18:18
+    Download Mode: ILM
+    CPU Frequency 15996682 Hz
+    ------PMP demo------
+    Get pmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
+    Get pmp entry: index 1, prot_out: 99, addr_out: 90000000, order_out: 12
+    Attempting to fetch instruction from protected address
+    ----protected_execute success!----
+    Attempting to read protected_data[0] 
+    protected_data[0]: 0xAA succeed 
+    Attempting to write protected_data[0] 
+    MCAUSE : 0x30000007
+    MDCAUSE: 0x1
+    MEPC   : 0x80004044
+    MTVAL  : 0x90000000
+    ra: 0x80004042, tp: 0x900025c0, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
+    a0: 0xa, a1: 0xa, a2: 0x28, a3: 0x28, a4: 0xffffefff, a5: 0xffffffff, a6: 0x10, a7: 0xc800
+    cause: 0x30000007, epc: 0x80004044
+    msubm: 0x80
+
+From disassembly code, MEPC refers to
+
+.. code-block:: console
+
+    80004044:	00f40023          	sb	a5,0(s0)
+
+
+**Expected output(TRIGGER_PMP_VIOLATION_MODE=RUN_WITH_NO_PMP_CHECK) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Aug 12 2022, 16:18:18
+    Download Mode: ILM
+    CPU Frequency 15996682 Hz
+    ------PMP demo------
+    Get pmp entry: index 0, prot_out: 1f, addr_out: 80004000, order_out: 12
+    Get pmp entry: index 1, prot_out: 1b, addr_out: 90000000, order_out: 12
+    Attempting to fetch instruction from protected address
+    ----protected_execute success!----
+    Attempting to read protected_data[0] 
+    protected_data[0]: 0xAA succeed 
+    Attempting to write protected_data[0] 
+    Won't run here if violates L R\W\X permission check! 
+
+
 FreeRTOS applications
 ---------------------
 
 demo
 ~~~~
 
-This `freertos demo application`_ is show basic freertos task functions.
+This `freertos demo application`_ is to show basic freertos task functions.
 
 * Two freertos tasks are created
 * A software timer is created
@@ -1225,4 +1631,6 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 .. _rt-thread demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo
 .. _rt-thread msh application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/msh
 .. _demo_smode_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_eclic
+.. _demo_spmp_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_spmp
+.. _demo_pmp_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pmp
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html
