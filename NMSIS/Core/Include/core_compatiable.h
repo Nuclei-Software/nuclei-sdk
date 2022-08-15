@@ -226,6 +226,24 @@ __STATIC_FORCEINLINE uint8_t __CLZ(uint32_t data)
 }
 #endif /* defined(__DSP_PRESENT) && (__DSP_PRESENT == 1) */
 
+/**
+ * \brief   Count tailing zero
+ * \details Return the count of least-significant bit zero.for example, return 3 if x=0bxxx1000
+ * \param [in] data   Value to count the tailing zeros
+ * \return            number of tailing zeros in value
+ */
+__STATIC_FORCEINLINE unsigned long __CTZ(unsigned long data)
+{
+    unsigned long ret = 0;
+
+    while (!(data & 1UL)) {
+        ret++;
+        data = data >> 1;
+    }
+
+    return ret;
+}
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_ARMCompatiable_Functions */
 
 #ifdef __cplusplus

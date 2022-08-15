@@ -33,6 +33,7 @@
 #endif
 
 #include "core_feature_base.h"
+#include "core_compatiable.h"
 
 #if defined(__PMP_PRESENT) && (__PMP_PRESENT == 1)
 /* ===== PMP Operations ===== */
@@ -54,117 +55,38 @@
 #error "__PMP_ENTRY_NUM is not defined, please check!"
 #endif
 
-/**
- * \brief   Get 8bit PMPxCFG Register by PMP entry index
- * \details Return the content of the PMPxCFG Register.
- * \param [in]    idx    PMP region index(0-15)
- * \return               PMPxCFG Register value
- */
-__STATIC_INLINE uint8_t __get_PMPxCFG(uint32_t idx)
-{
-    rv_csr_t pmpcfg = 0;
+typedef struct PMP_CONFIG_S{
 
-    if (idx >= __PMP_ENTRY_NUM) return 0;
-#if __RISCV_XLEN == 32
-    if (idx < 4) {
-        pmpcfg = __RV_CSR_READ(CSR_PMPCFG0);
-    } else if ((idx >=4) && (idx < 8)) {
-        idx -= 4;
-        pmpcfg = __RV_CSR_READ(CSR_PMPCFG1);
-    } else if ((idx >=8) && (idx < 12)) {
-        idx -= 8;
-        pmpcfg = __RV_CSR_READ(CSR_PMPCFG2);
-    } else {
-        idx -= 12;
-        pmpcfg = __RV_CSR_READ(CSR_PMPCFG3);
-    }
-
-    idx = idx << 3;
-    return (uint8_t)((pmpcfg>>idx) & 0xFF);
-#elif __RISCV_XLEN == 64
-    if (idx < 8) {
-        pmpcfg = __RV_CSR_READ(CSR_PMPCFG0);
-    } else {
-        idx -= 8;
-        pmpcfg = __RV_CSR_READ(CSR_PMPCFG2);
-    }
-    idx = idx << 3;
-    return (uint8_t)((pmpcfg>>idx) & 0xFF);
-#else
-    // TODO Add RV128 Handling
-    return 0;
-#endif
-}
+    /* set locking bit, addressing mode, read, write, and instruction execution permissions */
+    unsigned int protection;
+    /**
+     * Size of memory region as power of 2, it has to be minimum 2 and maxium __RISCV_XLEN according to the 
+     * hard-wired granularity 2^N bytes, if N = 12, then order has to be at least 12; if not, the order read out
+     * is N though you configure less than N.
+     */
+    unsigned long order;
+    /**
+     * Base address of memory region
+     * It must be 2^order aligned address
+     */
+    unsigned long base_addr;
+}pmp_configs;
 
 /**
- * \brief   Set 8bit PMPxCFG by pmp entry index
- * \details Set the given pmpxcfg value to the PMPxCFG Register.
- * \param [in]    idx      PMPx region index(0-15)
- * \param [in]    pmpxcfg  PMPxCFG register value to set
- */
-__STATIC_INLINE void __set_PMPxCFG(uint32_t idx, uint8_t pmpxcfg)
-{
-    rv_csr_t pmpcfgx = 0;
-    if (idx >= __PMP_ENTRY_NUM) return;
-
-#if __RISCV_XLEN == 32
-    if (idx < 4) {
-        pmpcfgx = __RV_CSR_READ(CSR_PMPCFG0);
-        idx = idx << 3;
-        pmpcfgx = (pmpcfgx & ~(0xFFUL << idx)) | ((rv_csr_t)pmpxcfg << idx);
-        __RV_CSR_WRITE(CSR_PMPCFG0, pmpcfgx);
-    } else if ((idx >=4) && (idx < 8)) {
-        idx -= 4;
-        pmpcfgx = __RV_CSR_READ(CSR_PMPCFG1);
-        idx = idx << 3;
-        pmpcfgx = (pmpcfgx & ~(0xFFUL << idx)) | ((rv_csr_t)pmpxcfg << idx);
-        __RV_CSR_WRITE(CSR_PMPCFG1, pmpcfgx);
-    } else if ((idx >=8) && (idx < 12)) {
-        idx -= 8;
-        pmpcfgx = __RV_CSR_READ(CSR_PMPCFG2);
-        idx = idx << 3;
-        pmpcfgx = (pmpcfgx & ~(0xFFUL << idx)) | ((rv_csr_t)pmpxcfg << idx);
-        __RV_CSR_WRITE(CSR_PMPCFG2, pmpcfgx);
-    } else {
-        idx -= 12;
-        pmpcfgx = __RV_CSR_READ(CSR_PMPCFG3);
-        idx = idx << 3;
-        pmpcfgx = (pmpcfgx & ~(0xFFUL << idx)) | ((rv_csr_t)pmpxcfg << idx);
-        __RV_CSR_WRITE(CSR_PMPCFG3, pmpcfgx);
-    }
-#elif __RISCV_XLEN == 64
-    if (idx < 8) {
-        pmpcfgx = __RV_CSR_READ(CSR_PMPCFG0);
-        idx = idx << 3;
-        pmpcfgx = (pmpcfgx & ~(0xFFULL << idx)) | ((rv_csr_t)pmpxcfg << idx);
-        __RV_CSR_WRITE(CSR_PMPCFG0, pmpcfgx);
-    } else {
-        idx -= 8;
-        pmpcfgx = __RV_CSR_READ(CSR_PMPCFG2);
-        idx = idx << 3;
-        pmpcfgx = (pmpcfgx & ~(0xFFULL << idx)) | ((rv_csr_t)pmpxcfg << idx);
-        __RV_CSR_WRITE(CSR_PMPCFG2, pmpcfgx);
-    }
-#else
-    // TODO Add RV128 Handling
-#endif
-}
-
-/**
- * \brief   Get PMPCFGx Register by index
+ * \brief   Get PMPCFGx Register by csr index
  * \details Return the content of the PMPCFGx Register.
- * \param [in]    idx    PMPCFG CSR index(0-3)
- * \return               PMPCFGx Register value
+ * \param [in]    csr_idx    PMPCFG CSR index(0-3)
+ * \return                   PMPCFGx Register value
  * \remark
- * - For RV64, only idx = 0 and idx = 2 is allowed.
+ * - For RV64, only csr_idx = 0 and csr_idx = 2 is allowed.
  *   pmpcfg0 and pmpcfg2 hold the configurations
  *   for the 16 PMP entries, pmpcfg1 and pmpcfg3 are illegal
  * - For RV32, pmpcfg0–pmpcfg3, hold the configurations
  *   pmp0cfg–pmp15cfg for the 16 PMP entries
  */
-__STATIC_INLINE rv_csr_t __get_PMPCFGx(uint32_t idx)
+__STATIC_INLINE rv_csr_t __get_PMPCFGx(uint32_t csr_idx)
 {
-    switch (idx) {
+    switch (csr_idx) {
         case 0: return __RV_CSR_READ(CSR_PMPCFG0);
         case 1: return __RV_CSR_READ(CSR_PMPCFG1);
         case 2: return __RV_CSR_READ(CSR_PMPCFG2);
@@ -174,20 +96,20 @@ __STATIC_INLINE rv_csr_t __get_PMPCFGx(uint32_t idx)
 }
 
 /**
- * \brief   Set PMPCFGx by index
+ * \brief   Set PMPCFGx by csr index
  * \details Write the given value to the PMPCFGx Register.
- * \param [in]    idx      PMPCFG CSR index(0-3)
- * \param [in]    pmpcfg   PMPCFGx Register value to set
+ * \param [in]    csr_idx      PMPCFG CSR index(0-3)
+ * \param [in]    pmpcfg       PMPCFGx Register value to set
  * \remark
- * - For RV64, only idx = 0 and idx = 2 is allowed.
+ * - For RV64, only csr_idx = 0 and csr_idx = 2 is allowed.
  *   pmpcfg0 and pmpcfg2 hold the configurations
  *   for the 16 PMP entries, pmpcfg1 and pmpcfg3 are illegal
  * - For RV32, pmpcfg0–pmpcfg3, hold the configurations
  *   pmp0cfg–pmp15cfg for the 16 PMP entries
  */
-__STATIC_INLINE void __set_PMPCFGx(uint32_t idx, rv_csr_t pmpcfg)
+__STATIC_INLINE void __set_PMPCFGx(uint32_t csr_idx, rv_csr_t pmpcfg)
 {
-    switch (idx) {
+    switch (csr_idx) {
         case 0: __RV_CSR_WRITE(CSR_PMPCFG0, pmpcfg); break;
         case 1: __RV_CSR_WRITE(CSR_PMPCFG1, pmpcfg); break;
         case 2: __RV_CSR_WRITE(CSR_PMPCFG2, pmpcfg); break;
@@ -197,14 +119,91 @@ __STATIC_INLINE void __set_PMPCFGx(uint32_t idx, rv_csr_t pmpcfg)
 }
 
 /**
- * \brief   Get PMPADDRx Register by index
- * \details Return the content of the PMPADDRx Register.
- * \param [in]    idx    PMP region index(0-15)
- * \return               PMPADDRx Register value
+ * \brief   Get 8bit PMPxCFG Register by PMP entry index
+ * \details Return the content of the PMPxCFG Register.
+ * \param [in]    entry_idx    PMP region index(0-15)
+ * \return               PMPxCFG Register value
  */
-__STATIC_INLINE rv_csr_t __get_PMPADDRx(uint32_t idx)
+__STATIC_INLINE uint8_t __get_PMPxCFG(uint32_t entry_idx)
 {
-    switch (idx) {
+    rv_csr_t pmpcfgx = 0;
+    uint8_t csr_cfg_num = 0;
+    uint16_t csr_idx = 0;
+    uint16_t cfg_shift = 0;
+
+    if (entry_idx >= __PMP_ENTRY_NUM) return 0;
+
+#if __RISCV_XLEN == 32
+    csr_cfg_num = 4;
+    csr_idx = entry_idx >> 2;
+#elif __RISCV_XLEN == 64
+     csr_cfg_num = 8;
+    /* For RV64, pmpcfg0 and pmpcfg2 each hold 8 PMP entries, align by 2 */
+    csr_idx = (entry_idx >> 2)  & ~1;
+#else
+    // TODO Add RV128 Handling
+    return 0;
+#endif
+    pmpcfgx = __get_PMPCFGx(csr_idx);
+    /* 
+     * first get specific pmpxcfg's order in one CSR composed of csr_cfg_num pmpxcfgs,
+     * then get pmpxcfg's bit position in one CSR by left shift 3(each pmpxcfg size is one byte)
+     */
+    cfg_shift = (entry_idx & (csr_cfg_num - 1)) << 3;
+
+    /* read specific pmpxcfg register value */
+    return (uint8_t)(__RV_EXTRACT_FIELD(pmpcfgx, 0xFF << cfg_shift));
+}
+
+/**
+ * \brief   Set 8bit PMPxCFG by pmp entry index
+ * \details Set the given pmpxcfg value to the PMPxCFG Register.
+ * \param [in]    entry_idx      PMPx region index(0-15)
+ * \param [in]    pmpxcfg  PMPxCFG register value to set
+ * \remark
+ * - For RV32, 4 pmpxcfgs are densely packed into one CSR in order
+ *   For RV64, 8 pmpxcfgs are densely packed into one CSR in order
+ */
+__STATIC_INLINE void __set_PMPxCFG(uint32_t entry_idx, uint8_t pmpxcfg)
+{
+    rv_csr_t pmpcfgx = 0;
+    uint8_t csr_cfg_num = 0;
+    uint16_t csr_idx = 0;
+    uint16_t cfg_shift = 0;
+    if (entry_idx >= __PMP_ENTRY_NUM) return;
+
+#if __RISCV_XLEN == 32
+    csr_cfg_num = 4;
+    csr_idx = entry_idx >> 2;
+#elif __RISCV_XLEN == 64
+    csr_cfg_num = 8;
+    /* For RV64, pmpcfg0 and pmpcfg2 each hold 8 PMP entries, align by 2 */
+    csr_idx = (entry_idx >> 2)  & ~1;
+#else
+    // TODO Add RV128 Handling
+    return;
+#endif
+    /* read specific pmpcfgx register value */
+    pmpcfgx = __get_PMPCFGx(csr_idx);
+    /* 
+     * first get specific pmpxcfg's order in one CSR composed of csr_cfg_num pmpxcfgs,
+     * then get pmpxcfg's bit position in one CSR by left shift 3(each pmpxcfg size is one byte)
+     */
+    cfg_shift = (entry_idx & (csr_cfg_num - 1)) << 3;
+
+    pmpcfgx = __RV_INSERT_FIELD(pmpcfgx, 0xFFUL << cfg_shift, pmpxcfg);
+    __set_PMPCFGx(csr_idx, pmpcfgx);
+}
+
+/**
+ * \brief   Get PMPADDRx Register by CSR index
+ * \details Return the content of the PMPADDRx Register.
+ * \param [in]    csr_idx    PMP region CSR index(0-15)
+ * \return        PMPADDRx Register value
+ */
+__STATIC_INLINE rv_csr_t __get_PMPADDRx(uint32_t csr_idx)
+{
+    switch (csr_idx) {
         case 0: return __RV_CSR_READ(CSR_PMPADDR0);
         case 1: return __RV_CSR_READ(CSR_PMPADDR1);
         case 2: return __RV_CSR_READ(CSR_PMPADDR2);
@@ -226,14 +225,14 @@ __STATIC_INLINE rv_csr_t __get_PMPADDRx(uint32_t idx)
 }
 
 /**
- * \brief   Set PMPADDRx by index
+ * \brief   Set PMPADDRx by CSR index
  * \details Write the given value to the PMPADDRx Register.
- * \param [in]    idx      PMP region index(0-15)
+ * \param [in]    csr_idx  PMP region CSR index(0-15)
  * \param [in]    pmpaddr  PMPADDRx Register value to set
  */
-__STATIC_INLINE void __set_PMPADDRx(uint32_t idx, rv_csr_t pmpaddr)
+__STATIC_INLINE void __set_PMPADDRx(uint32_t csr_idx, rv_csr_t pmpaddr)
 {
-    switch (idx) {
+    switch (csr_idx) {
         case 0: __RV_CSR_WRITE(CSR_PMPADDR0, pmpaddr); break;
         case 1: __RV_CSR_WRITE(CSR_PMPADDR1, pmpaddr); break;
         case 2: __RV_CSR_WRITE(CSR_PMPADDR2, pmpaddr); break;
@@ -253,6 +252,132 @@ __STATIC_INLINE void __set_PMPADDRx(uint32_t idx, rv_csr_t pmpaddr)
         default: return;
     }
 }
+
+/**
+ * \brief   Set PMP entry by entry idx
+ * \details Write the given value to the PMPxCFG Register and PMPADDRx.
+ * \param [in]    entry_idx    PMP entry index(0-15)
+ * \param [in]    pmp_config   structure of L, X, W, R field of PMP configuration register, memory region base address
+ *                and size of memory region as power of 2
+ * \remark
+ * - If the size of memory region is 2^12(4KB) range, pmp_config->order makes 12, and the like.
+ * - Suppose the size of memory region is 2^X bytes range, if X >=3, the NA4 mode is not selectable, NAPOT is selected.
+ * - TOR of A field in PMP configuration register is not considered here.
+ */
+__STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_configs *pmp_config)
+{
+    unsigned int cfg_shift, cfg_csr_idx, addr_csr_idx = 0;
+    unsigned long cfgmask, addrmask = 0;
+    unsigned long pmpcfg, pmpaddr = 0;
+    uint8_t protection, csr_cfg_num = 0;
+    /* check parameters */
+    if (entry_idx >= __PMP_ENTRY_NUM || pmp_config->order > __RISCV_XLEN || pmp_config->order < PMP_SHIFT) return;
+
+    /* calculate PMP register and offset */
+#if __RISCV_XLEN == 32
+    csr_cfg_num = 4;
+    cfg_csr_idx = (entry_idx >> 2);
+#elif __RISCV_XLEN == 64
+    csr_cfg_num = 8;
+    cfg_csr_idx = ((entry_idx >> 2)) & ~1;
+#else
+    // TODO Add RV128 Handling
+    return;
+#endif
+    /* 
+     * first get specific pmpxcfg's order in one CSR composed of csr_cfg_num pmpxcfgs,
+     * then get pmpxcfg's bit position in one CSR by left shift 3, each pmpxcfg size is one byte
+     */
+    cfg_shift = (entry_idx & (csr_cfg_num - 1)) << 3;
+    addr_csr_idx = entry_idx;
+
+    if (cfg_csr_idx < 0 || cfg_shift < 0) return;
+
+    /* encode PMP config */
+    protection = pmp_config->protection;
+    protection |= (PMP_SHIFT == pmp_config->order) ? PMP_A_NA4 : PMP_A_NAPOT;
+    cfgmask = ~(0xFFUL << cfg_shift);
+    pmpcfg = (__get_PMPCFGx(cfg_csr_idx) & cfgmask);
+    pmpcfg |= ((protection << cfg_shift) & ~cfgmask);
+
+    /* encode PMP address */
+    if (PMP_SHIFT == pmp_config->order) { /* NA4 */
+        pmpaddr = (pmp_config->base_addr >> PMP_SHIFT);
+    } else { /* NAPOT */
+        addrmask = (1UL << (pmp_config->order - PMP_SHIFT)) - 1;
+        pmpaddr = ((pmp_config->base_addr >> PMP_SHIFT) & ~addrmask);
+        pmpaddr |= (addrmask >> 1);
+    }
+    /* 
+     * write csrs, update the address first, in case the entry is locked that
+     * we won't be able to modify it after we set the config csr.
+     */
+    __set_PMPADDRx(addr_csr_idx, pmpaddr);
+    __set_PMPCFGx(cfg_csr_idx, pmpcfg);
+}
+
+/**
+ * \brief   Get PMP entry by entry idx
+ * \details Write the given value to the PMPxCFG Register and PMPADDRx.
+ * \param [in]     entry_idx     PMP entry index(0-15)
+ * \param [out]    pmp_config   structure of L, X, W, R, A field of PMP configuration register, memory region base
+ *                 address and size of memory region as power of 2
+ * \return  -1 failure, else 0 success
+ * \remark
+ * - If the size of memory region is 2^12(4KB) range, pmp_config->order makes 12, and the like.
+ * - TOR of A field in PMP configuration register is not considered here.
+ */
+__STATIC_INLINE int __get_PMPENTRYx(unsigned int entry_idx, pmp_configs *pmp_config)
+{
+    int cfg_shift, cfg_csr_idx, addr_csr_idx = 0;
+    unsigned long cfgmask, pmpcfg, prot = 0;
+    unsigned long t1, addr, pmpaddr, len = 0;
+    uint8_t csr_cfg_num = 0;
+    /* check parameters */
+    if (entry_idx >= __PMP_ENTRY_NUM || !pmp_config) return -1;
+
+    /* calculate PMP register and offset */
+#if __RISCV_XLEN == 32
+    csr_cfg_num = 4;
+    cfg_csr_idx = entry_idx >> 2;
+#elif __RISCV_XLEN == 64
+    csr_cfg_num = 8;
+    cfg_csr_idx = (entry_idx>> 2) & ~1;
+#else
+// TODO Add RV128 Handling
+    return -1;
+#endif
+
+    cfg_shift = (entry_idx & (csr_cfg_num - 1)) << 3;
+    addr_csr_idx = entry_idx;
+
+    if (cfg_csr_idx < 0 || cfg_shift < 0)
+        return -1;
+
+    /* decode PMP config */
+    cfgmask = (0xFFUL << cfg_shift);
+    pmpcfg = (__get_PMPCFGx(cfg_csr_idx) & cfgmask);
+    prot = pmpcfg >> cfg_shift;
+
+    /* decode PMP address */
+    pmpaddr = __get_PMPADDRx(addr_csr_idx);
+    if (PMP_A_NAPOT == (prot & PMP_A)) {
+        t1  = __CTZ(~pmpaddr);
+        addr = (pmpaddr & ~((1UL << t1) - 1)) << PMP_SHIFT;
+        len = (t1 + PMP_SHIFT + 1);
+    } else {
+        addr = pmpaddr << PMP_SHIFT;
+        len = PMP_SHIFT;
+    }
+
+    /* return details */
+    pmp_config->protection = prot;
+    pmp_config->base_addr = addr;
+    pmp_config->order = len;
+
+    return 0;
+}
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_PMP_Functions */
 #endif /* defined(__PMP_PRESENT) && (__PMP_PRESENT == 1) */
 

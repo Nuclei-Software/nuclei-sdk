@@ -1376,6 +1376,18 @@ __STATIC_FORCEINLINE unsigned long __get_hpm_counter(unsigned long idx)
 }
 
 /**
+ * \brief   Set exceptions delegation to S mode
+ * \details Set certain exceptions of supervisor mode or user mode 
+ *          delegated from machined mode to supervisor mode.
+ * \remarks
+ *          Exception should trigger in supervisor mode or user mode.
+ */
+__STATIC_FORCEINLINE void __set_medeleg(unsigned long mask)
+{
+    __RV_CSR_WRITE(CSR_MEDELEG, mask);
+}
+
+/**
  * \brief Execute fence instruction, p -> pred, s -> succ
  * \details
  * the FENCE instruction ensures that all memory accesses from instructions preceding

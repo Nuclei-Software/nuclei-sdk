@@ -33,6 +33,7 @@
 #endif
 
 #include "core_feature_base.h"
+#include "core_compatiable.h"
 
 #if defined(__SPMP_PRESENT) && (__SPMP_PRESENT == 1)
 /* ===== sPMP Operations ===== */
@@ -55,11 +56,28 @@
 #error "__SPMP_ENTRY_NUM is not defined, please check!"
 #endif
 
+typedef struct SPMP_CONFIG_S{
+
+    /* set locking bit, addressing mode, user mode, read, write, and instruction execution permissions */
+    unsigned int protection;
+    /**
+     * Size of memory region as power of 2, it has to be minimum 2 and maxium __RISCV_XLEN according to the 
+     * hardwired granularity 2^N bytes, if N = 12, then order has to be at least 12; if not, the order read out
+     * is N though you configure less than N.
+     */
+    unsigned long order;
+    /**
+     * Base address of memory region
+     * It must be 2^order aligned address
+     */
+    unsigned long base_addr;
+}spmp_configs;
+
 /**
  * \brief   Get sPMPCFGx Register by csr index
  * \details Return the content of the sPMPCFGx Register.
  * \param [in]    csr_idx    sPMPCFG CSR index(0-3)
- * \return        sPMPCFGx Register value
+ * \return                   sPMPCFGx Register value
  * \remark
  * - For RV64, only csr_idx = 0 and csr_idx = 2 is allowed.
  *   spmpcfg0 and spmpcfg2 hold the configurations
@@ -104,8 +122,8 @@ __STATIC_INLINE void __set_sPMPCFGx(uint32_t csr_idx, rv_csr_t spmpcfg)
 /**
  * \brief   Get 8bit sPMPxCFG Register by sPMP entry index
  * \details Return the content of the sPMPxCFG Register.
- * \param [in]    idx    sPMP region index(0-15)
- * \return        sPMPxCFG Register value
+ * \param [in]    entry_idx    sPMP region index(0-15)
+ * \return               sPMPxCFG Register value
  */
 __STATIC_INLINE uint8_t __get_sPMPxCFG(uint32_t entry_idx)
 {
@@ -121,7 +139,7 @@ __STATIC_INLINE uint8_t __get_sPMPxCFG(uint32_t entry_idx)
     csr_idx = entry_idx >> 2;
 #elif __RISCV_XLEN == 64
     csr_cfg_num = 8;
-    /* For RV64, spmpcfg0 and spmpcfg2 each hold 8 PMP entries, align by 2 */
+    /* For RV64, spmpcfg0 and spmpcfg2 each hold 8 sPMP entries, align by 2 */
     csr_idx = (entry_idx >> 2)  & ~1;
 #else
     // TODO Add RV128 Handling
@@ -129,20 +147,21 @@ __STATIC_INLINE uint8_t __get_sPMPxCFG(uint32_t entry_idx)
 #endif
     spmpcfgx = __get_sPMPCFGx(csr_idx);
     /* 
-     * first get specific pmpxcfg's order in one CSR composed of csr_cfg_num spmpxcfgs,
-     * then get spmpxcfg's bit position in one CSR by left shift 3, each spmpxcfg size is one byte
+     * first get specific spmpxcfg's order in one CSR composed of csr_cfg_num spmpxcfgs,
+     * then get spmpxcfg's bit position in one CSR by left shift 3(each spmpxcfg size is one byte)
      */
     cfg_shift = (entry_idx & (csr_cfg_num - 1)) << 3;
     
-    /* read specific pmpxcfg register value */
+    /* read specific spmpxcfg register value */
     return (uint8_t)(__RV_EXTRACT_FIELD(spmpcfgx, 0xFF << cfg_shift));
 }
 
 /**
  * \brief   Set 8bit sPMPxCFG by spmp entry index
  * \details Set the given spmpxcfg value to the sPMPxCFG Register.
- * \param [in]    idx       sPMPx region index(0-15)
+ * \param [in]    entry_idx       sPMPx region index(0-15)
  * \param [in]    spmpxcfg  sPMPxCFG register value to set
+ * \remark
  * - For RV32, 4 spmpxcfgs are densely packed into one CSR in order
  *   For RV64, 8 spmpxcfgs are densely packed into one CSR in order
  */
@@ -159,7 +178,7 @@ __STATIC_INLINE void __set_sPMPxCFG(uint32_t entry_idx, uint8_t spmpxcfg)
     csr_idx = entry_idx >> 2;
 #elif __RISCV_XLEN == 64
     csr_cfg_num = 8;
-    /* For RV64, spmpcfg0 and spmpcfg2 each hold 8 PMP entries, align by 2 */
+    /* For RV64, spmpcfg0 and spmpcfg2 each hold 8 sPMP entries, align by 2 */
     csr_idx = (entry_idx >> 2)  & ~1;
 #else
     // TODO Add RV128 Handling
@@ -168,8 +187,8 @@ __STATIC_INLINE void __set_sPMPxCFG(uint32_t entry_idx, uint8_t spmpxcfg)
     /* read specific spmpcfgx register value */
     spmpcfgx = __get_sPMPCFGx(csr_idx);
     /* 
-     * first get specific pmpxcfg's order in one CSR composed of csr_cfg_num spmpxcfgs,
-     * then get spmpxcfg's bit position in one CSR by left shift 3, each spmpxcfg size is one byte
+     * first get specific spmpxcfg's order in one CSR composed of csr_cfg_num spmpxcfgs,
+     * then get spmpxcfg's bit position in one CSR by left shift 3(each spmpxcfg size is one byte)
      */
     cfg_shift = (entry_idx & (csr_cfg_num - 1)) << 3;
 
@@ -239,24 +258,23 @@ __STATIC_INLINE void __set_sPMPADDRx(uint32_t csr_idx, rv_csr_t spmpaddr)
  * \brief   Set sPMP entry by entry idx
  * \details Write the given value to the sPMPxCFG Register and sPMPADDRx.
  * \param [in]    entry_idx    sPMP entry index(0-15)
- * \param [in]    protection   L,X,W,R field of sPMP configuration register
- * \param [in]    addr         the sPMP memory region base address, must be 2^log2len aligned
- * \param [in]    log2len      size of memory region as power of 2
+ * \param [in]    spmp_config   structure of L,U,X,W,R field of sPMP configuration register, memory region base address
+ *                and size of memory region as power of 2
  * \remark
- * - If the sPMP granularity is 2^12(4KB) NAPOT range, log2len makes 12, and the like.
+ * - If the size of memory region is 2^12(4KB) range, spmp_config->order makes 12, and the like.
+ * - Suppose the size of memory region is 2^X bytes range, if X >=3, the NA4 mode is not selectable, NAPOT is selected.
  * - TOR of A field in sPMP configuration register is not considered here.
  */
-__STATIC_INLINE void __set_sPMPENTRYx(uint32_t entry_idx, uint32_t protection, unsigned long addr,
-    unsigned long log2len)
+__STATIC_INLINE void __set_sPMPENTRYx(uint32_t entry_idx, const spmp_configs *spmp_config)
 {
     unsigned int cfg_shift, cfg_csr_idx, addr_csr_idx = 0;
     unsigned long cfgmask, addrmask = 0;
     unsigned long spmpcfg, spmpaddr = 0;
-    uint8_t csr_cfg_num = 0;
+    uint8_t protection, csr_cfg_num = 0;
     /* check parameters */
-    if (entry_idx >= __SPMP_ENTRY_NUM || log2len > __RISCV_XLEN || log2len < SPMP_SHIFT) return;
+    if (entry_idx >= __SPMP_ENTRY_NUM || spmp_config->order > __RISCV_XLEN || spmp_config->order < SPMP_SHIFT) return;
 
-    /* calculate PMP register and offset */
+    /* calculate sPMP register and offset */
 #if __RISCV_XLEN == 32
     csr_cfg_num = 4;
     cfg_csr_idx = (entry_idx >> 2);
@@ -268,7 +286,7 @@ __STATIC_INLINE void __set_sPMPENTRYx(uint32_t entry_idx, uint32_t protection, u
     return;
 #endif
     /* 
-     * first get specific pmpxcfg's order in one CSR composed of csr_cfg_num spmpxcfgs,
+     * first get specific spmpxcfg's order in one CSR composed of csr_cfg_num spmpxcfgs,
      * then get spmpxcfg's bit position in one CSR by left shift 3, each spmpxcfg size is one byte
      */
     cfg_shift = (entry_idx & (csr_cfg_num - 1)) << 3;
@@ -276,29 +294,91 @@ __STATIC_INLINE void __set_sPMPENTRYx(uint32_t entry_idx, uint32_t protection, u
 
     if (cfg_csr_idx < 0 || cfg_shift < 0) return;
 
-    /* encode PMP config */
-    protection |= (log2len == SPMP_SHIFT) ? SPMP_A_NA4 : SPMP_A_NAPOT;
+    /* encode sPMP config */
+    protection = spmp_config->protection;
+    protection |= (SPMP_SHIFT == spmp_config->order) ? SPMP_A_NA4 : SPMP_A_NAPOT;
     cfgmask = ~(0xFFUL << cfg_shift);
     spmpcfg = (__get_sPMPCFGx(cfg_csr_idx) & cfgmask);
     spmpcfg |= ((protection << cfg_shift) & ~cfgmask);
 
-    /* encode PMP address */
-    if (log2len == SPMP_SHIFT) {
-        spmpaddr = (addr >> SPMP_SHIFT);
-    } else {
-        if (log2len == __RISCV_XLEN) {
-            spmpaddr = -1UL;
-        } else {
-            addrmask = (1UL << (log2len - SPMP_SHIFT)) - 1;
-            spmpaddr = ((addr >> SPMP_SHIFT) & ~addrmask);
-            spmpaddr |= (addrmask >> 1);
-        }
+    /* encode sPMP address */
+    if (SPMP_SHIFT == spmp_config->order) { /* NA4 */
+        spmpaddr = (spmp_config->base_addr >> SPMP_SHIFT);
+    } else { /* NAPOT */
+        addrmask = (1UL << (spmp_config->order - SPMP_SHIFT)) - 1;
+        spmpaddr = ((spmp_config->base_addr >> SPMP_SHIFT) & ~addrmask);
+        spmpaddr |= (addrmask >> 1);
     }
-
-    /* write csrs */
+    /* 
+     * write csrs, update the address first, in case the entry is locked that
+     * we won't be able to modify it after we set the config csr.
+     */
     __set_sPMPADDRx(addr_csr_idx, spmpaddr);
     __set_sPMPCFGx(cfg_csr_idx, spmpcfg);
 }
+
+/**
+ * \brief   Get sPMP entry by entry idx
+ * \details Write the given value to the PMPxCFG Register and PMPADDRx.
+ * \param [in]     entry_idx     sPMP entry index(0-15)
+ * \param [out]    spmp_config   structure of L, U, X, W, R, A field of sPMP configuration register, memory region base 
+ *                 address and size of memory region as power of 2
+ * \return  -1 failure, else 0 success
+ * \remark
+ * - If the size of memory region is 2^12(4KB) range, pmp_config->order makes 12, and the like.
+ * - TOR of A field in PMP configuration register is not considered here.
+ */
+__STATIC_INLINE int __get_sPMPENTRYx(unsigned int entry_idx, spmp_configs *spmp_config)
+{
+    int cfg_shift, cfg_csr_idx, addr_csr_idx = 0;
+    unsigned long cfgmask, spmpcfg, prot = 0;
+    unsigned long t1, addr, spmpaddr, len = 0;
+    uint8_t csr_cfg_num = 0;
+    /* check parameters */
+    if (entry_idx >= __SPMP_ENTRY_NUM || !spmp_config) return -1;
+
+    /* calculate sPMP register and offset */
+#if __RISCV_XLEN == 32
+    csr_cfg_num = 4;
+    cfg_csr_idx = entry_idx >> 2;
+#elif __RISCV_XLEN == 64
+    csr_cfg_num = 8;
+    cfg_csr_idx = (entry_idx>> 2) & ~1;
+#else
+// TODO Add RV128 Handling
+    return -1;
+#endif
+
+    cfg_shift = (entry_idx & (csr_cfg_num - 1)) << 3;
+    addr_csr_idx = entry_idx;
+
+    if (cfg_csr_idx < 0 || cfg_shift < 0)
+        return -1;
+
+    /* decode sPMP config */
+    cfgmask = (0xFFUL << cfg_shift);
+    spmpcfg = (__get_sPMPCFGx(cfg_csr_idx) & cfgmask);
+    prot    = spmpcfg >> cfg_shift;
+
+    /* decode sPMP address */
+    spmpaddr = __get_sPMPADDRx(addr_csr_idx);
+    if (SPMP_A_NAPOT == (prot & SPMP_A) ) {
+        t1  = __CTZ(~spmpaddr);
+        addr = (spmpaddr & ~((1UL << t1) - 1)) << SPMP_SHIFT;
+        len = (t1 + SPMP_SHIFT + 1);
+    } else {
+        addr = spmpaddr << SPMP_SHIFT;
+        len = SPMP_SHIFT;
+    }
+
+    /* return details */
+    spmp_config->protection = prot;
+    spmp_config->base_addr = addr;
+    spmp_config->order = len;
+
+    return 0;
+}
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_SPMP_Functions */
 #endif /* defined(__SPMP_PRESENT) && (__SPMP_PRESENT == 1) */
 
