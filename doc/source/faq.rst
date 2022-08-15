@@ -45,13 +45,13 @@ If still not working, please check whether your JTAG connection is good or your 
     "monitor" command not supported by this target.
     "monitor" command not supported by this target.
 
-*bfd* is addbreviation for **Binary File Descriptor**.
+*bfd* is abbreviation for **Binary File Descriptor**.
 
 This is caused by the target core flen is 0, which means it didn't have float point
 unit in it, but your program is compiled using flen = 4, single point float unit used,
-which is incompatiable, similar cases such as ``bfd requires flen 8, but target has flen 4``
+which is incompatible, similar cases such as ``bfd requires flen 8, but target has flen 4``
 
-Just change your CORE to proper core settings will solve this issue.
+Just change your CORE to proper core settings and will solve this issue.
 
 For example, if you compile your core with ``CORE=n307``,
 just change it to ``CORE=n305``.
@@ -120,7 +120,7 @@ If you are running in ``FlashXIP`` download mode, it is expected,
 since the vector table is placed in Flash area which can't be changed
 during running time.
 
-You can only this ``ECLIC_SetVector`` API in when your vector table
+You can only use this ``ECLIC_SetVector`` API when your vector table
 is placed in RAM which can be changed during running time, so if you want to
 write portable application, we recommended you to use exactly the eclic handler
 names defined in **startup_<device>.S**.

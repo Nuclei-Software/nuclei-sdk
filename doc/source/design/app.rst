@@ -937,7 +937,8 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
 
 
 demo_spmp
-~~~~~~~~~~~~~~~~
+~~~~~~~~~
+
 This `demo_spmp_application`_ is used to demonstrate how to grant physical memory privileges
 (read, write, execute) on each physical memory region by supervisor-mode control CSRs.
 
@@ -948,6 +949,8 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
     * Need to enable TEE in <Device.h> if TEE present in CPU.
     * Need to enable SPMP in <Device.h> if SPMP present in CPU.
 
+* ``spmp_violation_fault_handler`` is registered, which is to excute when spmp violation
+  exception occurs
 * The sPMP values are checked after the physical address to be accessed passes PMP checks
 * There're three config structures, ``pmp_config`` inits that M-mode grants full permission 
   of the whole address range on S and U mode; ``spmp_config_x`` sets protected executable 
@@ -955,9 +958,9 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
   range as 2^12 bytes, and you can change the ``protection``, ``order``, ``base_addr`` 
   according to your memory assignments
 * Exception delegation from default M mode to S mode is also provided in this demo, when
-  it violates sPMP check.When exception occurs, the dump info including ``scause``, ``sdcause``,
-  and ``sepc`` can be observed by serial console, which explains the exception cause of 
-  SPMP permission violation, and shows which asm instruction triggers the violation
+  it violates sPMP check.When exception occurs, the print info including ``scause``, ``sepc``
+  can be observed by serial console, which explains the exception cause of SPMP permission 
+  violation, and shows which asm instruction triggers the violation
 * In the application code, there is a macro called ``TRIGGER_SPMP_VIOLATION_MODE`` to control the
   sPMP working feature:
 
@@ -1004,20 +1007,15 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
 
 .. code-block:: console
 
+    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
-    CPU Frequency 16005529 Hz
+    CPU Frequency 15997665 Hz
     ------sPMP demo------
     Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
     Get spmp entry: index 0, prot_out: 9b, addr_out: 80004000, order_out: 12
     Get spmp entry: index 1, prot_out: 9b, addr_out: 90000000, order_out: 12
     Attempting to fetch instruction from protected address
-    SCAUSE : 0x1000000c
-    SDCAUSE: 0x6
-    SEPC   : 0x80004000
-    STVAL  : 0x80004000
-    ra: 0x80005016, tp: 0x900025f8, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
-    a0: 0xa, a1: 0xa, a2: 0x37, a3: 0x37, a4: 0xffffefff, a5: 0xffffffff, a6: 0xa, a7: 0xc800
-    cause: 0x1000000c, epc: 0x80004000
+    Instruction page fault occurs, cause: 0x1000000c, epc: 0x80004000
 
 From disassembly code, SEPC refers to 
 
@@ -1030,23 +1028,17 @@ From disassembly code, SEPC refers to
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Aug 12 2022, 15:28:58
+    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
-    CPU Frequency 15998648 Hz
+    CPU Frequency 16005529 Hz
     ------sPMP demo------
     Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
     Get spmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
     Get spmp entry: index 1, prot_out: 9a, addr_out: 90000000, order_out: 12
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
-    Attempting to read protected_data[0] 
-    SCAUSE : 0x1000000d
-    SDCAUSE: 0x6
-    SEPC   : 0x80005026
-    STVAL  : 0x90000000
-    ra: 0x80005022, tp: 0x90002608, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
-    a0: 0xa, a1: 0xa, a2: 0x27, a3: 0x27, a4: 0xffffefff, a5: 0xffffffff, a6: 0xa, a7: 0xc800
-    cause: 0x1000000d, epc: 0x80005026
+    Attempting to read protected_data[0]
+    Load page fault occurs, cause: 0x1000000d, epc: 0x80005026
 
 From disassembly code, SEPC refers to
 
@@ -1059,25 +1051,19 @@ From disassembly code, SEPC refers to
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Aug 12 2022, 15:28:58
+    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
-    CPU Frequency 15998648 Hz
+    CPU Frequency 15997665 Hz
     ------sPMP demo------
     Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
     Get spmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
     Get spmp entry: index 1, prot_out: 99, addr_out: 90000000, order_out: 12
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
-    Attempting to read protected_data[0] 
-    protected_data[0]: 0xAA succeed 
-    Attempting to write protected_data[0] 
-    SCAUSE : 0x1000000f
-    SDCAUSE: 0x6
-    SEPC   : 0x80005050
-    STVAL  : 0x90000000
-    ra: 0x80005046, tp: 0x90002608, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
-    a0: 0x90002330, a1: 0xa, a2: 0x28, a3: 0x28, a4: 0xffffefff, a5: 0xffffffff, a6: 0x10, a7: 0xc800
-    cause: 0x1000000f, epc: 0x80005050
+    Attempting to read protected_data[0]
+    protected_data[0]: 0xAA succeed
+    Attempting to write protected_data[0]
+    Store/AMO page fault occurs, cause: 0x1000000f, epc: 0x80005050
 
 From disassembly code, SEPC refers to
 
@@ -1090,21 +1076,15 @@ From disassembly code, SEPC refers to
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Aug 12 2022, 15:28:58
+    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
-    CPU Frequency 15998648 Hz
+    CPU Frequency 15997665 Hz
     ------sPMP demo------
     Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
     Get spmp entry: index 0, prot_out: df, addr_out: 80004000, order_out: 12
     Get spmp entry: index 1, prot_out: 9b, addr_out: 90000000, order_out: 12
     Attempting to fetch instruction from protected address
-    SCAUSE : 0x1000000c
-    SDCAUSE: 0x6
-    SEPC   : 0x80004000
-    STVAL  : 0x80004000
-    ra: 0x80005016, tp: 0x90002608, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
-    a0: 0xa, a1: 0xa, a2: 0x37, a3: 0x37, a4: 0xffffefff, a5: 0xffffffff, a6: 0xa, a7: 0xc800
-    cause: 0x1000000c, epc: 0x80004000
+    Instruction page fault occurs, cause: 0x1000000c, epc: 0x80004000
 
 From disassembly code, SEPC refers to 
 
@@ -1117,7 +1097,7 @@ From disassembly code, SEPC refers to
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Aug 15 2022, 09:02:39
+    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 16005529 Hz
     ------sPMP demo------
@@ -1127,13 +1107,7 @@ From disassembly code, SEPC refers to
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
     Attempting to read protected_data[0]
-    SCAUSE : 0x1000000d
-    SDCAUSE: 0x6
-    SEPC   : 0x80005024
-    STVAL  : 0x90000000
-    ra: 0x80005020, tp: 0x900025e0, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
-    a0: 0xa, a1: 0xa, a2: 0x27, a3: 0x27, a4: 0xffffefff, a5: 0x90000000, a6: 0xa, a7: 0xc800
-    cause: 0x1000000d, epc: 0x80005024
+    Load page fault occurs, cause: 0x1000000d, epc: 0x80005024
 
 From disassembly code, SEPC refers to 
 
@@ -1146,9 +1120,9 @@ From disassembly code, SEPC refers to
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Aug 15 2022, 09:02:39
+    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
-    CPU Frequency 16005529 Hz
+    CPU Frequency 15997665 Hz
     ------sPMP demo------
     Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
     Get spmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
@@ -1156,42 +1130,36 @@ From disassembly code, SEPC refers to
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
     Attempting to write protected_data[0]
-    SCAUSE : 0x1000000f
-    SDCAUSE: 0x6
-    SEPC   : 0x8000502e
-    STVAL  : 0x90000000
-    ra: 0x80005020, tp: 0x900025c0, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
-    a0: 0x900022e4, a1: 0xa, a2: 0x28, a3: 0x28, a4: 0xffffffff, a5: 0x90000000, a6: 0xa, a7: 0xc800
-    cause: 0x1000000f, epc: 0x8000502e
+    Store/AMO page fault occurs, cause: 0x1000000f, epc: 0x8000502e
 
 From disassembly code, SEPC refers to 
 
 .. code-block:: console
 
     8000502e:	00e78023          	sb	a4,0(a5) # 90000000 <_sp+0xffff0000>
-    
+
 
 **Expected output(TRIGGER_SPMP_VIOLATION_MODE=RUN_WITH_NO_SPMP_CHECK) as below:**
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Aug 12 2022, 15:28:58
+    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
-    CPU Frequency 15998648 Hz
+    CPU Frequency 15997665 Hz
     ------sPMP demo------
     Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
     Get spmp entry: index 0, prot_out: 1f, addr_out: 80004000, order_out: 12
     Get spmp entry: index 1, prot_out: 1b, addr_out: 90000000, order_out: 12
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
-    Attempting to read protected_data[0] 
-    protected_data[0]: 0xAA succeed 
-    Attempting to write protected_data[0] 
-    Won't run here if violates L U\R\W\X permission check! 
+    Attempting to read protected_data[0]
+    protected_data[0]: 0xAA succeed
+    Attempting to write protected_data[0]
+    Won't run here if violates L U\R\W\X permission check!
 
 
 demo_pmp
-~~~~~~~~~~~~~~~
+~~~~~~~~
 
 This `demo_pmp_application`_ is used to demonstrate how to grant physical memory privileges
 (read, write, execute) on each physical memory region by machine mode control CSRs.
@@ -1200,11 +1168,13 @@ This `demo_pmp_application`_ is used to demonstrate how to grant physical memory
 
     * Need to enable PMP in <Device.h> if PMP present in CPU.
 
+* ``pmp_violation_fault_handler`` is registered, which is to excute when pmp violation
+  exception occurs
 * There're two config structures, ``pmp_config_x`` sets protected executable address range 
   as 2^12 bytes; ``pmp_config_rw`` sets protected readable/writable address range as 2^12 
   bytes, and you can change the ``protection``, ``order``, ``base_addr`` according to your 
   memory assignments
-* When exception occurs, the dump info including mcause, mdcause, and mepc can be observed 
+* When exception occurs, the print info including ``mcause``, ``mepc`` can be observed 
   by serial console, which explains the exception cause of PMP permission violation, and 
   shows which asm instruction triggers the violation
 * In the application code, there is a macro called ``TRIGGER_PMP_VIOLATION_MODE`` to control the
@@ -1241,21 +1211,14 @@ This `demo_pmp_application`_ is used to demonstrate how to grant physical memory
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Aug 12 2022, 16:04:33
+    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
-    CPU Frequency 15996682 Hz
+    CPU Frequency 16006184 Hz
     ------PMP demo------
     Get pmp entry: index 0, prot_out: 9b, addr_out: 80004000, order_out: 12
     Get pmp entry: index 1, prot_out: 9b, addr_out: 90000000, order_out: 12
     Attempting to fetch instruction from protected address
-    MCAUSE : 0x30000001
-    MDCAUSE: 0x1
-    MEPC   : 0x80004000
-    MTVAL  : 0x80004000
-    ra: 0x80002142, tp: 0x900025c0, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
-    a0: 0xa, a1: 0xa, a2: 0x37, a3: 0x37, a4: 0xffffefff, a5: 0xffffffff, a6: 0xa, a7: 0xc800
-    cause: 0x30000001, epc: 0x80004000
-    msubm: 0x80
+    Instruction access fault occurs, cause: 0x30000001, epc: 0x80004000
 
 From disassembly code, MEPC refers to
 
@@ -1268,23 +1231,16 @@ From disassembly code, MEPC refers to
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Aug 12 2022, 16:18:18
+    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
-    CPU Frequency 15996682 Hz
+    CPU Frequency 16006184 Hz
     ------PMP demo------
     Get pmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
     Get pmp entry: index 1, prot_out: 9a, addr_out: 90000000, order_out: 12
     Attempting to fetch instruction from protected address
-    ----protected_execute success!----
-    Attempting to read protected_data[0] 
-    MCAUSE : 0x30000005
-    MDCAUSE: 0x1
-    MEPC   : 0x80004022
-    MTVAL  : 0x90000000
-    ra: 0x8000401e, tp: 0x900025c0, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
-    a0: 0xa, a1: 0xa, a2: 0x27, a3: 0x27, a4: 0xffffefff, a5: 0xffffffff, a6: 0xa, a7: 0xc800
-    cause: 0x30000005, epc: 0x80004022
-    msubm: 0x80
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0]
+    Load access fault occurs, cause: 0x30000005, epc: 0x80004022
 
 From disassembly code, MEPC refers to
 
@@ -1297,25 +1253,18 @@ From disassembly code, MEPC refers to
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Aug 12 2022, 16:18:18
+    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
-    CPU Frequency 15996682 Hz
+    CPU Frequency 15998320 Hz
     ------PMP demo------
     Get pmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
     Get pmp entry: index 1, prot_out: 99, addr_out: 90000000, order_out: 12
     Attempting to fetch instruction from protected address
-    ----protected_execute success!----
-    Attempting to read protected_data[0] 
-    protected_data[0]: 0xAA succeed 
-    Attempting to write protected_data[0] 
-    MCAUSE : 0x30000007
-    MDCAUSE: 0x1
-    MEPC   : 0x80004044
-    MTVAL  : 0x90000000
-    ra: 0x80004042, tp: 0x900025c0, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
-    a0: 0xa, a1: 0xa, a2: 0x28, a3: 0x28, a4: 0xffffefff, a5: 0xffffffff, a6: 0x10, a7: 0xc800
-    cause: 0x30000007, epc: 0x80004044
-    msubm: 0x80
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0]
+    protected_data[0]: 0xAA succeed
+    Attempting to write protected_data[0]
+    Store/AMO access fault occurs, cause: 0x30000007, epc: 0x80004044
 
 From disassembly code, MEPC refers to
 
@@ -1328,18 +1277,18 @@ From disassembly code, MEPC refers to
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Aug 12 2022, 16:18:18
+    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
-    CPU Frequency 15996682 Hz
+    CPU Frequency 16006184 Hz
     ------PMP demo------
     Get pmp entry: index 0, prot_out: 1f, addr_out: 80004000, order_out: 12
     Get pmp entry: index 1, prot_out: 1b, addr_out: 90000000, order_out: 12
     Attempting to fetch instruction from protected address
-    ----protected_execute success!----
-    Attempting to read protected_data[0] 
-    protected_data[0]: 0xAA succeed 
-    Attempting to write protected_data[0] 
-    Won't run here if violates L R\W\X permission check! 
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0]
+    protected_data[0]: 0xAA succeed
+    Attempting to write protected_data[0]
+    Won't run here if violates L R\W\X permission check!
 
 
 FreeRTOS applications
