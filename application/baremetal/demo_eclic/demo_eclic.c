@@ -19,7 +19,7 @@ static volatile uint32_t int_check_cnt = 0;
 // setup timer
 void setup_timer(void)
 {
-    printf("Initialize timer and start timer interrupt periodly\n\r");
+    printf("Initialize timer and start timer interrupt periodically\n\r");
     SysTick_Config(TIMER_TICKS);
 }
 
@@ -96,7 +96,7 @@ int main(int argc, char** argv)
     __enable_irq();
 
     // Wait for timer interrupt and software interrupt
-    // triggered periodly
+    // triggered periodically
     while (int_check_cnt < RUN_LOOPS);
     __disable_irq();
     printf("ECLIC Demo finished sucessfully in %d loops\n", RUN_LOOPS);

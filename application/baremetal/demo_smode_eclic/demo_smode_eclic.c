@@ -44,7 +44,7 @@ void print_sp_judge_privilege_mode(void)
 // setup timer
 void setup_timer(void)
 {
-    printf("Initialize timer and start timer interrupt periodly\n\r");
+    printf("Initialize timer and start timer interrupt periodically\n\r");
     SysTick_HartConfig(TIMER_TICKS, 0);
 }
 
@@ -124,7 +124,7 @@ static void supervisor_mode_entry_point(void)
     // Enable interrupts in general.
     __enable_irq_s();
 
-    // Wait for timer interrupt and software interrupt triggered periodly
+    // Wait for timer interrupt and software interrupt triggered periodically
     while(1);
 }
 #endif
@@ -132,7 +132,7 @@ static void supervisor_mode_entry_point(void)
 int main(int argc, char** argv)
 {
     // set pmp, S mode can access all address range
-    pmp_configs pmp_config = {
+    pmp_config pmp_config = {
          /* M mode grants S and U mode with full permission of the whole address range */
         .protection = PMP_L | PMP_R | PMP_W | PMP_X,
         /* Memory region range 2^__RISCV_XLEN bytes */
