@@ -184,11 +184,11 @@ int main(void)
     __get_sPMPENTRYx(1, &spmp_config_rw);
     printf("Get spmp entry: index %d, prot_out: %0x, addr_out: %x, order_out: %d\r\n", \
         1, spmp_config_rw.protection, spmp_config_rw.base_addr, spmp_config_rw.order);
+    /* Drop to S mode */
+    __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
 #else
     printf("[ERROR]__TEE_PRESENT must be defined as 1 in <Device.h>!\r\n");
 #endif/* defined(__TEE_PRESENT) && (__TEE_PRESENT == 1) */
-    /* Drop to S mode */
-    __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
 
     while(1);
     return 0;
