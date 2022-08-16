@@ -173,7 +173,7 @@ void ecall_handler(unsigned long mcause, unsigned long sp)
     EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
     // mepc for ecall is the pc where ecall instruction located
     // so we just add 4 to mepc to return to the next instruction
-    exc_frame->mepc += 4;
+    exc_frame->epc += 4;
     CTEST_LOG("__ECALL called\n");
 }
 
