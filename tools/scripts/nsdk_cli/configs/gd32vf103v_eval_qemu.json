@@ -28,6 +28,14 @@
         "application/baremetal/demo_nice" : {
             "run": false,
             "build": true
+        },
+        "application/baremetal/demo_spmp" : {
+            "run": false,
+            "build": false
+        },
+        "application/baremetal/demo_smode_eclic": {
+            "run": false,
+            "build": true
         }
     }
 }
