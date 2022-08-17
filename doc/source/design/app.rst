@@ -1033,10 +1033,10 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
     Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 15997665 Hz
-    ------sPMP demo------
-    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
-    Get spmp entry: index 0, prot_out: 9b, addr_out: 80004000, order_out: 12
-    Get spmp entry: index 1, prot_out: 9b, addr_out: 90000000, order_out: 12
+    ------sPMP demo with trigger condition 0------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get spmp entry: index 0, prot_out: 0x9b, addr_out: 0x80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 0x9b, addr_out: 0x90000000, order_out: 12
     Attempting to fetch instruction from protected address
     Instruction page fault occurs, cause: 0x1000000c, epc: 0x80004000
 
@@ -1054,10 +1054,10 @@ From disassembly code, SEPC refers to
     Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 16005529 Hz
-    ------sPMP demo------
-    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
-    Get spmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
-    Get spmp entry: index 1, prot_out: 9a, addr_out: 90000000, order_out: 12
+    ------sPMP demo with trigger condition 1------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get spmp entry: index 0, prot_out: 0x9f, addr_out: 0x80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 0x9a, addr_out: 0x90000000, order_out: 12
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
     Attempting to read protected_data[0]
@@ -1077,10 +1077,10 @@ From disassembly code, SEPC refers to
     Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 15997665 Hz
-    ------sPMP demo------
-    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
-    Get spmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
-    Get spmp entry: index 1, prot_out: 99, addr_out: 90000000, order_out: 12
+    ------sPMP demo with trigger condition 2------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get spmp entry: index 0, prot_out: 0x9f, addr_out: 0x80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 0x99, addr_out: 0x90000000, order_out: 12
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
     Attempting to read protected_data[0]
@@ -1102,10 +1102,10 @@ From disassembly code, SEPC refers to
     Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 15997665 Hz
-    ------sPMP demo------
-    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
-    Get spmp entry: index 0, prot_out: df, addr_out: 80004000, order_out: 12
-    Get spmp entry: index 1, prot_out: 9b, addr_out: 90000000, order_out: 12
+    ------sPMP demo with trigger condition 3------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get spmp entry: index 0, prot_out: 0xdf, addr_out: 0x80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 0x9b, addr_out: 0x90000000, order_out: 12
     Attempting to fetch instruction from protected address
     Instruction page fault occurs, cause: 0x1000000c, epc: 0x80004000
 
@@ -1123,10 +1123,10 @@ From disassembly code, SEPC refers to
     Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 16005529 Hz
-    ------sPMP demo------
-    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
-    Get spmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
-    Get spmp entry: index 1, prot_out: d9, addr_out: 90000000, order_out: 12
+    ------sPMP demo with trigger condition 4------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0, order_out: 32
+    Get spmp entry: index 0, prot_out: 0x9f, addr_out: 0x80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 0xd9, addr_out: 0x90000000, order_out: 12
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
     Attempting to read protected_data[0]
@@ -1146,10 +1146,10 @@ From disassembly code, SEPC refers to
     Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 15997665 Hz
-    ------sPMP demo------
-    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
-    Get spmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
-    Get spmp entry: index 1, prot_out: da, addr_out: 90000000, order_out: 12
+    ------sPMP demo with trigger condition 5------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get spmp entry: index 0, prot_out: 0x9f, addr_out: 0x80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 0xda, addr_out: 0x90000000, order_out: 12
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
     Attempting to write protected_data[0]
@@ -1162,17 +1162,17 @@ From disassembly code, SEPC refers to
     8000502e:	00e78023          	sb	a4,0(a5) # 90000000 <_sp+0xffff0000>
 
 
-**Expected output(TRIGGER_SPMP_VIOLATION_MODE=RUN_WITH_NO_SPMP_CHECK) as below:**
+**(Default)Expected output(TRIGGER_SPMP_VIOLATION_MODE=RUN_WITH_NO_SPMP_CHECK) as below:**
 
 .. code-block:: console
 
     Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 15997665 Hz
-    ------sPMP demo------
-    Get pmp entry: index 0, prot_out: 9f, addr_out: 0, order_out: 32
-    Get spmp entry: index 0, prot_out: 1f, addr_out: 80004000, order_out: 12
-    Get spmp entry: index 1, prot_out: 1b, addr_out: 90000000, order_out: 12
+    ------sPMP demo with trigger condition 6------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get spmp entry: index 0, prot_out: 0x1f, addr_out: 0x80004000, order_out: 12
+    Get spmp entry: index 1, prot_out: 0x1b, addr_out: 0x90000000, order_out: 12
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
     Attempting to read protected_data[0]
@@ -1239,9 +1239,9 @@ This `demo_pmp_application`_ is used to demonstrate how to grant physical memory
     Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 16006184 Hz
-    ------PMP demo------
-    Get pmp entry: index 0, prot_out: 9b, addr_out: 80004000, order_out: 12
-    Get pmp entry: index 1, prot_out: 9b, addr_out: 90000000, order_out: 12
+    ------PMP demo with trigger condition 0------
+    Get pmp entry: index 0, prot_out: 0x9b, addr_out: 0x80004000, order_out: 12
+    Get pmp entry: index 1, prot_out: 0x9b, addr_out: 0x90000000, order_out: 12
     Attempting to fetch instruction from protected address
     Instruction access fault occurs, cause: 0x30000001, epc: 0x80004000
 
@@ -1259,9 +1259,9 @@ From disassembly code, MEPC refers to
     Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 16006184 Hz
-    ------PMP demo------
-    Get pmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
-    Get pmp entry: index 1, prot_out: 9a, addr_out: 90000000, order_out: 12
+    ------PMP demo with trigger condition 1------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x80004000, order_out: 12
+    Get pmp entry: index 1, prot_out: 0x9a, addr_out: 0x90000000, order_out: 12
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
     Attempting to read protected_data[0]
@@ -1281,9 +1281,9 @@ From disassembly code, MEPC refers to
     Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 15998320 Hz
-    ------PMP demo------
-    Get pmp entry: index 0, prot_out: 9f, addr_out: 80004000, order_out: 12
-    Get pmp entry: index 1, prot_out: 99, addr_out: 90000000, order_out: 12
+    ------PMP demo with trigger condition 2------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x80004000, order_out: 12
+    Get pmp entry: index 1, prot_out: 0x99, addr_out: 0x90000000, order_out: 12
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
     Attempting to read protected_data[0]
@@ -1298,16 +1298,16 @@ From disassembly code, MEPC refers to
     80004044:	00f40023          	sb	a5,0(s0)
 
 
-**Expected output(TRIGGER_PMP_VIOLATION_MODE=RUN_WITH_NO_PMP_CHECK) as below:**
+**(Default)Expected output(TRIGGER_PMP_VIOLATION_MODE=RUN_WITH_NO_PMP_CHECK) as below:**
 
 .. code-block:: console
 
     Nuclei SDK Build Time: Aug 15 2022, 15:45:57
     Download Mode: ILM
     CPU Frequency 16006184 Hz
-    ------PMP demo------
-    Get pmp entry: index 0, prot_out: 1f, addr_out: 80004000, order_out: 12
-    Get pmp entry: index 1, prot_out: 1b, addr_out: 90000000, order_out: 12
+    ------PMP demo with trigger condition 3------
+    Get pmp entry: index 0, prot_out: 0x1f, addr_out: 0x80004000, order_out: 12
+    Get pmp entry: index 1, prot_out: 0x1b, addr_out: 0x90000000, order_out: 12
     Attempting to fetch instruction from protected address
     ----protected_execute succeed!----
     Attempting to read protected_data[0]
