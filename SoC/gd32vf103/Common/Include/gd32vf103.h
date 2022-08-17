@@ -181,8 +181,12 @@ typedef enum EXCn {
     StAddrUnalign_EXCn       =   6,              /*!<  Store or AMO address misaligned */
     StAccessFault_EXCn       =   7,              /*!<  Store or AMO access fault */
     UmodeEcall_EXCn          =   8,              /*!<  Environment call from User mode */
+    SmodeEcall_EXCn          =   9,              /*!<  Environment call from S-mode */
     MmodeEcall_EXCn          =  11,              /*!<  Environment call from Machine mode */
-    NMI_EXCn                 = 0xfff,            /*!<  NMI interrupt*/
+    InsPageFault_EXCn        =  12,              /*!<  Instruction page fault */
+    LdPageFault_EXCn         =  13,              /*!<  Load page fault */
+    StPageFault_EXCn         =  15,              /*!<  Store or AMO page fault */
+    NMI_EXCn                 =  0xfff,           /*!<  NMI interrupt */
 } EXCn_Type;
 
 /* =========================================================================================================================== */
