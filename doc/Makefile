@@ -7,6 +7,7 @@ SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = build
+HTTPSERVER ?= ../tools/scripts/nsdk_cli/httpserver.py
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -27,3 +28,6 @@ firefox:
 
 firefox_pdf:
 	firefox build/latex/*.pdf
+
+preview:
+	$(HTTPSERVER) -d build/html
