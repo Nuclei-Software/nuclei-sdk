@@ -104,6 +104,8 @@
     },
     "expected": {
         "test/core": {"build": true, "run": false},
+        "application/baremetal/demo_spmp": {"build": true, "run": false},
+        "application/baremetal/demo_smode_eclic": {"build": true, "run": false},
         "application/baremetal/demo_nice": {"build": true, "run": false}
     },
     "expecteds": {
