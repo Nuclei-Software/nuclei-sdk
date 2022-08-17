@@ -4,8 +4,8 @@
 #include "nuclei_sdk_soc.h"
 
 #if !defined(__TEE_PRESENT) || (__TEE_PRESENT != 1)
-/* __TEE_PRESENT should be defined in <Device.h> */
-#warning "__TEE_PRESENT is not defined, please check!"
+/* __TEE_PRESENT should be defined in <Device>.h */
+#warning "__TEE_PRESENT is not defined or equal to 1, please check!"
 #endif
 
 /* different trigger condition */
@@ -186,11 +186,11 @@ int main(void)
         1, spmp_config_rw.protection, spmp_config_rw.base_addr, spmp_config_rw.order);
     /* Drop to S mode */
     __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
+    while(1);
 #else
-    printf("[ERROR]__TEE_PRESENT must be defined as 1 in <Device.h>!\r\n");
+    printf("[ERROR]__TEE_PRESENT must be defined as 1 in <Device>.h!\r\n");
 #endif/* defined(__TEE_PRESENT) && (__TEE_PRESENT == 1) */
 
-    while(1);
     return 0;
 }
 
