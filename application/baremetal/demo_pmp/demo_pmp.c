@@ -19,13 +19,13 @@ static void __attribute__((section (".text"), aligned(0x2000))) protected_execut
 {
     printf("----protected_execute succeed!----\r\n");
 
-    printf("Attempting to read protected_data[0] \r\n");
-    printf("protected_data[0]: 0x%0X succeed \r\n", protected_data[0]);
+    printf("Attempting to read protected_data[0]\r\n");
+    printf("protected_data[0]: 0x%0X succeed\r\n", protected_data[0]);
 
-    printf("Attempting to write protected_data[0] \r\n");
+    printf("Attempting to write protected_data[0]\r\n");
     protected_data[0] = 0xFF;
 
-    printf("Won't run here if violates L R\\W\\X permission check! \r\n");
+    printf("Won't run here if violates L R\\W\\X permission check!\r\n");
 }
 
 static void pmp_violation_fault_handler(unsigned long mcause, unsigned long sp)
@@ -33,7 +33,7 @@ static void pmp_violation_fault_handler(unsigned long mcause, unsigned long sp)
     EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
 
     switch (mcause & MCAUSE_CAUSE) {
-        case InsAccFault_EXCn: 
+        case InsAccFault_EXCn:
             printf("Instruction access fault occurs, cause: 0x%lx, epc: 0x%lx\r\n", exc_frame->cause, exc_frame->epc);
             break;
         case LdFault_EXCn:
@@ -51,9 +51,9 @@ int main(void)
 {
     /* Configuration of execution region*/
     pmp_config pmp_config_x = {
-        /* 
+        /*
          * Locked PMP entries remain locked until the hart is reset,
-         * the L bit also indicates whether the R/W/X permissions are enforced on M-mode accesses 
+         * the L bit also indicates whether the R/W/X permissions are enforced on M-mode accesses
          */
         .protection = PMP_L | PMP_R | PMP_W | PMP_X,
         /* Initial protected excutable address range is 2^12 = 4K bytes*/
@@ -64,9 +64,9 @@ int main(void)
 
     /* configuration of read/write region*/
     pmp_config pmp_config_rw = {
-        /* 
+        /*
          * Locked PMP entries remain locked until the hart is reset,
-         * the L bit also indicates whether the R/W/X permissions are enforced on M-mode accesses 
+         * the L bit also indicates whether the R/W/X permissions are enforced on M-mode accesses
          */
         .protection = PMP_L | PMP_R | PMP_W | PMP_X,
         /* initial protected readable/writable address range is 2^12 = 4K bytes */

@@ -34,7 +34,7 @@ static void spmp_violation_fault_handler(unsigned long scause, unsigned long sp)
     EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
 
     switch (scause & SCAUSE_CAUSE) {
-        case InsPageFault_EXCn: 
+        case InsPageFault_EXCn:
             printf("Instruction page fault occurs, cause: 0x%lx, epc: 0x%lx\r\n", exc_frame->cause, exc_frame->epc);
             break;
         case LdPageFault_EXCn:
@@ -66,15 +66,15 @@ static void __attribute__((section (".text"), aligned(0x1000))) supervisor_mode_
     fncptr();
 
 #if (STORE_USERMODE_MEMORY_EXCEPTION != TRIGGER_SPMP_VIOLATION_MODE)
-    printf("Attempting to read protected_data[0] \r\n");
-    printf("protected_data[0]: 0x%0X succeed \r\n", protected_data[0]);
+    printf("Attempting to read protected_data[0]\r\n");
+    printf("protected_data[0]: 0x%0X succeed\r\n", protected_data[0]);
 #endif
 
 #if (LOAD_USERMODE_MEMORY_EXCEPTION != TRIGGER_SPMP_VIOLATION_MODE)
-    printf("Attempting to write protected_data[0] \r\n");
+    printf("Attempting to write protected_data[0]\r\n");
     protected_data[0] = 0xFF;
 #endif
-    printf("Won't run here if violates L U\\R\\W\\X permission check! \r\n");
+    printf("Won't run here if violates L U\\R\\W\\X permission check!\r\n");
     while(1);
 }
 
@@ -127,7 +127,7 @@ int main(void)
     Exception_Register_EXC_S(InsPageFault_EXCn, (unsigned long)spmp_violation_fault_handler);
     Exception_Register_EXC_S(LdPageFault_EXCn, (unsigned long)spmp_violation_fault_handler);
     Exception_Register_EXC_S(StPageFault_EXCn, (unsigned long)spmp_violation_fault_handler);
- 
+
     /* Must align by 2^order */
     spmp_config_x.base_addr = (unsigned long)protected_execute;
     spmp_config_rw.base_addr = (unsigned long)protected_data;
@@ -155,7 +155,7 @@ int main(void)
 #elif (LOAD_USERMODE_MEMORY_EXCEPTION == TRIGGER_SPMP_VIOLATION_MODE)
     /* remove U permission of exclusive protected_execute region for usermode */
     spmp_config_x.protection = SPMP_L | SPMP_R | SPMP_W | SPMP_X;
-    
+
     /* add U permission of exclusive protected_data region for usermode */
     spmp_config_rw.protection = SPMP_L | SPMP_U | SPMP_R ;
 #elif (STORE_USERMODE_MEMORY_EXCEPTION == TRIGGER_SPMP_VIOLATION_MODE)
