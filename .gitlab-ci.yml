@@ -212,7 +212,6 @@ sdk_run_test_job_nuclei_fpga_eval:
       - HWCFG:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_libncrt.json
   script:
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
