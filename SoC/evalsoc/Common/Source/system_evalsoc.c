@@ -104,7 +104,7 @@ void eclic_stip_handler(void) __attribute__((weak));
  */
 static unsigned long vector_table_s[SOC_INT_MAX] __attribute__((section (".vtable_s"), aligned(512))) =
 {
-    (unsigned long)(&default_intexc_handler),        /* 0: Reserved, default handler for s-mode vector table remapped cases */
+    (unsigned long)(&default_intexc_handler),        /* 0: Reserved */
     (unsigned long)(&default_intexc_handler),        /* 1: Reserved */
     (unsigned long)(&default_intexc_handler),        /* 2: Reserved */
 

@@ -115,12 +115,12 @@
 /**
  * \brief  Macro for save necessary supervisor mode CSRs to stack
  * \details
- * This macro store SCAUSE, MEPC to stack.
+ * This macro store SCAUSE, SEPC to stack.
  */
 .macro SAVE_CSR_CONTEXT_S
-    /* Store CSR scause to stack using pushmcause */
+    /* Store CSR scause to stack using pushscause */
     csrrwi  x0, CSR_PUSHSCAUSE, 11
-    /* Store CSR sepc to stack using pushmepc */
+    /* Store CSR sepc to stack using pushsepc */
     csrrwi  x0, CSR_PUSHSEPC, 12
 .endm
 
