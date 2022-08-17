@@ -31,6 +31,8 @@ The following applications are running using RV-STAR board.
 Bare-metal applications
 -----------------------
 
+.. _design_app_helloworld:
+
 helloworld
 ~~~~~~~~~~
 
@@ -79,6 +81,8 @@ will check this RISC-V CSR **MISA** register value.
     18: Hello World From Nuclei RISC-V Processor!
     19: Hello World From Nuclei RISC-V Processor!
 
+
+.. _design_app_demo_timer:
 
 demo_timer
 ~~~~~~~~~~
@@ -299,6 +303,8 @@ the ECLIC API and Interrupt.
     [IN SOFTWARE INTERRUPT]software interrupt end
 
 
+.. _design_app_demo_dsp:
+
 demo_dsp
 ~~~~~~~~
 
@@ -367,6 +373,8 @@ This `demo_dsp application`_ is used to demonstrate how to NMSIS-DSP API.
     SUCCESS, riscv_conv_fast_opt_q15
     all test are passed. Well done!
 
+.. _design_app_lowpower:
+
 lowpower
 ~~~~~~~~
 
@@ -399,6 +407,7 @@ so interrupt handler will not be entered, and will directly resume to next pc of
     CSV, WFI Start/End, 178264/178289
     CSV, WFI Cost, 25
 
+.. _design_app_smphello:
 
 smphello
 ~~~~~~~~
@@ -464,6 +473,8 @@ Need to change ``__ICACHE_PRESENT``, ``__DCACHE_PRESENT`` and ``__CCM_PRESENT`` 
     Hello world from hart 0
     Hello world from hart 1
     All harts boot successfully!
+
+.. _design_app_demo_nice:
 
 demo_nice
 ~~~~~~~~~
@@ -534,6 +545,8 @@ For more about **NICE** feature, please click `Nuclei User Extended Introduction
              nice  :
                   instret: 125, cycle: 227
 
+
+.. _design_app_coremark:
 
 coremark
 ~~~~~~~~
@@ -611,6 +624,8 @@ to get different score number.
     (*) Assume the core running at 1 MHz
         So the CoreMark/MHz can be caculated by:
         (Iterations*1000000/total_ticks) = 3.081076 CoreMark/MHz
+
+.. _design_app_dhrystone:
 
 dhrystone
 ~~~~~~~~~
@@ -717,6 +732,8 @@ to get different score number.
            So the DMIPS/MHz can be caculated by:
            1000000/(User_Cycle/Number_Of_Runs)/1757 = 1.273270 DMIPS/MHz
 
+.. _design_app_whetstone:
+
 whetstone
 ~~~~~~~~~
 
@@ -783,13 +800,15 @@ to get different score number.
     MWIPS/MHz                                          0.046              9.825
 
 
+.. _design_app_demo_smode_eclic:
+
 demo_smode_eclic
 ~~~~~~~~~~~~~~~~
 
 This `demo_smode_eclic application`_ is used to demostrate how to use
 the ECLIC API and Interrupt in supervisor mode with TEE.
 
-.. note:: 
+.. note::
 
     * In this application's Makefile, we provided comments in Makefile about optimization
       for code size, please refer to chapter :ref:`design_app_demo_eclic` for details.
@@ -804,7 +823,7 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
 * The timer interrupt is triggered periodically
 * The timer software interrupt is triggered in timer interrupt handler using
   ``SysTimer_SetHartSWIRQ`` function
-* Interrupts occur in supervisor mode to which it drops from machine mode, and you can 
+* Interrupts occur in supervisor mode to which it drops from machine mode, and you can
   observe the difference from :ref:`design_app_demo_eclic` by console output
 * In the application code, there is a macro called ``SWIRQ_INTLEVEL_HIGHER`` to
   control the timer software interrupt working feature:
@@ -826,8 +845,9 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
     # Assume that you can set up the Tools and Nuclei SDK environment
     # cd to the demo_smode_eclic directory
     cd application/baremetal/demo_smode_eclic
-    # Change macro __TEE_PRESENT to 1 in <Device.h>,here CORE=n300 is
-    # equipped with TEE
+    # MUST: Your CPU configuration must has TEE configured
+    # Change macro __TEE_PRESENT to 1 in <Device.h>
+    # here assume CORE=n300 is equipped with TEE
     #define __TEE_PRESENT             1
     # Change macro SWIRQ_INTLEVEL_HIGHER value in demo_smode_eclic.c
     # to see different working mode of this demo
@@ -936,13 +956,15 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
     [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
 
 
+.. _design_app_demo_spmp:
+
 demo_spmp
 ~~~~~~~~~
 
 This `demo_spmp_application`_ is used to demonstrate how to grant physical memory privileges
 (read, write, execute) on each physical memory region by supervisor-mode control CSRs.
 
-.. note:: 
+.. note::
 
     * It doesn't work with gd32vf103 processor.
     * Need to enable PMP in <Device.h> if PMP present in CPU.
@@ -952,14 +974,14 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
 * ``spmp_violation_fault_handler`` is registered, which is to excute when spmp violation
   exception occurs
 * The sPMP values are checked after the physical address to be accessed passes PMP checks
-* There're three config structures, ``pmp_config`` inits that M-mode grants full permission 
-  of the whole address range on S and U mode; ``spmp_config_x`` sets protected executable 
-  address range as 2^12 bytes; ``spmp_config_rw`` sets protected readable/writable address 
-  range as 2^12 bytes, and you can change the ``protection``, ``order``, ``base_addr`` 
+* There're three config structures, ``pmp_config`` inits that M-mode grants full permission
+  of the whole address range on S and U mode; ``spmp_config_x`` sets protected executable
+  address range as 2^12 bytes; ``spmp_config_rw`` sets protected readable/writable address
+  range as 2^12 bytes, and you can change the ``protection``, ``order``, ``base_addr``
   according to your memory assignments
 * Exception delegation from default M mode to S mode is also provided in this demo, when
   it violates sPMP check.When exception occurs, the print info including ``scause``, ``sepc``
-  can be observed by serial console, which explains the exception cause of SPMP permission 
+  can be observed by serial console, which explains the exception cause of SPMP permission
   violation, and shows which asm instruction triggers the violation
 * In the application code, there is a macro called ``TRIGGER_SPMP_VIOLATION_MODE`` to control the
   sPMP working feature:
@@ -973,17 +995,17 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
   - If **TRIGGER_SPMP_VIOLATION_MODE=STORE_PAGE_EXCEPTION**, the unallowed memory is to write,
     which triggers ``Store/AMO page fault``, whose scause.EXCODE = 15 and sdcause = 6
 
-  - If **TRIGGER_SPMP_VIOLATION_MODE=EXECUTE_USERMODE_MEMORY_EXCEPTION**, the U-Mode accessiable 
+  - If **TRIGGER_SPMP_VIOLATION_MODE=EXECUTE_USERMODE_MEMORY_EXCEPTION**, the U-Mode accessiable
     memory is to execute, which triggers ``Instruction page fault``. By the way, S-mode can never
     execute instructions from user pages, regardless of the state of ``SUM(permit Supervisor User Memory access)``
-  
+
   - If **TRIGGER_SPMP_VIOLATION_MODE=LOAD_USERMODE_MEMORY_EXCEPTION**, the the U-Mode accessiable
     memory is to read, which triggers ``Load page fault``. When SUM=1, read access is permitted
 
   - If **TRIGGER_SPMP_VIOLATION_MODE=STORE_USERMODE_MEMORY_EXCEPTION**, the the U-Mode accessiable
     memory is to write, which triggers ``Store/AMO page fault``. When SUM=1, write access is permitted
 
-  - If **TRIGGER_SPMP_VIOLATION_MODE=RUN_WITH_NO_SPMP_CHECK**, supervisor mode access succeed, no 
+  - If **TRIGGER_SPMP_VIOLATION_MODE=RUN_WITH_NO_SPMP_CHECK**, supervisor mode access succeed, no
     violation occurs
 
 **How to run this application:**
@@ -993,8 +1015,9 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
     # Assume that you can set up the Tools and Nuclei SDK environment
     # cd to the demo_spmp directory
     cd application/baremetal/demo_spmp
-    # Change macro __TEE_PRESENT to 1 in <Device.h>,here CORE=n300 is
-    # equipped with TEE
+    # MUST: Your CPU configuration must has TEE configured
+    # Change macro __TEE_PRESENT to 1 in <Device.h>
+    # here assume CORE=n300 is equipped with TEE
     #define __TEE_PRESENT             1
     # Change macro TRIGGER_SPMP_VIOLATION_MODE value in demo_spmp.c
     # to see different working mode of this demo
@@ -1017,7 +1040,7 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
     Attempting to fetch instruction from protected address
     Instruction page fault occurs, cause: 0x1000000c, epc: 0x80004000
 
-From disassembly code, SEPC refers to 
+From disassembly code, SEPC refers to
 
 .. code-block:: console
 
@@ -1070,7 +1093,7 @@ From disassembly code, SEPC refers to
 .. code-block:: console
 
     80005050:	00f40023          	sb	a5,0(s0)
-  
+
 
 **Expected output(TRIGGER_SPMP_VIOLATION_MODE=EXECUTE_USERMODE_MEMORY_EXCEPTION) as below:**
 
@@ -1086,7 +1109,7 @@ From disassembly code, SEPC refers to
     Attempting to fetch instruction from protected address
     Instruction page fault occurs, cause: 0x1000000c, epc: 0x80004000
 
-From disassembly code, SEPC refers to 
+From disassembly code, SEPC refers to
 
 .. code-block:: console
 
@@ -1109,7 +1132,7 @@ From disassembly code, SEPC refers to
     Attempting to read protected_data[0]
     Load page fault occurs, cause: 0x1000000d, epc: 0x80005024
 
-From disassembly code, SEPC refers to 
+From disassembly code, SEPC refers to
 
 .. code-block:: console
 
@@ -1132,7 +1155,7 @@ From disassembly code, SEPC refers to
     Attempting to write protected_data[0]
     Store/AMO page fault occurs, cause: 0x1000000f, epc: 0x8000502e
 
-From disassembly code, SEPC refers to 
+From disassembly code, SEPC refers to
 
 .. code-block:: console
 
@@ -1157,6 +1180,7 @@ From disassembly code, SEPC refers to
     Attempting to write protected_data[0]
     Won't run here if violates L U\R\W\X permission check!
 
+.. _design_app_demo_pmp:
 
 demo_pmp
 ~~~~~~~~
@@ -1164,18 +1188,18 @@ demo_pmp
 This `demo_pmp_application`_ is used to demonstrate how to grant physical memory privileges
 (read, write, execute) on each physical memory region by machine mode control CSRs.
 
-.. note:: 
+.. note::
 
     * Need to enable PMP in <Device.h> if PMP present in CPU.
 
 * ``pmp_violation_fault_handler`` is registered, which is to excute when pmp violation
   exception occurs
-* There're two config structures, ``pmp_config_x`` sets protected executable address range 
-  as 2^12 bytes; ``pmp_config_rw`` sets protected readable/writable address range as 2^12 
-  bytes, and you can change the ``protection``, ``order``, ``base_addr`` according to your 
+* There're two config structures, ``pmp_config_x`` sets protected executable address range
+  as 2^12 bytes; ``pmp_config_rw`` sets protected readable/writable address range as 2^12
+  bytes, and you can change the ``protection``, ``order``, ``base_addr`` according to your
   memory assignments
-* When exception occurs, the print info including ``mcause``, ``mepc`` can be observed 
-  by serial console, which explains the exception cause of PMP permission violation, and 
+* When exception occurs, the print info including ``mcause``, ``mepc`` can be observed
+  by serial console, which explains the exception cause of PMP permission violation, and
   shows which asm instruction triggers the violation
 * In the application code, there is a macro called ``TRIGGER_PMP_VIOLATION_MODE`` to control the
   PMP working feature:
@@ -1198,6 +1222,7 @@ This `demo_pmp_application`_ is used to demonstrate how to grant physical memory
     # Assume that you can set up the Tools and Nuclei SDK environment
     # cd to the demo_pmp directory
     cd application/baremetal/demo_pmp
+    # MUST: Your CPU configuration must has PMP configured
     # Change macro __PMP_PRESENT to 1 in <Device.h>
     #define __PMP_PRESENT             1
     # Change macro TRIGGER_PMP_VIOLATION_MODE value in demo_pmp.c
@@ -1294,6 +1319,8 @@ From disassembly code, MEPC refers to
 FreeRTOS applications
 ---------------------
 
+.. _design_app_freertos_demo:
+
 demo
 ~~~~
 
@@ -1358,6 +1385,8 @@ In Nuclei SDK, we provided code and Makefile for this ``freertos demo`` applicat
 
 UCOSII applications
 -------------------
+
+.. _design_app_ucosii_demo:
 
 demo
 ~~~~
@@ -1437,6 +1466,8 @@ In Nuclei SDK, we provided code and Makefile for this ``ucosii demo`` applicatio
 RT-Thread applications
 ----------------------
 
+.. _design_app_rtthread_demo:
+
 demo
 ~~~~
 
@@ -1501,6 +1532,8 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread demo`` applicat
     Main thread count: 2
     thread 0 count: 4
     thread 1 count: 4
+
+.. _design_app_rtthread_msh:
 
 msh
 ~~~
