@@ -102,20 +102,20 @@ int main(void)
     pmp_config_rw.protection = PMP_R | PMP_W ;
 #endif
 
-    printf("------PMP demo------\r\n");
+    printf("------PMP demo with trigger condition %d------\r\n", TRIGGER_PMP_VIOLATION_MODE);
 
     __set_PMPENTRYx(0, &pmp_config_x);
     /* Verify the configuration takes effect */
     memset(&pmp_config_x, 0, sizeof(pmp_config));
     __get_PMPENTRYx(0, &pmp_config_x);
-    printf("Get pmp entry: index %d, prot_out: %0x, addr_out: %x, order_out: %d\r\n", \
+    printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%x, order_out: %d\r\n", \
         0, pmp_config_x.protection, pmp_config_x.base_addr, pmp_config_x.order);
 
     __set_PMPENTRYx(1, &pmp_config_rw);
     /* Verify the configuration takes effect */
     memset(&pmp_config_rw, 0, sizeof(pmp_config));
     __get_PMPENTRYx(1, &pmp_config_rw);
-    printf("Get pmp entry: index %d, prot_out: %0x, addr_out: %x, order_out: %d\r\n", \
+    printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%x, order_out: %d\r\n", \
         1, pmp_config_rw.protection, pmp_config_rw.base_addr, pmp_config_rw.order);
 
     /* register corresponding exception */

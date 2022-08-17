@@ -58,7 +58,7 @@ static void __attribute__((section (".text"), aligned(0x1000))) supervisor_mode_
     /* In case compiler use inline optimization of protected_execute */
     void (*fncptr)(void) = ((void *)protected_execute);
 
-    printf("Attempting to fetch instruction from protected address\n");
+    printf("Attempting to fetch instruction from protected address\r\n");
     /*
      * If TRIGGER_SPMP_INSTRUCTION_EXCEPTION, it will trigger instruction page fault,
      * see scause sdcause mepc for verification
@@ -110,13 +110,13 @@ int main(void)
         .base_addr = 0,
     };
 
-    printf("------sPMP demo------\r\n");
+    printf("------sPMP demo with trigger condition %d------\r\n", TRIGGER_SPMP_VIOLATION_MODE);
 
     __set_PMPENTRYx(0, &pmp_config);
     /* Verify the configuration takes effect */
     memset(&pmp_config, 0, sizeof(pmp_config));
     __get_PMPENTRYx(0, &pmp_config);
-    printf("Get pmp entry: index %d, prot_out: %0x, addr_out: %x, order_out: %d\r\n", \
+    printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%x, order_out: %d\r\n", \
         0, pmp_config.protection, pmp_config.base_addr, pmp_config.order);
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
@@ -175,14 +175,14 @@ int main(void)
     /* Verify the configuration takes effect */
     memset(&spmp_config_x, 0, sizeof(spmp_config));
     __get_sPMPENTRYx(0, &spmp_config_x);
-    printf("Get spmp entry: index %d, prot_out: %0x, addr_out: %x, order_out: %d\r\n", \
+    printf("Get spmp entry: index %d, prot_out: 0x%x, addr_out: 0x%x, order_out: %d\r\n", \
         0, spmp_config_x.protection, spmp_config_x.base_addr, spmp_config_x.order);
 
     __set_sPMPENTRYx(1, &spmp_config_rw);
     /* Verify the configuration takes effect */
     memset(&spmp_config_rw, 0, sizeof(spmp_config));
     __get_sPMPENTRYx(1, &spmp_config_rw);
-    printf("Get spmp entry: index %d, prot_out: %0x, addr_out: %x, order_out: %d\r\n", \
+    printf("Get spmp entry: index %d, prot_out: 0x%x, addr_out: 0x%x, order_out: %d\r\n", \
         1, spmp_config_rw.protection, spmp_config_rw.base_addr, spmp_config_rw.order);
     /* Drop to S mode */
     __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
