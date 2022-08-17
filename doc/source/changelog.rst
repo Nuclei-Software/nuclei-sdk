@@ -10,13 +10,36 @@ This is development version ``0.4.0`` of Nuclei SDK.
 
 * Application
 
-  - Add ``demo_smode_eclic`` application to demonstrate ECLIC interrupt with TEE feature of Nuclei Processor.
+  - Add :ref:`design_app_demo_pmp` application to demostrate pmp feature.
+  - Add :ref:`design_app_demo_spmp` application to demostrate smode pmp feature, spmp is present when TEE feature is enabled.
+  - Add :ref:`design_app_demo_smode_eclic` application to demonstrate ECLIC interrupt with TEE feature of Nuclei Processor.
+  - Changed ``test/core`` test case due to ``EXC_Frame_Type`` struct member name changes.
 
 * NMSIS
 
+  - Add ``__CTZ`` count trailing zero API in core_compatiable.h
+  - Add ``__switch_mode`` switch risc-v privilege mode API in core_feature_base.h
+  - Add ``__enable_irq_s``, ``__disable_irq_s`` smode irq control(on/off) API in core_feature_base.h
+  - Add ``__set_medeleg`` exception delegation API in core_feature_base.h
+  - Update and add smode eclic related API in core_feature_eclic.h only present when **TEE_PRESENT=1**
+  - Optimize APIs of PMP and add ``__set_PMPENTRYx`` and ``__get_PMPENTRYx`` API for easily PMP configuration in core_feature_pmp.h
+  - Add spmp related APIs for smode pmp hardware feature when **__SPMP_PRESENT=1**
+  - Add per-hart related APIs for systimer such as ``SysTimer_SetHartCompareValue``, ``SysTimer_SetHartSWIRQ`` and etc in core_feature_timer.h, this is mainly needed when configure timer in smode per hart
+  - Add TEE related csr macros in riscv_encoding.h
+
 * Build System
 
+  - Add ``intexc_<Device>_s.S`` asm file into compiling for evalsoc and demosoc
+
 * SoC
+
+  - Add smode interrupt and exception handling framework for evalsoc and demosoc, for details see code changes.
+
+    - A new section called ``.vector_s`` is added(required in linker script) to store smode vector table which is initialized in ``system_<Device>.c``
+    - A new ``intexc_<Device>_s.S`` asm source file is added to handle s-mode interrupt and exception
+    - A default smode exception register and handling framework is added in ``system_<Device>.c``
+    - **API Changes**: ``Exception_DumpFrame`` parameters changed to add mode passing in ``system_<Device>.c/h``
+    - **API Changes**: ``EXC_Frame_Type`` struct member mcause/mepc changed to cause/epc in ``system_<Device>.c/h``
 
 
 V0.3.9
