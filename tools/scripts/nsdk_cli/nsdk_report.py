@@ -236,10 +236,11 @@ td:first-child {
 
 def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
     if not(isinstance(config, dict) and isinstance(result, dict) and isinstance(rptfile, str)):
-        return False
+        return None
     report = analyze_report(config, result, runapp)
     rpt_passtxt = os.path.join(os.path.dirname(rptfile), "app_passed.txt")
     rpt_failtxt = os.path.join(os.path.dirname(rptfile), "app_failed.txt")
+    rpt_summary = dict()
     # generate markdown file
     with open(rptfile, "w") as rf:
         # generate overall status
@@ -303,16 +304,42 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
         x.field_names = ["App/Test Case", "Case Name", "Build Status", "Run Status", "Build Time", \
                     "Run Time", "Type", "Value", "Total", "Text", "Data", "Bss"]
         apps_buildsts = result
+        # summary of all app cases
+        tot_cases_count = 0
+        tot_cases_btm = []
+        tot_cases_rtm = []
+        tot_cases_sztot = []
+        tot_cases_sztext = []
+        tot_cases_szdata = []
+        tot_cases_szbss = []
         for app in apps_buildsts:
             app_sts = apps_buildsts[app]
             for cfgname in app_sts:
+                tot_cases_count += 1
                 size = app_sts[cfgname]["size"]
                 apprsttype, apprstval = get_app_runresult(app_sts[cfgname].get("result", dict()))
                 bsts_md, rsts_md, appbtm, apprtm = generate_build_run_status_md(app_sts[cfgname], logdir, True)
                 x.add_row([app, cfgname, bsts_md, rsts_md, appbtm, apprtm, apprsttype, apprstval, \
                     size["total"], size["text"], size["data"], size["bss"]])
+                # record total cases build and run time
+                appwithcfg = "%s:%s" % (app, cfgname)
+                tot_cases_btm.append((str(appbtm), appwithcfg))
+                tot_cases_rtm.append((str(apprtm), appwithcfg))
+                tot_cases_sztot.append((str(size["total"]), appwithcfg))
+                tot_cases_sztext.append((str(size["text"]), appwithcfg))
+                tot_cases_szdata.append((str(size["data"]), appwithcfg))
+                tot_cases_szbss.append((str(size["bss"]), appwithcfg))
+
         rf.write(str(x))
         rf.write("\n")
+        # save report summary
+        rpt_summary["count"] = tot_cases_count
+        rpt_summary["buildtime"] = tot_cases_btm
+        rpt_summary["runtime"] = tot_cases_rtm
+        rpt_summary["sztotal"] = tot_cases_sztot
+        rpt_summary["sztext"] = tot_cases_sztext
+        rpt_summary["szdata"] = tot_cases_szdata
+        rpt_summary["szbss"] = tot_cases_szbss
         # Real expected pass or fail cases
         percase_status = report["percase"]
         rf.write("\n# Passed Cases(as expected) Per Applications\n\n")
@@ -360,7 +387,7 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
             rf.write("\n")
     # generate html from markdown
     md2html(rptfile, rpthtml)
-    pass
+    return rpt_summary
 
 # check whether the result json is generate by nsdk_bench.py
 def is_bench_result(result):
@@ -519,12 +546,42 @@ def show_failed_apps(logdir):
                 print(line)
     return
 
+def show_report_summary(summary, sfl):
+    if not(isinstance(summary, dict)):
+        return
+    if len(summary) == 0:
+        return
+    def decsort(key):
+        return key[0]
+
+    summary["buildtime"].sort(reverse=True, key=decsort)
+    summary["runtime"].sort(reverse=True, key=decsort)
+    summary["sztotal"].sort(reverse=True, key=decsort)
+    summary["sztext"].sort(reverse=True, key=decsort)
+    summary["szdata"].sort(reverse=True, key=decsort)
+    summary["szbss"].sort(reverse=True, key=decsort)
+    mostnum = min(10, summary["count"])
+    with open(sfl, "w") as sflh:
+        sflh.write("There are %d cases executed\r\n" % (summary["count"]))
+        sflh.write("The most %d build time costing cases are %s\r\n" % (mostnum, summary["buildtime"][:mostnum]))
+        sflh.write("The most %d run time costing cases are %s\r\n" % (mostnum, summary["runtime"][:mostnum]))
+        sflh.write("The most %d program total size costing cases are %s\r\n" % (mostnum, summary["sztotal"][:mostnum]))
+        sflh.write("The most %d program text section size costing cases are %s\r\n" % (mostnum, summary["sztext"][:mostnum]))
+        sflh.write("The most %d program data section size costing cases are %s\r\n" % (mostnum, summary["szdata"][:mostnum]))
+        sflh.write("The most %d program bss section size costing cases are %s\r\n" % (mostnum, summary["szbss"][:mostnum]))
+    print("\r\n=====Here is the report summary:=====")
+    with open(sfl, "r") as sflh:
+        for line in sflh.readlines():
+            print(line)
+    pass
+
 def save_report_files(logdir, config, result, run=False):
     if os.path.isdir(logdir) == False:
         os.makedirs(logdir)
     rptfile = os.path.join(logdir, "report.md")
     rpthtml = os.path.join(logdir, "report.html")
-    generate_report(config, result, rptfile, rpthtml, logdir, run)
+    rptsumfile = os.path.join(logdir, "summary.txt")
+    rptsum = generate_report(config, result, rptfile, rpthtml, logdir, run)
     csvfile = os.path.join(logdir, "result.csv")
     save_bench_csv(result, csvfile)
     print("Generate report csv file to %s" % (csvfile))
@@ -535,6 +592,7 @@ def save_report_files(logdir, config, result, run=False):
         save_json(csvdatafile, csvdata)
         runresultexcel = os.path.join(logdir, "runresult.xlsx")
         save_runresult(csvdata, runresultexcel)
+    show_report_summary(rptsum, rptsumfile)
     # show failed apps
     show_failed_apps(logdir)
     pass
