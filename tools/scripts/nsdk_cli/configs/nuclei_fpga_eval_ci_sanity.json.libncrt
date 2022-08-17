@@ -5,19 +5,13 @@
             "timeout": 240
         },
         "qemu" : {
-            "timeout": 480
+            "timeout": 240
         }
     },
     "parallel": "-j",
     "build_target": "clean all",
     "build_config": {
     },
-    "appdirs_ignore": [
-        "application/baremetal/demo_nice",
-        "application/baremetal/smphello",
-        "application/baremetal/dsp_examples",
-        "application/baremetal/Internal"
-    ],
     "build_configs": {
         "n201e": {"CORE": "n201e", "ARCH_EXT": ""},
         "n205": {"CORE": "n205", "ARCH_EXT": ""},
