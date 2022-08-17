@@ -34,7 +34,7 @@
             "build": false
         },
         "application/baremetal/demo_smode_eclic": {
-            "run": false,
+            "run": true,
             "build": true
         }
     }

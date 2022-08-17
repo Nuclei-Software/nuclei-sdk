@@ -86,8 +86,8 @@
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": false},
         "application/rtthread/msh" : {"build": true, "run": false},
-        "application/baremetal/demo_spmp": {"build": true, "run": false},
-        "application/baremetal/demo_smode_eclic": {"build": true, "run": false},
+        "application/baremetal/demo_spmp": {"build": true, "run": true},
+        "application/baremetal/demo_smode_eclic": {"build": true, "run": true},
         "test/core": {"build": true, "run": false}
     }
 }
