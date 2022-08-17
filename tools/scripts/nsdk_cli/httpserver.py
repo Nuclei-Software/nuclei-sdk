@@ -19,7 +19,7 @@ if __name__ == '__main__':
     httpdirectory = args.directory
 
     if os.path.isdir(args.directory) == False:
-        print("ERROR: Directory not exist, please check!" %(args.directory))
+        print("ERROR: Directory %s not exist, please check!" % (args.directory))
         sys.exit(1)
 
     print("HTTP Served for directory %s" % (httpdirectory))
