@@ -8,6 +8,11 @@
 #warning "__TEE_PRESENT is not defined or equal to 1, please check!"
 #endif
 
+#if !defined(__SPMP_PRESENT) || (__SPMP_PRESENT != 1)
+/* __SPMP_PRESENT should be defined in <Device>.h */
+#error "__SPMP_PRESENT is not defined or equal to 1, please check!"
+#endif
+
 /* different trigger condition */
 #define INSTRUCTION_FETCH_PAGE_EXCEPTION     0
 #define LOAD_PAGE_EXCEPTION                  1
