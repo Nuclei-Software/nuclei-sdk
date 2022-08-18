@@ -19,7 +19,10 @@
 #define TIMER_TICKS             (SOC_TIMER_FREQ / 10)
 
 // 2048 is enough
-#define SMODE_STACK_SIZE      2048
+#define SMODE_STACK_SIZE        2048
+
+// Execute Hart ID
+#define EXECUTE_HARTID          0
 
 /* Create a stack for supervisor mode execution */
 uint8_t smode_stack[SMODE_STACK_SIZE] __attribute__((aligned(16)));
@@ -45,7 +48,7 @@ void print_sp_judge_privilege_mode(void)
 void setup_timer(void)
 {
     printf("Initialize timer and start timer interrupt periodically\n\r");
-    SysTick_HartConfig(TIMER_TICKS, 0);
+    SysTick_HartConfig(TIMER_TICKS, EXECUTE_HARTID);
 }
 
 // timer interrupt s-mode handler
@@ -65,10 +68,10 @@ void eclic_stip_handler(void)
     printf("[IN S-MODE TIMER INTERRUPT]software interrupt will run when timer interrupt finished\r\n");
 #endif
     // trigger software interrupt
-    SysTimer_SetHartSWIRQ(0);
+    SysTimer_SetHartSWIRQ(EXECUTE_HARTID);
 
     // Reload Timer Interrupt
-    SysTick_HartReload(TIMER_TICKS, 0);
+    SysTick_HartReload(TIMER_TICKS, EXECUTE_HARTID);
 
     printf("[IN S-MODE TIMER INTERRUPT]timer interrupt end\r\n");
 }
@@ -82,7 +85,7 @@ void __attribute__ ((interrupt("supervisor"))) eclic_ssip_handler(void)
     // save CSR context
     SAVE_IRQ_CSR_CONTEXT_S();
 
-    SysTimer_ClearHartSWIRQ(0);
+    SysTimer_ClearHartSWIRQ(EXECUTE_HARTID);
 
     printf("[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit %d times\r\n", int_sw_cnt++);
     print_sp_judge_privilege_mode();
