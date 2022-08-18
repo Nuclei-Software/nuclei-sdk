@@ -649,10 +649,10 @@ static void _get_iregion_info(IRegion_Info_Type *iregion)
     mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
     if (mcfg_info & MCFG_INFO_IREGION_EXIST) { // IRegion Info present
         iregion->iregion_base = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
-        iregion->eclic_base = iregion->iregion_base + 0x20000;
-        iregion->systimer_base = iregion->iregion_base + 0x30000;
-        iregion->smp_base = iregion->iregion_base + 0x40000;
-        iregion->idu_base = iregion->iregion_base + 0x50000;
+        iregion->eclic_base = iregion->iregion_base + IREGION_ECLIC_OFS;
+        iregion->systimer_base = iregion->iregion_base + IREGION_TIMER_OFS;
+        iregion->smp_base = iregion->iregion_base + IREGION_SMP_OFS;
+        iregion->idu_base = iregion->iregion_base + IREGION_IDU_OFS;
     } else {
         iregion->eclic_base = 0x0C000000UL;
         iregion->systimer_base = 0x02000000UL;
@@ -685,16 +685,17 @@ __attribute__((section(".init"))) void __sync_harts(void)
     if (mcfg_info & MCFG_INFO_IREGION_EXIST) { // IRegion Info present
         // clint base = system timer base + 0x1000
         irgb_base = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
-        clint_base = irgb_base + 0x30000 + 0x1000;
-        smp_base = irgb_base + 0x40000;
+        clint_base = irgb_base + IREGION_TIMER_OFS + 0x1000;
+        smp_base = irgb_base + IREGION_SMP_OFS;
     } else {
         // system timer base for demosoc is 0x02000000
         clint_base = 0x02000000 + 0x1000;
         smp_base = (__RV_CSR_READ(CSR_MSMPCFG_INFO) >> 4) << 4;
     }
-    // Enable SMP and L2
+    // Enable SMP and L2, disable cluster local memory
     SMP_CTRLREG(smp_base, 0xc) = 0xFFFFFFFF;
     SMP_CTRLREG(smp_base, 0x10) = 0x1;
+    SMP_CTRLREG(smp_base, 0xd8) = 0x0;
     __SMP_RWMB();
 
     // pre-condition: interrupt must be disabled, this is done before calling this function
