@@ -171,7 +171,7 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetLoadValue(void)
  * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
  * - \ref SysTimer_GetHartCompareValue
  */
-__STATIC_FORCEINLINE void SysTimer_SetHartCompareValue(uint64_t value, uint32_t hartid)
+__STATIC_FORCEINLINE void SysTimer_SetHartCompareValue(uint64_t value, unsigned long hartid)
 {
     if (hartid == 0) {
 #if __RISCV_XLEN == 32
@@ -224,7 +224,7 @@ __STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
  * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
  * - \ref SysTimer_SetHartCompareValue
  */
-__STATIC_FORCEINLINE uint64_t SysTimer_GetHartCompareValue(uint32_t hartid)
+__STATIC_FORCEINLINE uint64_t SysTimer_GetHartCompareValue(unsigned long hartid)
 {
     if (hartid == 0) {
         return SysTimer->MTIMERCMP;
@@ -257,7 +257,7 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetHartCompareValue(uint32_t hartid)
 __STATIC_FORCEINLINE uint64_t SysTimer_GetCompareValue(void)
 {
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
-    SysTimer_GetHartCompareValue(hartid);
+    return SysTimer_GetHartCompareValue(hartid);
 }
 
 /**
@@ -325,7 +325,7 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetControlValue(void)
  * - \ref SysTimer_ClearHartSWIRQ
  * - \ref SysTimer_GetHartMsipValue
  */
-__STATIC_FORCEINLINE void SysTimer_SetHartSWIRQ(uint32_t hartid)
+__STATIC_FORCEINLINE void SysTimer_SetHartSWIRQ(unsigned long hartid)
 {
     if (hartid == 0) {
         SysTimer->MSIP |= SysTimer_MSIP_MSIP_Msk;
@@ -361,7 +361,7 @@ __STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
  * - \ref SysTimer_SetHartSWIRQ
  * - \ref SysTimer_GetHartMsipValue
  */
-__STATIC_FORCEINLINE void SysTimer_ClearHartSWIRQ(uint32_t hartid)
+__STATIC_FORCEINLINE void SysTimer_ClearHartSWIRQ(unsigned long hartid)
 {
     if (hartid == 0) {
         SysTimer->MSIP &= ~SysTimer_MSIP_MSIP_Msk;
@@ -400,7 +400,7 @@ __STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
  * - \ref SysTimer_ClearHartSWIRQ
  * - \ref SysTimer_SetHartMsipValue
  */
-__STATIC_FORCEINLINE uint32_t SysTimer_GetHartMsipValue(uint32_t hartid)
+__STATIC_FORCEINLINE uint32_t SysTimer_GetHartMsipValue(unsigned long hartid)
 {
     if (hartid == 0) {
         return (uint32_t)(SysTimer->MSIP & SysTimer_MSIP_Msk);
@@ -425,7 +425,7 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetHartMsipValue(uint32_t hartid)
 __STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
 {
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
-    SysTimer_GetHartMsipValue(hartid);
+    return SysTimer_GetHartMsipValue(hartid);
 }
 
 /**
@@ -438,7 +438,7 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
  * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
  * - \ref SysTimer_GetHartMsipValue
  */
-__STATIC_FORCEINLINE void SysTimer_SetHartMsipValue(uint32_t msip, uint32_t hartid)
+__STATIC_FORCEINLINE void SysTimer_SetHartMsipValue(uint32_t msip, unsigned long hartid)
 {
     if (hartid == 0) {
         SysTimer->MSIP = (msip & SysTimer_MSIP_Msk);
@@ -474,6 +474,7 @@ __STATIC_FORCEINLINE void SysTimer_SetMsipValue(uint32_t msip)
 __STATIC_FORCEINLINE void SysTimer_SoftwareReset(void)
 {
     SysTimer->MSFTRST = SysTimer_MSFRST_KEY;
+    // will reset cpu, never return
     while (1);
 }
 
@@ -483,7 +484,7 @@ __STATIC_FORCEINLINE void SysTimer_SoftwareReset(void)
  * This function send ipi using clint timer.
  * \param [in]  hart  target hart
  */
-__STATIC_FORCEINLINE void SysTimer_SendIPI(uint32_t hartid)
+__STATIC_FORCEINLINE void SysTimer_SendIPI(unsigned long hartid)
 {
     uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
     __SW(addr, 1);
@@ -495,7 +496,7 @@ __STATIC_FORCEINLINE void SysTimer_SendIPI(uint32_t hartid)
  * This function clear ipi using Systimer clint timer.
  * \param [in]  hart  target hart
  */
-__STATIC_FORCEINLINE void SysTimer_ClearIPI(uint32_t hartid)
+__STATIC_FORCEINLINE void SysTimer_ClearIPI(unsigned long hartid)
 {
     uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
     __SW(addr, 0);
@@ -562,7 +563,7 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
  * \sa
  * - \ref SysTimer_SetCompareValue; SysTimer_SetLoadValue
  */
-__STATIC_INLINE uint32_t SysTick_HartConfig(uint64_t ticks, uint32_t hartid)
+__STATIC_INLINE uint32_t SysTick_HartConfig(uint64_t ticks, unsigned long hartid)
 {
     uint64_t loadticks = SysTimer_GetLoadValue();
     SysTimer_SetHartCompareValue(ticks + loadticks, hartid);
@@ -614,7 +615,7 @@ __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
 }
 
 /**
- * \brief   System Tick Reload 
+ * \brief   System Tick Reload
  * \details Reload the System Timer Tick when the MTIMECMP reached TIME value
  *
  * \param [in]  ticks  Number of ticks between two interrupts.
@@ -638,7 +639,7 @@ __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
  * - \ref SysTimer_SetCompareValue
  * - \ref SysTimer_SetLoadValue
  */
-__STATIC_FORCEINLINE uint32_t SysTick_HartReload(uint64_t ticks, uint32_t hartid)
+__STATIC_FORCEINLINE uint32_t SysTick_HartReload(uint64_t ticks, unsigned long hartid)
 {
     uint64_t cur_ticks = SysTimer_GetLoadValue();
     uint64_t reload_ticks = ticks + cur_ticks;
