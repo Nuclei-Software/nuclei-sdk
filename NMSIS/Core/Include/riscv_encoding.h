@@ -244,7 +244,9 @@
 #define MCFG_INFO_SMP               (1<<11)
 #define MCFG_INFO_DSP_N1            (1<<12)
 #define MCFG_INFO_DSP_N2            (1<<13)
+#define MCFG_INFO_DSP_N3            (1<<14)
 #define MCFG_INFO_IREGION_EXIST     (1<<16)
+#define MCFG_INFO_VP                (0x3<<17)
 
 #define MICFG_IC_SET                (0xF<<0)
 #define MICFG_IC_WAY                (0x7<<4)
@@ -261,6 +263,9 @@
 #define MDCFG_DLM_SIZE              (0x1F<<16)
 #define MDCFG_DLM_ECC               (0x1<<21)
 
+#define MIRGB_INFO_IRG_BASE_ADDR_BOFS       (10)
+#define MIRGB_INFO_IREGION_SIZE_BOFS        (1)
+
 #define MPPICFG_INFO_PPI_SIZE       (0x1F<<1)
 #define MPPICFG_INFO_PPI_BPA        (((1ULL<<((__riscv_xlen)-10))-1)<<10)
 
@@ -276,6 +281,17 @@
 #define CCM_SUEN_SUEN               (0x1<<0)
 #define CCM_DATA_DATA               (0x7<<0)
 #define CCM_COMMAND_COMMAND         (0x1F<<0)
+
+/* IREGION Offsets */
+#define IREGION_IINFO_OFS           (0x0)
+#define IREGION_DEBUG_OFS           (0x10000)
+#define IREGION_ECLIC_OFS           (0x20000)
+#define IREGION_TIMER_OFS           (0x30000)
+#define IREGION_SMP_OFS             (0x40000)
+#define IREGION_IDU_OFS             (0x50000)
+#define IREGION_PL2_OFS             (0x60000)
+#define IREGION_DPREFETCH_OFS       (0x70000)
+#define IREGION_PLIC_OFS            (0x4000000)
 
 #define SIP_SSIP MIP_SSIP
 #define SIP_STIP MIP_STIP
