@@ -44,7 +44,7 @@
  * \details
  * Optional superviosr physical memory protection (sPMP) unit provides per-hart supervisor-mode
  * control registers to allow physical memory access privileges (read, write, execute)
- * to be specified for each physical memory region. The sPMP values are checked after the physical 
+ * to be specified for each physical memory region. The sPMP values are checked after the physical
  * address to be accessed pass PMP checks described in the RISC-V privileged spec.
  *
  * Like PMP, the sPMP can supports region access control settings as small as four bytes.
@@ -63,7 +63,7 @@ typedef struct SPMP_CONFIG {
      */
     unsigned int protection;
     /**
-     * Size of memory region as power of 2, it has to be minimum 2 and maxium \ref __RISCV_XLEN according to the 
+     * Size of memory region as power of 2, it has to be minimum 2 and maxium \ref __RISCV_XLEN according to the
      * hardwired granularity 2^N bytes, if N = 12, then order has to be at least 12; if not, the order read out
      * is N though you configure less than N.
      */
@@ -148,12 +148,12 @@ __STATIC_INLINE uint8_t __get_sPMPxCFG(uint32_t entry_idx)
     return 0;
 #endif
     spmpcfgx = __get_sPMPCFGx(csr_idx);
-    /* 
+    /*
      * first get specific spmpxcfg's order in one CSR composed of csr_cfg_num spmpxcfgs,
      * then get spmpxcfg's bit position in one CSR by left shift 3(each spmpxcfg size is one byte)
      */
     cfg_shift = (entry_idx & (csr_cfg_num - 1)) << 3;
-    
+
     /* read specific spmpxcfg register value */
     return (uint8_t)(__RV_EXTRACT_FIELD(spmpcfgx, 0xFF << cfg_shift));
 }
@@ -188,7 +188,7 @@ __STATIC_INLINE void __set_sPMPxCFG(uint32_t entry_idx, uint8_t spmpxcfg)
 #endif
     /* read specific spmpcfgx register value */
     spmpcfgx = __get_sPMPCFGx(csr_idx);
-    /* 
+    /*
      * first get specific spmpxcfg's order in one CSR composed of csr_cfg_num spmpxcfgs,
      * then get spmpxcfg's bit position in one CSR by left shift 3(each spmpxcfg size is one byte)
      */
@@ -287,7 +287,7 @@ __STATIC_INLINE void __set_sPMPENTRYx(uint32_t entry_idx, const spmp_config *spm
     // TODO Add RV128 Handling
     return;
 #endif
-    /* 
+    /*
      * first get specific spmpxcfg's order in one CSR composed of csr_cfg_num spmpxcfgs,
      * then get spmpxcfg's bit position in one CSR by left shift 3, each spmpxcfg size is one byte
      */
@@ -311,7 +311,7 @@ __STATIC_INLINE void __set_sPMPENTRYx(uint32_t entry_idx, const spmp_config *spm
         spmpaddr = ((spmp_config->base_addr >> SPMP_SHIFT) & ~addrmask);
         spmpaddr |= (addrmask >> 1);
     }
-    /* 
+    /*
      * write csrs, update the address first, in case the entry is locked that
      * we won't be able to modify it after we set the config csr.
      */
@@ -323,7 +323,7 @@ __STATIC_INLINE void __set_sPMPENTRYx(uint32_t entry_idx, const spmp_config *spm
  * \brief   Get sPMP entry by entry idx
  * \details Write the given value to the PMPxCFG Register and PMPADDRx.
  * \param [in]     entry_idx     sPMP entry index(0-15)
- * \param [out]    spmp_config   structure of L, U, X, W, R, A field of sPMP configuration register, memory region base 
+ * \param [out]    spmp_config   structure of L, U, X, W, R, A field of sPMP configuration register, memory region base
  *                 address and size of memory region as power of 2
  * \return  -1 failure, else 0 success
  * \remark
@@ -386,5 +386,5 @@ __STATIC_INLINE int __get_sPMPENTRYx(unsigned int entry_idx, spmp_config *spmp_c
 
 #ifdef __cplusplus
 }
-#endif 
+#endif
 #endif /** __CORE_FEATURE_SPMP_H__  */

@@ -62,7 +62,7 @@ typedef struct PMP_CONFIG {
      */
     unsigned int protection;
     /**
-     * Size of memory region as power of 2, it has to be minimum 2 and maxium \ref __RISCV_XLEN according to the 
+     * Size of memory region as power of 2, it has to be minimum 2 and maxium \ref __RISCV_XLEN according to the
      * hard-wired granularity 2^N bytes, if N = 12, then order has to be at least 12; if not, the order read out
      * is N though you configure less than N.
      */
@@ -147,7 +147,7 @@ __STATIC_INLINE uint8_t __get_PMPxCFG(uint32_t entry_idx)
     return 0;
 #endif
     pmpcfgx = __get_PMPCFGx(csr_idx);
-    /* 
+    /*
      * first get specific pmpxcfg's order in one CSR composed of csr_cfg_num pmpxcfgs,
      * then get pmpxcfg's bit position in one CSR by left shift 3(each pmpxcfg size is one byte)
      */
@@ -187,7 +187,7 @@ __STATIC_INLINE void __set_PMPxCFG(uint32_t entry_idx, uint8_t pmpxcfg)
 #endif
     /* read specific pmpcfgx register value */
     pmpcfgx = __get_PMPCFGx(csr_idx);
-    /* 
+    /*
      * first get specific pmpxcfg's order in one CSR composed of csr_cfg_num pmpxcfgs,
      * then get pmpxcfg's bit position in one CSR by left shift 3(each pmpxcfg size is one byte)
      */
@@ -286,7 +286,7 @@ __STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_config *pmp_c
     // TODO Add RV128 Handling
     return;
 #endif
-    /* 
+    /*
      * first get specific pmpxcfg's order in one CSR composed of csr_cfg_num pmpxcfgs,
      * then get pmpxcfg's bit position in one CSR by left shift 3, each pmpxcfg size is one byte
      */
@@ -310,7 +310,7 @@ __STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_config *pmp_c
         pmpaddr = ((pmp_config->base_addr >> PMP_SHIFT) & ~addrmask);
         pmpaddr |= (addrmask >> 1);
     }
-    /* 
+    /*
      * write csrs, update the address first, in case the entry is locked that
      * we won't be able to modify it after we set the config csr.
      */

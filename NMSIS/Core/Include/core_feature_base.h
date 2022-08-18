@@ -1377,7 +1377,7 @@ __STATIC_FORCEINLINE unsigned long __get_hpm_counter(unsigned long idx)
 
 /**
  * \brief   Set exceptions delegation to S mode
- * \details Set certain exceptions of supervisor mode or user mode 
+ * \details Set certain exceptions of supervisor mode or user mode
  *          delegated from machined mode to supervisor mode.
  * \remarks
  *          Exception should trigger in supervisor mode or user mode.
