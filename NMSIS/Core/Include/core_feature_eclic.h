@@ -290,7 +290,7 @@ typedef enum IRQn {
 #else
     #define ECLIC_SetVector              __ECLIC_SetVector
     #define ECLIC_GetVector              __ECLIC_GetVector
-    
+
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
     #define ECLIC_SetVector_S            __ECLIC_SetVector_S
     #define ECLIC_GetVector_S            __ECLIC_GetVector_S
@@ -435,7 +435,7 @@ __STATIC_FORCEINLINE void __ECLIC_EnableIRQ(IRQn_Type IRQn)
  */
 __STATIC_FORCEINLINE uint32_t __ECLIC_GetEnableIRQ(IRQn_Type IRQn)
 {
-    return((uint32_t) (ECLIC->CTRL[IRQn].INTIE) & CLIC_INTIE_IE_Msk);
+    return ((uint32_t) (ECLIC->CTRL[IRQn].INTIE) & CLIC_INTIE_IE_Msk);
 }
 
 /**
@@ -469,7 +469,7 @@ __STATIC_FORCEINLINE void __ECLIC_DisableIRQ(IRQn_Type IRQn)
  */
 __STATIC_FORCEINLINE int32_t __ECLIC_GetPendingIRQ(IRQn_Type IRQn)
 {
-    return((uint32_t)(ECLIC->CTRL[IRQn].INTIP) & CLIC_INTIP_IP_Msk);
+    return ((uint32_t)(ECLIC->CTRL[IRQn].INTIP) & CLIC_INTIP_IP_Msk);
 }
 
 /**
@@ -502,7 +502,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetPendingIRQ(IRQn_Type IRQn)
  */
 __STATIC_FORCEINLINE void __ECLIC_ClearPendingIRQ(IRQn_Type IRQn)
 {
-    ECLIC->CTRL[IRQn].INTIP &= ~ CLIC_INTIP_IP_Msk;
+    ECLIC->CTRL[IRQn].INTIP &= ~CLIC_INTIP_IP_Msk;
 }
 
 /**
@@ -817,8 +817,8 @@ __STATIC_FORCEINLINE rv_csr_t __ECLIC_GetVector(IRQn_Type IRQn)
  */
 __STATIC_FORCEINLINE void __ECLIC_SetModeIRQ(IRQn_Type IRQn, uint32_t mode)
 {
-    /* 
-     * only 1 or 3 can be assigned to mode in one step.the default value of mode is 3, 
+    /*
+     * only 1 or 3 can be assigned to mode in one step.the default value of mode is 3,
      * which can't be clear to 0 firstly, then OR it to 1
      */
     ECLIC->CTRL[IRQn].INTATTR = (uint8_t)(mode << CLIC_INTATTR_MODE_Pos) + \
@@ -830,7 +830,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetModeIRQ(IRQn_Type IRQn, uint32_t mode)
  * \details
  * This function sets supervisor-mode interrupt level threshold.
  * \param [in]  sth       Interrupt Level Threshold.
- * \remarks 
+ * \remarks
  * - S-mode ECLIC region sintthresh'sth is a mirror to M-mode ECLIC region's mintthresh.sth,
  *   and will be updated synchronously, here operate on mintthresh.sth.
  * \sa
@@ -846,7 +846,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetSth(uint8_t sth)
  * \details
  * This function gets supervisor mode interrupt level threshold.
  * \return       Interrupt Level Threshold.
- * \remarks 
+ * \remarks
  * - S-mode ECLIC region sintthresh'sth is a mirror to M-mode ECLIC region's mintthresh.sth,
  *   and will be updated synchronously, here operate on mintthresh.sth.
  * \sa
@@ -1126,7 +1126,7 @@ __STATIC_FORCEINLINE void __ECLIC_EnableIRQ_S(IRQn_Type IRQn)
  */
 __STATIC_FORCEINLINE uint8_t __ECLIC_GetEnableIRQ_S(IRQn_Type IRQn)
 {
-    return((uint8_t) (ECLIC->SCTRL[IRQn].INTIE) & CLIC_INTIE_IE_Msk);
+    return ((uint8_t) (ECLIC->SCTRL[IRQn].INTIE) & CLIC_INTIE_IE_Msk);
 }
 
 /**
@@ -1168,12 +1168,12 @@ __STATIC_FORCEINLINE void __ECLIC_SetVector_S(IRQn_Type IRQn, rv_csr_t vector)
     (* (unsigned long *) vec_base) = vector;
 #if (defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1))
 #if (defined(__CCM_PRESENT) && (__CCM_PRESENT == 1))
-    MFlushDCacheLine((unsigned long)vec_base);
+    SFlushDCacheLine((unsigned long)vec_base);
 #endif
 #endif
 #if (defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1))
 #if (defined(__CCM_PRESENT) && (__CCM_PRESENT == 1))
-    MInvalICacheLine((unsigned long)vec_base);
+    SInvalICacheLine((unsigned long)vec_base);
 #else
     __FENCE_I();
 #endif
@@ -1202,7 +1202,8 @@ __STATIC_FORCEINLINE rv_csr_t __ECLIC_GetVector_S(IRQn_Type IRQn)
     return (*(uint64_t *)(__RV_CSR_READ(CSR_STVT) + IRQn * 8));
 #endif
 }
-#endif
+
+#endif /* defined(__TEE_PRESENT) && (__TEE_PRESENT == 1) */
 
 /**
  * \brief  Set Exception entry address
