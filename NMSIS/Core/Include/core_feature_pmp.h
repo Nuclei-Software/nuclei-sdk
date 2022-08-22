@@ -29,7 +29,7 @@
  * 2. __PMP_ENTRY_NUM:  Define the number of PMP entries, only 8 or 16 is configurable.
  */
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #include "core_feature_base.h"
@@ -139,7 +139,7 @@ __STATIC_INLINE uint8_t __get_PMPxCFG(uint32_t entry_idx)
     csr_cfg_num = 4;
     csr_idx = entry_idx >> 2;
 #elif __RISCV_XLEN == 64
-     csr_cfg_num = 8;
+    csr_cfg_num = 8;
     /* For RV64, pmpcfg0 and pmpcfg2 each hold 8 PMP entries, align by 2 */
     csr_idx = (entry_idx >> 2)  & ~1;
 #else

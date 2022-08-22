@@ -29,7 +29,7 @@
  * 2. __SYSTIMER_BASEADDR:  Define the base address of the System Timer.
  */
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #include "core_feature_base.h"

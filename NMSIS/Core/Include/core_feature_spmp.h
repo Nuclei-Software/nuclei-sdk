@@ -29,7 +29,7 @@
  * 2. __SPMP_ENTRY_NUM:  Define the number of sPMP entries, only 8 or 16 is configurable.
  */
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #include "core_feature_base.h"

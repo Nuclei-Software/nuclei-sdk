@@ -33,7 +33,7 @@
  *
  */
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 #include "core_feature_base.h"
@@ -260,7 +260,7 @@ typedef enum IRQn {
     #define ECLIC_SetPriorityIRQ          __ECLIC_SetPriorityIRQ
     #define ECLIC_GetPriorityIRQ          __ECLIC_GetPriorityIRQ
 
-    /* For TEE*/
+    /* For TEE */
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
     #define ECLIC_SetModeIRQ              __ECLIC_SetModeIRQ
     #define ECLIC_SetSth                  __ECLIC_SetSth
@@ -1253,7 +1253,7 @@ __STATIC_FORCEINLINE rv_csr_t __get_exc_entry(void)
  */
 __STATIC_FORCEINLINE void __set_nonvec_entry(rv_csr_t addr)
 {
-    if (__RV_CSR_READ(CSR_MTVT2) & 0x1){
+    if (__RV_CSR_READ(CSR_MTVT2) & 0x1) {
         __RV_CSR_WRITE(CSR_MTVT2, addr | 0x01);
     } else {
         addr &= (rv_csr_t)(~0x3F);
