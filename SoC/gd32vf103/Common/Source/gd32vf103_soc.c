@@ -62,8 +62,8 @@ void delay_1ms(uint32_t count)
 void simulation_exit(int status)
 {
 #if SIMULATION_MODE == SIMULATION_MODE_QEMU
-    #define QEMU_VIRT_TEST_BASE 0x100000
-    #define QEMU_SIG_EXIT      0x3333
+#define QEMU_VIRT_TEST_BASE    0x100000
+#define QEMU_SIG_EXIT          0x3333
     REG32(QEMU_VIRT_TEST_BASE) = (status << 16) | QEMU_SIG_EXIT;
 #endif
 }

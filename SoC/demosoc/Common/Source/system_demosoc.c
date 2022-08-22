@@ -549,7 +549,7 @@ void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler)
 {
     if ((EXCn < MAX_SYSTEM_EXCEPTION_NUM) && (EXCn >= 0)) {
         SystemExceptionHandlers_S[EXCn] = exc_handler;
-    } 
+    }
 }
 
 /**
