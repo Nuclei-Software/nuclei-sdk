@@ -51,7 +51,7 @@ void main(void);
 /* Reimplementation of smp_main for multi-harts */
 void smp_main(void)
 {
-   main(); 
+    main();
 }
 
 void main(void)

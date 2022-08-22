@@ -136,7 +136,7 @@ int main(int argc, char** argv)
 {
     // set pmp, S mode can access all address range
     pmp_config pmp_config = {
-         /* M mode grants S and U mode with full permission of the whole address range */
+        /* M mode grants S and U mode with full permission of the whole address range */
         .protection = PMP_L | PMP_R | PMP_W | PMP_X,
         /* Memory region range 2^__RISCV_XLEN bytes */
         .order = __RISCV_XLEN,
