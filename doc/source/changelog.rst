@@ -14,6 +14,8 @@ This is development version ``0.4.0`` of Nuclei SDK.
   - Add :ref:`design_app_demo_spmp` application to demostrate smode pmp feature, spmp is present when TEE feature is enabled.
   - Add :ref:`design_app_demo_smode_eclic` application to demonstrate ECLIC interrupt with TEE feature of Nuclei Processor.
   - Changed ``test/core`` test case due to ``EXC_Frame_Type`` struct member name changes.
+  - Fix XS bit set bug in demo_nice application.
+  - Add return value in smphello application.
 
 * NMSIS
 
@@ -26,6 +28,7 @@ This is development version ``0.4.0`` of Nuclei SDK.
   - Add spmp related APIs for smode pmp hardware feature when **__SPMP_PRESENT=1**
   - Add per-hart related APIs for systimer such as ``SysTimer_SetHartCompareValue``, ``SysTimer_SetHartSWIRQ`` and etc in core_feature_timer.h, this is mainly needed when configure timer in smode per hart
   - Add TEE related csr macros in riscv_encoding.h
+  - Add iregion offset macros and N3/VP mask in riscv_encoding.h and use it in demosoc/evalsoc implementation.
 
 * Build System
 
@@ -40,6 +43,20 @@ This is development version ``0.4.0`` of Nuclei SDK.
     - A default smode exception register and handling framework is added in ``system_<Device>.c``
     - **API Changes**: ``Exception_DumpFrame`` parameters changed to add mode passing in ``system_<Device>.c/h``
     - **API Changes**: ``EXC_Frame_Type`` struct member mcause/mepc changed to cause/epc in ``system_<Device>.c/h``
+
+  - print ``\0`` instead of ``\r`` when do simulation exit for better integration in Nuclei Studio QEMU simulation.
+
+* CI
+
+  - Start to use Nuclei QEMU/Toolchain/OpenOCD 2022.08 in daily ci for gitlab runner
+
+* Tools
+
+  - Add ``httpserver.py`` tool to create a http server on selected folder, good to preview built documentation.
+
+* Documentation
+
+  - Add ``make preview`` to preview build documentation.
 
 
 V0.3.9
