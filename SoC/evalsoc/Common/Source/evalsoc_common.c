@@ -63,7 +63,8 @@ void simulation_exit(int status)
     // Both xlspike and qemu will write RXFIFO to make it works for xlspike even SIMU=qemu
     // workaround for fix cycle model exit with some message not print
     for (int i = 0; i < 10; i ++) {
-        uart_write(UART0, '\r');
+        // print '\0' instead of '\r' for qemu simulation in ide
+        uart_write(UART0, '\0');
     }
     uart_write(UART0, '\n');
     // pass exit status via rxfifo register
