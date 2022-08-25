@@ -54,7 +54,7 @@
         "n305b-libncrt-small": {"CORE": "n305", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"}
     },
     "expected": {
-        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "application/baremetal/demo_nice": {"build": true, "run": true},
         "application/rtthread/msh" : {"build": true, "run": false},
         "test/core": {"build": false, "run": false}
     }

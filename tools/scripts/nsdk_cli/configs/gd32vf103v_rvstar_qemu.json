@@ -26,7 +26,7 @@
     },
     "expected": {
         "application/baremetal/demo_nice" : {
-            "run": false,
+            "run": true,
             "build": true
         },
         "application/baremetal/demo_spmp" : {

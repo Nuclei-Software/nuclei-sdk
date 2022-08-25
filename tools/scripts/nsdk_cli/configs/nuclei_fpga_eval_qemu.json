@@ -33,9 +33,9 @@
     },
     "expected": {
         "application/baremetal/demo_nice" : {
-            "run": false,
+            "run": true,
             "build": true
         },
-        "test/core": {"build": true, "run": false}
+        "test/core": {"build": true, "run": true}
     }
 }
