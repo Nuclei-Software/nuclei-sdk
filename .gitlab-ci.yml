@@ -2,7 +2,7 @@ variables:
   DOC_SERVER: doc
   DOC_CENTER: /home/xl_ci/doc_center
   IMAGE: rego.corp.nucleisys.com/software/sdkbuild
-  IMAGE_TAG: "2022.05"
+  IMAGE_TAG: "2022.08"
 
 default:
   tags:
@@ -174,9 +174,9 @@ sdk_run_newlib_job_nuclei_fpga_eval:
       - HWCFG:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_newlib.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv_newlib.json
-        IMAGE_TAG:
-        - "2022.05-eng2"
-        - "2022.05"
+          #IMAGE_TAG:
+          #- "2022.05-eng2"
+          #- "2022.05"
   script:
     - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
     # change ilm/dlm size from 64K to 128K for demosoc to be able to build with newlib full library
@@ -206,7 +206,7 @@ sdk_run_test_job_nuclei_fpga_eval:
   timeout: 4h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/test.json
-    RUNTARGET: xlspike
+    RUNTARGET: qemu
   parallel:
     matrix:
       - HWCFG:
@@ -221,7 +221,7 @@ sdk_run_smp_job_nuclei_fpga_eval:
   timeout: 4h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/smp_application.json
-    RUNTARGET: xlspike
+    RUNTARGET: qemu
   parallel:
     matrix:
       - HWCFG:
