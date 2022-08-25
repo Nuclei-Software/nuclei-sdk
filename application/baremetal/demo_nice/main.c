@@ -17,7 +17,7 @@ int main(void)
     unsigned int begin_instret, end_instret, instret_normal, instret_nice;
     unsigned int begin_cycle, end_cycle, cycle_normal, cycle_nice;
 
-    __RV_CSR_WRITE(CSR_MSTATUS, MSTATUS_XS);
+    __RV_CSR_SET(CSR_MSTATUS, MSTATUS_XS);
     __enable_minstret_counter();
     __enable_mcycle_counter();
 
