@@ -44,33 +44,35 @@ __STATIC_FORCEINLINE void spinlock_unlock(spinlock *lock)
     lock->state = 0;
 }
 
-void boot_hart_main(unsigned long hartid);
-void other_harts_main(unsigned long hartid);
-void main(void);
+int boot_hart_main(unsigned long hartid);
+int other_harts_main(unsigned long hartid);
+int main(void);
 
 /* Reimplementation of smp_main for multi-harts */
-void smp_main(void)
+int smp_main(void)
 {
-    main();
+    return main();
 }
 
-void main(void)
+int main(void)
 {
+    int ret;
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
     if (hartid == 0) { // boot hart
         spinlock_init(&lock);
         lock_ready = 1;
         finished = 0;
         __SMP_RWMB();
-        boot_hart_main(hartid);
+        ret = boot_hart_main(hartid);
     } else { // other harts
         // wait for lock initialized
         while (lock_ready == 0);
-        other_harts_main(hartid);
+        ret = other_harts_main(hartid);
     }
+    return ret;
 }
 
-void boot_hart_main(unsigned long hartid)
+int boot_hart_main(unsigned long hartid)
 {
     volatile unsigned long waitcnt = 0;
     spinlock_lock(&lock);
@@ -90,12 +92,14 @@ void boot_hart_main(unsigned long hartid)
     if (cpu_count == SMP_CPU_CNT) {
         printf("All harts boot successfully!\n");
         finished = 1;
+        return 0;
     } else {
         printf("Some harts boot failed, only %d/%d booted!\n", cpu_count, SMP_CPU_CNT);
+        return -1;
     }
 }
 
-void other_harts_main(unsigned long hartid)
+int other_harts_main(unsigned long hartid)
 {
     spinlock_lock(&lock);
     printf("Hello world from hart %d\n", hartid);
@@ -105,4 +109,5 @@ void other_harts_main(unsigned long hartid)
     while (cpu_count < SMP_CPU_CNT);
     // wait for boot hart to set finished flag
     while (finished == 0);
+    return 0;
 }
