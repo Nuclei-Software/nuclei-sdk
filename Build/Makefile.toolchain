@@ -1,0 +1,5 @@
+NUCLEI_SDK_TOOLCHAIN_MK=$(NUCLEI_SDK_BUILD)/toolchain/$(TOOLCHAIN).mk
+ifeq ($(wildcard $(NUCLEI_SDK_TOOLCHAIN_MK)),)
+$(error Cannot find toolchain related configuration makefile $(NUCLEI_SDK_TOOLCHAIN_MK))
+endif
+include $(NUCLEI_SDK_TOOLCHAIN_MK)
