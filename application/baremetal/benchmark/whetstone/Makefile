@@ -1,8 +1,9 @@
 TARGET := whetstone
 
 NUCLEI_SDK_ROOT = ../../../..
+TOOLCHAIN ?= nuclei_gnu
 
-BENCH_FLAGS ?= -O3 -funroll-loops -fsingle-precision-constant
+-include toolchain_$(TOOLCHAIN).mk
 
 COMMON_FLAGS := $(BENCH_FLAGS)
 

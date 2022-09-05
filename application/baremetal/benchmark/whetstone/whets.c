@@ -178,7 +178,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "stdatomic.h"
+// zcc report error stdatomic.h:201:17: error: unknown type name 'int_least8_t'; did you mean '__int_least8_t'?
+//#include "stdatomic.h"
 #include "nuclei_sdk_soc.h"
 
 #include "config.h"
