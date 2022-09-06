@@ -62,6 +62,7 @@ def analyze_hpm(records):
     x.set_style(MARKDOWN)
     x.field_names = ["Process", "HPM", "Mode", "Event", "Counts"]
     parsed_hpm = dict()
+    csv_hpm = [x.field_names]
     for proc in records:
         parsed_hpm[proc] = dict()
         for hpmkey in records[proc]:
@@ -74,10 +75,18 @@ def analyze_hpm(records):
             event_mode = get_hpm_evmode(event_ena)
             event_count = int(records[proc][hpmkey])
             x.add_row([proc, hpmcounter, event_mode, event_name, event_count])
+            csv_hpm.append([proc, hpmcounter, event_mode, event_name, event_count])
             if hpmcounter not in parsed_hpm[proc]:
                 parsed_hpm[proc][hpmcounter] = list()
             parsed_hpm[proc][hpmcounter].append((event_mode, event_name, event_count))
-    return parsed_hpm, x
+    return parsed_hpm, csv_hpm, x
+
+def save_csv(csvlist, csvfile):
+    with open(csvfile, "w") as cf:
+        for csvline in csvlist:
+            line = ",".join(map(str, csvline))
+            cf.write(line + "\n")
+    pass
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Nuclei SDK HPM Log Parsing")
@@ -89,14 +98,17 @@ if __name__ == '__main__':
     if len(hpmrecords) == 0:
         print("None records found in %s!" % (args.logfile))
         sys.exit(1)
-    parsedhpm, table = analyze_hpm(hpmrecords)
+    parsedhpm, csv_hpm, table = analyze_hpm(hpmrecords)
     print(table)
 
     hpmresult = {"records": hpmrecords, "parsed": parsedhpm}
     hpmrstfile = args.logfile + ".json"
     with open(hpmrstfile, "w") as cf:
         json.dump(hpmresult, cf, indent=4)
-
     print("\nParsed HPM event saved into %s" %(hpmrstfile))
+
+    hpmcsvfile = args.logfile + ".csv"
+    save_csv(csv_hpm, hpmcsvfile)
+    print("Save HPM CSV to %s" % (hpmcsvfile))
     sys.exit(0)
 
