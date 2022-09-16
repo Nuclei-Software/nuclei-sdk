@@ -24,6 +24,7 @@ def parse_usbinfo(origin):
 
 def find_usbinfo():
     cmdlog = tempfile.mktemp()
+    # lsusb may need sudo privilege to get iserial info
     os.system("lsusb -v 2>/dev/null | grep -i -E \"^bus |iserial|idvendor|idproduct|imanufacturer|iproduct\" > %s" % (cmdlog))
     usb_devices = []
     INFOCNT = 6
@@ -36,6 +37,9 @@ def find_usbinfo():
             if "VMware, Inc" in bus:
                 continue
             if "VirtualBox" in bus:
+                continue
+            bus = bus.lower()
+            if "future technology" not in bus and "xilinx" not in bus:
                 continue
             try:
                 origin = {"bus": lines[i*INFOCNT].strip(), "idvendor": lines[i*INFOCNT + 1].strip(), \
