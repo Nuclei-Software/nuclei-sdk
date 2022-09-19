@@ -2,6 +2,7 @@
 MAKE_OPTS=${MAKE_OPTS:-""}
 RUNON=${RUNON-fpga}
 CONFIG=${CONFIG-"n900,ux900"}
+RUNYAML=${RUNYAML-}
 BACKUP=${BACKUP:-Backups}
 CFGSET=${CFGSET:-full}
 BITSET=${BITSET:-latest}
@@ -12,6 +13,14 @@ MYSCRIPTDIR=$(readlink -f $MYSCRIPTDIR)
 COMMON_ENV=$(readlink -f $MYSCRIPTDIR/../env.sh)
 FPGALOC=
 CFGLOC=
+
+if [ "x$RUNYAML" != "x" ] ; then
+    RUNYAML=$(readlink -f $RUNYAML)
+    if [ ! -f $RUNYAML ] ; then
+        echo "$RUNYAML not exist, please check!"
+        exit 1
+    fi
+fi
 
 source $COMMON_ENV
 
@@ -44,6 +53,10 @@ function runbench {
     local mkoptions=${@:3}
 
     local RUNNER_CMD="python3 $NSDK_RUNNER_PY --appyaml ${MYSCRIPTDIR}/$yfn.yaml --logdir $LOGDIR/$logdir --runon $RUNON --cfgloc $CFGLOC --fpgaloc $FPGALOC"
+
+    if [ "x$RUNYAML" != "x" ] ; then
+        RUNNER_CMD="${RUNNER_CMD} --runyaml $RUNYAML"
+    fi
     if [ "x$CONFIG" != "x" ] ; then
         RUNNER_CMD="${RUNNER_CMD} --config \"$CONFIG\""
     fi
