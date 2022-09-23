@@ -62,7 +62,7 @@ function runbench {
         RUNNER_CMD="${RUNNER_CMD} --config \"$CONFIG\""
     fi
 
-    if [ "x$VERBOSE" != "x1" ] ; then
+    if [ "x$VERBOSE" == "x1" ] ; then
         RUNNER_CMD="${RUNNER_CMD} --verbose"
     fi
 
