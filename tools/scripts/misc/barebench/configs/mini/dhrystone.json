@@ -1,0 +1,116 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 60
+        },
+        "qemu": {
+            "qemu32": "qemu-system-riscv32",
+            "qemu64": "qemu-system-riscv64",
+            "timeout": 60
+        },
+        "ncycm": {
+            "timeout": 600
+        }
+    },
+    "copy_objects": true,
+    "build_target": "clean all",
+    "build_config": {
+    },
+    "parallel" : "-j",
+    "checks": {
+        "PASS": [],
+        "FAIL": ["MEPC"]
+    },
+    "appdirs": [
+        "application/baremetal/benchmark/dhrystone"
+    ],
+    "appdirs_ignore": [
+        "application/baremetal/dsp_examples",
+        "application/baremetal/Internal"
+    ],
+    "appconfig": {
+        "application/baremetal/benchmark/dhrystone": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CSV, Dhrystone"]
+            }
+        },
+        "application/baremetal/benchmark/whetstone": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CSV, Whetstone"]
+            }
+        },
+        "application/baremetal/benchmark/coremark": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CSV, CoreMark"]
+            }
+        },
+        "application/baremetal/demo_timer": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["MTimer msip and mtip interrupt test finish and pass"]
+            }
+        },
+        "application/baremetal/helloworld": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["19: Hello World From Nuclei RISC-V Processor!"]
+            }
+        },
+        "application/baremetal/demo_eclic": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["software interrupt hit 10 times"]
+            }
+        },
+        "application/baremetal/demo_nice": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["PASS"],
+                "FAIL": ["FAIL", "MEPC"]
+            }
+        },
+        "application/baremetal/demo_dsp": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["all test are passed"],
+                "FAIL": ["test error apprears", "MEPC"]
+            }
+        },
+        "application/freertos/demo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["timers Callback 11"]
+            }
+        },
+        "application/rtthread/demo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Main thread count: 6"]
+            }
+        },
+        "application/rtthread/msh": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["msh >"]
+            }
+        },
+        "application/ucosii/demo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["task3 is running... 10"]
+            }
+        },
+        "test/core": {
+            "build_config" : {},
+            "checks": {
+                "PASS": [", 0 failed"],
+                "FAIL": ["[FAIL]", "MEPC"]
+            }
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "copy_objects": true,
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "ARCH_EXT": "",
+        "DOWNLOAD": "ilm"
+    },
+    "build_configs": {
+        "n205b-newlib-small": {"CORE": "n205", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n205b-libncrt-small": {"CORE": "n205", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"}
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "application/rtthread/msh" : {"build": true, "run": false},
+        "test/core": {"build": false, "run": false}
+    }
+}
