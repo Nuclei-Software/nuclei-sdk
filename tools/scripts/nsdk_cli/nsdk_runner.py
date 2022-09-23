@@ -65,7 +65,7 @@ def check_usb_serial(serno):
     return False
 
 class nsdk_runner(object):
-    def __init__(self, sdk, makeopts, runyaml, locations):
+    def __init__(self, sdk, makeopts, runyaml, locations, verbose=False):
         if os.path.isdir(sdk) == False:
             print("Invalid sdk path %s" % (sdk))
             sys.exit(1)
@@ -77,6 +77,7 @@ class nsdk_runner(object):
         yret, self.runcfg = load_yaml(runyaml)
         self.sdk = sdk
         self.makeopts = makeopts
+        self.verbose = verbose
 
         if yret != YAML_OK:
             print("Invalid yaml configuration file %s" % (runyaml))
@@ -265,9 +266,9 @@ class nsdk_runner(object):
         if need2run:
             #if runon == "fpga":
             #    nsdk_ext.set_cpu_hangup_action(global_program_bit)
-            cmdsts, result = nsdk_ext.run_apps(subappcfg, False, sublogdir, False)
+            cmdsts, result = nsdk_ext.run_apps(subappcfg, self.verbose, sublogdir, False)
         else:
-            cmdsts, result = nsdk_ext.build_apps(subappcfg, False, sublogdir, False)
+            cmdsts, result = nsdk_ext.build_apps(subappcfg, self.verbose, sublogdir, False)
 
         runtime = round(time.time() - start_time, 2)
         print("Build or Run application for config %s run status: %s, time cost %s seconds" % (config, cmdsts, runtime))
@@ -312,6 +313,7 @@ if __name__ == '__main__':
     parser.add_argument('--config', help="run configuration")
     parser.add_argument('--runon', default='hardware', help="Where to run these application")
     parser.add_argument('--show', action='store_true', help="Show configurations")
+    parser.add_argument('--verbose', action='store_true', help="If specified, will show detailed build/run messsage")
     args = parser.parse_args()
 
     if args.sdk is None:
@@ -330,7 +332,7 @@ if __name__ == '__main__':
     pp = pprint.PrettyPrinter(compact=True)
     ret = True
     locations = {"fpgaloc": args.fpgaloc, "ncycmloc": args.ncycmloc, "cfgloc": args.cfgloc }
-    nsdk_ext = nsdk_runner(args.sdk, args.make_options, runneryaml, locations)
+    nsdk_ext = nsdk_runner(args.sdk, args.make_options, runneryaml, locations, args.verbose)
     if args.show:
         print("Here are the supported configs:")
         pp.pprint(nsdk_ext.get_configs())
