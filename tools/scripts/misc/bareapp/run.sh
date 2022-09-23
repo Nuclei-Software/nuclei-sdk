@@ -7,6 +7,7 @@ BACKUP=${BACKUP:-Backups}
 CFGSET=${CFGSET:-mini}
 BITSET=${BITSET:-latest}
 RUNMODE=${RUNMODE-all}
+VERBOSE=${VERBOSE-}
 
 MYSCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
 MYSCRIPTDIR=$(readlink -f $MYSCRIPTDIR)
@@ -59,6 +60,10 @@ function runbench {
     fi
     if [ "x$CONFIG" != "x" ] ; then
         RUNNER_CMD="${RUNNER_CMD} --config \"$CONFIG\""
+    fi
+
+    if [ "x$VERBOSE" != "x1" ] ; then
+        RUNNER_CMD="${RUNNER_CMD} --verbose"
     fi
 
     if [ "x$mkoptions" != "x" ] ; then
