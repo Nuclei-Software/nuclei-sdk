@@ -700,7 +700,7 @@ class nsdk_runner(nsdk_builder):
         target = appconfig.get("build_target", "all")
         parallel = appconfig.get("parallel", "")
         # Copy program objects if copy_objects is true
-        copy_objects_required = appconfig.get("copy_objects", False)
+        copy_objects_required = appconfig.get("copy_objects", get_sdk_copyobjects_flag())
         make_options = ""
         if isinstance(build_config, dict):
             for key, value in build_config.items():

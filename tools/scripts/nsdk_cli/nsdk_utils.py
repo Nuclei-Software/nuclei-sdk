@@ -36,7 +36,8 @@ SDK_GLOBAL_VARIABLES = {
     "sdk_checktag": "Nuclei SDK Build Time:",
     "sdk_check": True,
     "sdk_banner_tmout": 15,
-    "sdk_copy_objects": "elf,map,dasm,verilog"
+    "sdk_copy_objects": "elf,map,dasm,verilog",
+    "sdk_copy_objects_flag": False
     }
 
 class NThread(Thread):
@@ -645,11 +646,24 @@ def get_sdk_copyobjects():
         cpobjs = SDK_GLOBAL_VARIABLES.get("sdk_copy_objects")
     return cpobjs
 
+def get_env_flag(envar):
+    flag = os.environ.get(envar)
+    if flag is None:
+        return flag
+    return flag.lower() in ('true', '1', 't')
+
 def get_sdk_check():
-    check = os.environ.get("SDK_CHECK")
+    check = get_env_flag("SDK_CHECK")
     if check is None:
         check = SDK_GLOBAL_VARIABLES.get("sdk_check")
     return check
+
+
+def get_sdk_copyobjects_flag():
+    cpflag = get_env_flag("SDK_COPY_OBJECTS_FLAG")
+    if cpflag is None:
+        cpflag = SDK_GLOBAL_VARIABLES.get("sdk_copy_objects_flag")
+    return cpflag
 
 def get_sdk_banner_tmout():
     tmout = os.environ.get("SDK_BANNER_TMOUT")
