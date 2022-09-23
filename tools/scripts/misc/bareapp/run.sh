@@ -97,6 +97,6 @@ function do_bareapp {
 }
 
 setup_suite ${CFGSET} ${FPGASET}
-do_barebench | tee $LOGDIR/build.log
+do_bareapp | tee $LOGDIR/build.log
 
 zip_logdir
