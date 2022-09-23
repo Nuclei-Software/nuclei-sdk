@@ -459,7 +459,7 @@ typedef union {
  */
 #define __RV_CSR_SWAP(csr, val)                                 \
     ({                                                          \
-        register rv_csr_t __v = (unsigned long)(val);           \
+        rv_csr_t __v = (unsigned long)(val);                    \
         __ASM volatile("csrrw %0, " STRINGIFY(csr) ", %1"       \
                      : "=r"(__v)                                \
                      : "rK"(__v)                                \
@@ -477,7 +477,7 @@ typedef union {
  */
 #define __RV_CSR_READ(csr)                                      \
     ({                                                          \
-        register rv_csr_t __v;                                  \
+        rv_csr_t __v;                                           \
         __ASM volatile("csrr %0, " STRINGIFY(csr)               \
                      : "=r"(__v)                                \
                      :                                          \
@@ -495,7 +495,7 @@ typedef union {
  */
 #define __RV_CSR_WRITE(csr, val)                                \
     ({                                                          \
-        register rv_csr_t __v = (rv_csr_t)(val);                \
+        rv_csr_t __v = (rv_csr_t)(val);                         \
         __ASM volatile("csrw " STRINGIFY(csr) ", %0"            \
                      :                                          \
                      : "rK"(__v)                                \
@@ -514,7 +514,7 @@ typedef union {
  */
 #define __RV_CSR_READ_SET(csr, val)                             \
     ({                                                          \
-        register rv_csr_t __v = (rv_csr_t)(val);                \
+        rv_csr_t __v = (rv_csr_t)(val);                         \
         __ASM volatile("csrrs %0, " STRINGIFY(csr) ", %1"       \
                      : "=r"(__v)                                \
                      : "rK"(__v)                                \
@@ -532,7 +532,7 @@ typedef union {
  */
 #define __RV_CSR_SET(csr, val)                                  \
     ({                                                          \
-        register rv_csr_t __v = (rv_csr_t)(val);                \
+        rv_csr_t __v = (rv_csr_t)(val);                         \
         __ASM volatile("csrs " STRINGIFY(csr) ", %0"            \
                      :                                          \
                      : "rK"(__v)                                \
@@ -551,7 +551,7 @@ typedef union {
  */
 #define __RV_CSR_READ_CLEAR(csr, val)                           \
     ({                                                          \
-        register rv_csr_t __v = (rv_csr_t)(val);                \
+        rv_csr_t __v = (rv_csr_t)(val);                         \
         __ASM volatile("csrrc %0, " STRINGIFY(csr) ", %1"       \
                      : "=r"(__v)                                \
                      : "rK"(__v)                                \
@@ -569,7 +569,7 @@ typedef union {
  */
 #define __RV_CSR_CLEAR(csr, val)                                \
     ({                                                          \
-        register rv_csr_t __v = (rv_csr_t)(val);                \
+        rv_csr_t __v = (rv_csr_t)(val);                         \
         __ASM volatile("csrc " STRINGIFY(csr) ", %0"            \
                      :                                          \
                      : "rK"(__v)                                \
@@ -1550,8 +1550,8 @@ __STATIC_FORCEINLINE void __SD(volatile void *addr, uint64_t val)
  */
 __STATIC_FORCEINLINE uint32_t __CAS_W(volatile uint32_t *addr, uint32_t oldval, uint32_t newval)
 {
-    register uint32_t result;
-    register uint32_t rc;
+    uint32_t result;
+    uint32_t rc;
 
     __ASM volatile (                                \
             "0:     lr.w %0, %2      \n"            \
@@ -1574,7 +1574,7 @@ __STATIC_FORCEINLINE uint32_t __CAS_W(volatile uint32_t *addr, uint32_t oldval, 
  */
 __STATIC_FORCEINLINE uint32_t __AMOSWAP_W(volatile uint32_t *addr, uint32_t newval)
 {
-    register uint32_t result;
+    uint32_t result;
 
     __ASM volatile ("amoswap.w %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(newval) : "memory");
@@ -1590,7 +1590,7 @@ __STATIC_FORCEINLINE uint32_t __AMOSWAP_W(volatile uint32_t *addr, uint32_t newv
  */
 __STATIC_FORCEINLINE int32_t __AMOADD_W(volatile int32_t *addr, int32_t value)
 {
-    register int32_t result;
+    int32_t result;
 
     __ASM volatile ("amoadd.w %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1606,7 +1606,7 @@ __STATIC_FORCEINLINE int32_t __AMOADD_W(volatile int32_t *addr, int32_t value)
  */
 __STATIC_FORCEINLINE int32_t __AMOAND_W(volatile int32_t *addr, int32_t value)
 {
-    register int32_t result;
+    int32_t result;
 
     __ASM volatile ("amoand.w %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1622,7 +1622,7 @@ __STATIC_FORCEINLINE int32_t __AMOAND_W(volatile int32_t *addr, int32_t value)
  */
 __STATIC_FORCEINLINE int32_t __AMOOR_W(volatile int32_t *addr, int32_t value)
 {
-    register int32_t result;
+    int32_t result;
 
     __ASM volatile ("amoor.w %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1638,7 +1638,7 @@ __STATIC_FORCEINLINE int32_t __AMOOR_W(volatile int32_t *addr, int32_t value)
  */
 __STATIC_FORCEINLINE int32_t __AMOXOR_W(volatile int32_t *addr, int32_t value)
 {
-    register int32_t result;
+    int32_t result;
 
     __ASM volatile ("amoxor.w %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1654,7 +1654,7 @@ __STATIC_FORCEINLINE int32_t __AMOXOR_W(volatile int32_t *addr, int32_t value)
  */
 __STATIC_FORCEINLINE uint32_t __AMOMAXU_W(volatile uint32_t *addr, uint32_t value)
 {
-    register uint32_t result;
+    uint32_t result;
 
     __ASM volatile ("amomaxu.w %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1670,7 +1670,7 @@ __STATIC_FORCEINLINE uint32_t __AMOMAXU_W(volatile uint32_t *addr, uint32_t valu
  */
 __STATIC_FORCEINLINE int32_t __AMOMAX_W(volatile int32_t *addr, int32_t value)
 {
-    register int32_t result;
+    int32_t result;
 
     __ASM volatile ("amomax.w %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1686,7 +1686,7 @@ __STATIC_FORCEINLINE int32_t __AMOMAX_W(volatile int32_t *addr, int32_t value)
  */
 __STATIC_FORCEINLINE uint32_t __AMOMINU_W(volatile uint32_t *addr, uint32_t value)
 {
-    register uint32_t result;
+    uint32_t result;
 
     __ASM volatile ("amominu.w %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1702,7 +1702,7 @@ __STATIC_FORCEINLINE uint32_t __AMOMINU_W(volatile uint32_t *addr, uint32_t valu
  */
 __STATIC_FORCEINLINE int32_t __AMOMIN_W(volatile int32_t *addr, int32_t value)
 {
-    register int32_t result;
+    int32_t result;
 
     __ASM volatile ("amomin.w %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1723,8 +1723,8 @@ __STATIC_FORCEINLINE int32_t __AMOMIN_W(volatile int32_t *addr, int32_t value)
  */
 __STATIC_FORCEINLINE uint64_t __CAS_D(volatile uint64_t *addr, uint64_t oldval, uint64_t newval)
 {
-    register uint64_t result;
-    register uint64_t rc;
+    uint64_t result;
+    uint64_t rc;
 
     __ASM volatile (                                \
             "0:     lr.d %0, %2      \n"            \
@@ -1747,7 +1747,7 @@ __STATIC_FORCEINLINE uint64_t __CAS_D(volatile uint64_t *addr, uint64_t oldval, 
  */
 __STATIC_FORCEINLINE uint64_t __AMOSWAP_D(volatile uint64_t *addr, uint64_t newval)
 {
-    register uint64_t result;
+    uint64_t result;
 
     __ASM volatile ("amoswap.d %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(newval) : "memory");
@@ -1763,7 +1763,7 @@ __STATIC_FORCEINLINE uint64_t __AMOSWAP_D(volatile uint64_t *addr, uint64_t newv
  */
 __STATIC_FORCEINLINE int64_t __AMOADD_D(volatile int64_t *addr, int64_t value)
 {
-    register int64_t result;
+    int64_t result;
 
     __ASM volatile ("amoadd.d %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1779,7 +1779,7 @@ __STATIC_FORCEINLINE int64_t __AMOADD_D(volatile int64_t *addr, int64_t value)
  */
 __STATIC_FORCEINLINE int64_t __AMOAND_D(volatile int64_t *addr, int64_t value)
 {
-    register int64_t result;
+    int64_t result;
 
     __ASM volatile ("amoand.d %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1795,7 +1795,7 @@ __STATIC_FORCEINLINE int64_t __AMOAND_D(volatile int64_t *addr, int64_t value)
  */
 __STATIC_FORCEINLINE int64_t __AMOOR_D(volatile int64_t *addr, int64_t value)
 {
-    register int64_t result;
+    int64_t result;
 
     __ASM volatile ("amoor.d %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1811,7 +1811,7 @@ __STATIC_FORCEINLINE int64_t __AMOOR_D(volatile int64_t *addr, int64_t value)
  */
 __STATIC_FORCEINLINE int64_t __AMOXOR_D(volatile int64_t *addr, int64_t value)
 {
-    register int64_t result;
+    int64_t result;
 
     __ASM volatile ("amoxor.d %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1827,7 +1827,7 @@ __STATIC_FORCEINLINE int64_t __AMOXOR_D(volatile int64_t *addr, int64_t value)
  */
 __STATIC_FORCEINLINE uint64_t __AMOMAXU_D(volatile uint64_t *addr, uint64_t value)
 {
-    register uint64_t result;
+    uint64_t result;
 
     __ASM volatile ("amomaxu.d %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1843,7 +1843,7 @@ __STATIC_FORCEINLINE uint64_t __AMOMAXU_D(volatile uint64_t *addr, uint64_t valu
  */
 __STATIC_FORCEINLINE int64_t __AMOMAX_D(volatile int64_t *addr, int64_t value)
 {
-    register int64_t result;
+    int64_t result;
 
     __ASM volatile ("amomax.d %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1859,7 +1859,7 @@ __STATIC_FORCEINLINE int64_t __AMOMAX_D(volatile int64_t *addr, int64_t value)
  */
 __STATIC_FORCEINLINE uint64_t __AMOMINU_D(volatile uint64_t *addr, uint64_t value)
 {
-    register uint64_t result;
+    uint64_t result;
 
     __ASM volatile ("amominu.d %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");
@@ -1875,7 +1875,7 @@ __STATIC_FORCEINLINE uint64_t __AMOMINU_D(volatile uint64_t *addr, uint64_t valu
  */
 __STATIC_FORCEINLINE int64_t __AMOMIN_D(volatile int64_t *addr, int64_t value)
 {
-    register int64_t result;
+    int64_t result;
 
     __ASM volatile ("amomin.d %0, %2, %1" : \
             "=r"(result), "+A"(*addr) : "r"(value) : "memory");

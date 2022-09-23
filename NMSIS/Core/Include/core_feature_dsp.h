@@ -446,7 +446,7 @@
  */
 __STATIC_FORCEINLINE unsigned long __RV_ADD8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("add8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -487,7 +487,7 @@ __STATIC_FORCEINLINE unsigned long __RV_ADD8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_ADD16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("add16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -540,7 +540,7 @@ __STATIC_FORCEINLINE unsigned long __RV_ADD16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long long __RV_ADD64(unsigned long long a, unsigned long long b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("add64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -579,7 +579,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_ADD64(unsigned long long a, unsigne
  */
 __STATIC_FORCEINLINE long __RV_AVE(long a, long b)
 {
-    register long result;
+    long result;
     __ASM volatile("ave %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -620,7 +620,7 @@ __STATIC_FORCEINLINE long __RV_AVE(long a, long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_BITREV(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("bitrev %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -662,8 +662,8 @@ __STATIC_FORCEINLINE unsigned long __RV_BITREV(unsigned long a, unsigned long b)
  */
 #define __RV_BITREVI(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("bitrevi %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -703,7 +703,7 @@ __STATIC_FORCEINLINE unsigned long __RV_BITREV(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_BPICK(unsigned long a, unsigned long b, unsigned long c)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("bpick %0, %1, %2, %3" : "=r"(result) : "r"(a), "r"(b), "r"(c));
     return result;
 }
@@ -773,7 +773,7 @@ __STATIC_FORCEINLINE void __RV_CLROV(void)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CLRS8(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("clrs8 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -820,7 +820,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CLRS8(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CLRS16(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("clrs16 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -867,7 +867,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CLRS16(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CLRS32(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("clrs32 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -914,7 +914,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CLRS32(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CLO8(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("clo8 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -961,7 +961,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CLO8(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CLO16(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("clo16 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -1008,7 +1008,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CLO16(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CLO32(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("clo32 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -1055,7 +1055,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CLO32(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CLZ8(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("clz8 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -1102,7 +1102,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CLZ8(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CLZ16(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("clz16 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -1149,7 +1149,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CLZ16(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CLZ32(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("clz32 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -1191,7 +1191,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CLZ32(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CMPEQ8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("cmpeq8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1233,7 +1233,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CMPEQ8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CMPEQ16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("cmpeq16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1279,7 +1279,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CMPEQ16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_CRAS16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("cras16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1325,7 +1325,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CRAS16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CRSA16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("crsa16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1365,8 +1365,8 @@ __STATIC_FORCEINLINE unsigned long __RV_CRSA16(unsigned long a, unsigned long b)
  */
 #define __RV_INSB(t, a, b)    \
     ({    \
-        register unsigned long __t = (unsigned long)(t);    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long __t = (unsigned long)(t);    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("insb %0, %1, %2" : "+r"(__t) : "r"(__a), "K"(b));    \
         __t;    \
     })
@@ -1411,7 +1411,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CRSA16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KABS8(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kabs8 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -1456,7 +1456,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KABS8(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KABS16(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kabs16 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -1503,7 +1503,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KABS16(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KABSW(signed long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kabsw %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -1550,7 +1550,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KABSW(signed long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KADD8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kadd8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1597,7 +1597,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KADD8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KADD16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kadd16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1663,7 +1663,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KADD16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long long __RV_KADD64(long long a, long long b)
 {
-    register long long result;
+    long long result;
     __ASM volatile("kadd64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1710,7 +1710,7 @@ __STATIC_FORCEINLINE long long __RV_KADD64(long long a, long long b)
  */
 __STATIC_FORCEINLINE long __RV_KADDH(int a, int b)
 {
-    register long result;
+    long result;
     __ASM volatile("kaddh %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1758,7 +1758,7 @@ __STATIC_FORCEINLINE long __RV_KADDH(int a, int b)
  */
 __STATIC_FORCEINLINE long __RV_KADDW(int a, int b)
 {
-    register long result;
+    long result;
     __ASM volatile("kaddw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1815,7 +1815,7 @@ __STATIC_FORCEINLINE long __RV_KADDW(int a, int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KCRAS16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kcras16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1872,7 +1872,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KCRAS16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KCRSA16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kcrsa16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1927,7 +1927,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KCRSA16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE long __RV_KDMBB(unsigned int a, unsigned int b)
 {
-    register long result;
+    long result;
     __ASM volatile("kdmbb %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -1982,7 +1982,7 @@ __STATIC_FORCEINLINE long __RV_KDMBB(unsigned int a, unsigned int b)
  */
 __STATIC_FORCEINLINE long __RV_KDMBT(unsigned int a, unsigned int b)
 {
-    register long result;
+    long result;
     __ASM volatile("kdmbt %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -2037,7 +2037,7 @@ __STATIC_FORCEINLINE long __RV_KDMBT(unsigned int a, unsigned int b)
  */
 __STATIC_FORCEINLINE long __RV_KDMTT(unsigned int a, unsigned int b)
 {
-    register long result;
+    long result;
     __ASM volatile("kdmtt %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -2291,7 +2291,7 @@ __STATIC_FORCEINLINE long __RV_KDMATT(long t, unsigned int a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KHM8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("khm8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -2353,7 +2353,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KHM8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KHMX8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("khmx8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -2416,7 +2416,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KHMX8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KHM16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("khm16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -2479,7 +2479,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KHM16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KHMX16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("khmx16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -2532,7 +2532,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KHMX16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_KHMBB(unsigned int a, unsigned int b)
 {
-    register long result;
+    long result;
     __ASM volatile("khmbb %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -2585,7 +2585,7 @@ __STATIC_FORCEINLINE long __RV_KHMBB(unsigned int a, unsigned int b)
  */
 __STATIC_FORCEINLINE long __RV_KHMBT(unsigned int a, unsigned int b)
 {
-    register long result;
+    long result;
     __ASM volatile("khmbt %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -2638,7 +2638,7 @@ __STATIC_FORCEINLINE long __RV_KHMBT(unsigned int a, unsigned int b)
  */
 __STATIC_FORCEINLINE long __RV_KHMTT(unsigned int a, unsigned int b)
 {
-    register long result;
+    long result;
     __ASM volatile("khmtt %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -3290,7 +3290,7 @@ __STATIC_FORCEINLINE long long __RV_KMAR64(long long t, long a, long b)
  */
 __STATIC_FORCEINLINE long __RV_KMDA(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("kmda %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -3341,7 +3341,7 @@ __STATIC_FORCEINLINE long __RV_KMDA(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_KMXDA(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("kmxda %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -4159,7 +4159,7 @@ __STATIC_FORCEINLINE long __RV_KMMSB_U(long t, long a, long b)
  */
 __STATIC_FORCEINLINE long __RV_KMMWB2(long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("kmmwb2 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -4215,7 +4215,7 @@ __STATIC_FORCEINLINE long __RV_KMMWB2(long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_KMMWB2_U(long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("kmmwb2.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -4271,7 +4271,7 @@ __STATIC_FORCEINLINE long __RV_KMMWB2_U(long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_KMMWT2(long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("kmmwt2 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -4327,7 +4327,7 @@ __STATIC_FORCEINLINE long __RV_KMMWT2(long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_KMMWT2_U(long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("kmmwt2.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -4567,7 +4567,7 @@ __STATIC_FORCEINLINE long long __RV_KMSR64(long long t, long a, long b)
  */
 __STATIC_FORCEINLINE long __RV_KSLLW(long a, unsigned int b)
 {
-    register long result;
+    long result;
     __ASM volatile("ksllw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -4614,8 +4614,8 @@ __STATIC_FORCEINLINE long __RV_KSLLW(long a, unsigned int b)
  */
 #define __RV_KSLLIW(a, b)    \
     ({    \
-        register long result;    \
-        register long __a = (long)(a);    \
+        long result;    \
+        long __a = (long)(a);    \
         __ASM volatile("kslliw %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -4668,7 +4668,7 @@ __STATIC_FORCEINLINE long __RV_KSLLW(long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSLL8(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ksll8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -4720,8 +4720,8 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLL8(unsigned long a, unsigned int b)
  */
 #define __RV_KSLLI8(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("kslli8 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -4774,7 +4774,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLL8(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSLL16(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ksll16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -4826,8 +4826,8 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLL16(unsigned long a, unsigned int b)
  */
 #define __RV_KSLLI16(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("kslli16 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -4894,7 +4894,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLL16(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSLRA8(unsigned long a, int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kslra8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -4961,7 +4961,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLRA8(unsigned long a, int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSLRA8_U(unsigned long a, int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kslra8.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5028,7 +5028,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLRA8_U(unsigned long a, int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSLRA16(unsigned long a, int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kslra16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5095,7 +5095,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLRA16(unsigned long a, int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSLRA16_U(unsigned long a, int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kslra16.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5155,7 +5155,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLRA16_U(unsigned long a, int b)
  */
 __STATIC_FORCEINLINE long __RV_KSLRAW(int a, int b)
 {
-    register long result;
+    long result;
     __ASM volatile("kslraw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5218,7 +5218,7 @@ __STATIC_FORCEINLINE long __RV_KSLRAW(int a, int b)
  */
 __STATIC_FORCEINLINE long __RV_KSLRAW_U(int a, int b)
 {
-    register long result;
+    long result;
     __ASM volatile("kslraw.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5275,7 +5275,7 @@ __STATIC_FORCEINLINE long __RV_KSLRAW_U(int a, int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSTAS16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kstas16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5332,7 +5332,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSTAS16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSTSA16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kstsa16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5379,7 +5379,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSTSA16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSUB8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ksub8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5427,7 +5427,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSUB8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSUB16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ksub16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5493,7 +5493,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSUB16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long long __RV_KSUB64(long long a, long long b)
 {
-    register long long result;
+    long long result;
     __ASM volatile("ksub64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5540,7 +5540,7 @@ __STATIC_FORCEINLINE long long __RV_KSUB64(long long a, long long b)
  */
 __STATIC_FORCEINLINE long __RV_KSUBH(int a, int b)
 {
-    register long result;
+    long result;
     __ASM volatile("ksubh %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5588,7 +5588,7 @@ __STATIC_FORCEINLINE long __RV_KSUBH(int a, int b)
  */
 __STATIC_FORCEINLINE long __RV_KSUBW(int a, int b)
 {
-    register long result;
+    long result;
     __ASM volatile("ksubw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5644,7 +5644,7 @@ __STATIC_FORCEINLINE long __RV_KSUBW(int a, int b)
  */
 __STATIC_FORCEINLINE long __RV_KWMMUL(long a, long b)
 {
-    register long result;
+    long result;
     __ASM volatile("kwmmul %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5700,7 +5700,7 @@ __STATIC_FORCEINLINE long __RV_KWMMUL(long a, long b)
  */
 __STATIC_FORCEINLINE long __RV_KWMMUL_U(long a, long b)
 {
-    register long result;
+    long result;
     __ASM volatile("kwmmul.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5785,7 +5785,7 @@ __STATIC_FORCEINLINE unsigned long __RV_MADDR32(unsigned long t, unsigned long a
  */
 __STATIC_FORCEINLINE long __RV_MAXW(int a, int b)
 {
-    register long result;
+    long result;
     __ASM volatile("maxw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5821,7 +5821,7 @@ __STATIC_FORCEINLINE long __RV_MAXW(int a, int b)
  */
 __STATIC_FORCEINLINE long __RV_MINW(int a, int b)
 {
-    register long result;
+    long result;
     __ASM volatile("minw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5919,7 +5919,7 @@ __STATIC_FORCEINLINE unsigned long __RV_MSUBR32(unsigned long t, unsigned long a
  */
 __STATIC_FORCEINLINE unsigned long long __RV_MULR64(unsigned long a, unsigned long b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("mulr64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -5971,7 +5971,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_MULR64(unsigned long a, unsigned lo
  */
 __STATIC_FORCEINLINE long long __RV_MULSR64(long a, long b)
 {
-    register long long result;
+    long long result;
     __ASM volatile("mulsr64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6010,7 +6010,7 @@ __STATIC_FORCEINLINE long long __RV_MULSR64(long a, long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_PBSAD(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("pbsad %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6102,7 +6102,7 @@ __STATIC_FORCEINLINE unsigned long __RV_PBSADA(unsigned long t, unsigned long a,
  */
 __STATIC_FORCEINLINE unsigned long __RV_PKBB16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("pkbb16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6153,7 +6153,7 @@ __STATIC_FORCEINLINE unsigned long __RV_PKBB16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_PKBT16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("pkbt16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6204,7 +6204,7 @@ __STATIC_FORCEINLINE unsigned long __RV_PKBT16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_PKTT16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("pktt16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6255,7 +6255,7 @@ __STATIC_FORCEINLINE unsigned long __RV_PKTT16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_PKTB16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("pktb16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6300,7 +6300,7 @@ __STATIC_FORCEINLINE unsigned long __RV_PKTB16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_RADD8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("radd8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6345,7 +6345,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RADD8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_RADD16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("radd16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6398,7 +6398,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RADD16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long long __RV_RADD64(long long a, long long b)
 {
-    register long long result;
+    long long result;
     __ASM volatile("radd64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6446,7 +6446,7 @@ __STATIC_FORCEINLINE long long __RV_RADD64(long long a, long long b)
  */
 __STATIC_FORCEINLINE long __RV_RADDW(int a, int b)
 {
-    register long result;
+    long result;
     __ASM volatile("raddw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6495,7 +6495,7 @@ __STATIC_FORCEINLINE long __RV_RADDW(int a, int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_RCRAS16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rcras16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6544,7 +6544,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RCRAS16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_RCRSA16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rcrsa16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6571,7 +6571,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RCRSA16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_RDOV(void)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rdov %0" : "=r"(result));
     return result;
 }
@@ -6620,7 +6620,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RDOV(void)
  */
 __STATIC_FORCEINLINE unsigned long __RV_RSTAS16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rstas16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6669,7 +6669,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RSTAS16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_RSTSA16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rstsa16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6716,7 +6716,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RSTSA16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_RSUB8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rsub8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6763,7 +6763,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RSUB8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_RSUB16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rsub16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6817,7 +6817,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RSUB16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long long __RV_RSUB64(long long a, long long b)
 {
-    register long long result;
+    long long result;
     __ASM volatile("rsub64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6865,7 +6865,7 @@ __STATIC_FORCEINLINE long long __RV_RSUB64(long long a, long long b)
  */
 __STATIC_FORCEINLINE long __RV_RSUBW(int a, int b)
 {
-    register long result;
+    long result;
     __ASM volatile("rsubw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -6913,8 +6913,8 @@ __STATIC_FORCEINLINE long __RV_RSUBW(int a, int b)
  */
 #define __RV_SCLIP8(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("sclip8 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -6962,8 +6962,8 @@ __STATIC_FORCEINLINE long __RV_RSUBW(int a, int b)
  */
 #define __RV_SCLIP16(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("sclip16 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -7011,8 +7011,8 @@ __STATIC_FORCEINLINE long __RV_RSUBW(int a, int b)
  */
 #define __RV_SCLIP32(a, b)    \
     ({    \
-        register long result;    \
-        register long __a = (long)(a);    \
+        long result;    \
+        long __a = (long)(a);    \
         __ASM volatile("sclip32 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -7052,7 +7052,7 @@ __STATIC_FORCEINLINE long __RV_RSUBW(int a, int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SCMPLE8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("scmple8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -7092,7 +7092,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SCMPLE8(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_SCMPLE16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("scmple16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -7131,7 +7131,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SCMPLE16(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_SCMPLT8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("scmplt8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -7170,7 +7170,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SCMPLT8(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_SCMPLT16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("scmplt16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -7211,7 +7211,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SCMPLT16(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_SLL8(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sll8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -7251,8 +7251,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SLL8(unsigned long a, unsigned int b)
  */
 #define __RV_SLLI8(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("slli8 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -7293,7 +7293,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SLL8(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SLL16(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sll16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -7333,8 +7333,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SLL16(unsigned long a, unsigned int b)
  */
 #define __RV_SLLI16(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("slli16 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -7394,7 +7394,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SLL16(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE long long __RV_SMAL(long long a, unsigned long b)
 {
-    register long long result;
+    long long result;
     __ASM volatile("smal %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8261,7 +8261,7 @@ __STATIC_FORCEINLINE long __RV_SMAQA_SU(long t, unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_SMAX8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("smax8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8300,7 +8300,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SMAX8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SMAX16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("smax16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8352,7 +8352,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SMAX16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMBB16(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smbb16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8404,7 +8404,7 @@ __STATIC_FORCEINLINE long __RV_SMBB16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMBT16(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smbt16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8456,7 +8456,7 @@ __STATIC_FORCEINLINE long __RV_SMBT16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMTT16(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smtt16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8515,7 +8515,7 @@ __STATIC_FORCEINLINE long __RV_SMTT16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMDS(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smds %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8574,7 +8574,7 @@ __STATIC_FORCEINLINE long __RV_SMDS(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMDRS(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smdrs %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8633,7 +8633,7 @@ __STATIC_FORCEINLINE long __RV_SMDRS(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMXDS(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smxds %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8672,7 +8672,7 @@ __STATIC_FORCEINLINE long __RV_SMXDS(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SMIN8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("smin8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8711,7 +8711,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SMIN8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SMIN16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("smin16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8762,7 +8762,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SMIN16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMMUL(long a, long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smmul %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8813,7 +8813,7 @@ __STATIC_FORCEINLINE long __RV_SMMUL(long a, long b)
  */
 __STATIC_FORCEINLINE long __RV_SMMUL_U(long a, long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smmul.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8863,7 +8863,7 @@ __STATIC_FORCEINLINE long __RV_SMMUL_U(long a, long b)
  */
 __STATIC_FORCEINLINE long __RV_SMMWB(long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smmwb %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8913,7 +8913,7 @@ __STATIC_FORCEINLINE long __RV_SMMWB(long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMMWB_U(long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smmwb.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -8963,7 +8963,7 @@ __STATIC_FORCEINLINE long __RV_SMMWB_U(long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMMWT(long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smmwt %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -9013,7 +9013,7 @@ __STATIC_FORCEINLINE long __RV_SMMWT(long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMMWT_U(long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smmwt.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -9313,7 +9313,7 @@ __STATIC_FORCEINLINE long long __RV_SMSR64(long long t, long a, long b)
  */
 __STATIC_FORCEINLINE unsigned long long __RV_SMUL8(unsigned int a, unsigned int b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("smul8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -9396,7 +9396,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_SMUL8(unsigned int a, unsigned int 
  */
 __STATIC_FORCEINLINE unsigned long long __RV_SMULX8(unsigned int a, unsigned int b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("smulx8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -9481,7 +9481,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_SMULX8(unsigned int a, unsigned int
  */
 __STATIC_FORCEINLINE unsigned long long __RV_SMUL16(unsigned int a, unsigned int b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("smul16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -9566,7 +9566,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_SMUL16(unsigned int a, unsigned int
  */
 __STATIC_FORCEINLINE unsigned long long __RV_SMULX16(unsigned int a, unsigned int b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("smulx16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -9620,7 +9620,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_SMULX16(unsigned int a, unsigned in
  */
 __STATIC_FORCEINLINE long __RV_SRA_U(long a, unsigned int b)
 {
-    register long result;
+    long result;
     __ASM volatile("sra.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -9675,8 +9675,8 @@ __STATIC_FORCEINLINE long __RV_SRA_U(long a, unsigned int b)
  */
 #define __RV_SRAI_U(a, b)    \
     ({    \
-        register long result;    \
-        register long __a = (long)(a);    \
+        long result;    \
+        long __a = (long)(a);    \
         __ASM volatile("srai.u %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -9730,7 +9730,7 @@ __STATIC_FORCEINLINE long __RV_SRA_U(long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRA8(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sra8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -9784,7 +9784,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRA8(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRA8_U(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sra8.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -9837,8 +9837,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SRA8_U(unsigned long a, unsigned int b)
  */
 #define __RV_SRAI8(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("srai8 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -9891,8 +9891,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SRA8_U(unsigned long a, unsigned int b)
  */
 #define __RV_SRAI8_U(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("srai8.u %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -9946,7 +9946,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRA8_U(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRA16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sra16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -10000,7 +10000,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRA16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRA16_U(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sra16.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -10054,8 +10054,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SRA16_U(unsigned long a, unsigned long b
  */
 #define __RV_SRAI16(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("srai16 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -10109,8 +10109,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SRA16_U(unsigned long a, unsigned long b
  */
 #define __RV_SRAI16_U(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("srai16.u %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -10163,7 +10163,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRA16_U(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRL8(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("srl8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -10216,7 +10216,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRL8(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRL8_U(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("srl8.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -10268,8 +10268,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SRL8_U(unsigned long a, unsigned int b)
  */
 #define __RV_SRLI8(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("srli8 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -10321,8 +10321,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SRL8_U(unsigned long a, unsigned int b)
  */
 #define __RV_SRLI8_U(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("srli8.u %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -10374,7 +10374,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRL8_U(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRL16(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("srl16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -10426,7 +10426,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRL16(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRL16_U(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("srl16.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -10478,8 +10478,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SRL16_U(unsigned long a, unsigned int b)
  */
 #define __RV_SRLI16(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("srli16 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -10531,8 +10531,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SRL16_U(unsigned long a, unsigned int b)
  */
 #define __RV_SRLI16_U(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("srli16.u %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -10578,7 +10578,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRL16_U(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_STAS16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("stas16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -10624,7 +10624,7 @@ __STATIC_FORCEINLINE unsigned long __RV_STAS16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_STSA16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("stsa16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -10665,7 +10665,7 @@ __STATIC_FORCEINLINE unsigned long __RV_STSA16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SUB8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sub8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -10706,7 +10706,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SUB8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SUB16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sub16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -10760,7 +10760,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SUB16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long long __RV_SUB64(unsigned long long a, unsigned long long b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("sub64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -10806,7 +10806,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_SUB64(unsigned long long a, unsigne
  */
 __STATIC_FORCEINLINE unsigned long __RV_SUNPKD810(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sunpkd810 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -10852,7 +10852,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SUNPKD810(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SUNPKD820(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sunpkd820 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -10898,7 +10898,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SUNPKD820(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SUNPKD830(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sunpkd830 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -10944,7 +10944,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SUNPKD830(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SUNPKD831(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sunpkd831 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -10990,7 +10990,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SUNPKD831(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SUNPKD832(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sunpkd832 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -11027,7 +11027,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SUNPKD832(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SWAP8(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("swap8 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -11064,7 +11064,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SWAP8(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SWAP16(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("swap16 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -11111,8 +11111,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SWAP16(unsigned long a)
  */
 #define __RV_UCLIP8(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("uclip8 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -11160,8 +11160,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SWAP16(unsigned long a)
  */
 #define __RV_UCLIP16(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("uclip16 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -11210,8 +11210,8 @@ __STATIC_FORCEINLINE unsigned long __RV_SWAP16(unsigned long a)
  */
 #define __RV_UCLIP32(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register unsigned long __a = (unsigned long)(a);    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
         __ASM volatile("uclip32 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -11251,7 +11251,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SWAP16(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_UCMPLE8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ucmple8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11291,7 +11291,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UCMPLE8(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_UCMPLE16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ucmple16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11330,7 +11330,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UCMPLE16(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_UCMPLT8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ucmplt8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11369,7 +11369,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UCMPLT8(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_UCMPLT16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ucmplt16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11414,7 +11414,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UCMPLT16(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKADD8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukadd8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11459,7 +11459,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKADD8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKADD16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukadd16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11521,7 +11521,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKADD16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long long __RV_UKADD64(unsigned long long a, unsigned long long b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("ukadd64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11563,7 +11563,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_UKADD64(unsigned long long a, unsig
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKADDH(unsigned int a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukaddh %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11606,7 +11606,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKADDH(unsigned int a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKADDW(unsigned int a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukaddw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11662,7 +11662,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKADDW(unsigned int a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKCRAS16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukcras16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11717,7 +11717,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKCRAS16(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKCRSA16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukcrsa16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11902,7 +11902,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_UKMSR64(unsigned long long t, unsig
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKSTAS16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukstas16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -11957,7 +11957,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKSTAS16(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKSTSA16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukstsa16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12002,7 +12002,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKSTSA16(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKSUB8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("uksub8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12047,7 +12047,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKSUB8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKSUB16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("uksub16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12110,7 +12110,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKSUB16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long long __RV_UKSUB64(unsigned long long a, unsigned long long b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("uksub64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12156,7 +12156,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_UKSUB64(unsigned long long a, unsig
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKSUBH(unsigned int a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("uksubh %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12200,7 +12200,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKSUBH(unsigned int a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKSUBW(unsigned int a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("uksubw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12336,7 +12336,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UMAQA(unsigned long t, unsigned long a, 
  */
 __STATIC_FORCEINLINE unsigned long __RV_UMAX8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("umax8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12375,7 +12375,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UMAX8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_UMAX16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("umax16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12414,7 +12414,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UMAX16(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_UMIN8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("umin8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12453,7 +12453,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UMIN8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_UMIN16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("umin16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12590,7 +12590,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_UMSR64(unsigned long long t, unsign
  */
 __STATIC_FORCEINLINE unsigned long long __RV_UMUL8(unsigned int a, unsigned int b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("umul8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12674,7 +12674,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_UMUL8(unsigned int a, unsigned int 
  */
 __STATIC_FORCEINLINE unsigned long long __RV_UMULX8(unsigned int a, unsigned int b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("umulx8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12759,7 +12759,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_UMULX8(unsigned int a, unsigned int
  */
 __STATIC_FORCEINLINE unsigned long long __RV_UMUL16(unsigned int a, unsigned int b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("umul16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12844,7 +12844,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_UMUL16(unsigned int a, unsigned int
  */
 __STATIC_FORCEINLINE unsigned long long __RV_UMULX16(unsigned int a, unsigned int b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("umulx16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12891,7 +12891,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_UMULX16(unsigned int a, unsigned in
  */
 __STATIC_FORCEINLINE unsigned long __RV_URADD8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("uradd8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12938,7 +12938,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URADD8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_URADD16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("uradd16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -12990,7 +12990,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URADD16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long long __RV_URADD64(unsigned long long a, unsigned long long b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("uradd64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13038,7 +13038,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_URADD64(unsigned long long a, unsig
  */
 __STATIC_FORCEINLINE unsigned long __RV_URADDW(unsigned int a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("uraddw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13087,7 +13087,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URADDW(unsigned int a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_URCRAS16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("urcras16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13136,7 +13136,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URCRAS16(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_URCRSA16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("urcrsa16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13185,7 +13185,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URCRSA16(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_URSTAS16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("urstas16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13234,7 +13234,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URSTAS16(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_URSTSA16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("urstsa16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13281,7 +13281,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URSTSA16(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_URSUB8(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ursub8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13328,7 +13328,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URSUB8(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_URSUB16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ursub16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13382,7 +13382,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URSUB16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long long __RV_URSUB64(unsigned long long a, unsigned long long b)
 {
-    register unsigned long long result;
+    unsigned long long result;
     __ASM volatile("ursub64 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13430,7 +13430,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_URSUB64(unsigned long long a, unsig
  */
 __STATIC_FORCEINLINE unsigned long __RV_URSUBW(unsigned int a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ursubw %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13483,8 +13483,8 @@ __STATIC_FORCEINLINE unsigned long __RV_URSUBW(unsigned int a, unsigned int b)
  */
 #define __RV_WEXTI(a, b)    \
     ({    \
-        register unsigned long result;    \
-        register long long __a = (long long)(a);    \
+        unsigned long result;    \
+        long long __a = (long long)(a);    \
         __ASM volatile("wexti %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
         result;    \
     })
@@ -13534,7 +13534,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URSUBW(unsigned int a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_WEXT(long long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("wext %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13580,7 +13580,7 @@ __STATIC_FORCEINLINE unsigned long __RV_WEXT(long long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_ZUNPKD810(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("zunpkd810 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -13626,7 +13626,7 @@ __STATIC_FORCEINLINE unsigned long __RV_ZUNPKD810(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_ZUNPKD820(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("zunpkd820 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -13672,7 +13672,7 @@ __STATIC_FORCEINLINE unsigned long __RV_ZUNPKD820(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_ZUNPKD830(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("zunpkd830 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -13718,7 +13718,7 @@ __STATIC_FORCEINLINE unsigned long __RV_ZUNPKD830(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_ZUNPKD831(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("zunpkd831 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -13764,7 +13764,7 @@ __STATIC_FORCEINLINE unsigned long __RV_ZUNPKD831(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_ZUNPKD832(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("zunpkd832 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -13806,7 +13806,7 @@ __STATIC_FORCEINLINE unsigned long __RV_ZUNPKD832(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_ADD32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("add32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13849,7 +13849,7 @@ __STATIC_FORCEINLINE unsigned long __RV_ADD32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CRAS32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("cras32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13891,7 +13891,7 @@ __STATIC_FORCEINLINE unsigned long __RV_CRAS32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_CRSA32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("crsa32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -13951,7 +13951,7 @@ GE80B
  */
 __STATIC_FORCEINLINE unsigned long __RV_KABS32(unsigned long a)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kabs32 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
@@ -13997,7 +13997,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KABS32(unsigned long a)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KADD32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kadd32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -14048,7 +14048,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KADD32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KCRAS32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kcras32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -14098,7 +14098,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KCRAS32(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KCRSA32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kcrsa32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -14150,7 +14150,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KCRSA32(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KDMBB16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kdmbb16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -14202,7 +14202,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KDMBB16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KDMBT16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kdmbt16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -14254,7 +14254,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KDMBT16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KDMTT16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kdmtt16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -14502,7 +14502,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KDMATT16(unsigned long t, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_KHMBB16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("khmbb16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -14555,7 +14555,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KHMBB16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KHMBT16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("khmbt16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -14608,7 +14608,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KHMBT16(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KHMTT16(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("khmtt16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -14958,7 +14958,7 @@ __STATIC_FORCEINLINE long __RV_KMAXDA32(long t, unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE long __RV_KMDA32(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("kmda32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15010,7 +15010,7 @@ __STATIC_FORCEINLINE long __RV_KMDA32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_KMXDA32(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("kmxda32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15364,7 +15364,7 @@ __STATIC_FORCEINLINE long __RV_KMSXDA32(long t, unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSLL32(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ksll32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15415,7 +15415,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLL32(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSLLI32(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kslli32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15481,7 +15481,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLLI32(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSLRA32(unsigned long a, int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kslra32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15547,7 +15547,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLRA32(unsigned long a, int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSLRA32_U(unsigned long a, int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kslra32.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15599,7 +15599,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLRA32_U(unsigned long a, int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSTAS32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kstas32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15650,7 +15650,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSTAS32(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSTSA32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("kstsa32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15697,7 +15697,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSTSA32(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_KSUB32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ksub32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15745,7 +15745,7 @@ __STATIC_FORCEINLINE unsigned long __RV_KSUB32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_PKBB32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("pkbb32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15793,7 +15793,7 @@ __STATIC_FORCEINLINE unsigned long __RV_PKBB32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_PKBT32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("pkbt32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15841,7 +15841,7 @@ __STATIC_FORCEINLINE unsigned long __RV_PKBT32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_PKTT32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("pktt32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15889,7 +15889,7 @@ __STATIC_FORCEINLINE unsigned long __RV_PKTT32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_PKTB32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("pktb32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15935,7 +15935,7 @@ __STATIC_FORCEINLINE unsigned long __RV_PKTB32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_RADD32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("radd32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -15982,7 +15982,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RADD32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_RCRAS32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rcras32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16029,7 +16029,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RCRAS32(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_RCRSA32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rcrsa32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16076,7 +16076,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RCRSA32(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_RSTAS32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rstas32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16122,7 +16122,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RSTAS32(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_RSTSA32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rstsa32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16168,7 +16168,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RSTSA32(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_RSUB32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("rsub32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16208,7 +16208,7 @@ __STATIC_FORCEINLINE unsigned long __RV_RSUB32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SLL32(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sll32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16247,7 +16247,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SLL32(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SLLI32(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("slli32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16285,7 +16285,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SLLI32(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SMAX32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("smax32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16334,7 +16334,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SMAX32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMBB32(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smbb32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16383,7 +16383,7 @@ __STATIC_FORCEINLINE long __RV_SMBB32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMBT32(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smbt32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16432,7 +16432,7 @@ __STATIC_FORCEINLINE long __RV_SMBT32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMTT32(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smtt32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16485,7 +16485,7 @@ __STATIC_FORCEINLINE long __RV_SMTT32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMDS32(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smds32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16538,7 +16538,7 @@ __STATIC_FORCEINLINE long __RV_SMDS32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMDRS32(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smdrs32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16591,7 +16591,7 @@ __STATIC_FORCEINLINE long __RV_SMDRS32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE long __RV_SMXDS32(unsigned long a, unsigned long b)
 {
-    register long result;
+    long result;
     __ASM volatile("smxds32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16629,7 +16629,7 @@ __STATIC_FORCEINLINE long __RV_SMXDS32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SMIN32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("smin32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16682,7 +16682,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SMIN32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRA32(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sra32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16735,7 +16735,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRA32(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRA32_U(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sra32.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16788,7 +16788,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRA32_U(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRAI32(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("srai32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16841,7 +16841,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRAI32(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRAI32_U(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("srai32.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16886,7 +16886,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRAI32_U(unsigned long a, unsigned int b
  */
 __STATIC_FORCEINLINE long __RV_SRAIW_U(int a, unsigned int b)
 {
-    register long result;
+    long result;
     __ASM volatile("sraiw.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16939,7 +16939,7 @@ __STATIC_FORCEINLINE long __RV_SRAIW_U(int a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRL32(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("srl32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -16992,7 +16992,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRL32(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRL32_U(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("srl32.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17043,7 +17043,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRL32_U(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRLI32(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("srli32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17094,7 +17094,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRLI32(unsigned long a, unsigned int b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SRLI32_U(unsigned long a, unsigned int b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("srli32.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17137,7 +17137,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SRLI32_U(unsigned long a, unsigned int b
  */
 __STATIC_FORCEINLINE unsigned long __RV_STAS32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("stas32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17179,7 +17179,7 @@ __STATIC_FORCEINLINE unsigned long __RV_STAS32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_STSA32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("stsa32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17219,7 +17219,7 @@ __STATIC_FORCEINLINE unsigned long __RV_STSA32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_SUB32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("sub32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17263,7 +17263,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SUB32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKADD32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukadd32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17316,7 +17316,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKADD32(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKCRAS32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukcras32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17368,7 +17368,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKCRAS32(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKCRSA32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukcrsa32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17421,7 +17421,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKCRSA32(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKSTAS32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukstas32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17473,7 +17473,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKSTAS32(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKSTSA32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ukstsa32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17517,7 +17517,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKSTSA32(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_UKSUB32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("uksub32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17555,7 +17555,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UKSUB32(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_UMAX32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("umax32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17593,7 +17593,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UMAX32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_UMIN32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("umin32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17639,7 +17639,7 @@ __STATIC_FORCEINLINE unsigned long __RV_UMIN32(unsigned long a, unsigned long b)
  */
 __STATIC_FORCEINLINE unsigned long __RV_URADD32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("uradd32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17686,7 +17686,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URADD32(unsigned long a, unsigned long b
  */
 __STATIC_FORCEINLINE unsigned long __RV_URCRAS32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("urcras32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17733,7 +17733,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URCRAS32(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_URCRSA32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("urcrsa32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17780,7 +17780,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URCRSA32(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_URSTAS32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("urstas32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17827,7 +17827,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URSTAS32(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_URSTSA32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("urstsa32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
@@ -17873,7 +17873,7 @@ __STATIC_FORCEINLINE unsigned long __RV_URSTSA32(unsigned long a, unsigned long 
  */
 __STATIC_FORCEINLINE unsigned long __RV_URSUB32(unsigned long a, unsigned long b)
 {
-    register unsigned long result;
+    unsigned long result;
     __ASM volatile("ursub32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }

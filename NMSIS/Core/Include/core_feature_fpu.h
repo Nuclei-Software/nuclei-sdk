@@ -106,7 +106,7 @@
  */
 #define __RV_FLW(freg, addr, ofs)                              \
     ({                                                         \
-        register rv_csr_t __addr = (rv_csr_t)(addr);           \
+        rv_csr_t __addr = (rv_csr_t)(addr);                    \
         __ASM volatile("flw " STRINGIFY(freg) ", %0(%1)  "     \
                      : : "I"(ofs), "r"(__addr)                 \
                      : "memory");                              \
@@ -127,7 +127,7 @@
  */
 #define __RV_FSW(freg, addr, ofs)                              \
     ({                                                         \
-        register rv_csr_t __addr = (rv_csr_t)(addr);           \
+        rv_csr_t __addr = (rv_csr_t)(addr);                    \
         __ASM volatile("fsw " STRINGIFY(freg) ", %0(%1)  "     \
                      : : "I"(ofs), "r"(__addr)                 \
                      : "memory");                              \
@@ -150,7 +150,7 @@
  */
 #define __RV_FLD(freg, addr, ofs)                              \
     ({                                                         \
-        register rv_csr_t __addr = (rv_csr_t)(addr);           \
+        rv_csr_t __addr = (rv_csr_t)(addr);                    \
         __ASM volatile("fld " STRINGIFY(freg) ", %0(%1)  "     \
                      : : "I"(ofs), "r"(__addr)                 \
                      : "memory");                              \
@@ -173,7 +173,7 @@
  */
 #define __RV_FSD(freg, addr, ofs)                              \
     ({                                                         \
-        register rv_csr_t __addr = (rv_csr_t)(addr);           \
+        rv_csr_t __addr = (rv_csr_t)(addr);                    \
         __ASM volatile("fsd " STRINGIFY(freg) ", %0(%1)  "     \
                      : : "I"(ofs), "r"(__addr)                 \
                      : "memory");                              \
