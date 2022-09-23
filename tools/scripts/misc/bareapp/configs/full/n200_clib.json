@@ -23,6 +23,9 @@
     },
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": false},
+        "application/baremetal/demo_spmp": {"build": true, "run": false},
+        "application/baremetal/demo_pmp": {"build": true, "run": false},
+        "application/baremetal/demo_smode_eclic": {"build": true, "run": false},
         "test/core": {"build": false, "run": false}
     }
 }
