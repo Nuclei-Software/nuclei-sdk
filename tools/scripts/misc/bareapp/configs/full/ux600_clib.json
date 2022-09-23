@@ -1,0 +1,36 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "copy_objects": true,
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "ARCH_EXT": "",
+        "DOWNLOAD": "ilm"
+    },
+    "build_configs": {
+        "ux600-newlib-small": {"CORE": "ux600", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "ux600b-newlib-small": {"CORE": "ux600", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "ux600p-newlib-small": {"CORE": "ux600", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "ux600bp-newlib-small": {"CORE": "ux600", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "ux600f-newlib-small": {"CORE": "ux600f", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "ux600fb-newlib-small": {"CORE": "ux600f", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "ux600fp-newlib-small": {"CORE": "ux600f", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "ux600fbp-newlib-small": {"CORE": "ux600f", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "ux600fd-newlib-small": {"CORE": "ux600fd", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "ux600fdb-newlib-small": {"CORE": "ux600fd", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "ux600fdp-newlib-small": {"CORE": "ux600fd", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "ux600fdbp-newlib-small": {"CORE": "ux600fd", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"}
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "test/core": {"build": false, "run": false}
+    }
+}

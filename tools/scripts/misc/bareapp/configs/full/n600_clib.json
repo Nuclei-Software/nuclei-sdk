@@ -1,0 +1,48 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "copy_objects": true,
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "ARCH_EXT": "",
+        "DOWNLOAD": "ilm"
+    },
+    "build_configs": {
+        "n600-newlib-small": {"CORE": "n600", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "n600-libncrt-small": {"CORE": "n600", "STDCLIB": "libncrt_small", "ARCH_EXT": ""},
+        "n600b-newlib-small": {"CORE": "n600", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n600b-libncrt-small": {"CORE": "n600", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
+        "n600p-newlib-small": {"CORE": "n600", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "n600p-libncrt-small": {"CORE": "n600", "STDCLIB": "libncrt_small", "ARCH_EXT": "p"},
+        "n600bp-newlib-small": {"CORE": "n600", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "n600bp-libncrt-small": {"CORE": "n600", "STDCLIB": "libncrt_small", "ARCH_EXT": "bp"},
+        "n600f-newlib-small": {"CORE": "n600f", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "n600f-libncrt-small": {"CORE": "n600f", "STDCLIB": "libncrt_small", "ARCH_EXT": ""},
+        "n600fb-newlib-small": {"CORE": "n600f", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n600fb-libncrt-small": {"CORE": "n600f", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
+        "n600fp-newlib-small": {"CORE": "n600f", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "n600fp-libncrt-small": {"CORE": "n600f", "STDCLIB": "libncrt_small", "ARCH_EXT": "p"},
+        "n600fbp-newlib-small": {"CORE": "n600f", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "n600fbp-libncrt-small": {"CORE": "n600f", "STDCLIB": "libncrt_small", "ARCH_EXT": "bp"},
+        "n600fd-newlib-small": {"CORE": "n600fd", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "n600fd-libncrt-small": {"CORE": "n600fd", "STDCLIB": "libncrt_small", "ARCH_EXT": ""},
+        "n600fdb-newlib-small": {"CORE": "n600fd", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "n600fdb-libncrt-small": {"CORE": "n600fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
+        "n600fdp-newlib-small": {"CORE": "n600fd", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "n600fdp-libncrt-small": {"CORE": "n600fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "p"},
+        "n600fdbp-newlib-small": {"CORE": "n600fd", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "n600fdbp-libncrt-small": {"CORE": "n600fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "bp"}
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "test/core": {"build": false, "run": false}
+    }
+}

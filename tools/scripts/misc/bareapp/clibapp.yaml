@@ -1,0 +1,100 @@
+runcfg:
+    runner: fpga
+
+environment:
+    fpgaloc: /home/share/devtools/fpgabit/latest
+    ncycmloc: /home/share/devtools/ncycm/linux64/latest
+    cfgloc: .
+
+# fpga runners
+fpga_runners:
+    ddr200t_1:
+        # ddr200t/mcu200t/ku060/vcu118
+        board_type: ddr200t
+        # serial number, such as Digilent/210308AC59C6
+        fpga_serial: Digilent/210251A08870
+        # ftdi_serial number, such as FT4JUVF6
+        ftdi_serial: FT4JUVF6
+        # leave it empty, will find the serial port by ftdi_serial
+        # serial_port number, such as /dev/ttyUSB1
+        serial_port:
+    ku060_1:
+        # ddr200t/mcu200t/ku060/vcu118
+        board_type: ku060
+        # serial number, such as Digilent/210308AC59C6
+        fpga_serial: Xilinx/13724327082c01
+        # ftdi_serial number, such as FT4JUVF6
+        ftdi_serial: FT6JGAXS
+        # serial_port number, such as /dev/ttyUSB1
+        # leave it empty, will find the serial port by ftdi_serial
+        serial_port:
+    vcu118_1:
+        # ddr200t/mcu200t/ku060/vcu118
+        board_type: vcu118
+        # serial number, such as Digilent/210308AC59C6
+        fpga_serial: Digilent/210308B0AC12
+        # ftdi_serial number, such as FT4JUVF6
+        ftdi_serial: FT64JJQU
+        # serial_port number, such as /dev/ttyUSB1
+        # leave it empty, will find the serial port by ftdi_serial
+        serial_port:
+
+ncycm_runners:
+    n200b:
+        # model path
+        model: n200_software_best_config_cymodel_latest
+    n300fdbp:
+        model: n300_software_best_config_cymodel_latest
+    n900fdbp:
+        model: n900_software_best_config_cymodel_latest
+
+# configs
+configs:
+    n200:
+        fpga: ddr200t
+        # bitstream path related to this yaml's loc or abs path
+        bitstream: n200_software_best_config_ddr200t.bit
+        ncycm: n200b
+        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        appcfg: bareapp.json
+        hwcfg: n200_clib.json
+    # cpu core name
+    n300:
+        fpga: ddr200t
+        bitstream: n300_software_best_config_ddr200t.bit
+        ncycm: n300fdbp
+        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        appcfg: bareapp.json
+        hwcfg: n300_clib.json
+    # cpu core name
+    n600:
+        fpga: ku060
+        bitstream: n600_software_best_config_ku060.bit
+        ncycm: n600fdbp
+        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        appcfg: bareapp.json
+        hwcfg: n600_clib.json
+    # cpu core name
+    ux600:
+        fpga: ku060
+        bitstream: ux600_software_best_config_ku060.bit
+        ncycm: ux600fdbp
+        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        appcfg: bareapp.json
+        hwcfg: ux600_clib.json
+    # cpu core name
+    n900:
+        fpga: vcu118
+        bitstream: n900_software_best_config_vcu118.bit
+        ncycm: n900fdbp
+        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        appcfg: bareapp.json
+        hwcfg: n900_clib.json
+    # cpu core name
+    ux900:
+        fpga: vcu118
+        bitstream: ux900_software_best_config_vcu118.bit
+        ncycm: ux900fdbp
+        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        appcfg: bareapp.json
+        hwcfg: ux900_clib.json

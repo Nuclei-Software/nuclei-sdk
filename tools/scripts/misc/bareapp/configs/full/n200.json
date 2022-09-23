@@ -1,0 +1,12 @@
+{
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "DOWNLOAD": "ilm",
+        "CPU_SERIES": "200"
+    },
+    "build_configs": {
+        "rv32imac": {"CORE":"n203"},
+        "rv32imacb": {"CORE":"n203", "ARCH_EXT":"b"}
+    }
+}

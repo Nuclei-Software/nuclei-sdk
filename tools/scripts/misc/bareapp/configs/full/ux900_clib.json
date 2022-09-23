@@ -1,0 +1,36 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "copy_objects": true,
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "ARCH_EXT": "",
+        "DOWNLOAD": "ilm"
+    },
+    "build_configs": {
+        "ux900-newlib-small": {"CORE": "ux900", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "ux900b-newlib-small": {"CORE": "ux900", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "ux900p-newlib-small": {"CORE": "ux900", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "ux900bp-newlib-small": {"CORE": "ux900", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "ux900f-newlib-small": {"CORE": "ux900f", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "ux900fb-newlib-small": {"CORE": "ux900f", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "ux900fp-newlib-small": {"CORE": "ux900f", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "ux900fbp-newlib-small": {"CORE": "ux900f", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "ux900fd-newlib-small": {"CORE": "ux900fd", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "ux900fdb-newlib-small": {"CORE": "ux900fd", "STDCLIB": "newlib_small", "ARCH_EXT": "b"},
+        "ux900fdp-newlib-small": {"CORE": "ux900fd", "STDCLIB": "newlib_small", "ARCH_EXT": "p"},
+        "ux900fdbp-newlib-small": {"CORE": "ux900fd", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"}
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "test/core": {"build": false, "run": false}
+    }
+}

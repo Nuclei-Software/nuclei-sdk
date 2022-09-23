@@ -1,0 +1,12 @@
+{
+    "build_config": {
+        "SOC": "demosoc",
+        "BOARD": "nuclei_fpga_eval",
+        "DOWNLOAD": "ilm",
+        "CPU_SERIES": "900"
+    },
+    "build_configs": {
+        "rv64imacbp": {"CORE":"nx900", "ARCH_EXT":"bp"},
+        "rv64imafdcbp": {"CORE":"nx900fd", "ARCH_EXT":"bp"}
+    }
+}
