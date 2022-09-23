@@ -17,5 +17,9 @@
         "rv32imafdcb": {"CORE":"n900fd", "ARCH_EXT":"b"},
         "rv32imafdcp": {"CORE":"n900fd", "ARCH_EXT":"p"},
         "rv32imafdcbp": {"CORE":"n900fd", "ARCH_EXT":"bp"}
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "test/core": {"build": false, "run": false}
     }
 }
