@@ -36,7 +36,19 @@ def get_expected(config, app, cfg_name):
     else:
         app_expected = dict()
     if found_app_expecteds:
-        app_cfgexpected = config.get("expecteds", dict()).get(found_app_expecteds).get(cfg_name, dict())
+        allcfgs_expected = config.get("expecteds", dict()).get(found_app_expecteds)
+        # find expecteds config match key startwith
+        if allcfgs_expected is not None and len(allcfgs_expected) > 0:
+            if cfg_name not in allcfgs_expected:
+                for key in allcfgs_expected:
+                    if cfg_name.startswith(key):
+                        app_cfgexpected = allcfgs_expected[key]
+                        break
+            else:
+                app_cfgexpected = allcfgs_expected.get(cfg_name, dict())
+        else:
+            app_cfgexpected = dict()
+
     else:
         app_cfgexpected = dict()
     app_expected = merge_two_config(app_expected, app_cfgexpected)
@@ -426,6 +438,9 @@ def merge_runconfig(all_mergedcfg, config, reldir):
     if "build_configs" not in all_mergedcfg:
         all_mergedcfg["build_configs"] = dict()
 
+    if "expecteds" not in all_mergedcfg:
+        all_mergedcfg["expecteds"] = dict()
+
     if "checks" not in all_mergedcfg:
         all_mergedcfg["checks"] = config.get("checks", dict())
     if "appdirs" not in all_mergedcfg:
@@ -436,6 +451,20 @@ def merge_runconfig(all_mergedcfg, config, reldir):
         all_mergedcfg["appconfig"] = config.get("appconfig", dict())
 
     # TODO handle expecteds and expected
+    if "expected" in config:
+        for app in config["expected"]:
+            if app not in all_mergedcfg["expecteds"]:
+                all_mergedcfg["expecteds"][app] = dict()
+            newcfgname = reldir.replace("\\", "/")
+            all_mergedcfg["expecteds"][app][newcfgname] = config["expected"][app]
+
+    if "expecteds" in config:
+        for app in config["expecteds"]:
+            if app not in all_mergedcfg["expecteds"]:
+                all_mergedcfg["expecteds"][app] = dict()
+            for cfgname in config["expecteds"]:
+                newcfgname = os.path.join(reldir, cfgname).replace("\\", "/")
+                all_mergedcfg["expecteds"][app][newcfgname] = config["expecteds"][app][cfgname]
 
     def merge_buildcfgs(dstcfg, srccfg, rel):
         if "build_configs" in srccfg:
