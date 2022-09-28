@@ -288,6 +288,7 @@ class MonitorThread(Thread):
         self.timeout = timeout
         self.checks = checks
         self.checktime = checktime
+        self.tty_iserr = False
         self.sdk_check = sdk_check
         self.logfile = logfile
         self.show_output = show_output
@@ -301,6 +302,9 @@ class MonitorThread(Thread):
             return self.result
         except Exception:
             return None
+
+    def get_tty_iserror(self):
+        return self.tty_iserr
 
     def exit_request(self):
         self._exit_req = True
@@ -376,6 +380,8 @@ class MonitorThread(Thread):
         except serial.serialutil.SerialException:
             # https://stackoverflow.com/questions/21050671/how-to-check-if-device-is-connected-pyserial
             print("serial port %s might not exist or in use" % self.port)
+            # set tty is error
+            self.tty_iserr = True
         except Exception as exc:
             print("Some error happens during serial operations, %s" % (str(exc)))
         finally:
@@ -391,6 +397,8 @@ class nsdk_runner(nsdk_builder):
     def __init__(self):
         super().__init__()
         self.hangup_action = None
+        self.ttyerrcnt = 0
+        self.fpgaprogramcnt = 0
         pass
 
     @staticmethod
@@ -401,6 +409,23 @@ class nsdk_runner(nsdk_builder):
             if nsdk_runner.is_app(subdir):
                 appdirs.append(os.path.normpath(subdir))
         return appdirs
+
+    def reset_counters(self):
+        self.ttyerrcnt = 0
+        self.fpgaprogramcnt = 0
+        pass
+
+    def need_exit_now(self):
+        if self.ttyerrcnt > get_sdk_ttyerr_maxcnt():
+            return True
+        if self.fpgaprogramcnt > get_sdk_fpgaprog_maxcnt():
+            return True
+        return False
+
+    def show_counters(self):
+        print("TTY Error counter %d, limit count %d" % (self.ttyerrcnt, get_sdk_ttyerr_maxcnt()))
+        print("FPGA Program Error counter %d, limit count %d" % (self.fpgaprogramcnt, get_sdk_fpgaprog_maxcnt()))
+        pass
 
     def set_cpu_hangup_action(self, hangaction):
         self.hangup_action = hangaction
@@ -477,6 +502,7 @@ class nsdk_runner(nsdk_builder):
                     ser_thread.start()
                 else:
                     print("Warning: No available serial port found, please check!")
+                    self.ttyerrcnt += 1
                 cmdsts, upload_sts = self.upload_app(appdir, make_options, show_output, uploadlog)
                 uploader = upload_sts.get("app", dict()).get("uploader", None)
                 uploader["retried"] = retry_cnt
@@ -489,6 +515,8 @@ class nsdk_runner(nsdk_builder):
                     while ser_thread.is_alive():
                         ser_thread.join(1)
                     status = ser_thread.get_result()
+                    if ser_thread.get_tty_iserror(): # tty is in use or not exist
+                        self.ttyerrcnt += 1
                     del ser_thread
                 if uploader.get("cpustatus", "") == "hang": # cpu hangs then call cpu hangup action and retry this application
                     if self.hangup_action is not None:
@@ -500,6 +528,7 @@ class nsdk_runner(nsdk_builder):
                             print("hangup action failed!")
                     elif fpgabit and fpgaserial:
                         print("Reprogram fpga bit %s on fpga board serial number %s" % (fpgabit, fpgaserial))
+                        self.fpgaprogramcnt += 1
                         if program_fpga(fpgabit, fpgaserial) == True:
                             print("Reprogram fpga sucessfully!")
                             continue
@@ -843,6 +872,8 @@ class nsdk_runner(nsdk_builder):
         # Run all the applications, each application only has one configuration
         # "app" : { the_only_config }
         cmdsts = True
+        # reset error counters
+        self.reset_counters()
         build_status = dict()
         apps_config = copy.deepcopy(config)
         for appdir in apps_config:
@@ -855,14 +886,22 @@ class nsdk_runner(nsdk_builder):
             if appcmdsts == False:
                 cmdsts = appcmdsts
                 if stoponfail == True:
-                    print("Stop run apps with config due to fail on application %s" %(appdir))
+                    print("ERROR: Stop run apps with config due to fail on application %s" %(appdir))
                     return cmdsts, build_status
+            # error exit check
+            if self.need_exit_now():
+                print("ERROR: Need to exit now due to error counter exceed limit!")
+                self.show_counters()
+                cmdsts = False
+                return cmdsts, build_status
         return cmdsts, build_status
 
     def run_apps_with_configs(self, config:dict, show_output=True, stoponfail=False):
         # Run all the applications, each application has more than one configuration
         # "app" : {"configs": {"case1": case1_config}}
         cmdsts = True
+        # reset error counters
+        self.reset_counters()
         build_status = dict()
         apps_config = copy.deepcopy(config)
         for appdir in apps_config:
@@ -881,6 +920,12 @@ class nsdk_runner(nsdk_builder):
                 if appcmdsts == False:
                     cmdsts = appcmdsts
                     if stoponfail == True:
-                        print("Stop run apps with config due to fail on application %s" %(appdir))
+                        print("ERROR: Stop run apps with config due to fail on application %s" %(appdir))
                         return cmdsts, build_status
+                # error exit check
+                if self.need_exit_now():
+                    print("ERROR: Need to exit now due to error counter exceed limit!")
+                    self.show_counters()
+                    cmdsts = False
+                    return cmdsts, build_status
         return cmdsts, build_status

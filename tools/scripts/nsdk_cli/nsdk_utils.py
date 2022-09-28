@@ -37,7 +37,9 @@ SDK_GLOBAL_VARIABLES = {
     "sdk_check": True,
     "sdk_banner_tmout": 15,
     "sdk_copy_objects": "elf,map,dasm,verilog",
-    "sdk_copy_objects_flag": False
+    "sdk_copy_objects_flag": False,
+    "sdk_ttyerr_maxcnt": 10,
+    "sdk_fpgaprog_maxcnt": 10
     }
 
 class NThread(Thread):
@@ -673,6 +675,25 @@ def get_sdk_banner_tmout():
         tmout = SDK_GLOBAL_VARIABLES.get("sdk_banner_tmout")
 
     return tmout
+
+def get_sdk_ttyerr_maxcnt():
+    num = os.environ.get("SDK_TTYERR_MAXCNT")
+    if num is not None:
+        num = int(num)
+    else:
+        num = SDK_GLOBAL_VARIABLES.get("sdk_ttyerr_maxcnt")
+
+    return num
+
+def get_sdk_fpgaprog_maxcnt():
+    num = os.environ.get("SDK_FPGAPROG_MAXCNT")
+    if num is not None:
+        num = int(num)
+    else:
+        num = SDK_GLOBAL_VARIABLES.get("sdk_fpgaprog_maxcnt")
+
+    return num
+
 
 def find_local_appconfig(appdir, localcfgs):
     if isinstance(appdir, str) and isinstance(localcfgs, dict):
