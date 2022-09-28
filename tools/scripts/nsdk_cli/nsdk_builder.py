@@ -516,6 +516,7 @@ class nsdk_runner(nsdk_builder):
                         ser_thread.join(1)
                     status = ser_thread.get_result()
                     if ser_thread.get_tty_iserror(): # tty is in use or not exist
+                        print("tty serial port error count %d" % (self.ttyerrcnt))
                         self.ttyerrcnt += 1
                     del ser_thread
                 if uploader.get("cpustatus", "") == "hang": # cpu hangs then call cpu hangup action and retry this application
@@ -527,7 +528,7 @@ class nsdk_runner(nsdk_builder):
                         else:
                             print("hangup action failed!")
                     elif fpgabit and fpgaserial:
-                        print("Reprogram fpga bit %s on fpga board serial number %s" % (fpgabit, fpgaserial))
+                        print("Reprogram fpga bit %s on fpga board serial number %s, reprogam count %d" % (fpgabit, fpgaserial, self.fpgaprogramcnt))
                         self.fpgaprogramcnt += 1
                         if program_fpga(fpgabit, fpgaserial) == True:
                             print("Reprogram fpga sucessfully!")
