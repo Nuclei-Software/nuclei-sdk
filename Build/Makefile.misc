@@ -33,8 +33,12 @@ space=$(nullstring) # one space
 RM=rm -rf
 RMD=rm -rf
 ECHO=echo
+# TODO cp currently only avail in linux
+# windows build tool not provide it
 CP=cp -rf
-MKD = mkdir -p
+# https://github.com/bmatzelle/gow/issues/171#issuecomment-91709839
+# add extra "" around mkdir to overwrite cmd default mkdir in windows
+MKD="mkdir" -p
 PS=/$(nullstring)
 NULL=/dev/null
 
