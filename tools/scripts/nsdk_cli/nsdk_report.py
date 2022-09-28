@@ -40,6 +40,7 @@ def get_expected(config, app, cfg_name):
         # find expecteds config match key startwith
         if allcfgs_expected is not None and len(allcfgs_expected) > 0:
             if cfg_name not in allcfgs_expected:
+                app_cfgexpected = dict()
                 for key in allcfgs_expected:
                     if cfg_name.startswith(key):
                         app_cfgexpected = allcfgs_expected[key]
@@ -48,7 +49,6 @@ def get_expected(config, app, cfg_name):
                 app_cfgexpected = allcfgs_expected.get(cfg_name, dict())
         else:
             app_cfgexpected = dict()
-
     else:
         app_cfgexpected = dict()
     app_expected = merge_two_config(app_expected, app_cfgexpected)
