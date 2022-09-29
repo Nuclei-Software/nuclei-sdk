@@ -38,8 +38,8 @@ SDK_GLOBAL_VARIABLES = {
     "sdk_banner_tmout": 15,
     "sdk_copy_objects": "elf,map,dasm,verilog",
     "sdk_copy_objects_flag": False,
-    "sdk_ttyerr_maxcnt": 10,
-    "sdk_fpgaprog_maxcnt": 10
+    "sdk_ttyerr_maxcnt": 3,
+    "sdk_fpgaprog_maxcnt": 3
     }
 
 class NThread(Thread):
@@ -676,6 +676,10 @@ def get_sdk_banner_tmout():
 
     return tmout
 
+def get_sdk_fpga_prog_tmout():
+    tmout = os.environ.get("FPGA_PROG_TMOUT")
+    return tmout
+
 def get_sdk_ttyerr_maxcnt():
     num = os.environ.get("SDK_TTYERR_MAXCNT")
     if num is not None:
@@ -905,8 +909,14 @@ def program_fpga(bit, target):
         return False
     tcl = os.path.join(os.path.dirname(os.path.realpath(__file__)), "program_bit.tcl")
     target = "*%s" % (target)
+    progcmd = "%s -mode batch -nolog -nojournal -source %s -tclargs %s %s" % (vivado_cmd, tcl, bit, target)
+    tmout = get_sdk_fpga_prog_tmout()
+    if sys.platform != 'win32' and tmout is not None and tmout.strip() != "":
+        print("Timeout %s do fpga program" % (tmout))
+        progcmd = "timeout --foreground -s SIGKILL %s %s" % (tmout, progcmd)
+    print("Do fpga program using command: %s" % (progcmd))
     sys.stdout.flush()
-    ret = os.system("%s -mode batch -nolog -nojournal -source %s -tclargs %s %s" % (vivado_cmd, tcl, bit, target))
+    ret = os.system(progcmd)
     sys.stdout.flush()
     if ret != 0:
         print("Program fpga bit failed, error code %d" % ret)
