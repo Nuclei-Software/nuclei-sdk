@@ -256,7 +256,12 @@ class nsdk_builder(object):
                         uploader["cmd"] = uploader.get("cmd", "") + line.strip().strip("\\")
                     if "On-Chip Debugger" in line:
                         uploader["version"] = line.strip()
+                    if "A problem internal to GDB has been detected" in line:
+                        uploader["gdbstatus"] = "hang"
+                    if "Quit this debugging session?" in line:
+                        uploader["gdbstatus"] = "hang"
                     if "Start address" in line:
+                        uploader["gdbstatus"] = "ok"
                         upload_sts = True
                         break
             # append openocd log to upload log
@@ -399,6 +404,8 @@ class nsdk_runner(nsdk_builder):
         self.hangup_action = None
         self.ttyerrcnt = 0
         self.fpgaprogramcnt = 0
+        self.gdberrcnt = 0
+        self.uploaderrcnt = 0
         pass
 
     @staticmethod
@@ -412,7 +419,9 @@ class nsdk_runner(nsdk_builder):
 
     def reset_counters(self):
         self.ttyerrcnt = 0
+        self.uploaderrcnt = 0
         self.fpgaprogramcnt = 0
+        self.gdberrcnt = 0
         pass
 
     def need_exit_now(self):
@@ -420,10 +429,16 @@ class nsdk_runner(nsdk_builder):
             return True
         if self.fpgaprogramcnt > get_sdk_fpgaprog_maxcnt():
             return True
+        if self.gdberrcnt > get_sdk_gdberr_maxcnt():
+            return True
+        if self.uploaderrcnt > get_sdk_uploaderr_maxcnt():
+            return True
         return False
 
     def show_counters(self):
         print("TTY Error counter %d, limit count %d" % (self.ttyerrcnt, get_sdk_ttyerr_maxcnt()))
+        print("GDB Internal Error counter %d, limit count %d" % (self.gdberrcnt, get_sdk_gdberr_maxcnt()))
+        print("Upload Error counter %d, limit count %d" % (self.uploaderrcnt, get_sdk_uploaderr_maxcnt()))
         print("FPGA Program Error counter %d, limit count %d" % (self.fpgaprogramcnt, get_sdk_fpgaprog_maxcnt()))
         pass
 
@@ -491,9 +506,10 @@ class nsdk_runner(nsdk_builder):
         sdk_check = get_sdk_check()
         banner_tmout = get_sdk_banner_tmout()
         retry_cnt = 0
+        max_retrycnt = 1
         while True:
             try:
-                if retry_cnt > 1: # only retry once
+                if retry_cnt > max_retrycnt: # do retry
                     break
                 retry_cnt += 1
                 if serport: # only monitor serial port when port found
@@ -520,6 +536,7 @@ class nsdk_runner(nsdk_builder):
                         self.ttyerrcnt += 1
                     del ser_thread
                 if uploader.get("cpustatus", "") == "hang": # cpu hangs then call cpu hangup action and retry this application
+                    self.uploaderrcnt += 1
                     if self.hangup_action is not None:
                         print("Execute hangup action for hangup case!")
                         if self.hangup_action() == True:
@@ -528,13 +545,19 @@ class nsdk_runner(nsdk_builder):
                         else:
                             print("hangup action failed!")
                     elif fpgabit and fpgaserial:
-                        print("Reprogram fpga bit %s on fpga board serial number %s, reprogam count %d" % (fpgabit, fpgaserial, self.fpgaprogramcnt))
+                        print("Reprogram fpga bit %s on fpga board serial number %s, total fpga reprogam count %d" % (fpgabit, fpgaserial, self.fpgaprogramcnt))
                         self.fpgaprogramcnt += 1
                         if program_fpga(fpgabit, fpgaserial) == True:
                             print("Reprogram fpga sucessfully!")
                             continue
                         else:
                             print("Reprogram fpga failed!")
+                    else:
+                        print("No cpu hangup action found, just continue with other cases")
+                if uploader.get("gdbstatus", "") == "hang": # gdb hangs with internal error retry upload this applicationa
+                    max_retrycnt = 2 # when gdb internal error happened, do retry twice
+                    print("GDB internal error happened, re-upload application, total re-upload count %d" % (self.gdberrcnt))
+                    continue
                 # exit with upload status
                 break
             except (KeyboardInterrupt, SystemExit):

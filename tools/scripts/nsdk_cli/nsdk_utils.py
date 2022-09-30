@@ -39,7 +39,9 @@ SDK_GLOBAL_VARIABLES = {
     "sdk_copy_objects": "elf,map,dasm,verilog",
     "sdk_copy_objects_flag": False,
     "sdk_ttyerr_maxcnt": 3,
-    "sdk_fpgaprog_maxcnt": 3
+    "sdk_fpgaprog_maxcnt": 3,
+    "sdk_gdberr_maxcnt": 10,
+    "sdk_uploaderr_maxcnt": 10
     }
 
 class NThread(Thread):
@@ -698,6 +700,23 @@ def get_sdk_fpgaprog_maxcnt():
 
     return num
 
+def get_sdk_gdberr_maxcnt():
+    num = os.environ.get("SDK_GDBERR_MAXCNT")
+    if num is not None:
+        num = int(num)
+    else:
+        num = SDK_GLOBAL_VARIABLES.get("sdk_gdberr_maxcnt")
+
+    return num
+
+def get_sdk_uploaderr_maxcnt():
+    num = os.environ.get("SDK_UPLOADERR_MAXCNT")
+    if num is not None:
+        num = int(num)
+    else:
+        num = SDK_GLOBAL_VARIABLES.get("sdk_uploaderr_maxcnt")
+
+    return num
 
 def find_local_appconfig(appdir, localcfgs):
     if isinstance(appdir, str) and isinstance(localcfgs, dict):
