@@ -122,13 +122,14 @@ class nsdk_builder(object):
         if os.path.isfile(logfile):
             os.remove(logfile)
         total_ticks = 0
+        ignore_targets = ["info", "showtoolver", "showflags", "clean", "bin", "size"]
         for btg in build_targets:
             build_cmd = "make %s -C %s %s %s" % (parallel, appdir, make_options, btg)
-            if not ((show_output == False) and (btg == "info")):
+            if not ((show_output == False) and (btg in ignore_targets)):
                 print("Build application %s, with target: %s" % (appdir, btg))
                 print("Build command: %s" % (build_cmd))
             ret, ticks = run_command(build_cmd, show_output, logfile=logfile, append=True)
-            if not ((show_output == False) and (btg == "info")):
+            if not ((show_output == False) and (btg in ignore_targets)):
                 print("Build command return value: %s" % (ret))
             total_ticks += ticks
             if ret != 0: # if one target failed, then stop
@@ -770,7 +771,7 @@ class nsdk_runner(nsdk_builder):
         if copy_objects_required:
             nsdk_builder.copy_objects(appsts, objs_copydir)
         buildtime = appsts["time"]["build"]
-        print("Build application %s, time cost %s seconds, passed: %s" %(appdir, buildtime, appcmdsts))
+        print("Build application %s with target %s, time cost %s seconds, passed: %s" %(appdir, target, buildtime, appcmdsts))
         sys.stdout.flush()
 
         appsts["config"] = appconfig
