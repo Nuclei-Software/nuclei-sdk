@@ -626,6 +626,34 @@ def save_report_files(logdir, config, result, run=False):
     show_failed_apps(logdir)
     pass
 
+# save excel and csv for selected csv table
+def save_excel(csvtable, excelfile):
+    newcsvtable = {}
+    csvsummary = []
+    keylens = [ len(key) for key in  csvtable.keys() ]
+    keylens.sort()
+    maxlen = keylens[-1]
+    for cfg in csvtable:
+        if len(csvtable[cfg]) > 1:
+            csvsummary.append([cfg])
+            csvsummary.extend(csvtable[cfg])
+            if maxlen >= 31:
+                cfglist = cfg.split('-')
+                newcfg = "-".join(cfglist[1:])
+                newcsvtable[newcfg] = csvtable[cfg]
+            else:
+                newcsvtable[cfg] = csvtable[cfg]
+
+    newcsvtable["summary"] = csvsummary
+    pe.isave_book_as(bookdict=newcsvtable, dest_file_name=excelfile)
+    print("Generate run result excel file to %s" % (excelfile))
+    csvfile = excelfile + ".csv"
+    with open(csvfile, "w") as cf:
+        for row in csvsummary:
+            cf.write("%s\n" % (",".join(str(e) for e in row)))
+    print("Generate run result csv file to %s" % (csvfile))
+    pass
+
 def save_runresult(runresult, excelfile):
     if not(isinstance(runresult, dict)):
         return False
@@ -704,8 +732,7 @@ def save_runresult(runresult, excelfile):
         csvdict_jf = excelfile + ".csvdict.json"
         save_json(csvtable_jf, csvtable)
         save_json(csvdict_jf, csvdict)
-        pe.isave_book_as(bookdict=csvtable, dest_file_name=excelfile)
-        print("Generate run result excel file to %s" % (excelfile))
+        save_excel(csvtable, excelfile)
     except:
         print("pyexcel package is not installed.!")
         return False
