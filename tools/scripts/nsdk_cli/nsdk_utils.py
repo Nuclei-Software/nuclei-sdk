@@ -41,7 +41,8 @@ SDK_GLOBAL_VARIABLES = {
     "sdk_ttyerr_maxcnt": 3,
     "sdk_fpgaprog_maxcnt": 3,
     "sdk_gdberr_maxcnt": 10,
-    "sdk_uploaderr_maxcnt": 10
+    "sdk_uploaderr_maxcnt": 10,
+    "sdk_verb_buildmsg": True
     }
 
 class NThread(Thread):
@@ -150,7 +151,6 @@ def find_serport_by_no(serno):
                 break
     # serport founded
     return serport
-
 
 def find_most_possible_serport():
     serports = find_possible_serports()
@@ -662,6 +662,11 @@ def get_sdk_check():
         check = SDK_GLOBAL_VARIABLES.get("sdk_check")
     return check
 
+def get_sdk_verb_buildmsg():
+    check = get_env_flag("SDK_VERB_BUILDMSG")
+    if check is None:
+        check = SDK_GLOBAL_VARIABLES.get("sdk_verb_buildmsg")
+    return check
 
 def get_sdk_copyobjects_flag():
     cpflag = get_env_flag("SDK_COPY_OBJECTS_FLAG")

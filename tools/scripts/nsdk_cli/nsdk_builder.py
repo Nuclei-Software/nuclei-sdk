@@ -116,7 +116,8 @@ class nsdk_builder(object):
             parallel = ""
         if parallel != "": # need to split targets
             build_targets = target.strip().split()
-            print("Target \"%s\" are split to seperated targets %s in parallel mode." %(target, build_targets))
+            if get_sdk_verb_buildmsg():
+                print("Target \"%s\" are split to seperated targets %s in parallel mode." %(target, build_targets))
         else:
             build_targets = [target]
         if os.path.isfile(logfile):
@@ -125,11 +126,11 @@ class nsdk_builder(object):
         ignore_targets = ["info", "showtoolver", "showflags", "clean", "bin", "size"]
         for btg in build_targets:
             build_cmd = "make %s -C %s %s %s" % (parallel, appdir, make_options, btg)
-            if not ((show_output == False) and (btg in ignore_targets)):
+            if get_sdk_verb_buildmsg() and (not ((show_output == False) and (btg in ignore_targets))):
                 print("Build application %s, with target: %s" % (appdir, btg))
                 print("Build command: %s" % (build_cmd))
             ret, ticks = run_command(build_cmd, show_output, logfile=logfile, append=True)
-            if not ((show_output == False) and (btg in ignore_targets)):
+            if get_sdk_verb_buildmsg() and (not ((show_output == False) and (btg in ignore_targets))):
                 print("Build command return value: %s" % (ret))
             total_ticks += ticks
             if ret != 0: # if one target failed, then stop
@@ -335,10 +336,11 @@ class MonitorThread(Thread):
                         return True
             return False
 
-        print("Read serial log from %s, baudrate %s" %(self.port, self.baudrate))
         NSDK_CHECK_TAG = get_sdk_checktag()
-        print("Checker used: ", self.checks)
-        print("SDK Checker Tag \"%s\", checker enable %s" % (NSDK_CHECK_TAG, self.sdk_check))
+        if get_sdk_verb_buildmsg:
+            print("Read serial log from %s, baudrate %s" %(self.port, self.baudrate))
+            print("Checker used: ", self.checks)
+            print("SDK Checker Tag \"%s\", checker enable %s" % (NSDK_CHECK_TAG, self.sdk_check))
         check_finished = False
         try:
             ser = None
@@ -513,6 +515,7 @@ class nsdk_runner(nsdk_builder):
                 if retry_cnt > max_retrycnt: # do retry
                     break
                 retry_cnt += 1
+                print("Hardware configuration: serial port %s, baudrate %s, timeout %ds, retry counter %d" % (serport, baudrate, timeout, retry_cnt))
                 if serport: # only monitor serial port when port found
                     ser_thread = MonitorThread(serport, baudrate, timeout, app_runchecks, checktime, \
                         sdk_check, logfile, show_output)
@@ -771,7 +774,7 @@ class nsdk_runner(nsdk_builder):
         if copy_objects_required:
             nsdk_builder.copy_objects(appsts, objs_copydir)
         buildtime = appsts["time"]["build"]
-        print("Build application %s with target %s, time cost %s seconds, passed: %s" %(appdir, target, buildtime, appcmdsts))
+        print("Build application %s with target %s, make options %s, time cost %s seconds, passed: %s" %(appdir, target, make_options, buildtime, appcmdsts))
         sys.stdout.flush()
 
         appsts["config"] = appconfig
