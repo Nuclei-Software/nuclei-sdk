@@ -337,7 +337,7 @@ class MonitorThread(Thread):
             return False
 
         NSDK_CHECK_TAG = get_sdk_checktag()
-        if get_sdk_verb_buildmsg:
+        if get_sdk_verb_buildmsg():
             print("Read serial log from %s, baudrate %s" %(self.port, self.baudrate))
             print("Checker used: ", self.checks)
             print("SDK Checker Tag \"%s\", checker enable %s" % (NSDK_CHECK_TAG, self.sdk_check))
