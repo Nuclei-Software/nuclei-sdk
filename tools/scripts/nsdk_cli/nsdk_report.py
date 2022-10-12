@@ -26,6 +26,21 @@ except Exception as exc:
 
 from nsdk_utils import *
 
+def get_expected_build(expcfg):
+    if isinstance(expcfg, dict) == False:
+        return False
+    return expcfg.get("build", True)
+
+def get_expected_run(expcfg, build=None):
+    if isinstance(expcfg, dict) == False:
+        return False
+    if build is None:
+        build = get_expected_build(expcfg)
+    # if expected build is false, expected run should be false
+    if build == False:
+        return False
+    return expcfg.get("run", True)
+
 def get_expected(config, app, cfg_name):
     if isinstance(config, dict) == False:
         return None
@@ -67,8 +82,8 @@ def check_expected(build_status, config, run=False):
             run_ret = app_status.get("run", False)
             app_cfg_expected = get_expected(config, app, cfgname)
             if isinstance(app_cfg_expected, dict):
-                expected_build_ret = app_cfg_expected.get("build", True)
-                expected_run_ret = app_cfg_expected.get("run", True)
+                expected_build_ret = get_expected_build(app_cfg_expected)
+                expected_run_ret = get_expected_run(app_cfg_expected)
                 if build_ret == False and expected_build_ret != build_ret:
                     ret = False
                 if run:
@@ -134,8 +149,8 @@ def analyze_report(config, result, runapp=False):
         for cfgname in status:
             app_percase_sts[cfgname] = copy.deepcopy(percase_sts)
             app_cfg_expected = get_expected(config, app, cfgname)
-            expected_build = app_cfg_expected.get("build", True)
-            expected_run = app_cfg_expected.get("run", True)
+            expected_build = get_expected_build(app_cfg_expected)
+            expected_run = get_expected_run(app_cfg_expected)
             real_build = status[cfgname]["status"].get("build", False)
             real_run = status[cfgname]["status"].get("run", False)
             if real_build == False and expected_build != real_build:
