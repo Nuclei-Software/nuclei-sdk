@@ -477,13 +477,16 @@ class nsdk_runner(nsdk_builder):
                     return cmdsts, build_status
         return cmdsts, build_status
 
-    def analyze_runlog(self, logfile):
+    def analyze_runlog(self, logfile, parsescript=None):
         result = {"type": "unknown", "value": {}}
         if os.path.isfile(logfile):
             result_lines = open(logfile).readlines()
             program_found, subtype, result_parsed = parse_benchmark_runlog(result_lines, lgf=logfile)
+            if program_found == PROGRAM_UNKNOWN:
+                program_found, subtype, result_parsed = parse_benchmark_use_pyscript(result_lines, logfile, parsescript)
             if program_found != PROGRAM_UNKNOWN:
                 result = {"type": program_found, "subtype": subtype, "value": result_parsed}
+
         return result
 
     def run_app_onhw(self, appdir, runcfg:dict(), show_output=True, logfile=None, uploadlog=None):
@@ -597,6 +600,8 @@ class nsdk_runner(nsdk_builder):
             build_download = build_info["DOWNLOAD"]
             build_smp = build_info.get("SMP", "")
             build_arch_ext = build_config.get("ARCH_EXT", "")
+            if build_arch_ext == "":
+                build_arch_ext = build_info.get("ARCH_EXT", "")
             if build_smp != "":
                 qemu_extraopt = "%s -smp %s" % (qemu_extraopt, build_smp)
             if qemu_machine is None:
@@ -665,7 +670,7 @@ class nsdk_runner(nsdk_builder):
             riscv_arch = build_info["RISCV_ARCH"]
             # replace e with i for xlspike
             riscv_arch = riscv_arch.replace("e", "i")
-            #build_arch_ext = build_config.get("ARCH_EXT", "")
+            #build_arch_ext = build_info.get("ARCH_EXT", "")
             build_smp = build_info.get("SMP", "")
             if build_smp != "":
                 xlspike_extraopt = "%s -p%s" % (xlspike_extraopt, build_smp)
@@ -792,6 +797,10 @@ class nsdk_runner(nsdk_builder):
         # get run config
         app_runcfg = appconfig.get("run_config", dict())
         app_runtarget = app_runcfg.get("target", "hardware")
+        app_parsescript = app_runcfg.get("parsescript", None)
+        if app_parsescript is not None:
+            if os.path.isfile(app_parsescript) == False:
+                app_parsescript = os.path.join(appdir, app_parsescript)
         # get run checks
         DEFAULT_CHECKS = { "PASS": [ ], "FAIL": [ "MCAUSE:" ] }
         app_runchecks = appconfig.get("checks", DEFAULT_CHECKS)
@@ -809,7 +818,7 @@ class nsdk_runner(nsdk_builder):
             runstatus, uploader = self.run_app_onhw(appdir, runcfg, show_output, runlog, uploadlog)
             # If run successfully, then do log analyze
             if runlog and runstatus:
-                appsts["result"] = self.analyze_runlog(runlog)
+                appsts["result"] = self.analyze_runlog(runlog, app_parsescript)
             appsts["logs"]["run"] = runlog
             appsts["logs"]["upload"] = uploadlog
             appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
@@ -819,7 +828,7 @@ class nsdk_runner(nsdk_builder):
             runstatus, runner = self.run_app_onqemu(appdir, runcfg, show_output, runlog)
             # If run successfully, then do log analyze
             if runlog and runstatus:
-                appsts["result"] = self.analyze_runlog(runlog)
+                appsts["result"] = self.analyze_runlog(runlog, app_parsescript)
             appsts["logs"]["run"] = runlog
             appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
             if runner:
@@ -828,7 +837,7 @@ class nsdk_runner(nsdk_builder):
             runstatus, runner = self.run_app_onxlspike(appdir, runcfg, show_output, runlog)
             # If run successfully, then do log analyze
             if runlog and runstatus:
-                appsts["result"] = self.analyze_runlog(runlog)
+                appsts["result"] = self.analyze_runlog(runlog, app_parsescript)
             appsts["logs"]["run"] = runlog
             appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
             if runner:
@@ -837,7 +846,7 @@ class nsdk_runner(nsdk_builder):
             runstatus, runner = self.run_app_onncycm(appdir, runcfg, show_output, runlog)
             # If run successfully, then do log analyze
             if runlog and runstatus:
-                appsts["result"] = self.analyze_runlog(runlog)
+                appsts["result"] = self.analyze_runlog(runlog, app_parsescript)
             appsts["logs"]["run"] = runlog
             appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
             if runner:

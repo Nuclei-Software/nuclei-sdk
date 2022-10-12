@@ -7,6 +7,7 @@ requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.
 
 try:
     import time
+    import random
     import shutil
     import signal
     import psutil
@@ -22,6 +23,7 @@ try:
     import glob
     import json
     import yaml
+    import importlib.util
 except Exception as exc:
     print("Import Error: %s" % (exc))
     print("Please install requried packages using: pip3 install -r %s" % (requirement_file))
@@ -255,6 +257,26 @@ def kill_subprocess(proc):
     except:
         pass
     pass
+
+def import_module(module_name, file_path):
+    if file_path is None or os.path.isfile(file_path) == False:
+        return None
+    try:
+        spec = importlib.util.spec_from_file_location(module_name, file_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+    except:
+        module = None
+    return module
+
+def import_function(func_name, file_path):
+    module_name = "tempmodule_%s" % (random.randint(0, 10000))
+    tmpmodule = import_module(module_name, file_path)
+    if tmpmodule is None:
+        return None
+    if func_name not in dir(tmpmodule):
+        return None
+    return getattr(tmpmodule, func_name)
 
 COMMAND_RUNOK=0
 COMMAND_INVALID=1
@@ -899,6 +921,19 @@ def parse_benchmark_runlog(lines, lgf=""):
         else:
             program_type, subtype, result = parse_benchmark_compatiable(lines)
     return program_type, subtype, result
+
+def parse_benchmark_use_pyscript(lines, lgf, pyscript):
+    # function should named parse_benchmark
+    # function argument and return like parse_benchmark_runlog
+    parsefunc = import_function("parse_benchmark", pyscript)
+    if parsefunc is None:
+        return PROGRAM_UNKNOWN, PROGRAM_UNKNOWN, None
+    try:
+        program_type, subtype, result = parsefunc(lines, lgf)
+        return program_type, subtype, result
+    except Exception as exc:
+        print("ERROR: Parse using %s script error: %s" %(pyscript, exc))
+        return PROGRAM_UNKNOWN, PROGRAM_UNKNOWN, None
 
 def check_tool_exist(tool):
     exist = False
