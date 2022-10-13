@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <time.h>
 #include <nuclei_sdk_hal.h>
 
 int metal_tty_putc(int c)
@@ -22,6 +23,17 @@ void exit(int fd)
         __WFI();
     }
 }
+
+// clock() function implementation is added in 0.4.0 sdk release
+__WEAK clock_t clock(void)
+{
+    uint64_t cycles = __get_rv_cycle();
+    clock_t clktm;
+
+    clktm = (cycles * CLOCKS_PER_SEC) / SystemCoreClock;
+    return clktm;
+}
+
 
 // workaround for newlibc required
 // __libc_fini_array and __libc_init_array function
