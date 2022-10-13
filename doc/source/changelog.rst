@@ -33,6 +33,7 @@ This is development version ``0.4.0`` of Nuclei SDK.
 * Build System
 
   - Add ``intexc_<Device>_s.S`` asm file into compiling for evalsoc and demosoc
+  - Show ``ARCH_EXT`` information when run make info
 
 * SoC
 
@@ -45,6 +46,7 @@ This is development version ``0.4.0`` of Nuclei SDK.
     - **API Changes**: ``EXC_Frame_Type`` struct member mcause/mepc changed to cause/epc in ``system_<Device>.c/h``
 
   - print ``\0`` instead of ``\r`` when do simulation exit for better integration in Nuclei Studio QEMU simulation.
+  - add ``clock`` stub function for libncrt library in demosoc/evalsoc/gd32vf103 SoC support software.
 
 * CI
 
@@ -53,6 +55,8 @@ This is development version ``0.4.0`` of Nuclei SDK.
 * Tools
 
   - Add ``httpserver.py`` tool to create a http server on selected folder, good to preview built documentation.
+  - Fix many issues related to nsdk_cli scripts when integrated using fpga hardware ci flow.
+  - Support extra parsing benchmark python script for nsdk_cli tools, see 5f546fa0
 
 * Documentation
 
