@@ -207,9 +207,14 @@ def analyze_report(config, result, runapp=False):
         "percase": {"status": apps_percase_status, "failed": apps_percase_failed, "passed": apps_percase_passed} }
     return report_dict
 
-def generate_build_run_status_md(appresult, logdir, bold_false=True):
+def gen_mdtxt(key, value=None, bold=True):
+    if bold:
+        key = "**%s**" % (key)
+    return "[%s](%s)" % (key, value) if value else key
+
+def generate_build_run_status_md(appresult, logdir, casefail=True):
     if isinstance(appresult, dict) == False:
-        if bold_false:
+        if casefail:
             return "**False**", "**False**", "-", "-"
         else:
             return "False", "False", "-", "-"
@@ -223,19 +228,18 @@ def generate_build_run_status_md(appresult, logdir, bold_false=True):
         def gen_sts_md(sts, log, bold=True):
             if log:
                 log = os.path.relpath(log, logdir)
-                if bool(bold) ^ bool((not sts)):
-                    sts_md = "[%s](%s)" % (sts, log)
-                else:
-                    sts_md = "[**%s**](%s)" % (sts, log)
-            else:
-                if bool(bold) ^ bool((not sts)):
-                    sts_md = "%s" % (sts)
-                else:
-                    sts_md = "**%s**" % (sts)
-            return sts_md
-        bsts_md = gen_sts_md(appbsts, appblog, bold_false)
-        rsts_md = gen_sts_md(apprsts, apprlog, bold_false)
+            return gen_mdtxt(sts, log, bold)
+        bsts_md = gen_sts_md(appbsts, appblog, casefail)
+        rsts_md = gen_sts_md(apprsts, apprlog, casefail)
         return bsts_md, rsts_md, appbtm, apprtm
+
+def generate_build_cfgname_md(cfgname, appresult, logdir, casefail=False):
+    if isinstance(appresult, dict) == False or appresult["logs"].get("build", None) is None:
+        caselogdir = None
+    else:
+        appblog = appresult["logs"].get("build", None)
+        caselogdir = os.path.dirname(os.path.relpath(appblog, logdir))
+    return gen_mdtxt(cfgname, caselogdir, casefail)
 
 def md2html(mdfile, htmlfile):
     if MARKDOWN_PLUGIN == False or os.path.isfile(mdfile) == False:
@@ -328,9 +332,13 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
         rf.write("\n# Build and run status\n\n")
         x = PrettyTable()
         x.set_style(MARKDOWN)
-        x.field_names = ["App/Test Case", "Case Name", "Build Status", "Run Status", "Build Time", \
+        sts_title = ["App/Test Case", "Case Name", "Build Status", "Run Status", "Build Time", \
                     "Run Time", "Type", "Value", "Total", "Text", "Data", "Bss"]
+        x.field_names = sts_title
         apps_buildsts = result
+        percase_status = report["percase"]
+        # failed status
+        failed_sts = []
         # summary of all app cases
         tot_cases_count = 0
         tot_cases_btm = []
@@ -343,11 +351,19 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
             app_sts = apps_buildsts[app]
             for cfgname in app_sts:
                 tot_cases_count += 1
+                caseisfail = False
+                if cfgname in percase_status["failed"][app]:
+                    caseisfail = True
                 size = app_sts[cfgname]["size"]
                 apprsttype, apprstval = get_app_runresult(app_sts[cfgname].get("result", dict()))
-                bsts_md, rsts_md, appbtm, apprtm = generate_build_run_status_md(app_sts[cfgname], logdir, True)
-                x.add_row([app, cfgname, bsts_md, rsts_md, appbtm, apprtm, apprsttype, apprstval, \
-                    size["total"], size["text"], size["data"], size["bss"]])
+                bsts_md, rsts_md, appbtm, apprtm = generate_build_run_status_md(app_sts[cfgname], logdir, caseisfail)
+                cfgname_md = generate_build_cfgname_md(cfgname, app_sts[cfgname], logdir, caseisfail)
+                sts_row = [app, cfgname_md, bsts_md, rsts_md, appbtm, apprtm, apprsttype, apprstval, \
+                    size["total"], size["text"], size["data"], size["bss"]]
+                x.add_row(sts_row)
+                # add failed status into list
+                if caseisfail:
+                    failed_sts.append(sts_row)
                 # record total cases build and run time
                 appwithcfg = "%s:%s" % (app, cfgname)
                 tot_cases_btm.append((str(appbtm), appwithcfg))
@@ -367,6 +383,18 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
         rpt_summary["sztext"] = tot_cases_sztext
         rpt_summary["szdata"] = tot_cases_szdata
         rpt_summary["szbss"] = tot_cases_szbss
+
+        # show only failed cases
+        if len(failed_sts) > 0:
+            rf.write("\n# Failed Cases Details\n\n")
+            x = PrettyTable()
+            x.set_style(MARKDOWN)
+            x.field_names = sts_title
+            for row in failed_sts:
+                x.add_row(row)
+            rf.write(str(x))
+            rf.write("\n")
+
         # Real expected pass or fail cases
         percase_status = report["percase"]
         rf.write("\n# Passed Cases(as expected) Per Applications\n\n")
