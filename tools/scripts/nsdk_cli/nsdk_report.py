@@ -505,7 +505,7 @@ def merge_runconfig(all_mergedcfg, config, reldir):
         for app in config["expecteds"]:
             if app not in all_mergedcfg["expecteds"]:
                 all_mergedcfg["expecteds"][app] = dict()
-            for cfgname in config["expecteds"]:
+            for cfgname in config["expecteds"][app]:
                 newcfgname = os.path.join(reldir, cfgname).replace("\\", "/")
                 all_mergedcfg["expecteds"][app][newcfgname] = config["expecteds"][app][cfgname]
 
@@ -513,7 +513,7 @@ def merge_runconfig(all_mergedcfg, config, reldir):
         if "build_configs" in srccfg:
             for bcfg in srccfg["build_configs"]:
                 new_bcfg = os.path.join(rel, bcfg).replace("\\", "/")
-                dstcfg["build_configs"][new_bcfg] = merge_two_config(srccfg["build_config"], srccfg["build_configs"][bcfg])
+                dstcfg["build_configs"][new_bcfg] = merge_two_config(srccfg.get("build_config", None), srccfg["build_configs"][bcfg])
 
 
     merge_buildcfgs(all_mergedcfg, config, reldir)
