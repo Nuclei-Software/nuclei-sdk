@@ -357,7 +357,7 @@ sdk_sync_tools:
       - develop
       - tags
   tags:
-    - env::shell
+    - env::native
     - host::whml1
     - net::outside
   script:
