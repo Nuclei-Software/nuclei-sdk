@@ -1,6 +1,7 @@
 variables:
   DOC_SERVER: doc
   DOC_CENTER: /home/xl_ci/doc_center
+  SHAREENVLOC: /home/share/devtools
   IMAGE: rego.corp.nucleisys.com/software/sdkbuild
   IMAGE_TAG: "2022.08"
 
@@ -347,4 +348,21 @@ sdk_gen_benchmark:
       - gen
     expire_in: 2 day
 
+sdk_sync_tools:
+  stage: deploy
+  interruptible: true
+  only:
+    refs:
+      - master
+      - develop
+      - tags
+  tags:
+    - env::shell
+    - host::whml1
+    - net::outside
+  script:
+    - cp -f tools/scripts/nsdk_cli/httpserver.py ${SHAREENVLOC}/tools/bin/httpserver_cli
+    - cp -f tools/scripts/nsdk_cli/hpm_parse.py ${SHAREENVLOC}/tools/bin/hpmparse_cli
+    - cp -f tools/scripts/nsdk_cli/report_preview.py ${SHAREENVLOC}/tools/bin/reportview_cli
+    - chmod +x ${SHAREENVLOC}/tools/bin/*_cli
 
