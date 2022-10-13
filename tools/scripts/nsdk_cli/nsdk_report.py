@@ -431,8 +431,8 @@ def generate_report(config, result, rptfile, rpthtml, logdir, runapp=False):
             app_sts = apps_buildsts[app]
             for cfgname in app_sts:
                 app_cfg_expected = get_expected(config, app, cfgname)
-                expected_build = app_cfg_expected.get("build", True)
-                expected_run = app_cfg_expected.get("run", True)
+                expected_build = get_expected_build(app_cfg_expected)
+                expected_run = get_expected_run(app_cfg_expected)
                 if expected_build == False or expected_run == False:
                     with_expect = True
                     x.add_row([app, cfgname, expected_build, expected_run])
