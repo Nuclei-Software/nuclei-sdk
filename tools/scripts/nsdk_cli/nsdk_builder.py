@@ -249,37 +249,36 @@ class nsdk_builder(object):
             uploadlog = logfile
         cmdsts, build_status = self.build_target(appdir, make_options, "upload", show_output, uploadlog)
         uploader = dict()
-        if cmdsts:
-            upload_sts = False
-            with open(uploadlog, 'r') as uf:
-                for line in uf.readlines():
-                    if "-ex" in line or "\\" in line:
-                        # strip extra newline and \
-                        uploader["cmd"] = uploader.get("cmd", "") + line.strip().strip("\\")
-                    if "On-Chip Debugger" in line:
-                        uploader["version"] = line.strip()
-                    if "A problem internal to GDB has been detected" in line:
-                        uploader["gdbstatus"] = "hang"
-                    if "Quit this debugging session?" in line:
-                        uploader["gdbstatus"] = "hang"
-                    if "Start address" in line:
-                        uploader["gdbstatus"] = "ok"
-                        upload_sts = True
-                        break
-            # append openocd log to upload log
-            openocd_log = os.path.join(appdir, "openocd.log")
-            if os.path.isfile(openocd_log):
-                with open(uploadlog, 'a') as uf:
-                    uf.write("\n=====OpenOCD log content dumped as below:=====\n")
-                    with open(openocd_log, "r") as of:
-                        for line in of.readlines():
-                            if "Error: Target not examined yet" in line:
-                                uploader["cpustatus"] = "hang"
-                            if "Examined RISC-V core" in line:
-                                uploader["cpustatus"] = "ok"
-                            uf.write(line)
-            if upload_sts == False: # actually not upload successfully
-                cmdsts = False
+        upload_sts = False
+        with open(uploadlog, 'r') as uf:
+            for line in uf.readlines():
+                if "-ex" in line or "\\" in line:
+                    # strip extra newline and \
+                    uploader["cmd"] = uploader.get("cmd", "") + line.strip().strip("\\")
+                if "On-Chip Debugger" in line:
+                    uploader["version"] = line.strip()
+                if "A problem internal to GDB has been detected" in line:
+                    uploader["gdbstatus"] = "hang"
+                if "Quit this debugging session?" in line:
+                    uploader["gdbstatus"] = "hang"
+                if "Start address" in line:
+                    uploader["gdbstatus"] = "ok"
+                    upload_sts = True
+                    break
+        # append openocd log to upload log
+        openocd_log = os.path.join(appdir, "openocd.log")
+        if os.path.isfile(openocd_log):
+            with open(uploadlog, 'a') as uf:
+                uf.write("\n=====OpenOCD log content dumped as below:=====\n")
+                with open(openocd_log, "r") as of:
+                    for line in of.readlines():
+                        if "Error: Target not examined yet" in line:
+                            uploader["cpustatus"] = "hang"
+                        if "Examined RISC-V core" in line:
+                            uploader["cpustatus"] = "ok"
+                        uf.write(line)
+        if upload_sts == False: # actually not upload successfully
+            cmdsts = False
         if "app" in build_status:
             build_status["app"]["uploader"] = uploader
         if logfile is None:
