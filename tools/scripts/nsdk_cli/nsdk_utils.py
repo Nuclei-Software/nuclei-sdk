@@ -47,6 +47,94 @@ SDK_GLOBAL_VARIABLES = {
     "sdk_verb_buildmsg": True
     }
 
+def get_global_variables():
+    return SDK_GLOBAL_VARIABLES
+
+def get_sdk_checktag():
+    checktag = os.environ.get("SDK_CHECKTAG")
+    if checktag is None:
+        checktag = SDK_GLOBAL_VARIABLES.get("sdk_checktag")
+    return checktag
+
+def get_sdk_copyobjects():
+    cpobjs = os.environ.get("SDK_COPY_OBJECTS")
+    if cpobjs is None:
+        cpobjs = SDK_GLOBAL_VARIABLES.get("sdk_copy_objects")
+    return cpobjs
+
+def get_env_flag(envar):
+    flag = os.environ.get(envar)
+    if flag is None:
+        return flag
+    return flag.lower() in ('true', '1', 't')
+
+def get_sdk_check():
+    check = get_env_flag("SDK_CHECK")
+    if check is None:
+        check = SDK_GLOBAL_VARIABLES.get("sdk_check")
+    return check
+
+def get_sdk_verb_buildmsg():
+    check = get_env_flag("SDK_VERB_BUILDMSG")
+    if check is None:
+        check = SDK_GLOBAL_VARIABLES.get("sdk_verb_buildmsg")
+    return check
+
+def get_sdk_copyobjects_flag():
+    cpflag = get_env_flag("SDK_COPY_OBJECTS_FLAG")
+    if cpflag is None:
+        cpflag = SDK_GLOBAL_VARIABLES.get("sdk_copy_objects_flag")
+    return cpflag
+
+def get_sdk_banner_tmout():
+    tmout = os.environ.get("SDK_BANNER_TMOUT")
+    if tmout is not None:
+        tmout = int(tmout)
+    else:
+        tmout = SDK_GLOBAL_VARIABLES.get("sdk_banner_tmout")
+
+    return tmout
+
+def get_sdk_fpga_prog_tmout():
+    tmout = os.environ.get("FPGA_PROG_TMOUT")
+    return tmout
+
+def get_sdk_ttyerr_maxcnt():
+    num = os.environ.get("SDK_TTYERR_MAXCNT")
+    if num is not None:
+        num = int(num)
+    else:
+        num = SDK_GLOBAL_VARIABLES.get("sdk_ttyerr_maxcnt")
+
+    return num
+
+def get_sdk_fpgaprog_maxcnt():
+    num = os.environ.get("SDK_FPGAPROG_MAXCNT")
+    if num is not None:
+        num = int(num)
+    else:
+        num = SDK_GLOBAL_VARIABLES.get("sdk_fpgaprog_maxcnt")
+
+    return num
+
+def get_sdk_gdberr_maxcnt():
+    num = os.environ.get("SDK_GDBERR_MAXCNT")
+    if num is not None:
+        num = int(num)
+    else:
+        num = SDK_GLOBAL_VARIABLES.get("sdk_gdberr_maxcnt")
+
+    return num
+
+def get_sdk_uploaderr_maxcnt():
+    num = os.environ.get("SDK_UPLOADERR_MAXCNT")
+    if num is not None:
+        num = int(num)
+    else:
+        num = SDK_GLOBAL_VARIABLES.get("sdk_uploaderr_maxcnt")
+
+    return num
+
 class NThread(Thread):
     def __init__(self, func, args):
         super(NThread, self).__init__()
@@ -356,9 +444,10 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
                     return True
         return False
     NSDK_CHECK_TAG = get_sdk_checktag()
-    print("Checker used: ", checks)
-    print("SDK Checker Tag \"%s\", checker enable %s" % (NSDK_CHECK_TAG, sdk_check))
-    print("SDK run timeout %s, banner timeout %s" % (timeout, banner_timeout))
+    if get_sdk_verb_buildmsg():
+        print("Checker used: ", checks)
+        print("SDK Checker Tag \"%s\", checker enable %s" % (NSDK_CHECK_TAG, sdk_check))
+        print("SDK run timeout %s, banner timeout %s" % (timeout, banner_timeout))
     check_finished = False
     start_time = time.time()
     serial_log = ""
@@ -656,94 +745,6 @@ def save_bench_csv(result, csvfile):
     # save csv file
     save_csv(csvfile, csvlines)
     return True
-
-def get_global_variables():
-    return SDK_GLOBAL_VARIABLES
-
-def get_sdk_checktag():
-    checktag = os.environ.get("SDK_CHECKTAG")
-    if checktag is None:
-        checktag = SDK_GLOBAL_VARIABLES.get("sdk_checktag")
-    return checktag
-
-def get_sdk_copyobjects():
-    cpobjs = os.environ.get("SDK_COPY_OBJECTS")
-    if cpobjs is None:
-        cpobjs = SDK_GLOBAL_VARIABLES.get("sdk_copy_objects")
-    return cpobjs
-
-def get_env_flag(envar):
-    flag = os.environ.get(envar)
-    if flag is None:
-        return flag
-    return flag.lower() in ('true', '1', 't')
-
-def get_sdk_check():
-    check = get_env_flag("SDK_CHECK")
-    if check is None:
-        check = SDK_GLOBAL_VARIABLES.get("sdk_check")
-    return check
-
-def get_sdk_verb_buildmsg():
-    check = get_env_flag("SDK_VERB_BUILDMSG")
-    if check is None:
-        check = SDK_GLOBAL_VARIABLES.get("sdk_verb_buildmsg")
-    return check
-
-def get_sdk_copyobjects_flag():
-    cpflag = get_env_flag("SDK_COPY_OBJECTS_FLAG")
-    if cpflag is None:
-        cpflag = SDK_GLOBAL_VARIABLES.get("sdk_copy_objects_flag")
-    return cpflag
-
-def get_sdk_banner_tmout():
-    tmout = os.environ.get("SDK_BANNER_TMOUT")
-    if tmout is not None:
-        tmout = int(tmout)
-    else:
-        tmout = SDK_GLOBAL_VARIABLES.get("sdk_banner_tmout")
-
-    return tmout
-
-def get_sdk_fpga_prog_tmout():
-    tmout = os.environ.get("FPGA_PROG_TMOUT")
-    return tmout
-
-def get_sdk_ttyerr_maxcnt():
-    num = os.environ.get("SDK_TTYERR_MAXCNT")
-    if num is not None:
-        num = int(num)
-    else:
-        num = SDK_GLOBAL_VARIABLES.get("sdk_ttyerr_maxcnt")
-
-    return num
-
-def get_sdk_fpgaprog_maxcnt():
-    num = os.environ.get("SDK_FPGAPROG_MAXCNT")
-    if num is not None:
-        num = int(num)
-    else:
-        num = SDK_GLOBAL_VARIABLES.get("sdk_fpgaprog_maxcnt")
-
-    return num
-
-def get_sdk_gdberr_maxcnt():
-    num = os.environ.get("SDK_GDBERR_MAXCNT")
-    if num is not None:
-        num = int(num)
-    else:
-        num = SDK_GLOBAL_VARIABLES.get("sdk_gdberr_maxcnt")
-
-    return num
-
-def get_sdk_uploaderr_maxcnt():
-    num = os.environ.get("SDK_UPLOADERR_MAXCNT")
-    if num is not None:
-        num = int(num)
-    else:
-        num = SDK_GLOBAL_VARIABLES.get("sdk_uploaderr_maxcnt")
-
-    return num
 
 def find_local_appconfig(appdir, localcfgs):
     if isinstance(appdir, str) and isinstance(localcfgs, dict):
