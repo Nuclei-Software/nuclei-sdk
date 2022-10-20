@@ -724,7 +724,8 @@ def save_execute_csv(result, csvfile):
             app_status.get("run", False), app_time.get("build", "-"), app_time.get("run", "-"), \
             apprsttype, apprstval, size["total"], size["text"], size["data"], size["bss"])
         csvlines.append(csvline)
-    save_csv(csvfile, csvlines)
+    display = get_sdk_verb_buildmsg()
+    save_csv(csvfile, csvlines, display)
     return True
 
 def save_bench_csv(result, csvfile):
@@ -743,7 +744,8 @@ def save_bench_csv(result, csvfile):
                 apprsttype, apprstval, size["total"], size["text"], size["data"], size["bss"])
             csvlines.append(csvline)
     # save csv file
-    save_csv(csvfile, csvlines)
+    display = get_sdk_verb_buildmsg()
+    save_csv(csvfile, csvlines, display)
     return True
 
 def find_local_appconfig(appdir, localcfgs):
