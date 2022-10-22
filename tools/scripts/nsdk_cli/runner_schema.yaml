@@ -9,7 +9,7 @@ configs:
 ---
 
 rcfg:
-  runner: enum('fpga', 'ncycm')
+  runner: enum('fpga', 'ncycm', 'qemu', 'xlspike')
 
 env:
   fpgaloc: str()
