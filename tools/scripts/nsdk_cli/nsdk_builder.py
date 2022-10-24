@@ -561,9 +561,10 @@ class nsdk_runner(nsdk_builder):
                             print("Reprogram fpga failed!")
                     else:
                         print("No cpu hangup action found, just continue with other cases")
-                if uploader.get("gdbstatus", "") == "hang": # gdb hangs with internal error retry upload this applicationa
+                if uploader.get("gdbstatus", "") == "hang": # gdb hangs with internal error retry upload this application
                     max_retrycnt = 2 # when gdb internal error happened, do retry twice
                     print("GDB internal error happened, re-upload application, total re-upload count %d" % (self.gdberrcnt))
+                    self.gdberrcnt += 1
                     continue
                 # exit with upload status
                 break
