@@ -325,6 +325,8 @@ def prepare_yaml(appyaml, appdirs, runyaml, logdir):
     confloc = None
     appcfgjf = None
     conftype = "mini"
+    if os.path.isdir(logdir) == False:
+        os.makedirs(logdir)
     if appyaml is None or os.path.isfile(appyaml) == False:
         if appdirs is None:
             print("appyaml or appdirs is invalid, please check!")
@@ -341,8 +343,6 @@ def prepare_yaml(appyaml, appdirs, runyaml, logdir):
             print("System cpu json %s is invalid" % (sysappjson))
             return None
         appjsoncfg["appdirs"] = appdirs.split(",")
-        if os.path.isdir(logdir) == False:
-            os.makedirs(logdir)
         appcfgjf = os.path.join(logdir, "appcases.json")
         save_json(appcfgjf, appjsoncfg)
     # merge appyaml, runyaml
