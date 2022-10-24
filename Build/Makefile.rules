@@ -1,4 +1,4 @@
-TARGET_ELF = $(TARGET).elf
+TARGET_ELF := $(TARGET).elf
 
 ALL_CSRCS = $(filter-out $(wildcard $(EXCLUDE_SRCS)), $(sort $(wildcard $(C_SRCS)) $(call get_csrcs, $(SRCDIRS) $(C_SRCDIRS))))
 ALL_CXXSRCS = $(filter-out $(wildcard $(EXCLUDE_SRCS)), $(sort $(wildcard $(CXX_SRCS)) $(call get_cxxsrcs, $(SRCDIRS) $(CXX_SRCDIRS))))
@@ -106,22 +106,22 @@ $(ALL_CXX_OBJS): %.o: % $(COMMON_PREREQS)
 	$(TRACE_COMPILE)
 	$(Q)$(CXX) $(CXXFLAGS) $(MKDEP_OPT) -c -o $@ $<
 
-dasm: $(TARGET).elf
+dasm: $(TARGET_ELF)
 	-$(OBJDUMP) -S -d $< > $(TARGET).dump
 	-$(OBJDUMP) -d $< > $(TARGET).dasm
 	-$(OBJCOPY) $< -O ihex $(TARGET).hex
 	-$(OBJCOPY) $< -O srec $(TARGET).srec
 	-$(OBJCOPY) $< -O verilog $(TARGET).verilog
 
-bin: $(TARGET).elf
+bin: $(TARGET_ELF)
 	$(OBJCOPY) $< -O binary $(TARGET).bin
 
-size: $(TARGET).elf
+size: $(TARGET_ELF)
 	$(Q)$(SIZE) $<
 
-upload: $(TARGET).elf
+upload: $(TARGET_ELF)
 	@$(ECHO) "Download and run $<"
-	$(GDB) $< -ex "set remotetimeout 240" \
+	$(GDB) -ex "set remotetimeout 240" \
 	-ex "target remote $(GDBREMOTE)" \
 	$(GDB_UPLOAD_ARGS) $(GDB_UPLOAD_CMDS)
 
@@ -129,34 +129,34 @@ run_openocd:
 	@$(ECHO) "Start openocd server"
 	$(OPENOCD) $(OPENOCD_PORT_ARGS) $(OPENOCD_ARGS)
 
-run_gdb: $(TARGET).elf
+run_gdb: $(TARGET_ELF)
 	@$(ECHO) "Run gdb to connect openocd server and debug"
 	$(GDB) $< $(GDB_ARGS) $(GDB_CMDS)
 
-debug: $(TARGET).elf
+debug: $(TARGET_ELF)
 	@$(ECHO) "Download and debug $<"
 	$(GDB) $< -ex "set remotetimeout 240" \
 	-ex "target remote $(GDBREMOTE)"
 
 # just for demosoc purpose
-run_qemu: $(TARGET).elf
+run_qemu: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(QEMU)"
 	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) \
 		-nodefaults -nographic -serial stdio -kernel $<
 
 # just for demosoc purpose
-run_qemu_debug: $(TARGET).elf
+run_qemu_debug: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(QEMU), and waiting for gdb connection on port $(GDB_PORT)"
 	@$(ECHO) "Then you can open a new terminal in the same directory and run make target: run_gdb to connect to this gdb connection"
 	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) \
 		-nodefaults -nographic -serial stdio -kernel $< -S -gdb tcp::$(GDB_PORT)
 
 # just works on demosoc purpose, experimental support
-run_xlspike: $(TARGET).elf
+run_xlspike: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(XLSPIKE)"
 	$(XLSPIKE) $(XLSPIKE_OPT) --isa $(RISCV_ARCH) $<
 
-run_xlspike_rbb: $(TARGET).elf
+run_xlspike_rbb: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(XLSPIKE), and waiting for remote bitbang connection on port $(RBB_PORT)"
 	@$(ECHO) "Then you need open a new terminal in the same directory and run make target: run_xlspike_openocd to connect to this remote bitbang connection"
 	$(XLSPIKE) $(XLSPIKE_OPT) --rbb-port=$(RBB_PORT) -H --isa $(RISCV_ARCH) $<
