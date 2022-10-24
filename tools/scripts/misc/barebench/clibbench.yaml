@@ -2,7 +2,7 @@ runcfg:
     runner: fpga
 
 environment:
-    fpgaloc: /home/share/devtools/fpgabit/latest
+    fpgaloc: /home/share/devtools/ncycm/linux64/latest
     ncycmloc: /home/share/devtools/ncycm/linux64/latest
     cfgloc: .
 
@@ -40,13 +40,18 @@ fpga_runners:
         serial_port:
 
 ncycm_runners:
-    n200b:
-        # model path
-        model: n200_software_best_config_cymodel_latest
-    n300fdbp:
-        model: n300_software_best_config_cymodel_latest
-    n900fdbp:
-        model: n900_software_best_config_cymodel_latest
+    n200:
+        model: n200_software_best_config_cymodel
+    n300:
+        model: n300_software_best_config_cymodel
+    n600:
+        model: n600_software_best_config_cymodel
+    n900:
+        model: n900_software_best_config_cymodel
+    ux600:
+        model: ux600_software_best_config_cymodel
+    ux900:
+        model: ux900_software_best_config_cymodel
 
 # configs
 configs:
@@ -54,7 +59,7 @@ configs:
         fpga: ddr200t
         # bitstream path related to this yaml's loc or abs path
         bitstream: n200_software_best_config_ddr200t.bit
-        ncycm: n200b
+        ncycm: n200
         openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
         appcfg: barebench.json
         hwcfg: n200_clib.json
@@ -62,7 +67,7 @@ configs:
     n300:
         fpga: ddr200t
         bitstream: n300_software_best_config_ddr200t.bit
-        ncycm: n300fdbp
+        ncycm: n300
         openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
         appcfg: barebench.json
         hwcfg: n300_clib.json
@@ -70,7 +75,7 @@ configs:
     n600:
         fpga: ku060
         bitstream: n600_software_best_config_ku060.bit
-        ncycm: n600fdbp
+        ncycm: n600
         openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
         appcfg: barebench.json
         hwcfg: n600_clib.json
@@ -78,7 +83,7 @@ configs:
     ux600:
         fpga: ku060
         bitstream: ux600_software_best_config_ku060.bit
-        ncycm: ux600fdbp
+        ncycm: ux600
         openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
         appcfg: barebench.json
         hwcfg: ux600_clib.json
@@ -86,7 +91,7 @@ configs:
     n900:
         fpga: vcu118
         bitstream: n900_software_best_config_vcu118.bit
-        ncycm: n900fdbp
+        ncycm: n900
         openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
         appcfg: barebench.json
         hwcfg: n900_clib.json
@@ -94,7 +99,7 @@ configs:
     ux900:
         fpga: vcu118
         bitstream: ux900_software_best_config_vcu118.bit
-        ncycm: ux900fdbp
+        ncycm: ux900
         openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
         appcfg: barebench.json
         hwcfg: ux900_clib.json
