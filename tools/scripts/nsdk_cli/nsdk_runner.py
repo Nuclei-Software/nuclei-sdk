@@ -12,6 +12,8 @@ try:
     import glob
     import yaml
     import usb
+    import shutil
+    import tempfile
     import yamale
 except:
     print("Please install requried packages using: pip3 install -r %s" % (requirement_file))
@@ -65,7 +67,7 @@ def check_usb_serial(serno):
     return False
 
 class nsdk_runner(object):
-    def __init__(self, sdk, makeopts, runyaml, locations, verbose=False):
+    def __init__(self, sdk, makeopts, runyaml, locations, verbose=False, timeout=None):
         if os.path.isdir(sdk) == False:
             print("Invalid sdk path %s" % (sdk))
             sys.exit(1)
@@ -78,6 +80,7 @@ class nsdk_runner(object):
         self.sdk = sdk
         self.makeopts = makeopts
         self.verbose = verbose
+        self.runtmout = timeout
 
         if yret != YAML_OK:
             print("Invalid yaml configuration file %s" % (runyaml))
@@ -250,6 +253,13 @@ class nsdk_runner(object):
         else:
             mkopts = self.makeopts
 
+        if self.runtmout:
+            print("Force %s runner timeout to be %s seconds" % (runon, self.runtmout))
+            if runon == "fpga":
+                final_appcfg["run_config"]["hardware"]["timeout"] = int(self.runtmout)
+            elif runon in ["xlspike", "qemu", "ncycm"]:
+                final_appcfg["run_config"][runon]["timeout"] = int(self.runtmout)
+
         if runon == "ncycm" or runon == "xlspike":
             for opts in ("SIMULATION=1", "SIMU=xlspike"):
                 if opts not in mkopts:
@@ -284,55 +294,103 @@ class nsdk_runner(object):
         return ret
         pass
 
-def merge_cfgyaml(appyaml, runyaml):
+def merge_cfgyaml(appyaml, runyaml, confloc=None, appcfgjf=None):
     yret, appcfg = load_yaml(appyaml)
     if yret != YAML_OK:
         print("Invalid yaml configuration file %s" % (appyaml))
         sys.exit(1)
-    yret, runcfg = load_yaml(runyaml)
-    if yret != YAML_OK:
-        print("Invalid yaml configuration file %s" % (runyaml))
-        sys.exit(1)
+    if os.path.isfile(runyaml):
+        yret, runcfg = load_yaml(runyaml)
+        if yret != YAML_OK:
+            print("Invalid yaml configuration file %s" % (runyaml))
+            sys.exit(1)
+    else:
+        runcfg = dict()
+    if confloc:
+        appcfg["environment"]["cfgloc"] = confloc
+    if appcfgjf:
+        for cfgname in appcfg["configs"]:
+            appcfg["configs"][cfgname]["appcfg"] = appcfgjf
     for runner in ["ncycm_runners", "fpga_runners"]:
         if runner in appcfg and runner in runcfg:
             appcfg[runner] = runcfg[runner]
 
     return merge_two_config(appcfg, runcfg)
 
+def prepare_yaml(appyaml, appdirs, runyaml, logdir):
+    if not (appyaml or appdirs):
+        print("Must provide at least appyaml or appdirs")
+        return None
+    usesys = False
+    confloc = None
+    appcfgjf = None
+    conftype = "mini"
+    if appyaml is None or os.path.isfile(appyaml) == False:
+        if appdirs is None:
+            print("appyaml or appdirs is invalid, please check!")
+            return None
+        sysappyaml = os.path.join(SCRIPT_DIR, "configs", "cpu", "cpu.yaml")
+        sysappjson = os.path.join(SCRIPT_DIR, "configs", "cpu", "cpu.json")
+        print("appyaml specified file %s doesn't exit, use system one %s" % (appyaml, sysappyaml))
+        if appyaml in ["mini", "full"]:
+            conftype = appyaml
+        confloc = os.path.join(SCRIPT_DIR, "configs", "cpu", conftype)
+        appyaml = sysappyaml
+        ret, appjsoncfg = load_json(sysappjson)
+        if ret != JSON_OK:
+            print("System cpu json %s is invalid" % (sysappjson))
+            return None
+        appjsoncfg["appdirs"] = appdirs.split(",")
+        if os.path.isdir(logdir) == False:
+            os.makedirs(logdir)
+        appcfgjf = os.path.join(logdir, "appcases.json")
+        save_json(appcfgjf, appjsoncfg)
+    # merge appyaml, runyaml
+    mergedcfg = merge_cfgyaml(appyaml, runyaml, confloc, appcfgjf)
+    runneryaml = os.path.join(args.logdir, "runner.yaml")
+    save_yaml(runneryaml, mergedcfg)
+    print("Save used runner yaml %s" % (runneryaml))
+    return runneryaml
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Nuclei SDK Benchmark and Report Tool")
-    parser.add_argument('--appyaml', required=True, help="Application YAML Configuration File")
-    parser.add_argument('--runyaml', help="Runner YAML Configuration File")
+    parser.add_argument('--appyaml', help="Application YAML Configuration File, if not specified, will use generated specified by appdirs, contains n300/n600/n900/ux600/ux900")
+    parser.add_argument('--appdirs', help="App or test cases directories")
+    parser.add_argument('--runyaml', default="req_runners.yaml", help="Runner YAML Configuration File, default is req_runners.yaml")
     parser.add_argument('--logdir', default='logs', help="logs directory, default logs")
     parser.add_argument('--fpgaloc', help="Where fpga bitstream located in")
     parser.add_argument('--ncycmloc', help="Where nuclei cycle model located in")
     parser.add_argument('--cfgloc', help="Where nsdk bench configurations located in")
     parser.add_argument('--sdk', help="Where SDK located in")
     parser.add_argument('--make_options', help="Extra make options passed to overwrite default build configuration passed via appcfg and hwcfg")
-    parser.add_argument('--config', help="run configuration")
-    parser.add_argument('--runon', default='hardware', help="Where to run these application")
+    parser.add_argument('--config', help="Configurations to be run, split via comma, such as n300,n600")
+    parser.add_argument('--runon', default='qemu', choices=RUNNER_LIST, help="Where to run these application")
     parser.add_argument('--show', action='store_true', help="Show configurations")
+    parser.add_argument('--timeout', help="Runner timeout for each application run, if not specified will use default one specified in json configuration")
     parser.add_argument('--verbose', action='store_true', help="If specified, will show detailed build/run messsage")
     args = parser.parse_args()
 
     if args.sdk is None:
-        args.sdk =  os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../../"))
-    if (os.path.isfile(args.appyaml) == False):
-        print("Invalid application yaml, please check!")
+        sdk_path = os.environ.get("NUCLEI_SDK_ROOT")
+        if os.path.isdir(sdk_path) == False:
+            args.sdk =  os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../../"))
+        else:
+            args.sdk = sdk_path
+    if not(os.path.isdir(args.sdk) and os.path.isfile(os.path.join(args.sdk, "npk.yml"))):
+        print("SDK location %s is invalid, please check!" % (args.sdk))
         sys.exit(1)
-    runneryaml = args.appyaml
-    if args.runyaml:
-        rundict = merge_cfgyaml(args.appyaml, args.runyaml)
-        if os.path.isdir(args.logdir) == False:
-            os.makedirs(args.logdir)
-        runneryaml = os.path.join(args.logdir, "runner.yaml")
-        save_yaml(runneryaml, rundict)
+
+    print("Using sdk path in %s" % (args.sdk))
+
+    runneryaml = prepare_yaml(args.appyaml, args.appdirs, args.runyaml, args.logdir)
+    if runneryaml is None:
+        print("Can't prepare a valid runner yaml file")
+        sys.exit(1)
 
     pp = pprint.PrettyPrinter(compact=True)
     ret = True
     locations = {"fpgaloc": args.fpgaloc, "ncycmloc": args.ncycmloc, "cfgloc": args.cfgloc }
-    nsdk_ext = nsdk_runner(args.sdk, args.make_options, runneryaml, locations, args.verbose)
+    nsdk_ext = nsdk_runner(args.sdk, args.make_options, runneryaml, locations, args.verbose, args.timeout)
     if args.show:
         print("Here are the supported configs:")
         pp.pprint(nsdk_ext.get_configs())

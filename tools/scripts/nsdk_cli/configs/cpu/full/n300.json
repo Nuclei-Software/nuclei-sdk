@@ -1,0 +1,18 @@
+{
+    "build_config": {
+        "CPU_SERIES": "300"
+    },
+    "build_configs": {
+        "rv32imac": {"CORE":"n300"},
+        "rv32imacb": {"CORE":"n300", "ARCH_EXT":"b"},
+        "rv32imacbp": {"CORE":"n300", "ARCH_EXT":"bp"},
+        "rv32imafc": {"CORE":"n300f", "ARCH_EXT":""},
+        "rv32imafcb": {"CORE":"n300f", "ARCH_EXT":"b"},
+        "rv32imafcp": {"CORE":"n300f", "ARCH_EXT":"p"},
+        "rv32imafcbp": {"CORE":"n300f", "ARCH_EXT":"bp"},
+        "rv32imafdc": {"CORE":"n300fd", "ARCH_EXT":""},
+        "rv32imafdcb": {"CORE":"n300fd", "ARCH_EXT":"b"},
+        "rv32imafdcp": {"CORE":"n300fd", "ARCH_EXT":"p"},
+        "rv32imafdcbp": {"CORE":"n300fd", "ARCH_EXT":"bp"}
+    }
+}
