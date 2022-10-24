@@ -340,6 +340,7 @@ class MonitorThread(Thread):
             print("Read serial log from %s, baudrate %s" %(self.port, self.baudrate))
             print("Checker used: ", self.checks)
             print("SDK Checker Tag \"%s\", checker enable %s" % (NSDK_CHECK_TAG, self.sdk_check))
+        print("SDK run timeout %s, banner timeout %s" % (self.timeout, self._check_sdk_timeout))
         check_finished = False
         try:
             ser = None

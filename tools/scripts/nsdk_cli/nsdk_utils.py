@@ -447,7 +447,7 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     if get_sdk_verb_buildmsg():
         print("Checker used: ", checks)
         print("SDK Checker Tag \"%s\", checker enable %s" % (NSDK_CHECK_TAG, sdk_check))
-        print("SDK run timeout %s, banner timeout %s" % (timeout, banner_timeout))
+    print("SDK run timeout %s, banner timeout %s" % (timeout, banner_timeout))
     check_finished = False
     start_time = time.time()
     serial_log = ""
