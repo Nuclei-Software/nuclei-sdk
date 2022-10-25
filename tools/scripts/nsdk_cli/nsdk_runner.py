@@ -357,7 +357,7 @@ def prepare_yaml(appyaml, runyaml, logdir, appdirs=None, ocdcfg=None):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Nuclei SDK Benchmark and Report Tool")
-    parser.add_argument('--appyaml', help="Application YAML Configuration File, if not specified, will use generated specified by appdirs, contains n300/n600/n900/ux600/ux900")
+    parser.add_argument('--appyaml', '--runset', dest='appyaml', help="Application YAML Configuration File, if not specified, will use generated specified by appdirs, contains n300/n600/n900/ux600/ux900")
     parser.add_argument('--appdirs', help="App or test cases directories")
     parser.add_argument('--runyaml', default="req_runners.yaml", help="Runner YAML Configuration File, default is req_runners.yaml")
     parser.add_argument('--logdir', default='logs', help="logs directory, default logs")
