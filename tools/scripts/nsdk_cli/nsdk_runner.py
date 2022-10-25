@@ -294,7 +294,7 @@ class nsdk_runner(object):
         return ret
         pass
 
-def merge_cfgyaml(appyaml, runyaml, confloc=None, appcfgjf=None):
+def merge_cfgyaml(appyaml, runyaml, confloc=None, appcfgjf=None, ocdcfg=None):
     yret, appcfg = load_yaml(appyaml)
     if yret != YAML_OK:
         print("Invalid yaml configuration file %s" % (appyaml))
@@ -311,13 +311,16 @@ def merge_cfgyaml(appyaml, runyaml, confloc=None, appcfgjf=None):
     if appcfgjf:
         for cfgname in appcfg["configs"]:
             appcfg["configs"][cfgname]["appcfg"] = appcfgjf
+    if ocdcfg:
+        for cfgname in appcfg["configs"]:
+            appcfg["configs"][cfgname]["openocd_cfg"] = ocdcfg
     for runner in ["ncycm_runners", "fpga_runners"]:
         if runner in appcfg and runner in runcfg:
             appcfg[runner] = runcfg[runner]
 
     return merge_two_config(appcfg, runcfg)
 
-def prepare_yaml(appyaml, appdirs, runyaml, logdir):
+def prepare_yaml(appyaml, runyaml, logdir, appdirs=None, ocdcfg=None):
     if not (appyaml or appdirs):
         print("Must provide at least appyaml or appdirs")
         return None
@@ -346,7 +349,7 @@ def prepare_yaml(appyaml, appdirs, runyaml, logdir):
         appcfgjf = os.path.join(logdir, "appcases.json")
         save_json(appcfgjf, appjsoncfg)
     # merge appyaml, runyaml
-    mergedcfg = merge_cfgyaml(appyaml, runyaml, confloc, appcfgjf)
+    mergedcfg = merge_cfgyaml(appyaml, runyaml, confloc, appcfgjf, ocdcfg)
     runneryaml = os.path.join(args.logdir, "runner.yaml")
     save_yaml(runneryaml, mergedcfg)
     print("Save used runner yaml %s" % (runneryaml))
@@ -362,6 +365,7 @@ if __name__ == '__main__':
     parser.add_argument('--ncycmloc', help="Where nuclei cycle model located in")
     parser.add_argument('--cfgloc', help="Where nsdk bench configurations located in")
     parser.add_argument('--sdk', help="Where SDK located in")
+    parser.add_argument('--ocdcfg', help="OpenOCD Configuration File location relative to SDK, such as SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg")
     parser.add_argument('--make_options', help="Extra make options passed to overwrite default build configuration passed via appcfg and hwcfg")
     parser.add_argument('--config', help="Configurations to be run, split via comma, such as n300,n600")
     parser.add_argument('--runon', default='qemu', choices=RUNNER_LIST, help="Where to run these application")
@@ -382,7 +386,7 @@ if __name__ == '__main__':
 
     print("Using sdk path in %s" % (args.sdk))
 
-    runneryaml = prepare_yaml(args.appyaml, args.appdirs, args.runyaml, args.logdir)
+    runneryaml = prepare_yaml(args.appyaml, args.runyaml, args.logdir, args.appdirs, args.ocdcfg)
     if runneryaml is None:
         print("Can't prepare a valid runner yaml file")
         sys.exit(1)
