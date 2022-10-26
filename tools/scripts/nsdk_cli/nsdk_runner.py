@@ -377,7 +377,7 @@ if __name__ == '__main__':
     if args.sdk is None:
         sdk_path = os.environ.get("NUCLEI_SDK_ROOT")
         if sdk_path is None or os.path.isdir(sdk_path) == False:
-            args.sdk =  os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../../"))
+            args.sdk = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../../"))
         else:
             args.sdk = sdk_path
     if not(args.sdk and os.path.isdir(args.sdk) and os.path.isfile(os.path.join(args.sdk, "npk.yml"))):
