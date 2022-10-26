@@ -183,9 +183,9 @@ sdk_run_newlib_job_nuclei_fpga_eval:
       - HWCFG:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_newlib.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv_newlib.json
-          #IMAGE_TAG:
-          #- "2022.05-eng2"
-          #- "2022.05"
+       #IMAGE_TAG:
+        #- "2022.05-eng2"
+        #- "2022.05"
   script:
     - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
     # change ilm/dlm size from 64K to 128K for demosoc to be able to build with newlib full library
