@@ -80,14 +80,11 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #ifndef DISABLE_NMSIS_BENCH
 
 /** Declare benchmark required variables, need to be placed above all BENCH_xxx macros in each c source code if BENCH_xxx used */
-#define BENCH_DECLARE_VAR()     static volatile uint64_t _bc_sttcyc, _bc_endcyc, _bc_usecyc, _bc_extcst, _bc_ercd;
+#define BENCH_DECLARE_VAR()     static volatile uint64_t _bc_sttcyc, _bc_endcyc, _bc_usecyc, _bc_ercd;
 
 /** Initialize benchmark environment, need to called in before other BENCH_xxx macros are called */
 #define BENCH_INIT()            printf("Benchmark initialized\n"); \
                                 __prepare_bench_env(); \
-                                _bc_sttcyc = READ_CYCLE(); \
-                                _bc_endcyc = READ_CYCLE(); \
-                                _bc_extcst = _bc_endcyc - _bc_sttcyc; \
                                 _bc_ercd = 0;
 
 /** Start to do benchmark for proc, and record start cycle */
@@ -96,7 +93,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 
 /** Mark end of benchmark for proc, and calc used cycle, and print it */
 #define BENCH_END(proc)         _bc_endcyc = READ_CYCLE(); \
-                                _bc_usecyc = _bc_endcyc - _bc_sttcyc - _bc_extcst; \
+                                _bc_usecyc = _bc_endcyc - _bc_sttcyc; \
                                 printf("CSV, %s, %lu\n", #proc, _bc_usecyc);
 
 /** Mark benchmark for proc is errored */
