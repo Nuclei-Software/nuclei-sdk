@@ -164,6 +164,23 @@ __STATIC_FORCEINLINE void FlushPipeCCM(void)
  */
 
 /**
+ * \brief  Check ICache Unit Present or Not
+ * \details
+ * This function check icache unit present or not via mcfg_info csr
+ * \remarks
+ * - This function might not work for some old nuclei processors
+ * - Please make sure the version of your nuclei processor contain ICACHE bit in mcfg_info
+ * \return 1 if present otherwise 0
+*/
+__STATIC_FORCEINLINE int32_t ICachePresent(void)
+{
+    if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_ICACHE) {
+        return 1;
+    }
+    return 0;
+}
+
+/**
  * \brief  Enable ICache
  * \details
  * This function enable I-Cache
@@ -627,6 +644,24 @@ __STATIC_FORCEINLINE void UInvalICache(void)
  * \brief    Functions that configure Data Cache.
  * @{
  */
+
+/**
+ * \brief  Check DCache Unit Present or Not
+ * \details
+ * This function check dcache unit present or not via mcfg_info csr
+ * \remarks
+ * - This function might not work for some old nuclei processors
+ * - Please make sure the version of your nuclei processor contain DCACHE bit in mcfg_info
+ * \return 1 if present otherwise 0
+*/
+__STATIC_FORCEINLINE int32_t DCachePresent(void)
+{
+    if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_DCACHE) {
+        return 1;
+    }
+    return 0;
+}
+
 /**
  * \brief  Enable DCache
  * \details
