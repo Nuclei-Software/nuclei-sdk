@@ -772,11 +772,19 @@ void _premain_init(void)
 #endif
 
     /* __ICACHE_PRESENT and __DCACHE_PRESENT are defined in evalsoc.h */
+    // For our internal cpu testing, they want to set evalsoc __ICACHE_PRESENT/__DCACHE_PRESENT to be 1
+    // __CCM_PRESENT is still default to 0 in evalsoc.h, since it is used in core_feature_eclic.h to register interrupt, if set to 1, it might cause exception
+    // but in the cpu, icache or dcache might not exist due to cpu configuration, so here
+    // we need to check whether icache/dcache really exist, if yes, then turn on it
 #if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1)
-    EnableICache();
+    if (ICachePresent()) { // Check whether icache real present or not
+        EnableICache();
+    }
 #endif
 #if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1)
-    EnableDCache();
+    if (DCachePresent()) { // Check whether dcache real present or not
+        EnableDCache();
+    }
 #endif
 
     /* Do fence and fence.i to make sure previous ilm/dlm/icache/dcache control done */
