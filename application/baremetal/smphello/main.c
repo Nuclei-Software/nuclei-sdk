@@ -18,6 +18,9 @@ volatile uint32_t lock_ready = 0;
 volatile uint32_t cpu_count = 0;
 volatile uint32_t finished = 0;
 
+// comment SPINLOCK_CAS to use AMOSWAP as spinlock
+#define SPINLOCK_CAS
+
 __STATIC_FORCEINLINE void spinlock_init(spinlock *lock)
 {
     lock->state = 0;
@@ -28,7 +31,13 @@ __STATIC_FORCEINLINE void spinlock_lock(spinlock *lock)
     uint32_t old;
     uint32_t backoff = 10;
     do {
+#ifndef SPINLOCK_CAS
+        // Use amoswap as spinlock
         old = __AMOSWAP_W((&(lock->state)), 1);
+#else
+        // use lr.w & sc.w to do CAS as spinlock
+        old = __CAS_W((&(lock->state)), 0, 1);
+#endif
         if (old == 0) {
             break;
         }
