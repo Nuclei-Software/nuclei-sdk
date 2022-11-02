@@ -6,6 +6,8 @@ import sys
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.txt"))
 try:
+    import time
+    import random
     import json
     import argparse
     import pprint
@@ -183,12 +185,20 @@ class nsdk_runner(object):
                 if check_usb_serial(ftdi_serial) == False:
                     print("FDTI Serial %s not found!" % (ftdi_serial))
                     continue
-                # program fpga
-                if program_fpga(bitstream, fpga_serial) == False:
-                    print("Failed to program fpga using bit %s to target %s" % (bitstream, fpga_serial))
+                # program fpga, retry 3 times, and wait for 30s * times for each retry
+                fpgadone = False
+                for i in range(3):
+                    if program_fpga(bitstream, fpga_serial) == False:
+                        print("Failed to program fpga using bit %s to target %s, retry times %d" % (bitstream, fpga_serial, i))
+                        slptm = (30 * (i+1)) + random.randint(0, 30)
+                        time.sleep(slptm)
+                        continue
+                    else:
+                        print("Successfully program fpga using bit %s to target %s" % (bitstream, fpga_serial))
+                        fpgadone = True
+                        break
+                if fpgadone == False:
                     continue
-                else:
-                    print("Successfully program fpga using bit %s to target %s" % (bitstream, fpga_serial))
                 # after program bit, serial port might change, view in virtual machine
                 # so just check the serial port after program fpga
                 if serport is None or serport.strip() == "":
