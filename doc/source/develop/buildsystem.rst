@@ -442,6 +442,8 @@ Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
      - :ref:`design_soc_gd32vf103`
    * - demosoc
      - :ref:`design_soc_demosoc`
+   * - evalsoc
+     - :ref:`design_soc_evalsoc`
 
 .. note::
 
