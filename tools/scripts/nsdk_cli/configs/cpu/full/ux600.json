@@ -1,8 +1,5 @@
 {
     "build_config": {
-        "SOC": "demosoc",
-        "BOARD": "nuclei_fpga_eval",
-        "DOWNLOAD": "ilm",
         "CPU_SERIES": "600"
     },
     "build_configs": {
