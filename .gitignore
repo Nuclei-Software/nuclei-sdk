@@ -27,6 +27,7 @@ setup_config.bat
 setup_config.ps1
 
 tags
+ctags
 TAGS
 TAG
 CTAGS

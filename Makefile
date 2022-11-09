@@ -1,6 +1,6 @@
 PROGRAM :=baremetal/helloworld
 
-.PHONY: __help
+.PHONY: __help ctags
 __help:
 	@echo "Help about Build/Run/Debug/Clean Nuclei SDK Application"
 	@echo "make [PROGRAM=/path/to/app]  help                        Show Build System Help Message"
@@ -51,3 +51,10 @@ $(CLEAN_DIRS_RULES):
 
 $(VALID_SDK_RULES):
 	make -C $(VALID_PROGRAM) $@
+
+# Only works in linux
+# Exuberant Ctags is required to be installed
+tags ctags:
+	ctags -o tags `find . -name '*.[chS]' -print`
+	rm -f ctags
+	ln -sf tags ctags
