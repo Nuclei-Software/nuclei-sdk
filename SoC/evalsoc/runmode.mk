@@ -4,7 +4,7 @@
 RUNMODE ?=
 
 ifneq ($(RUNMODE),) # RUNMODE defined but not empty
-# lm mode, ilm/dlm enabled, icache/dcache enabled
+# lm mode, ilm/dlm enabled, icache/dcache disabled
 ifeq ($(RUNMODE),lm)
 ILM_EN ?= 1
 DLM_EN ?= 1
