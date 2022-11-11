@@ -1,0 +1,7 @@
+{
+    "matrix": {
+        "ground": {"DHRY_MODE": "ground"},
+        "inline": {"DHRY_MODE": "inline"},
+        "best": {"DHRY_MODE": "best"}
+    }
+}

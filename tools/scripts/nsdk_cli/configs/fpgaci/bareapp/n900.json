@@ -1,0 +1,8 @@
+{
+    "matrix": {
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "test/core": {"build": true, "run": true}
+    }
+}
