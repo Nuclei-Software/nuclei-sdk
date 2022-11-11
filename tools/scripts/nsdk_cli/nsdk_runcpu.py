@@ -48,12 +48,10 @@ def gen_runner_configs(casedir, caseconfig, genloc):
     runcfg = os.path.join(casedir, "%s.json" % (core))
     appcfg = os.path.join(casedir, "app.json")
     cfgcfg = os.path.join(casedir, "config.json")
-    for cf in [runcfg, appcfg, cfgcfg]:
-        ret, jdata = load_json(cf)
-        if ret != JSON_OK:
-            print("Invalid json file %s" % (cf))
-            return False
     _, cfgconfig = load_json(cfgcfg)
+    if cfgconfig is None:
+        cfgconfig = {"choice": "mini"}
+
     choice = cfgconfig.get("choice", "mini")
     if os.path.isdir(genloc) == False:
         os.makedirs(genloc)

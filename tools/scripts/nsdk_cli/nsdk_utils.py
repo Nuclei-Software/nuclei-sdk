@@ -1047,7 +1047,7 @@ def gen_runcfg(cpucfg, runcfg):
     _, cpucfgdict = load_json(cpucfg)
     _, runcfgdict = load_json(runcfg)
     if cpucfgdict is None:
-        return runcfgdict
+        return  { "build_configs": { "default": {} } }
     if runcfgdict is None:
         return cpucfgdict
     matrixcfgs = runcfgdict.get("matrix", None)
