@@ -31,6 +31,8 @@ FPGACIROOT = os.path.join(SCRIPT_DIR, "configs", "fpgaci")
 #            },
 #    "ncycm": "xxxx",
 #    "bitstream": "fpga.bit",
+#    "fpga_serial": "xxxx",
+#    "ftdi_serial": "xxxx",
 #    "boardtype": "ddr200t",
 #    "ocdcfg": "SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg",
 #    "cpucfg": "n300.json"
@@ -143,6 +145,7 @@ if __name__ == '__main__':
             ret = False
             break
         runneryaml = os.path.join(casecfgdir, "core.yaml")
+        shutil.copy(args.casecfg, os.path.join(casecfgdir, "casecfg.json"))
         locations = dict()
         nsdk_ext = nsdk_runner(args.sdk, args.make_options, runneryaml, locations, args.verbose, args.timeout)
         casepassed = True
