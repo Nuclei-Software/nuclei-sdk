@@ -69,7 +69,7 @@ def check_usb_serial(serno):
     return False
 
 class nsdk_runner(object):
-    def __init__(self, sdk, makeopts, runyaml, locations, verbose=False, timeout=None):
+    def __init__(self, sdk, makeopts, runyaml, locations=dict(), verbose=False, timeout=None):
         if os.path.isdir(sdk) == False:
             print("Invalid sdk path %s" % (sdk))
             sys.exit(1)
@@ -88,11 +88,13 @@ class nsdk_runner(object):
             print("Invalid yaml configuration file %s" % (runyaml))
             sys.exit(1)
 
-        if locations["fpgaloc"]:
+        self.yamlloc = os.path.dirname(runyaml)
+
+        if locations.get("fpgaloc", None):
             self.runcfg["environment"]["fpgaloc"] = locations["fpgaloc"]
-        if locations["ncycmloc"]:
+        if locations.get("ncycmloc", None):
             self.runcfg["environment"]["ncycmloc"] = locations["ncycmloc"]
-        if locations["cfgloc"]:
+        if locations.get("cfgloc", None):
             self.runcfg["environment"]["cfgloc"] = locations["cfgloc"]
         self.cpuruncfgs = dict()
         for key in self.runcfg["configs"]:
@@ -131,7 +133,7 @@ class nsdk_runner(object):
     def get_configs(self):
         return list(self.cpuruncfgs.keys())
 
-    def run_config(self, config, logdir, runon=""):
+    def run_config(self, config, logdir, runon="", createsubdir=True):
         runcfg = self.cpuruncfgs.get(config, None)
         if runcfg is None:
             return False
@@ -142,10 +144,14 @@ class nsdk_runner(object):
         appcfg_file = benchcfg["appcfg"]
         hwcfg_file = benchcfg["hwcfg"]
         cfgloc = self.runcfg["environment"]["cfgloc"]
-        def get_file_path(file, loc):
-            if os.path.isfile(file) == False:
-                file = os.path.join(loc, file)
-            return file
+        def get_file_path(fl, loc):
+            if os.path.isfile(fl) == False:
+                nfile = os.path.join(loc, fl)
+                if os.path.isfile(nfile) == False:
+                    fl = os.path.join(self.yamlloc, fl)
+                else:
+                    fl = nfile
+            return fl
         appcfg_file = get_file_path(appcfg_file, cfgloc)
         hwcfg_file = get_file_path(hwcfg_file, cfgloc)
 
@@ -157,6 +163,8 @@ class nsdk_runner(object):
         if ret != JSON_OK:
             print("ERROR: hwcfg json file is not a valid configuration file!")
         final_appcfg = merge_two_config(run_appcfg, run_hwcfg)
+        if "run_config" not in final_appcfg:
+            final_appcfg["run_config"] = dict()
         need2run = True
         # check fpga/ncycm runner
         if runon == "fpga":
@@ -177,11 +185,10 @@ class nsdk_runner(object):
                 if (os.path.isfile(openocdcfg)) == False:
                     print("OpenOCD Configuration File %s not found" % (openocdcfg))
                     continue
+                bitstream = get_file_path(bitstream, fpgaloc)
                 if os.path.isfile(bitstream) == False:
-                    bitstream = os.path.join(fpgaloc, bitstream)
-                    if os.path.isfile(bitstream) == False:
-                        print("Bitstream %s not found!" % (bitstream))
-                        continue
+                    print("Bitstream %s not found!" % (bitstream))
+                    continue
                 if check_usb_serial(ftdi_serial) == False:
                     print("FDTI Serial %s not found!" % (ftdi_serial))
                     continue
@@ -236,15 +243,14 @@ class nsdk_runner(object):
                 return False
             ncycm_path = runcfg["ncycm"]["model"]
             ncycm_loc = self.runcfg["environment"]["ncycmloc"]
+            ncycm_path = get_file_path(ncycm_path, ncycm_loc)
             if os.path.isfile(ncycm_path) == False:
-                ncycm_path = os.path.join(ncycm_loc, ncycm_path)
-                if os.path.isfile(ncycm_path) == False:
-                    print("cycle model %s not found!" % (ncycm_path))
-                    return False
+                print("cycle model %s not found!" % (ncycm_path))
+                return False
             # set run target to ncycm
             final_appcfg["run_config"]["target"] = "ncycm"
             if "ncycm" not in final_appcfg["run_config"]:
-                final_appcfg["run_config"]["ncycm"] = {"timeout": 600, "ncycm": "ncycm"}
+                final_appcfg["run_config"]["ncycm"] = {"timeout": 1200, "ncycm": "ncycm"}
             final_appcfg["run_config"]["ncycm"]["ncycm"] = ncycm_path
         elif runon == "qemu" or runon == "xlspike":
             # set run target to ncycm
@@ -281,7 +287,11 @@ class nsdk_runner(object):
         subappcfg = final_appcfg
         if mkopts != "":
             subappcfg = merge_config_with_makeopts(subappcfg, mkopts)
-        sublogdir = os.path.join(logdir, config)
+
+        if createsubdir:
+            sublogdir = os.path.join(logdir, config)
+        else:
+            sublogdir = logdir
         start_time = time.time()
         if need2run:
             #if runon == "fpga":

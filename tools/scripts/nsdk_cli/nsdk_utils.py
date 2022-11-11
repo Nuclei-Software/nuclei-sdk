@@ -1042,3 +1042,56 @@ def modify_openocd_cfg(cfg, ftdi_serial):
         cf.write(contents)
     return True
 
+GL_CPUCFGs = os.path.join(SCRIPT_DIR,  "configs", "cpu")
+def gen_runcfg(cpucfg, runcfg):
+    _, cpucfgdict = load_json(cpucfg)
+    _, runcfgdict = load_json(runcfg)
+    if cpucfgdict is None:
+        return runcfgdict
+    if runcfgdict is None:
+        return cpucfgdict
+    matrixcfgs = runcfgdict.get("matrix", None)
+    expectedcfg = runcfgdict.get("expected", dict())
+    finalruncfg = copy.deepcopy(cpucfgdict)
+    finalruncfg["expected"] = merge_two_config(finalruncfg.get("expected", dict()), expectedcfg)
+    if matrixcfgs is None:
+        return finalruncfg
+    bcfgs = cpucfgdict.get("build_configs", dict())
+    newbcfgs = dict()
+    for bkey in bcfgs:
+        for key in matrixcfgs:
+            cfgkey = "%s#%s" % (bkey, key)
+            newbcfgs[cfgkey] = merge_two_config(bcfgs[bkey], matrixcfgs[cfgkey])
+    if len(newbcfgs) > 1:
+        finalruncfg["build_configs"] = newbcfgs
+    else:
+        finalruncfg["build_configs"] = bcfgs
+    return finalruncfg
+
+def gen_coreruncfg(core, runcfg, choice="mini"):
+    cpucfg = os.path.join(GL_CPUCFGs, choice, "%s.json" % (core))
+    return gen_runcfg(cpucfg, runcfg)
+
+def gen_runyaml(core, locs, fpga_serial, ftdi_serial, cycm, fpgabit, boardtype, ocdcfg, appcfg, hwcfg):
+    runyaml = { "runcfg": {"runner": "fpga"},
+                "fpga_runners": { core: {
+                    "board_type": boardtype, "fpga_serial": fpga_serial,
+                    "ftdi_serial": ftdi_serial, "serial_port": ""}
+                },
+                "ncycm_runners": { core: {
+                    "model": cycm if cycm else "" }
+                },
+                "configs": { core: {
+                    "fpga": boardtype, "bitstream": fpgabit,
+                    "ncycm": core, "openocd_cfg": ocdcfg,
+                    "appcfg": appcfg, "hwcfg": hwcfg }
+                },
+                "environment": {
+                    "fpgaloc": locs.get("fpgaloc", ""),
+                    "ncycmloc": locs.get("ncycmloc", ""),
+                    "cfgloc": locs.get("cfgloc", "")
+                }
+            }
+    if cycm is not None:
+        runyaml["runcfg"]["runner"] = "ncycm"
+    return runyaml
