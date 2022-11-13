@@ -1061,7 +1061,7 @@ def gen_runcfg(cpucfg, runcfg):
     for bkey in bcfgs:
         for key in matrixcfgs:
             cfgkey = "%s#%s" % (bkey, key)
-            newbcfgs[cfgkey] = merge_two_config(bcfgs[bkey], matrixcfgs[cfgkey])
+            newbcfgs[cfgkey] = merge_two_config(bcfgs[bkey], matrixcfgs[key])
     if len(newbcfgs) > 1:
         finalruncfg["build_configs"] = newbcfgs
     else:
