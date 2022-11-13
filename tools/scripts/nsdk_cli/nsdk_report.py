@@ -624,7 +624,10 @@ def show_report_summary(summary, sfl):
     if len(summary) == 0:
         return
     def decsort(key):
-        return float(key[0])
+        try:
+            return float(key[0])
+        except:
+            return 0
 
     summary["buildtime"].sort(reverse=True, key=decsort)
     summary["runtime"].sort(reverse=True, key=decsort)
