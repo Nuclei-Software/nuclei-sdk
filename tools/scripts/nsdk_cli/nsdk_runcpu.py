@@ -121,48 +121,52 @@ if __name__ == '__main__':
     ret, caseconfig = load_json(args.casecfg)
     if ret != JSON_OK:
         print("Invalid case configuration file %s, please check!" % (args.casecfg))
-        sys.exit()
+        sys.exit(1)
     passed_cases = []
     torun_cases = args.cases.split(",")
     tot_cases = []
     start_time = time.time()
     ret = True
-    for case in torun_cases:
-        case = case.strip()
-        if case == "":
-            continue
-        casedir = os.path.join(args.caseroot, case)
-        if os.path.isdir(casedir) == False:
-            print("Can't find case %s, ignore it!" % (casedir))
-            continue
-        tot_cases.append(case)
-        caselogdir = os.path.join(args.logdir, case)
-        casecfgdir = os.path.join(caselogdir, "gencfgs")
-        if gen_runner_configs(casedir, caseconfig, casecfgdir) == False:
-            print("No correct case configurations found in %s" % (casedir))
-            ret = False
-            break
-        runneryaml = os.path.join(casecfgdir, "core.yaml")
-        shutil.copy(args.casecfg, os.path.join(casecfgdir, "casecfg.json"))
-        locations = dict()
-        nsdk_ext = nsdk_runner(args.sdk, args.make_options, runneryaml, locations, args.verbose, args.timeout)
-        casepassed = True
-        for config in nsdk_ext.get_configs():
-            print("Run case %s for configuration %s specified in yaml %s" % (case, config, runneryaml))
-            if nsdk_ext.run_config(config, caselogdir, runon=args.runon, createsubdir=False) == False:
-                print("Configuration %s failed" % (config))
+    try:
+        for case in torun_cases:
+            case = case.strip()
+            if case == "":
+                continue
+            casedir = os.path.join(args.caseroot, case)
+            if os.path.isdir(casedir) == False:
+                print("Can't find case %s, ignore it!" % (casedir))
+                continue
+            tot_cases.append(case)
+            caselogdir = os.path.join(args.logdir, case)
+            casecfgdir = os.path.join(caselogdir, "gencfgs")
+            if gen_runner_configs(casedir, caseconfig, casecfgdir) == False:
+                print("No correct case configurations found in %s" % (casedir))
                 ret = False
-            if ret == False:
-                print("Case %s for configuration %s specified in yaml %s: FAILED" % (case, config, runneryaml))
-                casepassed = False
                 break
-            else:
-                print("Case %s for configuration %s specified in yaml %s: PASSED" % (case, config, runneryaml))
+            runneryaml = os.path.join(casecfgdir, "core.yaml")
+            shutil.copy(args.casecfg, os.path.join(casecfgdir, "casecfg.json"))
+            locations = dict()
+            nsdk_ext = nsdk_runner(args.sdk, args.make_options, runneryaml, locations, args.verbose, args.timeout)
+            casepassed = True
+            for config in nsdk_ext.get_configs():
+                print("Run case %s for configuration %s specified in yaml %s" % (case, config, runneryaml))
+                if nsdk_ext.run_config(config, caselogdir, runon=args.runon, createsubdir=False) == False:
+                    print("Configuration %s failed" % (config))
+                    ret = False
+                if ret == False:
+                    print("Case %s for configuration %s specified in yaml %s: FAILED" % (case, config, runneryaml))
+                    casepassed = False
+                    break
+                else:
+                    print("Case %s for configuration %s specified in yaml %s: PASSED" % (case, config, runneryaml))
 
-        if casepassed == False:
-            ret = False
-            break
-        passed_cases.append(case)
+            if casepassed == False:
+                ret = False
+                break
+            passed_cases.append(case)
+    except Exception as exc:
+        print("Unexpected Error: %s" % (exc))
+        ret = False
 
     runtime = round(time.time() - start_time, 2)
     print("Cost about %s seconds to do this running!" % (runtime))
