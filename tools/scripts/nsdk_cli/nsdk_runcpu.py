@@ -128,9 +128,11 @@ if __name__ == '__main__':
     start_time = time.time()
     ret = True
     try:
+        print("Prepare to do cases %s on %s" % (torun_cases, args.runon))
         for case in torun_cases:
             case = case.strip()
             if case == "":
+                print("Case %s is invaild, ignore it!" % (case))
                 continue
             casedir = os.path.join(args.caseroot, case)
             if os.path.isdir(casedir) == False:
@@ -169,7 +171,7 @@ if __name__ == '__main__':
         ret = False
 
     runtime = round(time.time() - start_time, 2)
-    print("Cost about %s seconds to do this running!" % (runtime))
+    print("Cost about %s seconds to do this running, passed %s!" % (runtime, ret))
     print("Case %s passed out of %s" % (passed_cases, tot_cases))
 
     # Exit with ret value

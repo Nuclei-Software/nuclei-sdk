@@ -443,7 +443,7 @@ if __name__ == '__main__':
                 need2run = True
             generate_report_for_logs(args.logdir, need2run, True)
         runtime = round(time.time() - start_time, 2)
-        print("Cost about %s seconds to do this running!" % (runtime))
+        print("Cost about %s seconds to do this running, passed %s!" % (runtime, ret))
     # Exit with ret value
     if ret:
         sys.exit(0)
