@@ -24,7 +24,7 @@
         "FAIL": ["MEPC"]
     },
     "appdirs": [
-        "application/baremetal/benchmark"
+        "application"
     ],
     "appdirs_ignore": [
         "application/baremetal/dsp_examples",
