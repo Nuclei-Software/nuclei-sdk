@@ -123,7 +123,7 @@ if __name__ == '__main__':
         print("Invalid case configuration file %s, please check!" % (args.casecfg))
         sys.exit(1)
     passed_cases = []
-    torun_cases = args.cases.split(",")
+    torun_cases = list(set(args.cases.split(",")))
     tot_cases = []
     start_time = time.time()
     ret = True
@@ -172,7 +172,8 @@ if __name__ == '__main__':
 
     runtime = round(time.time() - start_time, 2)
     print("Cost about %s seconds to do this running, passed %s!" % (runtime, ret))
-    print("Case %s passed out of %s" % (passed_cases, tot_cases))
+    print("All the required cases are %s" % (torun_cases))
+    print("Case %s passed out of executed %s" % (passed_cases, tot_cases))
 
     # Exit with ret value
     if ret:
