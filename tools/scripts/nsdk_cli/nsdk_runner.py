@@ -68,6 +68,12 @@ def check_usb_serial(serno):
             continue
     return False
 
+def gen_STATUS(logdir, status):
+    statusfile = os.path.join(logdir, "STATUS")
+    with open(statusfile, "w") as sf:
+        sf.write("%s" % (status))
+    pass
+
 class nsdk_runner(object):
     def __init__(self, sdk, makeopts, runyaml, locations=dict(), verbose=False, timeout=None):
         if os.path.isdir(sdk) == False:
@@ -306,6 +312,8 @@ class nsdk_runner(object):
         print("Application build as expected: %s" % (locret))
         if locret == False:
             ret = False
+        # generate STATUS file in log directory
+        gen_STATUS(sublogdir, ret)
         save_results(subappcfg, None, subappcfg, result, sublogdir)
         if result:
             # Generate build or run report
