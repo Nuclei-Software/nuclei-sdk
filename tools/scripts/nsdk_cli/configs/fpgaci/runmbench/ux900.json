@@ -1,6 +1,6 @@
 {
     "matrix": {
         "lm": {"RUNMODE": "lm"},
-        "cache": {"STDCLIB": "cache"}
+        "cache": {"RUNMODE": "cache"}
     }
 }

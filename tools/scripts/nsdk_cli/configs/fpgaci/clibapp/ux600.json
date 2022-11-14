@@ -1,9 +1,6 @@
 {
     "matrix": {
-        "newlib_small": {"STDCLIB": "newlib_small"},
-        "libncrt_small": {"STDCLIB": "libncrt_small"},
-        "libncrt_balanced": {"STDCLIB": "libncrt_balanced"},
-        "libncrt_fast": {"STDCLIB": "libncrt_fast"}
+        "newlib_small": {"STDCLIB": "newlib_small"}
     },
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": false},
