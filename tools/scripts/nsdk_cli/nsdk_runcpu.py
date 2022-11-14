@@ -10,6 +10,7 @@ try:
     import argparse
     import shutil
     import time
+    import datetime
 
 except:
     print("Please install requried packages using: pip3 install -r %s" % (requirement_file))
@@ -62,6 +63,9 @@ def gen_runner_configs(casedir, caseconfig, genloc):
     else:
         runcfgdict = gen_coreruncfg(core, runcfg, choice)
 
+    caseconfig["gencfgtimestamp"] = str(datetime.datetime.now())
+    # save casecfg.json/app.json/hw.json
+    save_json(os.path.join(genloc, "casecfg.json"), caseconfig)
     save_json(os.path.join(genloc, "hw.json"), runcfgdict)
     shutil.copy(appcfg, os.path.join(genloc, "app.json"))
 
@@ -141,12 +145,12 @@ if __name__ == '__main__':
             tot_cases.append(case)
             caselogdir = os.path.join(args.logdir, case)
             casecfgdir = os.path.join(caselogdir, "gencfgs")
+            caseconfig["execase"] = case
             if gen_runner_configs(casedir, caseconfig, casecfgdir) == False:
                 print("No correct case configurations found in %s" % (casedir))
                 ret = False
                 break
             runneryaml = os.path.join(casecfgdir, "core.yaml")
-            shutil.copy(args.casecfg, os.path.join(casecfgdir, "casecfg.json"))
             locations = dict()
             nsdk_ext = nsdk_runner(args.sdk, args.make_options, runneryaml, locations, args.verbose, args.timeout)
             casepassed = True
