@@ -261,6 +261,8 @@ class nsdk_builder(object):
                     uploader["gdbstatus"] = "hang"
                 if "Quit this debugging session?" in line:
                     uploader["gdbstatus"] = "hang"
+                if "Remote communication error" in line:
+                    uploader["gdbstatus"] = "lostcon"
                 if "Start address" in line:
                     uploader["gdbstatus"] = "ok"
                     upload_sts = True
@@ -276,6 +278,8 @@ class nsdk_builder(object):
                             uploader["cpustatus"] = "hang"
                         if "Examined RISC-V core" in line:
                             uploader["cpustatus"] = "ok"
+                        if "Unable to halt hart" in line:
+                            uploader["cpustatus"] = "hang"
                         uf.write(line)
         if upload_sts == False: # actually not upload successfully
             cmdsts = False
