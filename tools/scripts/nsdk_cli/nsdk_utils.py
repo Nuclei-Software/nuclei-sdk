@@ -1019,10 +1019,10 @@ def modify_openocd_cfg(cfg, ftdi_serial):
     if (os.path.isfile(cfg)) == False:
         return False
     if os.path.isfile(cfg_bk) == True:
-        print("Restore openocd cfg")
+        print("Restore openocd cfg %s" %(cfg))
         shutil.copyfile(cfg_bk, cfg)
     else:
-        print("Backup openocd cfg")
+        print("Backup openocd cfg %s" %(cfg))
         shutil.copyfile(cfg, cfg_bk)
     found = False
     contents = []

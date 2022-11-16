@@ -54,7 +54,7 @@ def gen_runner_configs(casedir, caseconfig, genloc):
     except:
         defbldcfg = {"SOC": "demosoc"}
     # get build_config from caseconfig
-    glbldcfg = caseconfig.get("build_config", dict())
+    glbldcfg = caseconfig.get("build_config", defbldcfg)
     runcfg = os.path.join(casedir, "%s.json" % (core))
     appcfg = os.path.join(casedir, "app.json")
     cfgcfg = os.path.join(casedir, "config.json")
