@@ -7,7 +7,7 @@ from prettytable import *
 import json
 
 HPM_EVENTS= [
-        ["Cycle count", "Retired instruction count", "Integer load instruction (includes LR)",
+        ["Reserved", "Cycle count", "Retired instruction count", "Integer load instruction (includes LR)",
          "Integer store instruction (includes SC)", "Atomic memory operation (do not include LR and SC)",
          "System instruction", "Integer computational instruction(excluding multiplication/division/remainder)",
          "Conditional branch", "Taken conditional branch", "JAL instruction", "JALR instruction", "Return instruction",
@@ -16,7 +16,7 @@ HPM_EVENTS= [
          "Floating-point addition/subtraction", "Floating-point multiplication",
          "Floating-point fused multiply-add (FMADD, FMSUB, FNMSUB, FNMADD)", "Floating-point division or square-root",
          "Other floating-point instruction", "Conditional branch prediction fail", "JAL prediction fail", "JALR prediction fail"],
-        ["Icache miss", "Dcache miss", "ITLB miss", "DTLB miss", "Main TLB miss"]
+        ["Reserved", "Icache miss", "Dcache miss", "ITLB miss", "DTLB miss", "Main TLB miss"]
 ]
 
 HPM_MEVENT_ENABLE = 0x8
@@ -68,8 +68,11 @@ def analyze_hpm(records):
         for hpmkey in records[proc]:
             hpmcounter, hpmevent = hpmkey.split(":")
             hpmevent = int(hpmevent, 16)
+            # event_sel: 3:0
             event_sel = hpmevent & 0xF
-            event_idx = (hpmevent >> 4) & 0xF
+            # event_idx: 8:4
+            event_idx = (hpmevent >> 4) & 0x1F
+            # event_ena: m/rsv/s/u 31:28
             event_ena = (hpmevent >> 28) & 0xF
             event_name = get_hpm_event(event_sel, event_idx)
             event_mode = get_hpm_evmode(event_ena)
