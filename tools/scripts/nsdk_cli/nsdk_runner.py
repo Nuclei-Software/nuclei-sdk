@@ -69,7 +69,7 @@ def check_usb_serial(serno):
     return False
 
 def gen_STATUS(logdir, status):
-    statusfile = os.path.join(logdir, "STATUS")
+    statusfile = os.path.join(logdir, "STATUS.txt")
     with open(statusfile, "w") as sf:
         sf.write("%s" % (status))
     pass
@@ -312,7 +312,7 @@ class nsdk_runner(object):
         print("Application build as expected: %s" % (locret))
         if locret == False:
             ret = False
-        # generate STATUS file in log directory
+        # generate STATUS.txt file in log directory
         gen_STATUS(sublogdir, ret)
         save_results(subappcfg, None, subappcfg, result, sublogdir)
         if result:
