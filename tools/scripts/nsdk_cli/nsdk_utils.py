@@ -1043,7 +1043,7 @@ def modify_openocd_cfg(cfg, ftdi_serial):
     return True
 
 GL_CPUCFGs = os.path.join(SCRIPT_DIR,  "configs", "cpu")
-def gen_runcfg(cpucfg, runcfg, buildconfig=dict())):
+def gen_runcfg(cpucfg, runcfg, buildconfig=dict()):
     _, cpucfgdict = load_json(cpucfg)
     _, runcfgdict = load_json(runcfg)
     if cpucfgdict is None:
