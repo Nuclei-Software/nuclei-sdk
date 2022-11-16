@@ -46,6 +46,15 @@ def gen_runner_configs(casedir, caseconfig, genloc):
         print("No core is specified, please check!")
         return False
     core = caseconfig["core"]
+    ocdcfg = caseconfig.get("ocdcfg", "SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg")
+    defbldcfg = dict()
+    try:
+        pathkeys = ocdcfg.replace("\\","/").split("/")
+        defbldcfg = {"SOC": pathkeys[1], "BOARD": pathkeys[3]}
+    except:
+        defbldcfg = {"SOC": "demosoc"}
+    # get build_config from caseconfig
+    glbldcfg = caseconfig.get("build_config", dict())
     runcfg = os.path.join(casedir, "%s.json" % (core))
     appcfg = os.path.join(casedir, "app.json")
     cfgcfg = os.path.join(casedir, "config.json")
@@ -59,9 +68,9 @@ def gen_runner_configs(casedir, caseconfig, genloc):
 
     # if specified user own cpu config use it
     if caseconfig.get("cpucfg", None):
-        runcfgdict = gen_runcfg(caseconfig.get("cpucfg"), runcfg)
+        runcfgdict = gen_runcfg(caseconfig.get("cpucfg"), runcfg, glbldcfg)
     else:
-        runcfgdict = gen_coreruncfg(core, runcfg, choice)
+        runcfgdict = gen_coreruncfg(core, runcfg, choice, glbldcfg)
 
     caseconfig["gencfgtimestamp"] = str(datetime.datetime.now())
     # save casecfg.json/app.json/hw.json
@@ -86,7 +95,6 @@ def gen_runner_configs(casedir, caseconfig, genloc):
             boardtype = btype
             break
     boardtype = caseconfig.get("boardtype", boardtype)
-    ocdcfg = caseconfig.get("ocdcfg", "SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg")
     appcfg = "app.json"
     hwcfg = "hw.json"
 

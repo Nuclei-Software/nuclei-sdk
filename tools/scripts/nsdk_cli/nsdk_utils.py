@@ -1043,7 +1043,7 @@ def modify_openocd_cfg(cfg, ftdi_serial):
     return True
 
 GL_CPUCFGs = os.path.join(SCRIPT_DIR,  "configs", "cpu")
-def gen_runcfg(cpucfg, runcfg):
+def gen_runcfg(cpucfg, runcfg, buildconfig=dict())):
     _, cpucfgdict = load_json(cpucfg)
     _, runcfgdict = load_json(runcfg)
     if cpucfgdict is None:
@@ -1053,6 +1053,8 @@ def gen_runcfg(cpucfg, runcfg):
     matrixcfgs = runcfgdict.get("matrix", None)
     expectedcfg = runcfgdict.get("expected", dict())
     finalruncfg = copy.deepcopy(cpucfgdict)
+    # merge buildconfig
+    finalruncfg["build_config"] = merge_two_config(finalruncfg.get("build_config", dict()), buildconfig)
     finalruncfg["expected"] = merge_two_config(finalruncfg.get("expected", dict()), expectedcfg)
     if matrixcfgs is None:
         return finalruncfg
@@ -1068,9 +1070,9 @@ def gen_runcfg(cpucfg, runcfg):
         finalruncfg["build_configs"] = bcfgs
     return finalruncfg
 
-def gen_coreruncfg(core, runcfg, choice="mini"):
+def gen_coreruncfg(core, runcfg, choice="mini", buildconfig=dict()):
     cpucfg = os.path.join(GL_CPUCFGs, choice, "%s.json" % (core))
-    return gen_runcfg(cpucfg, runcfg)
+    return gen_runcfg(cpucfg, runcfg, buildconfig)
 
 def gen_runyaml(core, locs, fpga_serial, ftdi_serial, cycm, fpgabit, boardtype, ocdcfg, appcfg, hwcfg):
     runyaml = { "runcfg": {"runner": "fpga"},
