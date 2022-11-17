@@ -91,15 +91,23 @@ void print_misa(void)
 
 int main(void)
 {
-    srand(__get_rv_cycle()  | __get_rv_instret() | __RV_CSR_READ(CSR_MCYCLE));
-    uint32_t rval = rand();
-    uint32_t hartid = __RV_CSR_READ(CSR_MHARTID);
-    rv_csr_t misa = __RV_CSR_READ(CSR_MISA);
+    uint32_t rval, seed;
+    unsigned long hartid;
+    rv_csr_t misa;
+
+    hartid = __RV_CSR_READ(CSR_MHARTID);
+    misa = __RV_CSR_READ(CSR_MISA);
 
     printf("Hart %d, MISA: 0x%lx\r\n", hartid, misa);
     print_misa();
 
-    for (int i = 0; i < RUN_LOOPS; i ++) {
+    // Generate random value with seed
+    seed = (uint32_t)(__get_rv_cycle()  | __get_rv_instret() | __RV_CSR_READ(CSR_MCYCLE));
+    srand(seed);
+    rval = rand();
+    printf("Got rand integer %d using seed %d.\r\n", seed, rval);
+
+    for (unsigned long i = 0; i < RUN_LOOPS; i ++) {
         printf("%d: Hello World From Nuclei RISC-V Processor!\r\n", i);
     }
 
