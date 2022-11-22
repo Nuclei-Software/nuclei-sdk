@@ -308,6 +308,7 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
     printf("MDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_MDCAUSE));
     printf("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
     printf("MTVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
+    printf("HARTID : %u\r\n", (unsigned int)__RV_CSR_READ(CSR_MHARTID));
     Exception_DumpFrame(sp, PRV_M);
 #if defined(SIMULATION_MODE)
     // directly exit if in SIMULATION
@@ -446,6 +447,7 @@ void SystemBannerPrint(void)
     printf("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
 #endif
     printf("CPU Frequency %u Hz\r\n", (unsigned int)SystemCoreClock);
+    printf("CPU HartID: %u\r\n", (unsigned int)__RV_CSR_READ(CSR_MHARTID));
 #endif
 }
 
@@ -639,6 +641,9 @@ int32_t ECLIC_Register_IRQ_S(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type tri
 #endif
 /** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
 
+#define FALLBACK_DEFAULT_ECLIC_BASE             0x0C000000UL
+#define FALLBACK_DEFAULT_SYSTIMER_BASE          0x02000000UL
+
 volatile IRegion_Info_Type SystemIRegionInfo;
 static void _get_iregion_info(IRegion_Info_Type *iregion)
 {
@@ -654,8 +659,8 @@ static void _get_iregion_info(IRegion_Info_Type *iregion)
         iregion->smp_base = iregion->iregion_base + IREGION_SMP_OFS;
         iregion->idu_base = iregion->iregion_base + IREGION_IDU_OFS;
     } else {
-        iregion->eclic_base = 0x0C000000UL;
-        iregion->systimer_base = 0x02000000UL;
+        iregion->eclic_base = FALLBACK_DEFAULT_ECLIC_BASE;
+        iregion->systimer_base = FALLBACK_DEFAULT_SYSTIMER_BASE;
     }
 }
 
@@ -688,8 +693,7 @@ __attribute__((section(".init"))) void __sync_harts(void)
         clint_base = irgb_base + IREGION_TIMER_OFS + 0x1000;
         smp_base = irgb_base + IREGION_SMP_OFS;
     } else {
-        // system timer base for demosoc is 0x02000000
-        clint_base = 0x02000000 + 0x1000;
+        clint_base = FALLBACK_DEFAULT_SYSTIMER_BASE + 0x1000;
         smp_base = (__RV_CSR_READ(CSR_MSMPCFG_INFO) >> 4) << 4;
     }
     // Enable SMP and L2, disable cluster local memory
@@ -699,7 +703,8 @@ __attribute__((section(".init"))) void __sync_harts(void)
     __SMP_RWMB();
 
     // pre-condition: interrupt must be disabled, this is done before calling this function
-    if (hartid == 0) { // boot hart
+    // BOOT_HARTID is defined <Device.h>
+    if (hartid == BOOT_HARTID) { // boot hart
         // clear msip pending
         for (int i = 0; i < SMP_CPU_CNT; i ++) {
             CLINT_MSIP(clint_base, i) = 0;
@@ -755,7 +760,8 @@ void _premain_init(void)
     // TODO to make it possible for configurable boot hartid
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
 
-    if (hartid == 0) { // only done in boot hart
+    // BOOT_HARTID is defined <Device.h>
+    if (hartid == BOOT_HARTID) { // only done in boot hart
         // IREGION INFO MUST BE SET BEFORE ANY PREMAIN INIT STEPS
         _get_iregion_info((IRegion_Info_Type *)(&SystemIRegionInfo));
     }
@@ -791,7 +797,7 @@ void _premain_init(void)
     __RWMB();
     __FENCE_I();
 
-    if (hartid == 0) { // only required for boot hartid
+    if (hartid == BOOT_HARTID) { // only required for boot hartid
         SystemCoreClock = get_cpu_freq();
         gpio_iof_config(GPIO, IOF0_UART0_MASK, IOF_SEL_0);
         uart_init(SOC_DEBUG_UART, 115200);

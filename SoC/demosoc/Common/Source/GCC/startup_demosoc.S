@@ -26,6 +26,11 @@
 
 #include "riscv_encoding.h"
 
+/* If BOOT_HARTID is not defined, default value is 0 */
+#ifndef BOOT_HARTID
+    .equ BOOT_HARTID,    0
+#endif
+
 .macro DECLARE_INT_HANDLER  INT_HDL_NAME
 #if defined(__riscv_xlen) && (__riscv_xlen == 32)
     .word \INT_HDL_NAME
@@ -147,6 +152,18 @@ _start:
     /* Disable Global Interrupt */
     csrc CSR_MSTATUS, MSTATUS_MIE
 
+    /* If SMP_CPU_CNT is not defined,
+     * assume that only 1 core is allowed to run,
+     * the core hartid is defined via BOOT_HARTID.
+     * other harts if run to here, just do wfi in __amp_wait
+     */
+#ifndef SMP_CPU_CNT
+    csrr a0, CSR_MHARTID
+    /* BOOT_HARTID is configurable in Makefile via BOOT_HARTID variable */
+    li a1, BOOT_HARTID
+    bne a0, a1, __amp_wait
+#endif
+
     /* Initialize GP and TP */
     .option push
     .option norelax
@@ -237,8 +254,7 @@ _start:
 
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     csrr a0, CSR_MHARTID
-    /* TODO: make boot hard id configurable */
-    li a1, 0
+    li a1, BOOT_HARTID
     bne a0, a1, __skip_init
 #endif
 
@@ -351,7 +367,9 @@ __skip_init:
      * this function will be called by each cpu */
     call _postmain_fini
 
+__amp_wait:
 1:
+    wfi
     j 1b
 
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
@@ -366,7 +384,7 @@ smp_main:
     STORE ra, 0*REGBYTES(sp)
     /* only boot hart goto main, other harts do wfi */
     csrr t0, mhartid
-    li t1, 0
+    li t1, BOOT_HARTID
     beq t0, t1, 2f
 1:
     wfi
