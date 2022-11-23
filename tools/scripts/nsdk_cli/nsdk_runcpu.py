@@ -143,8 +143,12 @@ if __name__ == '__main__':
     ret = True
     try:
         print("Prepare to do cases %s on %s, stop on fail %s" % (torun_cases, args.runon, STOPONFAIL))
+        index = 0
+        totlen = len(torun_cases)
         for case in torun_cases:
             case = case.strip()
+            index += 1
+            print("Run baremetal cpu test case %s now, progress %d/%d!" % (case, index, totlen))
             if case == "":
                 print("Case %s is invaild, ignore it!" % (case))
                 continue
