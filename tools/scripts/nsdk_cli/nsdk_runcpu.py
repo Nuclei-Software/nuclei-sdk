@@ -205,6 +205,7 @@ if __name__ == '__main__':
     print("Cost about %s seconds to do this running, passed %s!" % (runtime, ret))
     print("All the required cases are %s" % (torun_cases))
     print("Case %s passed out of executed %s" % (passed_cases, tot_cases))
+    print("These following cases failed: %s" % (failed_cases))
     # At least passed or failed cases are not zero
     if (len(passed_cases) > 0 or len(failed_cases) > 0) and os.path.isdir(args.logdir):
         runcpustatustxt = os.path.join(args.logdir, "runcpustatus.txt")
