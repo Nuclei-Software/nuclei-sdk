@@ -62,10 +62,10 @@ def get_sdk_copyobjects():
         cpobjs = SDK_GLOBAL_VARIABLES.get("sdk_copy_objects")
     return cpobjs
 
-def get_env_flag(envar):
+def get_env_flag(envar, deft=None):
     flag = os.environ.get(envar)
     if flag is None:
-        return flag
+        return deft
     return flag.lower() in ('true', '1', 't')
 
 def get_sdk_check():

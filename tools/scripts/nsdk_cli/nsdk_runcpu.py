@@ -128,6 +128,7 @@ if __name__ == '__main__':
         print("SDK location %s is invalid, please check!" % (args.sdk))
         sys.exit(1)
 
+    STOPONFAIL = get_env_flag("STOPONFAIL", True)
     print("Using sdk path in %s" % (args.sdk))
 
     ret, caseconfig = load_json(args.casecfg)
@@ -135,12 +136,13 @@ if __name__ == '__main__':
         print("Invalid case configuration file %s, please check!" % (args.casecfg))
         sys.exit(1)
     passed_cases = []
+    failed_cases = []
     torun_cases = list(set(args.cases.split(",")))
     tot_cases = []
     start_time = time.time()
     ret = True
     try:
-        print("Prepare to do cases %s on %s" % (torun_cases, args.runon))
+        print("Prepare to do cases %s on %s, stop on fail %s" % (torun_cases, args.runon, STOPONFAIL))
         for case in torun_cases:
             case = case.strip()
             if case == "":
@@ -157,7 +159,14 @@ if __name__ == '__main__':
             if gen_runner_configs(casedir, caseconfig, casecfgdir) == False:
                 print("No correct case configurations found in %s" % (casedir))
                 ret = False
-                break
+                # if stop on fail, it will break current execution and exit
+                if STOPONFAIL:
+                    print("Stop early due to case %s failed" % (case))
+                    failed_cases.append(case)
+                    break
+                else:
+                    print("Continue execution due to not stop on failed case")
+                    continue
             runneryaml = os.path.join(casecfgdir, "core.yaml")
             locations = dict()
             nsdk_ext = nsdk_runner(args.sdk, args.make_options, runneryaml, locations, args.verbose, args.timeout)
@@ -170,14 +179,20 @@ if __name__ == '__main__':
                 if ret == False:
                     print("Case %s for configuration %s specified in yaml %s: FAILED" % (case, config, runneryaml))
                     casepassed = False
+                    failed_cases.append(case)
                     break
                 else:
                     print("Case %s for configuration %s specified in yaml %s: PASSED" % (case, config, runneryaml))
+                    passed_cases.append(case)
 
             if casepassed == False:
                 ret = False
-                break
-            passed_cases.append(case)
+                # if stop on fail, it will break current execution and exit
+                if STOPONFAIL:
+                    print("Stop early due to case %s failed" % (case))
+                    break
+                else:
+                    print("Continue execution due to not stop on failed case")
     except Exception as exc:
         print("Unexpected Error: %s" % (exc))
         ret = False
@@ -186,7 +201,15 @@ if __name__ == '__main__':
     print("Cost about %s seconds to do this running, passed %s!" % (runtime, ret))
     print("All the required cases are %s" % (torun_cases))
     print("Case %s passed out of executed %s" % (passed_cases, tot_cases))
+    # At least passed or failed cases are not zero
+    if (len(passed_cases) > 0 or len(failed_cases) > 0) and os.path.isdir(args.logdir):
+        runcpustatustxt = os.path.join(args.logdir, "runcpustatus.txt")
+        print("Save run cpu report status into %s" % (runcpustatustxt))
+        with open(runcpustatustxt, "w") as rf:
+            rf.write("PASSED:%s\n" % (",".join(passed_cases)))
+            rf.write("FAILED:%s\n" % (",".join(failed_cases)))
 
+    sys.stdout.flush()
     # Exit with ret value
     if ret:
         sys.exit(0)
