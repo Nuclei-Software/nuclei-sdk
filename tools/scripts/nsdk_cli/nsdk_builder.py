@@ -812,9 +812,14 @@ class nsdk_runner(nsdk_builder):
         misc_config = {"make_options": appsts["app"]["make_options"], "build_config": appconfig["build_config"],\
             "build_info": appsts["info"], "build_objects": appsts["objects"], "build_time": build_cktime}
         runcfg = {"run_config": app_runcfg, "checks": app_runchecks, "misc": misc_config}
+        # get copy fail objects flags
+        copy_objects_required = appconfig.get("copy_objects", get_sdk_copyobjects_flag())
+        copy_failobj_required = appconfig.get("copy_failobj", get_sdk_copy_failobj())
+
         print("Run application on %s" % app_runtarget)
         runstarttime = time.time()
         runstatus = False
+        ignorehw = False
         appsts["status_code"]["run"] = RUNSTATUS_NOTSTART
         if app_runtarget == "hardware":
             uploadlog = None
@@ -858,6 +863,13 @@ class nsdk_runner(nsdk_builder):
                 appsts["app"]["ncycm"] = runner
         else:
             print("Unsupported run target %s" %(app_runtarget))
+            ignorehw = True
+
+        # only do copy when needed, fail copy enabled and copy objects disabled
+        if copy_failobj_required == True and copy_objects_required == False \
+                and runstatus == False and ignorehw == False and runlog is not None:
+            objs_copydir = os.path.dirname(runlog) # where objects are copied to
+            nsdk_builder.copy_objects(appsts, objs_copydir)
 
         runtime = round(time.time() - runstarttime, 2)
         print("Run application %s on %s, time cost %s seconds, passed: %s" %(appdir, app_runtarget, runtime, runstatus))

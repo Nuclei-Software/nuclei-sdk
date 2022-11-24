@@ -38,13 +38,14 @@ SDK_GLOBAL_VARIABLES = {
     "sdk_checktag": "Nuclei SDK Build Time:",
     "sdk_check": True,
     "sdk_banner_tmout": 15,
-    "sdk_copy_objects": "elf,map,dasm,verilog",
+    "sdk_copy_objects": "elf,map",
     "sdk_copy_objects_flag": False,
     "sdk_ttyerr_maxcnt": 3,
     "sdk_fpgaprog_maxcnt": 3,
     "sdk_gdberr_maxcnt": 10,
     "sdk_uploaderr_maxcnt": 10,
-    "sdk_verb_buildmsg": True
+    "sdk_verb_buildmsg": True,
+    "sdk_copy_failobj": True
     }
 
 def get_global_variables():
@@ -84,6 +85,12 @@ def get_sdk_copyobjects_flag():
     cpflag = get_env_flag("SDK_COPY_OBJECTS_FLAG")
     if cpflag is None:
         cpflag = SDK_GLOBAL_VARIABLES.get("sdk_copy_objects_flag")
+    return cpflag
+
+def get_sdk_copy_failobj():
+    cpflag = get_env_flag("SDK_COPY_FAILOBJ")
+    if cpflag is None:
+        cpflag = SDK_GLOBAL_VARIABLES.get("sdk_copy_failobj")
     return cpflag
 
 def get_sdk_banner_tmout():
