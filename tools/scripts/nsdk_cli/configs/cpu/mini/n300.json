@@ -3,7 +3,9 @@
         "CPU_SERIES": "300"
     },
     "build_configs": {
+        "rv32imacb": {"CORE":"n300", "ARCH_EXT":"b"},
         "rv32imacbp": {"CORE":"n300", "ARCH_EXT":"bp"},
+        "rv32imafdcb": {"CORE":"n300fd", "ARCH_EXT":"b"},
         "rv32imafdcbp": {"CORE":"n300fd", "ARCH_EXT":"bp"}
     }
 }
