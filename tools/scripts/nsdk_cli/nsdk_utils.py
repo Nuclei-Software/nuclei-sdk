@@ -90,7 +90,7 @@ def get_sdk_copyobjects_flag():
 def get_sdk_need_copyobjects(appconfig):
     try:
         needed = appconfig.get("copy_objects")
-    else:
+    except:
         needed = False
     if needed != True:
         # use global flag
