@@ -6,6 +6,7 @@ import time
 import copy
 import shutil
 import glob
+import traceback
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.txt"))
@@ -250,37 +251,42 @@ class nsdk_builder(object):
         cmdsts, build_status = self.build_target(appdir, make_options, "upload", show_output, uploadlog)
         uploader = dict()
         upload_sts = False
-        with open(uploadlog, 'r', errors='ignore') as uf:
-            for line in uf.readlines():
-                if "-ex" in line or "\\" in line:
-                    # strip extra newline and \
-                    uploader["cmd"] = uploader.get("cmd", "") + line.strip().strip("\\")
-                if "On-Chip Debugger" in line:
-                    uploader["version"] = line.strip()
-                if "A problem internal to GDB has been detected" in line:
-                    uploader["gdbstatus"] = "hang"
-                if "Quit this debugging session?" in line:
-                    uploader["gdbstatus"] = "hang"
-                if "Remote communication error" in line:
-                    uploader["gdbstatus"] = "lostcon"
-                if "Start address" in line:
-                    uploader["gdbstatus"] = "ok"
-                    upload_sts = True
-                    break
-        # append openocd log to upload log
-        openocd_log = os.path.join(appdir, "openocd.log")
-        if os.path.isfile(openocd_log):
-            with open(uploadlog, 'a', errors='ignore') as uf:
-                uf.write("\n=====OpenOCD log content dumped as below:=====\n")
-                with open(openocd_log, "r", errors='ignore') as of:
-                    for line in of.readlines():
-                        if "Error: Target not examined yet" in line:
-                            uploader["cpustatus"] = "hang"
-                        if "Examined RISC-V core" in line:
-                            uploader["cpustatus"] = "ok"
-                        if "Unable to halt hart" in line:
-                            uploader["cpustatus"] = "hang"
-                        uf.write(line)
+        # some error might happened error, try catch protect it
+        try:
+            with open(uploadlog, 'r', errors='ignore') as uf:
+                for line in uf.readlines():
+                    if "-ex" in line or "\\" in line:
+                        # strip extra newline and \
+                        uploader["cmd"] = uploader.get("cmd", "") + line.strip().strip("\\")
+                    if "On-Chip Debugger" in line:
+                        uploader["version"] = line.strip()
+                    if "A problem internal to GDB has been detected" in line:
+                        uploader["gdbstatus"] = "hang"
+                    if "Quit this debugging session?" in line:
+                        uploader["gdbstatus"] = "hang"
+                    if "Remote communication error" in line:
+                        uploader["gdbstatus"] = "lostcon"
+                    if "Start address" in line:
+                        uploader["gdbstatus"] = "ok"
+                        upload_sts = True
+                        break
+            # append openocd log to upload log
+            openocd_log = os.path.join(appdir, "openocd.log")
+            if os.path.isfile(openocd_log):
+                with open(uploadlog, 'a', errors='ignore') as uf:
+                    uf.write("\n=====OpenOCD log content dumped as below:=====\n")
+                    with open(openocd_log, "r", errors='ignore') as of:
+                        for line in of.readlines():
+                            if "Error: Target not examined yet" in line:
+                                uploader["cpustatus"] = "hang"
+                            if "Examined RISC-V core" in line:
+                                uploader["cpustatus"] = "ok"
+                            if "Unable to halt hart" in line:
+                                uploader["cpustatus"] = "hang"
+                            uf.write(line)
+        except Exception as exc:
+            print("Some error happened during upload application, %s" % (str(exc)))
+            traceback.print_exc()
         if upload_sts == False: # actually not upload successfully
             cmdsts = False
         if "app" in build_status:
@@ -484,7 +490,10 @@ class nsdk_runner(nsdk_builder):
     def analyze_runlog(self, logfile, parsescript=None):
         result = {"type": "unknown", "value": {}}
         if os.path.isfile(logfile):
-            result_lines = open(logfile, "r", errors='ignore').readlines()
+            try:
+                result_lines = open(logfile, "r", errors='ignore').readlines()
+            except:
+                result_lines = []
             program_found, subtype, result_parsed = parse_benchmark_runlog(result_lines, lgf=logfile)
             if program_found == PROGRAM_UNKNOWN:
                 program_found, subtype, result_parsed = parse_benchmark_use_pyscript(result_lines, logfile, parsescript)
@@ -767,7 +776,7 @@ class nsdk_runner(nsdk_builder):
         target = appconfig.get("build_target", "all")
         parallel = appconfig.get("parallel", "")
         # Copy program objects if copy_objects is true
-        copy_objects_required = appconfig.get("copy_objects", get_sdk_copyobjects_flag())
+        copy_objects_required = get_sdk_need_copyobjects(appconfig)
         make_options = ""
         if isinstance(build_config, dict):
             for key, value in build_config.items():
@@ -813,8 +822,8 @@ class nsdk_runner(nsdk_builder):
             "build_info": appsts["info"], "build_objects": appsts["objects"], "build_time": build_cktime}
         runcfg = {"run_config": app_runcfg, "checks": app_runchecks, "misc": misc_config}
         # get copy fail objects flags
-        copy_objects_required = appconfig.get("copy_objects", get_sdk_copyobjects_flag())
-        copy_failobj_required = appconfig.get("copy_failobj", get_sdk_copy_failobj())
+        copy_objects_required = get_sdk_need_copyobjects(appconfig)
+        copy_failobj_required = get_sdk_copy_failobj()
 
         print("Run application on %s" % app_runtarget)
         runstarttime = time.time()

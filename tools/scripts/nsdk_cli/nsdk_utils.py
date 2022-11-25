@@ -87,6 +87,16 @@ def get_sdk_copyobjects_flag():
         cpflag = SDK_GLOBAL_VARIABLES.get("sdk_copy_objects_flag")
     return cpflag
 
+def get_sdk_need_copyobjects(appconfig):
+    try:
+        needed = appconfig.get("copy_objects")
+    else:
+        needed = False
+    if needed != True:
+        # use global flag
+        needed = get_sdk_copyobjects_flag()
+    return needed
+
 def get_sdk_copy_failobj():
     cpflag = get_env_flag("SDK_COPY_FAILOBJ")
     if cpflag is None:
@@ -885,6 +895,8 @@ def find_index(key, arr):
 def parse_benchmark_runlog(lines, lgf=""):
     if isinstance(lines, list) == False:
         return PROGRAM_UNKNOWN, PROGRAM_UNKNOWN, None
+    if len(lines) == 0:
+        return PROGRAM_UNKNOWN, PROGRAM_UNKNOWN, None
     subtype = ""
     if lgf.strip() == "": # old style
         program_type, subtype, result = parse_benchmark_compatiable(lines)
@@ -933,6 +945,10 @@ def parse_benchmark_runlog(lines, lgf=""):
     return program_type, subtype, result
 
 def parse_benchmark_use_pyscript(lines, lgf, pyscript):
+    if isinstance(lines, list) == False:
+        return PROGRAM_UNKNOWN, PROGRAM_UNKNOWN, None
+    if len(lines) == 0:
+        return PROGRAM_UNKNOWN, PROGRAM_UNKNOWN, None
     # function should named parse_benchmark
     # function argument and return like parse_benchmark_runlog
     parsefunc = import_function("parse_benchmark", pyscript)
