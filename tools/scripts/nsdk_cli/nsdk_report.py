@@ -674,6 +674,9 @@ def save_report_files(logdir, config, result, run=False):
 
 # save excel and csv for selected csv table
 def save_excel(csvtable, excelfile):
+    if len(csvtable) == 0:
+        print("Not run result found, no need to generate excel!")
+        return
     newcsvtable = {}
     csvsummary = []
     keylens = [ len(key) for key in  csvtable.keys() ]
@@ -779,8 +782,8 @@ def save_runresult(runresult, excelfile):
         save_json(csvtable_jf, csvtable)
         save_json(csvdict_jf, csvdict)
         save_excel(csvtable, excelfile)
-    except:
-        print("pyexcel package is not installed.!")
+    except Exception as exc:
+        print("Exception happend during save excel, error %s" % (exc))
         return False
 
     return True
