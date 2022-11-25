@@ -585,7 +585,7 @@ def check_tool_version(ver_cmd, ver_check):
     check_sts = False
     verstr = None
     if ret == COMMAND_RUNOK:
-        with open(vercmd_log, 'r') as vlf:
+        with open(vercmd_log, 'r', errors='ignore') as vlf:
             for line in vlf.readlines():
                 if ver_check in line:
                     verstr = line.strip()
@@ -602,7 +602,7 @@ def get_elfsize(elf):
     sizelog = tempfile.mktemp()
     ret, _ = run_command(sizecmd, show_output=False, logfile=sizelog)
     if ret == COMMAND_RUNOK:
-        with open(sizelog, "r") as sf:
+        with open(sizelog, "r", errors='ignore') as sf:
             lines = sf.readlines()
             datas = lines[-1].strip().split()
             sizeinfo["text"] = int(datas[0])
@@ -783,7 +783,7 @@ def fix_demosoc_verilog_ncycm(verilog):
     if os.path.isfile(verilog) == False:
         return ""
     vfct = ""
-    with open(verilog, "r") as vf:
+    with open(verilog, "r", errors='ignore') as vf:
         for line in vf.readlines():
             line = line.replace("@80", "@00").replace("@90", "@08")
             vfct += line
@@ -1004,7 +1004,7 @@ def find_fpgas():
     os.system("%s -mode batch -nolog -nojournal -source %s -notrace > %s" % (vivado_cmd, tcl, tmp_log))
     sys.stdout.flush()
     fpgadevices = dict()
-    with open(tmp_log, "r") as tf:
+    with open(tmp_log, "r", errors='ignore') as tf:
         for line in tf.readlines():
             line = line.strip()
             if line.startswith("CSV,") == False:
@@ -1034,7 +1034,7 @@ def modify_openocd_cfg(cfg, ftdi_serial):
     found = False
     contents = []
     index = 0
-    with open(cfg, 'r') as cf:
+    with open(cfg, 'r', errors='ignore') as cf:
         contents = cf.readlines()
         for line in contents:
             if line.strip().startswith("transport select"):

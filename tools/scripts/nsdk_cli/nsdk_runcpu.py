@@ -2,6 +2,7 @@
 
 import os
 import sys
+import traceback
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.txt"))
@@ -179,15 +180,14 @@ if __name__ == '__main__':
                 print("Run case %s for configuration %s specified in yaml %s" % (case, config, runneryaml))
                 if nsdk_ext.run_config(config, caselogdir, runon=args.runon, createsubdir=False) == False:
                     print("Configuration %s failed" % (config))
-                    ret = False
-                if ret == False:
                     print("Case %s for configuration %s specified in yaml %s: FAILED" % (case, config, runneryaml))
-                    casepassed = False
                     failed_cases.append(case)
-                    break
+                    casepassed = False
                 else:
                     print("Case %s for configuration %s specified in yaml %s: PASSED" % (case, config, runneryaml))
                     passed_cases.append(case)
+                # only one configuration should be executed, so just break here
+                break
 
             if casepassed == False:
                 ret = False
@@ -198,7 +198,11 @@ if __name__ == '__main__':
                 else:
                     print("Continue execution due to not stop on failed case")
     except Exception as exc:
-        print("Unexpected Error: %s" % (exc))
+        print("Unexpected Error: %s during execute case %s" % (exc, case))
+        if case not in failed_cases:
+            failed_cases.append(case)
+        # https://stackoverflow.com/questions/3702675/how-to-catch-and-print-the-full-exception-traceback-without-halting-exiting-the
+        traceback.print_exc()
         ret = False
 
     runtime = round(time.time() - start_time, 2)

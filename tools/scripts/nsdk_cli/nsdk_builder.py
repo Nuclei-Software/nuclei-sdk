@@ -146,7 +146,7 @@ class nsdk_builder(object):
             os.remove(infolog)
             return build_info
         build_info = dict()
-        with open(infolog, "r") as inf:
+        with open(infolog, "r", errors='ignore') as inf:
             for line in inf.readlines():
                 line = line.strip()
                 INFO_TAG = "Current Configuration:"
@@ -168,7 +168,7 @@ class nsdk_builder(object):
             os.remove(flagslog)
             return build_flags
         build_flags = dict()
-        with open(flagslog, "r") as inf:
+        with open(flagslog, "r", errors='ignore') as inf:
             for line in inf.readlines():
                 line = line.strip()
                 if ":" in line:
@@ -192,7 +192,7 @@ class nsdk_builder(object):
             return buildout
         buildout = dict()
         toolname = ""
-        with open(log, "r") as inf:
+        with open(log, "r", errors='ignore') as inf:
             for line in inf.readlines():
                 line = line.strip()
                 if line.startswith("Show"):
@@ -250,7 +250,7 @@ class nsdk_builder(object):
         cmdsts, build_status = self.build_target(appdir, make_options, "upload", show_output, uploadlog)
         uploader = dict()
         upload_sts = False
-        with open(uploadlog, 'r') as uf:
+        with open(uploadlog, 'r', errors='ignore') as uf:
             for line in uf.readlines():
                 if "-ex" in line or "\\" in line:
                     # strip extra newline and \
@@ -270,9 +270,9 @@ class nsdk_builder(object):
         # append openocd log to upload log
         openocd_log = os.path.join(appdir, "openocd.log")
         if os.path.isfile(openocd_log):
-            with open(uploadlog, 'a') as uf:
+            with open(uploadlog, 'a', errors='ignore') as uf:
                 uf.write("\n=====OpenOCD log content dumped as below:=====\n")
-                with open(openocd_log, "r") as of:
+                with open(openocd_log, "r", errors='ignore') as of:
                     for line in of.readlines():
                         if "Error: Target not examined yet" in line:
                             uploader["cpustatus"] = "hang"
@@ -484,7 +484,7 @@ class nsdk_runner(nsdk_builder):
     def analyze_runlog(self, logfile, parsescript=None):
         result = {"type": "unknown", "value": {}}
         if os.path.isfile(logfile):
-            result_lines = open(logfile).readlines()
+            result_lines = open(logfile, "r", errors='ignore').readlines()
             program_found, subtype, result_parsed = parse_benchmark_runlog(result_lines, lgf=logfile)
             if program_found == PROGRAM_UNKNOWN:
                 program_found, subtype, result_parsed = parse_benchmark_use_pyscript(result_lines, logfile, parsescript)
