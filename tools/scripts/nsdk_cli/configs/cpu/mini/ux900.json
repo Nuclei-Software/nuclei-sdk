@@ -6,8 +6,6 @@
         "rv64imacb": {"CORE":"nx900", "ARCH_EXT":"b"},
         "rv64imacbp": {"CORE":"nx900", "ARCH_EXT":"bp"},
         "rv64imafdcb": {"CORE":"nx900fd", "ARCH_EXT":"b"},
-        "rv64imafdcbp": {"CORE":"nx900fd", "ARCH_EXT":"bp"},
-        "rv64imafdcv": {"CORE":"nx900fd", "ARCH_EXT":"v"},
-        "rv64imafdcbpv": { "CORE": "nx900fd", "ARCH_EXT": "bpv" }
+        "rv64imafdcbp": {"CORE":"nx900fd", "ARCH_EXT":"bp"}
     }
 }
