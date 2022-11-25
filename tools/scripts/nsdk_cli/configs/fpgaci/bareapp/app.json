@@ -14,7 +14,6 @@
             "timeout": 1200
         }
     },
-    "copy_objects": true,
     "parallel" : "-j",
     "build_target": "clean all",
     "build_config": {
