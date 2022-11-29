@@ -246,11 +246,13 @@ configuration:
       - name: ccm
         description: CCM Extension
   nuclei_smp:
-    default_value: 1
+    default_value: 0
     type: choice
     global: true
     description: Nuclei SMP Count
     choices:
+      - name: 0
+        description: No SMP
       - name: 1
         description: 1 Core
       - name: 2
@@ -269,6 +271,44 @@ configuration:
         description: 14 Core
       - name: 16
         description: 16 Core
+  boothartid:
+    default_value: 0
+    type: choice
+    global: true
+    description: Boot HartID
+    choices:
+      - name: 0
+        description: Hart 0
+      - name: 1
+        description: Hart 1
+      - name: 2
+        description: Hart 2
+      - name: 3
+        description: Hart 3
+      - name: 4
+        description: Hart 4
+      - name: 5
+        description: Hart 5
+      - name: 6
+        description: Hart 6
+      - name: 7
+        description: Hart 7
+      - name: 8
+        description: Hart 8
+      - name: 9
+        description: Hart 9
+      - name: 10
+        description: Hart 10
+      - name: 11
+        description: Hart 11
+      - name: 12
+        description: Hart 12
+      - name: 13
+        description: Hart 13
+      - name: 14
+        description: Hart 14
+      - name: 15
+        description: Hart 15
   heapsz:
       value: ""
       type: text
@@ -387,6 +427,7 @@ buildconfig:
     common_defines:
       - defines: SMP_CPU_CNT=${nuclei_smp}
         condition: $( ${nuclei_smp} > 1 )
+      - defines: BOOT_HARTID=${boothartid}
       - defines: RUNMODE_IC_EN=1
         condition: $( contains(${nuclei_cache}, "ic"))
       - defines: RUNMODE_IC_EN=0

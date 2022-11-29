@@ -68,6 +68,13 @@ debugconfig:
       - key: config
         value: "openocd_evalsoc_smp.cfg"
         condition: $( ${nuclei_smp} > 1 )
+      # TODO: need tool_extrapreopts support in npk
+      - key: tool_extrapreopts
+        value: -c "set SMP ${nuclei_smp}; set BOOT_HARTID ${boothartid};"
+        condition: $( ${nuclei_smp} > 1 )
+      - key: tool_extrapreopts
+        value: -c "set BOOT_HARTID ${boothartid};"
+        condition: $( ${nuclei_smp} <= 1 )
       - key: config
         value: "openocd_evalsoc.cfg"
         condition: $( ${nuclei_smp} <= 1 )
@@ -89,6 +96,11 @@ debugconfig:
          value: nuclei_n
        - key: smp
          value: ${nuclei_smp}
+         condition: $( ${nuclei_smp} > 1 )
+       # TODO: need arithop support in npk
+       - key: smp
+         value: $( arithop(${boothartid} + 1) )
+         condition: $( ${nuclei_smp} <= 1 )
 
   - type: jlink
     description: Segger Jlink
