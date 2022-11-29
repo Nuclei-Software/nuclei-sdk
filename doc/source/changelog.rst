@@ -29,11 +29,14 @@ This is development version ``0.4.0`` of Nuclei SDK.
   - Add per-hart related APIs for systimer such as ``SysTimer_SetHartCompareValue``, ``SysTimer_SetHartSWIRQ`` and etc in core_feature_timer.h, this is mainly needed when configure timer in smode per hart
   - Add TEE related csr macros in riscv_encoding.h
   - Add iregion offset macros and N3/VP mask in riscv_encoding.h and use it in demosoc/evalsoc implementation.
+  - Add ``ICachePresent/DCachePresent`` API
+  - Don't sub extra cost for BENCH_xxx API
 
 * Build System
 
   - Add ``intexc_<Device>_s.S`` asm file into compiling for evalsoc and demosoc
   - Show ``ARCH_EXT`` information when run make info
+  - Don't specify elf filename when run gdb, only specify it when do load to avoid some gdb internal error
 
 * SoC
 
@@ -45,8 +48,11 @@ This is development version ``0.4.0`` of Nuclei SDK.
     - **API Changes**: ``Exception_DumpFrame`` parameters changed to add mode passing in ``system_<Device>.c/h``
     - **API Changes**: ``EXC_Frame_Type`` struct member mcause/mepc changed to cause/epc in ``system_<Device>.c/h``
 
-  - print ``\0`` instead of ``\r`` when do simulation exit for better integration in Nuclei Studio QEMU simulation.
-  - add ``clock`` stub function for libncrt library in demosoc/evalsoc/gd32vf103 SoC support software.
+  - Print ``\0`` instead of ``\r`` when do simulation exit for better integration in Nuclei Studio QEMU simulation.
+  - Add ``clock`` stub function for libncrt library in demosoc/evalsoc/gd32vf103 SoC support software.
+  - Add ``sram`` download mode for evalsoc/demosoc, for details directly check the linker script
+  - Change default ``__ICACHE_PRESENT/__DCACHE_PRESENT`` to 1 for evalsoc/demosoc, when evalsoc/demosoc startup, it will
+    enable i/d cache if it really present.
 
 * CI
 
@@ -57,6 +63,7 @@ This is development version ``0.4.0`` of Nuclei SDK.
   - Add ``httpserver.py`` tool to create a http server on selected folder, good to preview built documentation.
   - Fix many issues related to nsdk_cli scripts when integrated using fpga hardware ci flow.
   - Support extra parsing benchmark python script for nsdk_cli tools, see 5f546fa0
+  - Add ``nsdk_runcpu.py`` tool to run fpga baremetal benchmark
 
 * Documentation
 
