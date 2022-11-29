@@ -294,6 +294,10 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 
 /** @} */ /* End of group Configuration_of_NMSIS */
 
+/* Define boot hart id */
+#ifndef BOOT_HARTID
+#define BOOT_HARTID               0                     /*!< Choosen boot hart id when in soc system, need to align with the value defined in startup_<Device>.S */
+#endif
 
 #include <nmsis_core.h>                         /*!< Nuclei N/NX class processor and core peripherals */
 /* ToDo: include your system_evalsoc.h file

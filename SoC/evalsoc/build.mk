@@ -34,11 +34,18 @@ CORE ?= n307fd
 # it will define c macro SMP_CPU_CNT to be SMP value
 # and define a ld symbol __SMP_CPU_CNT to be used by linker script
 SMP ?=
+# BOOT_HARTID must be a number, and above 0
+# it will define a c macro BOOT_HARTID to be boot hart id,
+# other harts other than boot hartid will do wfi when in AMP mode,
+# or run application in smp mode
+BOOT_HARTID ?= 0
 
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
 
 OPENOCD_XLSPIKE_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_xlspike.cfg
+# smp use a different openocd configuration file
+# and will set SMP value in the openocd configuration file
 ifneq ($(SMP),)
 OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_evalsoc_smp.cfg
 OPENOCD_CMD_ARGS += set SMP $(SMP);
@@ -64,9 +71,29 @@ endif
 
 ifneq ($(SMP),)
 $(call assert,$(call gt,$(SMP),1),SMP must be a integer number >= 2)
-QEMU_OPT += -smp $(SMP)
-COMMON_FLAGS += -DSMP_CPU_CNT=$(SMP)
-LDFLAGS += -Wl,--defsym=__SMP_CPU_CNT=$(SMP)
+ifneq ($(BOOT_HARTID),)
+$(call assert,$(call gt,$(SMP),$(BOOT_HARTID)),BOOT_HARTID must be small than SMP)
+endif
+CPU_CNT := $(SMP)
+COMMON_FLAGS += -DSMP_CPU_CNT=$(CPU_CNT)
+LDFLAGS += -Wl,--defsym=__SMP_CPU_CNT=$(CPU_CNT)
+endif
+ifneq ($(BOOT_HARTID),)
+$(call assert,$(call gte,$(BOOT_HARTID),0),BOOT_HARTID must be a integer number >= 0)
+ifeq ($(CPU_CNT),)
+CPU_CNT := $(call inc,$(BOOT_HARTID))
+endif
+# if BOOT_HARTID is set, will set the BOOT_HARTID in openocd configuration file
+OPENOCD_CMD_ARGS += set BOOT_HARTID $(BOOT_HARTID);
+COMMON_FLAGS += -DBOOT_HARTID=$(BOOT_HARTID)
+endif
+
+ifneq ($(CPU_CNT),)
+QEMU_OPT += -smp $(CPU_CNT)
+endif
+## xlspike is only valid for nuclei demosoc/evalsoc
+ifneq ($(CPU_CNT),)
+XLSPIKE_OPT += -p$(CPU_CNT)
 endif
 
 # Set RISCV_ARCH and RISCV_ABI
