@@ -81,8 +81,8 @@ def gen_runner_configs(casedir, caseconfig, genloc):
 
     locs = caseconfig.get("locations", dict())
     locs["cfgloc"] = "."
-    fpga_serial = caseconfig.get("fpga_serial", "xxxxxx")
-    ftdi_serial = caseconfig.get("ftdi_serial", "xxxxxx")
+    fpga_serial = caseconfig.get("fpga_serial", INVAILD_SERNO)
+    ftdi_serial = caseconfig.get("ftdi_serial", INVAILD_SERNO)
     cycm = caseconfig.get("ncycm", None)
     fpgabit = caseconfig.get("bitstream", "fpga.bit")
     if core in ["n200", "n300"]:

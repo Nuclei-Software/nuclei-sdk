@@ -48,6 +48,8 @@ SDK_GLOBAL_VARIABLES = {
     "sdk_copy_failobj": True
     }
 
+INVAILD_SERNO = "xxxxx"
+
 def get_global_variables():
     return SDK_GLOBAL_VARIABLES
 

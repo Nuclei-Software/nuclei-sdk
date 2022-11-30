@@ -188,6 +188,9 @@ class nsdk_runner(object):
                 fpgaloc = self.runcfg["environment"]["fpgaloc"]
                 serport = runcfg["fpga"][fpga]["serial_port"]
                 openocdcfg = os.path.join(self.sdk, runcfg["fpga"][fpga]["openocd_cfg"])
+                if fpga_serial == INVAILD_SERNO or ftdi_serial == INVAILD_SERNO:
+                    print("Invalid fpga or ftdi serial, please check!")
+                    continue
                 if (os.path.isfile(openocdcfg)) == False:
                     print("OpenOCD Configuration File %s not found" % (openocdcfg))
                     continue
