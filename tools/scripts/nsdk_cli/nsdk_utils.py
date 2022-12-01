@@ -1077,10 +1077,12 @@ def gen_runcfg(cpucfg, runcfg, buildconfig=dict()):
         return cpucfgdict
     matrixcfgs = runcfgdict.get("matrix", None)
     expectedcfg = runcfgdict.get("expected", dict())
+    expectedscfg = runcfgdict.get("expecteds", dict())
     finalruncfg = copy.deepcopy(cpucfgdict)
     # merge buildconfig
     finalruncfg["build_config"] = merge_two_config(finalruncfg.get("build_config", dict()), buildconfig)
     finalruncfg["expected"] = merge_two_config(finalruncfg.get("expected", dict()), expectedcfg)
+    finalruncfg["expecteds"] = merge_two_config(finalruncfg.get("expecteds", dict()), expectedscfg)
     if matrixcfgs is None:
         return finalruncfg
     bcfgs = cpucfgdict.get("build_configs", dict())

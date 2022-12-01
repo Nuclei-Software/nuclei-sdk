@@ -11,5 +11,13 @@
         "application/baremetal/demo_pmp": {"build": true, "run": false},
         "application/baremetal/demo_smode_eclic": {"build": true, "run": false},
         "test/core": {"build": false, "run": false}
+    },
+    "expecteds": {
+        "application/baremetal/demo_dsp" : {
+            "rv32emc-newlib_small": { "build": false, "run": false },
+            "rv32emc-libncrt_small": { "build": false, "run": false },
+            "rv32emc-libncrt_balanced": { "build": false, "run": false },
+            "rv32emc-libncrt_fast": { "build": false, "run": false }
+        }
     }
 }
