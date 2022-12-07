@@ -67,7 +67,7 @@ int main(void)
 {
     int ret;
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
-    if (hartid == 0) { // boot hart
+    if (hartid == BOOT_HARTID) { // boot hart
         spinlock_init(&lock);
         lock_ready = 1;
         finished = 0;
