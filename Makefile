@@ -16,7 +16,7 @@ VALID_PROGRAM=$(wildcard $(PROGRAM))
 VALID_PROGRAM_MAKEFILE=$(wildcard $(PROGRAM)/Makefile)
 
 # Valid SDK Rules accepted by build system
-VALID_SDK_RULES := all info help bin size dasm upload run_openocd run_gdb clean debug showflags showtoolver run_xlspike run_qemu_debug run_xlspike_rbb run_xlspike_openocd
+VALID_SDK_RULES := all info help bin size dasm upload run_openocd run_gdb clean debug showflags showtoolver run_qemu run_xlspike run_qemu_debug run_xlspike_rbb run_xlspike_openocd
 
 # Default root directories to search
 APP_ROOTDIRS := application test
