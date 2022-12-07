@@ -27,12 +27,14 @@ configuration:
 setconfig:
   - config: nuclei_smp
     value: 2
+  - config: nuclei_core
+    value: nx900
   - config: heapsz
     value: 2K
   - config: stacksz
     value: 2K
   - config: download_mode
-    value: ddr
+    value: sram
   - config: nuclei_cache
     value: ["ic", "dc", "ccm"]
 

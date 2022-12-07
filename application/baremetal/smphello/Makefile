@@ -11,6 +11,9 @@ COMMON_FLAGS := -O2
 # Per-Core HEAP and STACK Size Settings
 HEAPSZ ?= 2K
 STACKSZ ?= 2K
+
+DOWNLOAD ?= sram
+CORE ?= nx900
 # SMP CORE Number Settings
 SMP ?= 2
 
