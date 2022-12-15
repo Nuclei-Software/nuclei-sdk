@@ -218,7 +218,7 @@ void SystemInit(void)
     /* reset the RCC clock configuration to the default reset state */
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
-    
+
     /* reset SCS, AHBPSC, APB1PSC, APB2PSC, ADCPSC, CKOUT0SEL bits */
     RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
                   RCU_CFG0_ADCPSC | RCU_CFG0_ADCPSC_2 | RCU_CFG0_CKOUT0SEL);
@@ -230,7 +230,7 @@ void SystemInit(void)
     RCU_CTL &= ~(RCU_CTL_HXTALBPS);
 
     /* reset PLLSEL, PREDV0_LSB, PLLMF, USBFSPSC bits */
-    
+
     RCU_CFG0 &= ~(RCU_CFG0_PLLSEL | RCU_CFG0_PREDV0_LSB | RCU_CFG0_PLLMF |
                   RCU_CFG0_USBFSPSC | RCU_CFG0_PLLMF_4);
     RCU_CFG1 = 0x00000000U;
@@ -264,12 +264,12 @@ void SystemCoreClockUpdate(void)
         case SEL_IRC8M:
             SystemCoreClock = IRC8M_VALUE;
             break;
-            
+
         /* HXTAL is selected as CK_SYS */
         case SEL_HXTAL:
             SystemCoreClock = HXTAL_VALUE;
             break;
-            
+
         /* PLL is selected as CK_SYS */
         case SEL_PLL:
             /* PLL clock source selection, HXTAL or IRC8M/2 */
@@ -338,33 +338,33 @@ static void system_clock_hxtal(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
-    
+
     /* enable HXTAL */
     RCU_CTL |= RCU_CTL_HXTALEN;
-    
+
     /* wait until HXTAL is stable or the startup time is longer than HXTAL_STARTUP_TIMEOUT */
     do{
         timeout++;
         stab_flag = (RCU_CTL & RCU_CTL_HXTALSTB);
     }while((0U == stab_flag) && (HXTAL_STARTUP_TIMEOUT != timeout));
-    
+
     /* if fail */
     if(0U == (RCU_CTL & RCU_CTL_HXTALSTB)){
         while(1){
         }
     }
-    
+
     /* AHB = SYSCLK */
     RCU_CFG0 |= RCU_AHB_CKSYS_DIV1;
     /* APB2 = AHB/1 */
     RCU_CFG0 |= RCU_APB2_CKAHB_DIV1;
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
-    
+
     /* select HXTAL as system clock */
     RCU_CFG0 &= ~RCU_CFG0_SCS;
     RCU_CFG0 |= RCU_CKSYSSRC_HXTAL;
-    
+
     /* wait until HXTAL is selected as system clock */
     while(0 == (RCU_CFG0 & RCU_SCSS_HXTAL)){
     }
@@ -693,7 +693,7 @@ static void system_clock_72m_hxtal(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
 
-    /* CK_PLL = (CK_PREDIV0) * 18 = 72 MHz */ 
+    /* CK_PLL = (CK_PREDIV0) * 18 = 72 MHz */
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL | RCU_PLL_MUL18);
 
@@ -842,7 +842,7 @@ static void system_clock_108m_hxtal(void)
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
 
-    /* CK_PLL = (CK_PREDIV0) * 27 = 108 MHz */ 
+    /* CK_PLL = (CK_PREDIV0) * 27 = 108 MHz */
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL | RCU_PLL_MUL27);
 
@@ -906,7 +906,7 @@ static void system_clock_48m_irc8m(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
-    
+
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
@@ -962,7 +962,7 @@ static void system_clock_72m_irc8m(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
-    
+
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
@@ -1018,7 +1018,7 @@ static void system_clock_108m_irc8m(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
-    
+
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
