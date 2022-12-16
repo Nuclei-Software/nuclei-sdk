@@ -66,17 +66,13 @@ debugconfig:
     description: Nuclei OpenOCD
     configs:
       - key: config
-        value: "openocd_demosoc_smp.cfg"
-        condition: $( ${nuclei_smp} > 1 )
+        value: "openocd_demosoc.cfg"
       # TODO: need tool_extrapreopts support in npk
       - key: tool_extrapreopts
         value: -c "set SMP ${nuclei_smp}; set BOOT_HARTID ${boothartid};"
         condition: $( ${nuclei_smp} > 1 )
       - key: tool_extrapreopts
         value: -c "set BOOT_HARTID ${boothartid};"
-        condition: $( ${nuclei_smp} <= 1 )
-      - key: config
-        value: "openocd_demosoc.cfg"
         condition: $( ${nuclei_smp} <= 1 )
 
   - type: qemu
