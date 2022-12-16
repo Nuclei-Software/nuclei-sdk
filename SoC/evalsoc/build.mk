@@ -39,18 +39,19 @@ SMP ?=
 # other harts other than boot hartid will do wfi when in AMP mode,
 # or run application in smp mode
 BOOT_HARTID ?= 0
+# JTAGSN must be a jtag serial number
+# If not specified, it will not bind serial number
+JTAGSN ?=
 
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
 
 OPENOCD_XLSPIKE_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_xlspike.cfg
+OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_evalsoc.cfg
 # smp use a different openocd configuration file
 # and will set SMP value in the openocd configuration file
 ifneq ($(SMP),)
-OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_evalsoc_smp.cfg
 OPENOCD_CMD_ARGS += set SMP $(SMP);
-else
-OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_evalsoc.cfg
 endif
 LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_evalsoc_$(DOWNLOAD).ld
 
@@ -86,6 +87,10 @@ endif
 # if BOOT_HARTID is set, will set the BOOT_HARTID in openocd configuration file
 OPENOCD_CMD_ARGS += set BOOT_HARTID $(BOOT_HARTID);
 COMMON_FLAGS += -DBOOT_HARTID=$(BOOT_HARTID)
+endif
+# if JTAGSN is not empty, pass it via openocd command
+ifneq ($(JTAGSN),)
+OPENOCD_CMD_ARGS += set JTAGSN $(JTAGSN);
 endif
 
 ifneq ($(CPU_CNT),)
