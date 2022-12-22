@@ -45,8 +45,9 @@ endif
 ifeq ($(wildcard $(OPENOCD_CFG)),)
 $(error The openocd configuration file $(OPENOCD_CFG) for $(SOC) doesn't exist, please check!)
 endif
+# Allow non-existance of LINKER_SCRIPT, it might be generated
 ifeq ($(wildcard $(LINKER_SCRIPT)),)
-$(error The link script file $(LINKER_SCRIPT) for $(SOC) doesn't exist, please check!)
+$(warning The link script file $(LINKER_SCRIPT) for $(SOC) doesn't exist, please check!)
 endif
 
 # Set RISCV_ARCH and RISCV_ABI
