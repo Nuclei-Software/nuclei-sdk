@@ -141,6 +141,11 @@ void xPortTaskSwitch(void)
     /* Clear Software IRQ, A MUST */
     SysTimer_ClearSWIRQ();
     rt_thread_switch_interrupt_flag = 0;
+    // make from thread to be to thread
+    // If there is another swi interrupt triggered by other harts
+    // not through rt_hw_context_switch or rt_hw_context_switch_interrupt
+    // the task switch should just do a same task save and restore
+    rt_interrupt_from_thread = rt_interrupt_to_thread;
 }
 
 void vPortSetupTimerInterrupt(void)
