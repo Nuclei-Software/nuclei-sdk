@@ -68,7 +68,7 @@ int main(void)
     prvSetupHardware();
     OSInit();
     OSTaskCreate(start_task, NULL, &start_stk[STK_LEN - 1], TASK_START_PRIO);
-    printf("create start task success \r\n");
+    printf("create start task success\r\n");
     OSStart();
     while (1) {
     }
