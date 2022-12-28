@@ -12,6 +12,9 @@ COMMON_FLAGS := -O2
 HEAPSZ ?= 2K
 STACKSZ ?= 2K
 
+# DOWNLOAD mode must be a mode
+# where all cpus share the same code/data ram
+# such as external ddr/sram, core local ilm is not ok
 DOWNLOAD ?= sram
 CORE ?= nx900
 # SMP CORE Number Settings
