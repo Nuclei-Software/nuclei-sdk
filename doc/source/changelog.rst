@@ -37,6 +37,7 @@ This is development version ``0.4.0`` of Nuclei SDK.
   - Add ``intexc_<Device>_s.S`` asm file into compiling for evalsoc and demosoc
   - Show ``ARCH_EXT`` information when run make info
   - Don't specify elf filename when run gdb, only specify it when do load to avoid some gdb internal error
+  - Add **BOOT_HARTID** and **JTAGSN** support, which need to be done in SoC support code
 
 * SoC
 
@@ -53,6 +54,10 @@ This is development version ``0.4.0`` of Nuclei SDK.
   - Add ``sram`` download mode for evalsoc/demosoc, for details directly check the linker script
   - Change default ``__ICACHE_PRESENT/__DCACHE_PRESENT`` to 1 for evalsoc/demosoc, when evalsoc/demosoc startup, it will
     enable i/d cache if it really present.
+  - Merge smp and single core openocd config into one configuration for evalsoc and demosoc
+  - Add **BOOT_HARTID** support for evalsoc and demosoc, which is used to specify the boot hartid, used together with **SMP**
+    can support SMP or AMP run mode
+  - Add **JTAGSN** support to specify a unified hummingbird jtag debugger via ``adapter serial``
 
 * CI
 

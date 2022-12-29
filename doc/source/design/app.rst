@@ -427,7 +427,8 @@ to do spinlock in this example.
     * Need to enable I/D Cache in <Device.h> if I/D Cache present in CPU.
 
 Need to change ``__ICACHE_PRESENT``, ``__DCACHE_PRESENT`` and ``__CCM_PRESENT`` to 1 in
-``SoC/demosoc/Common/Include/demosoc.h`` before run this application.
+``SoC/demosoc/Common/Include/demosoc.h`` before run this application, from 0.4.0 release,
+for evalsoc/demosoc, ``__ICACHE_PRESENT`` and ``__DCACHE_PRESENT`` are default set to 1.
 
 .. code-block:: diff
 

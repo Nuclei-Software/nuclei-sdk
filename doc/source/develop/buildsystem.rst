@@ -717,6 +717,31 @@ You can do it like this, take ``nuclei_fpga_eval`` board for example, such as po
 
 * connect gdb with openocd server: ``make SOC=demosoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_gdb``
 
+.. _develop_buildsystem_var_jtagsn:
+
+JTAGSN
+~~~~~~
+
+.. note::
+
+   * This new variable **JTAGSN** is added in ``0.4.0`` release
+
+This variable is used specify jtag adapter serial number in openocd configuration, need to be supported in
+openocd configuration file and makefile, currently **demosoc** and **evalsoc** are supported.
+It is used by openocd ``adapter serial``.
+
+Assume you have a jtag adapter, serial number is ``FT6S9RD6``, and you want to download program through
+this jtag to a fpga with ux900 bitstream on it, you can do it like this.
+
+.. code-block:: shell
+
+    # cd to helloworld
+    cd application/baremetal/helloworld
+    # clean program
+    make SOC=evalsoc CORE=ux900 JTAGSN=FT6S9RD6 clean
+    # upload program
+    make SOC=evalsoc CORE=ux900 JTAGSN=FT6S9RD6 upload
+
 .. _develop_buildsystem_var_banner:
 
 BANNER
@@ -917,7 +942,10 @@ can provided smaller code size and highly optimized floating point support compa
       https://github.com/riscv-collab/riscv-newlib/blob/riscv-newlib-3.2.0/newlib/README
     * About Nuclei C runtime library, it didn't provided all the features that
       newlib can do, it is highly optimized for deeply embedded scenery
-    * Nuclei C runtime library is only available in Nuclei GNU Toolchain released after Nov 2021.
+    * Nuclei C runtime library is only available in Nuclei GNU Toolchain released after Nov 2021,
+      about how to use this library, please follow doc located in ``gcc\share\pdf``, changes need
+      to be done in startup code, linker script, stub code, and compiler options, you can check commit
+      history of nuclei sdk for support of libncrt.
     * Since there are different c runtime library can be chosen now, so developer
       need to provide different stub functions for different library, please check
       ``SoC/demosoc/Common/Source/Stubs/`` and ``SoC/demosoc/build.mk`` for example.
@@ -938,6 +966,48 @@ And for demosoc, we use a different openocd configuration file for SMP named
 
 When SMP variable is defined, extra openocd command ``set SMP $(SMP)`` will also
 be passed when run openocd upload or create a openocd server.
+
+For SMP application, please check ``application/baremetal/smphello``, if you want to implement
+a smp application, you need to reimplement ``smp_main``, which all harts will run to this function
+instead of ``main``, if you don't implement it, a weak ``smp_main`` in ``startup_<Device>.S`` will
+be used, and only boot hartid specified by **BOOT_HARTID** will enter to main, other harts will do wfi.
+
+.. _develop_buildsystem_var_boot_hartid:
+
+BOOT_HARTID
+~~~~~~~~~~~
+
+.. note::
+
+   * This new variable **BOOT_HARTID** is added in ``0.4.0`` release
+
+This variable is used to control the boot hartid in a multiple core system.
+If **SMP** variable is specified, it means this application is expected to be a smp application,
+otherwise it means this application is expected to be a amp application.
+
+For amp application, only the boot hart specified by **BOOT_HARTID** will run, other harts
+will directly do wfi when startup, but for smp application, other hartid will do normal boot
+code instead of code/data/bss init, and do sync harts to make sure all harts boots.
+
+For both amp and smp application, the program should execute on a share memory which all
+harts can access, not hart private memory such as ilm/dlm.
+
+Currently **SMP** and **BOOT_HARTID** support all require SOC support code to implement it, currently
+demosoc/evalsoc support it, currently qemu simulation didn't work for SMP/AMP use case.
+
+Here is some basic usage for SMP and BOOT_HARTID on UX900 x4, run on external ddr.
+
+.. code-block:: shell
+
+    # cd to helloworld
+    cd <Nuclei SDK>/application/baremetal/helloworld
+    # clean program
+    make SOC=evalsoc CORE=ux900 clean
+    # AMP: choose hart 1 as boot hartid, other harts spin
+    make SOC=evalsoc CORE=ux900 BOOT_HARTID=1 DOWNLOAD=ddr clean upload
+    cd <Nuclei SDK>/application/baremetal/smphello
+    # SMP: choose hart 2 as boot hartid
+    make SOC=evalsoc CORE=ux900 BOOT_HARTID=2 SMP=4 DOWNLOAD=ddr clean upload
 
 .. _develop_buildsystem_var_stacksz:
 
