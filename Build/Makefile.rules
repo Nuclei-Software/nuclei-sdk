@@ -11,9 +11,10 @@ ALL_CXX_OBJS := $(ALL_CXXSRCS:=.o)
 ALL_OBJS += $(ALL_ASM_OBJS) $(ALL_C_OBJS) $(ALL_CXX_OBJS)
 
 ALL_DEPS := $(ALL_OBJS:=.d)
+ALL_GCNOS := $(ALL_OBJS:.o=.gcno)
 
 CLEAN_OBJS += $(TARGET).elf $(TARGET).map $(TARGET).bin $(TARGET).dump $(TARGET).dasm \
-		$(TARGET).srec $(TARGET).hex $(TARGET).verilog openocd.log $(ALL_OBJS) $(ALL_DEPS)
+		$(TARGET).srec $(TARGET).hex $(TARGET).verilog openocd.log $(ALL_OBJS) $(ALL_DEPS) $(ALL_GCNOS)
 REAL_CLEAN_OBJS = $(subst /,$(PS), $(CLEAN_OBJS))
 
 # Default goal, placed before dependency includes
