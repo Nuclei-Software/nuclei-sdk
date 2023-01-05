@@ -66,15 +66,7 @@
    * Pre-processor Macros
    * ------------
    *
-   * Each library project have different pre-processor macros.
-   *
-   * - RISCV_MATH_DSP:
-   *
-   * Define macro RISCV_MATH_DSP, If the silicon supports DSP instructions.
-   *
-   * - RISCV_NN_TRUNCATE:
-   *
-   * Define macro RISCV_NN_TRUNCATE to use floor instead of round-to-the-nearest-int for the computation.
+   * Each library project have different pre-processor macros controlled via CMakeLists.txt.
    *
    *
    * [1] CMSIS-NN: Efficient Neural Network Kernels for Arm Cortex-M CPUs https://arxiv.org/abs/1801.06601

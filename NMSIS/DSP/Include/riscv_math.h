@@ -76,19 +76,8 @@
    * Preprocessor Macros
    * -------------------
    *
-   * Each library project have different preprocessor macros.
+   * Each library project have different preprocessor macros controlled via CMakeLists.txt.
    *
-   * - RISCV_MATH_MATRIX_CHECK:
-   *
-   * Define macro RISCV_MATH_MATRIX_CHECK for checking on the input and output sizes of matrices
-   *
-   * - RISCV_MATH_ROUNDING:
-   *
-   * Define macro RISCV_MATH_ROUNDING for rounding on support functions
-   *
-   * - RISCV_MATH_LOOPUNROLL:
-   *
-   * Define macro RISCV_MATH_LOOPUNROLL to enable manual loop unrolling in DSP functions
    *
    */
 
