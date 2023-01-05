@@ -50,6 +50,11 @@ ifeq ($(wildcard $(LINKER_SCRIPT)),)
 $(warning The link script file $(LINKER_SCRIPT) for $(SOC) doesn't exist, please check!)
 endif
 
+# if JTAGSN is not empty, pass it via openocd command
+ifneq ($(JTAGSN),)
+OPENOCD_CMD_ARGS += set JTAGSN $(JTAGSN);
+endif
+
 # Set RISCV_ARCH and RISCV_ABI
 CORE_UPPER := $(call uc, $(CORE))
 
