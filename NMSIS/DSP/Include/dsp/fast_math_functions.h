@@ -1,8 +1,8 @@
 /******************************************************************************
  * @file     fast_math_functions.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
@@ -33,6 +33,9 @@
 
 #include "dsp/none.h"
 #include "dsp/utils.h"
+
+#include "dsp/basic_math_functions.h"
+
 
 #ifdef   __cplusplus
 extern "C"
@@ -149,6 +152,46 @@ extern "C"
         float32_t * pDst,
         uint32_t blockSize);
 
+
+
+/**
+  @brief         Floating-point vector of log values.
+  @param[in]     pSrc       points to the input vector
+  @param[out]    pDst       points to the output vector
+  @param[in]     blockSize  number of samples in each vector
+  @return        none
+ */
+  void riscv_vlog_f64(
+  const float64_t * pSrc,
+		float64_t * pDst,
+		uint32_t blockSize);
+
+
+
+  /**
+   * @brief  q31 vector of log values.
+   * @param[in]     pSrc       points to the input vector in q31
+   * @param[out]    pDst       points to the output vector in q5.26
+   * @param[in]     blockSize  number of samples in each vector
+   * @return        none
+   */
+  void riscv_vlog_q31(const q31_t * pSrc,
+        q31_t * pDst,
+        uint32_t blockSize);
+
+  /**
+   * @brief  q15 vector of log values.
+   * @param[in]     pSrc       points to the input vector in q15
+   * @param[out]    pDst       points to the output vector in q4.11
+   * @param[in]     blockSize  number of samples in each vector
+   * @return        none
+   */
+  void riscv_vlog_q15(const q15_t * pSrc,
+        q15_t * pDst,
+        uint32_t blockSize);
+
+
+
 /**
   @brief         Floating-point vector of exp values.
   @param[in]     pSrc       points to the input vector
@@ -160,6 +203,22 @@ extern "C"
   const float32_t * pSrc,
         float32_t * pDst,
         uint32_t blockSize);
+
+
+
+/**
+  @brief         Floating-point vector of exp values.
+  @param[in]     pSrc       points to the input vector
+  @param[out]    pDst       points to the output vector
+  @param[in]     blockSize  number of samples in each vector
+  @return        none
+ */
+  void riscv_vexp_f64(
+  const float64_t * pSrc,
+		float64_t * pDst,
+		uint32_t blockSize);
+
+
 
  /**
    * @defgroup SQRT Square Root
@@ -196,18 +255,12 @@ extern "C"
                    - \ref RISCV_MATH_ARGUMENT_ERROR : input value is negative; *pOut is set to 0
  */
 __STATIC_FORCEINLINE riscv_status riscv_sqrt_f32(
-  float32_t in,
+  const float32_t in,
   float32_t * pOut)
   {
     if (in >= 0.0f)
     {
-
-#if defined ( __riscv_flen ) && (__riscv_flen > 0)
-      __ASM volatile("fsqrt.s %0, %1" : "=f"(*pOut) : "f"(in));
-
-#else
       *pOut = sqrtf(in);
-#endif
 
       return (RISCV_MATH_SUCCESS);
     }
@@ -244,28 +297,7 @@ riscv_status riscv_sqrt_q15(
   q15_t in,
   q15_t * pOut);
 
-  /**
-   * @brief  Vector Floating-point square root function.
-   * @param[in]  pIn   input vector.
-   * @param[out] pOut  vector of square roots of input elements.
-   * @param[in]  len   length of input vector.
-   * @return The function returns RISCV_MATH_SUCCESS if input value is positive value or RISCV_MATH_ARGUMENT_ERROR if
-   * <code>in</code> is negative value and returns zero output for negative values.
-   */
-  void riscv_vsqrt_f32(
-  float32_t * pIn,
-  float32_t * pOut,
-  uint16_t len);
 
-  void riscv_vsqrt_q31(
-  q31_t * pIn,
-  q31_t * pOut,
-  uint16_t len);
-
-  void riscv_vsqrt_q15(
-  q15_t * pIn,
-  q15_t * pOut,
-  uint16_t len);
 
   /**
    * @} end of SQRT group
@@ -288,6 +320,52 @@ riscv_status riscv_divide_q15(q15_t numerator,
   q15_t *quotient,
   int16_t *shift);
 
+  /**
+  @brief         Fixed point division
+  @param[in]     numerator    Numerator
+  @param[in]     denominator  Denominator
+  @param[out]    quotient     Quotient value normalized between -1.0 and 1.0
+  @param[out]    shift        Shift left value to get the unnormalized quotient
+  @return        error status
+
+  When dividing by 0, an error RISCV_MATH_NANINF is returned. And the quotient is forced
+  to the saturated negative or positive value.
+ */
+
+riscv_status riscv_divide_q31(q31_t numerator,
+  q31_t denominator,
+  q31_t *quotient,
+  int16_t *shift);
+
+
+
+  /**
+     @brief  Arc tangent in radian of y/x using sign of x and y to determine right quadrant.
+     @param[in]   y  y coordinate
+     @param[in]   x  x coordinate
+     @param[out]  result  Result
+     @return  error status.
+   */
+  riscv_status riscv_atan2_f32(float32_t y,float32_t x,float32_t *result);
+
+
+  /**
+     @brief  Arc tangent in radian of y/x using sign of x and y to determine right quadrant.
+     @param[in]   y  y coordinate
+     @param[in]   x  x coordinate
+     @param[out]  result  Result in Q2.29
+     @return  error status.
+   */
+  riscv_status riscv_atan2_q31(q31_t y,q31_t x,q31_t *result);
+
+  /**
+     @brief  Arc tangent in radian of y/x using sign of x and y to determine right quadrant.
+     @param[in]   y  y coordinate
+     @param[in]   x  x coordinate
+     @param[out]  result  Result in Q2.13
+     @return  error status.
+   */
+  riscv_status riscv_atan2_q15(q15_t y,q15_t x,q15_t *result);
 
 #ifdef   __cplusplus
 }

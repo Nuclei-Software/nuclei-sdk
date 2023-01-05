@@ -78,7 +78,6 @@
  */
 /** @} */ /* End of Doxygen Group NMSIS_Core_DSP_Intrinsic */
 
-
 /**
  * \defgroup NMSIS_Core_DSP_Intrinsic_SIMD_DATA_PROCESS      SIMD Data Processing Instructions
  * \ingroup  NMSIS_Core_DSP_Intrinsic
@@ -15413,12 +15412,13 @@ __STATIC_FORCEINLINE unsigned long __RV_KSLL32(unsigned long a, unsigned int b)
  * \param [in]  b    unsigned int type of value stored in b
  * \return value stored in unsigned long type
  */
-__STATIC_FORCEINLINE unsigned long __RV_KSLLI32(unsigned long a, unsigned int b)
-{
-    unsigned long result;
-    __ASM volatile("kslli32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
-    return result;
-}
+#define __RV_KSLLI32(a, b)    \
+    ({    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
+        __ASM volatile("kslli32 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
+        result;    \
+    })
 /* ===== Inline Function End for 4.17. KSLLI32 ===== */
 
 /* ===== Inline Function Start for 4.18.1. KSLRA32 ===== */
@@ -16245,12 +16245,13 @@ __STATIC_FORCEINLINE unsigned long __RV_SLL32(unsigned long a, unsigned int b)
  * \param [in]  b    unsigned int type of value stored in b
  * \return value stored in unsigned long type
  */
-__STATIC_FORCEINLINE unsigned long __RV_SLLI32(unsigned long a, unsigned int b)
-{
-    unsigned long result;
-    __ASM volatile("slli32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
-    return result;
-}
+#define __RV_SLLI32(a, b)    \
+    ({    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
+        __ASM volatile("slli32 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
+        result;    \
+    })
 /* ===== Inline Function End for 4.30. SLLI32 ===== */
 
 /* ===== Inline Function Start for 4.31. SMAX32 ===== */
@@ -16786,12 +16787,13 @@ __STATIC_FORCEINLINE unsigned long __RV_SRA32_U(unsigned long a, unsigned int b)
  * \param [in]  b    unsigned int type of value stored in b
  * \return value stored in unsigned long type
  */
-__STATIC_FORCEINLINE unsigned long __RV_SRAI32(unsigned long a, unsigned int b)
-{
-    unsigned long result;
-    __ASM volatile("srai32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
-    return result;
-}
+#define __RV_SRAI32(a, b)    \
+    ({    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
+        __ASM volatile("srai32 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
+        result;    \
+    })
 /* ===== Inline Function End for 4.36.1. SRAI32 ===== */
 
 /* ===== Inline Function Start for 4.36.2. SRAI32.u ===== */
@@ -16839,12 +16841,13 @@ __STATIC_FORCEINLINE unsigned long __RV_SRAI32(unsigned long a, unsigned int b)
  * \param [in]  b    unsigned int type of value stored in b
  * \return value stored in unsigned long type
  */
-__STATIC_FORCEINLINE unsigned long __RV_SRAI32_U(unsigned long a, unsigned int b)
-{
-    unsigned long result;
-    __ASM volatile("srai32.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
-    return result;
-}
+#define __RV_SRAI32_U(a, b)    \
+    ({    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
+        __ASM volatile("srai32.u %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
+        result;    \
+    })
 /* ===== Inline Function End for 4.36.2. SRAI32.u ===== */
 
 /* ===== Inline Function Start for 4.37. SRAIW.u ===== */
@@ -16884,12 +16887,13 @@ __STATIC_FORCEINLINE unsigned long __RV_SRAI32_U(unsigned long a, unsigned int b
  * \param [in]  b    unsigned int type of value stored in b
  * \return value stored in long type
  */
-__STATIC_FORCEINLINE long __RV_SRAIW_U(int a, unsigned int b)
-{
-    long result;
-    __ASM volatile("sraiw.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
-    return result;
-}
+#define __RV_SRAIW_U(a, b)    \
+    ({    \
+        long result;    \
+        int __a = (int)(a);    \
+        __ASM volatile("sraiw.u %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
+        result;    \
+    })
 /* ===== Inline Function End for 4.37. SRAIW.u ===== */
 
 /* ===== Inline Function Start for 4.38.1. SRL32 ===== */
@@ -17041,12 +17045,13 @@ __STATIC_FORCEINLINE unsigned long __RV_SRL32_U(unsigned long a, unsigned int b)
  * \param [in]  b    unsigned int type of value stored in b
  * \return value stored in unsigned long type
  */
-__STATIC_FORCEINLINE unsigned long __RV_SRLI32(unsigned long a, unsigned int b)
-{
-    unsigned long result;
-    __ASM volatile("srli32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
-    return result;
-}
+#define __RV_SRLI32(a, b)    \
+    ({    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
+        __ASM volatile("srli32 %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
+        result;    \
+    })
 /* ===== Inline Function End for 4.39.1. SRLI32 ===== */
 
 /* ===== Inline Function Start for 4.39.2. SRLI32.u ===== */
@@ -17092,12 +17097,13 @@ __STATIC_FORCEINLINE unsigned long __RV_SRLI32(unsigned long a, unsigned int b)
  * \param [in]  b    unsigned int type of value stored in b
  * \return value stored in unsigned long type
  */
-__STATIC_FORCEINLINE unsigned long __RV_SRLI32_U(unsigned long a, unsigned int b)
-{
-    unsigned long result;
-    __ASM volatile("srli32.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
-    return result;
-}
+#define __RV_SRLI32_U(a, b)    \
+    ({    \
+        unsigned long result;    \
+        unsigned long __a = (unsigned long)(a);    \
+        __ASM volatile("srli32.u %0, %1, %2" : "=r"(result) : "r"(__a), "K"(b));    \
+        result;    \
+    })
 /* ===== Inline Function End for 4.39.2. SRLI32.u ===== */
 
 /* ===== Inline Function Start for 4.40. STAS32 ===== */
@@ -17884,15 +17890,29 @@ __STATIC_FORCEINLINE unsigned long __RV_URSUB32(unsigned long a, unsigned long b
 
 #if (__RISCV_XLEN == 32) || defined(__ONLY_FOR_DOXYGEN_DOCUMENT_GENERATION__)
 /* XXXXX Nuclei Extended DSP Instructions for RV32 XXXXX */
+
 /**
- * \defgroup NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM      Nuclei Customized DSP Instructions
+ * \defgroup NMSIS_Core_DSP_Intrinsic_NUCLEI_N1      Nuclei N1 SIMD DSP Additional Instructions
  * \ingroup  NMSIS_Core_DSP_Intrinsic
- * \brief    (RV32 only)Nuclei Customized DSP Instructions
- * \details  This is Nuclei customized DSP instructions only for RV32
+ * \brief    (RV32 only)Nuclei Customized N1 DSP Instructions
+ * \details  This is Nuclei customized DSP N1 instructions only for RV32
  */
-/* ===== Inline Function Start for A.1. DKHM8 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \defgroup NMSIS_Core_DSP_Intrinsic_NUCLEI_N2      Nuclei N2 SIMD DSP Additional Instructions
+ * \ingroup  NMSIS_Core_DSP_Intrinsic
+ * \brief    (RV32 only)Nuclei Customized N2 DSP Instructions
+ * \details  This is Nuclei customized DSP N2 instructions only for RV32
+ */
+/**
+ * \defgroup NMSIS_Core_DSP_Intrinsic_NUCLEI_N3      Nuclei N3 SIMD DSP Additional Instructions
+ * \ingroup  NMSIS_Core_DSP_Intrinsic
+ * \brief    (RV32 only)Nuclei Customized N3 DSP Instructions
+ * \details  This is Nuclei customized DSP N3 instructions only for RV32
+ */
+
+/* ===== Inline Function Start for B.8.1 DKHM8 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief DKHM8 (64-bit SIMD Signed Saturating Q7 Multiply)
  * \details
  * **Type**: SIMD
@@ -17942,11 +17962,11 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKHM8(unsigned long long a, unsigne
     __ASM volatile("dkhm8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
-/* ===== Inline Function End for A.1. DKHM8 ===== */
+/* ===== Inline Function End for B.8.1 DKHM8 ===== */
 
-/* ===== Inline Function Start for A.2. DKHM16 ===== */
+/* ===== Inline Function Start for B.8.2 DKHM16 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief DKHM16 (64-bit SIMD Signed Saturating Q15 Multiply)
  * \details
  * **Type**: SIMD
@@ -17997,11 +18017,11 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKHM16(unsigned long long a, unsign
     __ASM volatile("dkhm16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
-/* ===== Inline Function End for A.2. DKHM16 ===== */
+/* ===== Inline Function End for B.8.2 DKHM16 ===== */
 
-/* ===== Inline Function Start for A.3. DKABS8 ===== */
+/* ===== Inline Function Start for B.8.3 DKABS8 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief DKABS8 (64-bit SIMD 8-bit Saturating Absolute)
  * \details
  * **Type**: SIMD
@@ -18042,11 +18062,11 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKABS8(unsigned long long a)
     __ASM volatile("dkabs8 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
-/* ===== Inline Function End for A.3. DKABS8 ===== */
+/* ===== Inline Function End for B.8.3 DKABS8 ===== */
 
-/* ===== Inline Function Start for A.4. DKABS16 ===== */
+/* ===== Inline Function Start for B.8.4 DKABS16 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief DKABS16 (64-bit SIMD 16-bit Saturating Absolute)
  * \details
  * **Type**: SIMD
@@ -18087,11 +18107,11 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKABS16(unsigned long long a)
     __ASM volatile("dkabs16 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
-/* ===== Inline Function End for A.4. DKABS16 ===== */
+/* ===== Inline Function End for B.8.4 DKABS16 ===== */
 
-/* ===== Inline Function Start for A.5. DKSLRA8 ===== */
+/* ===== Inline Function Start for B.8.5 DKSLRA8 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief DKSLRA8 (64-bit SIMD 8-bit Shift Left Logical with Saturation or Shift Right Arithmetic)
  * \details
  * **Type**: SIMD
@@ -18145,11 +18165,11 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKSLRA8(unsigned long long a, int b
     __ASM volatile("dkslra8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
-/* ===== Inline Function End for A.5. DKSLRA8 ===== */
+/* ===== Inline Function End for B.8.5 DKSLRA8 ===== */
 
-/* ===== Inline Function Start for A.6. DKSLRA16 ===== */
+/* ===== Inline Function Start for B.8.6 DKSLRA16 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief DKSLRA16 (64-bit SIMD 16-bit Shift Left Logical with Saturation or Shift Right Arithmetic)
  * \details
  * **Type**: SIMD
@@ -18204,11 +18224,11 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKSLRA16(unsigned long long a, int 
     __ASM volatile("dkslra16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
-/* ===== Inline Function End for A.6. DKSLRA16 ===== */
+/* ===== Inline Function End for B.8.6 DKSLRA16 ===== */
 
-/* ===== Inline Function Start for A.7. DKADD8 ===== */
+/* ===== Inline Function Start for B.8.7 DKADD8 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief DKADD8 (64-bit SIMD 8-bit Signed Saturating Addition)
  * \details
  * **Type**: SIMD
@@ -18251,11 +18271,11 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKADD8(unsigned long long a, unsign
     __ASM volatile("dkadd8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
-/* ===== Inline Function End for A.7. DKADD8 ===== */
+/* ===== Inline Function End for B.8.7 DKADD8 ===== */
 
-/* ===== Inline Function Start for A.8. DKADD16 ===== */
+/* ===== Inline Function Start for B.8.8 DKADD16 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief DKADD16 (64-bit SIMD 16-bit Signed Saturating Addition)
  * \details
  * **Type**: SIMD
@@ -18298,11 +18318,11 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKADD16(unsigned long long a, unsig
     __ASM volatile("dkadd16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
-/* ===== Inline Function End for A.8. DKADD16 ===== */
+/* ===== Inline Function End for B.8.8 DKADD16 ===== */
 
-/* ===== Inline Function Start for A.10. DKSUB8 ===== */
+/* ===== Inline Function Start for B.8.9 DKSUB8 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief DKSUB8 (64-bit SIMD 8-bit Signed Saturating Subtraction)
  * \details
  * **Type**: SIMD
@@ -18345,11 +18365,11 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKSUB8(unsigned long long a, unsign
     __ASM volatile("dksub8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
-/* ===== Inline Function End for A.9. DKSUB8 ===== */
+/* ===== Inline Function End for B.8.9 DKSUB8 ===== */
 
-/* ===== Inline Function Start for A.10. DKSUB16 ===== */
+/* ===== Inline Function Start for B.8.10 DKSUB16 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief DKSUB16 (64-bit SIMD 16-bit Signed Saturating Subtraction)
  * \details
  * **Type**: SIMD
@@ -18393,11 +18413,11 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKSUB16(unsigned long long a, unsig
     __ASM volatile("dksub16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
-/* ===== Inline Function End for A.10. DKSUB16 ===== */
+/* ===== Inline Function End for B.8.10 DKSUB16 ===== */
 
-/* ===== Inline Function Start for A.11.1. EXPD80 ===== */
+/* ===== Inline Function Start for A.7.1 EXPD80 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief EXPD80 (Expand and Copy Byte 0 to 32bit)
  * \details
  * **Type**: DSP
@@ -18428,11 +18448,11 @@ __STATIC_FORCEINLINE unsigned long __RV_EXPD80(unsigned long a)
     __ASM volatile("expd80 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
-/* ===== Inline Function End for A11.1. EXPD80 ===== */
+/* ===== Inline Function End for A.7.1 EXPD80 ===== */
 
-/* ===== Inline Function Start for A.11.2. EXPD81 ===== */
+/* ===== Inline Function Start for A.7.1 EXPD81 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief EXPD81 (Expand and Copy Byte 1 to 32bit)
  * \details
  * **Type**: DSP
@@ -18463,11 +18483,11 @@ __STATIC_FORCEINLINE unsigned long __RV_EXPD81(unsigned long a)
     __ASM volatile("expd81 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
-/* ===== Inline Function End for A11.2. EXPD81 ===== */
+/* ===== Inline Function End for A.7.1 EXPD81 ===== */
 
-/* ===== Inline Function Start for A.11.3. EXPD82 ===== */
+/* ===== Inline Function Start for A.7.1 EXPD82 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief EXPD82 (Expand and Copy Byte 2 to 32bit)
  * \details
  * **Type**: DSP
@@ -18498,11 +18518,11 @@ __STATIC_FORCEINLINE unsigned long __RV_EXPD82(unsigned long a)
     __ASM volatile("expd82 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
-/* ===== Inline Function End for A11.3. EXPD82 ===== */
+/* ===== Inline Function End for A.7.1 EXPD82 ===== */
 
-/* ===== Inline Function Start for A.11.4. EXPD83 ===== */
+/* ===== Inline Function Start for A.7.1 EXPD83 ===== */
 /**
- * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_CUSTOM
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
  * \brief EXPD83 (Expand and Copy Byte 3 to 32bit)
  * \details
  * **Type**: DSP
@@ -18533,7 +18553,2284 @@ __STATIC_FORCEINLINE unsigned long __RV_EXPD83(unsigned long a)
     __ASM volatile("expd83 %0, %1" : "=r"(result) : "r"(a));
     return result;
 }
-/* ===== Inline Function End for A11.4. EXPD83 ===== */
+/* ===== Inline Function End for A.7.1 EXPD83 ===== */
+
+/* ===== Inline Function Start for A.7.1 EXPD84 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
+ * \brief EXPD84 (Expand and Copy Byte 4 to 32bit)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * EXPD84 Rd, Rs1
+ * ~~~
+ *
+ * **Purpose**:\n
+ * When RV64, copy 8-bit data from 64-bit chunks into 8 bytes in a register.
+ *
+ * **Description**:\n
+ * Moves Rs1.B[4][7:0] to Rd.[0][7:0], Rd.[1][7:0], Rd.[2][7:0], Rd.[3][7:0]
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[x][31:0] = CONCAT(Rs1.B[4][7:0], Rs1.B[4][7:0], Rs1.B[4][7:0], Rs1.B[4][7:0]);
+ * for RV32: x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long type of value stored in a
+ * \return value stored in unsigned long type
+ */
+__STATIC_FORCEINLINE unsigned long __RV_EXPD84(unsigned long a)
+{
+    unsigned long result;
+    __ASM volatile("expd84 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for A.7.1 EXPD84 ===== */
+
+/* ===== Inline Function Start for A.7.1 EXPD85 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
+ * \brief EXPD85 (Expand and Copy Byte 5 to 32bit)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * EXPD85 Rd, Rs1
+ * ~~~
+ *
+ * **Purpose**:\n
+ * When RV64, copy 8-bit data from 64-bit chunks into 8 bytes in a register.
+ *
+ * **Description**:\n
+ * Moves Rs1.B[5][7:0] to Rd.[0][7:0], Rd.[1][7:0], Rd.[2][7:0], Rd.[3][7:0]
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[x][31:0] = CONCAT(Rs1.B[5][7:0], Rs1.B[5][7:0], Rs1.B[5][7:0], Rs1.B[5][7:0]);
+ * for RV32: x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long type of value stored in a
+ * \return value stored in unsigned long type
+ */
+__STATIC_FORCEINLINE unsigned long __RV_EXPD85(unsigned long a)
+{
+    unsigned long result;
+    __ASM volatile("expd85 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for A.7.1 EXPD85 ===== */
+
+/* ===== Inline Function Start for A.7.1 EXPD86 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
+ * \brief EXPD86 (Expand and Copy Byte 6 to 32bit)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * EXPD86 Rd, Rs1
+ * ~~~
+ *
+ * **Purpose**:\n
+ * When RV64, copy 8-bit data from 64-bit chunks into 8 bytes in a register.
+ *
+ * **Description**:\n
+ * Moves Rs1.B[6][7:0] to Rd.[0][7:0], Rd.[1][7:0], Rd.[2][7:0], Rd.[3][7:0]
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[x][31:0] = CONCAT(Rs1.B[6][7:0], Rs1.B[6][7:0], Rs1.B[6][7:0], Rs1.B[6][7:0]);
+ * for RV32: x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long type of value stored in a
+ * \return value stored in unsigned long type
+ */
+__STATIC_FORCEINLINE unsigned long __RV_EXPD86(unsigned long a)
+{
+    unsigned long result;
+    __ASM volatile("expd86 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for A.7.1 EXPD86 ===== */
+
+/* ===== Inline Function Start for A.7.1 EXPD87 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N1
+ * \brief EXPD87 (Expand and Copy Byte 7 to 32bit)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * EXPD87 Rd, Rs1
+ * ~~~
+ *
+ * **Purpose**:\n
+ * When RV64, copy 8-bit data from 64-bit chunks into 8 bytes in a register.
+ *
+ * **Description**:\n
+ * Moves Rs1.B[7][7:0] to Rd.[0][7:0], Rd.[1][7:0], Rd.[2][7:0], Rd.[3][7:0]
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[x][31:0] = CONCAT(Rs1.B[7][7:0], Rs1.B[7][7:0], Rs1.B[7][7:0], Rs1.B[7][7:0]);
+ * for RV32: x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long type of value stored in a
+ * \return value stored in unsigned long type
+ */
+__STATIC_FORCEINLINE unsigned long __RV_EXPD87(unsigned long a)
+{
+    unsigned long result;
+    __ASM volatile("expd87 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for A.7.1 EXPD87 ===== */
+
+/* ===== Inline Function Start for C.9.1 DKHMX8 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief DKHMX8 (64-bit SIMD Signed Crossed Saturating Q7 Multiply)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKHMX8 Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do Q7xQ7 element crossed multiplications simultaneously. The Q15 results are then reduced to Q7 numbers again.
+ *
+ * **Description**:\n
+ * For the DKHMX8 instruction, multiply the top 8-bit Q7 content of 16-bit chunks in Rs1 with the
+ * bottom 8-bit Q7 content of 16-bit chunks in Rs2. At the same time, multiply the bottom 8-bit Q7
+ * content of 16-bit chunks in Rs1 with the top 8-bit Q7 content of 16-bit chunks in Rs2.
+ *
+ * The Q14 results are then right-shifted 7-bits and saturated into Q7 values. The Q7 results are then
+ * written into Rd. When both the two Q7 inputs of a multiplication are 0x80, saturation will happen.
+ * The result will be saturated to 0x7F and the overflow flag OV will be set.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.B[x+1]; op2t = Rs2.B[x]; // top
+ * op1b = Rs1.B[x]; op2b = Rs2.B[x+1]; // bottom
+ * for ((aop,bop,res) in [(op1t,op2t,rest), (op1b,op2b,resb)]) {
+ *   if (0x80 != aop | 0x80 != bop) {
+ *     res = (aop s* bop) >> 7;
+ *   } else {
+ *     res= 0x7F;
+ *     OV = 1;
+ *   }
+ * }
+ * Rd.H[x/2] = concat(rest, resb);
+ * for RV32, x=0,2,4,6
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  b unsigned long long type of value stored in b
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKHMX8(unsigned long long a, unsigned long long b)
+{
+    unsigned long long result;
+    __ASM volatile("dkhmx8 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    return result;
+}
+/* ===== Inline Function End for C.9.1 DKHMX8 ===== */
+
+/* ===== Inline Function Start for C.9.2 DKHMX16 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief DKHMX16 (64-bit SIMD Signed Crossed Saturating Q15 Multiply)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKHMX16 Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do Q15xQ15 element crossed multiplications simultaneously. The Q31 results are then reduced to Q15 numbers again.
+ *
+ * **Description**:\n
+ * For the KHMX16 instruction, multiply the top 16-bit Q15 content of 32-bit chunks in Rs1 with the
+ * bottom 16-bit Q15 content of 32-bit chunks in Rs2. At the same time, multiply the bottom 16-bit Q15
+ * content of 32-bit chunks in Rs1 with the top 16-bit Q15 content of 32-bit chunks in Rs2.
+ *
+ * The Q30 results are then right-shifted 15-bits and saturated into Q15 values. The Q15 results are
+ * then written into Rd. When both the two Q15 inputs of a multiplication are 0x8000, saturation will
+ * happen. The result will be saturated to 0x7FFF and the overflow flag OV will be set.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.H[x+1]; op2t = Rs2.H[x]; // top
+ * op1b = Rs1.H[x]; op2b = Rs2.H[x+1]; // bottom
+ * for ((aop,bop,res) in [(op1t,op2t,rest), (op1b,op2b,resb)]) {
+ *   if (0x8000 != aop | 0x8000 != bop) {
+ *     res = (aop s* bop) >> 15;
+ *   } else {
+ *     res= 0x7FFF;
+ *     OV = 1;
+ *   }
+ * }
+ * Rd.W[x/2] = concat(rest, resb);
+ * for RV32, x=0,2
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  b unsigned long long type of value stored in b
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKHMX16(unsigned long long a, unsigned long long b)
+{
+    unsigned long long result;
+    __ASM volatile("dkhmx16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    return result;
+}
+/* ===== Inline Function End for C.9.2 DKHMX16 ===== */
+
+/* ===== Inline Function Start for C.9.3 DSMMUL ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief DSMMUL (64-bit MSW 32x32 Signed Multiply)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMMUL Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do MSW 32x32 element signed multiplications simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * This instruction multiplies the 32-bit elements of Rs1 with the 32-bit elements of Rs2 and writes the
+ * most significant 32-bit multiplication results to the corresponding 32-bit elements of Rd. The 32-bit
+ * elements of Rs1 and Rs2 are treated as signed integers. The .u form of the instruction rounds up
+ * the most significant 32-bit of the 64-bit multiplication results by adding a 1 to bit 31 of the results.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ * for ((aop,bop,res) in [(op1t,op2t,rest), (op1b,op2b,resb)]) {
+ *     res = (aop s* bop)[63:32];
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  b unsigned long long type of value stored in b
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMMUL(unsigned long long a, unsigned long long b)
+{
+    unsigned long long result;
+    __ASM volatile("dsmmul %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    return result;
+}
+/* ===== Inline Function End for C.9.3 DSMMUL ===== */
+
+/* ===== Inline Function Start for C.9.4 DSMMULU ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief  DSMMULU (64-bit MSW 32x32 Unsigned Multiply)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMMUL.U Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do MSW 32x32 element unsigned multiplications simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * This instruction multiplies the 32-bit elements of Rs1 with the 32-bit elements of Rs2 and writes the
+ * most significant 32-bit multiplication results to the corresponding 32-bit elements of Rd. The 32-bit
+ * elements of Rs1 and Rs2 are treated as unsigned integers. The .u form of the instruction rounds up
+ * the most significant 32-bit of the 64-bit multiplication results by adding a 1 to bit 31 of the results.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ * for ((aop,bop,res) in [(op1t,op2t,rest), (op1b,op2b,resb)]) {
+ *     res = RUND(aop u* bop)[63:32];
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  b unsigned long long type of value stored in b
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMMUL_U(unsigned long long a, unsigned long long b)
+{
+    unsigned long long result;
+    __ASM volatile("dsmmul.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    return result;
+}
+/* ===== Inline Function End for C.9.4 DSMMULU ===== */
+
+/* ===== Inline Function Start for C.9.5 DKWMMUL ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief   DKWMMUL (64-bit MSW 32x32 Signed Multiply & Double)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKWMMUL Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do MSW 32x32 element signed multiplications simultaneously and double. The results are written into Rd.
+ *
+ * **Description**:\n
+ * This instruction multiplies the 32-bit elements of Rs1 with the 32-bit elements of Rs2. It then shifts
+ * the multiplication results one bit to the left and takes the most significant 32-bit results. If the
+ * shifted result is greater than 231-1, it is saturated to 231-1 and the OV flag is set to 1. The final element
+ * result is written to Rd. The 32-bit elements of Rs1 and Rs2 are treated as signed integers. The .u
+ * form of the instruction additionally rounds up the 64-bit multiplication results by adding a 1 to bit
+ * 30 before the shift and saturation operations.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ * for ((aop,bop,res) in [(op1t,op2t,rest), (op1b,op2b,resb)]) {
+ *     res = sat.q31((aop s* bop) << 1)[63:32];
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  b unsigned long long type of value stored in b
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKWMMUL(unsigned long long a, unsigned long long b)
+{
+    unsigned long long result;
+    __ASM volatile("dkwmmul %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    return result;
+}
+/* ===== Inline Function End for C.9.5 DKWMMUL ===== */
+
+/* ===== Inline Function Start for C.9.6 DKWMMULU ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief   DKWMMULU (64-bit MSW 32x32 Unsigned Multiply & Double)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKWMMUL.U Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do MSW 32x32 element unsigned multiplications simultaneously and double. The results are written into Rd.
+ *
+ * **Description**:\n
+ * This instruction multiplies the 32-bit elements of Rs1 with the 32-bit elements of Rs2. It then shifts
+ * the multiplication results one bit to the left and takes the most significant 32-bit results. If the
+ * shifted result is greater than 231-1, it is saturated to 231-1 and the OV flag is set to 1. The final element
+ * result is written to Rd. The 32-bit elements of Rs1 and Rs2 are treated as signed integers. The .u
+ * form of the instruction additionally rounds up the 64-bit multiplication results by adding a 1 to bit
+ * 30 before the shift and saturation operations.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ * for ((aop,bop,res) in [(op1t,op2t,rest), (op1b,op2b,resb)]) {
+ *     res = sat.q31(RUND(aop u* bop) << 1)[63:32];
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  b unsigned long long type of value stored in b
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKWMMUL_U(unsigned long long a, unsigned long long b)
+{
+    unsigned long long result;
+    __ASM volatile("dkwmmul.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    return result;
+}
+/* ===== Inline Function End for C.9.6 DKWMMULU ===== */
+
+/* ===== Inline Function Start for C.9.7 DKABS32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief   DKABS32 (64-bit SIMD 32-bit Saturating Absolute)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKABS32 Rd, Rs1
+ * # Rd, Rs1 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Get the absolute value of 32-bit signed integer elements simultaneously.
+ *
+ * **Description**:\n
+ * This instruction calculates the absolute value of 32-bit signed integer elements stored in Rs1 and writes the element
+ * results to Rd. If the input number is 0x8000_0000, this instruction generates 0x7fff_ffff as the output and sets the OV
+ * bit to 1.
+ *
+ * **Operations**:\n
+ * ~~~
+ * src = Rs1.W[x];
+ * if (src == 0x8000_0000) {
+ * src = 0x7fff_ffff;
+ * OV = 1;
+ * } else if (src[31] == 1)
+ * src = -src;
+ * }
+ * Rd.W[x] = src;
+ * x=1...0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKABS32(unsigned long long a)
+{
+    unsigned long long result;
+    __ASM volatile("dkabs32 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for C.9.7 DKABS32 ===== */
+
+/* ===== Inline Function Start for C.9.8 DKSLRA32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief   DKSLRA32 (64-bit SIMD 32-bit Shift Left Logical with Saturation or Shift Right Arithmetic)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKSLRA32 Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do 31-bit elements logical left (positive) or arithmetic right (negative) shift operation with Q31 saturation for the left shift.
+ *
+ * **Description**:\n
+ * The 31-bit data elements of Rs1 are left-shifted logically or right-shifted arithmetically based on the value of Rs2[5:0].
+ * Rs2[5:0] is in the signed range of [-2^5, 2^5-1]. A positive Rs2[5:0] means logical left shift and a negative Rs2[4:0]
+ * means arithmetic right shift. The shift amount is the absolute value of Rs2[5:0]. However, the behavior of Rs2[5:0]==-
+ * 2^5 (0x20) is defined to be equivalent to the behavior of Rs2[5:0]==-(2^5-1) (0x21).
+ *
+ * **Operations**:\n
+ * ~~~
+ * if (Rs2[5:0] < 0) {
+ *   sa = -Rs2[5:0];
+ *   sa = (sa == 32)? 31 : sa;
+ *   Rd.W[x] = SE32(Rs1.W[x][31:sa]);
+ * } else {
+ *   sa = Rs2[4:0];
+ *   res[(31+sa):0] = Rs1.W[x] <<(logic) sa;
+ *   if (res > (2^31)-1) {
+ *   res[31:0] = 0x7fff_ffff; OV = 1;
+ * } else if (res < -2^31) {
+ *   res[31:0] = 0x8000_0000; OV = 1;
+ * }
+ *   Rd.W[x] = res[31:0];
+ * }
+ * x=1...0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a int type of value stored in b
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKSLRA32(unsigned long long a, int b)
+{
+    unsigned long long result;
+    __ASM volatile("dkslra32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    return result;
+}
+/* ===== Inline Function End for C.9.8 DKSLRA32 ===== */
+
+/* ===== Inline Function Start for C.9.9 DKADD32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief   DKADD32(64-bit SIMD 32-bit Signed Saturating Addition)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKADD32 Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do 32-bit signed integer element saturating additions simultaneously.
+ *
+ * **Description**:\n
+ * This instruction adds the 32-bit signed integer elements in Rs1 with the 32-bit signed integer elements in Rs2. If any
+ * of the results are beyond the Q31 number range (-2^31 <= Q31 <= 2^31-1), they are saturated to the range and the OV
+ * bit is set to 1. The saturated results are written to Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * res[x] = Rs1.W[x] + Rs2.W[x];
+ * if (res[x] > 0x7fff_ffff) {
+ * res[x] = 0x7fff_ffff;
+ * OV = 1;
+ * } else if (res[x] < 0x8000_0000) {
+ * res[x] = 0x8000_0000;
+ * OV = 1;
+ * }
+ * Rd.W[x] = res[x];
+ * x=1...0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKADD32(unsigned long long a, unsigned long long b)
+{
+    unsigned long long result;
+    __ASM volatile("dkadd32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    return result;
+}
+/* ===== Inline Function End for C.9.9 DKADD32 ===== */
+
+/* ===== Inline Function Start for C.9.10 DKSUB32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief   DKSUB32(64-bit SIMD 32-bit Signed Saturating Subtraction)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKSUB32 Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do 32-bit signed integer element saturating subtractions simultaneously.
+ *
+ * **Description**:\n
+ * This instruction subtracts the 32-bit signed integer elements in Rs2 from the 32-bit signed integer elements in Rs1. If
+ * any of the results are beyond the Q31 number range (-2^31 <= Q31 <= 2^31-1), they are saturated to the range and the
+ * OV bit is set to 1. The saturated results are written to Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * res[x] = Rs1.W[x] - Rs2.W[x];
+ * if (res[x] > (2^31)-1) {
+ * res[x] = (2^31)-1;
+ * OV = 1;
+ * } else if (res[x] < -2^31) {
+ * res[x] = -2^31;
+ * OV = 1;
+ * }
+ * Rd.W[x] = res[x];
+ * x=1...0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKSUB32(unsigned long long a, unsigned long long b)
+{
+    unsigned long long result;
+    __ASM volatile("dksub32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    return result;
+}
+/* ===== Inline Function End for C.9.10 DKSUB32 ===== */
+
+/* ===== Inline Function Start for D.10.1 DKMMAC ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief   DKMMAC (64-bit MSW 32x32 Signed Multiply and Saturating Add)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMMAC Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do MSW 32x32 element signed multiplications and saturating addition simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * This instruction multiplies the signed 32-bit elements of Rs1 with the signed 32-bit elements of Rs2
+ * and adds the most significant 32-bit multiplication results with the signed 32-bit elements of Rd. If
+ * the addition result is beyond the Q31 number range (-231  Q31  231-1), it is saturated to the range
+ * and the OV bit is set to 1. The results after saturation are written to Rd. The .u form of the
+ * instruction additionally rounds up the most significant 32-bit of the 64-bit multiplication results by
+ * adding a 1 to bit 31 of the results.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *    res = sat.q31(dop + (aop s* bop)[63:32]);
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in c
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMMAC(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmmac %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.1 DKMMAC ===== */
+
+/* ===== Inline Function Start for D.10.2 DKMMACU ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief   DKMMACU (64-bit MSW 32x32 Unsigned Multiply and Saturating Add)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMMACU Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do MSW 32x32 element unsigned multiplications and saturating addition simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * This instruction multiplies the signed 32-bit elements of Rs1 with the signed 32-bit elements of Rs2
+ * and adds the most significant 32-bit multiplication results with the signed 32-bit elements of Rd. If
+ * the addition result is beyond the Q31 number range (-231  Q31  231-1), it is saturated to the range
+ * and the OV bit is set to 1. The results after saturation are written to Rd. The .u form of the
+ * instruction additionally rounds up the most significant 32-bit of the 64-bit multiplication results by
+ * adding a 1 to bit 31 of the results.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *    res = sat.q31(dop + RUND(aop u* bop)[63:32]);
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMMAC_U(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmmac.u %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.2 DKMMACU ===== */
+
+/* ===== Inline Function Start for D.10.3 DKMMSB ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief   DKMMSB (64-bit MSW 32x32 Signed Multiply and Saturating Sub)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMMSB Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do MSW 32x32 element signed multiplications and saturating subtraction simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * This instruction multiplies the signed 32-bit elements of Rs1 with the signed 32-bit elements of Rs2
+ * and subtracts the most significant 32-bit multiplication results from the signed 32-bit elements of
+ * Rd. If the subtraction result is beyond the Q31 number range (-231  Q31  231-1), it is saturated to the
+ * range and the OV bit is set to 1. The results after saturation are written to Rd. The .u form of the
+ * instruction additionally rounds up the most significant 32-bit of the 64-bit multiplication results by
+ * adding a 1 to bit 31 of the results.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *    res = sat.q31(dop - (aop s* bop)[63:32]);
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMMSB(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmmsb %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.3 DKMMSB ===== */
+
+/* ===== Inline Function Start for D.10.4 DKMMSBU ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief   DKMMSBU (64-bit MSW 32x32 Unsigned Multiply and Saturating Sub)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMMSBU Rd, Rs1, Rs2
+ * # Rd, Rs1, Rs2 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do MSW 32x32 element unsigned multiplications and saturating subtraction simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * This instruction multiplies the signed 32-bit elements of Rs1 with the signed 32-bit elements of Rs2
+ * and subtracts the most significant 32-bit multiplication results from the signed 32-bit elements of
+ * Rd. If the subtraction result is beyond the Q31 number range (-231  Q31  231-1), it is saturated to the
+ * range and the OV bit is set to 1. The results after saturation are written to Rd. The .u form of the
+ * instruction additionally rounds up the most significant 32-bit of the 64-bit multiplication results by
+ * adding a 1 to bit 31 of the results.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *    res = sat.q31(dop - (aop u* bop)[63:32]);
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMMSB_U(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmmsb.u %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.4 DKMMSBU ===== */
+
+/* ===== Inline Function Start for D.10.5. DKMADA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMADA (Saturating Signed Multiply Two Halfs and Two Adds)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMADA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two 16x16 with 32-bit signed double addition simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 16-bit content of 32-bit elements in Rs1 with
+ * the bottom 16-bit content of 32-bit elements in Rs2 and then adds the result to the result of
+ * multiplying the top 16-bit content of 32-bit elements in Rs1 with the top 16-bit content of 32-bit
+ * elements in Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ *
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *      mul1 = aop.H[1] s* bop.H[1];
+ *      mul2 = aop.H[0] s* bop.H[0];
+ *      res = sat.q31(dop + mul1 + mul2);
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMADA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmada %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.5. DKMADA ===== */
+
+/* ===== Inline Function Start for D.10.6. DKMAXDA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMAXDA (Two Cross 16x16 with 32-bit Signed Double Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMAXDA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two cross 16x16 with 32-bit signed double addition simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the top 16-bit content of 32-bit elements in Rs1 with the bottom 16-bit content of 32-bit
+ * elements in Rs2 and then adds the result to the result of multiplying the bottom 16-bit content of
+ * 32-bit elements in Rs1 with the top 16-bit content of 32-bit elements in elements in Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ *
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *      mul1 = aop.H[1] s* bop.H[0];
+ *      mul2 = aop.H[0] s* bop.H[1];
+ *      res = sat.q31(dop + mul1 + mul2);
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMAXDA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmaxda %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.6. DKMAXDA ===== */
+
+/* ===== Inline Function Start for D.10.7. DKMADS ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief  DKMADS (Two 16x16 with 32-bit Signed Add and Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMADS Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two 16x16 with 32-bit signed addition and subtraction simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 16-bit content of 32-bit elements in Rs1 with
+ * the bottom 16-bit content of 32-bit elements in Rs2 and then subtracts the result from the result of
+ * multiplying the top 16-bit content of 32-bit elements in Rs1 with the top 16-bit content of 32-bit
+ * elements in Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ *
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *      mul1 = aop.H[1] s* bop.H[1];
+ *      mul2 = aop.H[0] s* bop.H[0];
+ *      res = sat.q31(dop + mul1 - mul2);
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMADS(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmads %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.7. DKMADS ===== */
+
+/* ===== Inline Function Start for D.10.8. DKMADRS ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief  DKMADRS (Two 16x16 with 32-bit Signed Add and Reversed Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMADRS Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two 16x16 with 32-bit signed addition and revered subtraction simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * it multiplies the top 16-bit content of 32-bit elements in Rs1 with the
+ * top 16-bit content of 32-bit elements in Rs2 and then subtracts the result from the result of
+ * multiplying the bottom 16-bit content of 32-bit elements in Rs1 with the bottom 16-bit content of 32-
+ * bit elements in Rs2
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ *
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *      mul1 = aop.H[1] s* bop.H[1];
+ *      mul2 = aop.H[0] s* bop.H[0];
+ *      res = sat.q31(dop - mul1 + mul2);
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in c
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMADRS(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmadrs %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.8. DKMADRS ===== */
+
+/* ===== Inline Function Start for D.10.9. DKMAXDS ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMAXDS (Saturating Signed Crossed Multiply Two Halfs & Subtract & Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMAXDS Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two cross 16x16 with 32-bit signed addition and subtraction simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * Do two signed 16-bit multiplications from 32-bit elements in two registers; and then
+ * perform a subtraction operation between the two 32-bit results. Then add the subtraction result to
+ * the corresponding 32-bit elements in a third register. The addition result may be saturated.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ *
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *      mul1 = aop.H[1] s* bop.H[0];
+ *      mul2 = aop.H[0] s* bop.H[1];
+ *      res = sat.q31(dop + mul1 - mul2);
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMAXDS(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmaxds %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.9. DKMAXDS ===== */
+
+/* ===== Inline Function Start for D.10.10. DKMSDA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMSDA (Two 16x16 with 32-bit Signed Double Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMSDA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two 16x16 with 32-bit signed double subtraction simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * it multiplies the bottom 16-bit content of the 32-bit elements of Rs1
+ * with the bottom 16-bit content of the 32-bit elements of Rs2 and multiplies the top 16-bit content of
+ * the 32-bit elements of Rs1 with the top 16-bit content of the 32-bit elements of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ *
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *      mul1 = aop.H[1] s* bop.H[0];
+ *      mul2 = aop.H[0] s* bop.H[1];
+ *      res = sat.q31(dop - mul1 - mul2);
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMSDA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmsda %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.10. DKMSDA ===== */
+
+/* ===== Inline Function Start for D.10.11. DKMSXDA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMSXDA (Two Cross 16x16 with 32-bit Signed Double Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMSXDA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two cross 16x16 with 32-bit signed double subtraction simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 16-bit content of the 32-bit elements of Rs1
+ * with the top 16-bit content of the 32-bit elements of Rs2 and multiplies the top 16-bit content of the
+ * 32-bit elements of Rs1 with the bottom 16-bit content of the 32-bit elements of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ *
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *      mul1 = aop.H[1] s* bop.H[0];
+ *      mul2 = aop.H[0] s* bop.H[1];
+ *      res = sat.q31(dop - mul1 - mul2);
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMSXDA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmsxda %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.11. DKMSXDA ===== */
+
+/* ===== Inline Function Start for D.10.12. DSMAQA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DSMAQA (Four Signed 8x8 with 32-bit Signed Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMAQA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do four signed 8x8 with 32-bit signed addition simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * This instruction multiplies the four signed 8-bit elements of 32-bit chunks of Rs1 with the four
+ * signed 8-bit elements of 32-bit chunks of Rs2 and then adds the four results together with the signed
+ * content of the corresponding 32-bit chunks of Rd. The final results are written back to the
+ * corresponding 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ *
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *      m0 = aop.B[0] s* bop.B[0];
+ *      m1 = aop.B[1] s* bop.B[1];
+ *      m2 = aop.B[2] s* bop.B[2];
+ *      m3 = aop.B[3] s* bop.B[3];
+ *      res = dop + m0 + m1 + m2 + m3;
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMAQA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmaqa %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.12. DSMAQA ===== */
+
+/* ===== Inline Function Start for D.10.13. DSMAQASU ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DSMAQASU (Four Signed 8 x Unsigned 8 with 32-bit Signed Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMAQASU Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do four Signed 8 x Unsigned 8 with 32-bit unsigned addition simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * This instruction multiplies the four unsigned 8-bit elements of 32-bit chunks of Rs1 with the four
+ * signed 8-bit elements of 32-bit chunks of Rs2 and then adds the four results together with the unsigned
+ * content of the corresponding 32-bit chunks of Rd. The final results are written back to the
+ * corresponding 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ *
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *      m0 = aop.B[0] su* bop.B[0];
+ *      m1 = aop.B[1] su* bop.B[1];
+ *      m2 = aop.B[2] su* bop.B[2];
+ *      m3 = aop.B[3] su* bop.B[3];
+ *      res = dop + m0 + m1 + m2 + m3;
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMAQA_SU(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmaqasu %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.13. DSMAQASU ===== */
+
+/* ===== Inline Function Start for D.10.14. DUMAQA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DUMAQA (Four Unsigned 8x8 with 32-bit Unsigned Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DUMAQA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do four unsigned 8x8 with 32-bit unsigned addition simultaneously. The results are written into Rd.
+ *
+ * **Description**:\n
+ * This instruction multiplies the four unsigned 8-bit elements of 32-bit chunks of Rs1 with the four
+ * unsigned 8-bit elements of 32-bit chunks of Rs2 and then adds the four results together with the
+ * unsigned content of the corresponding 32-bit chunks of Rd. The final results are written back to the
+ * corresponding 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; op3t = Rd.W[x+1] // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; op3b = Rd.W[x] // bottom
+ *
+ * for ((aop,bop,dop,res) in [(op1t,op2t,op3t,rest), (op1b,op2b,op3b,resb)]) {
+ *      m0 = aop.B[0] su* bop.B[0];
+ *      m1 = aop.B[1] su* bop.B[1];
+ *      m2 = aop.B[2] su* bop.B[2];
+ *      m3 = aop.B[3] su* bop.B[3];
+ *      res = dop + m0 + m1 + m2 + m3;
+ * }
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DUMAQA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dumaqa %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.14. DUMAQA ===== */
+
+/* ===== Inline Function Start for D.10.15. DKMDA32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMDA32 (Two Signed 32x32 with 64-bit Saturation Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMDA32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two signed 32x32 add the signed multiplication results with Q63 saturation. The results are written into Rd.
+ *
+ * **Description**:\n
+ * For the KMDA32 instruction, it multiplies the bottom 32-bit element of Rs1 with the bottom 32-bit
+ * element of Rs2 and then adds the result to the result of multiplying the top 32-bit element of Rs1
+ * with the top 32-bit element of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ * t0 = op1b s* op2b;
+ * t1 = op1t s* op2t;
+ * Rd = concat(rest, resb);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMDA32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmda32 %0, %1, %2" : "=r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.15. DKMDA32 ===== */
+
+/* ===== Inline Function Start for D.10.16. DKMXDA32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMXDA32 (Two Cross Signed 32x32 with 64-bit Saturation Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMXDA32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two cross signed 32x32 and add the signed multiplication results with Q63 saturation. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 32-bit element of Rs1 with the top 32-bit
+ * element of Rs2 and then adds the result to the result of multiplying the top 32-bit element of Rs1
+ * with the bottom 32-bit element of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ * t01 = op1b s* op2t;
+ * t10 = op1t s* op2b;
+ * Rd = sat.q63(t01 + t10);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMXDA32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmxda32 %0, %1, %2" : "=r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.16. DKMXDA32 ===== */
+
+/* ===== Inline Function Start for D.10.17. DKMADA32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMADA32 (Two Signed 32x32 with 64-bit Saturation Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMADA32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two signed 32x32 and add the signed multiplication results and a third register with Q63 saturation. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 32-bit element of Rs1 with the top 32-bit
+ * element of Rs2 and then adds the result to the result of multiplying the top 32-bit element of Rs1
+ * with the bottom 32-bit element of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ * t01 = op1b s* op2t;
+ * t10 = op1t s* op2b;
+ * Rd = sat.q63(t01 + t10);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMADA32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmada32 %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.17. DKMADA32 ===== */
+
+/* ===== Inline Function Start for D.10.18. DKMAXDA32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMAXDA32 (Two Cross Signed 32x32 with 64-bit Saturation Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMAXDA32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two cross signed 32x32 and add the signed multiplication results and a third register with Q63 saturation. The
+ * results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the top 32-bit element in Rs1 with the bottom 32-bit
+ * element in Rs2 and then adds the result to the result of multiplying the bottom 32-bit element in Rs1
+ * with the top 32-bit element in Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *   t01 = op1b s* op2t;
+ *   t10 = op1t s* op2b;
+ * Rd = sat.q63(Rd + t01 + t10);
+ *   x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMAXDA32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmaxda32 %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.18. DKMAXDA32 ===== */
+
+/* ===== Inline Function Start for D.10.19. DKMADS32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMADS32 (Two Signed 32x32 with 64-bit Saturation Add and Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMADS32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two signed 32x32 and add the top signed multiplication results and subtraction bottom signed multiplication results
+ * and add a third register with Q63 saturation. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the top 32-bit element in Rs1 with the bottom 32-bit
+ * element in Rs2 and then subtracts the result to the result of multiplying the top 32-bit element in Rs1
+ * with the top 32-bit element in Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * t0 = op1b s* op2b;
+ * t1 = op1t s* op2t;
+ * Rd = sat.q63(Rd - t0 + t1);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMADS32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmads32 %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.19. DKMADS32 ===== */
+
+/* ===== Inline Function Start for D.10.20. DKMADRS32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMADRS32 (Two Signed 32x32 with 64-bit Saturation Revered Add and Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMADRS32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two signed 32x32 and add the signed multiplication results and a third register with Q63 saturation. The results
+ * are written into Rd.Do two signed 32x32 and subtraction the top signed multiplication results and add bottom signed
+ * multiplication results and add a third register with Q63 saturation. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the top 32-bit element in Rs1 with the top 32-bit
+ * element in Rs2 and then subtracts the result from the result of multiplying the bottom 32-bit
+ * element in Rs1 with the bottom 32-bit element in Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ * t0 = op1b s* op2b;
+ * t1 = op1t s* op2t;
+ * Rd = sat.q63(Rd + t0 - t1);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in c
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMADRS32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmadrs32 %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.20. DKMADRS32 ===== */
+
+/* ===== Inline Function Start for D.10.21. DKMAXDS32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMAXDS32 (Two Cross Signed 32x32 with 64-bit Saturation Add and Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMAXDS32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two signed 32x32 and add the top signed multiplication results and subtraction bottom signed multiplication results
+ * and add a third register with Q63 saturation. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 32-bit element in Rs1 with the top 32-bit
+ * element in Rs2 and then subtracts the result from the result of multiplying the top 32-bit element in
+ * Rs1 with the bottom 32-bit element in Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * t01 = op1b s* op2t;
+ * t10 = op1t s* op2b;
+ * Rd = sat.q63(Rd - t01 + t10);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMAXDS32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmaxds32 %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.21. DKMAXDS32 ===== */
+
+/* ===== Inline Function Start for D.10.22. DKMSDA32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMSDA32 (Two Signed 32x32 with 64-bit Saturation Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMSDA32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two signed 32x32 and subtraction the top signed multiplication results and subtraction bottom signed multiplication
+ * results and add a third register with Q63 saturation. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 32-bit element of Rs1 with the bottom 32-bit
+ * element of Rs2 and multiplies the top 32-bit element of Rs1 with the top 32-bit element of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * t0 = op1b s* op2b;
+ * t1 = op1t s* op2t;
+ * Rd = sat.q63(Rd - t0 - t1);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMSDA32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmsda32 %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.22. DKMSDA32 ===== */
+
+/* ===== Inline Function Start for D.10.23. DKMSXDA32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DKMSXDA32 (Two Cross Signed 32x32 with 64-bit Saturation Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DKMSXDA32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two cross signed 32x32 and subtraction the top signed multiplication results and subtraction bottom signed multiplication
+ * results and add a third register with Q63 saturation. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 32-bit element of Rs1 with the top 32-bit
+ * element of Rs2 and multiplies the top 32-bit element of Rs1 with the bottom 32-bit element of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * t0 = op1b s* op2t;
+ * t1 = op1t s* op2b;
+ * Rd = sat.q63(Rd - t0 - t1);
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DKMSXDA32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dkmsxda32 %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for 10.23. DKMSXDA32 ===== */
+
+/* ===== Inline Function Start for D.10.24. DSMDS32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DSMDS32 (Two Signed 32x32 with 64-bit Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMDS32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two signed 32x32 and add the top signed multiplication results and subtraction bottom signed multiplication. The
+ * results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 32-bit element of Rs1 with the bottom 32-bit
+ * element of Rs2 and then subtracts the result from the result of multiplying the top 32-bit element of
+ * Rs1 with the top 32-bit element of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * t0 = op1b s* op2t;
+ * t1 = op1t s* op2b;
+ * Rd = t1 - t0;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMDS32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmds32 %0, %1, %2" : "=r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.24. DSMDS32 ===== */
+
+/* ===== Inline Function Start for D.10.25. DSMDRS32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DSMDRS32 (Two Signed 32x32 with 64-bit Revered Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMDRS32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two signed 32x32 and subtraction the top signed multiplication results and add bottom signed multiplication. The results are written into Rd
+ *
+ * **Description**:\n
+ * It multiplies the top 32-bit element of Rs1 with the top 32-bit
+ * element of Rs2 and then subtracts the result from the result of multiplying the bottom 32-bit
+ * element of Rs1 with the bottom 32-bit element of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * t0 = op1b s* op2b;
+ * t1 = op1t s* op2t;
+ * Rd = t1 - t0;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMDRS32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmdrs32 %0, %1, %2" : "=r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.25. DSMDRS32 ===== */
+
+/* ===== Inline Function Start for D.10.26. DSMXDS32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DSMXDS32 (Two Cross Signed 32x32 with 64-bit Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMXDS32 Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two cross signed 32x32 and add the top signed multiplication results and subtraction bottom signed multiplication.
+ * The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 32-bit element of Rs1 with the top 32-bit
+ * element of Rs2 and then subtracts the result from the result of multiplying the top 32-bit element of
+ * Rs1 with the bottom 32-bit element of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * t01 = op1b s* op2t;
+ * t10 = op1t s* op2b;
+ * Rd = t1 - t0;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMXDS32(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmxds32 %0, %1, %2" : "=r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.26. DSMXDS32 ===== */
+
+/* ===== Inline Function Start for D.10.27. DSMALDA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DSMALDA (Four Signed 16x16 with 64-bit Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMALDA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do four signed 16x16 and add signed multiplication results and a third register. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 16-bit content of Rs1 with the bottom 16-bit
+ * content of Rs2 and then adds the result to the result of multiplying the top 16-bit content of Rs1 with
+ * the top 16-bit content of Rs2 with unlimited precision
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * m0 = op1b.H[0] s* op2b.H[0];
+ * m1 = op1b.H[1] s* op2b.H[1];
+ * m2 = op1t.H[0] s* op2t.H[0];
+ * m3 = op1t.H[1] s* op2t.H[1];
+ *
+ * Rd = Rd + m0 + m1 + m2 + m3;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMALDA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmalda %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.27. DSMALDA ===== */
+
+/* ===== Inline Function Start for D.10.28. DSMALXDA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DSMALXDA (Four Signed 16x16 with 64-bit Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMALXDA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do four cross signed 16x16 and add signed multiplication results and a third register. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the top 16-bit content of Rs1 with the bottom 16-bit
+ * content of Rs2 and then adds the result to the result of multiplying the bottom 16-bit content of Rs1
+ * with the top 16-bit content of Rs2 with unlimited precision.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * m0 = op1b.H[0] s* op2b.H[1];
+ * m1 = op1b.H[1] s* op2b.H[0];
+ * m2 = op1t.H[0] s* op2t.H[1];
+ * m3 = op1t.H[1] s* op2t.H[0];
+ *
+ * Rd = Rd + m0 + m1 + m2 + m3;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMALXDA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmalxda %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.28. DSMALXDA ===== */
+
+/* ===== Inline Function Start for D.10.29. DSMALDS ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DSMALDS (Four Signed 16x16 with 64-bit Add and Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMALDS Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do four signed 16x16 and add and subtraction signed multiplication results and a third register. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 16-bit content of Rs1 with the bottom 16-bit
+ * content of Rs2 and then subtracts the result from the result of multiplying the top 16-bit content of
+ * Rs1 with the top 16-bit content of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * m0 = op1b.H[1] s* op2b.H[1];
+ * m1 = op1b.H[0] s* op2b.H[0];
+ * m2 = op1t.H[1] s* op2t.H[1];
+ * m3 = op1t.H[0] s* op2t.H[0];
+ *
+ * Rd = Rd + m0 - m1 + m2 - m3;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMALDS(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmalds %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.29. DSMALDS ===== */
+
+/* ===== Inline Function Start for D.10.30. DSMALDRS ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief DSMALDRS (Four Signed 16x16 with 64-bit Add and Revered Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMALDRS Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do two signed 16x16 and add and revered subtraction signed multiplication results and a third register. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the top 16-bit content of Rs1 with the top 16-bit content
+ * of Rs2 and then subtracts the result from the result of multiplying the bottom 16-bit content of Rs1
+ * with the bottom 16-bit content of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * m0 = op1b.H[0] s* op2b.H[0];
+ * m1 = op1b.H[1] s* op2b.H[1];
+ * m2 = op1t.H[0] s* op2t.H[0];
+ * m3 = op1t.H[1] s* op2t.H[1];
+ *
+ * Rd = Rd + m0 - m1 + m2 - m3;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMALDRS(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmaldrs %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.30. DSMALDRS ===== */
+
+/* ===== Inline Function Start for D.10.31. DSMALXDS ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief  DSMALXDS (Four Cross Signed 16x16 with 64-bit Add and Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMALXDS Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do four cross signed 16x16 and add and subtraction signed multiplication results and a third register. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 16-bit content of Rs1 with the top 16-bit
+ * content of Rs2 and then subtracts the result from the result of multiplying the top 16-bit content of
+ * Rs1 with the bottom 16-bit content of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * m0 = op1b.H[1] s* op2b.H[0];
+ * m1 = op1b.H[0] s* op2b.H[1];
+ * m2 = op1t.H[1] s* op2t.H[0];
+ * m3 = op1t.H[0] s* op2t.H[1];
+ *
+ * Rd = Rd + m0 - m1 + m2 - m3;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMALXDS(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmalxds %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.31. DSMALXDS ===== */
+
+/* ===== Inline Function Start for D.10.32. DSMSLDA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief  DSMSLDA (Four Signed 16x16 with 64-bit Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMSLDA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do four signed 16x16 and subtraction signed multiplication results and add a third register. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the bottom 16-bit content of Rs1 with the bottom 16-bit
+ * content Rs2 and multiplies the top 16-bit content of Rs1 with the top 16-bit content of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * m0 = op1b.H[0] s* op2b.H[0];
+ * m1 = op1b.H[1] s* op2b.H[1];
+ * m2 = op1t.H[0] s* op2t.H[0];
+ * m3 = op1t.H[1] s* op2t.H[1];
+ *
+ * Rd = Rd - m0 - m1 - m2 - m3;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMSLDA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmslda %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.32. DSMSLDA ===== */
+
+/* ===== Inline Function Start for D.10.33. DSMSLXDA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief  DSMSLXDA (Four Cross Signed 16x16 with 64-bit Sub)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSMSLXDA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do four signed 16x16 and subtraction signed multiplication results and add a third register. The results are written into Rd.
+ *
+ * **Description**:\n
+ * It multiplies the top 16-bit content of Rs1 with the bottom 16-bit
+ * content of Rs2 and multiplies the bottom 16-bit content of Rs1 with the top 16-bit content of Rs2.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * m0 = op1b.H[0] s* op2b.H[1];
+ * m1 = op1b.H[1] s* op2b.H[0];
+ * m2 = op1t.H[0] s* op2t.H[1];
+ * m3 = op1t.H[1] s* op2t.H[0];
+ *
+ * Rd = Rd - m0 - m1 - m2 - m3;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSMSLXDA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("dsmslxda %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.33. DSMSLXDA ===== */
+
+/* ===== Inline Function Start for D.10.34. DDSMAQA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief  DDSMAQA (Eight Signed 8x8 with 64-bit Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DDSMAQA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do eight signed 8x8 and add signed multiplication results and a third register. The results are written into Rd.
+ *
+ * **Description**:\n
+ * Do eight signed 8-bit multiplications from eight 8-bit chunks of two registers; and then adds
+ * the eight 16-bit results and the content of 64-bit chunks of a third register.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * m0 = op1b.B[0] s* op2b.B[0];
+ * m1 = op1b.B[1] s* op2b.B[1];
+ * m2 = op1b.B[2] s* op2b.B[2];
+ * m3 = op1b.B[3] s* op2b.B[3];
+ * m4 = op1t.B[0] s* op2t.B[0];
+ * m5 = op1t.B[1] s* op2t.B[1];
+ * m6 = op1t.B[2] s* op2t.B[2];
+ * m7 = op1t.B[3] s* op2t.B[3];
+ *
+ * s0 = m0 + m1 + m2 + m3;
+ * s1 = m4 + m5 + m6 + m7;
+ * Rd = Rd + s0 + s1;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DDSMAQA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("ddsmaqa %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.34. DDSMAQA ===== */
+
+/* ===== Inline Function Start for D.10.35. DDSMAQASU ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief  DDSMAQASU (Eight Signed 8 x Unsigned 8 with 64-bit Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DDSMAQASU Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do eight signed 8 x unsigned 8 and add signed multiplication results and a third register. The results are written into Rd.
+ *
+ * **Description**:\n
+ * Do eight signed 8 x unsigned 8 and add signed multiplication results and a third register; and then adds
+ * the eight 16-bit results and the content of 64-bit chunks of a third register.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * m0 = op1b.B[0] su* op2b.B[0];
+ * m1 = op1b.B[1] su* op2b.B[1];
+ * m2 = op1b.B[2] su* op2b.B[2];
+ * m3 = op1b.B[3] su* op2b.B[3];
+ * m4 = op1t.B[0] su* op2t.B[0];
+ * m5 = op1t.B[1] su* op2t.B[1];
+ * m6 = op1t.B[2] su* op2t.B[2];
+ * m7 = op1t.B[3] su* op2t.B[3];
+ *
+ * s0 = m0 + m1 + m2 + m3;
+ * s1 = m4 + m5 + m6 + m7;
+ * Rd = Rd + s0 + s1;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DDSMAQA_SU(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("ddsmaqasu %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.35. DDSMAQASU ===== */
+
+/* ===== Inline Function Start for D.10.36. DDUMAQA ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
+ * \brief  DDUMAQA (Eight Unsigned 8x8 with 64-bit Unsigned Add)
+ * \details
+ * **Type**: DSP
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DDUMAQA Rd, Rs1, Rs2
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Do eight unsigned 8x8 and add unsigned multiplication results and a third register. The results are written into Rd.
+ *
+ * **Description**:\n
+ * Do eight unsigned 8x8 and add unsigned multiplication results and a third register; and then adds
+ * the eight 16-bit results and the content of 64-bit chunks of a third register.
+ *
+ * **Operations**:\n
+ * ~~~
+ * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
+ * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
+ *
+ * m0 = op1b.B[0] u* op2b.B[0];
+ * m1 = op1b.B[1] u* op2b.B[1];
+ * m2 = op1b.B[2] u* op2b.B[2];
+ * m3 = op1b.B[3] u* op2b.B[3];
+ * m4 = op1t.B[0] u* op2t.B[0];
+ * m5 = op1t.B[1] u* op2t.B[1];
+ * m6 = op1t.B[2] u* op2t.B[2];
+ * m7 = op1t.B[3] u* op2t.B[3];
+ *
+ * s0 = m0 + m1 + m2 + m3;
+ * s1 = m4 + m5 + m6 + m7;
+ * Rd = Rd + s0 + s1;
+ * x=0
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \param [in]  a unsigned long long type of value stored in b
+ * \param [in]  a unsigned long long type of value stored in t
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DDUMAQA(unsigned long long t, unsigned long long a, unsigned long long b)
+{
+    __ASM volatile("ddumaqa %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    return t;
+}
+/* ===== Inline Function End for D.10.36. DDUMAQA ===== */
 #endif /* __RISCV_XLEN == 32 */
 
 /* XXXXX ARM Compatiable SIMD API XXXXX */
@@ -18560,63 +20857,63 @@ __STATIC_FORCEINLINE unsigned long __RV_EXPD83(unsigned long a)
 /** \brief Dual 16-bit signed multiply with exchange returning difference. */
 #define __SMUSDX(x, y)              __RV_SMXDS((y), (x))
 /** \brief Q setting sum of dual 16-bit signed multiply with exchange. */
-__STATIC_FORCEINLINE int32_t __SMUADX (int32_t op1, int32_t op2)
+__STATIC_FORCEINLINE long __SMUADX (unsigned long op1, unsigned long op2)
 {
-    return (int32_t)__RV_KMXDA(op1, op2);
+    return __RV_KMXDA(op1, op2);
 }
 /** \brief Q setting saturating add. */
 #define __QADD(x, y)                __RV_KADDW((x), (y))
 /** \brief Q setting saturating subtract. */
 #define __QSUB(x, y)                __RV_KSUBW((x), (y))
 /** \brief Q setting dual 16-bit signed multiply with single 32-bit accumulator. */
-__STATIC_FORCEINLINE int32_t __SMLAD(int32_t op1, int32_t op2, int32_t op3)
+__STATIC_FORCEINLINE long __SMLAD(unsigned long op1, unsigned long op2, long op3)
 {
-    return (int32_t)__RV_KMADA(op3, op1, op2);
+    return __RV_KMADA(op3, op1, op2);
 }
 /** \brief Q setting pre-exchanged dual 16-bit signed multiply with single 32-bit accumulator.  */
-__STATIC_FORCEINLINE int32_t __SMLADX(int32_t op1, int32_t op2, int32_t op3)
+__STATIC_FORCEINLINE long __SMLADX(unsigned long op1, unsigned long op2, long op3)
 {
-    return (int32_t)__RV_KMAXDA(op3, op1, op2);
+    return __RV_KMAXDA(op3, op1, op2);
 }
 /** \brief Q setting dual 16-bit signed multiply with exchange subtract with 32-bit accumulate.  */
-__STATIC_FORCEINLINE int32_t __SMLSDX(int32_t op1, int32_t op2, int32_t op3)
+__STATIC_FORCEINLINE long __SMLSDX(unsigned long op1, unsigned long op2, long op3)
 {
-    return (op3 - (int32_t)__RV_SMXDS(op1, op2));
+    return (op3 - __RV_SMXDS(op1, op2));
 }
 /** \brief Dual 16-bit signed multiply with single 64-bit accumulator. */
-__STATIC_FORCEINLINE int64_t __SMLALD(int32_t op1, int32_t op2, int64_t acc)
+__STATIC_FORCEINLINE long long __SMLALD(unsigned long op1, unsigned long op2, long long acc)
 {
-    return (int64_t)__RV_SMALDA(acc, op1, op2);
+    return __RV_SMALDA(acc, op1, op2);
 }
 /** \brief Dual 16-bit signed multiply with exchange with single 64-bit accumulator.  */
-__STATIC_FORCEINLINE int64_t __SMLALDX(int32_t op1, int32_t op2, int64_t acc)
+__STATIC_FORCEINLINE long long __SMLALDX(unsigned long op1, unsigned long op2, long long acc)
 {
-    return (int64_t)__RV_SMALXDA(acc, op1, op2);
+    return __RV_SMALXDA(acc, op1, op2);
 }
 /** \brief Q setting sum of dual 16-bit signed multiply. */
-__STATIC_FORCEINLINE int32_t __SMUAD(int32_t op1, int32_t op2)
+__STATIC_FORCEINLINE long __SMUAD(unsigned long op1, unsigned long op2)
 {
-    return (int32_t)__RV_KMDA(op1, op2);
+    return __RV_KMDA(op1, op2);
 }
 /** \brief Dual 16-bit signed multiply returning difference. */
-__STATIC_FORCEINLINE int32_t __SMUSD(int32_t op1, int32_t op2)
+__STATIC_FORCEINLINE long __SMUSD(unsigned long op1, unsigned long op2)
 {
-    return (int32_t)__RV_SMDRS(op1, op2);
+    return __RV_SMDRS(op1, op2);
 }
 /** \brief Dual extract 8-bits and sign extend each to 16-bits. */
 #define __SXTB16(x)             __RV_SUNPKD820(x)
 /** \brief Dual extracted 8-bit to 16-bit signed addition. TODO Need test */
-__STATIC_FORCEINLINE int32_t __SXTAB16(uint32_t op1, uint32_t op2)
+__STATIC_FORCEINLINE unsigned long __SXTAB16(unsigned long op1, unsigned long op2)
 {
     return __RV_ADD16(op1, __RV_SUNPKD820(op2));
 }
 #define __SXTAB16_RORn(ARG1, ARG2, ROTATE)        __SXTAB16(ARG1, __ROR(ARG2, ROTATE))
 
 /** \brief 32-bit signed multiply with 32-bit truncated accumulator. */
-__STATIC_FORCEINLINE int32_t __SMMLA(int32_t op1, int32_t op2, int32_t op3)
+__STATIC_FORCEINLINE long __SMMLA(long op1, long op2, long op3)
 {
-    int32_t mul;
-    mul = (int32_t)__RV_SMMUL(op1, op2);
+    long mul;
+    mul = __RV_SMMUL(op1, op2);
     return (op3 + mul);
 }
 #define __DKHM8                 __RV_DKHM8
@@ -18652,11 +20949,16 @@ __STATIC_FORCEINLINE int32_t __SMMLA(int32_t op1, int32_t op2, int32_t op3)
 #define __USAT16                __RV_UCLIP16
 
 /** \brief Halfword packing instruction. Combines bits[15:0] of val1 with bits[31:16] of val2 levitated with the val3. */
-#define __PKHBT(ARG1,ARG2,ARG3)     ( ((((uint32_t)(ARG1))          ) & 0x0000FFFFUL) |  \
-                                    ((((uint32_t)(ARG2)) << (ARG3)) & 0xFFFF0000UL)  )
+#define __PKHBT(ARG1, ARG2, ARG3)  ((ARG3 == 0) ? __RV_PKTB16(ARG2, ARG1) :              \
+                                   (ARG3 == 16) ? __RV_PKBB16(ARG2, ARG1) :              \
+                                   (((((uint32_t)(ARG1))          ) & 0x0000FFFFUL) |    \
+                                   ((((uint32_t)(ARG2)) << (ARG3)) & 0xFFFF0000UL)))
+
 /** \brief Halfword packing instruction. Combines bits[31:16] of val1 with bits[15:0] of val2 right-shifted with the val3. */
-#define __PKHTB(ARG1,ARG2,ARG3)     ( ((((uint32_t)(ARG1))          ) & 0xFFFF0000UL) |  \
-                                    ((((uint32_t)(ARG2)) >> (ARG3)) & 0x0000FFFFUL)  )
+#define __PKHTB(ARG1, ARG2, ARG3)  ((ARG3 == 0) ? __RV_PKTB16(ARG1, ARG2) :              \
+                                   (ARG3 == 16) ? __RV_PKTT16(ARG1, ARG2) :              \
+                                   (((((uint32_t)(ARG1))          ) & 0xFFFF0000UL) |    \
+                                   ((((uint32_t)(ARG2)) >> (ARG3)) & 0x0000FFFFUL)))
 
 /** first rotate then extract. This is more suitable for arm compiler for it can rotate and extract in one command*/
 #define __SXTB16_RORn(ARG1, ARG2)   __RV_SUNPKD820(__ROR(ARG1, ARG2))

@@ -1,8 +1,8 @@
 /******************************************************************************
  * @file     interpolation_functions.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
@@ -203,7 +203,7 @@ extern "C"
    *
    */
   q31_t riscv_linear_interp_q31(
-  q31_t * pYData,
+  const q31_t * pYData,
   q31_t x,
   uint32_t nValues);
 
@@ -221,7 +221,7 @@ extern "C"
    *
    */
   q15_t riscv_linear_interp_q15(
-  q15_t * pYData,
+  const q15_t * pYData,
   q31_t x,
   uint32_t nValues);
 
@@ -238,7 +238,7 @@ extern "C"
    * This function can support maximum of table size 2^12.
    */
 q7_t riscv_linear_interp_q7(
-  q7_t * pYData,
+  const q7_t * pYData,
   q31_t x,
   uint32_t nValues);
 

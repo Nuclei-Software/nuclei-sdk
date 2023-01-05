@@ -1,8 +1,8 @@
 /******************************************************************************
  * @file     support_functions.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
@@ -296,6 +296,20 @@ extern "C"
         float32_t * pDst,
         uint32_t blockSize);
 
+ 
+ 
+  /**
+   * @brief  Copies the elements of a floating-point vector.
+   * @param[in]  pSrc       input pointer
+   * @param[out] pDst       output pointer
+   * @param[in]  blockSize  number of samples to process
+   */
+  void riscv_copy_f64(
+  const float64_t * pSrc,
+        float64_t * pDst,
+        uint32_t blockSize);
+
+
 
   /**
    * @brief  Copies the elements of a Q7 vector.
@@ -342,6 +356,18 @@ extern "C"
   void riscv_fill_f32(
         float32_t value,
         float32_t * pDst,
+        uint32_t blockSize);
+
+
+  /**
+   * @brief  Fills a constant value into a floating-point vector.
+   * @param[in]  value      input value to be filled
+   * @param[out] pDst       output pointer
+   * @param[in]  blockSize  number of samples to process
+   */
+  void riscv_fill_f64(
+        float64_t value,
+        float64_t * pDst,
         uint32_t blockSize);
 
 

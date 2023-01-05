@@ -3,8 +3,8 @@
  * Title:        riscv_common_tables.h
  * Description:  Extern declaration for common tables
  *
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  *
  * Target Processor: RISC-V Cores
  * -------------------------------------------------------------------- */
@@ -499,6 +499,16 @@ extern "C"
     extern const q15_t sinTable_q15[FAST_MATH_TABLE_SIZE + 1];
   #endif /* !defined(RISCV_DSP_CONFIG_TABLES) defined(RISCV_ALL_FAST_TABLES) */
 
+  /* Fast vector sqrt */
+
+  /* Accurate scalar sqrt */
+  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FAST_TABLES) || defined(RISCV_TABLE_SQRT_Q31)
+       extern const q31_t sqrt_initial_lut_q31[32];
+  #endif
+
+  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FAST_TABLES) || defined(RISCV_TABLE_SQRT_Q15)
+       extern const q15_t sqrt_initial_lut_q15[16];
+  #endif
 
 
 #endif /* if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_FAST_TABLES) */

@@ -1,8 +1,8 @@
 /******************************************************************************
  * @file     controller_functions.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
@@ -369,6 +369,8 @@ __STATIC_FORCEINLINE q15_t riscv_pid_q15(
     acc += (q31_t) S->A1 * S->state[0];
     acc += (q31_t) S->A2 * S->state[1];
 #endif
+
+    asm volatile("nop");
 
     /* acc += y[n-1] */
     acc += (q31_t) S->state[2] << 15;

@@ -1,8 +1,8 @@
 /******************************************************************************
  * @file     basic_math_functions.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
@@ -33,7 +33,6 @@
 
 #include "dsp/none.h"
 #include "dsp/utils.h"
-
 
 #ifdef   __cplusplus
 extern "C"
@@ -101,6 +100,21 @@ extern "C"
 
 
 
+/**
+ * @brief Floating-point vector multiplication.
+ * @param[in]  pSrcA      points to the first input vector
+ * @param[in]  pSrcB      points to the second input vector
+ * @param[out] pDst       points to the output vector
+ * @param[in]  blockSize  number of samples in each vector
+ */
+void riscv_mult_f64(
+const float64_t * pSrcA,
+const float64_t * pSrcB,
+	  float64_t * pDst,
+	  uint32_t blockSize);
+
+
+
  /**
    * @brief Floating-point vector addition.
    * @param[in]  pSrcA      points to the first input vector
@@ -113,6 +127,21 @@ extern "C"
   const float32_t * pSrcB,
         float32_t * pDst,
         uint32_t blockSize);
+
+
+
+/**
+  * @brief Floating-point vector addition.
+  * @param[in]  pSrcA      points to the first input vector
+  * @param[in]  pSrcB      points to the second input vector
+  * @param[out] pDst       points to the output vector
+  * @param[in]  blockSize  number of samples in each vector
+  */
+ void riscv_add_f64(
+ const float64_t * pSrcA,
+ const float64_t * pSrcB,
+	   float64_t * pDst,
+	   uint32_t blockSize);
 
 
 
@@ -174,6 +203,21 @@ extern "C"
 
 
   /**
+   * @brief Floating-point vector subtraction.
+   * @param[in]  pSrcA      points to the first input vector
+   * @param[in]  pSrcB      points to the second input vector
+   * @param[out] pDst       points to the output vector
+   * @param[in]  blockSize  number of samples in each vector
+   */
+  void riscv_sub_f64(
+  const float64_t * pSrcA,
+  const float64_t * pSrcB,
+        float64_t * pDst,
+        uint32_t blockSize);
+
+
+
+  /**
    * @brief Q7 vector subtraction.
    * @param[in]  pSrcA      points to the first input vector
    * @param[in]  pSrcB      points to the second input vector
@@ -226,6 +270,21 @@ extern "C"
   const float32_t * pSrc,
         float32_t scale,
         float32_t * pDst,
+        uint32_t blockSize);
+
+
+
+  /**
+   * @brief Multiplies a floating-point vector by a scalar.
+   * @param[in]  pSrc       points to the input vector
+   * @param[in]  scale      scale factor to be applied
+   * @param[out] pDst       points to the output vector
+   * @param[in]  blockSize  number of samples in the vector
+   */
+  void riscv_scale_f64(
+  const float64_t * pSrc,
+        float64_t scale,
+        float64_t * pDst,
         uint32_t blockSize);
 
 
@@ -303,6 +362,18 @@ extern "C"
 
 
 
+/**
+ * @brief Floating-point vector absolute value.
+ * @param[in]  pSrc       points to the input buffer
+ * @param[out] pDst       points to the output buffer
+ * @param[in]  blockSize  number of samples in each vector
+ */
+void riscv_abs_f64(
+const float64_t * pSrc,
+	  float64_t * pDst,
+	  uint32_t blockSize);
+
+
 
   /**
    * @brief Q15 vector absolute value.
@@ -340,6 +411,21 @@ extern "C"
   const float32_t * pSrcB,
         uint32_t blockSize,
         float32_t * result);
+
+
+
+/**
+ * @brief Dot product of floating-point vectors.
+ * @param[in]  pSrcA      points to the first input vector
+ * @param[in]  pSrcB      points to the second input vector
+ * @param[in]  blockSize  number of samples in each vector
+ * @param[out] result     output result returned here
+ */
+void riscv_dot_prod_f64(
+const float64_t * pSrcA,
+const float64_t * pSrcB,
+	  uint32_t blockSize,
+	  float64_t * result);
 
 
 
@@ -427,6 +513,21 @@ extern "C"
         uint32_t blockSize);
 
 
+/**
+ * @brief  Adds a constant offset to a floating-point vector.
+ * @param[in]  pSrc       points to the input vector
+ * @param[in]  offset     is the offset to be added
+ * @param[out] pDst       points to the output vector
+ * @param[in]  blockSize  number of samples in the vector
+ */
+void riscv_offset_f64(
+const float64_t * pSrc,
+	  float64_t offset,
+	  float64_t * pDst,
+	  uint32_t blockSize);
+
+
+
   /**
    * @brief  Adds a constant offset to a floating-point vector.
    * @param[in]  pSrc       points to the input vector
@@ -494,6 +595,20 @@ extern "C"
   const float32_t * pSrc,
         float32_t * pDst,
         uint32_t blockSize);
+
+
+
+/**
+ * @brief  Negates the elements of a floating-point vector.
+ * @param[in]  pSrc       points to the input vector
+ * @param[out] pDst       points to the output vector
+ * @param[in]  blockSize  number of samples in the vector
+ */
+void riscv_negate_f64(
+const float64_t * pSrc,
+	  float64_t * pDst,
+	  uint32_t blockSize);
+
 
 
   /**

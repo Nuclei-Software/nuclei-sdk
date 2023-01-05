@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020-2021 Arm Limited or its affiliates. All rights reserved.
+ * Copyright (C) 2020-2022 Arm Limited or its affiliates. All rights reserved.
  * Copyright (c) 2019 Nuclei Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -23,8 +23,8 @@
  * Description:  Public header file to contain the NMSIS-NN structs for the
  *               TensorFlowLite micro compliant functions
  *
- * $Date:        19. March 2021
- * $Revision:    V.2.0.0
+ * $Date:        22. Februari 2022
+ * $Revision:    V.2.1.0
  *
  * Target Processor: RISC-V Cores
  * -------------------------------------------------------------------- */
@@ -127,5 +127,12 @@ typedef struct
     nmsis_nn_activation input_activation;
     nmsis_nn_activation output_activation;
 } nmsis_nn_svdf_params;
+
+/** NMSIS-NN object for Softmax s16 layer parameters */
+typedef struct
+{
+    const int16_t *exp_lut;
+    const int16_t *one_by_one_lut;
+} nmsis_nn_softmax_lut_s16;
 
 #endif // _RISCV_NN_TYPES_H

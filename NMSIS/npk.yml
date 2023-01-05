@@ -1,7 +1,7 @@
 ## Package Base Information
 name: csp-nsdk_nmsis
 owner: nuclei
-version: 1.0.4
+version: 1.1.0
 description: NMSIS in Nuclei SDK
 type: csp
 keywords:
@@ -23,6 +23,8 @@ configuration:
         "rv32imacb", "rv32imafcb", "rv32imafdcb",
         "rv32imacp", "rv32imafcp", "rv32imafdcp",
         "rv32imacbp", "rv32imafcbp", "rv32imafdcbp",
+        "rv32imafcv", "rv32imafcbv", "rv32imafcpv", "rv32imafcbpv",
+        "rv32imafdcv", "rv32imafdcbv", "rv32imafdcpv", "rv32imafdcbpv",
         "rv64imac", "rv64imafc", "rv64imafdc",
         "rv64imacb", "rv64imafcb", "rv64imafdcb",
         "rv64imacp", "rv64imafcp", "rv64imafdcp",

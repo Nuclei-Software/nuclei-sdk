@@ -1,8 +1,8 @@
 /******************************************************************************
  * @file     matrix_functions.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
@@ -446,6 +446,21 @@ riscv_status riscv_mat_mult_q31(
         riscv_matrix_instance_q31 * pDst);
 
   /**
+   * @brief Q31 matrix multiplication
+   * @param[in]  pSrcA  points to the first input matrix structure
+   * @param[in]  pSrcB  points to the second input matrix structure
+   * @param[out] pDst   points to output matrix structure
+   * @param[in]  pState  points to the array for storing intermediate results
+   * @return     The function returns either
+   * <code>RISCV_MATH_SIZE_MISMATCH</code> or <code>RISCV_MATH_SUCCESS</code> based on the outcome of size checking.
+   */
+riscv_status riscv_mat_mult_opt_q31(
+  const riscv_matrix_instance_q31 * pSrcA,
+  const riscv_matrix_instance_q31 * pSrcB,
+        riscv_matrix_instance_q31 * pDst,
+        q31_t *pState);
+
+  /**
    * @brief Q31 matrix and vector multiplication
    * @param[in]  pSrcMat  points to the input matrix structure
    * @param[in]  pVec     points to vector
@@ -566,7 +581,7 @@ riscv_status riscv_mat_scale_q31(
 
   /**
    * @brief  Q31 matrix initialization.
-   * @param[in,out] S         points to an instance of the floating-point matrix structure.
+   * @param[in,out] S         points to an instance of the Q31-type matrix structure.
    * @param[in]     nRows     number of rows in the matrix.
    * @param[in]     nColumns  number of columns in the matrix.
    * @param[in]     pData     points to the matrix data array.
@@ -579,7 +594,7 @@ void riscv_mat_init_q31(
 
   /**
    * @brief  Q15 matrix initialization.
-   * @param[in,out] S         points to an instance of the floating-point matrix structure.
+   * @param[in,out] S         points to an instance of the Q15-type matrix structure.
    * @param[in]     nRows     number of rows in the matrix.
    * @param[in]     nColumns  number of columns in the matrix.
    * @param[in]     pData     points to the matrix data array.
@@ -589,6 +604,19 @@ void riscv_mat_init_q15(
         uint16_t nRows,
         uint16_t nColumns,
         q15_t * pData);
+
+  /**
+   * @brief  Q7 matrix initialization.
+   * @param[in,out] S         points to an instance of the Q7-type matrix structure.
+   * @param[in]     nRows     number of rows in the matrix.
+   * @param[in]     nColumns  number of columns in the matrix.
+   * @param[in]     pData     points to the matrix data array.
+   */
+void riscv_mat_init_q7(
+        riscv_matrix_instance_q7 * S,
+        uint16_t nRows,
+        uint16_t nColumns,
+        q7_t * pData);
 
   /**
    * @brief  Floating-point matrix initialization.

@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2010-2021 Arm Limited or its affiliates. All rights reserved.
- * Copyright (c) 2019 Nuclei Limited. All rights reserved.
+ * Copyright (C) 2010-2022 Arm Limited or its affiliates.
+ * Copyright (c) 2022 Nuclei Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -22,8 +22,8 @@
  * Title:        riscv_nnsupportfunctions.h
  * Description:  Public header file of support functions for NMSIS NN Library
  *
- * $Date:        15. April 2021
- * $Revision:    V.5.5.0
+ * $Date:        19. April 2022
+ * $Revision:    V.7.0.1
  *
  * Target Processor: RISC-V Cores
  * -------------------------------------------------------------------- */
@@ -31,8 +31,8 @@
 #ifndef _RISCV_NNSUPPORTFUNCTIONS_H_
 #define _RISCV_NNSUPPORTFUNCTIONS_H_
 
-#include "riscv_common_tables.h"
-#include "riscv_math_types.h"
+#include "riscv_nn_math_types.h"
+#include "riscv_nn_types.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,6 +47,19 @@ extern "C" {
 #define MAX(A, B) ((A) > (B) ? (A) : (B))
 #define MIN(A, B) ((A) < (B) ? (A) : (B))
 #define CLAMP(x, h, l) MAX(MIN((x), (h)), (l))
+#define REDUCE_MULTIPLIER(_mult) ((_mult < 0x7FFF0000) ? ((_mult + (1 << 15)) >> 16) : 0x7FFF)
+
+/*
+ * Use RVV may help if data length > RVV_OPT_THRESHOLD, otherwise use pure C version
+ * RVV_OPT_THRESHOLD could be {0x0, 0x1, 0x3, 0x7, 0xF, 0x1F, 0x3F ...}
+ */
+#define RVV_OPT_THRESHOLD 0xF
+/**
+ * @brief definition to pack four 8 bit values.
+ */
+#define PACK_Q7x4_32x1(v0, v1, v2, v3)                                                                                 \
+    ((((int32_t)(v0) << 0) & (int32_t)0x000000FF) | (((int32_t)(v1) << 8) & (int32_t)0x0000FF00) |                     \
+     (((int32_t)(v2) << 16) & (int32_t)0x00FF0000) | (((int32_t)(v3) << 24) & (int32_t)0xFF000000))
 
 /**
  * @brief Union for SIMD access of q31/q15/q7 types
@@ -92,7 +105,7 @@ union riscv_nn_long_long
  */
 void riscv_q7_to_q15_no_shift(const q7_t *pSrc, q15_t *pDst, uint32_t blockSize);
 
-void      riscv_q7_to_q7_no_shift(const q7_t * pSrc, q7_t * pDst, uint32_t blockSize);
+void riscv_q7_to_q7_no_shift(const q7_t * pSrc, q7_t * pDst, uint32_t blockSize);
 
 /**
  * @brief Non-saturating addition of elements of a q7 vector
@@ -122,7 +135,7 @@ void riscv_nn_add_q7(const q7_t *input, q31_t *output, uint32_t block_size);
  */
 void riscv_q7_to_q15_reordered_no_shift(const q7_t *pSrc, q15_t *pDst, uint32_t blockSize);
 
-void      riscv_q7_to_q7_reordered_no_shift(const q7_t * pSrc, q7_t * pDst, uint32_t blockSize);
+void riscv_q7_to_q7_reordered_no_shift(const q7_t * pSrc, q7_t * pDst, uint32_t blockSize);
 
 /**
  * @brief Converts the elements from a q7 vector to a q15 vector with an added offset
@@ -173,23 +186,6 @@ void riscv_q7_to_q15_reordered_with_offset(const q7_t *src, q15_t *dst, uint32_t
  *
  */
 void riscv_nn_accumulate_q7_to_q15(q15_t *dst, const q7_t *src, uint32_t block_size);
-
-/**
- * @brief Converts the elements from a q7 vector and accumulate to a q7 vector
- * @param[in]    *src       points to the q7 input vector
- * @param[out]   *dst       points to the q7 output vector
- * @param[in]    block_size length of the input vector
- *
- * \par Description:
- *
- * The equation used for the conversion process is:
- *
- * <pre>
- *  dst[n] += (q7_t) src[n] ;   0 <= n < block_size.
- * </pre>
- *
- */
-void riscv_nn_accumulate_q7_to_q7(q7_t *dst, const q7_t *src, uint32_t block_size);
 
 /**
  * @brief Depthwise conv on an im2col buffer where the input channel equals output channel.
@@ -258,7 +254,37 @@ q7_t *riscv_nn_mat_mult_s8(const q7_t *input_row,
                          const uint16_t row_len,
                          const int32_t *const bias,
                          q7_t *out);
-
+/**
+ * @brief Matrix-multiplication function for convolution with per-channel requantization for 16 bits convolution.
+ * @param[in]       input_a     pointer to operand A
+ * @param[in]       input_b     pointer to operand B, always consists of 2 vectors.
+ * @param[in]       output_ch   number of rows of A
+ * @param[in]       out_shift  pointer to per output channel requantization shift parameter.
+ * @param[in]       out_mult   pointer to per output channel requantization multiplier parameter.
+ * @param[in]       activation_min   minimum value to clamp the output to. Range : int16
+ * @param[in]       activation_max   maximum value to clamp the output to. Range : int16
+ * @param[in]       num_col_a   number of columns of A
+ * @param[in]       output_bias per output channel bias. Range : int64
+ * @param[in,out]   out_0       pointer to output
+ * @return     The function returns one of the two
+ *              1. The incremented output pointer for a successful operation or
+ *              2. NULL if implementation is not available.
+ *
+ * @details   This function does the matrix multiplication of weight matrix for all output channels
+ *            with 2 columns from im2col and produces two elements/output_channel. The outputs are
+ *            clamped in the range provided by activation min and max.
+ *            Supported framework: TensorFlow Lite micro.
+ */
+q15_t *riscv_nn_mat_mult_kernel_s16(const q7_t *input_a,
+                                  const q15_t *input_b,
+                                  const int32_t output_ch,
+                                  const int32_t *out_shift,
+                                  const int32_t *out_mult,
+                                  const int16_t activation_min,
+                                  const int16_t activation_max,
+                                  const int32_t num_col_a,
+                                  const int64_t *const output_bias,
+                                  q15_t *out_0);
 /**
  * @brief General Matrix-multiplication without requantization for one row & one column
  * @param[in]       row_elements  number of row elements
@@ -283,33 +309,31 @@ riscv_status riscv_nn_mat_mul_core_1x_s8(int32_t row_elements,
                                      int32_t *const output);
 
 /**
- * @brief General Matrix-multiplication without requantization for four rows and one column
+ * @brief Matrix-multiplication with requantization & activation function for four rows and one column
  * @param[in]       row_elements  number of row elements
  * @param[in]       offset        offset between rows. Can be the same as row_elements.
  *                                For e.g, in a 1x1 conv scenario with stride as 1.
  * @param[in]       row_base      pointer to row operand
  * @param[in]       col_base      pointer to col operand
- * @param[out]      sum_col       pointer to store sum of column elements
- * @param[out]      output        pointer to store result(4 int32's) of multiply-accumulate
- * @return     The function returns the multiply-accumulated result of the row by column
+ * @param[in]       out_ch        Number of output channels
+ * @param[in]       conv_params   Pointer to convolution parameters like offsets and activation values
+ * @param[in]       quant_params  Pointer to per-channel quantization parameters
+ * @param[in]       bias          Pointer to per-channel bias
+ * @param[out]      output        Pointer to output where int8 results are stored.
  *
- * @details Pseudo-code
- *      output[0] = 0
- *         ..
- *      output[3] = 0
- *      sum_col = 0
- *      for (i = 0; i < row_elements; i++)
- *          output[0] += row_base[i] * col_base[i]
- *                ..
- *          output[3] += row_base[i + (row_elements * 3)] * col_base[i]
- *          sum_col += col_base[i]
+ * @return     The function returns the updated output pointer or NULL if implementation is not available.
+ *
+ * @details Compliant to TFLM int8 specification. MVE implementation only
  */
-riscv_status riscv_nn_mat_mul_core_4x_s8(const int32_t row_elements,
-                                     const int32_t offset,
-                                     const int8_t *row_base,
-                                     const int8_t *col_base,
-                                     int32_t *const sum_col,
-                                     int32_t *const output);
+int8_t *riscv_nn_mat_mul_core_4x_s8(const int32_t row_elements,
+                                  const int32_t offset,
+                                  const int8_t *row_base,
+                                  const int8_t *col_base,
+                                  const int32_t out_ch,
+                                  const nmsis_nn_conv_params *conv_params,
+                                  const nmsis_nn_per_channel_quant_params *quant_params,
+                                  const int32_t *bias,
+                                  int8_t *output);
 
 /**
  * @brief General Matrix-multiplication function with per-channel requantization.
@@ -371,6 +395,8 @@ riscv_status riscv_nn_mat_mult_nt_t_s8(const q7_t *lhs,
  * @param[in]      rhs_rows        Number of rows in the right-hand side input matrix
  * @param[in]      activation_min  Minimum value to clamp the output to. Range: int8
  * @param[in]      activation_max  Maximum value to clamp the output to. Range: int8
+ * @param[in]      address_offset  Memory position offset for dst. First output is stored at 'dst', the
+ *                                 second at 'dst + address_offset' and so on. Default value is typically 1.
  *
  * @return         The function returns <code>RISCV_MATH_SUCCESS</code>
  *
@@ -387,7 +413,36 @@ riscv_status riscv_nn_vec_mat_mult_t_s8(const q7_t *lhs,
                                     const int32_t rhs_cols,
                                     const int32_t rhs_rows,
                                     const int32_t activation_min,
-                                    const int32_t activation_max);
+                                    const int32_t activation_max,
+                                    const int32_t address_offset);
+
+/**
+ * @brief s16 Vector by Matrix (transposed) multiplication
+ *
+ * @param[in]      lhs             Input left-hand side vector
+ * @param[in]      rhs             Input right-hand side matrix (transposed)
+ * @param[in]      bias            Input bias
+ * @param[out]     dst             Output vector
+ * @param[in]      dst_multiplier  Output multiplier
+ * @param[in]      dst_shift       Output shift
+ * @param[in]      rhs_cols        Number of columns in the right-hand side input matrix
+ * @param[in]      rhs_rows        Number of rows in the right-hand side input matrix
+ * @param[in]      activation_min  Minimum value to clamp the output to. Range: int16
+ * @param[in]      activation_max  Maximum value to clamp the output to. Range: int16
+ *
+ * @return         The function returns <code>RISCV_MATH_SUCCESS</code>
+ *
+ */
+riscv_status riscv_nn_vec_mat_mult_t_s16(const q15_t *lhs,
+                                     const q7_t *rhs,
+                                     const q63_t *bias,
+                                     q15_t *dst,
+                                     const int32_t dst_multiplier,
+                                     const int32_t dst_shift,
+                                     const int32_t rhs_cols,
+                                     const int32_t rhs_rows,
+                                     const int32_t activation_min,
+                                     const int32_t activation_max);
 
 /**
  * @brief s8 Vector by Matrix (transposed) multiplication with s16 output
@@ -506,6 +561,38 @@ q7_t *riscv_nn_depthwise_conv_nt_t_s8(const q7_t *lhs,
                                     q7_t *out);
 
 /**
+ *@brief Matrix-multiplication function for convolution with reordered columns
+ *@param[in]       pA          pointer to operand A
+ *@param[in]       pInBuffer   pointer to operand B, always conssists of 2 vectors
+ *@param[in]       ch_im_out   numRow of A
+ *@param[in]       numCol_A    numCol of A
+ *@param[in]       bias_shift  amount of left-shift for bias
+ *@param[in]       out_shift   amount of right-shift for output
+ *@param[in]       bias        the bias
+ *@param[in,out]   pOut        pointer to output
+ *@return     The function returns the incremented output pointer
+ *
+ *@details  This function assumes that data in pInBuffer are reordered
+ */
+q7_t *riscv_nn_mat_mult_kernel_q7_q15_reordered(const q7_t *pA,
+                                              const q15_t *pInBuffer,
+                                              const uint16_t ch_im_out,
+                                              const uint16_t numCol_A,
+                                              const uint16_t bias_shift,
+                                              const uint16_t out_shift,
+                                              const q7_t *bias,
+                                              q7_t *pOut);
+
+q7_t *riscv_nn_mat_mult_kernel_q7_reordered(const q7_t * pA,
+                                              const q7_t * pInBuffer,
+                                              const uint16_t ch_im_out,
+                                              const uint16_t numCol_A,
+                                              const uint16_t bias_shift,
+                                              const uint16_t out_shift,
+                                              const q7_t * bias,
+                                              q7_t * pOut);
+
+/**
   @brief         Read 2 q15 elements and post increment pointer.
   @param[in]     in_q15   Pointer to pointer that holds address of input.
   @return        q31 value
@@ -515,11 +602,11 @@ __STATIC_FORCEINLINE q31_t riscv_nn_read_q15x2_ia(const q15_t **in_q15)
     q31_t val;
 
 #ifdef __RISCV_FEATURE_UNALIGNED
-  memcpy (&val, *in_q15, 4);
+    memcpy(&val, *in_q15, 4);
 #else
     __ASM volatile ("lw %0, 0(%1)" : "=r" (val) : "r" (*in_q15));
 #endif
-  *in_q15 += 2;
+    *in_q15 += 2;
 
     return (val);
 }
@@ -531,11 +618,11 @@ __STATIC_FORCEINLINE q31_t riscv_nn_read_q15x2_ia(const q15_t **in_q15)
  */
 __STATIC_FORCEINLINE q31_t riscv_nn_read_q7x4_ia(const q7_t **in_q7)
 {
-  q31_t val;
+    q31_t val;
 #ifdef __RISCV_FEATURE_UNALIGNED
-  memcpy (&val, *in_q7, 4);
+    memcpy (&val, *in_q7, 4);
 #else
-  __ASM volatile ("lw %0, 0(%1)" : "=r" (val) : "r" (*in_q7));
+    __ASM volatile ("lw %0, 0(%1)" : "=r" (val) : "r" (*in_q7));
 #endif
   *in_q7 += 4;
 
@@ -549,9 +636,9 @@ __STATIC_FORCEINLINE q31_t riscv_nn_read_q7x4_ia(const q7_t **in_q7)
  */
 __STATIC_FORCEINLINE q31_t riscv_nn_read_q15x2(const q15_t *in_q15)
 {
-  q31_t val;
+    q31_t val;
 #ifdef __RISCV_FEATURE_UNALIGNED
-  memcpy (&val, in_q15, 4);
+    memcpy (&val, in_q15, 4);
 #else
     __ASM volatile ("lw %0, 0(%1)" : "=r" (val) : "r" (in_q15));
 #endif
@@ -567,14 +654,25 @@ __STATIC_FORCEINLINE q31_t riscv_nn_read_q15x2(const q15_t *in_q15)
  */
 __STATIC_FORCEINLINE q31_t riscv_nn_read_q7x4(const q7_t *in_q7)
 {
-  q31_t val;
+    q31_t val;
 #ifdef __RISCV_FEATURE_UNALIGNED
-  memcpy (&val, in_q7, 4);
+    memcpy (&val, in_q7, 4);
 #else
     __ASM volatile ("lw %0, 0(%1)" : "=r" (val) : "r" (in_q7));
 #endif
 
     return (val);
+}
+
+/**
+  @brief         Write four q7 to q7 pointer and increment pointer afterwards.
+  @param[in]     in       Double pointer to input value
+  @param[in]     value    Four bytes to copy
+ */
+__STATIC_FORCEINLINE void riscv_nn_write_q7x4_ia(q7_t **in, q31_t value)
+{
+    memcpy(*in, &value, 4);
+    *in += 4;
 }
 
 /**
@@ -598,7 +696,7 @@ __STATIC_FORCEINLINE void riscv_memset_q7(q7_t *dst, const q7_t val, uint32_t bl
 __STATIC_FORCEINLINE const q7_t *read_and_pad(const q7_t *source, q31_t *out1, q31_t *out2)
 {
     q31_t inA = riscv_nn_read_q7x4_ia(&source);
-    q31_t inAbuf1 = __SXTB16(__ROR((uint32_t)inA, 8));
+    q31_t inAbuf1 = __SXTB16_RORn((uint32_t)inA, 8);
     q31_t inAbuf2 = __SXTB16(inA);
 
     *out2 = (int32_t)(__PKHTB(inAbuf1, inAbuf2, 16));
@@ -680,10 +778,67 @@ void riscv_nn_mult_q15(q15_t *pSrcA, q15_t *pSrcB, q15_t *pDst, const uint16_t o
 void riscv_nn_mult_q7(q7_t *pSrcA, q7_t *pSrcB, q7_t *pDst, const uint16_t out_shift, uint32_t blockSize);
 
 /**
+ * @brief Matrix-multiplication function for convolution with per-channel requantization.
+ * @param[in]       input_a     pointer to operand A
+ * @param[in]       input_b     pointer to operand B, always consists of 2 vectors.
+ * @param[in]       output_ch   number of rows of A
+ * @param[in]       out_shift  pointer to per output channel requantization shift parameter.
+ * @param[in]       out_mult   pointer to per output channel requantization multiplier parameter.
+ * @param[in]       out_offset      output tensor offset.
+ * @param[in]       activation_min   minimum value to clamp the output to. Range : int8
+ * @param[in]       activation_max   maximum value to clamp the output to. Range : int8
+ * @param[in]       num_col_a   number of columns of A
+ * @param[in]       output_bias per output channel bias. Range : int32
+ * @param[in,out]   out_0       pointer to output
+ * @return     The function returns one of the two
+ *              1. The incremented output pointer for a successful operation or
+ *              2. NULL if implementation is not available.
+ *
+ * @details   This function does the matrix multiplication of weight matrix for all output channels
+ *            with 2 columns from im2col and produces two elements/output_channel. The outputs are
+ *            clamped in the range provided by activation min and max.
+ *            Supported framework: TensorFlow Lite micro.
+ */
+q7_t *riscv_nn_mat_mult_kernel_s8_s16(const q7_t *input_a,
+                                    const q15_t *input_b,
+                                    const uint16_t output_ch,
+                                    const int32_t *out_shift,
+                                    const int32_t *out_mult,
+                                    const int32_t out_offset,
+                                    const int16_t activation_min,
+                                    const int16_t activation_max,
+                                    const uint16_t num_col_a,
+                                    const int32_t *const output_bias,
+                                    q7_t *out_0);
+
+/**
+ * @brief Common softmax function for s8 input and s8 or s16 output
+ * @param[in]  input          Pointer to the input tensor
+ * @param[in]  num_rows       Number of rows in the input tensor
+ * @param[in]  row_size       Number of elements in each input row
+ * @param[in]  mult           Input quantization multiplier
+ * @param[in]  shift          Input quantization shift within the range [0, 31]
+ * @param[in]  diff_min       Minimum difference with max in row. Used to check if
+ *                            the quantized exponential operation can be performed
+ * @param[in]  int16_output   Indicating s8 output if 0 else s16 output
+ * @param[out] output         Pointer to the output tensor
+ *
+ * @note Supported framework: TensorFlow Lite micro (bit-accurate)
+ *
+ */
+void riscv_nn_softmax_common_s8(const int8_t *input,
+                              const int32_t num_rows,
+                              const int32_t row_size,
+                              const int32_t mult,
+                              const int32_t shift,
+                              const int32_t diff_min,
+                              const int16_t int16_output,
+                              void *output);
+/**
  * @brief macro for adding rounding offset
  */
 #ifndef RISCV_NN_TRUNCATE
-#define NN_ROUND(out_shift) ((0x1u << out_shift) >> 1)
+#define NN_ROUND(out_shift) ((0x1 << out_shift) >> 1)
 #else
 #define NN_ROUND(out_shift) 0
 #endif
@@ -702,8 +857,8 @@ void riscv_nn_mult_q7(q7_t *pSrcA, q7_t *pSrcB, q7_t *pDst, const uint16_t out_s
 /**
  * @brief           Saturating doubling high multiply. Result matches
  *                  NEON instruction VQRDMULH.
- * @param[in]       m1        Multiplicand. Range: {Q31_MIN, Q31_MAX}
- * @param[in]       m2        Multiplier. Range: {Q31_MIN, Q31_MAX}
+ * @param[in]       m1        Multiplicand. Range: {NN_Q31_MIN, NN_Q31_MAX}
+ * @param[in]       m2        Multiplier. Range: {NN_Q31_MIN, NN_Q31_MAX}
  * @return          Result of multiplication.
  *
  */
@@ -724,9 +879,9 @@ __STATIC_FORCEINLINE q31_t riscv_nn_doubling_high_mult(const q31_t m1, const q31
     // as well.
     result = (int32_t)(mult / (1ll << 31));
 
-    if ((m1 == m2) && (m1 == (int32_t)Q31_MIN))
+    if ((m1 == m2) && (m1 == (int32_t)NN_Q31_MIN))
     {
-        result = Q31_MAX;
+        result = NN_Q31_MAX;
     }
     return result;
 }
@@ -735,13 +890,13 @@ __STATIC_FORCEINLINE q31_t riscv_nn_doubling_high_mult(const q31_t m1, const q31
  * @brief           Doubling high multiply without saturation. This is intended
  *                  for requantization where the scale is a positive integer
  *
- * @param[in]       m1        Multiplicand. Range: {Q31_MIN, Q31_MAX}
- * @param[in]       m2        Multiplier Range: {Q31_MIN, Q31_MAX}
+ * @param[in]       m1        Multiplicand. Range: {NN_Q31_MIN, NN_Q31_MAX}
+ * @param[in]       m2        Multiplier Range: {NN_Q31_MIN, NN_Q31_MAX}
  * @return          Result of multiplication.
  * @note            The result of this matches that of neon instruction
- *                  VQRDMULH for m1 in range {Q31_MIN, Q31_MAX} and m2 in
- *                  range {Q31_MIN + 1, Q31_MAX}. Saturation occurs when
- *                  m1 equals m2 equals Q31_MIN and that is not handled by
+ *                  VQRDMULH for m1 in range {NN_Q31_MIN, NN_Q31_MAX} and m2 in
+ *                  range {NN_Q31_MIN + 1, NN_Q31_MAX}. Saturation occurs when
+ *                  m1 equals m2 equals NN_Q31_MIN and that is not handled by
  *                  this function.
  *
  */
@@ -798,7 +953,7 @@ __STATIC_FORCEINLINE q31_t riscv_nn_divide_by_power_of_two(const q31_t dividend,
 /**
  * @brief           Requantize a given value.
  * @param[in]       val         Value to be requantized
- * @param[in]       multiplier  multiplier. Range {Q31_MIN + 1, Q32_MAX}
+ * @param[in]       multiplier  multiplier. Range {NN_Q31_MIN + 1, Q32_MAX}
  * @param[in]       shift       left or right shift for 'val * multiplier'
  *
  * @return          Returns (val * multiplier)/(2 ^ shift)
@@ -808,6 +963,25 @@ __STATIC_FORCEINLINE q31_t riscv_nn_requantize(const q31_t val, const q31_t mult
 {
     return riscv_nn_divide_by_power_of_two(riscv_nn_doubling_high_mult_no_sat(val * (1 << LEFT_SHIFT(shift)), multiplier),
                                          RIGHT_SHIFT(shift));
+}
+/**
+ * @brief           Requantize a given 64 bit value.
+ * @param[in]       val                 Value to be requantized in the range {-(1<<47)} to {(1<<47) - 1}
+ * @param[in]       reduced_multiplier  Reduced multiplier in the range {NN_Q31_MIN + 1, Q32_MAX} to {Q16_MIN + 1,
+ * Q16_MAX}
+ * @param[in]       shift               Left or right shift for 'val * multiplier' in the range {-31} to {7}
+ *
+ * @return          Returns (val * multiplier)/(2 ^ shift)
+ *
+ */
+__STATIC_FORCEINLINE q31_t riscv_nn_requantize_s64(const q63_t val, const q31_t reduced_multiplier, const q31_t shift)
+{
+    const q63_t new_val = val * reduced_multiplier;
+
+    q31_t result = new_val >> (14 - shift); // 64->32 bit reduction
+    result = (result + 1) >> 1;             // Last shift position and insert round
+
+    return result;
 }
 
 /**
@@ -855,21 +1029,21 @@ __STATIC_FORCEINLINE int32_t riscv_nn_exp_on_negative_values(int32_t val)
 #undef SELECT_IF_NON_ZERO
 
     mask = MASK_IF_ZERO(val);
-    return SELECT_USING_MASK(mask, Q31_MAX, result);
+    return SELECT_USING_MASK(mask, NN_Q31_MAX, result);
 }
 
 __STATIC_FORCEINLINE q31_t riscv_nn_mult_by_power_of_two(const int32_t val, const int32_t exp)
 {
     const int32_t thresh = ((1 << (31 - exp)) - 1);
     int32_t result = val << exp;
-    result = SELECT_USING_MASK(MASK_IF_NON_ZERO(val > thresh), Q31_MAX, result);
-    result = SELECT_USING_MASK(MASK_IF_NON_ZERO(val < -thresh), Q31_MIN, result);
+    result = SELECT_USING_MASK(MASK_IF_NON_ZERO(val > thresh), NN_Q31_MAX, result);
+    result = SELECT_USING_MASK(MASK_IF_NON_ZERO(val < -thresh), NN_Q31_MIN, result);
     return result;
 }
 
 __STATIC_FORCEINLINE int32_t riscv_nn_one_over_one_plus_x_for_x_in_0_1(int32_t val)
 {
-    const int64_t sum = (int64_t)val + (int64_t)Q31_MAX;
+    const int64_t sum = (int64_t)val + (int64_t)NN_Q31_MAX;
     const int32_t half_denominator = (int32_t)((sum + (sum >= 0 ? 1 : -1)) / 2L);
     int32_t x = 1515870810 + MUL_SAT(half_denominator, -1010580540);
 
@@ -885,7 +1059,6 @@ __STATIC_FORCEINLINE int32_t riscv_nn_one_over_one_plus_x_for_x_in_0_1(int32_t v
   @brief         Write 2 q15 elements and post increment pointer.
   @param[in]     dest_q15  Pointer to pointer that holds address of destination.
   @param[in]     src_q31   Input value to be written.
-  @return        none
  */
 __STATIC_FORCEINLINE void riscv_nn_write_q15x2_ia(q15_t **dest_q15, q31_t src_q31)
 {

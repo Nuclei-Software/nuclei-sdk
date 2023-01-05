@@ -60,7 +60,7 @@ MSVC is not going to be used to cross-compile to ARM. So, having a MSVC
 compiler file in Core or Core_A would not make sense.
 
 */
-#if defined ( _MSC_VER ) || defined(__GNUC_PYTHON__)
+#if defined ( _MSC_VER ) || defined(__GNUC_PYTHON__) || defined(__APPLE_CC__)
     __STATIC_FORCEINLINE uint8_t __CLZ(uint32_t data)
     {
       if (data == 0U) { return 32U; }
@@ -224,8 +224,15 @@ __STATIC_FORCEINLINE uint32_t __ROR(uint32_t op1, uint32_t op2)
                                   (((int32_t)(v2) << 16) & (int32_t)0x00FF0000) | \
                                   (((int32_t)(v3) << 24) & (int32_t)0xFF000000)  )
 
+  /**
+  * @brief definition to word shift and pack instruction.
+  */
+  #define __SHIFTPACK(ARG1, ARG2, ARG3) ((uint32_t)(ARG2) << (32 - ARG3) |  (uint32_t)(ARG1) >> ARG3)
 
- 
+  /**
+  * @brief definition to two words shift and pack instruction.
+  */
+  #define __SHIFTPACK_64(ARG1, ARG2, ARG3) ((uint64_t)(ARG2) << (64 - ARG3) |  (uint64_t)(ARG1) >> ARG3)
 
 /*
  * @brief C custom defined intrinsic functions

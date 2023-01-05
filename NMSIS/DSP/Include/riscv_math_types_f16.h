@@ -1,8 +1,8 @@
 /******************************************************************************
  * @file     riscv_math_types_f16.h
  * @brief    Public header file for f16 function of the NMSIS DSP Library
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
@@ -60,13 +60,16 @@ won't be built.
 
 
 #if defined(RISCV_FLOAT16_SUPPORTED)
+
+
+#define F16INFINITY ((float16_t)__builtin_inf())
+
+
 #define F16_MAX   ((float16_t)__FLT16_MAX__)
-#define F16_MIN   (-(float16_t)__FLT16_MAX__)
+#define F16_MIN   (-(_Float16)__FLT16_MAX__)
 
 #define F16_ABSMAX   ((float16_t)__FLT16_MAX__)
 #define F16_ABSMIN   ((float16_t)0.0f16)
-
-#define F16INFINITY ((float16_t)__builtin_inf())
 
 #endif /* RISCV_FLOAT16_SUPPORTED*/
 
@@ -75,5 +78,3 @@ won't be built.
 #endif
 
 #endif /* _RISCV_MATH_F16_H */
-
-

@@ -1,8 +1,8 @@
 /******************************************************************************
  * @file     statistics_functions_f16.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
@@ -151,6 +151,29 @@ extern "C"
         float16_t * pResult,
         uint32_t * pIndex);
 
+    /**
+   * @brief  Minimum value of absolute values of a floating-point vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] pResult    is output pointer
+   */
+  void riscv_absmin_no_idx_f16(
+  const float16_t * pSrc,
+        uint32_t blockSize,
+        float16_t * pResult);
+
+/**
+ * @brief Maximum value of a floating-point vector.
+ * @param[in]  pSrc       points to the input buffer
+ * @param[in]  blockSize  length of the input vector
+ * @param[out] pResult    maximum value returned here
+ */
+  void riscv_absmax_no_idx_f16(
+  const float16_t * pSrc,
+        uint32_t blockSize,
+        float16_t * pResult);
+
+
 /**
  * @brief Entropy
  *
@@ -209,7 +232,32 @@ float16_t riscv_kullback_leibler_f16(const float16_t * pSrcA
       uint32_t   blockSize,
       float16_t *pResult);
 
+/**
+    @brief         Minimum value of a floating-point vector.
+    @param[in]     pSrc       points to the input vector
+    @param[in]     blockSize  number of samples in input vector
+    @param[out]    pResult    minimum value returned here
+    @return        none
+   */
+  void riscv_min_no_idx_f16(
+      const float16_t *pSrc,
+      uint32_t   blockSize,
+      float16_t *pResult);
 
+/**
+  @brief         Mean square error between two half precision float vectors.
+  @param[in]     pSrcA       points to the first input vector
+  @param[in]     pSrcB       points to the second input vector
+  @param[in]     blockSize  number of samples in input vector
+  @param[out]    pResult    mean square error
+  @return        none 
+*/
+  
+void riscv_mse_f16(
+  const float16_t * pSrcA,
+  const float16_t * pSrcB,
+        uint32_t blockSize,
+        float16_t * pResult);
 
 #endif /*defined(RISCV_FLOAT16_SUPPORTED)*/
 #ifdef   __cplusplus

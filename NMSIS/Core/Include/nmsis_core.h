@@ -41,7 +41,7 @@
  * \attention
  * This define is exclusive with \ref __NUCLEI_NX_REV
  */
-#define __NUCLEI_N_REV                   (0x0104)
+#define __NUCLEI_N_REV                   (0x0309)
 /**
  * \brief Nuclei NX class core revision number
  * \details
@@ -49,7 +49,7 @@
  * \attention
  * This define is exclusive with \ref __NUCLEI_N_REV
  */
-#define __NUCLEI_NX_REV                  (0x0100)
+#define __NUCLEI_NX_REV                  (0x0207)
 #endif /* __ONLY_FOR_DOXYGEN_DOCUMENT_GENERATION__ */
 /** @} */ /* End of Group NMSIS_Core_VersionControl */
 

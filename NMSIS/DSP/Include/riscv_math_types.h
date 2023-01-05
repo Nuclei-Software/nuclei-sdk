@@ -1,8 +1,8 @@
 /******************************************************************************
  * @file     riscv_math_types.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
@@ -34,7 +34,7 @@ extern "C"
 #endif
 
 /* Compiler specific diagnostic adjustment */
-#if   defined ( __GNUC__ )
+#if defined ( __GNUC__ )
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wsign-conversion"
   #pragma GCC diagnostic ignored "-Wconversion"
@@ -82,12 +82,13 @@ extern "C"
     #define __RISCV_FEATURE_VECTOR 1
 #endif
 
-#if (defined (__riscv_bitmainp))
+#if (defined (__riscv_bitmanip))
     #define __BITMANIP_PRESENT      1
     #undef __RISCV_FEATURE_BITMANIP
     #define __RISCV_FEATURE_BITMANIP 1
 #endif
 
+/* Include intrinisc header files for rvb/rvp/rvv */
 #undef __INC_INTRINSIC_API
 #define __INC_INTRINSIC_API     1
 
@@ -113,7 +114,7 @@ extern "C"
 #endif
 
 /* evaluate RISCV Bitmanip feature */
-#if (defined(__riscv_bitmainp))
+#if (defined(__riscv_bitmanip))
   #define RISCV_MATH_BITMANIP               1
 #endif
 

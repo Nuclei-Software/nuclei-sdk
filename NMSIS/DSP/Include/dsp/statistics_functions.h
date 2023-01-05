@@ -1,8 +1,8 @@
 /******************************************************************************
  * @file     statistics_functions.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
@@ -172,6 +172,18 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
 
 
   /**
+   * @brief  Sum of the squares of the elements of a floating-point vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] pResult    is output value.
+   */
+  void riscv_power_f64(
+  const float64_t * pSrc,
+        uint32_t blockSize,
+        float64_t * pResult);
+
+
+  /**
    * @brief  Sum of the squares of the elements of a Q15 vector.
    * @param[in]  pSrc       is input pointer
    * @param[in]  blockSize  is the number of samples to process
@@ -244,6 +256,18 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
 
 
   /**
+   * @brief  Mean value of a floating-point vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] pResult    is output value.
+   */
+  void riscv_mean_f64(
+  const float64_t * pSrc,
+        uint32_t blockSize,
+        float64_t * pResult);
+
+
+  /**
    * @brief  Variance of the elements of a floating-point vector.
    * @param[in]  pSrc       is input pointer
    * @param[in]  blockSize  is the number of samples to process
@@ -253,6 +277,18 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
   const float32_t * pSrc,
         uint32_t blockSize,
         float32_t * pResult);
+
+
+  /**
+   * @brief  Variance of the elements of a floating-point vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] pResult    is output value.
+   */
+  void riscv_var_f64(
+  const float64_t * pSrc,
+        uint32_t blockSize,
+        float64_t * pResult);
 
 
   /**
@@ -328,6 +364,18 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
 
 
   /**
+   * @brief  Standard deviation of the elements of a floating-point vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] pResult    is output value.
+   */
+  void riscv_std_f64(
+  const float64_t * pSrc,
+        uint32_t blockSize,
+        float64_t * pResult);
+
+
+  /**
    * @brief  Standard deviation of the elements of a Q31 vector.
    * @param[in]  pSrc       is input pointer
    * @param[in]  blockSize  is the number of samples to process
@@ -378,6 +426,17 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
         q7_t * result,
         uint32_t * index);
 
+    /**
+   * @brief  Minimum value of absolute values of a Q7 vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] result     is output pointer
+   */
+  void riscv_absmin_no_idx_q7(
+  const q7_t * pSrc,
+        uint32_t blockSize,
+        q7_t * result);
+
 
   /**
    * @brief  Minimum value of a Q15 vector.
@@ -404,6 +463,17 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
         uint32_t blockSize,
         q15_t * pResult,
         uint32_t * pIndex);
+
+  /**
+   * @brief  Minimum value of absolute values of a Q15 vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] pResult    is output pointer
+   */
+  void riscv_absmin_no_idx_q15(
+  const q15_t * pSrc,
+        uint32_t blockSize,
+        q15_t * pResult);
 
 
   /**
@@ -432,6 +502,17 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
         q31_t * pResult,
         uint32_t * pIndex);
 
+ /**
+   * @brief  Minimum value of absolute values of a Q31 vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] pResult    is output pointer
+   */
+  void riscv_absmin_no_idx_q31(
+  const q31_t * pSrc,
+        uint32_t blockSize,
+        q31_t * pResult);
+
 
   /**
    * @brief  Minimum value of a floating-point vector.
@@ -458,6 +539,55 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
         uint32_t blockSize,
         float32_t * pResult,
         uint32_t * pIndex);
+
+  /**
+   * @brief  Minimum value of absolute values of a floating-point vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] pResult    is output pointer
+   */
+  void riscv_absmin_no_idx_f32(
+  const float32_t * pSrc,
+        uint32_t blockSize,
+        float32_t * pResult);
+
+
+  /**
+   * @brief  Minimum value of a floating-point vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] pResult    is output pointer
+   * @param[out] pIndex     is the array index of the minimum value in the input buffer.
+   */
+  void riscv_min_f64(
+  const float64_t * pSrc,
+        uint32_t blockSize,
+        float64_t * pResult,
+        uint32_t * pIndex);
+
+  /**
+   * @brief  Minimum value of absolute values of a floating-point vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] pResult    is output pointer
+   * @param[out] pIndex     is the array index of the minimum value in the input buffer.
+   */
+  void riscv_absmin_f64(
+  const float64_t * pSrc,
+        uint32_t blockSize,
+        float64_t * pResult,
+        uint32_t * pIndex);
+
+  /**
+   * @brief  Minimum value of absolute values of a floating-point vector.
+   * @param[in]  pSrc       is input pointer
+   * @param[in]  blockSize  is the number of samples to process
+   * @param[out] pResult    is output pointer
+   */
+  void riscv_absmin_no_idx_f64(
+  const float64_t * pSrc,
+        uint32_t blockSize,
+        float64_t * pResult);
 
 
 /**
@@ -486,6 +616,17 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
         q7_t * pResult,
         uint32_t * pIndex);
 
+/**
+ * @brief Maximum value of absolute values of a Q7 vector.
+ * @param[in]  pSrc       points to the input buffer
+ * @param[in]  blockSize  length of the input vector
+ * @param[out] pResult    maximum value returned here
+ */
+  void riscv_absmax_no_idx_q7(
+  const q7_t * pSrc,
+        uint32_t blockSize,
+        q7_t * pResult);
+
 
 /**
  * @brief Maximum value of a Q15 vector.
@@ -513,6 +654,17 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
         q15_t * pResult,
         uint32_t * pIndex);
 
+  /**
+ * @brief Maximum value of absolute values of a Q15 vector.
+ * @param[in]  pSrc       points to the input buffer
+ * @param[in]  blockSize  length of the input vector
+ * @param[out] pResult    maximum value returned here
+ */
+  void riscv_absmax_no_idx_q15(
+  const q15_t * pSrc,
+        uint32_t blockSize,
+        q15_t * pResult);
+
 /**
  * @brief Maximum value of a Q31 vector.
  * @param[in]  pSrc       points to the input buffer
@@ -538,6 +690,17 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
         uint32_t blockSize,
         q31_t * pResult,
         uint32_t * pIndex);
+
+ /**
+ * @brief Maximum value of absolute values of a Q31 vector.
+ * @param[in]  pSrc       points to the input buffer
+ * @param[in]  blockSize  length of the input vector
+ * @param[out] pResult    maximum value returned here
+ */
+  void riscv_absmax_no_idx_q31(
+  const q31_t * pSrc,
+        uint32_t blockSize,
+        q31_t * pResult);
 
 /**
  * @brief Maximum value of a floating-point vector.
@@ -565,6 +728,54 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
         float32_t * pResult,
         uint32_t * pIndex);
 
+ /**
+ * @brief Maximum value of absolute values of a floating-point vector.
+ * @param[in]  pSrc       points to the input buffer
+ * @param[in]  blockSize  length of the input vector
+ * @param[out] pResult    maximum value returned here
+ */
+  void riscv_absmax_no_idx_f32(
+  const float32_t * pSrc,
+        uint32_t blockSize,
+        float32_t * pResult);
+
+/**
+ * @brief Maximum value of a floating-point vector.
+ * @param[in]  pSrc       points to the input buffer
+ * @param[in]  blockSize  length of the input vector
+ * @param[out] pResult    maximum value returned here
+ * @param[out] pIndex     index of maximum value returned here
+ */
+  void riscv_max_f64(
+  const float64_t * pSrc,
+        uint32_t blockSize,
+        float64_t * pResult,
+        uint32_t * pIndex);
+
+/**
+ * @brief Maximum value of absolute values of a floating-point vector.
+ * @param[in]  pSrc       points to the input buffer
+ * @param[in]  blockSize  length of the input vector
+ * @param[out] pResult    maximum value returned here
+ * @param[out] pIndex     index of maximum value returned here
+ */
+  void riscv_absmax_f64(
+  const float64_t * pSrc,
+        uint32_t blockSize,
+        float64_t * pResult,
+        uint32_t * pIndex);
+
+/**
+ * @brief Maximum value of absolute values of a floating-point vector.
+ * @param[in]  pSrc       points to the input buffer
+ * @param[in]  blockSize  length of the input vector
+ * @param[out] pResult    maximum value returned here
+ */
+  void riscv_absmax_no_idx_f64(
+  const float64_t * pSrc,
+        uint32_t blockSize,
+        float64_t * pResult);
+
   /**
     @brief         Maximum value of a floating-point vector.
     @param[in]     pSrc       points to the input vector
@@ -574,11 +785,191 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    */
   void riscv_max_no_idx_f32(
       const float32_t *pSrc,
-      uint32_t   blockSize,
+      uint32_t blockSize,
       float32_t *pResult);
 
+  /**
+    @brief         Minimum value of a floating-point vector.
+    @param[in]     pSrc       points to the input vector
+    @param[in]     blockSize  number of samples in input vector
+    @param[out]    pResult    minimum value returned here
+    @return        none
+   */
+  void riscv_min_no_idx_f32(
+      const float32_t *pSrc,
+      uint32_t blockSize,
+      float32_t *pResult);
 
+  /**
+    @brief         Maximum value of a floating-point vector.
+    @param[in]     pSrc       points to the input vector
+    @param[in]     blockSize  number of samples in input vector
+    @param[out]    pResult    maximum value returned here
+    @return        none
+   */
+  void riscv_max_no_idx_f64(
+      const float64_t *pSrc,
+      uint32_t blockSize,
+      float64_t *pResult);
 
+  /**
+    @brief         Maximum value of a q31 vector.
+    @param[in]     pSrc       points to the input vector
+    @param[in]     blockSize  number of samples in input vector
+    @param[out]    pResult    maximum value returned here
+    @return        none
+   */
+  void riscv_max_no_idx_q31(
+      const q31_t *pSrc,
+      uint32_t blockSize,
+      q31_t *pResult);
+
+  /**
+    @brief         Maximum value of a q15 vector.
+    @param[in]     pSrc       points to the input vector
+    @param[in]     blockSize  number of samples in input vector
+    @param[out]    pResult    maximum value returned here
+    @return        none
+   */
+  void riscv_max_no_idx_q15(
+      const q15_t *pSrc,
+      uint32_t blockSize,
+      q15_t *pResult);
+
+  /**
+    @brief         Maximum value of a q7 vector.
+    @param[in]     pSrc       points to the input vector
+    @param[in]     blockSize  number of samples in input vector
+    @param[out]    pResult    maximum value returned here
+    @return        none
+   */
+  void riscv_max_no_idx_q7(
+      const q7_t *pSrc,
+      uint32_t blockSize,
+      q7_t *pResult);
+
+  /**
+    @brief         Minimum value of a floating-point vector.
+    @param[in]     pSrc       points to the input vector
+    @param[in]     blockSize  number of samples in input vector
+    @param[out]    pResult    minimum value returned here
+    @return        none
+   */
+  void riscv_min_no_idx_f64(
+      const float64_t *pSrc,
+      uint32_t blockSize,
+      float64_t *pResult);
+
+/**
+    @brief         Minimum value of a q31 vector.
+    @param[in]     pSrc       points to the input vector
+    @param[in]     blockSize  number of samples in input vector
+    @param[out]    pResult    minimum value returned here
+    @return        none
+   */
+  void riscv_min_no_idx_q31(
+      const q31_t *pSrc,
+      uint32_t blockSize,
+      q31_t *pResult);
+
+  /**
+    @brief         Minimum value of a q15 vector.
+    @param[in]     pSrc       points to the input vector
+    @param[in]     blockSize  number of samples in input vector
+    @param[out]    pResult    minimum value returned here
+    @return        none
+   */
+  void riscv_min_no_idx_q15(
+      const q15_t *pSrc,
+      uint32_t blockSize,
+      q15_t *pResult);
+
+  /**
+    @brief         Minimum value of a q7 vector.
+    @param[in]     pSrc       points to the input vector
+    @param[in]     blockSize  number of samples in input vector
+    @param[out]    pResult    minimum value returned here
+    @return        none
+   */
+  void riscv_min_no_idx_q7(
+      const q7_t *pSrc,
+      uint32_t blockSize,
+      q7_t *pResult);
+
+/**
+  @brief         Mean square error between two Q7 vectors.
+  @param[in]     pSrcA       points to the first input vector
+  @param[in]     pSrcB       points to the second input vector
+  @param[in]     blockSize  number of samples in input vector
+  @param[out]    pResult    mean square error
+  @return        none 
+*/
+  
+void riscv_mse_q7(
+  const q7_t * pSrcA,
+  const q7_t * pSrcB,
+        uint32_t blockSize,
+        q7_t * pResult);
+
+/**
+  @brief         Mean square error between two Q15 vectors.
+  @param[in]     pSrcA       points to the first input vector
+  @param[in]     pSrcB       points to the second input vector
+  @param[in]     blockSize  number of samples in input vector
+  @param[out]    pResult    mean square error
+  @return        none 
+*/
+  
+void riscv_mse_q15(
+  const q15_t * pSrcA,
+  const q15_t * pSrcB,
+        uint32_t blockSize,
+        q15_t * pResult);
+
+/**
+  @brief         Mean square error between two Q31 vectors.
+  @param[in]     pSrcA       points to the first input vector
+  @param[in]     pSrcB       points to the second input vector
+  @param[in]     blockSize  number of samples in input vector
+  @param[out]    pResult    mean square error
+  @return        none 
+*/
+  
+void riscv_mse_q31(
+  const q31_t * pSrcA,
+  const q31_t * pSrcB,
+        uint32_t blockSize,
+        q31_t * pResult);
+
+/**
+  @brief         Mean square error between two single precision float vectors.
+  @param[in]     pSrcA       points to the first input vector
+  @param[in]     pSrcB       points to the second input vector
+  @param[in]     blockSize  number of samples in input vector
+  @param[out]    pResult    mean square error
+  @return        none 
+*/
+  
+void riscv_mse_f32(
+  const float32_t * pSrcA,
+  const float32_t * pSrcB,
+        uint32_t blockSize,
+        float32_t * pResult);
+
+/**
+  @brief         Mean square error between two double precision float vectors.
+  @param[in]     pSrcA       points to the first input vector
+  @param[in]     pSrcB       points to the second input vector
+  @param[in]     blockSize  number of samples in input vector
+  @param[out]    pResult    mean square error
+  @return        none 
+*/
+  
+void riscv_mse_f64(
+  const float64_t * pSrcA,
+  const float64_t * pSrcB,
+        uint32_t blockSize,
+        float64_t * pResult);
 
 #ifdef   __cplusplus
 }

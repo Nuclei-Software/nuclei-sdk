@@ -3,8 +3,8 @@
  * Title:        riscv_nn_tables.h
  * Description:  Extern declaration for NN tables
  *
- * $Date:        09. October 2020
- * $Revision:    V.1.0.1
+ * $Date:        17. August 2021
+ * $Revision:    V.1.0.2
  *
  * Target Processor: RISC-V Cores
  * -------------------------------------------------------------------- */
@@ -30,12 +30,12 @@
 #ifndef _RISCV_NN_TABLES_H
 #define _RISCV_NN_TABLES_H
 
-#include "riscv_math_types.h"
+#include "riscv_nn_math_types.h"
 
 /**
-* @brief tables for various activation functions
-*
-*/
+ * @brief tables for various activation functions
+ *
+ */
 
 extern const q15_t sigmoidTable_q15[256];
 extern const q7_t sigmoidTable_q7[256];

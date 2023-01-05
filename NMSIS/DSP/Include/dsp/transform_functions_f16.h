@@ -1,8 +1,8 @@
 /******************************************************************************
  * @file     transform_functions_f16.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.9.0
- * @date     23 April 2021
+ * @version  V1.10.0
+ * @date     08 July 2021
  * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
@@ -140,6 +140,57 @@ riscv_status riscv_rfft_fast_init_f16 (
   void riscv_cfft_radix2_f16(
   const riscv_cfft_radix2_instance_f16 * S,
         float16_t * pSrc);
+
+  /**
+   * @brief Instance structure for the Floating-point MFCC function.
+   */
+typedef struct
+  {
+     const float16_t *dctCoefs; /**< Internal DCT coefficients */
+     const float16_t *filterCoefs; /**< Internal Mel filter coefficients */
+     const float16_t *windowCoefs; /**< Windowing coefficients */
+     const uint32_t *filterPos; /**< Internal Mel filter positions in spectrum */
+     const uint32_t *filterLengths; /**< Internal Mel filter  lengths */
+     uint32_t fftLen; /**< FFT length */
+     uint32_t nbMelFilters; /**< Number of Mel filters */
+     uint32_t nbDctOutputs; /**< Number of DCT outputs */
+#if defined(RISCV_MFCC_CFFT_BASED)
+     /* Implementation of the MFCC is using a CFFT */
+     riscv_cfft_instance_f16 cfft; /**< Internal CFFT instance */
+#else
+     /* Implementation of the MFCC is using a RFFT (default) */
+     riscv_rfft_fast_instance_f16 rfft;
+#endif
+  } riscv_mfcc_instance_f16 ;
+
+riscv_status riscv_mfcc_init_f16(
+  riscv_mfcc_instance_f16 * S,
+  uint32_t fftLen,
+  uint32_t nbMelFilters,
+  uint32_t nbDctOutputs,
+  const float16_t *dctCoefs,
+  const uint32_t *filterPos,
+  const uint32_t *filterLengths,
+  const float16_t *filterCoefs,
+  const float16_t *windowCoefs
+  );
+
+
+/**
+  @brief         MFCC F16
+  @param[in]    S       points to the mfcc instance structure
+  @param[in]     pSrc points to the input samples
+  @param[out]     pDst  points to the output MFCC values
+  @param[inout]     pTmp  points to a temporary buffer of complex
+  @return        none
+ */
+  void riscv_mfcc_f16(
+  const riscv_mfcc_instance_f16 * S,
+  float16_t *pSrc,
+  float16_t *pDst,
+  float16_t *pTmp
+  );
+
   
 #endif /* defined(RISCV_FLOAT16_SUPPORTED)*/
 
