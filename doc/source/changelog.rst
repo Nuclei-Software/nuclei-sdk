@@ -55,10 +55,12 @@ This is release version ``0.4.0`` of Nuclei SDK.
   - Add ``sram`` download mode for evalsoc/demosoc, for details directly check the linker script
   - Change default ``__ICACHE_PRESENT/__DCACHE_PRESENT`` to 1 for evalsoc/demosoc, when evalsoc/demosoc startup, it will
     enable i/d cache if it really present.
+  - Update openocd configuration files to remove deprecated command which might not be support in future
   - Merge smp and single core openocd config into one configuration for evalsoc and demosoc
   - Add **BOOT_HARTID** support for evalsoc and demosoc, which is used to specify the boot hartid, used together with **SMP**
     can support SMP or AMP run mode
   - Add **JTAGSN** support to specify a unified hummingbird jtag debugger via ``adapter serial``
+  - For AMP support, we can work together with Nuclei Linux SDK, see https://github.com/Nuclei-Software/nsdk_ampdemo
 
 * CI
 
