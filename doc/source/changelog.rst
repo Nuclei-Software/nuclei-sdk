@@ -3,10 +3,10 @@
 Changelog
 =========
 
-V0.4.0-dev
-----------
+V0.4.0
+------
 
-This is development version ``0.4.0`` of Nuclei SDK.
+This is release version ``0.4.0`` of Nuclei SDK.
 
 * Application
 
@@ -31,6 +31,7 @@ This is development version ``0.4.0`` of Nuclei SDK.
   - Add iregion offset macros and N3/VP mask in riscv_encoding.h and use it in demosoc/evalsoc implementation.
   - Add ``ICachePresent/DCachePresent`` API
   - Don't sub extra cost for BENCH_xxx API
+  - Update NMSIS Core/DSP/NN and prebuilt library to version 1.1.0
 
 * Build System
 
@@ -61,7 +62,7 @@ This is development version ``0.4.0`` of Nuclei SDK.
 
 * CI
 
-  - Start to use Nuclei QEMU/Toolchain/OpenOCD 2022.08 in daily ci for gitlab runner
+  - Start to use Nuclei QEMU/Toolchain/OpenOCD 2022.12 in daily ci for gitlab runner
 
 * Tools
 
