@@ -38,7 +38,7 @@ This is release version ``0.4.0`` of Nuclei SDK.
   - Add ``intexc_<Device>_s.S`` asm file into compiling for evalsoc and demosoc
   - Show ``ARCH_EXT`` information when run make info
   - Don't specify elf filename when run gdb, only specify it when do load to avoid some gdb internal error
-  - Add **BOOT_HARTID** and **JTAGSN** support, which need to be done in SoC support code
+  - Add ``BOOT_HARTID`` and ``JTAGSN`` support, which need to be done in SoC support code and build system
 
 * SoC
 
