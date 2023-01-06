@@ -61,6 +61,7 @@ This is release version ``0.4.0`` of Nuclei SDK.
     can support SMP or AMP run mode
   - Add **JTAGSN** support to specify a unified hummingbird jtag debugger via ``adapter serial``
   - For AMP support, we can work together with Nuclei Linux SDK, see https://github.com/Nuclei-Software/nsdk_ampdemo
+  - Add NPK support for SMP/AMP working mode, and sram download mode
 
 * CI
 
@@ -76,7 +77,6 @@ This is release version ``0.4.0`` of Nuclei SDK.
 * Documentation
 
   - Add ``make preview`` to preview build documentation.
-
 
 V0.3.9
 ------
