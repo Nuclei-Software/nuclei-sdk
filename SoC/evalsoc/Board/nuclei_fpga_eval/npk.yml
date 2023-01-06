@@ -48,6 +48,8 @@ configuration:
         description: FLASHXIP download mode, program will to be download into flash and run directly in Flash
       - name: ddr
         description: DDR download mode, program will be download into ddr and run directly in ddr, program lost when poweroff
+      - name: sram
+        description: SRAM download mode(sram mode use sram for 200/300, ddr for 600/900)
 
 ## Source Code Management
 codemanage:
