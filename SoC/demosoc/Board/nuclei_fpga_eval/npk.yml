@@ -76,6 +76,11 @@ debugconfig:
       - key: tool_extrapreopts
         value: -c "set BOOT_HARTID ${boothartid};"
         condition: $( ${nuclei_smp} <= 1 )
+      # Need 2022.08 release of Nuclei Studio
+      # set extra run/restart commands
+      - key: otherRunCommands
+        value: thread apply all set $pc=_start
+        condition: $( ${nuclei_smp} > 1 )
 
   - type: qemu
     description: Nuclei QEMU
