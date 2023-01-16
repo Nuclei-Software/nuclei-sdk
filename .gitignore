@@ -52,3 +52,6 @@ Backup*
 usb_info.json
 fpga_runner.yaml
 *.back*
+*.gcda
+*.gcno
+*.gcov
