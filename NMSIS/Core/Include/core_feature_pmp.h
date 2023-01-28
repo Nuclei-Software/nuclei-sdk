@@ -141,7 +141,7 @@ __STATIC_INLINE uint8_t __get_PMPxCFG(uint32_t entry_idx)
 #elif __RISCV_XLEN == 64
     csr_cfg_num = 8;
     /* For RV64, pmpcfg0 and pmpcfg2 each hold 8 PMP entries, align by 2 */
-    csr_idx = (entry_idx >> 2)  & ~1;
+    csr_idx = (entry_idx >> 2) & ~1;
 #else
     // TODO Add RV128 Handling
     return 0;
@@ -180,7 +180,7 @@ __STATIC_INLINE void __set_PMPxCFG(uint32_t entry_idx, uint8_t pmpxcfg)
 #elif __RISCV_XLEN == 64
     csr_cfg_num = 8;
     /* For RV64, pmpcfg0 and pmpcfg2 each hold 8 PMP entries, align by 2 */
-    csr_idx = (entry_idx >> 2)  & ~1;
+    csr_idx = (entry_idx >> 2) & ~1;
 #else
     // TODO Add RV128 Handling
     return;
@@ -259,21 +259,21 @@ __STATIC_INLINE void __set_PMPADDRx(uint32_t csr_idx, rv_csr_t pmpaddr)
  * \brief   Set PMP entry by entry idx
  * \details Write the given value to the PMPxCFG Register and PMPADDRx.
  * \param [in]    entry_idx    PMP entry index(0-15)
- * \param [in]    pmp_config   structure of L, X, W, R field of PMP configuration register, memory region base address
+ * \param [in]    pmp_cfg      structure of L, X, W, R field of PMP configuration register, memory region base address
  *                and size of memory region as power of 2
  * \remark
- * - If the size of memory region is 2^12(4KB) range, pmp_config->order makes 12, and the like.
+ * - If the size of memory region is 2^12(4KB) range, pmp_cfg->order makes 12, and the like.
  * - Suppose the size of memory region is 2^X bytes range, if X >=3, the NA4 mode is not selectable, NAPOT is selected.
  * - TOR of A field in PMP configuration register is not considered here.
  */
-__STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_config *pmp_config)
+__STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_config *pmp_cfg)
 {
     unsigned int cfg_shift, cfg_csr_idx, addr_csr_idx = 0;
     unsigned long cfgmask, addrmask = 0;
     unsigned long pmpcfg, pmpaddr = 0;
     uint8_t protection, csr_cfg_num = 0;
     /* check parameters */
-    if (entry_idx >= __PMP_ENTRY_NUM || pmp_config->order > __RISCV_XLEN || pmp_config->order < PMP_SHIFT) return;
+    if (entry_idx >= __PMP_ENTRY_NUM || pmp_cfg->order > __RISCV_XLEN || pmp_cfg->order < PMP_SHIFT) return;
 
     /* calculate PMP register and offset */
 #if __RISCV_XLEN == 32
@@ -293,21 +293,19 @@ __STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_config *pmp_c
     cfg_shift = (entry_idx & (csr_cfg_num - 1)) << 3;
     addr_csr_idx = entry_idx;
 
-    if (cfg_csr_idx < 0 || cfg_shift < 0) return;
-
     /* encode PMP config */
-    protection = pmp_config->protection;
-    protection |= (PMP_SHIFT == pmp_config->order) ? PMP_A_NA4 : PMP_A_NAPOT;
+    protection = pmp_cfg->protection;
+    protection |= (PMP_SHIFT == pmp_cfg->order) ? PMP_A_NA4 : PMP_A_NAPOT;
     cfgmask = ~(0xFFUL << cfg_shift);
     pmpcfg = (__get_PMPCFGx(cfg_csr_idx) & cfgmask);
     pmpcfg |= ((protection << cfg_shift) & ~cfgmask);
 
     /* encode PMP address */
-    if (PMP_SHIFT == pmp_config->order) { /* NA4 */
-        pmpaddr = (pmp_config->base_addr >> PMP_SHIFT);
+    if (PMP_SHIFT == pmp_cfg->order) { /* NA4 */
+        pmpaddr = (pmp_cfg->base_addr >> PMP_SHIFT);
     } else { /* NAPOT */
-        addrmask = (1UL << (pmp_config->order - PMP_SHIFT)) - 1;
-        pmpaddr = ((pmp_config->base_addr >> PMP_SHIFT) & ~addrmask);
+        addrmask = (1UL << (pmp_cfg->order - PMP_SHIFT)) - 1;
+        pmpaddr = ((pmp_cfg->base_addr >> PMP_SHIFT) & ~addrmask);
         pmpaddr |= (addrmask >> 1);
     }
     /*
@@ -322,21 +320,21 @@ __STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_config *pmp_c
  * \brief   Get PMP entry by entry idx
  * \details Write the given value to the PMPxCFG Register and PMPADDRx.
  * \param [in]     entry_idx     PMP entry index(0-15)
- * \param [out]    pmp_config   structure of L, X, W, R, A field of PMP configuration register, memory region base
+ * \param [out]    pmp_cfg       structure of L, X, W, R, A field of PMP configuration register, memory region base
  *                 address and size of memory region as power of 2
  * \return  -1 failure, else 0 success
  * \remark
- * - If the size of memory region is 2^12(4KB) range, pmp_config->order makes 12, and the like.
+ * - If the size of memory region is 2^12(4KB) range, pmp_cfg->order makes 12, and the like.
  * - TOR of A field in PMP configuration register is not considered here.
  */
-__STATIC_INLINE int __get_PMPENTRYx(unsigned int entry_idx, pmp_config *pmp_config)
+__STATIC_INLINE int __get_PMPENTRYx(unsigned int entry_idx, pmp_config *pmp_cfg)
 {
-    int cfg_shift, cfg_csr_idx, addr_csr_idx = 0;
+    unsigned int cfg_shift, cfg_csr_idx, addr_csr_idx = 0;
     unsigned long cfgmask, pmpcfg, prot = 0;
     unsigned long t1, addr, pmpaddr, len = 0;
     uint8_t csr_cfg_num = 0;
     /* check parameters */
-    if (entry_idx >= __PMP_ENTRY_NUM || !pmp_config) return -1;
+    if (entry_idx >= __PMP_ENTRY_NUM || !pmp_cfg) return -1;
 
     /* calculate PMP register and offset */
 #if __RISCV_XLEN == 32
@@ -353,9 +351,6 @@ __STATIC_INLINE int __get_PMPENTRYx(unsigned int entry_idx, pmp_config *pmp_conf
     cfg_shift = (entry_idx & (csr_cfg_num - 1)) << 3;
     addr_csr_idx = entry_idx;
 
-    if (cfg_csr_idx < 0 || cfg_shift < 0)
-        return -1;
-
     /* decode PMP config */
     cfgmask = (0xFFUL << cfg_shift);
     pmpcfg = (__get_PMPCFGx(cfg_csr_idx) & cfgmask);
@@ -364,7 +359,7 @@ __STATIC_INLINE int __get_PMPENTRYx(unsigned int entry_idx, pmp_config *pmp_conf
     /* decode PMP address */
     pmpaddr = __get_PMPADDRx(addr_csr_idx);
     if (PMP_A_NAPOT == (prot & PMP_A)) {
-        t1  = __CTZ(~pmpaddr);
+        t1 = __CTZ(~pmpaddr);
         addr = (pmpaddr & ~((1UL << t1) - 1)) << PMP_SHIFT;
         len = (t1 + PMP_SHIFT + 1);
     } else {
@@ -373,9 +368,9 @@ __STATIC_INLINE int __get_PMPENTRYx(unsigned int entry_idx, pmp_config *pmp_conf
     }
 
     /* return details */
-    pmp_config->protection = prot;
-    pmp_config->base_addr = addr;
-    pmp_config->order = len;
+    pmp_cfg->protection = prot;
+    pmp_cfg->base_addr = addr;
+    pmp_cfg->order = len;
 
     return 0;
 }
@@ -386,4 +381,4 @@ __STATIC_INLINE int __get_PMPENTRYx(unsigned int entry_idx, pmp_config *pmp_conf
 #ifdef __cplusplus
 }
 #endif
-#endif /** __CORE_FEATURE_PMP_H__  */
+#endif /** __CORE_FEATURE_PMP_H__ */
