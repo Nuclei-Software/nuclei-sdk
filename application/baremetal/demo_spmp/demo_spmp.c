@@ -86,7 +86,7 @@ static void __attribute__((section (".text"), aligned(0x1000))) supervisor_mode_
 int main(void)
 {
     /* The sPMP values are checked after the physical address to be accessed pass PMP checks */
-    pmp_config pmp_config = {
+    pmp_config pmp_cfg = {
         /* M mode grants S and U mode with full permission of the whole address range */
         .protection = PMP_L | PMP_R | PMP_W | PMP_X,
         /* Memory region range 2^__RISCV_XLEN bytes */
@@ -117,12 +117,12 @@ int main(void)
 
     printf("------sPMP demo with trigger condition %d------\r\n", TRIGGER_SPMP_VIOLATION_MODE);
 
-    __set_PMPENTRYx(0, &pmp_config);
+    __set_PMPENTRYx(0, &pmp_cfg);
     /* Verify the configuration takes effect */
-    memset(&pmp_config, 0, sizeof(pmp_config));
-    __get_PMPENTRYx(0, &pmp_config);
+    memset(&pmp_cfg, 0, sizeof(pmp_cfg));
+    __get_PMPENTRYx(0, &pmp_cfg);
     printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%x, order_out: %d\r\n", \
-        0, pmp_config.protection, pmp_config.base_addr, pmp_config.order);
+        0, pmp_cfg.protection, pmp_cfg.base_addr, pmp_cfg.order);
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
     /* Corresponding exceptions occurs in S/U-mode will be delegated to S-mode */
