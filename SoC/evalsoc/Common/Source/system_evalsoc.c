@@ -549,7 +549,7 @@ static void system_default_exception_handler_s(unsigned long scause, unsigned lo
  */
 void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler)
 {
-    if ((EXCn < MAX_SYSTEM_EXCEPTION_NUM) && (EXCn >= 0)) {
+    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         SystemExceptionHandlers_S[EXCn] = exc_handler;
     }
 }
@@ -563,7 +563,7 @@ void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler)
  */
 unsigned long Exception_Get_EXC_S(uint32_t EXCn)
 {
-    if ((EXCn < MAX_SYSTEM_EXCEPTION_NUM) && (EXCn >= 0)) {
+    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         return SystemExceptionHandlers[EXCn];
     } else {
         return 0;
@@ -588,7 +588,7 @@ uint32_t core_exception_handler_s(unsigned long scause, unsigned long sp)
     uint32_t EXCn = (uint32_t)(scause & 0X00000fff);
     EXC_HANDLER exc_handler;
 
-    if ((EXCn < MAX_SYSTEM_EXCEPTION_NUM) && (EXCn >= 0)) {
+    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         exc_handler = (EXC_HANDLER)SystemExceptionHandlers_S[EXCn];
     } else {
         exc_handler = (EXC_HANDLER)system_default_exception_handler_s;
