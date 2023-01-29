@@ -135,7 +135,7 @@ static void supervisor_mode_entry_point(void)
 int main(int argc, char** argv)
 {
     // set pmp, S mode can access all address range
-    pmp_config pmp_config = {
+    pmp_config pmp_cfg = {
         /* M mode grants S and U mode with full permission of the whole address range */
         .protection = PMP_L | PMP_R | PMP_W | PMP_X,
         /* Memory region range 2^__RISCV_XLEN bytes */
@@ -144,7 +144,7 @@ int main(int argc, char** argv)
         .base_addr = 0,
     };
 
-    __set_PMPENTRYx(0, &pmp_config);
+    __set_PMPENTRYx(0, &pmp_cfg);
 
     print_sp_judge_privilege_mode();
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
