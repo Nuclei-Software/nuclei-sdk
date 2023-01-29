@@ -305,4 +305,4 @@ typedef uint64_t rv_fpu_t;
 #ifdef __cplusplus
 }
 #endif
-#endif /* __RISCV_EXT_FPU_H__  */
+#endif /* __CORE_FEATURE_FPU_H__ */
