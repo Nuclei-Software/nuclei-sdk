@@ -1368,4 +1368,4 @@ __STATIC_FORCEINLINE rv_csr_t __get_nmi_entry(void)
 #ifdef __cplusplus
 }
 #endif
-#endif /** __CORE_FEATURE_ECLIC__ */
+#endif /* __CORE_FEATURE_ECLIC__ */

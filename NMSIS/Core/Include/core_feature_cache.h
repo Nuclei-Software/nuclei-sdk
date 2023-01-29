@@ -1431,4 +1431,4 @@ __STATIC_FORCEINLINE void UFlushInvalDCache(void)
 #ifdef __cplusplus
 }
 #endif
-#endif /** __CORE_FEATURE_CACHE_H__ */
+#endif /* __CORE_FEATURE_CACHE_H__ */

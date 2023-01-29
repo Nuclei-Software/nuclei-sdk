@@ -381,4 +381,4 @@ __STATIC_INLINE int __get_PMPENTRYx(unsigned int entry_idx, pmp_config *pmp_cfg)
 #ifdef __cplusplus
 }
 #endif
-#endif /** __CORE_FEATURE_PMP_H__ */
+#endif /* __CORE_FEATURE_PMP_H__ */

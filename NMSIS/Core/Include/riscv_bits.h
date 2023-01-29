@@ -91,4 +91,4 @@
 }
 #endif
 
-#endif /** __RISCV_BITS_H__  */
+#endif /* __RISCV_BITS_H__ */

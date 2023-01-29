@@ -665,4 +665,4 @@ __STATIC_FORCEINLINE uint32_t SysTick_HartReload(uint64_t ticks, unsigned long h
 #ifdef __cplusplus
 }
 #endif
-#endif /** __CORE_FEATURE_TIMER_H__  */
+#endif /* __CORE_FEATURE_TIMER_H__ */

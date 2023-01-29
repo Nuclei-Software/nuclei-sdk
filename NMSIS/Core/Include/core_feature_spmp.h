@@ -382,4 +382,4 @@ __STATIC_INLINE int __get_sPMPENTRYx(unsigned int entry_idx, spmp_config *spmp_c
 #ifdef __cplusplus
 }
 #endif
-#endif /** __CORE_FEATURE_SPMP_H__ */
+#endif /* __CORE_FEATURE_SPMP_H__ */
