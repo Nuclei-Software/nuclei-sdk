@@ -63,7 +63,7 @@ jobs:
           cd prebuilt_tools
           toolzip=nuclei_riscv_newlibc_prebuilt_linux64_2022.04.tar.bz2
           if [ ! -e $toolzip ] ; then
-            wget https://nucleisys.com/upload/files/toochain/gcc/$toolzip
+            wget --no-check-certificate https://nucleisys.com/upload/files/toochain/gcc/$toolzip
           fi
           tar -xjf $toolzip
           cd ..
