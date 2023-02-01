@@ -68,7 +68,8 @@ int32_t uart_disable_txint(UART_TypeDef* uart);
 int32_t uart_set_rx_watermark(UART_TypeDef* uart, uint32_t watermark);
 int32_t uart_enable_rxint(UART_TypeDef* uart);
 int32_t uart_disable_rxint(UART_TypeDef* uart);
-
+int32_t uart_get_status(UART_TypeDef* uart);
+int32_t uart_clear_status(UART_TypeDef* uart, uint32_t mask);
 #ifdef __cplusplus
 }
 #endif

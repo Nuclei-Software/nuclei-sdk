@@ -100,3 +100,20 @@ int32_t uart_disable_rxint(UART_TypeDef* uart)
     uart->IE &= ~UART_IE_RXIE_MASK;
     return 0;
 }
+
+int32_t uart_get_status(UART_TypeDef* uart)
+{
+    if (__RARELY(uart == NULL)) {
+        return -1;
+    }
+    return (uart->IP);
+}
+
+int32_t uart_clear_status(UART_TypeDef* uart, uint32_t mask)
+{
+    if (__RARELY(uart == NULL)) {
+        return -1;
+    }
+    uart->IP &= ~mask;
+    return 0;
+}
