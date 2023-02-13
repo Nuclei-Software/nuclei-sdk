@@ -32,14 +32,14 @@ extern "C" {
 #define UART_RXFIFO_EMPTY       (1<<31)
 
 #define UART_TXCTRL_TXCNT_OFS   (16)
-#define UART_TXCTRL_TXCNT_MASK  (0x7 << UART_TXCTRL_TXCNT_OFS)
+#define UART_TXCTRL_TXCNT_MASK  (0x1F << UART_TXCTRL_TXCNT_OFS)
 #define UART_TXCTRL_TXEN_OFS    (0)
 #define UART_TXCTRL_TXEN_MASK   (0x1 << UART_TXCTRL_TXEN_OFS)
 #define UART_TXCTRL_NSTOP_OFS   (1)
-#define UART_TXCTRL_NSTOP_MASK  (0x1 << UART_TXCTRL_TXEN_OFS)
+#define UART_TXCTRL_NSTOP_MASK  (0x3 << UART_TXCTRL_NSTOP_OFS)
 
 #define UART_RXCTRL_RXCNT_OFS   (16)
-#define UART_RXCTRL_RXCNT_MASK  (0x7 << UART_RXCTRL_RXCNT_OFS)
+#define UART_RXCTRL_RXCNT_MASK  (0x1F << UART_RXCTRL_RXCNT_OFS)
 #define UART_RXCTRL_RXEN_OFS    (0)
 #define UART_RXCTRL_RXEN_MASK   (0x1 << UART_RXCTRL_RXEN_OFS)
 
@@ -68,7 +68,8 @@ int32_t uart_disable_txint(UART_TypeDef* uart);
 int32_t uart_set_rx_watermark(UART_TypeDef* uart, uint32_t watermark);
 int32_t uart_enable_rxint(UART_TypeDef* uart);
 int32_t uart_disable_rxint(UART_TypeDef* uart);
-
+int32_t uart_get_status(UART_TypeDef* uart);
+int32_t uart_clear_status(UART_TypeDef* uart, uint32_t mask);
 #ifdef __cplusplus
 }
 #endif
