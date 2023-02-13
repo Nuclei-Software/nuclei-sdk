@@ -217,7 +217,7 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 #define __SYSTIMER_PRESENT        1                     /*!< Set to 1 if System Timer is present */
 #define __SYSTIMER_BASEADDR       SystemIRegionInfo.systimer_base          /*!< Set to SysTimer baseaddr of your device */
 
-#define __CIDU_PRESENT            1                     /*!< Set to 1 if CIDU is present */
+#define __CIDU_PRESENT            0                     /*!< Set to 1 if CIDU is present */
 #define __CIDU_BASEADDR           SystemIRegionInfo.idu_base              /*!< Set to cidu baseaddr of your device */
 
 /*!< Set to 0, 1, or 2, 0 not present, 1 single floating point unit present, 2 double floating point unit present */
