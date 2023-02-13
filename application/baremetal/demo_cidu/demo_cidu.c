@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "nuclei_sdk_soc.h"
 #include "nuclei_sdk_hal.h"
-#include "evalsoc_uart.h"
 
 #if !defined(__CIDU_PRESENT) || (__CIDU_PRESENT != 1)
 /* __CIDU_PRESENT should be defined in <Device>.h */
