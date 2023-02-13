@@ -73,6 +73,8 @@
  #include "core_feature_spmp.h"
 /* Include core cache feature header file */
 #include "core_feature_cache.h"
+/* Include core cidu feature header file */
+ #include "core_feature_cidu.h"
 
 /* Include compatiable functions header file */
 #include "core_compatiable.h"
