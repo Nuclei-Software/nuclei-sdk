@@ -26,6 +26,11 @@
 
 #include "riscv_encoding.h"
 
+/* If BOOT_HARTID is not defined, default value is 0 */
+#ifndef BOOT_HARTID
+    .equ BOOT_HARTID,    0
+#endif
+
 .macro DECLARE_INT_HANDLER  INT_HDL_NAME
 #if defined(__riscv_xlen) && (__riscv_xlen == 32)
     .word \INT_HDL_NAME
