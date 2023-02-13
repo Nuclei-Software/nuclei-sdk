@@ -38,7 +38,8 @@
 
     .weak eclic_msip_handler
     .weak eclic_mtip_handler
-
+    .weak eclic_uart0_int_handler
+    .weak eclic_inter_core_int_handler
     .globl vector_base
     .type vector_base, @object
 vector_base:
@@ -67,7 +68,7 @@ vector_base:
     DECLARE_INT_HANDLER     default_intexc_handler          /* 14: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 15: Reserved */
 
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 16: Reserved */
+    DECLARE_INT_HANDLER     eclic_inter_core_int_handler          /* 16: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 17: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 18: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 19: Interrupt 19 */
@@ -110,7 +111,7 @@ vector_base:
     DECLARE_INT_HANDLER     default_intexc_handler          /* 48: Interrupt 48 */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 49: Interrupt 49 */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 50: Interrupt 50 */
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 51: Interrupt 51 */
+    DECLARE_INT_HANDLER     eclic_uart0_int_handler             /* 51: Interrupt 51 */
 
     DECLARE_INT_HANDLER     default_intexc_handler          /* 52: Interrupt 52 */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 53: Interrupt 53 */
