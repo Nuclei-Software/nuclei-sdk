@@ -414,7 +414,7 @@ smphello
 
 This `smphello application`_ is used to demonstrate how to use baremetal SMP feature.
 
-This demo request the SMP cores share the same RAM and ROM, for example, in current
+This demo requests the SMP cores share the same RAM and ROM, for example, in current
 demosoc system, ilm/dlm are private resource for cpu, only the DDR memory are shared
 resource for all the cpu.
 
@@ -456,7 +456,7 @@ for evalsoc/demosoc, ``__ICACHE_PRESENT`` and ``__DCACHE_PRESENT`` are default s
 
     # Assume that you can set up the Tools and Nuclei SDK environment
     # Use Nuclei UX600 SMP 2 Core RISC-V processor as example
-    # application need to run in ddr memory not in ilm memory
+    # application needs to run in ddr memory not in ilm memory
     # cd to the smphello directory
     cd application/baremetal/smphello
     # Clean the application first
@@ -1268,6 +1268,7 @@ From disassembly code, MEPC refers to
     Attempting to read protected_data[0]
     Load access fault occurs, cause: 0x30000005, epc: 0x80004022
 
+
 From disassembly code, MEPC refers to
 
 .. code-block:: console
@@ -1315,6 +1316,168 @@ From disassembly code, MEPC refers to
     protected_data[0]: 0xAA succeed
     Attempting to write protected_data[0]
     Won't run here if violates L R\W\X permission check!
+
+.. _design_app_demo_cidu:
+
+demo_cidu
+~~~~~~~~~
+
+This `demo_cidu_application`_ is used to demonstrate External Interrupt Distribution
+(external interrupt broadcast/first come first claim), Inter Core interrupt and Semaphore
+of Cluster Interrupt Distribution Unit (CIDU).
+
+This demo requests the SMP cores share the same RAM and ROM, for example, in current 
+evalsoc/demosoc system, ilm/dlm are private resource for cpu, only the DDR memory are shared resource
+for all the cpu.
+
+.. note::
+    * Need to enable CIDU in <Device.h> if CIDU present in cluster.
+    * Multicore soc is needed.
+
+* ``UART0`` receive is used as external interrupt, registered as ``eclic_uart0_int_handler``, which is the best choice 
+  for evalsoc/demosoc and is easy to trigger by writing the serial terminal
+* ``UART0`` receive interrupt can be broadcast to all the cores or some, and also first coming first claim
+  mode will ensure only the first responding core handle the interrupt service routine(ISR)
+* Inter core interrupt shows likes this: core3 sends interrupt to core2, core2 sends interrupt to core1,
+  core1 sends interrupt to core0, and core0 sends interrupt to core3, registered as ``eclic_inter_core_int_handler``,
+  supposing the SOC is four cores, and etc.
+* To demonstrate it will handle properly if multiple cores send interrupt to one core simultaneously,
+  besides core2, core0 also sends interrupt to core1, supposing the SOC is four core
+* To protect ``UART0`` resource when multicores want to access it(call ``printf``), semaphore is configured, which needs to
+  be acquired successfully before accessing ``UART0``, and release it after job done
+* ``ENABLE_FIRST_COME_FIRST_CLAIM_MODE`` is defined by default, you can comment it to just use broadcast mode
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei UX900 SMP 2/4/8(4/8 is better) Core RISC-V processor as example
+    # application needs to run in ddr memory not in ilm memory
+    # cd to the demo_cidu directory
+    cd application/baremetal/demo_cidu
+    # Clean the application first
+    make SOC=demosoc BOARD=nuclei_fpga_eval SMP=4 DOWNLOAD=ddr CORE=ux900 clean
+    # Build and upload the application
+    make SOC=demosoc BOARD=nuclei_fpga_eval SMP=4 DOWNLOAD=ddr CORE=ux900 upload
+
+**Expected output(inter core interrupt) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Feb 10 2023, 18:39:17
+    Download Mode: DDR
+    CPU Frequency 100602675 Hz
+    CPU HartID: 0
+    Core 3 has received interrupt from core 0
+    Core 1 has received interrupt from core 0
+    Core 2 has received interrupt from core 3
+    Core 1 has received interrupt from core 2
+    Core 0 has received interrupt from core 1
+
+From output, each core sends interrupt in order, and core 1 has received interrupts from
+both core 0 and core 2.
+
+
+**Expected output(write anything to the serial terminal, enable first come first claim mode) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Feb 10 2023, 18:44:45
+    Download Mode: DDR
+    CPU Frequency 100612833 Hz
+    CPU HartID: 0
+    Core 3 has received interrupt from core 0
+    Core 1 has received interrupt from core 0
+    Core 2 has received interrupt from core 3
+    Core 1 has received interrupt from core 2
+    Core 0 has received interrupt from core 1
+    Core 2 enters uart0_receive_handler
+    Core 1 enters uart0_receive_handler
+    Core 2 wants to process rx input
+    Core 2 processed input:d
+    Core 3 enters uart0_receive_handler
+    Core 0 enters uart0_receive_handler
+    Core 3 wants to process rx input
+    Core 3 enters uart0_receive_handler
+    Core 1 enters uart0_receive_handler
+    Core 3 wants to process rx input
+    Core 3 processed input:q
+    Core 0 enters uart0_receive_handler
+    Core 2 enters uart0_receive_handler
+    Core 0 wants to process rx input
+    Core 0 enters uart0_receive_handler
+    Core 1 enters uart0_receive_handler
+    Core 0 wants to process rx input
+    Core 0 processed input:s
+    Core 3 enters uart0_receive_handler
+    Core 2 enters uart0_receive_handler
+    Core 3 wants to process rx input
+    Core 1 enters uart0_receive_handler
+    Core 2 enters uart0_receive_handler
+    Core 0 enters uart0_receive_handler
+    Core 1 wants to process rx input
+    Core 1 processed input:g
+    Core 3 enters uart0_receive_handler
+    Core 3 wants to process rx input
+
+From output, though setting interrupt broadcasted to all(all the core enters the ISR), while only one core (the first one) 
+can claim the the interrupt(first come first claim) then process the uart0 input, others quit when find interrupt has been claimed.
+
+
+**Expected output(write anything to the serial terminal, disable first come first claim mode) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Feb 10 2023, 18:48:47
+    Download Mode: DDR
+    CPU Frequency 100602675 Hz
+    CPU HartID: 0
+    Core 3 has received interrupt from core 0
+    Core 1 has received interrupt from core 0
+    Core 2 has received interrupt from core 3
+    Core 1 has received interrupt from core 2
+    Core 0 has received interrupt from core 1
+    Core 2 enters uart0_receive_handler
+    Core 0 enters uart0_receive_handler
+    Core 2 wants to process rx input
+    Core 2 processed input:q
+    Core 0 wants to process rx input
+    Core 1 enters uart0_receive_handler
+    Core 1 wants to process rx input
+    Core 3 enters uart0_receive_handler
+    Core 3 wants to process rx input
+    Core 3 enters uart0_receive_handler
+    Core 0 enters uart0_receive_handler
+    Core 1 enters uart0_receive_handler
+    Core 2 enters uart0_receive_handler
+    Core 0 wants to process rx input
+    Core 0 processed input:w
+    Core 1 wants to process rx input
+    Core 3 wants to process rx input
+    Core 2 wants to process rx input
+    Core 2 enters uart0_receive_handler
+    Core 0 enters uart0_receive_handler
+    Core 1 enters uart0_receive_handler
+    Core 1 wants to process rx input
+    Core 1 processed input:e
+    Core 0 wants to process rx input
+    Core 2 wants to process rx input
+    Core 3 enters uart0_receive_handler
+    Core 3 wants to process rx input
+    Core 3 enters uart0_receive_handler
+    Core 1 enters uart0_receive_handler
+    Core 3 wants to process rx input
+    Core 3 processed input:r
+    Core 0 enters uart0_receive_handler
+    Core 1 wants to process rx input
+    Core 0 wants to process rx input
+    Core 2 enters uart0_receive_handler
+    Core 2 wants to process rx input
+
+From output, all the core enters the ISR(means broadcasted), while only one core can process
+the uart0 input(semaphore used), when semaphore released, other core wants to handle the ISR job(means claim mode disabled),
+but process nothing (keyboard input has been received and rx interrupt pending cleared) because it has been processed.
 
 
 FreeRTOS applications
@@ -1616,4 +1779,5 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 .. _demo_smode_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_eclic
 .. _demo_spmp_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_spmp
 .. _demo_pmp_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pmp
+.. _demo_cidu_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cidu
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html
