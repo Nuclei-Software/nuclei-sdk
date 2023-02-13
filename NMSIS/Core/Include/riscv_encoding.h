@@ -179,8 +179,9 @@
 
 /* === Nuclei custom CSR bit mask === */
 #define CSR_MCACHE_CTL_IE   0x00000001
+#define CSR_MCACHE_CTL_IECC_EN   0x00000004
 #define CSR_MCACHE_CTL_DE   0x00010000
-
+#define CSR_MCACHE_CTL_DECC_EN   0x00020000
 #define WFE_WFE                     (0x1)
 #define TXEVT_TXEVT                 (0x1)
 #define SLEEPVALUE_SLEEPVALUE       (0x1)

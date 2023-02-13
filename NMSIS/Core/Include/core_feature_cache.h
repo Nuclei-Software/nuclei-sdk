@@ -210,6 +210,36 @@ __STATIC_FORCEINLINE void DisableICache(void)
     __RV_CSR_CLEAR(CSR_MCACHE_CTL, CSR_MCACHE_CTL_IE);
 }
 
+/**
+ * \brief  Enable ICache ECC
+ * \details
+ * This function enable I-Cache ECC
+ * \remarks
+ * - This function can be called in M-Mode only.
+ * - This \ref CSR_MCACHE_CTL register control I Cache ECC enable.
+ * \sa
+ * - \ref DisableICacheECC
+*/
+__STATIC_FORCEINLINE void EnableICacheECC(void)
+{
+    __RV_CSR_SET(CSR_MCACHE_CTL, CSR_MCACHE_CTL_IECC_EN);
+}
+
+/**
+ * \brief  Disable ICache ECC
+ * \details
+ * This function disable I-Cache ECC
+ * \remarks
+ * - This function can be called in M-Mode only.
+ * - This \ref CSR_MCACHE_CTL register control I Cache ECC enable.
+ * \sa
+ * - \ref EnableICacheECC
+*/
+__STATIC_FORCEINLINE void DisableICacheECC(void)
+{
+    __RV_CSR_CLEAR(CSR_MCACHE_CTL, CSR_MCACHE_CTL_IECC_EN);
+}
+
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
 /**
  * \brief  Get I-Cache Information
@@ -690,6 +720,36 @@ __STATIC_FORCEINLINE void EnableDCache(void)
 __STATIC_FORCEINLINE void DisableDCache(void)
 {
     __RV_CSR_CLEAR(CSR_MCACHE_CTL, CSR_MCACHE_CTL_DE);
+}
+
+/**
+ * \brief  Enable DCache ECC
+ * \details
+ * This function enable D-Cache ECC
+ * \remarks
+ * - This function can be called in M-Mode only.
+ * - This \ref CSR_MCACHE_CTL register control D Cache ECC enable.
+ * \sa
+ * - \ref DisableDCacheECC
+*/
+__STATIC_FORCEINLINE void EnableDCacheECC(void)
+{
+    __RV_CSR_SET(CSR_MCACHE_CTL, CSR_MCACHE_CTL_DECC_EN);
+}
+
+/**
+ * \brief  Disable DCache ECC
+ * \details
+ * This function disable D-Cache ECC
+ * \remarks
+ * - This function can be called in M-Mode only.
+ * - This \ref CSR_MCACHE_CTL register control D Cache ECC enable.
+ * \sa
+ * - \ref EnableDCacheECC
+*/
+__STATIC_FORCEINLINE void DisableDCacheECC(void)
+{
+    __RV_CSR_CLEAR(CSR_MCACHE_CTL, CSR_MCACHE_CTL_DECC_EN);
 }
 
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
