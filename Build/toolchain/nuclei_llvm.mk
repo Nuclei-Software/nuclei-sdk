@@ -3,7 +3,7 @@ CXX     := clang++
 OBJDUMP := llvm-objdump
 OBJCOPY := llvm-objcopy
 # not ready
-GDB     := lldb
+GDB     := riscv64-unknown-elf-gdb
 AR      := llvm-ar
 SIZE    := llvm-size
 OPENOCD := openocd
