@@ -47,8 +47,9 @@ SECTIONS
 
   .init           :
   {
-    *(.vtable)
-    *(.vtable_s)
+    *(.text.vtable)
+    *(.text.vtable_s)
+    *(.text.init)
     KEEP (*(SORT_NONE(.init)))
     . = ALIGN(4);
   } >ROM AT>ROM

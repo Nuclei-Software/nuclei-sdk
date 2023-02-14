@@ -148,7 +148,8 @@
 .section .text.trap
 /* In CLIC mode, the exeception entry must be 64bytes aligned */
 .align 6
-.global exc_entry_s
+# gnu let .weak override .globl, but llvm will show warning
+# see https://reviews.llvm.org/D90108
 .weak exc_entry_s
 exc_entry_s:
     /* Save the caller saving registers (context) */
@@ -192,7 +193,8 @@ exc_entry_s:
 .section      .text.irq
 /* In CLIC mode, the interrupt entry must be 4bytes aligned */
 .align 2
-.global irq_entry_s
+# gnu let .weak override .globl, but llvm will show warning
+# see https://reviews.llvm.org/D90108
 .weak irq_entry_s
 /* This label will be set to STVT2 register */
 irq_entry_s:

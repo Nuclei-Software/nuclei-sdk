@@ -2,6 +2,7 @@ CC      := clang
 CXX     := clang++
 OBJDUMP := llvm-objdump
 OBJCOPY := llvm-objcopy
+# not ready
 GDB     := lldb
 AR      := llvm-ar
 SIZE    := llvm-size
@@ -27,15 +28,15 @@ endif
 ifneq ($(findstring newlib,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has newlib in it
 ifeq ($(STDCLIB),newlib_full)
-LDLIBS += -lc
+LDLIBS += -lc -lnosys
 else ifeq ($(STDCLIB),newlib_fast)
-LDLIBS += -lc_nano
+LDLIBS += -lc_nano -lnosys
 STDCLIB_LDFLAGS += -u _printf_float -u _scanf_float
 else ifeq ($(STDCLIB),newlib_small)
-LDLIBS += -lc_nano
+LDLIBS += -lc_nano -lnosys
 STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
-LDLIBS += -lc_nano
+LDLIBS += -lc_nano -lnosys
 else
 LDLIBS +=
 endif
@@ -80,7 +81,7 @@ SIMULATION_MODE=SIMULATION_MODE_$(call uc, $(SIMU))
 COMMON_FLAGS += -DSIMULATION_MODE=$(SIMULATION_MODE)
 endif
 
-COMMON_FLAGS += -g -fno-common -mno-relax
+COMMON_FLAGS += -g -fno-common
 COMMON_FLAGS += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
 ## Append mtune options when RISCV_TUNE is defined
 ## It might be defined in SoC/<SOC>/build.mk, and can be overwritten by make

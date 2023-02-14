@@ -46,13 +46,15 @@ SECTIONS
 
   .init           :
   {
+    *(.text.init)
     KEEP (*(SORT_NONE(.init)))
     . = ALIGN(4);
   } >ROM AT>ROM
 
   .text           :
   {
-    *(.vtable)
+    *(.text.vtable)
+    *(.text.vtable_s)
     *(.text.unlikely .text.unlikely.*)
     *(.text.startup .text.startup.*)
     *(.text .text.*)
