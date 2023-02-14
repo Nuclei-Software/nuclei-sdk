@@ -149,7 +149,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #else
 #define HPM_DECLARE_VAR(idx)
 #define HPM_EVENT(sel, idx, ena)
-#define HPM_INIT(idx, proc, event)
+#define HPM_INIT()
 #define HPM_START(idx, proc, event)
 #define HPM_END(idx, proc, event)
 #endif
