@@ -1,5 +1,8 @@
 {
     "matrix": {
+        "terapines": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small"},
+        "nuclei_gnu": {"TOOLCHAIN":"nuclei_gnu", "STDCLIB":"newlib_small"},
+        "nuclei_llvm": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small"},
         "terapines_O0": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O0"},
         "terapines_O1": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O1"},
         "terapines_O2": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O2"},
