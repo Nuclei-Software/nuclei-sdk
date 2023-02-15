@@ -44,11 +44,15 @@ SDK_GLOBAL_VARIABLES = {
     "sdk_fpgaprog_maxcnt": 3,
     "sdk_gdberr_maxcnt": 10,
     "sdk_uploaderr_maxcnt": 10,
+    "sdk_bannertmout_maxcnt": 100,
     "sdk_verb_buildmsg": True,
     "sdk_copy_failobj": True
     }
 
 INVAILD_SERNO = "xxxxx"
+BANNER_TMOUT = "banner_timeout"
+TTY_OP_ERR = "tty_operate_error"
+TTY_UNKNOWN_ERR = "tty_unknown_error"
 
 # get ci url information
 def get_ci_info():
@@ -151,6 +155,15 @@ def get_sdk_gdberr_maxcnt():
         num = int(num)
     else:
         num = SDK_GLOBAL_VARIABLES.get("sdk_gdberr_maxcnt")
+
+    return num
+
+def get_sdk_bannertmout_maxcnt():
+    num = os.environ.get("SDK_BANNERTMOUT_MAXCNT")
+    if num is not None:
+        num = int(num)
+    else:
+        num = SDK_GLOBAL_VARIABLES.get("sdk_bannertmout_maxcnt")
 
     return num
 

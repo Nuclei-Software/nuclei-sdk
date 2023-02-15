@@ -312,13 +312,21 @@ class MonitorThread(Thread):
         self._exit_req = False
         self._check_sdk = False
         self._check_sdk_timeout = 10
+        self.result = False
+        self.reason = ""
         pass
 
     def get_result(self):
         try:
             return self.result
         except Exception:
-            return None
+            return False
+
+    def get_reason(self):
+        try:
+            return self.reason
+        except Exception:
+            return ""
 
     def get_tty_iserror(self):
         return self.tty_iserr
@@ -335,8 +343,10 @@ class MonitorThread(Thread):
 
     def run(self):
         start_time = time.time()
+        serial_prelog = ""
         serial_log = ""
         check_status = False
+        check_reason = ""
         pass_checks = self.checks.get("PASS", [])
         fail_checks = self.checks.get("FAIL", [])
         def test_in_check(string, checks):
@@ -369,26 +379,36 @@ class MonitorThread(Thread):
                         chk_time_cost = time.time() - self._check_sdk_timestart
                         if chk_time_cost > self._check_sdk_timeout:
                             print("No SDK banner found in %s s, quit now!" % (self._check_sdk_timeout))
+                            check_reason = BANNER_TMOUT
                             break
                     if NSDK_CHECK_TAG in line:
                         timestr = line.split(NSDK_CHECK_TAG)[-1].strip()
                         if "Download" in timestr:
                             print("Warning: Download and SDK tag in same line which should not happen!")
                             #timestr = timestr.split("Download")[0].strip()
-                        cur_time = time.mktime(time.strptime(timestr, "%b %d %Y, %H:%M:%S"))
+                        try:
+                            cur_time = time.mktime(time.strptime(timestr, "%b %d %Y, %H:%M:%S"))
+                        except:
+                            print("Warning: Failed to parse time string %s" % (timestr))
+                            cur_time = 0
                         if int(cur_time) >= int(self.checktime):
                             self.sdk_check = False
                             line = NSDK_CHECK_TAG + " " + timestr + "\n"
                             serial_log = serial_log + str(line)
+                        else:
+                            # record previous log of this application
+                            serial_prelog = serial_prelog + str(line)
                 else:
                     serial_log = serial_log + str(line)
                     if self.show_output:
                         print(line, end='')
                     if check_finished == False:
                         if test_in_check(line, fail_checks):
+                            check_reason = "FAIL line: %s" % (line)
                             check_status = False
                             check_finished = True
                         if test_in_check(line, pass_checks):
+                            check_reason = "PASS line: %s" % (line)
                             check_status = True
                             check_finished = True
                         if check_finished:
@@ -401,15 +421,23 @@ class MonitorThread(Thread):
             print("serial port %s might not exist or in use" % self.port)
             # set tty is error
             self.tty_iserr = True
+            check_reason = TTY_OP_ERR
         except Exception as exc:
             print("Some error happens during serial operations, %s" % (str(exc)))
+            check_reason = TTY_UNKNOWN_ERR
         finally:
             if ser:
                 ser.close()
         if self.logfile:
             with open(self.logfile, 'w') as lf:
                 lf.write(serial_log)
+            prelogfile = os.path.splitext(self.logfile)[0] + "pre.log"
+            # record prestep serial log
+            if serial_prelog.strip() != "":
+                with open(prelogfile, 'w') as lf:
+                    lf.write(serial_prelog)
         self.result = check_status
+        self.reason = check_reason
         return check_status
 
 class nsdk_runner(nsdk_builder):
@@ -419,6 +447,7 @@ class nsdk_runner(nsdk_builder):
         self.ttyerrcnt = 0
         self.fpgaprogramcnt = 0
         self.gdberrcnt = 0
+        self.bannertmoutcnt = 0
         self.uploaderrcnt = 0
         pass
 
@@ -436,6 +465,7 @@ class nsdk_runner(nsdk_builder):
         self.uploaderrcnt = 0
         self.fpgaprogramcnt = 0
         self.gdberrcnt = 0
+        self.bannertmoutcnt = 0
         pass
 
     def need_exit_now(self):
@@ -445,6 +475,8 @@ class nsdk_runner(nsdk_builder):
             return True
         if self.gdberrcnt > get_sdk_gdberr_maxcnt():
             return True
+        if self.bannertmoutcnt > get_sdk_bannertmout_maxcnt():
+            return True
         if self.uploaderrcnt > get_sdk_uploaderr_maxcnt():
             return True
         return False
@@ -453,6 +485,7 @@ class nsdk_runner(nsdk_builder):
         print("TTY Error counter %d, limit count %d" % (self.ttyerrcnt, get_sdk_ttyerr_maxcnt()))
         print("GDB Internal Error counter %d, limit count %d" % (self.gdberrcnt, get_sdk_gdberr_maxcnt()))
         print("Upload Error counter %d, limit count %d" % (self.uploaderrcnt, get_sdk_uploaderr_maxcnt()))
+        print("Banner Timeout Error counter %d, limit count %d" % (self.bannertmoutcnt, get_sdk_bannertmout_maxcnt()))
         print("FPGA Program Error counter %d, limit count %d" % (self.fpgaprogramcnt, get_sdk_fpgaprog_maxcnt()))
         pass
 
@@ -544,6 +577,7 @@ class nsdk_runner(nsdk_builder):
                 uploader = upload_sts.get("app", dict()).get("uploader", None)
                 uploader["retried"] = retry_cnt
                 status = True
+                check_reason = ""
                 if ser_thread:
                     if cmdsts == False:
                         ser_thread.exit_request()
@@ -552,11 +586,13 @@ class nsdk_runner(nsdk_builder):
                     while ser_thread.is_alive():
                         ser_thread.join(1)
                     status = ser_thread.get_result()
+                    check_reason = ser_thread.get_reason()
                     if ser_thread.get_tty_iserror(): # tty is in use or not exist
                         print("tty serial port error count %d" % (self.ttyerrcnt))
                         self.ttyerrcnt += 1
                     del ser_thread
                 if uploader.get("cpustatus", "") == "hang": # cpu hangs then call cpu hangup action and retry this application
+                    max_retrycnt = 1 # when upload error happened, do retry once
                     self.uploaderrcnt += 1
                     if self.hangup_action is not None:
                         print("Execute hangup action for hangup case!")
@@ -579,6 +615,11 @@ class nsdk_runner(nsdk_builder):
                     max_retrycnt = 2 # when gdb internal error happened, do retry twice
                     print("GDB internal error happened, re-upload application, total re-upload count %d" % (self.gdberrcnt))
                     self.gdberrcnt += 1
+                    continue
+                if status == False and check_reason == BANNER_TMOUT: # banner timeout error, so retry upload application
+                    max_retrycnt = 1 # when banner timeout error happened, do retry once
+                    print("Banner timeout, re-upload application, total re-upload count %d" % (self.bannertmoutcnt))
+                    self.bannertmoutcnt += 1
                     continue
                 # exit with upload status
                 break
