@@ -77,7 +77,13 @@ typedef struct IRegion_Info {
    eg.: uart0's external interrupt id in demosoc is 32, while its ECLIC IRQn is 51 */
 #define SOC_EXTERNAL_MAP_TO_ECLIC_IRQn_OFFSET      19
 /* get demosoc's External IRQn from ECLIC external IRQn which indexs from 19 */
-#define ECLIC_IRQn_MAP_TO_SOC_EXTERNAL(IRQn)       (IRQn - SOC_EXTERNAL_MAP_TO_ECLIC_IRQn_OFFSET)
+#define IRQn_MAP_TO_EXT_ID(IRQn)                   (IRQn - SOC_EXTERNAL_MAP_TO_ECLIC_IRQn_OFFSET)
+/* UART0 Interrupt */
+#define UART0_IRQn                                 SOC_INT51_IRQn
+/* QSPI Interrupt */
+#define QSPI0_IRQn                                 SOC_INT53_IRQn
+#define QSPI1_IRQn                                 SOC_INT54_IRQn
+#define QSPI2_IRQn                                 SOC_INT55_IRQn
 
 typedef enum IRQn {
     /* =======================================  Nuclei Core Specific Interrupt Numbers  ======================================== */
@@ -138,11 +144,11 @@ typedef enum IRQn {
     SOC_INT48_IRQn           = 48,                /*!< Device Interrupt */
     SOC_INT49_IRQn           = 49,                /*!< Device Interrupt */
     SOC_INT50_IRQn           = 50,                /*!< Device Interrupt */
-    UART0_IRQn               = 51,                /*!< UART0 Interrupt */
+    SOC_INT51_IRQn           = 51,                /*!< Device Interrupt */
     SOC_INT52_IRQn           = 52,                /*!< Device Interrupt */
-    QSPI0_IRQn               = 53,                /*!< QSPI0 Interrupt */
-    QSPI1_IRQn               = 54,                /*!< QSPI1 Interrupt */
-    QSPI2_IRQn               = 55,                /*!< QSPI2 Interrupt */
+    SOC_INT53_IRQn           = 53,                /*!< Device Interrupt */
+    SOC_INT54_IRQn           = 54,                /*!< Device Interrupt */
+    SOC_INT55_IRQn           = 55,                /*!< Device Interrupt */
     SOC_INT56_IRQn           = 56,                /*!< Device Interrupt */
     SOC_INT57_IRQn           = 57,                /*!< Device Interrupt */
     SOC_INT58_IRQn           = 58,                /*!< Device Interrupt */
