@@ -28,7 +28,7 @@ endif
 .PHONY: all info showflags showtoolver help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike run_qemu_debug run_xlspike_rbb run_xlspike_openocd clean debug
 
 info:
-	@$(ECHO) Current Configuration: RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) RISCV_TUNE=$(RISCV_TUNE) RISCV_CMODEL=$(RISCV_CMODEL) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) ARCH_EXT=$(ARCH_EXT) DOWNLOAD=$(DOWNLOAD) STDCLIB=$(STDCLIB) SMP=$(SMP) BOOT_HARTID=$(BOOT_HARTID)
+	@$(ECHO) Current Configuration: TOOLCHAIN=$(TOOLCHAIN) RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) RISCV_TUNE=$(RISCV_TUNE) RISCV_CMODEL=$(RISCV_CMODEL) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) ARCH_EXT=$(ARCH_EXT) DOWNLOAD=$(DOWNLOAD) STDCLIB=$(STDCLIB) SMP=$(SMP) BOOT_HARTID=$(BOOT_HARTID)
 
 showflags:
 	@$(ECHO) TARGET: $(TARGET)

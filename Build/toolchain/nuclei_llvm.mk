@@ -2,7 +2,7 @@ CC      := clang
 CXX     := clang++
 OBJDUMP := llvm-objdump
 OBJCOPY := llvm-objcopy
-# not ready
+# use gnu gdb to debug or upload
 GDB     := riscv64-unknown-elf-gdb
 AR      := llvm-ar
 SIZE    := llvm-size

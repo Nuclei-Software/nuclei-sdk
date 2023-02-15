@@ -2,6 +2,7 @@ CC      := zcc
 CXX     := z++
 OBJDUMP := llvm-objdump
 OBJCOPY := llvm-objcopy
+# use gnu gdb to debug or upload
 GDB     := riscv64-unknown-elf-gdb
 AR      := llvm-ar
 SIZE    := llvm-size
