@@ -120,6 +120,61 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 
 // High performance monitor bench helpers
 #ifndef DISABLE_NMSIS_HPM
+
+/* Events type select */
+#define EVENT_SEL_INSTRUCTION_COMMIT                                               0
+#define EVENT_SEL_MEMORY_ACCESS                                                    1
+
+/* Instruction commit events idx define*/
+#define EVENT_INSTRUCTION_COMMIT_CYCLE_COUNT                                       1
+#define EVENT_INSTRUCTION_COMMIT_RETIRED_COUNT                                     2
+/* Integer load instruction (includes LR) */
+#define EVENT_INSTRUCTION_COMMIT_INTEGER_LOAD                                      3
+/* Integer store instruction (includes SC) */
+#define EVENT_INSTRUCTION_COMMIT_INTEGER_STORE                                     4
+/* Atomic memory operation (do not include LR and SC) */
+#define EVENT_INSTRUCTION_COMMIT_ATOMIC_MEMORY_OPERATION                           5
+/* System instruction */
+#define EVENT_INSTRUCTION_COMMIT_SYSTEM                                            6
+/* Integer computational instruction (excluding multiplication/division/remainder) */
+#define EVENT_INSTRUCTION_COMMIT_INTEGER_COMPUTATIONAL                             7
+#define EVENT_INSTRUCTION_COMMIT_CONDITIONAL_BRANCH                                8
+#define EVENT_INSTRUCTION_COMMIT_TAKEN_CONDITIONAL_BRANCH                          9
+#define EVENT_INSTRUCTION_COMMIT_JAL                                               10
+#define EVENT_INSTRUCTION_COMMIT_JALR                                              11
+#define EVENT_INSTRUCTION_COMMIT_RETURN                                            12
+/* Control transfer instruction (CBR+JAL+JALR) */
+#define EVENT_INSTRUCTION_COMMIT_CONTROL_TRANSFER                                  13
+/* 14 Reseved */
+#define EVENT_INSTRUCTION_COMMIT_INTEGER_MULTIPLICATION                            15
+/* Integer division/remainder instruction */
+#define EVENT_INSTRUCTION_COMMIT_INTEGER_DIVISION_REMAINDER                        16
+#define EVENT_INSTRUCTION_COMMIT_FLOATING_POINT_LOAD                               17
+#define EVENT_INSTRUCTION_COMMIT_FLOATING_POINT_STORE                              18
+/* Floating-point addition/subtraction */
+#define EVENT_INSTRUCTION_COMMIT_FLOATING_POINT_ADDITION_SUBTRACTION               19
+#define EVENT_INSTRUCTION_COMMIT_FLOATING_POINT_MULTIPLICATION                     20
+/* Floating-point fused multiply-add (FMADD, FMSUB, FNMSUB, FNMADD) */
+#define EVENT_INSTRUCTION_COMMIT_FLOATING_POINT_FUSED_MULTIPLY_ADD_SUB             21
+#define EVENT_INSTRUCTION_COMMIT_FLOATING_POINT_DIVISION_OR_SQUARE_ROOT            22
+#define EVENT_INSTRUCTION_COMMIT_OTHER_FLOATING_POINT_INSTRUCTION                  23
+#define EVENT_INSTRUCTION_COMMIT_CONDITIONAL_BRANCH_PREDICTION_FAIL                24
+#define EVENT_INSTRUCTION_COMMIT_JAL_PREDICTION_FAIL                               25
+#define EVENT_INSTRUCTION_COMMIT_JALR_PREDICTION_FAIL                              26
+
+/* Memory access events idx define*/
+#define EVENT_MEMORY_ACCESS_ICACHE_MISS                                            1
+#define EVENT_MEMORY_ACCESS_DCACHE_MISS                                            2
+#define EVENT_MEMORY_ACCESS_ITLB_MISS                                              3
+#define EVENT_MEMORY_ACCESS_DTLB_MISS                                              4
+#define EVENT_MEMORY_ACCESS_MAIN_DTLB_MISS                                         5
+
+/* Enable the corresponding performance monitor counter increment for events in Machine/Supervisor/User Mode */
+#define MSU_EVENT_ENABLE                                                           0x0F
+#define MEVENT_EN                                                                  0x08
+#define SEVENT_EN                                                                  0x02
+#define UEVENT_EN                                                                  0x01
+
 /** Declare high performance monitor counter idx benchmark required variables, need to be placed above all HPM_xxx macros in each c source code if HPM_xxx used */
 #define HPM_DECLARE_VAR(idx)    static volatile uint64_t __hpm_sttcyc##idx, __hpm_endcyc##idx, __hpm_usecyc##idx, __hpm_val##idx;
 
