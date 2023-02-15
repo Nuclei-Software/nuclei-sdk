@@ -1,0 +1,10 @@
+{
+    "build_config": {
+        "CPU_SERIES": "900"
+    },
+    "build_configs": {
+        "rv64imac": {"CORE":"nx900"},
+        "rv64imafc": {"CORE":"nx900f", "ARCH_EXT":""},
+        "rv64imafdc": {"CORE":"nx900fd", "ARCH_EXT":""}
+    }
+}

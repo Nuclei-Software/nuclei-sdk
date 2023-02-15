@@ -1,0 +1,8 @@
+{
+    "build_config": {
+        "CPU_SERIES": "200"
+    },
+    "build_configs": {
+        "rv32imac": {"CORE":"n203"}
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "build_config": {
+        "CPU_SERIES": "300"
+    },
+    "build_configs": {
+        "rv32imac": {"CORE":"n300"},
+        "rv32imafc": {"CORE":"n300f", "ARCH_EXT":""},
+        "rv32imafdc": {"CORE":"n300fd", "ARCH_EXT":""}
+    }
+}
