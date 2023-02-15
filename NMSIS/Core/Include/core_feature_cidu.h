@@ -61,32 +61,27 @@ extern "C" {
 #endif
 
 #define CIDU_BASE                                __CIDU_BASEADDR
-#define CORE_RECEIVE_INTERRUPT_ENABLE(core_id)   (1 << core_id)   /*!< indicates the core can receive corresponding interrupt */
+#define CIDU_RECEIVE_INTERRUPT_EN(core_id)       (0x1U << core_id)   /*!< Indicates the core can receive corresponding interrupt */
 
-/**
- * \brief CIDU Register offset
- */
-#define CORE_INT_STATUS_OFS                      0x0
-#define SEMAPHORE_OFS                            0x80
-#define ICI_SHADOW_OFS                           0x3FFC
-#define INT_INDICATOR_OFS                        0x4000
-#define INT_MASK_OFS                             0x8000
-#define CORE_NUM_OFS                             0xC084
-#define INT_NUM_OFS                              0xC090
+#define CIDU_CORE_INT_STATUS_OFS      0x0        /*!< Core n Inter Core Interrupt status register base offset */
+#define CIDU_SEMAPHORE_OFS            0x80       /*!< Semaphore n register base offset */
+#define CIDU_ICI_SHADOW_OFS           0x3FFC     /*!< ICI Interrupt source core ID and target core ID register offset */
+#define CIDU_INT_INDICATOR_OFS        0x4000     /*!< External interrupt n indicator register base offset */
+#define CIDU_INT_MASK_OFS             0x8000     /*!< External interrupt n mask (mask interrupt n to cores or not when interrupt n indicator on)register base offset */
+#define CIDU_CORE_NUM_OFS             0xC084     /*!< Static configuration core num register offset */
+#define CIDU_INT_NUM_OFS              0xC090     /*!< Static configuration external interrupt number register offset */
 
-/**
- * \brief CIDU Register address
- */
-#define CORE_INT_STATUS_ADDR(n)                  (unsigned long)((CIDU_BASE) + (CORE_INT_STATUS_OFS) + ((n) << 2))
-#define SEMAPHORE_ADDR(n)                        (unsigned long)((CIDU_BASE) + (SEMAPHORE_OFS) + ((n) << 2))
-#define ICI_SHADOW_ADDR                          (unsigned long)((CIDU_BASE) + (ICI_SHADOW_OFS))
-#define INT_INDICATOR_ADDR(n)                    (unsigned long)((CIDU_BASE) + (INT_INDICATOR_OFS) + ((n) << 2))
-#define INT_MASK_ADDR(n)                         (unsigned long)((CIDU_BASE) + (INT_MASK_OFS) + ((n) << 2))
-#define CORE_NUM_ADDR                            (unsigned long)((CIDU_BASE) + (CORE_NUM_OFS))
-#define INT_NUM_ADDR                             (unsigned long)((CIDU_BASE) + (INT_NUM_OFS))
+#define CIDU_CORE_INT_STATUS_ADDR(n)  (unsigned long)((CIDU_BASE) + (CIDU_CORE_INT_STATUS_OFS) + ((n) << 2))    /*!< Core n Inter Core Interrupt status register address */
+#define CIDU_SEMAPHORE_ADDR(n)        (unsigned long)((CIDU_BASE) + (CIDU_SEMAPHORE_OFS) + ((n) << 2))          /*!< Semaphore n register address */
+#define CIDU_ICI_SHADOW_ADDR          (unsigned long)((CIDU_BASE) + (CIDU_ICI_SHADOW_OFS))                      /*!< ICI Interrupt source core ID and target core ID register address */
+#define CIDU_INT_INDICATOR_ADDR(n)    (unsigned long)((CIDU_BASE) + (CIDU_INT_INDICATOR_OFS) + ((n) << 2))      /*!< External interrupt n indicator register address */
+#define CIDU_INT_MASK_ADDR(n)         (unsigned long)((CIDU_BASE) + (CIDU_INT_MASK_OFS) + ((n) << 2))           /*!< External interrupt n mask (mask interrupt n to cores or not when interrupt n indicator on)register address */
+#define CIDU_CORE_NUM_ADDR            (unsigned long)((CIDU_BASE) + (CIDU_CORE_NUM_OFS))                        /*!< Static configuration core num register address */
+#define CIDU_INT_NUM_ADDR             (unsigned long)((CIDU_BASE) + (CIDU_INT_NUM_OFS))                         /*!< Static configuration external interrupt number register address */
 
-/* SEND_CORE_ID position in ICI_SHADOW_REG register*/
-#define ICI_SHADOW_SEND_CORE_ID_POS              16
+
+/* SEND_CORE_ID position in ICI_SHADOW_REG register */
+#define CIDU_ICI_SHADOW_SEND_CORE_ID_POS         16
 
 /**
  * \brief  Get core number in the cluster
@@ -101,7 +96,7 @@ extern "C" {
 __STATIC_FORCEINLINE uint32_t CIDU_GetCoreNum(void)
 {
     uint32_t val;
-    uint32_t* addr = (uint32_t*)CORE_NUM_ADDR;
+    uint32_t* addr = (uint32_t*)CIDU_CORE_NUM_ADDR;
 
     val = __LW(addr);
     return val;
@@ -118,7 +113,7 @@ __STATIC_FORCEINLINE uint32_t CIDU_GetCoreNum(void)
 __STATIC_FORCEINLINE uint32_t CIDU_GetIntNum(void)
 {
     uint32_t val;
-    uint32_t* addr = (uint32_t*)INT_NUM_ADDR;
+    uint32_t* addr = (uint32_t*)CIDU_INT_NUM_ADDR;
 
     val = __LW(addr);
     return val;
@@ -138,7 +133,7 @@ __STATIC_FORCEINLINE uint32_t CIDU_GetIntNum(void)
  * This function broadcasts external interrupt_n to some/all target cores
  * \param [in]    interrupt_n    external interrupt id
  * \param [in]    to_cores       target cores which can receive interrupt, use bitwise inclusive or
- *                               of \ref CORE_RECEIVE_INTERRUPT_ENABLE(core_id)
+ *                               of \ref CIDU_RECEIVE_INTERRUPT_EN(core_id)
  * \remarks
  * - External IRQn ID(interrupt_n) is from the hard-wired persperctive,
  *   which has an offset mapped to the ECLIC IRQn, see Interrupt Number Definition in <Device.h>
@@ -146,7 +141,7 @@ __STATIC_FORCEINLINE uint32_t CIDU_GetIntNum(void)
 */
 __STATIC_FORCEINLINE void CIDU_SetBroadcastMode(uint32_t interrupt_n, uint32_t to_cores)
 {
-    uint32_t* addr = (uint32_t*)INT_INDICATOR_ADDR(interrupt_n);
+    uint32_t* addr = (uint32_t*)CIDU_INT_INDICATOR_ADDR(interrupt_n);
 
     __SW(addr, (uint32_t)to_cores);
 }
@@ -162,10 +157,10 @@ __STATIC_FORCEINLINE void CIDU_SetBroadcastMode(uint32_t interrupt_n, uint32_t t
  *   which has an offset mapped to the ECLIC IRQn, see Interrupt Number Definition in <Device.h>
  * - By default on reset, only core 0 can receive interrupt_n
 */
-__STATIC_FORCEINLINE uint32_t CIDU_GetBroadcastModeStaus(uint32_t interrupt_n)
+__STATIC_FORCEINLINE uint32_t CIDU_GetBroadcastModeStatus(uint32_t interrupt_n)
 {
     uint32_t val = 0;
-    uint32_t* addr = (uint32_t*)INT_INDICATOR_ADDR(interrupt_n);
+    uint32_t* addr = (uint32_t*)CIDU_INT_INDICATOR_ADDR(interrupt_n);
 
     val = __LW(addr);
     return val;
@@ -191,7 +186,7 @@ __STATIC_FORCEINLINE uint32_t CIDU_GetBroadcastModeStaus(uint32_t interrupt_n)
 __STATIC_FORCEINLINE int32_t CIDU_SetFirstClaimMode(uint32_t interrupt_n, uint32_t core_id)
 {
     uint32_t val = 0;
-    uint32_t* addr = (uint32_t*)INT_MASK_ADDR(interrupt_n);
+    uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(interrupt_n);
     uint32_t mask = 1 << core_id;
 
     __SW(addr, mask);
@@ -217,7 +212,7 @@ __STATIC_FORCEINLINE int32_t CIDU_SetFirstClaimMode(uint32_t interrupt_n, uint32
 __STATIC_FORCEINLINE void CIDU_ResetFirstClaimMode(uint32_t interrupt_n)
 {
     uint32_t val = 0;
-    uint32_t* addr = (uint32_t*)INT_MASK_ADDR(interrupt_n);
+    uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(interrupt_n);
 
     /* clear by writing all 1 */
     __SW(addr, 0xFFFFFFFF);
@@ -240,7 +235,7 @@ __STATIC_FORCEINLINE void CIDU_ResetFirstClaimMode(uint32_t interrupt_n)
 __STATIC_FORCEINLINE int32_t CIDU_GetClaimStatus(uint32_t interrupt_n)
 {
     uint32_t val = 0;
-    uint32_t* addr = (uint32_t*)INT_MASK_ADDR(interrupt_n);
+    uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(interrupt_n);
 
     val = __LW(addr);
     return val;
@@ -276,9 +271,9 @@ __STATIC_FORCEINLINE int32_t CIDU_GetClaimStatus(uint32_t interrupt_n)
 __STATIC_FORCEINLINE void CIDU_SetInterCoreIntShadow(uint32_t send_core_id, uint32_t recv_core_id)
 {
     uint32_t val = 0;
-    uint32_t* addr = (uint32_t*)ICI_SHADOW_ADDR;
+    uint32_t* addr = (uint32_t*)CIDU_ICI_SHADOW_ADDR;
 
-    val = (uint32_t)(send_core_id << ICI_SHADOW_SEND_CORE_ID_POS) | (uint32_t)(recv_core_id);
+    val = (uint32_t)(send_core_id << CIDU_ICI_SHADOW_SEND_CORE_ID_POS) | (uint32_t)(recv_core_id);
     __SW(addr, (uint32_t)val);
 }
 
@@ -294,7 +289,7 @@ __STATIC_FORCEINLINE void CIDU_SetInterCoreIntShadow(uint32_t send_core_id, uint
 __STATIC_FORCEINLINE uint32_t CIDU_GetCoreIntStatus(uint32_t recv_core_id)
 {
     uint32_t val = 0;
-    uint32_t* addr = (uint32_t*)CORE_INT_STATUS_ADDR(recv_core_id);
+    uint32_t* addr = (uint32_t*)CIDU_CORE_INT_STATUS_ADDR(recv_core_id);
 
     val = __LW(addr);
     return val;
@@ -336,7 +331,7 @@ __STATIC_FORCEINLINE uint32_t CIDU_GetCoreIntSenderId(uint32_t recv_core_id)
 __STATIC_FORCEINLINE void CIDU_ClearCoreIntStatus(uint32_t send_core_id, uint32_t recv_core_id)
 {
     uint32_t val = 0;
-    uint32_t* addr = (uint32_t*)CORE_INT_STATUS_ADDR(recv_core_id);
+    uint32_t* addr = (uint32_t*)CIDU_CORE_INT_STATUS_ADDR(recv_core_id);
 
     val |= (uint32_t)(1 << send_core_id);
     __SW(addr, val);
@@ -366,7 +361,7 @@ __STATIC_FORCEINLINE void CIDU_ClearCoreIntStatus(uint32_t send_core_id, uint32_
 __STATIC_FORCEINLINE int32_t CIDU_GetSemaphoreStatus(uint32_t semph_n)
 {
     uint32_t val;
-    uint32_t* addr = (uint32_t*)SEMAPHORE_ADDR(semph_n);
+    uint32_t* addr = (uint32_t*)CIDU_SEMAPHORE_ADDR(semph_n);
 
     val = __LW(addr);
     return val;
@@ -413,7 +408,7 @@ __STATIC_FORCEINLINE int32_t CIDU_CheckSemaphoreOwnStatus(uint32_t semph_n, uint
 __STATIC_FORCEINLINE int32_t CIDU_AcquireSemaphore(uint32_t semph_n, uint32_t core_id)
 {
     int32_t semaphore_status = -1;
-    uint32_t* addr = (uint32_t*)SEMAPHORE_ADDR(semph_n);
+    uint32_t* addr = (uint32_t*)CIDU_SEMAPHORE_ADDR(semph_n);
 
     __SW(addr, core_id);
     semaphore_status = CIDU_CheckSemaphoreOwnStatus(semph_n, core_id);
@@ -454,7 +449,7 @@ __STATIC_FORCEINLINE void CIDU_AcquireSemaphore_Block(uint32_t semph_n, uint32_t
 __STATIC_FORCEINLINE void CIDU_ReleaseSemaphore(uint32_t semph_n)
 {
     uint32_t val;
-    uint32_t* addr = (uint32_t*)SEMAPHORE_ADDR(semph_n);
+    uint32_t* addr = (uint32_t*)CIDU_SEMAPHORE_ADDR(semph_n);
 
     /* Release by writing all 1 */
     __SW(addr, 0xFFFFFFFF);
