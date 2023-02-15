@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "nuclei_sdk_soc.h"
 #include "nuclei_sdk_hal.h"
 
 #if !defined(__CIDU_PRESENT) || (__CIDU_PRESENT != 1)
@@ -11,7 +10,7 @@
 #error "SMP_CPU_CNT macro is not defined, please set SMP_CPU_CNT to integer value > 1"
 #endif
 
-/* Comment it if you want broadcast mode */
+/* Comment it if you just want broadcast mode */
 #define ENABLE_FIRST_COME_FIRST_CLAIM_MODE
 
 #define CORE_ID(n)                (n)
@@ -45,7 +44,7 @@ void eclic_uart0_int_handler()
     CIDU_ReleaseSemaphore(UART0_SEMAPHORE);
 
 #if defined(ENABLE_FIRST_COME_FIRST_CLAIM_MODE)
-    status = CIDU_SetFirstClaimMode(ECLIC_IRQn_MAP_TO_SOC_EXTERNAL(UART0_IRQn), hartid);
+    status = CIDU_SetFirstClaimMode(IRQn_MAP_TO_EXT_ID(UART0_IRQn), hartid);
     if (0 != status) {
         return;
     }
@@ -67,7 +66,7 @@ void eclic_uart0_int_handler()
     CIDU_ReleaseSemaphore(UART0_SEMAPHORE);
 
 #if defined(ENABLE_FIRST_COME_FIRST_CLAIM_MODE)
-    CIDU_ResetFirstClaimMode(ECLIC_IRQn_MAP_TO_SOC_EXTERNAL(UART0_IRQn));
+    CIDU_ResetFirstClaimMode(IRQn_MAP_TO_EXT_ID(UART0_IRQn));
 #endif
 }
 
@@ -93,9 +92,9 @@ int main(void)
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
 
     if (hartid == BOOT_HARTID) { // boot hart
-        /* CIDU_SetBroadcastMode(ECLIC_IRQn_MAP_TO_SOC_EXTERNAL(UART0_IRQn), CORE_RECEIVE_INTERRUPT_ENABLE(0)
-                                | CORE_RECEIVE_INTERRUPT_ENABLE(1)); */
-        CIDU_SetBroadcastMode(ECLIC_IRQn_MAP_TO_SOC_EXTERNAL(UART0_IRQn), BROADCAST_TO_ALL_CORES);
+        /* CIDU_SetBroadcastMode(IRQn_MAP_TO_EXT_ID(UART0_IRQn), CIDU_RECEIVE_INTERRUPT_EN(0)
+                                | CIDU_RECEIVE_INTERRUPT_EN(1)); */
+        CIDU_SetBroadcastMode(IRQn_MAP_TO_EXT_ID(UART0_IRQn), BROADCAST_TO_ALL_CORES);
 
         /* Register uart0 interrupt receive message handler */
         ECLIC_Register_IRQ(UART0_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
