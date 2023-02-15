@@ -1479,6 +1479,172 @@ From output, all the core enters the ISR(means broadcasted), while only one core
 the uart0 input(semaphore used), when semaphore released, other core wants to handle the ISR job(means claim mode disabled),
 but process nothing (keyboard input has been received and rx interrupt pending cleared) because it has been processed.
 
+.. _design_app_demo_cache:
+
+demo_cache
+~~~~~~~~~~
+
+This `demo_cache_application`_ is used to demonstrate how to understand cache mechanism.
+
+This demo requests DCache, ICache and CCM(Cache Control and Maintenance), and needs to run in ddr memory,
+because cache will bypass when run in ilm, data in dlm(private resource for cpu).
+
+.. note::
+    * Need to enable DCache, ICACHE, CCM in <Device.h> if present in CPU.
+
+* An arrary( ``ROW_SIZE`` * ``COL_SIZE`` ) called ``array_test`` is created to access its first element ``array_test[0][0]``
+* Firstly, enable and invalidate all DCache, update ``array_test`` by writing a consant, the cache miss happens and will update ``array_test``'s
+  mapping value in DCache, read out ``array_test[0][0]``; then disable the Dcache, init array_test in the ddr memory to different constant, 
+  read out ``array_test[0][0]``; after that, enable the DCache flushes DCache to ddr memory, read out ``array_test[0][0]``, and compare these ``array_test[0][0]`` value
+* Again disable the Dcache, init array_test in the ddr memory, read out ``array_test[0][0]``; then enable the DCache, read out ``array_test[0][0]``,
+  and compare with the one before
+* **For further understanding**, if the CPU has configured ``HPM`` (Hardware Performance Monitor), observe the cache miss count by recording the cache miss
+  of updating array_test with DCache invalid, then compared to updating array_test with keeping DCache valid; also, compare the cache miss
+  count of updating array_test row by row with column by column
+* ``BIG_ROW_SIZE`` can be defined to make the array size ``2048*64`` bytes, which is big to see the cache miss gap(performance gap) between
+  updating ``array_test`` row by row and column by column
+* In our evalsoc/demosoc, cache line size is 64 bytes generally, so ``array_test``'s ``COL_SIZE`` is 64 bytes for calculating the cache miss manually and easily
+* When ``HPM`` used, because there's global variables in ``HPM_START`` and ``HPM_END`` , **these will bring 3 cache miss itself** (not considering cached)
+* You can manage ICache apis like DCache, which skipped in this demo for less similar code
+
+.. note::
+    * There's ``printf`` hidden in ``HPM_END``, if there is another HPM_END before it, the ``printf`` will bring about 10 or more cache miss
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei UX900 Core RISC-V processor as example
+    # application needs to run in ddr memory not in ilm memory
+    # cd to the demo_cache directory
+    cd application/baremetal/demo_cache
+    # Clean the application first
+    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ddr CORE=ux900 clean
+    # Build and upload the application
+    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ddr CORE=ux900 upload
+
+**Expected output(DISABLE_NMSIS_HPM defined) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Feb 14 2023, 18:14:18
+    Download Mode: DDR
+    CPU Frequency 100605952 Hz
+    CPU HartID: 0
+    DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
+
+    array_test 10 * 64 bytes
+
+    ------Update array in memory------
+
+    ------Update array to all 0xab in cache: array_update_by_row------
+
+    -------Keep DCache valid, do array_update_by_row again-------
+
+    -------Invalidate all the Dcache-------
+
+    ------Update array to all 0xab in cache: array_update_by_col ------
+    Read out array_test[0][0] 0xab in cache, then disable DCache
+
+    ------Init array in memory to all 0x34------
+    Read out array_test[0][0] 0x34 in memory, then enable Dcache
+    After cache flushed to memory, array_test[0][0] in memory is 0xab
+
+    ------Again init array in memory to all 0x34, then enable DCache------
+    Read out array_test[0][0] 0x34 in memory
+    Read out array_test[0][0] 0xab in cache, when mapped value in memory has changed
+
+From output, ``array_test`` is updated in memory to all 0xab, and **cached in DCache** when miss happens,
+then disable DCache, init array_test just in memory to all 0x34, **after cache flushed to memory**,
+``array_test`` in memory is all 0xab same with ``array_test`` in DCache. **Disable DCache and init array_test
+again**, ``array_test`` now (all 0x34) differs with cached array_test (all 0xab) after DCache enabled.
+
+
+**Expected output(DISABLE_NMSIS_HPM undefined) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Feb 14 2023, 18:19:17
+    Download Mode: DDR
+    CPU Frequency 100612177 Hz
+    CPU HartID: 0
+    DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
+
+    array_test 10 * 64 bytes
+
+    ------Update array in memory------
+    High performance monitor initialized
+
+    ------Update array to all 0xab in cache: array_update_by_row------
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 13
+
+    -------Keep DCache valid, do array_update_by_row again-------
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 2
+
+    -------Invalidate all the Dcache-------
+
+    ------Update array to all 0xab in cache: array_update_by_col ------
+    HPM4:0xf0000021, array_update_by_col_dcache_miss, 12
+    Read out array_test[0][0] 0xab in cache, then disable DCache
+
+    ------Init array in memory to all 0x34------
+    Read out array_test[0][0] 0x34 in memory, then enable Dcache
+    After cache flushed to memory, array_test[0][0] in memory is 0xab
+
+    ------Again init array in memory to all 0x34, then enable DCache------
+    Read out array_test[0][0] 0x34 in memory
+    Read out array_test[0][0] 0xab in cache, when mapped value in memory has changed
+    HPM4:0xf0000021, dcachemiss_readonebyte, 4
+
+From output, ``HPM`` is enabled, cache miss is counted and ``array_test`` size is 10 * 64 bytes.
+**At first, DCache is invalid**, the first time ``array_test`` update by row has 10 miss(HPM4 shows 13,
+because HPM itself brings in 3 miss); **Keep DCache valid**, update array_test by row again, cache miss
+decreases to 2(``HPM`` itself brings in), which means ``array_test`` has already cached; 
+**Then invalidate all the Dcache**, array_test update by col seems has the same cache miss as update by row.
+
+
+**Expected output(BIG_ROW_SIZE defined, DISABLE_NMSIS_HPM undefined) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Feb 14 2023, 18:22:17
+    Download Mode: DDR
+    CPU Frequency 100612177 Hz
+    CPU HartID: 0
+    DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
+
+    array_test 2048 * 64 bytes
+
+    ------Update array in memory------
+    High performance monitor initialized
+
+    ------Update array to all 0xab in cache: array_update_by_row------
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 2052
+
+    -------Keep DCache valid, do array_update_by_row again-------
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 1301
+
+    -------Invalidate all the Dcache-------
+
+    ------Update array to all 0xab in cache: array_update_by_col ------
+    HPM4:0xf0000021, array_update_by_col_dcache_miss, 88336
+    Read out array_test[0][0] 0xab in cache, then disable DCache
+
+    ------Init array in memory to all 0x34------
+    Read out array_test[0][0] 0x34 in memory, then enable Dcache
+    After cache flushed to memory, array_test[0][0] in memory is 0xab
+
+    ------Again init array in memory to all 0x34, then enable DCache------
+    Read out array_test[0][0] 0x34 in memory
+    Read out array_test[0][0] 0xab in cache, when mapped value in memory has changed
+    HPM4:0xf0000021, dcachemiss_readonebyte, 4
+
+From output, ``array_test`` size is enlarged to ``2048 * 64`` bytes, which is **two times the size of DCache (1024 * 64 bytes)**.
+Cache miss brought by ``HPM`` itself ignored, array update by col has **43 times cache miss(88336) as the array update by row has(2052)**.
+That's because when first byte access brings one cache misse, **one cache line(64 bytes in this demo) is fetched to cache**,
+and it works best if other 63 cached bytes can be accessed before getting dirty as soon as possible, as update by row does.
+
 
 FreeRTOS applications
 ---------------------
@@ -1780,4 +1946,5 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 .. _demo_spmp_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_spmp
 .. _demo_pmp_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pmp
 .. _demo_cidu_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cidu
+.. _demo_cache_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cache
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html
