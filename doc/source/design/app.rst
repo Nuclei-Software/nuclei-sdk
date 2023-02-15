@@ -1332,7 +1332,7 @@ for all the cpu.
 
 .. note::
     * Need to enable CIDU in <Device.h> if CIDU present in cluster.
-    * Multicore soc is needed.
+    * Multicore SoC is needed.
 
 * ``UART0`` receive is used as external interrupt, registered as ``eclic_uart0_int_handler``, which is the best choice 
   for evalsoc/demosoc and is easy to trigger by writing the serial terminal
@@ -1340,9 +1340,9 @@ for all the cpu.
   mode will ensure only the first responding core handle the interrupt service routine(ISR)
 * Inter core interrupt shows likes this: core3 sends interrupt to core2, core2 sends interrupt to core1,
   core1 sends interrupt to core0, and core0 sends interrupt to core3, registered as ``eclic_inter_core_int_handler``,
-  supposing the SOC is four cores, and etc.
+  supposing the SoC is four cores, and etc.
 * To demonstrate it will handle properly if multiple cores send interrupt to one core simultaneously,
-  besides core2, core0 also sends interrupt to core1, supposing the SOC is four core
+  besides core2, core0 also sends interrupt to core1, supposing the SoC is four core
 * To protect ``UART0`` resource when multicores want to access it(call ``printf``), semaphore is configured, which needs to
   be acquired successfully before accessing ``UART0``, and release it after job done
 * ``ENABLE_FIRST_COME_FIRST_CLAIM_MODE`` is defined by default, you can comment it to just use broadcast mode
