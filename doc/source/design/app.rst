@@ -1506,6 +1506,7 @@ because cache will bypass when run in ilm, data in dlm(private resource for cpu)
 * In our evalsoc/demosoc, cache line size is 64 bytes generally, so ``array_test``'s ``COL_SIZE`` is 64 bytes for calculating the cache miss manually and easily
 * When ``HPM`` used, because there's global variables in ``HPM_START`` and ``HPM_END`` , **these will bring 3 cache miss itself** (not considering cached)
 * You can manage ICache apis like DCache, which skipped in this demo for less similar code
+* Different compile optimization level such as -O2/-O0 effects cache miss
 
 .. note::
     * There's ``printf`` hidden in ``HPM_END``, if there is another HPM_END before it, the ``printf`` will bring about 10 or more cache miss
