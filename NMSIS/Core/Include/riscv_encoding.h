@@ -178,10 +178,22 @@
 #define UCODE_OV            (0x1)
 
 /* === Nuclei custom CSR bit mask === */
-#define CSR_MCACHE_CTL_IE   0x00000001
-#define CSR_MCACHE_CTL_IECC_EN   0x00000004
-#define CSR_MCACHE_CTL_DE   0x00010000
-#define CSR_MCACHE_CTL_DECC_EN   0x00020000
+#define CSR_MCACHE_CTL_IE               0x00000001
+#define CSR_MCACHE_CTL_DE               0x00010000
+
+#define CSR_MCACHE_CTL_IC_EN            0x00000001
+#define CSR_MCACHE_CTL_IC_SCPD_MOD      0x00000002
+#define CSR_MCACHE_CTL_IC_ECC_EN        0x00000004
+#define CSR_MCACHE_CTL_IC_ECC_EXCP_EN   0x00000008
+#define CSR_MCACHE_CTL_IC_RWTECC        0x00000010
+#define CSR_MCACHE_CTL_IC_RWDECC        0x00000020
+#define CSR_MCACHE_CTL_IC_PF_EN         0x00000040
+#define CSR_MCACHE_CTL_IC_CANCEL_EN     0x00000080
+#define CSR_MCACHE_CTL_DC_EN            0x00010000
+#define CSR_MCACHE_CTL_DC_ECC_EN        0x00020000
+#define CSR_MCACHE_CTL_DC_ECC_EXCP_EN   0x00040000
+
+
 #define WFE_WFE                     (0x1)
 #define TXEVT_TXEVT                 (0x1)
 #define SLEEPVALUE_SLEEPVALUE       (0x1)

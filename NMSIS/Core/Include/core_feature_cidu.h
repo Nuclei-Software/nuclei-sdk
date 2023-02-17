@@ -81,7 +81,7 @@ extern "C" {
 
 
 /* SEND_CORE_ID position in ICI_SHADOW_REG register */
-#define CIDU_ICI_SHADOW_SEND_CORE_ID_POS         16
+#define CIDU_ICI_SEND_CORE_ID_POS     16
 
 /**
  * \brief  Get core number in the cluster
@@ -130,18 +130,18 @@ __STATIC_FORCEINLINE uint32_t CIDU_GetIntNum(void)
 /**
  * \brief  Broadcast external interrupt to cores
  * \details
- * This function broadcasts external interrupt_n to some/all target cores
- * \param [in]    interrupt_n    external interrupt id
- * \param [in]    to_cores       target cores which can receive interrupt, use bitwise inclusive or
- *                               of \ref CIDU_RECEIVE_INTERRUPT_EN(core_id)
+ * This function broadcasts external interrupt which id is int_id to some/all target cores
+ * \param [in]    int_id      external interrupt id
+ * \param [in]    to_cores    target cores which can receive interrupt, use bitwise inclusive or
+ *                            of \ref CIDU_RECEIVE_INTERRUPT_EN(core_id)
  * \remarks
- * - External IRQn ID(interrupt_n) is from the hard-wired persperctive,
+ * - External IRQn ID(int_id) is from the hard-wired persperctive,
  *   which has an offset mapped to the ECLIC IRQn, see Interrupt Number Definition in <Device.h>
- * - By default on reset, only core 0 can receive interrupt_n
+ * - By default on reset, only core 0 can receive interrupt which id is int_id
 */
-__STATIC_FORCEINLINE void CIDU_SetBroadcastMode(uint32_t interrupt_n, uint32_t to_cores)
+__STATIC_FORCEINLINE void CIDU_BroadcastExtInterrupt(uint32_t int_id, uint32_t to_cores)
 {
-    uint32_t* addr = (uint32_t*)CIDU_INT_INDICATOR_ADDR(interrupt_n);
+    uint32_t* addr = (uint32_t*)CIDU_INT_INDICATOR_ADDR(int_id);
 
     __SW(addr, (uint32_t)to_cores);
 }
@@ -150,17 +150,17 @@ __STATIC_FORCEINLINE void CIDU_SetBroadcastMode(uint32_t interrupt_n, uint32_t t
  * \brief  get broadcast mode status
  * \details
  * Just query the INTn_INDICATOR register value
- * \param [in]    interrupt_n    external interrupt id
+ * \param [in]    int_id    external interrupt id
  * \return INTn_INDICATOR register value
  * \remarks
- * - External IRQn ID(interrupt_n) is from the hard-wired persperctive,
+ * - External IRQn ID(int_id) is from the hard-wired persperctive,
  *   which has an offset mapped to the ECLIC IRQn, see Interrupt Number Definition in <Device.h>
- * - By default on reset, only core 0 can receive interrupt_n
+ * - By default on reset, only core 0 can receive interrupt which id is int_id
 */
-__STATIC_FORCEINLINE uint32_t CIDU_GetBroadcastModeStatus(uint32_t interrupt_n)
+__STATIC_FORCEINLINE uint32_t CIDU_GetBroadcastModeStatus(uint32_t int_id)
 {
     uint32_t val = 0;
-    uint32_t* addr = (uint32_t*)CIDU_INT_INDICATOR_ADDR(interrupt_n);
+    uint32_t* addr = (uint32_t*)CIDU_INT_INDICATOR_ADDR(int_id);
 
     val = __LW(addr);
     return val;
@@ -169,24 +169,23 @@ __STATIC_FORCEINLINE uint32_t CIDU_GetBroadcastModeStatus(uint32_t interrupt_n)
 /**
  * \brief  Let the first coming core to first claim the interrupt
  * \details
- * In external interrupt broadcast mode, make the first coming core to claim this interrupt and then handle it.
- * When it claims the interrupt, it will mask the other core's corresponding bit in the INTn_INDICATOR register.
- * \param [in]    interrupt_n    external interrupt id
- * \param [in]    core_id        core id that receive the interrupt
+ * In external interrupt broadcast mode, make the first coming core to claim this interrupt and then can handle it.
+ * \param [in]    int_id     external interrupt id
+ * \param [in]    core_id    core id that receive the interrupt
  * \return -1 if it fails to claim the interrupt, else it can continue to handle the interrupt
  * \remarks
- * - External IRQn ID(interrupt_n) is from the hard-wired persperctive,
+ * - External IRQn ID(int_id) is from the hard-wired persperctive,
  *   which has an offset mapped to the ECLIC IRQn, see Interrupt Number Definition in <Device.h>.
  * - If it fails to claim the interrupt, it should quit the interrupt n's handler of all cores
  * - When a core claims the interrupt successfully and has handled it, it must call \ref CIDU_ResetFirstClaimMode to reset the claim.
  * \sa
- * - \ref CIDU_SetBroadcastMode
+ * - \ref CIDU_BroadcastExtInterrupt
  * - \ref CIDU_ResetFirstClaimMode
 */
-__STATIC_FORCEINLINE int32_t CIDU_SetFirstClaimMode(uint32_t interrupt_n, uint32_t core_id)
+__STATIC_FORCEINLINE long CIDU_SetFirstClaimMode(uint32_t int_id, uint32_t core_id)
 {
     uint32_t val = 0;
-    uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(interrupt_n);
+    uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(int_id);
     uint32_t mask = 1 << core_id;
 
     __SW(addr, mask);
@@ -201,18 +200,18 @@ __STATIC_FORCEINLINE int32_t CIDU_SetFirstClaimMode(uint32_t interrupt_n, uint32
  * \brief  Reset the claim mode mask
  * \details
  * Reset the claim mode mask by Writing the reset value (all 1) to it
- * \param [in] interrupt_n    external interrupt id
+ * \param [in] int_id    external interrupt id
  * \remarks
- * - External IRQn ID(interrupt_n) is from the hard-wired persperctive,
+ * - External IRQn ID(int_id) is from the hard-wired persperctive,
  *   which has an offset mapped to the ECLIC IRQn, see Interrupt Number Definition in <Device.h>
  * - When a core claims the interrupt successfully and handle it, it must call \ref CIDU_ResetFirstClaimMode to reset the claim
  * \sa
  * - \ref CIDU_SetFirstClaimMode
 */
-__STATIC_FORCEINLINE void CIDU_ResetFirstClaimMode(uint32_t interrupt_n)
+__STATIC_FORCEINLINE void CIDU_ResetFirstClaimMode(uint32_t int_id)
 {
     uint32_t val = 0;
-    uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(interrupt_n);
+    uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(int_id);
 
     /* clear by writing all 1 */
     __SW(addr, 0xFFFFFFFF);
@@ -221,21 +220,21 @@ __STATIC_FORCEINLINE void CIDU_ResetFirstClaimMode(uint32_t interrupt_n)
 /**
  * \brief  Get the claim mask status
  * \details
- * Get the claim mode INTn_MASK register value, each bit indicates it should mask the INTn_INDICATOR's bit or not,
- * 1 means no, 0 means yes.
- * \param [in]    interrupt_n    external interrupt id
+ * Get the claim mode staus, each bit[n] indicates whether core n has claimed interrupt successfully,
+ * 1 means yes, 0 means no.
+ * \param [in]    int_id    external interrupt id
  * \return claim mode register INTn_MASK value
  * \remarks
- * - External IRQn ID(interrupt_n) is from the hard-wired persperctive,
+ * - External IRQn ID(int_id) is from the hard-wired persperctive,
  *   which has an offset mapped to the ECLIC IRQn, see Interrupt Number Definition in <Device.h>
  * \sa
  * - \ref CIDU_ResetFirstClaimMode
  * - \ref CIDU_SetFirstClaimMode
 */
-__STATIC_FORCEINLINE int32_t CIDU_GetClaimStatus(uint32_t interrupt_n)
+__STATIC_FORCEINLINE uint32_t CIDU_GetClaimStatus(uint32_t int_id)
 {
     uint32_t val = 0;
-    uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(interrupt_n);
+    uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(int_id);
 
     val = __LW(addr);
     return val;
@@ -254,39 +253,40 @@ __STATIC_FORCEINLINE int32_t CIDU_GetClaimStatus(uint32_t interrupt_n)
  */
 
 /**
- * \brief  Send interrupt to another core in a multi-core cluster
+ * \brief  Trigger interrupt to another core in a multi-core cluster
  * \details
  * When called by core send_core_id, CIDU will trigger ICI to core recv_core_id automatically.
  * and core recv_core_id could query \ref CIDU_GetCoreIntSenderId to know the sender.
  * \param [in]    send_core_id    the core id which want to send the inter core interrupt
  * \param [in]    recv_core_id    the core id which will receive the inter core interrupt
  * \remarks
- * - The core recv_core_id need to call CIDU_ClearCoreIntStatus to clear the corresponding bit/bits
+ * - The core recv_core_id need to call CIDU_ClearInterCoreIntReq to clear the corresponding bit/bits
  *   of its own COREn_INT_STATUS.
- * - It supports that multiple cores call \ref CIDU_SetInterCoreIntShadow simultaneously.
+ * - It supports that multiple cores call \ref CIDU_TriggerInterCoreInt simultaneously.
  * \sa
  * - \ref CIDU_GetCoreIntSenderId
- * - \ref CIDU_ClearCoreIntStatus
+ * - \ref CIDU_ClearInterCoreIntReq
 */
-__STATIC_FORCEINLINE void CIDU_SetInterCoreIntShadow(uint32_t send_core_id, uint32_t recv_core_id)
+__STATIC_FORCEINLINE void CIDU_TriggerInterCoreInt(uint32_t send_core_id, uint32_t recv_core_id)
 {
     uint32_t val = 0;
     uint32_t* addr = (uint32_t*)CIDU_ICI_SHADOW_ADDR;
 
-    val = (uint32_t)(send_core_id << CIDU_ICI_SHADOW_SEND_CORE_ID_POS) | (uint32_t)(recv_core_id);
+    val = (uint32_t)(send_core_id << CIDU_ICI_SEND_CORE_ID_POS) | (uint32_t)(recv_core_id);
     __SW(addr, (uint32_t)val);
 }
 
 /**
- * \brief  get Coren's Interrupt status register value
+ * \brief  Core recv_core_id queries out who sends inter core interrupt to itself
  * \details
- * Just query COREn_INT_STATUS value
+ * In the ISR of ICI, receive core can query if bit[n] of this return value is 1, core n sends the current ICI,
+ * if bit[m] is 1, then core m also sends, etc.
  * \param [in]    recv_core_id    the core id which receives the inter core interrupt
- * \return register COREn_INT_STATUS value
- * \sa
- * - \ref CIDU_GetCoreIntSenderId
+ * \return    Value that shows sender core's ID n whose bit[n](bit[m] if core m send too, etc.) is 1
+ * \remarks
+ * - If the ICI ISR has finished the job, should call \ref CIDU_ClearInterCoreIntReq to clear the IRQ
 */
-__STATIC_FORCEINLINE uint32_t CIDU_GetCoreIntStatus(uint32_t recv_core_id)
+__STATIC_FORCEINLINE uint32_t CIDU_QueryCoreIntSenderId(uint32_t recv_core_id)
 {
     uint32_t val = 0;
     uint32_t* addr = (uint32_t*)CIDU_CORE_INT_STATUS_ADDR(recv_core_id);
@@ -296,44 +296,21 @@ __STATIC_FORCEINLINE uint32_t CIDU_GetCoreIntStatus(uint32_t recv_core_id)
 }
 
 /**
- * \brief  Core recv_core_id query out who sends inter core interrupt to itself
- * \details
- * When core recv_core_id receives the ICI and enter the ICI Interrupt Service Routine (ISR), it
- * can query out who triggered the ICI.
- * \param [in]    recv_core_id    the core id which receives the inter core interrupt
- * \return sender core id that triggers the ICI
- * \sa
- * - \ref CIDU_GetCoreIntSenderId
- * - \ref CIDU_ClearCoreIntStatus
-*/
-__STATIC_FORCEINLINE uint32_t CIDU_GetCoreIntSenderId(uint32_t recv_core_id)
-{
-    uint32_t val = 0;
-    uint32_t core_id = 0;
-    val = CIDU_GetCoreIntStatus(recv_core_id);
-    while (val != 0) {
-        val >>= 1;
-        core_id++;
-    }
-    return (core_id - 1);
-}
-
-/**
- * \brief  Clear the corresponding bit/bits of its own COREn_INT_STATUS
+ * \brief  Clear the corresponding bit/bits of ICI request triggered by sender core
  * \details
  * Core recv_core_id write 1 to clear the bit send_core_id of the core recv_core_id's COREn_INT_STATUS.
- * \param [in]    send_core_id    the core id which want to send the inter core interrupt
+ * \param [in]    send_core_id    the core id which wants to send the inter core interrupt
  * \param [in]    recv_core_id    the core id which will receive the inter core interrupt
  * \remarks
  * - If the ICI ISR has finished the job of send_core_id_n's ICI, then clear bit send_core_id_n;
- *   if it has finished send_core_id_n and send_core_id_m's, then should clear both the bits and etc.
+ *   if it has finished send_core_id_n and send_core_id_m's, then should clear both the bits, etc.
 */
-__STATIC_FORCEINLINE void CIDU_ClearCoreIntStatus(uint32_t send_core_id, uint32_t recv_core_id)
+__STATIC_FORCEINLINE void CIDU_ClearInterCoreIntReq(uint32_t send_core_id, uint32_t recv_core_id)
 {
     uint32_t val = 0;
     uint32_t* addr = (uint32_t*)CIDU_CORE_INT_STATUS_ADDR(recv_core_id);
 
-    val |= (uint32_t)(1 << send_core_id);
+    val = (uint32_t)(1 << send_core_id);
     __SW(addr, val);
 }
 /** @} */ /* End of Doxygen Group NMSIS_Core_ICI */
@@ -348,7 +325,7 @@ __STATIC_FORCEINLINE void CIDU_ClearCoreIntStatus(uint32_t send_core_id, uint32_
  * * All Cores in the cluster agree on using SEMAPHORE_n register to protect a critical resource (an UART device for example).
  * * If Core n wants to access the critical resource, it should try to own the SEMPAPHORE_n register, or else it can’t access the critical resource.
  * * When the Core n owns the register SEMPAPHORE_n and finishes the job related the critical resource, then it should
- *   release the register by write all 1 to it.
+ *   release the register by writing all 1 to it.
  */
 
 /**
@@ -358,7 +335,7 @@ __STATIC_FORCEINLINE void CIDU_ClearCoreIntStatus(uint32_t send_core_id, uint32_
  * \param [in]    semph_n     the semaphore id used to protect a critical resource
  * \return register SEMAPHOREn_STATUS value
 */
-__STATIC_FORCEINLINE int32_t CIDU_GetSemaphoreStatus(uint32_t semph_n)
+__STATIC_FORCEINLINE uint32_t CIDU_GetSemaphoreStatus(uint32_t semph_n)
 {
     uint32_t val;
     uint32_t* addr = (uint32_t*)CIDU_SEMAPHORE_ADDR(semph_n);
@@ -368,9 +345,9 @@ __STATIC_FORCEINLINE int32_t CIDU_GetSemaphoreStatus(uint32_t semph_n)
 }
 
 /**
- * \brief  check SEMAPHOREn's own status
+ * \brief  check SEMAPHOREn's acquired status
  * \details
- * Query that whether SEMAPHOREn has been owned by one core successfully.
+ * Query that whether SEMAPHOREn has been acquired by one core successfully.
  * \param [in]    semph_n    the semaphore id used to protect a critical resource
  * \param [in]    core_id    the core id that wants to access the critical resource
  * \return 0 if core_id has acquired this semaphore successfully, or else -1 if failed
@@ -381,7 +358,7 @@ __STATIC_FORCEINLINE int32_t CIDU_GetSemaphoreStatus(uint32_t semph_n)
  * - \ref CIDU_GetSemaphoreStatus
  * - \ref CIDU_ReleaseSemaphore
 */
-__STATIC_FORCEINLINE int32_t CIDU_CheckSemaphoreOwnStatus(uint32_t semph_n, uint32_t core_id)
+__STATIC_FORCEINLINE long CIDU_CheckSemaphoreAcquired(uint32_t semph_n, uint32_t core_id)
 {
     uint32_t val;
     val = CIDU_GetSemaphoreStatus(semph_n);
@@ -394,7 +371,7 @@ __STATIC_FORCEINLINE int32_t CIDU_CheckSemaphoreOwnStatus(uint32_t semph_n, uint
 /**
  * \brief  Acquire the SEMAPHOREn
  * \details
- * Acuqire the SEMAPHOREn, and check the own status
+ * Acuqire the SEMAPHOREn, and check the acquired status
  * \param [in]    semph_n    the semaphore id used to protect a critical resource
  * \param [in]    core_id    the core id that wants to access the critical resource
  * \return 0 if core_id has acquired this semaphore successfully, or else -1 if failed
@@ -402,21 +379,21 @@ __STATIC_FORCEINLINE int32_t CIDU_CheckSemaphoreOwnStatus(uint32_t semph_n, uint
  * - When the core n owns the register SEMPAPHORE_n and finishes the job related the critical resource,
  *   it should call \ref CIDU_ReleaseSemaphore to release it.
  * \sa
- * - \ref CIDU_CheckSemaphoreOwnStatus
+ * - \ref CIDU_CheckSemaphoreAcquired
  * - \ref CIDU_ReleaseSemaphore
 */
-__STATIC_FORCEINLINE int32_t CIDU_AcquireSemaphore(uint32_t semph_n, uint32_t core_id)
+__STATIC_FORCEINLINE long CIDU_AcquireSemaphore(uint32_t semph_n, uint32_t core_id)
 {
-    int32_t semaphore_status = -1;
+    long semaphore_status = -1;
     uint32_t* addr = (uint32_t*)CIDU_SEMAPHORE_ADDR(semph_n);
 
     __SW(addr, core_id);
-    semaphore_status = CIDU_CheckSemaphoreOwnStatus(semph_n, core_id);
+    semaphore_status = CIDU_CheckSemaphoreAcquired(semph_n, core_id);
     return semaphore_status;
 }
 
 /**
- * \brief  Keep acquiring the SEMAPHOREn until it has own this semaphore successfully
+ * \brief  Keep acquiring the SEMAPHOREn until it has acquired this semaphore successfully
  * \details
  * Query that whether SEMAPHOREn has been owned by one core successfully, if not, keep trying.
  * \param [in]    semph_n    the semaphore id used to protect a critical resource
@@ -439,7 +416,7 @@ __STATIC_FORCEINLINE void CIDU_AcquireSemaphore_Block(uint32_t semph_n, uint32_t
 /**
  * \brief  Release the SEMAPHOREn
  * \details
- * Release the SEMAPHOREn by write all 1 to SEMAPHOREn register.
+ * Release the SEMAPHOREn by writing all 1 to SEMAPHOREn register.
  * \param [in]    semph_n    the semaphore id used to protect a critical resource
  * \remarks
  * - When the core finishes the job related to the critical resource, it should release the corresponding semaphore.
@@ -448,12 +425,10 @@ __STATIC_FORCEINLINE void CIDU_AcquireSemaphore_Block(uint32_t semph_n, uint32_t
 */
 __STATIC_FORCEINLINE void CIDU_ReleaseSemaphore(uint32_t semph_n)
 {
-    uint32_t val;
     uint32_t* addr = (uint32_t*)CIDU_SEMAPHORE_ADDR(semph_n);
 
     /* Release by writing all 1 */
     __SW(addr, 0xFFFFFFFF);
-    val = __LW(addr);
 }
 /** @} */ /* End of Doxygen Group NMSIS_Core_Semaphore */
 #endif /* defined(__CIDU_PRESENT) && (__CIDU_PRESENT == 1) */
