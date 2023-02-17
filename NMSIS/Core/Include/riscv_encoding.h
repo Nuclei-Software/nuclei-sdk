@@ -193,7 +193,6 @@
 #define CSR_MCACHE_CTL_DC_ECC_EN        0x00020000
 #define CSR_MCACHE_CTL_DC_ECC_EXCP_EN   0x00040000
 
-
 #define WFE_WFE                     (0x1)
 #define TXEVT_TXEVT                 (0x1)
 #define SLEEPVALUE_SLEEPVALUE       (0x1)
