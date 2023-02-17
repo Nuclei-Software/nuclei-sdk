@@ -78,12 +78,6 @@ typedef struct IRegion_Info {
 #define SOC_EXTERNAL_MAP_TO_ECLIC_IRQn_OFFSET      19
 /* get evalsoc's External IRQn from ECLIC external IRQn which indexs from 19 */
 #define IRQn_MAP_TO_EXT_ID(IRQn)                   (IRQn - SOC_EXTERNAL_MAP_TO_ECLIC_IRQn_OFFSET)
-/* UART0 Interrupt */
-#define UART0_IRQn                                 SOC_INT51_IRQn
-/* QSPI Interrupt */
-#define QSPI0_IRQn                                 SOC_INT53_IRQn
-#define QSPI1_IRQn                                 SOC_INT54_IRQn
-#define QSPI2_IRQn                                 SOC_INT55_IRQn
 
 typedef enum IRQn {
     /* =======================================  Nuclei Core Specific Interrupt Numbers  ======================================== */
@@ -164,6 +158,13 @@ typedef enum IRQn {
     SOC_INT68_IRQn           = 68,                /*!< Device Interrupt */
     SOC_INT_MAX,
 } IRQn_Type;
+
+/* UART0 Interrupt */
+#define UART0_IRQn                                 SOC_INT51_IRQn
+/* QSPI Interrupt */
+#define QSPI0_IRQn                                 SOC_INT53_IRQn
+#define QSPI1_IRQn                                 SOC_INT54_IRQn
+#define QSPI2_IRQn                                 SOC_INT55_IRQn
 
 /* =========================================================================================================================== */
 /* ================                                  Exception Code Definition                                ================ */
