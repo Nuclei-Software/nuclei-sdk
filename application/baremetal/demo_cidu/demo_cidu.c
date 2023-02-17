@@ -72,18 +72,25 @@ void eclic_uart0_int_handler()
 
 void eclic_inter_core_int_handler()
 {
-    uint32_t sender_core_id = 0;
+    uint32_t sender_id = 0;
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
 
-    /* Query sender's ID */
-    sender_core_id = CIDU_GetCoreIntSenderId(hartid);
+    uint32_t val = CIDU_QueryCoreIntSenderId(hartid);
     /* Protect the uart0, in case that other core access */
     CIDU_AcquireSemaphore_Block(UART0_SEMAPHORE, hartid);
-    printf("Core %d has received interrupt from core %d\n", hartid, sender_core_id);
+    /* Query sender's ID */
+    while (0 != val) {
+        sender_id++;
+        if (val & 0x01) {
+            /* find one sender */
+            printf("Core %d has received interrupt from core %d\n", hartid, sender_id - 1);
+            /* Job finished, reset the core interrupt status */
+            CIDU_ClearInterCoreIntReq(sender_id - 1, hartid);
+        }
+        val >>= 1;
+    }
     /* Job finished, release the semaphore */
     CIDU_ReleaseSemaphore(UART0_SEMAPHORE);
-    /* Job finished, reset the core interrupt status */
-    CIDU_ClearCoreIntStatus(sender_core_id, hartid);
 }
 
 int main(void)
@@ -92,9 +99,9 @@ int main(void)
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
 
     if (hartid == BOOT_HARTID) { // boot hart
-        /* CIDU_SetBroadcastMode(IRQn_MAP_TO_EXT_ID(UART0_IRQn), CIDU_RECEIVE_INTERRUPT_EN(0)
+        /* CIDU_BroadcastExtInterrupt(IRQn_MAP_TO_EXT_ID(UART0_IRQn), CIDU_RECEIVE_INTERRUPT_EN(0)
                                 | CIDU_RECEIVE_INTERRUPT_EN(1)); */
-        CIDU_SetBroadcastMode(IRQn_MAP_TO_EXT_ID(UART0_IRQn), BROADCAST_TO_ALL_CORES);
+        CIDU_BroadcastExtInterrupt(IRQn_MAP_TO_EXT_ID(UART0_IRQn), BROADCAST_TO_ALL_CORES);
 
         /* Register uart0 interrupt receive message handler */
         ECLIC_Register_IRQ(UART0_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
@@ -121,9 +128,9 @@ int main(void)
 int boot_hart_main(unsigned long hartid)
 {
     /* Core 0(boot hart) send interrup to last core */
-    CIDU_SetInterCoreIntShadow(BOOT_HARTID, SMP_CPU_CNT - 1);
+    CIDU_TriggerInterCoreInt(BOOT_HARTID, SMP_CPU_CNT - 1);
     /* Besides Core 2, Core 0 sends interrupt to core 1 too, if SMP_CPU_CNT >2 */
-    CIDU_SetInterCoreIntShadow(BOOT_HARTID, CORE_ID(1));
+    CIDU_TriggerInterCoreInt(BOOT_HARTID, CORE_ID(1));
 
     while(1);
 }
@@ -141,7 +148,7 @@ int other_harts_main(unsigned long hartid)
     __enable_irq();
 
     /* core n send interrupt to core n-1 */
-    CIDU_SetInterCoreIntShadow(hartid, hartid - 1);
+    CIDU_TriggerInterCoreInt(hartid, hartid - 1);
 
     while(1);
 }
