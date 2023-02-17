@@ -6,6 +6,7 @@ SRCDIRS = . src
 
 INCDIRS = . inc
 
+# different optimization level such as -O2 effects cache miss
 COMMON_FLAGS := -O0
 
 # DOWNLOAD mode must be a mode

@@ -2,7 +2,7 @@
 name: app-nsdk_cache
 owner: nuclei
 version:
-description: cache demo
+description: demo demonstrates cache mechanism
 type: app
 keywords:
   - baremetal
@@ -19,13 +19,16 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value: -O2
+    value: -O0
     type: text
     description: Application Compile Flags
 
 ## Set Configuration for other packages
 setconfig:
-
+  - config: download_mode
+    value: ddr
+  - config: nuclei_cache
+    value: ["ic", "dc", "ccm"]
 
 ## Source Code Management
 codemanage:
