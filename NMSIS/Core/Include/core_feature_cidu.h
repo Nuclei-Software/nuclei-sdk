@@ -286,7 +286,7 @@ __STATIC_FORCEINLINE void CIDU_TriggerInterCoreInt(uint32_t send_core_id, uint32
  * \remarks
  * - If the ICI ISR has finished the job, should call \ref CIDU_ClearInterCoreIntReq to clear the IRQ
 */
-__STATIC_FORCEINLINE uint32_t CIDU_QueryCoreIntSenderId(uint32_t recv_core_id)
+__STATIC_FORCEINLINE uint32_t CIDU_QueryCoreIntSenderMask(uint32_t recv_core_id)
 {
     uint32_t val = 0;
     uint32_t* addr = (uint32_t*)CIDU_CORE_INT_STATUS_ADDR(recv_core_id);
