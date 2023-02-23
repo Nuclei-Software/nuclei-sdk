@@ -75,7 +75,7 @@ void eclic_inter_core_int_handler()
     uint32_t sender_id = 0;
     unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
 
-    uint32_t val = CIDU_QueryCoreIntSenderId(hartid);
+    uint32_t val = CIDU_QueryCoreIntSenderMask(hartid);
     /* Protect the uart0, in case that other core access */
     CIDU_AcquireSemaphore_Block(UART0_SEMAPHORE, hartid);
     /* Query sender's ID */
