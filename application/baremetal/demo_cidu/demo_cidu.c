@@ -3,7 +3,7 @@
 
 #if !defined(__CIDU_PRESENT) || (__CIDU_PRESENT != 1)
 /* __CIDU_PRESENT should be defined in <Device>.h */
-#error "__CIDU_PRESENT is not defined or equal to 1, please check!"
+#warning "__CIDU_PRESENT is not defined or equal to 1, please check!"
 #endif
 
 #if !defined(SMP_CPU_CNT)
@@ -32,6 +32,7 @@ int smp_main(void)
     return main();
 }
 
+#if defined(__CIDU_PRESENT) && (__CIDU_PRESENT == 1)
 void eclic_uart0_int_handler()
 {
     int32_t status = -1;
@@ -93,38 +94,6 @@ void eclic_inter_core_int_handler()
     CIDU_ReleaseSemaphore(UART0_SEMAPHORE);
 }
 
-int main(void)
-{
-    int ret;
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
-
-    if (hartid == BOOT_HARTID) { // boot hart
-        /* CIDU_BroadcastExtInterrupt(IRQn_MAP_TO_EXT_ID(UART0_IRQn), CIDU_RECEIVE_INTERRUPT_EN(0)
-                                | CIDU_RECEIVE_INTERRUPT_EN(1)); */
-        CIDU_BroadcastExtInterrupt(IRQn_MAP_TO_EXT_ID(UART0_IRQn), BROADCAST_TO_ALL_CORES);
-
-        /* Register uart0 interrupt receive message handler */
-        ECLIC_Register_IRQ(UART0_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
-                            ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, eclic_uart0_int_handler);
-        /* Register inter core interrupt handler */
-        ECLIC_Register_IRQ(InterCore_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
-                            ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, eclic_inter_core_int_handler);
-
-        // Enable interrupts in general.
-        __enable_irq();
-        // Enable uart0 receive interrupt
-        uart_enable_rxint(SOC_DEBUG_UART);
-
-        boothart_ready = 1;
-        ret = boot_hart_main(hartid);
-    } else { // other harts
-        while (boothart_ready == 0);
-
-        ret = other_harts_main(hartid);
-    }
-    return ret;
-}
-
 int boot_hart_main(unsigned long hartid)
 {
     /* Core 0(boot hart) send interrup to last core */
@@ -151,4 +120,40 @@ int other_harts_main(unsigned long hartid)
     CIDU_TriggerInterCoreInt(hartid, hartid - 1);
 
     while(1);
+}
+#endif
+
+int main(void)
+{
+    int ret = 0;
+    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+#if defined(__CIDU_PRESENT) && (__CIDU_PRESENT == 1)
+    if (hartid == BOOT_HARTID) { // boot hart
+        /* CIDU_BroadcastExtInterrupt(IRQn_MAP_TO_EXT_ID(UART0_IRQn), CIDU_RECEIVE_INTERRUPT_EN(0)
+                                | CIDU_RECEIVE_INTERRUPT_EN(1)); */
+        CIDU_BroadcastExtInterrupt(IRQn_MAP_TO_EXT_ID(UART0_IRQn), BROADCAST_TO_ALL_CORES);
+
+        /* Register uart0 interrupt receive message handler */
+        ECLIC_Register_IRQ(UART0_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
+                            ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, eclic_uart0_int_handler);
+        /* Register inter core interrupt handler */
+        ECLIC_Register_IRQ(InterCore_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
+                            ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, eclic_inter_core_int_handler);
+
+        // Enable interrupts in general.
+        __enable_irq();
+        // Enable uart0 receive interrupt
+        uart_enable_rxint(SOC_DEBUG_UART);
+
+        boothart_ready = 1;
+        ret = boot_hart_main(hartid);
+    } else { // other harts
+        while (boothart_ready == 0);
+
+        ret = other_harts_main(hartid);
+    }
+#else
+    printf("[ERROR]__CIDU_PRESENT must be defined as 1 in <Device>.h!\r\n");
+#endif
+    return ret;
 }
