@@ -6,19 +6,9 @@
 #define DISABLE_NMSIS_HPM
 #include "nmsis_bench.h"
 
-#if !defined(__DCACHE_PRESENT) || (__DCACHE_PRESENT != 1)
-/* __DCACHE_PRESENT should be defined in <Device>.h */
-#error "__DCACHE_PRESENT is not defined or equal to 1, please check!"
-#endif
-
-#if !defined(__ICACHE_PRESENT) || (__ICACHE_PRESENT != 1)
-/* __ICACHE_PRESENT should be defined in <Device>.h */
-#error "__ICACHE_PRESENT is not defined or equal to 1, please check!"
-#endif
-
 #if !defined(__CCM_PRESENT) || (__CCM_PRESENT != 1)
 /* __CCM_PRESENT should be defined in <Device>.h */
-#error "__CCM_PRESENT is not defined or equal to 1, please check!"
+#warning "__CCM_PRESENT is not defined or equal to 1, please check!"
 #endif
 
 // Declare HPMCOUNTER4
@@ -69,8 +59,9 @@ void array_init(void)
 
 int main(void)
 {
+#if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
     int32_t ret = 0;
-    int32_t val = 11;
+    int32_t val = 0;
     CacheInfo_Type cacheinfo_type;
 
     if (!DCachePresent() || !ICachePresent()) {
@@ -136,7 +127,9 @@ int main(void)
     /* Read brings in one cache miss */
     val = *(volatile uint8_t*) &array_test[0][0];
     HPM_END(4, dcachemiss_readonebyte, HPM_EVENT4);
-
+#else
+    printf("[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!\r\n");
+#endif
     return 0;
 }
 
