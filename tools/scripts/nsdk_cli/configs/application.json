@@ -75,6 +75,18 @@
                 "PASS": ["Won't run here if violates L U\\R\\W\\X permission check!", "[ERROR]__TEE_PRESENT must be defined as 1"]
             }
         },
+        "application/baremetal/demo_cache": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!"]
+            }
+        },
+        "application/baremetal/demo_cidu": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[ERROR]__CIDU_PRESENT must be defined as 1 in <Device>.h!"]
+            }
+        },
         "application/baremetal/demo_pmp": {
             "build_config" : {},
             "checks": {
