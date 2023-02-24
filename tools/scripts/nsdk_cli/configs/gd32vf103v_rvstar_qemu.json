@@ -36,6 +36,14 @@
         "application/baremetal/demo_smode_eclic": {
             "run": true,
             "build": true
+        },
+        "application/baremetal/demo_cidu": {
+            "run": false,
+            "build": false
+        },
+        "application/baremetal/demo_cache": {
+            "run": false,
+            "build": true
         }
     }
 }

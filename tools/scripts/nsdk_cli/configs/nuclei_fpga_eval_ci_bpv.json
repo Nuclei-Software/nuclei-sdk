@@ -84,6 +84,8 @@
         "application/rtthread/msh" : {"build": true, "run": false},
         "application/baremetal/demo_spmp": {"build": true, "run": true},
         "application/baremetal/demo_smode_eclic": {"build": true, "run": true},
+        "application/baremetal/demo_cidu": {"build": true, "run": false},
+        "application/baremetal/demo_cache": {"build": true, "run": false},
         "test/core": {"build": true, "run": true}
     }
 }
