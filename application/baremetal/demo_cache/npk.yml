@@ -1,12 +1,13 @@
 ## Package Base Information
-name: app-nsdk_cache
+name: app-nsdk_demo_cache
 owner: nuclei
 version:
-description: demo demonstrates cache mechanism
+description: Nuclei cache demo to show how to use Nuclei CCM feature
 type: app
 keywords:
   - baremetal
   - get started
+  - cache
 category: baremetal application
 license:
 homepage:
