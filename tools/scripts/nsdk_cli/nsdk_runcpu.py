@@ -3,6 +3,8 @@
 import os
 import sys
 import traceback
+from itertools import combinations
+import random
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.txt"))
@@ -22,6 +24,106 @@ from nsdk_report import *
 from nsdk_runner import nsdk_runner
 
 FPGACIROOT = os.path.join(SCRIPT_DIR, "configs", "fpgaci")
+
+def valid_cpuarch(cpuarch):
+    cpuarch = cpuarch.lower()
+    if not cpuarch.startswith("rv64") and not cpuarch.startswith("rv32"):
+        print("CPU arch should start with rv64 or rv32")
+        return False
+    # remove rv64/rv32
+    arch = re.sub(r'rv\d\d', "", cpuarch)
+    rst = re.search(r'[^imafdcbpvg]', arch)
+    if rst:
+        print("%s not valid arch" %(cpuarch))
+        return False
+    return True
+
+def gen_buildcfg(cpu, full_arch):
+    buildcfg = dict()
+    # if 'g'(imafd) exist
+    rv_arch = re.sub(r'g', "imafd", full_arch)
+    # remove rv64/rv32
+    arch = re.sub(r'rv\d\d', "", rv_arch)
+    arch_ext = re.sub(r'[imafdc]', "", arch)
+    # core + f/p or fp
+    core = cpu.replace('u', 'n') + re.sub(r'[imac%s]' %(arch_ext), "", arch)
+    if "" == arch_ext:
+        buildcfg = {full_arch:{"CORE": core}}
+    else:
+        buildcfg = {full_arch:{"CORE": core, "ARCH_EXT": arch_ext}}
+    return buildcfg
+
+def gencfg_from_arch(cfgloc, core, cpuarch, maxnum):
+    DEFAULT_VALID_MAX = 0
+    # single, just itself
+    ARCH_VALID = 1
+    ARCH_AT_LEAST_VALID = 2
+    arch_ext_comb = []
+    arch_full = []
+    cpucfgdict = dict()
+
+    cpuarch = cpuarch.lower()
+    # remove rv64/rv32
+    arch = re.sub(r'rv\d\d', "", cpuarch)
+
+    cpu_series = re.search(r'\d+', core).group()
+    arch_prefix = re.match(r'rv\d\d', cpuarch).group()
+
+    arch_base = ["imac"]
+    if "f" in arch:
+        arch_base.append('imafc')
+    # if "d" exists, "f" exists
+    if "d" in arch:
+        arch_base.append('imafdc')
+    # b/p/v
+    arch_ext = re.sub(r'[imafdc]', "", arch)
+    for i in range(1, len(arch_ext) + 1):
+        for val in combinations(arch_ext, i):
+            arch_ext_comb.append(''.join(val))
+
+    # empty string on purpose to generate ones without ARCH_EXT
+    arch_ext_comb.append("")
+    arch_ext_comb.sort(key = lambda val:len(val), reverse = False)
+
+    if maxnum >= ARCH_AT_LEAST_VALID and len(arch_ext_comb) > 1:
+        arch_base = [arch_base[-1]]
+        print("ARCH_AT_LEAST_VALID base : %s" %(arch_base))
+    if maxnum >= ARCH_AT_LEAST_VALID:
+        arch_ext_rest_cnt = 0
+        if len(arch_ext_comb) > 2:
+            arch_ext_rest_cnt = random.randint(0, len(arch_ext_comb) - 2)
+        rand_rest_ext = random.sample(arch_ext_comb[1:-1], arch_ext_rest_cnt)
+        # empty string ensures at least one element
+        arch_ext_comb = [arch_ext_comb[0],arch_ext_comb[-1]]
+        print("ARCH_AT_LEAST_VALID at least ext : %s, random rest ext : %s" %(arch_ext_comb, rand_rest_ext))
+        arch_ext_comb.extend(rand_rest_ext)
+
+    arch_ext_comb = list(set(arch_ext_comb))
+    arch_base.sort(key = lambda val:len(val), reverse = False)
+    arch_ext_comb.sort(key = lambda val:len(val), reverse = False)
+    for idx_base, base in enumerate(arch_base):
+        if ARCH_VALID == maxnum and idx_base != len(arch_base) - 1:
+            print("Not ARCH_VALID base type, skip %s" %(base))
+            continue
+        for idx_ext, ext in enumerate(arch_ext_comb):
+            if ARCH_VALID == maxnum and idx_ext != len(arch_ext_comb) - 1:
+                print("Not ARCH_VALID ext type, skip %s" %(ext))
+                continue
+            if "imac" == base and 'v' in ext:
+                print("v ext should not be with base imac, skip")
+                continue
+            arch_full.append(arch_prefix+base+ext)
+
+    cpucfgdict["build_config"] = {"CPU_SERIES": cpu_series}
+    cpucfgdict["build_configs"] = dict()
+    for arch in arch_full:
+        buildcfg = gen_buildcfg(core, arch)
+        cpucfgdict["build_configs"].update(buildcfg)
+    print("CPU config generated from arch = %s, mode = %s, number = %d: %s" %(cpuarch, maxnum, len(cpucfgdict["build_configs"]), cpucfgdict))
+    cpucfg_name = core + "_" + cpuarch + ".json"
+    cpucfg = os.path.join(cfgloc, cpucfg_name)
+    save_json(cpucfg, cpucfgdict)
+    return cpucfg
 
 # caseconfig is a dict
 # {
@@ -67,9 +169,17 @@ def gen_runner_configs(casedir, caseconfig, genloc):
     if os.path.isdir(genloc) == False:
         os.makedirs(genloc)
 
+    cpuarch = caseconfig.get("cpuarch", "")
     # if specified user own cpu config use it
     if caseconfig.get("cpucfg", None):
         runcfgdict = gen_runcfg(caseconfig.get("cpucfg"), runcfg, glbldcfg)
+    elif valid_cpuarch(cpuarch):
+        # maxnum: 0, means generate default reasonable arch sets, max sets
+        #         1, means generate cpuarch-same set
+        #        >1, means generate at least reasonable arch sets
+        maxnum = int(caseconfig.get("archmaxnum", 1))
+        cpucfgpath = gencfg_from_arch(genloc, core, cpuarch, maxnum)
+        runcfgdict = gen_runcfg(cpucfgpath, runcfg, glbldcfg)
     else:
         runcfgdict = gen_coreruncfg(core, runcfg, choice, glbldcfg)
 
