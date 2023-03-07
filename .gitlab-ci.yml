@@ -70,7 +70,7 @@ deploy_doc:
     - build_doc
   tags:
     - env::native
-    - host::xls01
+    - host::whss1
 
 ## Job for deploy document to nuclei website
 deploy_website:
@@ -88,7 +88,7 @@ deploy_website:
     - build_doc
   tags:
     - env::native
-    - host::xls01
+    - host::whss1
 
 ## Job template
 .build_job_template: &build_job_template_default
