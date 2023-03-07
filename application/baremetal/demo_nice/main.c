@@ -14,8 +14,8 @@ int main(void)
     unsigned int row_sum_ref[ROW_LEN] = {0};
     unsigned int col_sum_nice[COL_LEN] = {0};
     unsigned int row_sum_nice[ROW_LEN] = {0};
-    unsigned int begin_instret, end_instret, instret_normal, instret_nice;
-    unsigned int begin_cycle, end_cycle, cycle_normal, cycle_nice;
+    unsigned long begin_instret, end_instret, instret_normal, instret_nice;
+    unsigned long begin_cycle, end_cycle, cycle_normal, cycle_nice;
 
     __RV_CSR_SET(CSR_MSTATUS, MSTATUS_XS);
     __enable_minstret_counter();

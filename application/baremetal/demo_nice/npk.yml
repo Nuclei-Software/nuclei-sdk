@@ -2,7 +2,7 @@
 name: app-nsdk_demo_nice
 owner: nuclei
 version:
-description: NICE Demo
+description: Nuclei NICE Extension Demo
 type: app
 keywords:
   - baremetal
