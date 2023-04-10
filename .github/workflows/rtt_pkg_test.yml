@@ -1,0 +1,8 @@
+name: RT-Thread_Packages_Test
+
+on:
+  [push, pull_request]
+
+jobs:
+  pkgs-test:
+    uses: RT-Thread/pkgs-test/.github/workflows/pkgs-action.yml@main
