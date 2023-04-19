@@ -733,6 +733,36 @@ __STATIC_FORCEINLINE uint64_t __get_rv_time(void)
 #endif
 }
 
+/**
+ * \brief   Get cluster id of current cluster
+ * \details This function will get cluster id of current cluster in a multiple cluster system
+ * \return  The cluster id of current cluster
+ * \remarks mhartid bit 15-8 is designed for cluster id
+ * \attention function is allowed in machine mode only
+ */
+__STATIC_FORCEINLINE unsigned long __get_cluster_id(void)
+{
+    unsigned long id;
+
+    id = (__RV_CSR_READ(CSR_MHARTID) >> 8) & 0xFF;
+    return id;
+}
+
+/**
+ * \brief   Get hart id of current cluster
+ * \details This function will get hart id of current cluster in a multiple cluster system
+ * \return  The hart id of current cluster
+ * \remarks mhartid bit 7-0 is designed for hart id
+ * \attention function is allowed in machine mode only
+ */
+__STATIC_FORCEINLINE unsigned long __get_hart_id(void)
+{
+    unsigned long id;
+
+    id = __RV_CSR_READ(CSR_MHARTID) & 0xFF;
+    return id;
+}
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_CSR_Register_Access */
 
 /* ###########################  CPU Intrinsic Functions ########################### */

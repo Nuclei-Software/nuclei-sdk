@@ -168,7 +168,7 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetLoadValue(void)
  * - Compare value is 64bits wide.
  * - If compare value is larger than current value timer interrupt generate.
  * - Modify the load value or compare value less to clear the interrupt.
- * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * - \ref SysTimer_GetHartCompareValue
  */
 __STATIC_FORCEINLINE void SysTimer_SetHartCompareValue(uint64_t value, unsigned long hartid)
@@ -204,12 +204,12 @@ __STATIC_FORCEINLINE void SysTimer_SetHartCompareValue(uint64_t value, unsigned 
  * - Compare value is 64bits wide.
  * - If compare value is larger than current value timer interrupt generate.
  * - Modify the load value or compare value less to clear the interrupt.
- * - CSR_MHARTID can only be accessed in machined mode, or else exception will occur.
+ * - __get_hart_id function can only be accessed in machined mode, or else exception will occur.
  * - \ref SysTimer_GetCompareValue
  */
 __STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
 {
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long hartid = __get_hart_id();
     SysTimer_SetHartCompareValue(value, hartid);
 }
 
@@ -221,7 +221,7 @@ __STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
  * \return  compare value of system timer MTIMERCMP register.
  * \remarks
  * - Compare value is 64bits wide.
- * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * - \ref SysTimer_SetHartCompareValue
  */
 __STATIC_FORCEINLINE uint64_t SysTimer_GetHartCompareValue(unsigned long hartid)
@@ -256,7 +256,7 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetHartCompareValue(unsigned long hartid)
  */
 __STATIC_FORCEINLINE uint64_t SysTimer_GetCompareValue(void)
 {
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long hartid = __get_hart_id();
     return SysTimer_GetHartCompareValue(hartid);
 }
 
@@ -321,7 +321,7 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetControlValue(void)
  * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
  * \remarks
  * - Set system timer MSIP bit and generate a SW interrupt.
- * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * - \ref SysTimer_ClearHartSWIRQ
  * - \ref SysTimer_GetHartMsipValue
  */
@@ -346,7 +346,7 @@ __STATIC_FORCEINLINE void SysTimer_SetHartSWIRQ(unsigned long hartid)
  */
 __STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
 {
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long hartid = __get_hart_id();
     SysTimer_SetHartSWIRQ(hartid);
 }
 
@@ -357,7 +357,7 @@ __STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
  * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
  * \remarks
  * - Clear system timer MSIP bit in MSIP register to clear the software interrupt pending.
- * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * - \ref SysTimer_SetHartSWIRQ
  * - \ref SysTimer_GetHartMsipValue
  */
@@ -382,7 +382,7 @@ __STATIC_FORCEINLINE void SysTimer_ClearHartSWIRQ(unsigned long hartid)
  */
 __STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
 {
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long hartid = __get_hart_id();
     SysTimer_ClearHartSWIRQ(hartid);
 }
 
@@ -395,7 +395,7 @@ __STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
  * \remarks
  * - Bit0 is SW interrupt flag.
  *   Bit0 is 1 then SW interrupt set. Bit0 is 0 then SW interrupt clear.
- * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * - \ref SysTimer_SetHartSWIRQ
  * - \ref SysTimer_ClearHartSWIRQ
  * - \ref SysTimer_SetHartMsipValue
@@ -424,7 +424,7 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetHartMsipValue(unsigned long hartid)
  */
 __STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
 {
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long hartid = __get_hart_id();
     return SysTimer_GetHartMsipValue(hartid);
 }
 
@@ -435,7 +435,7 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
  * \param [in]  msip   value to set MSIP register
  * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
  * \remarks
- * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - In S-mode, hartid can't be get using __get_hart_id function, so this api suits S-mode particularly.
  * - \ref SysTimer_GetHartMsipValue
  */
 __STATIC_FORCEINLINE void SysTimer_SetHartMsipValue(uint32_t msip, unsigned long hartid)
@@ -457,7 +457,7 @@ __STATIC_FORCEINLINE void SysTimer_SetHartMsipValue(uint32_t msip, unsigned long
  */
 __STATIC_FORCEINLINE void SysTimer_SetMsipValue(uint32_t msip)
 {
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long hartid = __get_hart_id();
     SysTimer_SetHartMsipValue(msip, hartid);
 }
 
@@ -559,7 +559,7 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
  * - If user need this function to start a period timer interrupt, then in timer interrupt handler
  *   routine code, user should call \ref SysTick_Reload with ticks to reload the timer.
  * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
- * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * \sa
  * - \ref SysTimer_SetCompareValue; SysTimer_SetLoadValue
  */
@@ -634,7 +634,7 @@ __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
  *   of this function.
  * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
  * - Since the MTIMERCMP value might overflow, if overflowed, MTIMER will be set to 0, and MTIMERCMP set to ticks
- * - In S-mode, hartid can't be get by read CSR_MHARTID,so this api suits S-mode particularly.
+ * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * \sa
  * - \ref SysTimer_SetCompareValue
  * - \ref SysTimer_SetLoadValue
