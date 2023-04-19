@@ -66,7 +66,8 @@ int smp_main(void)
 int main(void)
 {
     int ret;
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    // get hart id in current cluster
+    unsigned long hartid = __get_hart_id();
     if (hartid == BOOT_HARTID) { // boot hart
         spinlock_init(&lock);
         lock_ready = 1;
