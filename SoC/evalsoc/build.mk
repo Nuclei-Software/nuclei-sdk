@@ -30,11 +30,11 @@
 
 override BOARD := nuclei_fpga_eval
 CORE ?= n307fd
-# SMP must be a number, and above 1
+# SMP must be a number, and above 1, means smp cpu count in a cluster
 # it will define c macro SMP_CPU_CNT to be SMP value
 # and define a ld symbol __SMP_CPU_CNT to be used by linker script
 SMP ?=
-# BOOT_HARTID must be a number, and above 0
+# BOOT_HARTID must be a number, and above 0, the hartid is taken the mhartid bit 0-7
 # it will define a c macro BOOT_HARTID to be boot hart id,
 # other harts other than boot hartid will do wfi when in AMP mode,
 # or run application in smp mode

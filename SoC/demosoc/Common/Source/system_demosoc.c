@@ -308,7 +308,7 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
     printf("MDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_MDCAUSE));
     printf("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
     printf("MTVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
-    printf("HARTID : %u\r\n", (unsigned int)__RV_CSR_READ(CSR_MHARTID));
+    printf("HARTID : %u\r\n", (unsigned int)__get_hart_id());
     Exception_DumpFrame(sp, PRV_M);
 #if defined(SIMULATION_MODE)
     // directly exit if in SIMULATION
@@ -447,7 +447,7 @@ void SystemBannerPrint(void)
     printf("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
 #endif
     printf("CPU Frequency %u Hz\r\n", (unsigned int)SystemCoreClock);
-    printf("CPU HartID: %u\r\n", (unsigned int)__RV_CSR_READ(CSR_MHARTID));
+    printf("CPU HartID: %u\r\n", (unsigned int)__get_hart_id());
 #endif
 }
 
@@ -682,7 +682,7 @@ __attribute__((section(".init"))) void __sync_harts(void)
 {
 // Only do synchronize when SMP_CPU_CNT is defined and number > 0
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long hartid = __get_hart_id();
     unsigned long clint_base, irgb_base, smp_base;
     unsigned long mcfg_info;
 
@@ -758,7 +758,7 @@ static void Trap_Init(void)
 void _premain_init(void)
 {
     // TODO to make it possible for configurable boot hartid
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long hartid = __get_hart_id();
 
     // BOOT_HARTID is defined <Device.h>
     if (hartid == BOOT_HARTID) { // only done in boot hart

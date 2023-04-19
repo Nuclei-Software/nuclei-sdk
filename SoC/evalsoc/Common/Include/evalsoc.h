@@ -312,7 +312,7 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 
 /* Define boot hart id */
 #ifndef BOOT_HARTID
-#define BOOT_HARTID               0                     /*!< Choosen boot hart id when in soc system, need to align with the value defined in startup_<Device>.S */
+#define BOOT_HARTID               0                     /*!< Choosen boot hart id in current cluster when in soc system, need to align with the value defined in startup_<Device>.S, should start from 0, taken the mhartid bit 0-7 value */
 #endif
 
 #include <nmsis_core.h>                         /*!< Nuclei N/NX class processor and core peripherals */

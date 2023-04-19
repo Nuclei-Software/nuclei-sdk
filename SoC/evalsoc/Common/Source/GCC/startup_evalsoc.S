@@ -73,7 +73,7 @@ vector_base:
     DECLARE_INT_HANDLER     default_intexc_handler          /* 14: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 15: Reserved */
 
-    DECLARE_INT_HANDLER     eclic_inter_core_int_handler          /* 16: Reserved */
+    DECLARE_INT_HANDLER     eclic_inter_core_int_handler    /* 16: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 17: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 18: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 19: Interrupt 19 */
@@ -116,7 +116,7 @@ vector_base:
     DECLARE_INT_HANDLER     default_intexc_handler          /* 48: Interrupt 48 */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 49: Interrupt 49 */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 50: Interrupt 50 */
-    DECLARE_INT_HANDLER     eclic_uart0_int_handler             /* 51: Interrupt 51 */
+    DECLARE_INT_HANDLER     eclic_uart0_int_handler         /* 51: Interrupt 51 */
 
     DECLARE_INT_HANDLER     default_intexc_handler          /* 52: Interrupt 52 */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 53: Interrupt 53 */
@@ -159,7 +159,9 @@ _start:
      * other harts if run to here, just do wfi in __amp_wait
      */
 #ifndef SMP_CPU_CNT
+    /* take bit 0-7 for hart id in a local cluster */
     csrr a0, CSR_MHARTID
+    andi a0, a0, 0xFF
     /* BOOT_HARTID is configurable in Makefile via BOOT_HARTID variable */
     li a1, BOOT_HARTID
     bne a0, a1, __amp_wait
@@ -179,6 +181,7 @@ _start:
     la t0, __STACK_SIZE
     la sp, _sp
     csrr a0, CSR_MHARTID
+    andi a0, a0, 0xFF
     li a1, 0
 1:
     beq a0, a1, 2f
@@ -255,6 +258,7 @@ _start:
 
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     csrr a0, CSR_MHARTID
+    andi a0, a0, 0xFF
     li a1, BOOT_HARTID
     bne a0, a1, __skip_init
 #endif
@@ -384,7 +388,8 @@ smp_main:
     addi sp, sp, -2*REGBYTES
     STORE ra, 0*REGBYTES(sp)
     /* only boot hart goto main, other harts do wfi */
-    csrr t0, mhartid
+    csrr t0, CSR_MHARTID
+    andi t0, t0, 0xFF
     li t1, BOOT_HARTID
     beq t0, t1, 2f
 1:
