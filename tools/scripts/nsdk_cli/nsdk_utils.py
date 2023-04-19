@@ -1061,6 +1061,8 @@ def modify_openocd_cfg(cfg, ftdi_serial):
             index += 1
     if found == False:
         return False
+    if sys.platform == 'win32':
+        ftdi_serial = "%sA" % (ftdi_serial)
     contents.insert(index, "ftdi_serial %s\ntcl_port disabled\ntelnet_port disabled\n" %(ftdi_serial))
     with open(cfg, 'w') as cf:
         contents = "".join(contents)
