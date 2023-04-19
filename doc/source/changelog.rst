@@ -3,6 +3,55 @@
 Changelog
 =========
 
+V0.4.1-dev
+----------
+
+This is release version ``0.4.1`` of Nuclei SDK, which is still in development.
+
+* Application
+
+  - Add demo_cidu to demo cidu feature of Nuclei RISC-V Processor
+  - Add demo_cache to demo ccm feature of Nuclei RISC-V Processor
+  - Optimize demo_nice for rv64
+  - Fix compile error when -Werror=shadow
+  - Update helloworld and smphello due to mhartid changes
+
+* NMSIS
+
+  - Add CIDU support via core_feature_cidu.h, and ``__CIDU_PRESENT`` macro is required in ``<Device>.h`` to represent CIDU present or not
+  - Add macros of HPM m/s/u event enable, events type, events idx
+  - Fix define error of HPM_INIT macro
+  - Due to mhartid csr update, two new API added called ``__get_hart_id`` and ``__get_cluster_id``
+
+    - mhartid in Nuclei RISC-V processor are now used to present cluster id and hart id
+    - bit 0-7 is used for hart id in current cluster
+    - bit 8-15 is used for cluster id of current cluster
+
+* Build System
+
+  - Add semihost support in build system via SEMIHOST make variable, if SEMIHOST=1, will link semihost library, currently only works with newlibc library, not working with libncrt
+
+* SoC
+
+  - Fix missing definition of BOOT_HARTID in ``startup_demosoc.S``
+  - Update demosoc and evalsoc interrupt id and handler definition for CIDU changes
+  - Add ``__CIDU_PRESENT`` macro to control CIDU present or not in ``demosoc.h`` and ``evalsoc.h`` which is the ``<Device>.h``
+  - Add uart status get and clear api for evalsoc and demosoc, which is used by cidu demo
+  - Add semihost support for all SoCs, currently only works with newlib, ``SEMIHOST=1`` control semihost support
+  - Add extra run/restart command for openocd debug configuration in smp debug in npk for Nuclei Studio
+  - Update smp/boot flow to match mhartid csr update
+  - **BOOT_HARTID** is the choosen boot hart id in current cluster, not the full mhartid register value, for example, it the mhartid csr register is 0x0101, and the **BOOT_HARTID** should be set to 1, if you want hart 1 to be boot hart
+
+* CI
+
+  - Add demo_cidu and demo_cache in ci configuration files, but expect it to run fail when run in qemu
+  - Don't check certificate when download tool
+
+* Tools
+
+  - Modify openocd configuration file in nsdk_utils.oy support win32 now
+  - Add new feature to generate cpu json when knowing cpu arch in nsdk_runcpu.py script
+
 V0.4.0
 ------
 
