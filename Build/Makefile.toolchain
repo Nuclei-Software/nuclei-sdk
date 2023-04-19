@@ -3,3 +3,4 @@ ifeq ($(wildcard $(NUCLEI_SDK_TOOLCHAIN_MK)),)
 $(error Cannot find toolchain related configuration makefile $(NUCLEI_SDK_TOOLCHAIN_MK))
 endif
 include $(NUCLEI_SDK_TOOLCHAIN_MK)
+MAKEFILE_PREREQS += $(NUCLEI_SDK_TOOLCHAIN_MK)

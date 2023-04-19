@@ -2,7 +2,7 @@
 ## NUCLEI RISCV OPENOCD
 #
 #!< Nuclei SDK Tools Root
-COMPILE_PREFIX ?= riscv-nuclei-elf-
+COMPILE_PREFIX ?= riscv64-unknown-elf-
 NUCLEI_SDK_TOOL_ROOT ?= $(NUCLEI_SDK_ROOT)/prebuilt_tools
 NUCLEI_RISCV_GCC_ROOT ?= $(NUCLEI_SDK_TOOL_ROOT)/gcc
 NUCLEI_OPENOCD_ROOT ?= $(NUCLEI_SDK_TOOL_ROOT)/openocd
@@ -121,7 +121,7 @@ COMMON_FLAGS += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
 ## Append mtune options when RISCV_TUNE is defined
 ## It might be defined in SoC/<SOC>/build.mk, and can be overwritten by make
 ifneq ($(RISCV_TUNE),)
-COMMON_FLAGS += -mtune=$(RISCV_TUNE)
+#COMMON_FLAGS += -mtune=$(RISCV_TUNE)
 endif
 
 ifneq ($(findstring newlib,$(STDCLIB)),)

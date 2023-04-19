@@ -1,7 +1,7 @@
-CC      := clang
-CXX     := clang++
-OBJDUMP := llvm-objdump
-OBJCOPY := llvm-objcopy
+CC      := riscv64-unknown-elf-clang
+CXX     := riscv64-unknown-elf-clang++
+OBJDUMP := riscv64-unknown-elf-objdump
+OBJCOPY := riscv64-unknown-elf-objcopy
 # use gnu gdb to debug or upload
 GDB     := riscv64-unknown-elf-gdb
 AR      := llvm-ar
@@ -37,6 +37,8 @@ LDLIBS += -lc_nano -lnosys
 STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
 LDLIBS += -lc_nano -lnosys
+# work around for relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references _printf_float when compile with rv64
+STDCLIB_LDFLAGS += -u _printf_float
 else
 LDLIBS +=
 endif
