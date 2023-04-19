@@ -406,6 +406,7 @@ which can be passed via make command.
 * :ref:`develop_buildsystem_var_core`
 * :ref:`develop_buildsystem_var_archext`
 * :ref:`develop_buildsystem_var_simulation`
+* :ref:`develop_buildsystem_var_semihost`
 * :ref:`develop_buildsystem_var_gdb_port`
 * :ref:`develop_buildsystem_var_v`
 * :ref:`develop_buildsystem_var_silent`
@@ -548,6 +549,9 @@ currently it has these modes supported as described in table
    * - ddr
      - | Program will to be download into ddr and
        | run directly in ddr, program will lost when poweroff
+   * - sram
+     - | Program will to be download into sram and
+       | run directly in sram, program will lost when poweroff
 
 .. note::
 
@@ -577,6 +581,8 @@ currently it has these modes supported as described in table
       no longer need to define it in source code as before.
     * From release ``0.3.2``, you can define **DOWNLOAD** not just the download mode list above,
       you can use other download mode names specified by your customized SoC.
+    * For SRAM download mode, for 200/300, it don't has DDR, so sram is a external ram outside of cpu,
+      for 600/900, it has DDR, so sram is the ddr ram
 
 .. _develop_buildsystem_var_core:
 
@@ -678,6 +684,41 @@ It is suggested to use this ARCH_EXT with other arch options like this, can be f
     RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))$(ARCH_EXT)
     RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
 
+.. _develop_buildsystem_var_semihost:
+
+SEMIHOST
+~~~~~~~~
+
+If **SEMIHOST=1**, it means it will enable semihost support using openocd.
+
+Currently in Nuclei SDK, only newlibc support semihosting feature, libncrt is not yet ready.
+
+When using semihosting feature, debug message will print via openocd console.
+
+You need to use it like this(Assume you are run on evalsoc, CORE=n300):
+
+In terminal 1, open openocd and monitor the output:
+
+.. code-block:: shell
+
+    cd application/baremetal/helloworld
+    make SOC=evalsoc CORE=n300 run_openocd
+    # when terminal 2 has download program and start to run, you will be able to see output here
+
+In terminal 2, gdb connect to the openocd exposed gdb port and load program, and run
+
+.. code-block:: shell
+
+    # in normal shell terminal
+    cd application/baremetal/helloworld
+    make SOC=evalsoc CORE=n300 SEMIHOST=1 clean
+    make SOC=evalsoc CORE=n300 SEMIHOST=1 run_gdb
+
+    # now in gdb command terminal, run the following command
+    monitor reset halt
+    load
+    ## when run continue, you will be able to see output in previous terminal 1 running openocd
+    continue
 
 .. _develop_buildsystem_var_simulation:
 

@@ -38,6 +38,7 @@ This is release version ``0.4.1`` of Nuclei SDK, which is still in development.
   - Add ``__CIDU_PRESENT`` macro to control CIDU present or not in ``demosoc.h`` and ``evalsoc.h`` which is the ``<Device>.h``
   - Add uart status get and clear api for evalsoc and demosoc, which is used by cidu demo
   - Add semihost support for all SoCs, currently only works with newlib, ``SEMIHOST=1`` control semihost support
+  - Update openocd configuration file to support semihosting feature
   - Add extra run/restart command for openocd debug configuration in smp debug in npk for Nuclei Studio
   - Update smp/boot flow to match mhartid csr update
   - **BOOT_HARTID** is the choosen boot hart id in current cluster, not the full mhartid register value, for example, it the mhartid csr register is 0x0101, and the **BOOT_HARTID** should be set to 1, if you want hart 1 to be boot hart
