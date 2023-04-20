@@ -39,20 +39,20 @@ extern "C" {
 
 /* ##########################  CIDU functions  #################################### */
 /**
- * \defgroup NMSIS_Core_CIDU         CIDU functions
- * \brief    Functions that manage external interrupts, inter core interrupts and semaphores .
+ * \defgroup NMSIS_Core_CIDU         CIDU Functions
+ * \brief    Functions that manage external interrupts, inter core interrupts and semaphores.
  * @{
- * 
+ *
  * Nuclei provide Cluster Interrupt Distribution Unit (CIDU) for scenarios that a SMP system is designed for real
  * time application or both Linux and real time application, and Nuclei processor core can optionally support CIDU.
  * The CIDU is used to distribute external interrupts to the core’s ECLIC, also it provides Inter Core Interrupt (ICI)
  * and Semaphores Mechanism. Its features are as follows:
- * 
+ *
  * * Support up to 16 Cores in one cluster
  * * Support up to 4096 external interrupts sources
  * * Support up to 16 Inter Core Interrupts
  * * Support 32 Semaphores
- * 
+ *
  */
 
 #ifndef __CIDU_BASEADDR
@@ -248,7 +248,7 @@ __STATIC_FORCEINLINE uint32_t CIDU_GetClaimStatus(uint32_t int_id)
  * @{
  * Inter Core Interrupt (ICI) means that one core can send interrupt to another core in a multi-core cluster. CIDU ICI belongs
  * to Internal Interrupt.
- * 
+ *
  * * CIDU ICI Interrupt ID is fixed to 16.
  */
 
@@ -321,7 +321,7 @@ __STATIC_FORCEINLINE void CIDU_ClearInterCoreIntReq(uint32_t send_core_id, uint3
  * \brief    Functions that configure and use semaphores
  * @{
  * Semaphore is very useful for multi-core cluster without SMP enable.
- * 
+ *
  * * All Cores in the cluster agree on using SEMAPHORE_n register to protect a critical resource (an UART device for example).
  * * If Core n wants to access the critical resource, it should try to own the SEMPAPHORE_n register, or else it can’t access the critical resource.
  * * When the Core n owns the register SEMPAPHORE_n and finishes the job related the critical resource, then it should
@@ -435,5 +435,5 @@ __STATIC_FORCEINLINE void CIDU_ReleaseSemaphore(uint32_t semph_n)
 
 #ifdef __cplusplus
 }
-#endif 
+#endif
 #endif /* __CORE_FEATURE_CIDU_H__ */
