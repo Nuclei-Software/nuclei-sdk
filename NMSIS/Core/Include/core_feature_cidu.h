@@ -90,7 +90,7 @@ extern "C" {
  * \return core number configured
  * \remarks
  * - In a Nulcei multi-core system, each core has an identifiable serial number, the serial number starts from 0 and is
- *   continuous, also the number is static and has a direct mapping with the CSR mhartID.
+ *   continuous, also the number is static.
  * - CORE_NUM register is read only.
 */
 __STATIC_FORCEINLINE uint32_t CIDU_GetCoreNum(void)
