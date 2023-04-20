@@ -36,7 +36,7 @@ int smp_main(void)
 void eclic_uart0_int_handler()
 {
     int32_t status = -1;
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long hartid = __get_hart_id();
 
     /* Protect the uart0, in case that other core access */
     CIDU_AcquireSemaphore_Block(UART0_SEMAPHORE, hartid);
@@ -74,7 +74,7 @@ void eclic_uart0_int_handler()
 void eclic_inter_core_int_handler()
 {
     uint32_t sender_id = 0;
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long hartid = __get_hart_id();
 
     uint32_t val = CIDU_QueryCoreIntSenderMask(hartid);
     /* Protect the uart0, in case that other core access */
@@ -126,7 +126,7 @@ int other_harts_main(unsigned long hartid)
 int main(void)
 {
     int ret = 0;
-    unsigned long hartid = __RV_CSR_READ(CSR_MHARTID);
+    unsigned long hartid = __get_hart_id();
 #if defined(__CIDU_PRESENT) && (__CIDU_PRESENT == 1)
     if (hartid == BOOT_HARTID) { // boot hart
         /* CIDU_BroadcastExtInterrupt(IRQn_MAP_TO_EXT_ID(UART0_IRQn), CIDU_RECEIVE_INTERRUPT_EN(0)
