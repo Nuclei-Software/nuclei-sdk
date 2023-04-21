@@ -21,11 +21,13 @@ This is release version ``0.4.1`` of Nuclei SDK, which is still in development.
   - Add CIDU support via core_feature_cidu.h, and ``__CIDU_PRESENT`` macro is required in ``<Device>.h`` to represent CIDU present or not
   - Add macros of HPM m/s/u event enable, events type, events idx
   - Fix define error of HPM_INIT macro
-  - Due to mhartid csr update, two new API added called ``__get_hart_id`` and ``__get_cluster_id``
+  - Due to mhartid csr update for nuclei subsystem reference design, two new API added called ``__get_hart_id`` and ``__get_cluster_id``
 
-    - mhartid in Nuclei RISC-V processor are now used to present cluster id and hart id
+    - mhartid csr is now used to present cluster id and hart id for nuclei subsystem reference design
     - bit 0-7 is used for hart id in current cluster
     - bit 8-15 is used for cluster id of current cluster
+    - for normal nuclei riscv cpu design, the mhartid csr is used as usual, but in NMSIS Core, we only take
+      lower 8bits in use cases like systimer, startup code to support nuclei subsystem
 
 * Build System
 
