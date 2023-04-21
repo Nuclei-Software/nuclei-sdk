@@ -100,7 +100,7 @@ int main(void)
     clusterid = __get_cluster_id();
     misa = __RV_CSR_READ(CSR_MISA);
 
-    printf("Cluster %d, Hart %d, MISA: 0x%lx\r\n", clusterid, hartid, misa);
+    printf("Cluster %d, Hart %lu, MISA: 0x%lx\r\n", clusterid, hartid, misa);
     print_misa();
 
     // Generate random value with seed
@@ -110,7 +110,7 @@ int main(void)
     printf("Got rand integer %d using seed %d.\r\n", seed, rval);
 
     for (unsigned long i = 0; i < RUN_LOOPS; i ++) {
-        printf("%d: Hello World From Nuclei RISC-V Processor!\r\n", i);
+        printf("%lu: Hello World From Nuclei RISC-V Processor!\r\n", i);
     }
 
     return 0;
