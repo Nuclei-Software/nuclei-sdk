@@ -737,7 +737,7 @@ __STATIC_FORCEINLINE uint64_t __get_rv_time(void)
  * \brief   Get cluster id of current cluster
  * \details This function will get cluster id of current cluster in a multiple cluster system
  * \return  The cluster id of current cluster
- * \remarks mhartid bit 15-8 is designed for cluster id
+ * \remarks mhartid bit 15-8 is designed for cluster id in nuclei subsystem reference design
  * \attention function is allowed in machine mode only
  */
 __STATIC_FORCEINLINE unsigned long __get_cluster_id(void)
@@ -752,7 +752,7 @@ __STATIC_FORCEINLINE unsigned long __get_cluster_id(void)
  * \brief   Get hart id of current cluster
  * \details This function will get hart id of current cluster in a multiple cluster system
  * \return  The hart id of current cluster
- * \remarks mhartid bit 7-0 is designed for hart id
+ * \remarks mhartid bit 7-0 is designed for hart id in nuclei subsystem reference design
  * \attention function is allowed in machine mode only
  */
 __STATIC_FORCEINLINE unsigned long __get_hart_id(void)
