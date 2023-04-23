@@ -56,7 +56,7 @@ def get_ci_info():
     cipipelineurl = os.environ.get("CI_PIPELINE_URL")
     if cijoburl and cipipelineurl:
         return {"joburl": cijoburl, "pipelineurl": cipipelineurl}
-    else
+    else:
         return {}
 
 def get_global_variables():
