@@ -28,15 +28,15 @@ endif
 ifneq ($(findstring newlib,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has newlib in it
 ifeq ($(STDCLIB),newlib_full)
-LDLIBS += -lc -lnosys
+LDLIBS += -lc -lnosys -lgcc
 else ifeq ($(STDCLIB),newlib_fast)
-LDLIBS += -lc_nano -lnosys
+LDLIBS += -lc_nano -lnosys -lgcc
 STDCLIB_LDFLAGS += -u _printf_float -u _scanf_float
 else ifeq ($(STDCLIB),newlib_small)
-LDLIBS += -lc_nano -lnosys
+LDLIBS += -lc_nano -lnosys -lgcc
 STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
-LDLIBS += -lc_nano -lnosys
+LDLIBS += -lc_nano -lnosys -lgcc
 # work around for relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references _printf_float when compile with rv64
 STDCLIB_LDFLAGS += -u _printf_float
 else
@@ -94,5 +94,5 @@ endif
 ifneq ($(findstring newlib,$(STDCLIB)),)
 LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek -u __on_exit_args
 endif
-
-LDFLAGS += -fuse-ld=lld
+# -nodefaultlibs to ignore the auto added -lc -lgloss in RISCV::Linker::ConstructJob of clang/lib/Driver/ToolChains/RISCVToolchain.cpp
+LDFLAGS += -fuse-ld=lld -nodefaultlibs
