@@ -50,6 +50,15 @@ SDK_GLOBAL_VARIABLES = {
 
 INVAILD_SERNO = "xxxxx"
 
+# get ci url information
+def get_ci_info():
+    cijoburl = os.environ.get("CI_JOB_URL")
+    cipipelineurl = os.environ.get("CI_PIPELINE_URL")
+    if cijoburl and cipipelineurl:
+        return {"joburl": cijoburl, "pipelineurl": cipipelineurl}
+    else
+        return {}
+
 def get_global_variables():
     return SDK_GLOBAL_VARIABLES
 

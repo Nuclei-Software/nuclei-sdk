@@ -600,6 +600,11 @@ def parse_result2dict(result):
             if csvdict[cfg][apptype][appsubtype]["meta"] == None:
                 csvdict[cfg][apptype][appsubtype]["meta"] = dict()
             csvdict[cfg][apptype][appsubtype]["meta"].update(appresult[cfg].get("flags", dict()))
+            # record ci information
+            ciinfo = get_ci_info()
+            if ciinfo:
+                csvdict[cfg][apptype][appsubtype]["meta"]["ci"] = ciinfo
+
             if "value" not in csvdict[cfg][apptype][appsubtype]:
                 csvdict[cfg][apptype][appsubtype]["value"] = dict()
             csvdict[cfg][apptype][appsubtype]["value"].update(appresult[cfg]["result"]["value"])

@@ -222,6 +222,7 @@ class nsdk_builder(object):
 
         build_status["app"] = { "path": appdir, \
                                 "make_options": make_options, \
+                                "ci": get_ci_info(), \
                                 "target": target }
         build_status["status"] = {"build": cmdsts}
         build_status["status_code"] = {"build": ret}
