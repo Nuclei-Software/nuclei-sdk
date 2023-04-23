@@ -242,6 +242,8 @@ class nsdk_runner(object):
                 final_appcfg["run_config"]["hardware"] = {"baudrate": 115200, "timeout": 60, "serport": ""}
             final_appcfg["run_config"]["hardware"]["serport"] = serport
             final_appcfg["run_config"]["hardware"]["fpgabit"] = bitstream
+            # set a realpath variable for fpga bitstream for better debug
+            final_appcfg["run_config"]["hardware"]["fpgabit_realpath"] = os.path.realpath(bitstream)
             final_appcfg["run_config"]["hardware"]["fpgaserial"] = fpga_serial
             # set bitstream and fpga serial
             #set_fpga_bit(bitstream, fpga_serial)
@@ -261,6 +263,7 @@ class nsdk_runner(object):
             if "ncycm" not in final_appcfg["run_config"]:
                 final_appcfg["run_config"]["ncycm"] = {"timeout": 1200, "ncycm": "ncycm"}
             final_appcfg["run_config"]["ncycm"]["ncycm"] = ncycm_path
+            final_appcfg["run_config"]["ncycm"]["ncycm_realpath"] = os.path.realpath(ncycm_path)
         elif runon == "qemu" or runon == "xlspike":
             # set run target to ncycm
             final_appcfg["run_config"]["target"] = runon
