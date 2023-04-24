@@ -69,7 +69,7 @@ typedef enum CCM_OP_FINFO {
     CCM_OP_EXCEED_ERR = 0x1,            /*!< Exceed the the number of lockable ways(N-Way I/D-Cache, lockable is N-1) */
     CCM_OP_PERM_CHECK_ERR = 0x2,        /*!< PMP/sPMP/Page-Table X(I-Cache)/R(D-Cache) permission check failed, or belong to Device/Non-Cacheable address range */
     CCM_OP_REFILL_BUS_ERR = 0x3,        /*!< Refill has Bus Error */
-    CCM_OP_ECC_ERR = 0x4                /*!< ECC Error */
+    CCM_OP_ECC_ERR = 0x4                /*!< Deprecated, ECC Error, this error code is removed in later Nuclei CCM RTL design, please don't use it */
 } CCM_OP_FINFO_Type;
 
 /**
@@ -192,7 +192,7 @@ __STATIC_FORCEINLINE int32_t ICachePresent(void)
 */
 __STATIC_FORCEINLINE void EnableICache(void)
 {
-    __RV_CSR_SET(CSR_MCACHE_CTL, CSR_MCACHE_CTL_IE);
+    __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_IC_EN);
 }
 
 /**
@@ -207,7 +207,7 @@ __STATIC_FORCEINLINE void EnableICache(void)
  */
 __STATIC_FORCEINLINE void DisableICache(void)
 {
-    __RV_CSR_CLEAR(CSR_MCACHE_CTL, CSR_MCACHE_CTL_IE);
+    __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_IC_EN);
 }
 
 /**
@@ -222,7 +222,7 @@ __STATIC_FORCEINLINE void DisableICache(void)
 */
 __STATIC_FORCEINLINE void EnableICacheECC(void)
 {
-    __RV_CSR_SET(CSR_MCACHE_CTL, CSR_MCACHE_CTL_IC_ECC_EN);
+    __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_IC_ECC_EN);
 }
 
 /**
@@ -237,7 +237,7 @@ __STATIC_FORCEINLINE void EnableICacheECC(void)
 */
 __STATIC_FORCEINLINE void DisableICacheECC(void)
 {
-    __RV_CSR_CLEAR(CSR_MCACHE_CTL, CSR_MCACHE_CTL_IC_ECC_EN);
+    __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_IC_ECC_EN);
 }
 
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
@@ -415,13 +415,17 @@ __STATIC_FORCEINLINE unsigned long MLockICacheLines(unsigned long addr, unsigned
 {
     if (cnt > 0) {
         unsigned long i;
+        unsigned long fail_info = CCM_OP_SUCCESS;
         __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_LOCK);
+            fail_info = __RV_CSR_READ(CSR_CCM_MDATA);
+            if (CCM_OP_SUCCESS != fail_info) {
+                return fail_info;
+            }
         }
-        return __RV_CSR_READ(CSR_CCM_MDATA);
     } else {
-        return 0;
+        return CCM_OP_SUCCESS;
     }
 }
 
@@ -458,13 +462,17 @@ __STATIC_FORCEINLINE unsigned long SLockICacheLines(unsigned long addr, unsigned
 {
     if (cnt > 0) {
         unsigned long i;
+        unsigned long fail_info = CCM_OP_SUCCESS;
         __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_LOCK);
+            fail_info = __RV_CSR_READ(CSR_CCM_SDATA);
+            if (CCM_OP_SUCCESS != fail_info) {
+                return fail_info;
+            }
         }
-        return __RV_CSR_READ(CSR_CCM_SDATA);
     } else {
-        return 0;
+        return CCM_OP_SUCCESS;
     }
 }
 
@@ -501,13 +509,17 @@ __STATIC_FORCEINLINE unsigned long ULockICacheLines(unsigned long addr, unsigned
 {
     if (cnt > 0) {
         unsigned long i;
+        unsigned long fail_info = CCM_OP_SUCCESS;
         __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_LOCK);
+            fail_info = __RV_CSR_READ(CSR_CCM_UDATA);
+            if (CCM_OP_SUCCESS != fail_info) {
+                return fail_info;
+            }
         }
-        return __RV_CSR_READ(CSR_CCM_UDATA);
     } else {
-        return 0;
+        return CCM_OP_SUCCESS;
     }
 }
 
@@ -704,7 +716,7 @@ __STATIC_FORCEINLINE int32_t DCachePresent(void)
 */
 __STATIC_FORCEINLINE void EnableDCache(void)
 {
-    __RV_CSR_SET(CSR_MCACHE_CTL, CSR_MCACHE_CTL_DE);
+    __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_DC_EN);
 }
 
 /**
@@ -719,7 +731,7 @@ __STATIC_FORCEINLINE void EnableDCache(void)
  */
 __STATIC_FORCEINLINE void DisableDCache(void)
 {
-    __RV_CSR_CLEAR(CSR_MCACHE_CTL, CSR_MCACHE_CTL_DE);
+    __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_DC_EN);
 }
 
 /**
@@ -734,7 +746,7 @@ __STATIC_FORCEINLINE void DisableDCache(void)
 */
 __STATIC_FORCEINLINE void EnableDCacheECC(void)
 {
-    __RV_CSR_SET(CSR_MCACHE_CTL, CSR_MCACHE_CTL_DC_ECC_EN);
+    __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_DC_ECC_EN);
 }
 
 /**
@@ -749,7 +761,7 @@ __STATIC_FORCEINLINE void EnableDCacheECC(void)
 */
 __STATIC_FORCEINLINE void DisableDCacheECC(void)
 {
-    __RV_CSR_CLEAR(CSR_MCACHE_CTL, CSR_MCACHE_CTL_DC_ECC_EN);
+    __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_DC_ECC_EN);
 }
 
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
@@ -1149,13 +1161,17 @@ __STATIC_FORCEINLINE unsigned long MLockDCacheLines(unsigned long addr, unsigned
 {
     if (cnt > 0) {
         unsigned long i;
+        unsigned long fail_info = CCM_OP_SUCCESS;
         __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_LOCK);
+            fail_info = __RV_CSR_READ(CSR_CCM_MDATA);
+            if (CCM_OP_SUCCESS != fail_info) {
+                return fail_info;
+            }
         }
-        return __RV_CSR_READ(CSR_CCM_MDATA);
     } else {
-        return 0;
+        return CCM_OP_SUCCESS;
     }
 }
 
@@ -1192,13 +1208,17 @@ __STATIC_FORCEINLINE unsigned long SLockDCacheLines(unsigned long addr, unsigned
 {
     if (cnt > 0) {
         unsigned long i;
+        unsigned long fail_info = CCM_OP_SUCCESS;
         __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_LOCK);
+            fail_info = __RV_CSR_READ(CSR_CCM_SDATA);
+            if (CCM_OP_SUCCESS != fail_info) {
+                return fail_info;
+            }
         }
-        return __RV_CSR_READ(CSR_CCM_SDATA);
     } else {
-        return 0;
+        return CCM_OP_SUCCESS;
     }
 }
 
@@ -1235,13 +1255,17 @@ __STATIC_FORCEINLINE unsigned long ULockDCacheLines(unsigned long addr, unsigned
 {
     if (cnt > 0) {
         unsigned long i;
+        unsigned long fail_info = CCM_OP_SUCCESS;
         __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_LOCK);
+            fail_info = __RV_CSR_READ(CSR_CCM_UDATA);
+            if (CCM_OP_SUCCESS != fail_info) {
+                return fail_info;
+            }
         }
-        return __RV_CSR_READ(CSR_CCM_UDATA);
     } else {
-        return 0;
+        return CCM_OP_SUCCESS;
     }
 }
 
