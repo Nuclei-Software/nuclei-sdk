@@ -406,6 +406,7 @@ if __name__ == '__main__':
     parser.add_argument('--show', action='store_true', help="Show configurations")
     parser.add_argument('--timeout', help="Runner timeout for each application run, if not specified will use default one specified in json configuration")
     parser.add_argument('--verbose', action='store_true', help="If specified, will show detailed build/run messsage")
+    parser.add_argument('--uniqueid', default="", help="Pass pipeline$CI_PIPELINE_ID, such as pipeline123456")
     args = parser.parse_args()
 
     if args.sdk is None:

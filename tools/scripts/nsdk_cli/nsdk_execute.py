@@ -257,6 +257,7 @@ if __name__ == '__main__':
     parser.add_argument('--parallel', help="parallel value, such as -j4 or -j or -j8, default None")
     parser.add_argument('--run', action='store_true', help="If specified, will do run not build process")
     parser.add_argument('--verbose', action='store_true', help="If specified, will show detailed build/run messsage")
+    parser.add_argument('--uniqueid', default="", help="Pass pipeline$CI_PIPELINE_ID, such as pipeline123456")
     args = parser.parse_args()
 
     # Load appcfg and hwcfg

@@ -244,6 +244,7 @@ if __name__ == '__main__':
     parser.add_argument('--ncycm',  help="If specified, will use cycle model specified here")
     parser.add_argument("--timeout", help="If specified, will use timeout value specified here")
     parser.add_argument('--verbose', action='store_true', help="If specified, will show detailed build/run messsage")
+    parser.add_argument('--uniqueid', default="", help="Pass pipeline$CI_PIPELINE_ID, such as pipeline123456")
     args = parser.parse_args()
 
     # Load appcfg and hwcfg
