@@ -32,6 +32,7 @@ This is release version ``0.4.1`` of Nuclei SDK, which is still in development.
 * Build System
 
   - Add semihost support in build system via SEMIHOST make variable, if SEMIHOST=1, will link semihost library, currently only works with newlibc library, not working with libncrt
+  - Add support for compile cpp files with suffix like .cc or .CC
 
 * SoC
 
