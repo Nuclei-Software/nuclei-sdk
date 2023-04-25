@@ -24,6 +24,10 @@ ifeq ($(BANNER),0)
 COMMON_FLAGS += -DNUCLEI_BANNER=0
 endif
 
+ifneq ($(findstring libncrt,$(STDCLIB)),)
+$(error terapine toolchain don't provide libncrt library support)
+endif
+
 # Handle standard c library selection variable STDCLIB
 ifneq ($(findstring newlib,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has newlib in it
@@ -43,7 +47,8 @@ endif
 ###
 else ifneq ($(findstring libncrt,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has libncrt in it
-COMMON_FLAGS += --config=$(STDCLIB).specs
+LDLIBS += -l$(patsubst lib%,%,$(STDCLIB)) -lheapops_$(NCRTHEAP)
+COMMON_FLAGS += -isystem=/include/libncrt
 ###
 else ifeq ($(STDCLIB),nostd)
 ### Handle cases when no standard system directories for header files
@@ -56,6 +61,18 @@ COMMON_FLAGS +=
 else
 COMMON_FLAGS += --config nosys.cfg
 ###
+endif
+
+ifneq ($(SEMIHOST),)
+ifneq ($(findstring libncrt,$(STDCLIB)),)
+LDLIBS += -lfileops_semi
+else
+LDLIBS += -lsemihost
+endif
+else
+ifneq ($(findstring libncrt,$(STDCLIB)),)
+LDLIBS += -lfileops_uart
+endif
 endif
 
 ## Heap and stack size settings
@@ -76,7 +93,6 @@ SIMULATION_MODE=SIMULATION_MODE_$(call uc, $(SIMU))
 COMMON_FLAGS += -DSIMULATION_MODE=$(SIMULATION_MODE)
 endif
 
-COMMON_FLAGS += -g -fno-common
 COMMON_FLAGS += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
 ## Append mtune options when RISCV_TUNE is defined
 ## It might be defined in SoC/<SOC>/build.mk, and can be overwritten by make

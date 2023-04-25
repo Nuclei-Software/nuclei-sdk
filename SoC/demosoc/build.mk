@@ -148,14 +148,16 @@ C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source $(NUCLEI_SDK_SOC_COMMON)/Source/Dri
 
 # If semihosting is enabled, no stub function is needed
 ifeq ($(SEMIHOST),)
-ifneq ($(findstring libncrt,$(STDCLIB)),)
-# semihosting currently not ported to support libncrt
-C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/libncrt
-else ifneq ($(findstring newlib,$(STDCLIB)),)
+ifneq ($(findstring newlib,$(STDCLIB)),)
 C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/newlib
 else
 # no stubs will be used
 endif
+endif
+
+ifneq ($(findstring libncrt,$(STDCLIB)),)
+# semihosting currently not ported to support libncrt
+C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/libncrt
 endif
 
 ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_demosoc.S \

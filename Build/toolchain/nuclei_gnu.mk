@@ -71,6 +71,7 @@ endif
 else ifneq ($(findstring libncrt,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has libncrt in it
 COMMON_FLAGS += --specs=$(STDCLIB).specs
+LDLIBS += -l$(patsubst lib%,%,$(STDCLIB)) -lheapops_$(NCRTHEAP)
 ###
 else ifeq ($(STDCLIB),nostd)
 ### Handle cases when no standard system directories for header files
@@ -95,7 +96,15 @@ endif
 endif
 
 ifneq ($(SEMIHOST),)
+ifneq ($(findstring libncrt,$(STDCLIB)),)
+LDLIBS += -lfileops_semi
+else
 LDLIBS += -lsemihost
+endif
+else
+ifneq ($(findstring libncrt,$(STDCLIB)),)
+LDLIBS += -lfileops_uart
+endif
 endif
 
 ## Heap and stack size settings
@@ -116,7 +125,6 @@ SIMULATION_MODE=SIMULATION_MODE_$(call uc, $(SIMU))
 COMMON_FLAGS += -DSIMULATION_MODE=$(SIMULATION_MODE)
 endif
 
-COMMON_FLAGS += -g -fno-common
 COMMON_FLAGS += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
 ## Append mtune options when RISCV_TUNE is defined
 ## It might be defined in SoC/<SOC>/build.mk, and can be overwritten by make
