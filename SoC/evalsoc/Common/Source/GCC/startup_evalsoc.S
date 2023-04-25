@@ -39,7 +39,7 @@
 #endif
 .endm
 
-    .section .vtable
+    .section .text.vtable
 
     .weak eclic_msip_handler
     .weak eclic_mtip_handler
@@ -140,7 +140,7 @@ vector_base:
 
     DECLARE_INT_HANDLER     default_intexc_handler          /* 68: Interrupt 68 */
 
-    .section .init
+    .section .text.init
 
     .globl _start
     .type _start, @function

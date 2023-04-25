@@ -102,7 +102,7 @@ void eclic_stip_handler(void) __attribute__((weak));
  *    257 to 512              2KB
  *    513 to 1024             4KB
  */
-static unsigned long vector_table_s[SOC_INT_MAX] __attribute__((section (".vtable_s"), aligned(512))) =
+static unsigned long vector_table_s[SOC_INT_MAX] __attribute__((section (".text.vtable_s"), aligned(512))) =
 {
     (unsigned long)(&default_intexc_handler),        /* 0: Reserved */
     (unsigned long)(&default_intexc_handler),        /* 1: Reserved */
@@ -670,7 +670,7 @@ static void _get_iregion_info(IRegion_Info_Type *iregion)
  * This function is used to synchronize all the harts,
  * especially to wait the boot hart finish initialization of
  * data section, bss section and c runtines initialization
- * This function must be placed in .init section, since
+ * This function must be placed in .text.init section, since
  * section initialization is not ready, global variable
  * and static variable should be avoid to use in this function,
  * and avoid to call other functions
@@ -678,7 +678,7 @@ static void _get_iregion_info(IRegion_Info_Type *iregion)
 #define CLINT_MSIP(base, hartid)    (*(volatile uint32_t *)((uintptr_t)((base) + ((hartid) * 4))))
 #define SMP_CTRLREG(base, ofs)      (*(volatile uint32_t *)((uintptr_t)((base) + (ofs))))
 
-__attribute__((section(".init"))) void __sync_harts(void)
+__attribute__((section(".text.init"))) void __sync_harts(void)
 {
 // Only do synchronize when SMP_CPU_CNT is defined and number > 0
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
