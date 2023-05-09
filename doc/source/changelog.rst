@@ -55,6 +55,9 @@ This is release version ``0.4.1`` of Nuclei SDK, which is still in development.
 
   - Modify openocd configuration file in nsdk_utils.oy support win32 now
   - Add new feature to generate cpu json when knowing cpu arch in nsdk_runcpu.py script
+  - Add runresult_diff.py script to compare the difference of two runresult.xlsx.csvtable.json files, useful when
+    do benchmark difference check
+  - Add ``--uniqueid <id>`` option for nsdk cli tools
 
 V0.4.0
 ------
