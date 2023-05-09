@@ -372,5 +372,6 @@ sdk_sync_tools:
     - cp -f tools/scripts/nsdk_cli/httpserver.py ${SHAREENVLOC}/tools/bin/httpserver_cli
     - cp -f tools/scripts/nsdk_cli/hpm_parse.py ${SHAREENVLOC}/tools/bin/hpmparse_cli
     - cp -f tools/scripts/nsdk_cli/report_preview.py ${SHAREENVLOC}/tools/bin/reportview_cli
+    - cp -f tools/scripts/nsdk_cli/runresult_diff.py ${SHAREENVLOC}/tools/bin/runrstdiff_cli
     - chmod +x ${SHAREENVLOC}/tools/bin/*_cli
 
