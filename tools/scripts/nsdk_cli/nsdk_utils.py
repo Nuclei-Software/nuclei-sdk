@@ -202,6 +202,16 @@ def save_yaml(file, data):
         print("Error: Data can't be serialized to yaml file!")
         return False
 
+def get_specific_key_value(dictdata:dict, key):
+    if not dictdata:
+        print("Error: dictdata doesn't exist!")
+        return None
+    value = dictdata.get(key, None)
+    if not value:
+        print("Error, key %s has no value!" % (key))
+        return None
+    return value
+
 JSON_OK=0
 JSON_NOFILE=1
 JSON_INVAILD=2
