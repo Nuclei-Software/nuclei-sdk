@@ -210,13 +210,13 @@ buildconfig:
     common_flags: # flags need to be combined together across all packages
       - flags: -g -fno-common -ffunction-sections -fdata-sections
       - flags: -march=${nuclei_core.arch} -mabi=${nuclei_core.abi} -mcmodel=medany
-      - flags: --specs=nosys.specs
+      - flags:
         condition: $( ${stdclib} == "newlib_full" )
-      - flags: --specs=nano.specs --specs=nosys.specs -u _printf_float -u _scanf_float
+      - flags: --specs=nano.specs -u _printf_float -u _scanf_float
         condition: $( ${stdclib} == "newlib_fast" )
-      - flags: --specs=nano.specs --specs=nosys.specs -u _printf_float
+      - flags: --specs=nano.specs -u _printf_float
         condition: $( ${stdclib} == "newlib_small" )
-      - flags: --specs=nano.specs --specs=nosys.specs
+      - flags: --specs=nano.specs
         condition: $( ${stdclib} == "newlib_nano" )
       - flags: --specs=${stdclib}.specs
         condition: $( startswith(${stdclib}, "libncrt") )
@@ -229,7 +229,7 @@ buildconfig:
       - flags: -lstdc++
         condition: $( startswith(${stdclib}, "newlib") )
       - flags: -Wl,--gc-sections -Wl,--check-sections
-      - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
+      - flags: # -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
         condition: $( startswith(${stdclib}, "newlib") )
       - flags: -Wl,--defsym=__HEAP_SIZE=${heapsz}
         condition: $( ${heapsz} != "" )
