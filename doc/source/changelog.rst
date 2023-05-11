@@ -33,6 +33,7 @@ This is release version ``0.4.1`` of Nuclei SDK, which is still in development.
 
   - Add semihost support in build system via SEMIHOST make variable, if SEMIHOST=1, will link semihost library, currently only works with newlibc library, not working with libncrt
   - Add support for compile cpp files with suffix like .cc or .CC
+  - Remove ``--specs=nosys.specs`` compile options used during compiling, since we have implement almost all necessary newlibc stub functions, no need to link the nosys version, which will throw warning of link with empty newlibc stub functions.
 
 * SoC
 
@@ -45,6 +46,7 @@ This is release version ``0.4.1`` of Nuclei SDK, which is still in development.
   - Add extra run/restart command for openocd debug configuration in smp debug in npk for Nuclei Studio
   - Update smp/boot flow to match mhartid csr update
   - **BOOT_HARTID** is the choosen boot hart id in current cluster, not the full mhartid register value, for example, it the mhartid csr register is 0x0101, and the **BOOT_HARTID** should be set to 1, if you want hart 1 to be boot hart
+  - Update and add more newlib stub functions in demosoc/evalsoc/gd32vf103 SoC's newlibc stub implementation, since we are no longer compile with ``--specs=nosys.specs``
 
 * CI
 
