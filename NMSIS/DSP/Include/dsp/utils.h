@@ -28,6 +28,7 @@
 #define _RISCV_MATH_UTILS_H_
 
 #include "riscv_math_types.h"
+#include <limits.h>
 
 #ifdef   __cplusplus
 extern "C"
@@ -40,6 +41,13 @@ extern "C"
 
 #define INDEX_MASK         0x0000003F
 
+#ifndef MIN
+  #define MIN(x,y) ((x) < (y) ? (x) : (y))
+#endif
+
+#ifndef MAX
+  #define MAX(x,y) ((x) > (y) ? (x) : (y))
+#endif
 
 #define SQ(x) ((x) * (x))
 
@@ -48,6 +56,7 @@ extern "C"
 
   /**
    * @brief Function to Calculates 1/in (reciprocal) value of Q31 Data type.
+     It should not be used with negative values.
    */
   __STATIC_FORCEINLINE uint32_t riscv_recip_q31(
         q31_t in,
@@ -61,11 +70,11 @@ extern "C"
 
     if (in > 0)
     {
-      signBits = ((uint32_t) (__CLZ( in) - 1));
+      signBits = ((uint32_t) (__CLZ( (uint32_t)in) - 1));
     }
     else
     {
-      signBits = ((uint32_t) (__CLZ(-in) - 1));
+      signBits = ((uint32_t) (__CLZ((uint32_t)(-in)) - 1));
     }
 
     /* Convert input sample to 1.31 format */
@@ -99,6 +108,7 @@ extern "C"
 
   /**
    * @brief Function to Calculates 1/in (reciprocal) value of Q15 Data type.
+     It should not be used with negative values.
    */
   __STATIC_FORCEINLINE uint32_t riscv_recip_q15(
         q15_t in,
@@ -106,21 +116,21 @@ extern "C"
   const q15_t * pRecipTable)
   {
     q15_t out = 0;
-    uint32_t tempVal = 0;
+    int32_t tempVal = 0;
     uint32_t index = 0, i = 0;
     uint32_t signBits = 0;
 
     if (in > 0)
     {
-      signBits = ((uint32_t)(__CLZ( in) - 17));
+      signBits = ((uint32_t)(__CLZ( (uint32_t)in) - 17));
     }
     else
     {
-      signBits = ((uint32_t)(__CLZ(-in) - 17));
+      signBits = ((uint32_t)(__CLZ((uint32_t)(-in)) - 17));
     }
 
     /* Convert input sample to 1.15 format */
-    in = (in << signBits);
+    in = (q15_t)(in << signBits);
 
     /* calculation of index for initial approximated Val */
     index = (uint32_t)(in >>  8);
@@ -133,8 +143,8 @@ extern "C"
     /* running approximation for two iterations */
     for (i = 0U; i < 2U; i++)
     {
-      tempVal = (uint32_t) (((q31_t) in * out) >> 15);
-      tempVal = 0x7FFFu - tempVal;
+      tempVal = (((q31_t) in * out) >> 15);
+      tempVal = 0x7FFF - tempVal;
       /*      1.15 with exp 1 */
       out = (q15_t) (((q31_t) out * tempVal) >> 14);
       /* out = clip_q31_to_q15(((q31_t) out * tempVal) >> 14); */
@@ -160,13 +170,13 @@ __STATIC_INLINE  void riscv_norm_64_to_32u(uint64_t in, int32_t * normalized, in
     int32_t     hi = (int32_t) (in >> 32);
     int32_t     lo = (int32_t) ((in << 32) >> 32);
 
-    n1 = __CLZ(hi) - 32;
+    n1 = __CLZ((uint32_t)hi) - 32;
     if (!n1)
     {
         /*
          * input fits in 32-bit
          */
-        n1 = __CLZ(lo);
+        n1 = __CLZ((uint32_t)lo);
         if (!n1)
         {
             /*
@@ -202,13 +212,13 @@ __STATIC_INLINE  void riscv_norm_64_to_32u(uint64_t in, int32_t * normalized, in
         /*
          * 64 bit normalization
          */
-        *normalized = (((uint32_t) lo) >> n1) | (hi << (32 - n1));
+        *normalized = (int32_t)(((uint32_t)lo) >> n1) | (hi << (32 - n1));
     }
 }
 
-__STATIC_INLINE q31_t riscv_div_q63_to_q31(q63_t num, q31_t den)
+__STATIC_INLINE int32_t riscv_div_int64_to_int32(int64_t num, int32_t den)
 {
-    q31_t   result;
+    int32_t   result;
     uint64_t   absNum;
     int32_t   normalized;
     int32_t   norm;
@@ -217,18 +227,25 @@ __STATIC_INLINE q31_t riscv_div_q63_to_q31(q63_t num, q31_t den)
      * if sum fits in 32bits
      * avoid costly 64-bit division
      */
-    absNum = num > 0 ? num : -num;
+    if (num == (int64_t)LONG_MIN)
+    {
+        absNum = LONG_MAX;
+    }
+    else
+    {
+       absNum = (uint64_t) (num > 0 ? num : -num);
+    }
     riscv_norm_64_to_32u(absNum, &normalized, &norm);
     if (norm > 0)
         /*
          * 32-bit division
          */
-        result = (q31_t) num / den;
+        result = (int32_t) num / den;
     else
         /*
          * 64-bit division
          */
-        result = (q31_t) (num / den);
+        result = (int32_t) (num / den);
 
     return result;
 }

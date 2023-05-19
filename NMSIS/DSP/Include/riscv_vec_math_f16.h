@@ -46,7 +46,7 @@ extern "C"
 }
 #endif
 
-#endif /* ARM FLOAT16 SUPPORTED */
+#endif /* RISCV FLOAT16 SUPPORTED */
 
 #endif /* _RISCV_VEC_MATH_F16_H */
 

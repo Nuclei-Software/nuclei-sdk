@@ -35,12 +35,6 @@ extern "C"
 #endif
 
 
-/**
- * @brief 16-bit floating-point type definition.
- * This is already defined in riscv_mve.h
- *
- * This is not fully supported on ARM AC5.
- */
 
 /*
 

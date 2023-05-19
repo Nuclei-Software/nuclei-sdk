@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2022 Arm Limited or its affiliates.
+ * SPDX-FileCopyrightText: Copyright 2010-2023 Arm Limited and/or its affiliates <open-source-office@arm.com>
  * Copyright (c) 2022 Nuclei Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -22,8 +22,8 @@
  * Title:        riscv_nnsupportfunctions.h
  * Description:  Public header file of support functions for NMSIS NN Library
  *
- * $Date:        19. April 2022
- * $Revision:    V.7.0.1
+ * $Date:        23 Mars 2023
+ * $Revision:    V.16.0.0
  *
  * Target Processor: RISC-V Cores
  * -------------------------------------------------------------------- */
@@ -34,9 +34,15 @@
 #include "riscv_nn_math_types.h"
 #include "riscv_nn_types.h"
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define USE_FAST_DW_CONV_S16_FUNCTION(dw_conv_params, filter_dims, input_dims)                                         \
+    (dw_conv_params->ch_mult == 1 && dw_conv_params->dilation.w == 1 && dw_conv_params->dilation.h == 1 &&             \
+     filter_dims->w * filter_dims->h < 512)
 
 #define LEFT_SHIFT(_shift) (_shift > 0 ? _shift : 0)
 #define RIGHT_SHIFT(_shift) (_shift > 0 ? 0 : -_shift)
@@ -57,21 +63,26 @@ extern "C" {
 /**
  * @brief definition to pack four 8 bit values.
  */
-#define PACK_Q7x4_32x1(v0, v1, v2, v3)                                                                                 \
+#define PACK_S8x4_32x1(v0, v1, v2, v3)                                                                                 \
     ((((int32_t)(v0) << 0) & (int32_t)0x000000FF) | (((int32_t)(v1) << 8) & (int32_t)0x0000FF00) |                     \
      (((int32_t)(v2) << 16) & (int32_t)0x00FF0000) | (((int32_t)(v3) << 24) & (int32_t)0xFF000000))
 
 /**
- * @brief Union for SIMD access of q31/q15/q7 types
+ * @brief definition to pack two 16 bit values.
+ */
+#define PACK_Q15x2_32x1(v0, v1) (((int32_t)v0 & (int32_t)0xFFFF) | ((int32_t)v1 << 16))
+
+/**
+ * @brief Union for SIMD access of q31/s16/s8 types
  */
 union riscv_nnword
 {
-    q31_t word;
+    int32_t word;
     /**< q31 type */
-    q15_t half_words[2];
-    /**< q15 type */
-    q7_t bytes[4];
-    /**< q7 type */
+    int16_t half_words[2];
+    /**< s16 type */
+    int8_t bytes[4];
+    /**< s8 type */
 };
 
 /**
@@ -89,8 +100,81 @@ union riscv_nn_long_long
     struct riscv_nn_double word;
 };
 
+#ifndef RISCV_MATH_DSP
+  /**
+   * @brief definition to pack two 16 bit values.
+   */
+  #define __NN_PKHBT(ARG1, ARG2, ARG3) ( (((int32_t)(ARG1) <<    0) & (int32_t)0x0000FFFF) | \
+                                      (((int32_t)(ARG2) << ARG3) & (int32_t)0xFFFF0000)  )
+  #define __NN_PKHTB(ARG1, ARG2, ARG3) ( (((int32_t)(ARG1) <<    0) & (int32_t)0xFFFF0000) | \
+                                      (((int32_t)(ARG2) >> ARG3) & (int32_t)0x0000FFFF)  )
+
+  /**
+   * @brief Clips Q63 to Q31 values.
+   */
+  __STATIC_FORCEINLINE q31_t nn_clip_q63_to_q31(
+  q63_t x)
+  {
+    return ((q31_t) (x >> 32) != ((q31_t) x >> 31)) ?
+      ((0x7FFFFFFF ^ ((q31_t) (x >> 63)))) : (q31_t) x;
+  }
+
+  /*
+   * @brief C custom defined QADD
+   */
+  __STATIC_FORCEINLINE int32_t __NN_QADD(
+  int32_t x,
+  int32_t y)
+  {
+    return ((int32_t)(nn_clip_q63_to_q31((q63_t)x + (q31_t)y)));
+  }
+
+  /*
+   * @brief C custom defined QADD16
+   */
+  __STATIC_FORCEINLINE uint32_t __NN_QADD16(
+  uint32_t x,
+  uint32_t y)
+  {
+/*  q31_t r,     s;  without initialisation 'riscv_offset_q15 test' fails  but 'intrinsic' tests pass! for armCC */
+    q31_t r = 0, s = 0;
+
+    r = __SSAT(((((q31_t)x << 16) >> 16) + (((q31_t)y << 16) >> 16)), 16) & (int32_t)0x0000FFFF;
+    s = __SSAT(((((q31_t)x      ) >> 16) + (((q31_t)y      ) >> 16)), 16) & (int32_t)0x0000FFFF;
+
+    return ((uint32_t)((s << 16) | (r      )));
+  }
+
+  /*
+   * @brief C custom defined SXTB16
+   */
+  __STATIC_FORCEINLINE uint32_t __NN_SXTB16(
+  uint32_t x)
+  {
+    return ((uint32_t)(((((q31_t)x << 24) >> 24) & (q31_t)0x0000FFFF) |
+                       ((((q31_t)x <<  8) >>  8) & (q31_t)0xFFFF0000)  ));
+  }
+
+#else
+
+#define __NN_PKHBT __PKHBT
+#define __NN_PKHTB __PKHTB
+#define __NN_QADD __QADD
+#define __NN_QADD16 __QADD16
+#define __NN_SXTB16 __SXTB16
+
+#endif
+
+   /**
+   * @brief definition to pack four 8 bit values.
+   */
+  #define __NN_PACKq7(v0,v1,v2,v3) ( (((int32_t)(v0) <<  0) & (int32_t)0x000000FF) | \
+                                  (((int32_t)(v1) <<  8) & (int32_t)0x0000FF00) | \
+                                  (((int32_t)(v2) << 16) & (int32_t)0x00FF0000) | \
+                                  (((int32_t)(v3) << 24) & (int32_t)0xFF000000)  )
+
 /**
- * @defgroup nndata_convert Neural Network Data Conversion Functions
+ * @defgroup groupSupport Private
  *
  * Perform data type conversion in-between neural network operations
  *
@@ -126,9 +210,9 @@ void riscv_q7_to_q7_no_shift(const q7_t * pSrc, q7_t * pDst, uint32_t blockSize)
 void riscv_nn_add_q7(const q7_t *input, q31_t *output, uint32_t block_size);
 
 /**
- * @brief  Converts the elements of the q7 vector to reordered q15 vector without left-shift
- * @param[in]       *pSrc points to the q7 input vector
- * @param[out]      *pDst points to the q15 output vector
+ * @brief  Converts the elements of the s8 vector to reordered q15 vector without left-shift
+ * @param[in]       *pSrc points to the s8 input vector
+ * @param[out]      *pDst points to the s16 output vector
  * @param[in]       blockSize length of the input vector
  * @return none.
  *
@@ -138,27 +222,54 @@ void riscv_q7_to_q15_reordered_no_shift(const q7_t *pSrc, q15_t *pDst, uint32_t 
 void riscv_q7_to_q7_reordered_no_shift(const q7_t * pSrc, q7_t * pDst, uint32_t blockSize);
 
 /**
- * @brief Converts the elements from a q7 vector to a q15 vector with an added offset
- * @param[in]    src        pointer to the q7 input vector
- * @param[out]   dst        pointer to the q15 output vector
+ * @brief Converts the elements from a s8 vector to a s16 vector with an added offset
+ * @param[in]    src        pointer to the s8 input vector
+ * @param[out]   dst        pointer to the s16 output vector
  * @param[in]    block_size length of the input vector
- * @param[in]    offset     q7 offset to be added to each input vector element.
+ * @param[in]    offset     s16 offset to be added to each input vector element.
  *
  * \par Description:
  *
+ * Output elements are ordered.
  * The equation used for the conversion process is:
  *
  * <pre>
- *  dst[n] = (q15_t) src[n] + offset;   0 <= n < block_size.
+ *  dst[n] = (int16_t) src[n] + offset;   0 <= n < block_size.
  * </pre>
  *
  */
-void riscv_q7_to_q15_with_offset(const q7_t *src, q15_t *dst, uint32_t block_size, q15_t offset);
+void riscv_q7_to_q15_with_offset(const int8_t *src, int16_t *dst, int32_t block_size, int16_t offset);
+
+#if defined(RISCV_MATH_DSP)
+/**
+ * @brief Converts the elements from a s8 vector to a s16 vector with an added offset
+ * @param[in]    src        pointer to the s8 input vector
+ * @param[out]   dst        pointer to the s16 output vector
+ * @param[in]    block_size length of the input vector
+ * @param[in]    offset     s16 offset to be added to each input vector element.
+ *
+ * \par Description:
+ *
+ * No additonal ordering is done with the result that output elements are not in order.
+ * Instead of ABCD order will be ACBD.
+ * Note this is for processors with DSP extension only.
+ * The equation used for the conversion process is:
+ *
+ * <pre>
+ *  dst[n - 0] = (int16_t) src[n - 0] + offset;   0 <= n < block_size.
+ *  dst[n - 1] = (int16_t) src[n - 2] + offset;   0 <= n < block_size.
+ *  dst[n - 2] = (int16_t) src[n - 1] + offset;   0 <= n < block_size.
+ *  dst[n - 3] = (int16_t) src[n - 3] + offset;   0 <= n < block_size.
+ * </pre>
+ *
+ */
+void riscv_s8_to_s16_unordered_with_offset(const int8_t *src, int16_t *dst, int32_t block_size, int16_t offset);
+#endif
 
 /**
- * @brief Converts the elements of the q7 vector to reordered q15 vector with an added offset
- * @param[in]       src        pointer to the q7 input vector
- * @param[out]      dst        pointer to the q15 output vector
+ * @brief Converts the elements from a s8 vector to a s16 vector with an added offset
+ * @param[in]    src        pointer to the s8 input vector
+ * @param[out]   dst        pointer to the s16 output vector
  * @param[in]       block_size length of the input vector
  * @param[in]       offset     offset to be added to each input vector element.
  * @return none.
@@ -206,17 +317,17 @@ void riscv_nn_accumulate_q7_to_q15(q15_t *dst, const q7_t *src, uint32_t block_s
  *
  * @details     Supported framework: TensorFlow Lite micro.
  */
-q7_t *riscv_nn_depthwise_conv_s8_core(const q7_t *row,
-                                    const q15_t *col,
-                                    const uint16_t num_ch,
-                                    const int32_t *out_shift,
-                                    const int32_t *out_mult,
-                                    const int32_t out_offset,
-                                    const int32_t activation_min,
-                                    const int32_t activation_max,
-                                    const uint16_t kernel_size,
-                                    const int32_t *const output_bias,
-                                    q7_t *out);
+int8_t *riscv_nn_depthwise_conv_s8_core(const int8_t *row,
+                                      const int16_t *col,
+                                      const uint16_t num_ch,
+                                      const int32_t *out_shift,
+                                      const int32_t *out_mult,
+                                      const int32_t out_offset,
+                                      const int32_t activation_min,
+                                      const int32_t activation_max,
+                                      const uint16_t kernel_size,
+                                      const int32_t *const output_bias,
+                                      int8_t *out);
 
 /**
  * @brief General Matrix-multiplication function with per-channel requantization.
@@ -240,20 +351,20 @@ q7_t *riscv_nn_depthwise_conv_s8_core(const q7_t *row,
  *
  * @details   Supported framework: TensorFlow Lite
  */
-q7_t *riscv_nn_mat_mult_s8(const q7_t *input_row,
-                         const q7_t *input_col,
-                         const uint16_t output_ch,
-                         const uint16_t col_batches,
-                         const int32_t *output_shift,
-                         const int32_t *output_mult,
-                         const int32_t out_offset,
-                         const int32_t col_offset,
-                         const int32_t row_offset,
-                         const int16_t out_activation_min,
-                         const int16_t out_activation_max,
-                         const uint16_t row_len,
-                         const int32_t *const bias,
-                         q7_t *out);
+int8_t *riscv_nn_mat_mult_s8(const int8_t *input_row,
+                           const int8_t *input_col,
+                           const uint16_t output_ch,
+                           const uint16_t col_batches,
+                           const int32_t *output_shift,
+                           const int32_t *output_mult,
+                           const int32_t out_offset,
+                           const int32_t col_offset,
+                           const int32_t row_offset,
+                           const int16_t out_activation_min,
+                           const int16_t out_activation_max,
+                           const uint16_t row_len,
+                           const int32_t *const bias,
+                           int8_t *out);
 /**
  * @brief Matrix-multiplication function for convolution with per-channel requantization for 16 bits convolution.
  * @param[in]       input_a     pointer to operand A
@@ -275,38 +386,53 @@ q7_t *riscv_nn_mat_mult_s8(const q7_t *input_row,
  *            clamped in the range provided by activation min and max.
  *            Supported framework: TensorFlow Lite micro.
  */
-q15_t *riscv_nn_mat_mult_kernel_s16(const q7_t *input_a,
-                                  const q15_t *input_b,
-                                  const int32_t output_ch,
-                                  const int32_t *out_shift,
-                                  const int32_t *out_mult,
-                                  const int16_t activation_min,
-                                  const int16_t activation_max,
-                                  const int32_t num_col_a,
-                                  const int64_t *const output_bias,
-                                  q15_t *out_0);
+int16_t *riscv_nn_mat_mult_kernel_s16(const int8_t *input_a,
+                                    const int16_t *input_b,
+                                    const int32_t output_ch,
+                                    const int32_t *out_shift,
+                                    const int32_t *out_mult,
+                                    const int16_t activation_min,
+                                    const int16_t activation_max,
+                                    const int32_t num_col_a,
+                                    const int64_t *const output_bias,
+                                    int16_t *out_0);
+
 /**
- * @brief General Matrix-multiplication without requantization for one row & one column
- * @param[in]       row_elements  number of row elements
- * @param[in]       row_base      pointer to row operand
- * @param[in]       col_base      pointer to col operand
- * @param[out]      sum_col       pointer to store sum of column elements
- * @param[out]      output        pointer to store result of multiply-accumulate
- * @return     The function returns the multiply-accumulated result of the row by column.
+ * @brief General Vector by Matrix multiplication with requantization and storage of result.
+ * @param[in]       row_elements          number of row elements
+ * @param[in]       skipped_row_elements  number of row elements skipped due to padding.
+ *                                        row_elements + skipped_row_elements = (kernel_x * kernel_y) * input_ch
+ * @param[in]       row_base_ref          pointer to row operand
+ * @param[in]       col_base_ref          pointer to col operand
+ * @param[out]      out_ch                Number of output channels
+ * @param[in]       conv_params           Pointer to convolution parameters like offsets and activation values
+ * @param[in]       quant_params          Pointer to per-channel quantization parameters
+ * @param[in]       bias                  Pointer to optional per-channel bias
+ * @param[out]      output                Pointer to output where int8 results are stored.
+ * @return     The function performs matrix(row_base_ref) multiplication with vector(col_base_ref) and
+ *             scaled result is stored in memory.
  *
  * @details Pseudo-code
  *      *output = 0
  *      sum_col = 0
+ *      for (j = 0; j < out_ch; j++)
  *      for (i = 0; i < row_elements; i++)
- *          *output += row_base[i] * col_base[i]
- *          sum_col += col_base[i]
+ *          *output += row_base_ref[i] * col_base_ref[i]
+ *          sum_col += col_base_ref[i]
+ *      scale sum_col using quant_params and bias
+ *      store result in 'output'
+ *
  *
  */
-riscv_status riscv_nn_mat_mul_core_1x_s8(int32_t row_elements,
-                                     const int8_t *row_base,
-                                     const int8_t *col_base,
-                                     int32_t *const sum_col,
-                                     int32_t *const output);
+riscv_nmsis_nn_status riscv_nn_mat_mul_core_1x_s8(int32_t row_elements,
+                                              const int32_t skipped_row_elements,
+                                              const int8_t *row_base_ref,
+                                              const int8_t *col_base_ref,
+                                              const int32_t out_ch,
+                                              const nmsis_nn_conv_params *conv_params,
+                                              const nmsis_nn_per_channel_quant_params *quant_params,
+                                              const int32_t *bias,
+                                              int8_t *output);
 
 /**
  * @brief Matrix-multiplication with requantization & activation function for four rows and one column
@@ -346,13 +472,13 @@ int8_t *riscv_nn_mat_mul_core_4x_s8(const int32_t row_elements,
  * @param[in]  lhs                Pointer to the LHS input matrix
  * @param[in]  rhs                Pointer to the RHS input matrix
  * @param[in]  bias               Pointer to the bias vector. The length of this vector is equal to the number of
- * output columns (or RHS input rows)
+ *                                output columns (or RHS input rows)
  * @param[out] dst                Pointer to the output matrix with "m" rows and "n" columns
  * @param[in]  dst_multipliers    Pointer to the multipliers vector needed for the per-channel requantization.
  *                                The length of this vector is equal to the number of output columns (or RHS input
- * rows)
+ *                                rows)
  * @param[in]  dst_shifts         Pointer to the shifts vector needed for the per-channel requantization. The length
- * of this vector is equal to the number of output columns (or RHS input rows)
+ *                                of this vector is equal to the number of output columns (or RHS input rows)
  * @param[in]  lhs_rows           Number of LHS input rows
  * @param[in]  rhs_rows           Number of RHS input rows
  * @param[in]  rhs_cols           Number of LHS/RHS input columns
@@ -360,23 +486,25 @@ int8_t *riscv_nn_mat_mul_core_4x_s8(const int32_t row_elements,
  * @param[in]  dst_offset         Offset to be applied the output result
  * @param[in]  activation_min     Minimum value to clamp down the output. Range : int8
  * @param[in]  activation_max     Maximum value to clamp up the output. Range : int8
+ * @param[in]  lhs_cols_offset    Column offset between subsequent lhs_rows
  *
- * @return     The function returns <code>RISCV_MATH_SUCCESS</code>
+ * @return     The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
  *
  */
-riscv_status riscv_nn_mat_mult_nt_t_s8(const q7_t *lhs,
-                                   const q7_t *rhs,
-                                   const q31_t *bias,
-                                   q7_t *dst,
-                                   const int32_t *dst_multipliers,
-                                   const int32_t *dst_shifts,
-                                   const int32_t lhs_rows,
-                                   const int32_t rhs_rows,
-                                   const int32_t rhs_cols,
-                                   const int32_t lhs_offset,
-                                   const int32_t dst_offset,
-                                   const int32_t activation_min,
-                                   const int32_t activation_max);
+riscv_nmsis_nn_status riscv_nn_mat_mult_nt_t_s8(const int8_t *lhs,
+                                            const int8_t *rhs,
+                                            const int32_t *bias,
+                                            int8_t *dst,
+                                            const int32_t *dst_multipliers,
+                                            const int32_t *dst_shifts,
+                                            const int32_t lhs_rows,
+                                            const int32_t rhs_rows,
+                                            const int32_t rhs_cols,
+                                            const int32_t lhs_offset,
+                                            const int32_t dst_offset,
+                                            const int32_t activation_min,
+                                            const int32_t activation_max,
+                                            const int32_t lhs_cols_offset);
 
 /**
  * @brief s8 Vector by Matrix (transposed) multiplication
@@ -387,7 +515,6 @@ riscv_status riscv_nn_mat_mult_nt_t_s8(const q7_t *lhs,
  * @param[out]     dst             Output vector
  * @param[in]      lhs_offset      Offset to be added to the input values of the left-hand side vector.
  *                                 Range: -127 to 128
- * @param[in]      rhs_offset      Not used
  * @param[in]      dst_offset      Offset to be added to the output values. Range: -127 to 128
  * @param[in]      dst_multiplier  Output multiplier
  * @param[in]      dst_shift       Output shift
@@ -398,23 +525,22 @@ riscv_status riscv_nn_mat_mult_nt_t_s8(const q7_t *lhs,
  * @param[in]      address_offset  Memory position offset for dst. First output is stored at 'dst', the
  *                                 second at 'dst + address_offset' and so on. Default value is typically 1.
  *
- * @return         The function returns <code>RISCV_MATH_SUCCESS</code>
+ * @return         The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
  *
  */
-riscv_status riscv_nn_vec_mat_mult_t_s8(const q7_t *lhs,
-                                    const q7_t *rhs,
-                                    const q31_t *bias,
-                                    q7_t *dst,
-                                    const int32_t lhs_offset,
-                                    const int32_t rhs_offset,
-                                    const int32_t dst_offset,
-                                    const int32_t dst_multiplier,
-                                    const int32_t dst_shift,
-                                    const int32_t rhs_cols,
-                                    const int32_t rhs_rows,
-                                    const int32_t activation_min,
-                                    const int32_t activation_max,
-                                    const int32_t address_offset);
+riscv_nmsis_nn_status riscv_nn_vec_mat_mult_t_s8(const int8_t *lhs,
+                                             const int8_t *rhs,
+                                             const int32_t *bias,
+                                             int8_t *dst,
+                                             const int32_t lhs_offset,
+                                             const int32_t dst_offset,
+                                             const int32_t dst_multiplier,
+                                             const int32_t dst_shift,
+                                             const int32_t rhs_cols,
+                                             const int32_t rhs_rows,
+                                             const int32_t activation_min,
+                                             const int32_t activation_max,
+                                             const int32_t address_offset);
 
 /**
  * @brief s16 Vector by Matrix (transposed) multiplication
@@ -430,19 +556,19 @@ riscv_status riscv_nn_vec_mat_mult_t_s8(const q7_t *lhs,
  * @param[in]      activation_min  Minimum value to clamp the output to. Range: int16
  * @param[in]      activation_max  Maximum value to clamp the output to. Range: int16
  *
- * @return         The function returns <code>RISCV_MATH_SUCCESS</code>
+ * @return         The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
  *
  */
-riscv_status riscv_nn_vec_mat_mult_t_s16(const q15_t *lhs,
-                                     const q7_t *rhs,
-                                     const q63_t *bias,
-                                     q15_t *dst,
-                                     const int32_t dst_multiplier,
-                                     const int32_t dst_shift,
-                                     const int32_t rhs_cols,
-                                     const int32_t rhs_rows,
-                                     const int32_t activation_min,
-                                     const int32_t activation_max);
+riscv_nmsis_nn_status riscv_nn_vec_mat_mult_t_s16(const int16_t *lhs,
+                                              const int8_t *rhs,
+                                              const int64_t *bias,
+                                              int16_t *dst,
+                                              const int32_t dst_multiplier,
+                                              const int32_t dst_shift,
+                                              const int32_t rhs_cols,
+                                              const int32_t rhs_rows,
+                                              const int32_t activation_min,
+                                              const int32_t activation_max);
 
 /**
  * @brief s8 Vector by Matrix (transposed) multiplication with s16 output
@@ -452,7 +578,6 @@ riscv_status riscv_nn_vec_mat_mult_t_s16(const q15_t *lhs,
  * @param[out]     dst             Output vector
  * @param[in]      lhs_offset      Offset to be added to the input values of the left-hand side
  *                                 vector. Range: -127 to 128
- * @param[in]      rhs_offset      Not used
  * @param[in]      scatter_offset  Address offset for dst. First output is stored at 'dst', the
  *                                 second at 'dst + scatter_offset' and so on.
  * @param[in]      dst_multiplier  Output multiplier
@@ -462,21 +587,20 @@ riscv_status riscv_nn_vec_mat_mult_t_s16(const q15_t *lhs,
  * @param[in]      activation_min  Minimum value to clamp the output to. Range: int16
  * @param[in]      activation_max  Maximum value to clamp the output to. Range: int16
  *
- * @return         The function returns <code>RISCV_MATH_SUCCESS</code>
+ * @return         The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
  *
  */
-riscv_status riscv_nn_vec_mat_mult_t_svdf_s8(const q7_t *lhs,
-                                         const q7_t *rhs,
-                                         q15_t *dst,
-                                         const int32_t lhs_offset,
-                                         const int32_t rhs_offset,
-                                         const int32_t scatter_offset,
-                                         const int32_t dst_multiplier,
-                                         const int32_t dst_shift,
-                                         const int32_t rhs_cols,
-                                         const int32_t rhs_rows,
-                                         const int32_t activation_min,
-                                         const int32_t activation_max);
+riscv_nmsis_nn_status riscv_nn_vec_mat_mult_t_svdf_s8(const int8_t *lhs,
+                                                  const int8_t *rhs,
+                                                  int16_t *dst,
+                                                  const int32_t lhs_offset,
+                                                  const int32_t scatter_offset,
+                                                  const int32_t dst_multiplier,
+                                                  const int32_t dst_shift,
+                                                  const int32_t rhs_cols,
+                                                  const int32_t rhs_rows,
+                                                  const int32_t activation_min,
+                                                  const int32_t activation_max);
 
 /**
  * @brief Depthwise convolution of transposed rhs matrix with 4 lhs matrices. To be used in padded cases where
@@ -485,7 +609,8 @@ riscv_status riscv_nn_vec_mat_mult_t_svdf_s8(const q7_t *lhs,
  * @param[in]      lhs             Input left-hand side matrix
  * @param[in]      rhs             Input right-hand side matrix (transposed)
  * @param[in]      lhs_offset      LHS matrix offset(input offset). Range: -127 to 128
- * @param[in]      num_ch          Number of channels in LHS/RHS
+ * @param[in]      active_ch       Subset of total_ch processed
+ * @param[in]      total_ch        Number of channels in LHS/RHS
  * @param[in]      out_shift       Per channel output shift. Length of vector is equal to number of channels
  * @param[in]      out_mult        Per channel output multiplier. Length of vector is equal to number of channels
  * @param[in]      out_offset      Offset to be added to the output values. Range: -127 to 128
@@ -506,18 +631,19 @@ riscv_status riscv_nn_vec_mat_mult_t_svdf_s8(const q7_t *lhs,
  *                  - Output bias
  *                  - rhs
  */
-q7_t *riscv_nn_depthwise_conv_nt_t_padded_s8(const q7_t *lhs,
-                                           const q7_t *rhs,
-                                           const int32_t lhs_offset,
-                                           const uint16_t num_ch,
-                                           const int32_t *out_shift,
-                                           const int32_t *out_mult,
-                                           const int32_t out_offset,
-                                           const int32_t activation_min,
-                                           const int32_t activation_max,
-                                           const uint16_t row_x_col,
-                                           const int32_t *const output_bias,
-                                           q7_t *out);
+riscv_nmsis_nn_status riscv_nn_depthwise_conv_nt_t_padded_s8(const int8_t *lhs,
+                                                         const int8_t *rhs,
+                                                         const int32_t lhs_offset,
+                                                         const int32_t active_ch,
+                                                         const int32_t total_ch,
+                                                         const int32_t *out_shift,
+                                                         const int32_t *out_mult,
+                                                         const int32_t out_offset,
+                                                         const int32_t activation_min,
+                                                         const int32_t activation_max,
+                                                         const uint16_t row_x_col,
+                                                         const int32_t *const output_bias,
+                                                         int8_t *out);
 
 /**
  * @brief Depthwise convolution of transposed rhs matrix with 4 lhs matrices. To be used in non-padded cases.
@@ -526,7 +652,8 @@ q7_t *riscv_nn_depthwise_conv_nt_t_padded_s8(const q7_t *lhs,
  * @param[in]      lhs             Input left-hand side matrix
  * @param[in]      rhs             Input right-hand side matrix (transposed)
  * @param[in]      lhs_offset      LHS matrix offset(input offset). Range: -127 to 128
- * @param[in]      num_ch          Number of channels in LHS/RHS
+ * @param[in]      active_ch       Subset of total_ch processed
+ * @param[in]      total_ch        Number of channels in LHS/RHS
  * @param[in]      out_shift       Per channel output shift. Length of vector is equal to number of channels.
  * @param[in]      out_mult        Per channel output multiplier. Length of vector is equal to number of channels.
  * @param[in]      out_offset      Offset to be added to the output values. Range: -127 to 128
@@ -547,18 +674,56 @@ q7_t *riscv_nn_depthwise_conv_nt_t_padded_s8(const q7_t *lhs,
  *                  - Output bias
  *                  - rhs
  */
-q7_t *riscv_nn_depthwise_conv_nt_t_s8(const q7_t *lhs,
-                                    const q7_t *rhs,
-                                    const int32_t lhs_offset,
-                                    const uint16_t num_ch,
-                                    const int32_t *out_shift,
-                                    const int32_t *out_mult,
-                                    const int32_t out_offset,
-                                    const int32_t activation_min,
-                                    const int32_t activation_max,
-                                    const uint16_t row_x_col,
-                                    const int32_t *const output_bias,
-                                    q7_t *out);
+riscv_nmsis_nn_status riscv_nn_depthwise_conv_nt_t_s8(const int8_t *lhs,
+                                                  const int8_t *rhs,
+                                                  const int32_t lhs_offset,
+                                                  const int32_t active_ch,
+                                                  const int32_t total_ch,
+                                                  const int32_t *out_shift,
+                                                  const int32_t *out_mult,
+                                                  const int32_t out_offset,
+                                                  const int32_t activation_min,
+                                                  const int32_t activation_max,
+                                                  const uint16_t row_x_col,
+                                                  const int32_t *const output_bias,
+                                                  int8_t *out);
+
+/**
+ * @brief Depthwise convolution of transposed rhs matrix with 4 lhs matrices. To be used in non-padded cases.
+ *        Dimensions are the same for lhs and rhs.
+ *
+ * @param[in]      lhs             Input left-hand side matrix
+ * @param[in]      rhs             Input right-hand side matrix (transposed)
+ * @param[in]      num_ch          Number of channels in LHS/RHS
+ * @param[in]      out_shift       Per channel output shift. Length of vector is equal to number of channels.
+ * @param[in]      out_mult        Per channel output multiplier. Length of vector is equal to number of channels.
+ * @param[in]      activation_min  Minimum value to clamp the output to. Range: int8
+ * @param[in]      activation_max  Maximum value to clamp the output to. Range: int8
+ * @param[in]       row_x_col       (row_dimension * col_dimension) of LHS/RHS matrix
+ * @param[in]      output_bias     Per channel output bias. Length of vector is equal to number of channels.
+ * @param[in]      out             Output pointer
+ *
+ * @return         The function returns one of the two
+ *                  - Updated output pointer if an implementation is available
+ *                  - NULL if no implementation is available.
+ *
+ * @note           If number of channels is not a multiple of 4, upto 3 elements outside the boundary will be read
+ * out for the following.
+ *                  - Output shift
+ *                  - Output multiplier
+ *                  - Output bias
+ *                  - rhs
+ */
+int16_t *riscv_nn_depthwise_conv_nt_t_s16(const int16_t *lhs,
+                                        const int8_t *rhs,
+                                        const uint16_t num_ch,
+                                        const int32_t *out_shift,
+                                        const int32_t *out_mult,
+                                        const int32_t activation_min,
+                                        const int32_t activation_max,
+                                        const uint16_t row_x_col,
+                                        const int64_t *const output_bias,
+                                        int16_t *out);
 
 /**
  *@brief Matrix-multiplication function for convolution with reordered columns
@@ -592,14 +757,22 @@ q7_t *riscv_nn_mat_mult_kernel_q7_reordered(const q7_t * pA,
                                               const q7_t * bias,
                                               q7_t * pOut);
 
+
+#define __SIMD32_TYPE int32_t
+
+#define __SIMD32(addr)        (*(__SIMD32_TYPE **) & (addr))
+#define __SIMD32_CONST(addr)  ( (__SIMD32_TYPE * )   (addr))
+#define _SIMD32_OFFSET(addr)  (*(__SIMD32_TYPE * )   (addr))
+#define __SIMD64(addr)        (*(      int64_t **) & (addr))
+
 /**
-  @brief         Read 2 q15 elements and post increment pointer.
+  @brief         Read 2 s16 elements and post increment pointer.
   @param[in]     in_q15   Pointer to pointer that holds address of input.
   @return        q31 value
  */
-__STATIC_FORCEINLINE q31_t riscv_nn_read_q15x2_ia(const q15_t **in_q15)
+__STATIC_FORCEINLINE int32_t riscv_nn_read_q15x2_ia(const int16_t **in_q15)
 {
-    q31_t val;
+    int32_t val;
 
 #ifdef __RISCV_FEATURE_UNALIGNED
     memcpy(&val, *in_q15, 4);
@@ -609,6 +782,129 @@ __STATIC_FORCEINLINE q31_t riscv_nn_read_q15x2_ia(const q15_t **in_q15)
     *in_q15 += 2;
 
     return (val);
+}
+
+/**
+  @brief         Read 4 s8 from s8 pointer and post increment pointer.
+  @param[in]     in_s8       Pointer to pointer that holds address of input.
+  @return        q31 value
+ */
+__STATIC_FORCEINLINE int32_t riscv_nn_read_s8x4_ia(const int8_t **in_s8)
+{
+    int32_t val;
+    memcpy(&val, *in_s8, 4);
+    *in_s8 += 4;
+
+    return (val);
+}
+
+/**
+  @brief         Read 2 int16 values from int16 pointer.
+  @param[in]     in     pointer to address of input.
+  @return        s32    value
+ */
+__STATIC_FORCEINLINE int32_t riscv_nn_read_s16x2(const int16_t *in)
+{
+    int32_t val;
+    memcpy(&val, in, 4);
+
+    return (val);
+}
+
+/**
+  @brief         Read 4 s8 values.
+  @param[in]     in_s8       pointer to address of input.
+  @return        s32 value
+ */
+__STATIC_FORCEINLINE int32_t riscv_nn_read_s8x4(const int8_t *in_s8)
+{
+    int32_t val;
+    memcpy(&val, in_s8, 4);
+
+    return (val);
+}
+
+/**
+  @brief         Write four s8 to s8 pointer and increment pointer afterwards.
+  @param[in]     in       Double pointer to input value
+  @param[in]     value    Four bytes to copy
+ */
+__STATIC_FORCEINLINE void riscv_nn_write_s8x4_ia(int8_t **in, int32_t value)
+{
+    memcpy(*in, &value, 4);
+    *in += 4;
+}
+
+/**
+  @brief         Read 4 Q15 from Q15 pointer.
+  @param[in]     pQ15      points to input value
+  @return        Q63 value
+ */
+__STATIC_FORCEINLINE q63_t riscv_nn_read_q15x4 (
+		q15_t const * pQ15)
+{
+  q63_t val;
+#ifndef __RISCV_FEATURE_UNALIGNED
+#if __RISCV_XLEN == 64
+  val = __LD((q15_t *)pQ15);
+#else
+  val = *((q63_t *)pQ15);
+#endif /* __RISCV_XLEN == 64 */
+#else
+  memcpy((void *)(&val), (void *)(pQ15), 8);
+#endif
+  return (val);
+}
+
+/**
+  @brief         Read 4 Q15 from Q15 pointer and increment pointer afterwards.
+  @param[in]     pQ15      points to input value
+  @return        Q63 value
+ */
+__STATIC_FORCEINLINE q63_t riscv_nn_read_q15x4_ia (
+  q15_t ** pQ15)
+{
+  q63_t val;
+
+  val = riscv_nn_read_q15x4(*pQ15);
+  *pQ15 += 4;
+
+  return (val);
+}
+
+/**
+  @brief         Write 4 Q15 to Q15 pointer.
+  @param[in]     pQ15      points to input value
+  @param[in]     value     Q31 value
+  @return        none
+ */
+__STATIC_FORCEINLINE void riscv_nn_write_q15x4 (
+		q15_t * pQ15,
+		q63_t   value)
+{
+#ifndef __RISCV_FEATURE_UNALIGNED
+#if __RISCV_XLEN == 64
+  __SD(pQ15, value);
+#else
+  *((q63_t *)pQ15) = value;
+#endif
+#else
+  memcpy((void *)(pQ15), (void *)(&value), 8);
+#endif
+}
+
+/**
+  @brief         Write 4 Q15 to Q15 pointer and increment pointer afterwards.
+  @param[in]     pQ15      points to input value
+  @param[in]     value     Q31 value
+  @return        none
+ */
+__STATIC_FORCEINLINE void riscv_nn_write_q15x4_ia (
+  q15_t ** pQ15,
+  q63_t    value)
+{
+  riscv_nn_write_q15x4(*pQ15, value);
+  *pQ15 += 4;
 }
 
 /**
@@ -665,6 +961,44 @@ __STATIC_FORCEINLINE q31_t riscv_nn_read_q7x4(const q7_t *in_q7)
 }
 
 /**
+  @brief         Read 8 Q7 from Q7 pointer.
+  @param[in]     pQ7       points to input value
+  @return        Q63 value
+ */
+__STATIC_FORCEINLINE q63_t riscv_nn_read_q7x8 (
+		q7_t const * pQ7)
+{
+	q63_t val;
+#ifndef __RISCV_FEATURE_UNALIGNED
+#if __RISCV_XLEN == 64
+  val = __LD((q7_t *)pQ7);
+#else
+  val = *((q63_t *)pQ7);
+#endif
+#else
+  memcpy((void *)(&val), (void *)pQ7, 8);
+#endif
+
+  return val;
+}
+
+/**
+  @brief         Read 8 Q7 from Q7 pointer and increment pointer afterwards.
+  @param[in]     pQ7       points to input value
+  @return        Q63 value
+ */
+__STATIC_FORCEINLINE q63_t riscv_nn_read_q7x8_ia (
+  q7_t ** pQ7)
+{
+  q63_t val;
+
+  val = riscv_nn_read_q7x8(*pQ7);
+  *pQ7 += 8;
+
+  return val;
+}
+
+/**
   @brief         Write four q7 to q7 pointer and increment pointer afterwards.
   @param[in]     in       Double pointer to input value
   @param[in]     value    Four bytes to copy
@@ -675,6 +1009,29 @@ __STATIC_FORCEINLINE void riscv_nn_write_q7x4_ia(q7_t **in, q31_t value)
     *in += 4;
 }
 
+
+/**
+  @brief         Write 8 Q7 to Q7 pointer and increment pointer afterwards.
+  @param[in]     pQ7       points to input value
+  @param[in]     value     Q63 value
+  @return        none
+ */
+__STATIC_FORCEINLINE void riscv_nn_write_q7x8_ia (
+		q7_t ** pQ7,
+		q63_t   value)
+{
+#ifndef __RISCV_FEATURE_UNALIGNED
+#if __RISCV_XLEN == 64
+  __SD(*pQ7,value);
+#else
+  *((q63_t *)*pQ7) = value;
+#endif
+#else
+  memcpy((void *)(*pQ7), (void *)(&value), 8);
+#endif
+  *pQ7 += 8;
+}
+
 /**
  * @brief           memset
  * @param[in, out]  dst         Destination pointer
@@ -682,7 +1039,7 @@ __STATIC_FORCEINLINE void riscv_nn_write_q7x4_ia(q7_t **in, q31_t value)
  * @param[in]       block_size  Number of bytes to copy.
  *
  */
-__STATIC_FORCEINLINE void riscv_memset_q7(q7_t *dst, const q7_t val, uint32_t block_size)
+__STATIC_FORCEINLINE void riscv_memset_s8(int8_t *dst, const int8_t val, uint32_t block_size)
 {
     memset(dst, val, block_size);
 }
@@ -690,28 +1047,27 @@ __STATIC_FORCEINLINE void riscv_memset_q7(q7_t *dst, const q7_t val, uint32_t bl
 #if defined(RISCV_MATH_DSP)
 
 /**
- * @brief read and expand one q7 word into two q15 words
+ * @brief read and expand one s8 word into two s16 words with ordering.
  */
-
-__STATIC_FORCEINLINE const q7_t *read_and_pad(const q7_t *source, q31_t *out1, q31_t *out2)
+__STATIC_FORCEINLINE const int8_t *read_and_pad(const int8_t *source, int32_t *out1, int32_t *out2)
 {
-    q31_t inA = riscv_nn_read_q7x4_ia(&source);
-    q31_t inAbuf1 = __SXTB16_RORn((uint32_t)inA, 8);
-    q31_t inAbuf2 = __SXTB16(inA);
+    int32_t inA = riscv_nn_read_s8x4_ia(&source);
+    int32_t inAbuf1 = __SXTB16_RORn((uint32_t)inA, 8);
+    int32_t inAbuf2 = __SXTB16(inA);
 
-    *out2 = (int32_t)(__PKHTB(inAbuf1, inAbuf2, 16));
-    *out1 = (int32_t)(__PKHBT(inAbuf2, inAbuf1, 16));
+    *out2 = (int32_t)(__NN_PKHTB(inAbuf1, inAbuf2, 16));
+    *out1 = (int32_t)(__NN_PKHBT(inAbuf2, inAbuf1, 16));
 
     return source;
 }
 
 /**
- * @brief read and expand one q7 word into two q15 words with reordering
+ * @brief read and expand one s8 word into two s16 words with no additional ordering.
  */
 
-__STATIC_FORCEINLINE const q7_t *read_and_pad_reordered(const q7_t *source, q31_t *out1, q31_t *out2)
+__STATIC_FORCEINLINE const int8_t *read_and_pad_reordered(const int8_t *source, int32_t *out1, int32_t *out2)
 {
-    q31_t inA = riscv_nn_read_q7x4_ia(&source);
+    int32_t inA = riscv_nn_read_s8x4_ia(&source);
     *out2 = __SXTB16(__ROR((uint32_t)inA, 8));
     *out1 = __SXTB16(inA);
 
@@ -728,8 +1084,8 @@ read_and_pad_reordered_with_offset(const q7_t *source, q31_t *out1, q31_t *out2,
 
     *out2 = __SXTB16(__ROR((uint32_t)inA, 8));
     *out1 = __SXTB16(inA);
-    *out1 = __QADD16(*out1, offset);
-    *out2 = __QADD16(*out2, offset);
+    *out1 = __NN_QADD16(*out1, offset);
+    *out2 = __NN_QADD16(*out2, offset);
 
     return source;
 }
@@ -799,17 +1155,17 @@ void riscv_nn_mult_q7(q7_t *pSrcA, q7_t *pSrcB, q7_t *pDst, const uint16_t out_s
  *            clamped in the range provided by activation min and max.
  *            Supported framework: TensorFlow Lite micro.
  */
-q7_t *riscv_nn_mat_mult_kernel_s8_s16(const q7_t *input_a,
-                                    const q15_t *input_b,
-                                    const uint16_t output_ch,
-                                    const int32_t *out_shift,
-                                    const int32_t *out_mult,
-                                    const int32_t out_offset,
-                                    const int16_t activation_min,
-                                    const int16_t activation_max,
-                                    const uint16_t num_col_a,
-                                    const int32_t *const output_bias,
-                                    q7_t *out_0);
+int8_t *riscv_nn_mat_mult_kernel_s8_s16(const int8_t *input_a,
+                                      const int16_t *input_b,
+                                      const uint16_t output_ch,
+                                      const int32_t *out_shift,
+                                      const int32_t *out_mult,
+                                      const int32_t out_offset,
+                                      const int16_t activation_min,
+                                      const int16_t activation_max,
+                                      const int32_t num_col_a,
+                                      const int32_t *const output_bias,
+                                      int8_t *out_0);
 
 /**
  * @brief Common softmax function for s8 input and s8 or s16 output
@@ -832,24 +1188,23 @@ void riscv_nn_softmax_common_s8(const int8_t *input,
                               const int32_t mult,
                               const int32_t shift,
                               const int32_t diff_min,
-                              const int16_t int16_output,
+                              const bool int16_output,
                               void *output);
+
 /**
  * @brief macro for adding rounding offset
  */
 #ifndef RISCV_NN_TRUNCATE
-#define NN_ROUND(out_shift) ((0x1 << out_shift) >> 1)
+    #define NN_ROUND(out_shift) ((0x1 << out_shift) >> 1)
 #else
-#define NN_ROUND(out_shift) 0
+    #define NN_ROUND(out_shift) 0
 #endif
 
 // Macros for shortening quantization functions' names and avoid long lines
 #define MUL_SAT(a, b) riscv_nn_doubling_high_mult((a), (b))
-#define MUL_SAT_MVE(a, b) riscv_doubling_high_mult_mve_32x4((a), (b))
 #define MUL_POW2(a, b) riscv_nn_mult_by_power_of_two((a), (b))
 
 #define DIV_POW2(a, b) riscv_nn_divide_by_power_of_two((a), (b))
-#define DIV_POW2_MVE(a, b) riscv_divide_by_power_of_two_mve((a), (b))
 
 #define EXP_ON_NEG(x) riscv_nn_exp_on_negative_values((x))
 #define ONE_OVER1(x) riscv_nn_one_over_one_plus_x_for_x_in_0_1((x))
@@ -862,18 +1217,18 @@ void riscv_nn_softmax_common_s8(const int8_t *input,
  * @return          Result of multiplication.
  *
  */
-__STATIC_FORCEINLINE q31_t riscv_nn_doubling_high_mult(const q31_t m1, const q31_t m2)
+__STATIC_FORCEINLINE int32_t riscv_nn_doubling_high_mult(const int32_t m1, const int32_t m2)
 {
-    q31_t result = 0;
+    int32_t result = 0;
     // Rounding offset to add for a right shift of 31
-    q63_t mult = 1 << 30;
+    int64_t mult = 1 << 30;
 
     if ((m1 < 0) ^ (m2 < 0))
     {
         mult = 1 - mult;
     }
     // Gets resolved as a SMLAL instruction
-    mult = mult + (q63_t)m1 * m2;
+    mult = mult + (int64_t)m1 * m2;
 
     // Utilize all of the upper 32 bits. This is the doubling step
     // as well.
@@ -900,9 +1255,9 @@ __STATIC_FORCEINLINE q31_t riscv_nn_doubling_high_mult(const q31_t m1, const q31
  *                  this function.
  *
  */
-__STATIC_FORCEINLINE q31_t riscv_nn_doubling_high_mult_no_sat(const q31_t m1, const q31_t m2)
+__STATIC_FORCEINLINE int32_t riscv_nn_doubling_high_mult_no_sat(const int32_t m1, const int32_t m2)
 {
-    q31_t result = 0;
+    int32_t result = 0;
     union riscv_nn_long_long mult;
 
     // Rounding offset to add for a right shift of 31
@@ -910,7 +1265,7 @@ __STATIC_FORCEINLINE q31_t riscv_nn_doubling_high_mult_no_sat(const q31_t m1, co
     mult.word.high = 0;
 
     // Gets resolved as a SMLAL instruction
-    mult.long_long = mult.long_long + (q63_t)m1 * m2;
+    mult.long_long = mult.long_long + (int64_t)m1 * m2;
 
     // Utilize all of the upper 32 bits. This is the doubling step
     // as well.
@@ -927,17 +1282,17 @@ __STATIC_FORCEINLINE q31_t riscv_nn_doubling_high_mult_no_sat(const q31_t m1, co
  * @return          Rounded result of division. Midpoint is rounded away from zero.
  *
  */
-__STATIC_FORCEINLINE q31_t riscv_nn_divide_by_power_of_two(const q31_t dividend, const q31_t exponent)
+__STATIC_FORCEINLINE int32_t riscv_nn_divide_by_power_of_two(const int32_t dividend, const int32_t exponent)
 {
-    q31_t result = 0;
-    const q31_t remainder_mask = (1 << exponent) - 1;
+    int32_t result = 0;
+    const int32_t remainder_mask = (1 << exponent) - 1;
     int32_t remainder = remainder_mask & dividend;
 
     // Basic division
     result = dividend >> exponent;
 
     // Adjust 'result' for rounding (mid point away from zero)
-    q31_t threshold = remainder_mask >> 1;
+    int32_t threshold = remainder_mask >> 1;
     if (result < 0)
     {
         threshold++;
@@ -959,11 +1314,61 @@ __STATIC_FORCEINLINE q31_t riscv_nn_divide_by_power_of_two(const q31_t dividend,
  * @return          Returns (val * multiplier)/(2 ^ shift)
  *
  */
-__STATIC_FORCEINLINE q31_t riscv_nn_requantize(const q31_t val, const q31_t multiplier, const q31_t shift)
+__STATIC_FORCEINLINE int32_t riscv_nn_requantize(const int32_t val, const int32_t multiplier, const int32_t shift)
 {
     return riscv_nn_divide_by_power_of_two(riscv_nn_doubling_high_mult_no_sat(val * (1 << LEFT_SHIFT(shift)), multiplier),
                                          RIGHT_SHIFT(shift));
 }
+
+#if defined(RISCV_MATH_VECTOR)
+__STATIC_FORCEINLINE vint32m4_t riscv_nn_requantize_m4_rvv(vint32m4_t valm4, size_t l, const q31_t multiplier, const q31_t shift)
+{
+    if (shift >= 0) {
+        valm4 = vsmul_vx_i32m4(vsll_vx_i32m4(valm4, shift, l), multiplier, l);
+    } else {
+        q31_t exponent = -shift;
+        q31_t remainder_mask = (1 << exponent) - 1;
+        q31_t threshold = remainder_mask >> 1;
+        vint32m4_t b32m4, c32m4;
+        valm4 = vsmul_vx_i32m4(valm4, multiplier, l);
+        b32m4 = vsra_vx_i32m4(valm4, exponent, l);
+        valm4 = vand_vx_i32m4(valm4, remainder_mask, l);
+
+        c32m4 = vmv_v_x_i32m4(threshold, l);
+        vbool8_t mask = vmslt_vx_i32m4_b8(b32m4, 0, l);
+        c32m4 = vadd_vx_i32m4_m(mask, c32m4, c32m4, 1, l);
+
+        mask = vmsgt_vv_i32m4_b8(valm4, c32m4, l);
+        valm4 = vadd_vx_i32m4_m(mask, b32m4, b32m4, 1, l);
+    }
+    return valm4;
+}
+
+__STATIC_FORCEINLINE vint32m8_t riscv_nn_requantize_m8_rvv(vint32m8_t valm8, size_t l, const q31_t multiplier, const q31_t shift)
+{
+    if (shift >= 0) {
+        valm8 = vsmul_vx_i32m8(vsll_vx_i32m8(valm8, shift, l), multiplier, l);
+    } else {
+        q31_t exponent = -shift;
+        q31_t remainder_mask = (1 << exponent) - 1;
+        q31_t threshold = remainder_mask >> 1;
+        vint32m8_t b32m8, c32m8;
+        valm8 = vsmul_vx_i32m8(valm8, multiplier, l);
+        b32m8 = vsra_vx_i32m8(valm8, exponent, l);
+        valm8 = vand_vx_i32m8(valm8, remainder_mask, l);
+
+        c32m8 = vmv_v_x_i32m8(threshold, l);
+        vbool4_t mask = vmslt_vx_i32m8_b4(b32m8, 0, l);
+        c32m8 = vadd_vx_i32m8_m(mask, c32m8, c32m8, 1, l);
+
+        mask = vmsgt_vv_i32m8_b4(valm8, c32m8, l);
+        valm8 = vadd_vx_i32m8_m(mask, b32m8, b32m8, 1, l);
+    }
+    return valm8;
+}
+
+#endif
+
 /**
  * @brief           Requantize a given 64 bit value.
  * @param[in]       val                 Value to be requantized in the range {-(1<<47)} to {(1<<47) - 1}
@@ -974,12 +1379,14 @@ __STATIC_FORCEINLINE q31_t riscv_nn_requantize(const q31_t val, const q31_t mult
  * @return          Returns (val * multiplier)/(2 ^ shift)
  *
  */
-__STATIC_FORCEINLINE q31_t riscv_nn_requantize_s64(const q63_t val, const q31_t reduced_multiplier, const q31_t shift)
+__STATIC_FORCEINLINE int32_t riscv_nn_requantize_s64(const int64_t val,
+                                                   const int32_t reduced_multiplier,
+                                                   const int32_t shift)
 {
-    const q63_t new_val = val * reduced_multiplier;
+    const int64_t new_val = val * reduced_multiplier;
 
-    q31_t result = new_val >> (14 - shift); // 64->32 bit reduction
-    result = (result + 1) >> 1;             // Last shift position and insert round
+    int32_t result = new_val >> (14 - shift); // 64->32 bit reduction
+    result = (result + 1) >> 1;               // Last shift position and insert round
 
     return result;
 }
@@ -991,7 +1398,31 @@ __STATIC_FORCEINLINE q31_t riscv_nn_requantize_s64(const q63_t val, const q31_t 
  * @param[in]       block_size  Number of bytes to copy.
  *
  */
+__STATIC_FORCEINLINE void riscv_memcpy_s8(int8_t *__RESTRICT dst, const int8_t *__RESTRICT src, uint32_t block_size)
+{
+    memcpy(dst, src, block_size);
+}
+
+/**
+ * @brief           memcpy
+ * @param[in, out]  dst         Destination pointer
+ * @param[in]       src         Source pointer.
+ * @param[in]       block_size  Number of bytes to copy.
+ *
+ */
 __STATIC_FORCEINLINE void riscv_memcpy_q7(q7_t *__RESTRICT dst, const q7_t *__RESTRICT src, uint32_t block_size)
+{
+    memcpy(dst, src, block_size);
+}
+
+/**
+ * @brief           memcpy wrapper for int16
+ * @param[in, out]  dst         Destination pointer
+ * @param[in]       src         Source pointer.
+ * @param[in]       block_size  Number of bytes to copy.
+ *
+ */
+__STATIC_FORCEINLINE void riscv_memcpy_q15(int16_t *__RESTRICT dst, const int16_t *__RESTRICT src, uint32_t block_size)
 {
     memcpy(dst, src, block_size);
 }
@@ -1032,7 +1463,7 @@ __STATIC_FORCEINLINE int32_t riscv_nn_exp_on_negative_values(int32_t val)
     return SELECT_USING_MASK(mask, NN_Q31_MAX, result);
 }
 
-__STATIC_FORCEINLINE q31_t riscv_nn_mult_by_power_of_two(const int32_t val, const int32_t exp)
+__STATIC_FORCEINLINE int32_t riscv_nn_mult_by_power_of_two(const int32_t val, const int32_t exp)
 {
     const int32_t thresh = ((1 << (31 - exp)) - 1);
     int32_t result = val << exp;
@@ -1056,17 +1487,236 @@ __STATIC_FORCEINLINE int32_t riscv_nn_one_over_one_plus_x_for_x_in_0_1(int32_t v
 }
 
 /**
-  @brief         Write 2 q15 elements and post increment pointer.
+  @brief         Write 2 s16 elements and post increment pointer.
   @param[in]     dest_q15  Pointer to pointer that holds address of destination.
   @param[in]     src_q31   Input value to be written.
  */
-__STATIC_FORCEINLINE void riscv_nn_write_q15x2_ia(q15_t **dest_q15, q31_t src_q31)
+__STATIC_FORCEINLINE void riscv_nn_write_q15x2_ia(int16_t **dest_q15, int32_t src_q31)
 {
-    q31_t val = src_q31;
+    int32_t val = src_q31;
 
     memcpy(*dest_q15, &val, 4);
     *dest_q15 += 2;
 }
+
+/**
+  @brief         Write 2 s8 elements and post increment pointer.
+  @param[in]     dst  Pointer to pointer that holds address of destination.
+  @param[in]     src  Input value to be written.
+ */
+__STATIC_FORCEINLINE void riscv_nn_write_s8x2_ia(int8_t **dst, int16_t src)
+{
+    memcpy(*dst, &src, 2);
+    *dst += 2;
+}
+
+  /**
+   * @brief  Copies the elements of a Q7 vector.
+   * @param[in]  pSrc       input pointer
+   * @param[out] pDst       output pointer
+   * @param[in]  blockSize  number of samples to process
+   */
+void riscv_nn_copy_q7(
+  const q7_t * pSrc,
+        q7_t * pDst,
+        uint32_t blockSize);
+
+
+  /**
+   * @brief  Copies the elements of a Q15 vector.
+   * @param[in]  pSrc       input pointer
+   * @param[out] pDst       output pointer
+   * @param[in]  blockSize  number of samples to process
+   */
+void riscv_nn_copy_q15(
+  const q15_t * pSrc,
+        q15_t * pDst,
+        uint32_t blockSize);
+
+  /**
+   * @brief  Fills a constant value into a Q7 vector.
+   * @param[in]  value      input value to be filled
+   * @param[out] pDst       output pointer
+   * @param[in]  blockSize  number of samples to process
+   */
+void riscv_nn_fill_q7(
+        q7_t value,
+        q7_t * pDst,
+        uint32_t blockSize);
+
+
+  /**
+   * @brief  Fills a constant value into a Q15 vector.
+   * @param[in]  value      input value to be filled
+   * @param[out] pDst       output pointer
+   * @param[in]  blockSize  number of samples to process
+   */
+void riscv_nn_fill_q15(
+        q15_t value,
+        q15_t * pDst,
+        uint32_t blockSize);
+
+// Support functions for LSTM
+/**
+ * @brief Update LSTM function for an iteration step
+ *
+ * param[in]    input                           Input data
+ * param[in]    input_to_input_weight           Input to input gate weights
+ * param[in]    input_to_forget_weight          Input to forget gate weights
+ * param[in]    input_to_cell_weight            Input to cell gate weights
+ * param[in]    input_to_output_weight          Input to output weights
+ * param[in]    recurrent_to_input_weight       Recurrent signal to input weights
+ * param[in]    recurrent_to_forget_weight      Recurrent signal to forget gate weights
+ * param[in]    recurrent_to_cell_weight        Recurrent signal to cell gate weighst
+ * param[in]    recurrent_to_output_weight      Recurrent signal to output weights
+ * param[in]    lstm                            LSTM parameters
+ * param[in]    n_batch                         Batch size
+ * param[in]    n_cell                          Cell size
+ * param[in]    n_input                         Input size
+ * param[in]    n_output                        Output size
+ * param[out]   output_state                    Output state
+ * param[out]   cell_state                      Internal state
+ * param[out]   output                          Output signal
+ * param[in] *scratch_buffers                   Struct containing scratch buffers
+ */
+riscv_nmsis_nn_status riscv_nn_lstm_step_s8_s16(const int8_t *input,
+                                            const int8_t *input_to_input_weight,
+                                            const int8_t *input_to_forget_weight,
+                                            const int8_t *input_to_cell_weight,
+                                            const int8_t *input_to_output_weight,
+                                            const int8_t *recurrent_to_input_weight,
+                                            const int8_t *recurrent_to_forget_weight,
+                                            const int8_t *recurrent_to_cell_weight,
+                                            const int8_t *recurrent_to_output_weight,
+                                            const nmsis_nn_lstm_params *lstm,
+                                            const int n_batch,
+                                            const int n_cell,
+                                            const int n_input,
+                                            const int n_output,
+                                            int8_t *output_state,
+                                            int16_t *cell_state,
+                                            int8_t *output,
+                                            nmsis_nn_lstm_context *scratch_buffers);
+
+/**
+ * @brief         Updates a LSTM gate for an iteration step of LSTM function, int8x8_16 version.
+ *
+ * param[in]    input                           Input data
+ * param[in]    input_to_gate_weights           Input to gate weights
+ * param[in]    input_to_gate_bias              Input to gate weights
+ * param[in]    input_to_gate_scaling           Input to gate scaling
+ * param[in]    activation                      Actival min and max values
+ * param[in]    output_state                    Output state
+ * param[in]    recurrent_to_gate_weights       Recurrent to gate weights
+ * param[in]    recurrent_to_gate_bias          Recurrent to gate bias
+ * param[in]    recurrent_to_gate_scaling       Recurrent to gate scaling
+ * param[in]    n_batch                         Batch size
+ * param[in]    n_input                         Input size
+ * param[out]   n_output                        Output size
+ * param[in]    activation_type                 Activation type (sigmoid or tanh)
+ * param[out]   n_cell                          Cell size
+ */
+void riscv_nn_lstm_calculate_gate_s8_s16(const int8_t *input,
+                                       const int8_t *input_to_gate_weights,
+                                       const int32_t *input_to_gate_bias,
+                                       const nmsis_nn_scaling input_to_gate_scaling,
+                                       const int8_t *output_state,
+                                       const int8_t *recurrent_to_gate_weights,
+                                       const int32_t *recurrent_to_gate_bias,
+                                       const nmsis_nn_scaling recurrent_to_gate_scaling,
+                                       const int32_t n_batch,
+                                       const int32_t n_input,
+                                       const int32_t n_output,
+                                       const int32_t n_cell,
+                                       const riscv_nn_activation_type activation_type,
+                                       int16_t *gate);
+
+/**
+ * @brief       Update cell state for a single LSTM iteration step, int8x8_16 version.
+ * @param[in]   n_block             total number of cells for all batches
+ * @param[in]   cell_state_scale    Scaling factor of cell state
+ * @param[in]   cell_state          Input/output vector, size n_batch*n_cell
+ * @param[in]   input_gate          Input vector of size n_block
+ * @param[in]   forget_gate         Input/scratch vector of size n_block, always modified
+ * @param[in]   cell_gate           Input vector of size, n_block
+ */
+void riscv_nn_lstm_update_cell_state_s16(const int32_t n_block,
+                                       const int32_t cell_state_scale,
+                                       int16_t *cell_state,
+                                       const int16_t *input_gate,
+                                       const int16_t *forget_gate,
+                                       const int16_t *cell_gate);
+
+/**
+ * @brief       Calculate the output state tensor of an LSTM step, s8 input/output and s16 weight version.
+ *
+ * @param[in]       n_batch                     The number of distinct vectors in each array
+ * @param[in]       n_cell                      Number of cells
+ * @param[in,out]   cell_state                  Cell state, size n_batch*n_cell
+ * @param[in]       cell_state_scale            Scaling of cell_state
+ * @param[in]       output_gate                 Output gate
+ * @param[in]       hidden_scale                Effective scaling of cell_state .* output_gate
+ * @param[in]       hidden_offset               Zero point for cell_state .* output_gate
+ * @param[out]      output_state                Output state
+ * @param[in]       cell_gate_scratch           Scratch buffer
+ */
+void riscv_nn_lstm_update_output_s8_s16(const int n_batch,
+                                      const int n_cell,
+                                      int16_t *cell_state,
+                                      const int32_t cell_state_scale,
+                                      const int16_t *output_gate,
+                                      const nmsis_nn_scaling hidden_scale,
+                                      const int32_t hidden_offset,
+                                      int8_t *output_state,
+                                      int16_t *cell_gate_scratch);
+
+/**
+ * @brief The result of the multiplication is accumulated to the passed result buffer.
+ * Multiplies a matrix by a "batched" vector (i.e. a matrix with a batch dimension composed by input vectors independent
+ * from each other).
+ *
+ * @param[in]   lhs_in           Batched vector
+ * @param[in]   rhs_in           Weights - input matrix (H(Rows)xW(Columns))
+ * @param[in]   bias             Bias vector
+ * @param[out]  dst              Output
+ * @param[in]   dst_offset       Output offset
+ * @param[in]   dst_multiplier   Multiplier for quantization
+ * @param[in]   dst_shift        Shift for quantization
+ * @param[in]   rhs_cols         Vector/matarix column length
+ * @param[in]   rhs_rows         Row count of matrix
+ * @param[in]   batch            Batch size
+ */
+void riscv_nn_vec_mat_mul_result_acc_s8(const int8_t *lhs_in,
+                                      const int8_t *rhs_in,
+                                      const int32_t *bias,
+                                      int16_t *dst,
+                                      const int32_t dst_offset,
+                                      const int32_t dst_multiplier,
+                                      const int32_t dst_shift,
+                                      const int32_t rhs_cols,
+                                      const int32_t rhs_rows,
+                                      const int32_t batch);
+
+/**
+ * @brief s16 elementwise multiplication with s8 output
+ * @param[in]       input_1_vect        pointer to input vector 1
+ * @param[in]       input_2_vect        pointer to input vector 2
+ * @param[in,out]   output              pointer to output vector
+ * @param[in]       out_offset          output offset
+ * @param[in]       out_mult            output multiplier
+ * @param[in]       out_shift           output shift
+ * @param[in]       block_size          number of samples
+ * @return          The function returns RISCV_NMSIS_NN_SUCCESS
+ *
+ * @details   Supported framework: TensorFlow Lite micro
+ */
+riscv_nmsis_nn_status riscv_elementwise_mul_s16_s8(const int16_t *input_1_vect,
+                                               const int16_t *input_2_vect,
+                                               int8_t *output,
+                                               const int32_t out_offset,
+                                               const int32_t out_mult,
+                                               const int32_t out_shift,
+                                               const int32_t block_size);
 
 #ifdef __cplusplus
 }

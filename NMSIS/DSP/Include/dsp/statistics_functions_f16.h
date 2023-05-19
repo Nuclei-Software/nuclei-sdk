@@ -1,9 +1,9 @@
 /******************************************************************************
  * @file     statistics_functions_f16.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.10.0
- * @date     08 July 2021
- * Target Processor: RISC-V Cores
+ * @version  V1.10.1
+ * @date     14 July 2022
+ * Target Processor: RISC-V cores
  ******************************************************************************/
 /*
  * Copyright (c) 2010-2020 Arm Limited or its affiliates. All rights reserved.
@@ -258,6 +258,19 @@ void riscv_mse_f16(
   const float16_t * pSrcB,
         uint32_t blockSize,
         float16_t * pResult);
+
+
+/**
+  * @brief  Sum value of a floating-point vector.
+  * @param[in]  pSrc       is input pointer
+  * @param[in]  blockSize  is the number of samples to process
+  * @param[out] pResult    is output value.
+  */
+ void riscv_accumulate_f16(
+ const float16_t * pSrc,
+       uint32_t blockSize,
+       float16_t * pResult);
+
 
 #endif /*defined(RISCV_FLOAT16_SUPPORTED)*/
 #ifdef   __cplusplus

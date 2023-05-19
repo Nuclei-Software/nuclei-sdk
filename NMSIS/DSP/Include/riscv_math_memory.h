@@ -62,6 +62,28 @@ extern "C"
 
 /* SIMD replacement */
 
+
+/**
+  @brief         Read 2 Q31 from Q31 pointer.
+  @param[in]     pQ31      points to input value
+  @return        Q63 value
+ */
+__STATIC_FORCEINLINE q63_t read_q31x2 (
+  q31_t const * pQ31)
+{
+  q63_t val;
+#ifndef __RISCV_FEATURE_UNALIGNED
+#if __RISCV_XLEN == 64
+  val = __LD((q31_t *)pQ31);
+#else
+  val = *((q63_t *)pQ31);
+#endif /* __RISCV_XLEN == 64 */
+#else
+  memcpy((void *)(&val), (void *)(pQ31), 8);
+#endif
+  return (val);
+}
+
 /**
   @brief         Read 2 Q31 from Q31 pointer and increment pointer afterwards.
   @param[in]     pQ31      points to input value
@@ -71,16 +93,10 @@ __STATIC_FORCEINLINE q63_t read_q31x2_ia (
   q31_t ** pQ31)
 {
   q63_t val;
-#ifndef __RISCV_FEATURE_UNALIGNED
-#if __RISCV_XLEN == 64
-  val = __LD(*pQ31);
-#else
-  val = *((q63_t *)*pQ31);
-#endif /* __RISCV_XLEN == 64 */
-#else
-  memcpy((void *)(&val), (void *)(*pQ31), 8);
-#endif
+
+  val = read_q31x2(*pQ31);
   *pQ31 += 2;
+
   return (val);
 }
 
@@ -93,60 +109,11 @@ __STATIC_FORCEINLINE q63_t read_q31x2_da (
   q31_t ** pQ31)
 {
   q63_t val;
-#ifndef __RISCV_FEATURE_UNALIGNED
-#if __RISCV_XLEN == 64
-  val = __LD(*pQ31);
-#else
-  val = *((q63_t *)*pQ31);
-#endif /* __RISCV_XLEN == 64 */
-#else
-  memcpy((void *)(&val), (void *)(*pQ31), 8);
-#endif
+
+  val = read_q31x2(*pQ31);
   *pQ31 -= 2;
-  return (val);
-}
 
-/**
-  @brief         Read 2 Q31 from Q31 pointer.
-  @param[in]     pQ31      points to input value
-  @return        Q63 value
- */
-__STATIC_FORCEINLINE q63_t read_q31x2 (
-  q31_t * pQ31)
-{
-  q63_t val;
-#ifndef __RISCV_FEATURE_UNALIGNED
-#if __RISCV_XLEN == 64
-  val = __LD(pQ31);
-#else
-  val = *((q63_t *)pQ31);
-#endif /* __RISCV_XLEN == 64 */
-#else
-  memcpy((void *)(&val), (void *)(pQ31), 8);
-#endif
   return (val);
-}
-
-/**
-  @brief         Write 2 Q31 to Q31 pointer and increment pointer afterwards.
-  @param[in]     pQ31      points to input value
-  @param[in]     value     Q63 value
-  @return        none
- */
-__STATIC_FORCEINLINE void write_q31x2_ia (
-		q31_t ** pQ31,
-		q63_t    value)
-{
-#ifndef __RISCV_FEATURE_UNALIGNED
-#if __RISCV_XLEN == 64
-  __SD(*pQ31, value);
-#else
-  *((q63_t *)*pQ31) = value;
-#endif /* __RISCV_XLEN == 64 */
-#else
-  memcpy((void *)(*pQ31), (void *)(&value), 8);
-#endif
-  *pQ31 += 2;
 }
 
 /**
@@ -171,19 +138,33 @@ __STATIC_FORCEINLINE void write_q31x2 (
 }
 
 /**
+  @brief         Write 2 Q31 to Q31 pointer and increment pointer afterwards.
+  @param[in]     pQ31      points to input value
+  @param[in]     value     Q63 value
+  @return        none
+ */
+__STATIC_FORCEINLINE void write_q31x2_ia (
+  q31_t ** pQ31,
+  q63_t    value)
+{
+  write_q31x2(*pQ31, value);
+  *pQ31 += 2;
+}
+
+/**
   @brief         Read 2 Q15 from Q15 pointer.
   @param[in]     pQ15      points to input value
   @return        Q31 value
  */
 __STATIC_FORCEINLINE q31_t read_q15x2 (
-  q15_t * pQ15)
+  q15_t const * pQ15)
 {
   q31_t val;
 
 #ifdef __RISCV_FEATURE_UNALIGNED
   memcpy (&val, pQ15, 4);
 #else
-  val = __LW(pQ15);
+  val = __LW((q15_t *)pQ15);
 #endif
 
   return (val);
@@ -199,14 +180,10 @@ __STATIC_FORCEINLINE q31_t read_q15x2_ia (
 {
   q31_t val;
 
-#ifdef __RISCV_FEATURE_UNALIGNED
-  memcpy (&val, *pQ15, 4);
-#else
-  val = __LW(*pQ15);
-#endif
+  val = read_q15x2(*pQ15);
+  *pQ15 += 2;
 
- *pQ15 += 2;
- return (val);
+  return (val);
 }
 
 /**
@@ -219,33 +196,10 @@ __STATIC_FORCEINLINE q31_t read_q15x2_da (
 {
   q31_t val;
 
-#ifdef __RISCV_FEATURE_UNALIGNED
-  memcpy (&val, *pQ15, 4);
-#else
-  val = __LW(*pQ15);
-#endif
-
+  val = read_q15x2(*pQ15);
   *pQ15 -= 2;
+
   return (val);
-}
-
-/**
-  @brief         Write 2 Q15 to Q15 pointer and increment pointer afterwards.
-  @param[in]     pQ15      points to input value
-  @param[in]     value     Q31 value
-  @return        none
- */
-__STATIC_FORCEINLINE void write_q15x2_ia (
-  q15_t ** pQ15,
-  q31_t    value)
-{
-#ifdef __RISCV_FEATURE_UNALIGNED
-  memcpy (*pQ15, &value, 4);
-#else
-  __SW(*pQ15, value);
-#endif
-
- *pQ15 += 2;
 }
 
 /**
@@ -266,47 +220,17 @@ __STATIC_FORCEINLINE void write_q15x2 (
 }
 
 /**
-  @brief         Write 4 Q15 to Q15 pointer and increment pointer afterwards.
+  @brief         Write 2 Q15 to Q15 pointer and increment pointer afterwards.
   @param[in]     pQ15      points to input value
   @param[in]     value     Q31 value
   @return        none
  */
-__STATIC_FORCEINLINE void write_q15x4_ia (
-		q15_t ** pQ15,
-		q63_t    value)
+__STATIC_FORCEINLINE void write_q15x2_ia (
+  q15_t ** pQ15,
+  q31_t    value)
 {
-#ifndef __RISCV_FEATURE_UNALIGNED
-#if __RISCV_XLEN == 64
-  __SD(*pQ15, value);
-#else
-  *((q63_t *)*pQ15) = value;
-#endif
-#else
-  memcpy((void *)(*pQ15), (void *)(&value), 8);
-#endif
-  *pQ15 += 4;
-}
-
-/**
-  @brief         Write 4 Q15 to Q15 pointer and decrement pointer afterwards.
-  @param[in]     pQ15      points to input value
-  @param[in]     value     Q31 value
-  @return        none
- */
-__STATIC_FORCEINLINE void write_q15x4_da (
-		q15_t ** pQ15,
-		q63_t    value)
-{
-#ifndef __RISCV_FEATURE_UNALIGNED
-#if __RISCV_XLEN == 64
-  __SD(*pQ15, value);
-#else
-  *((q63_t *)*pQ15) = value;
-#endif
-#else
-  memcpy((void *)(*pQ15), (void *)(&value), 8);
-#endif
-  *pQ15 -= 4;
+  write_q15x2(*pQ15, value);
+  *pQ15 += 2;
 }
 
 /**
@@ -331,23 +255,65 @@ __STATIC_FORCEINLINE void write_q15x4 (
 }
 
 /**
+  @brief         Write 4 Q15 to Q15 pointer and increment pointer afterwards.
+  @param[in]     pQ15      points to input value
+  @param[in]     value     Q31 value
+  @return        none
+ */
+__STATIC_FORCEINLINE void write_q15x4_ia (
+  q15_t ** pQ15,
+  q63_t    value)
+{
+  write_q15x4(*pQ15, value);
+  *pQ15 += 4;
+}
+
+/**
+  @brief         Write 4 Q15 to Q15 pointer and decrement pointer afterwards.
+  @param[in]     pQ15      points to input value
+  @param[in]     value     Q31 value
+  @return        none
+ */
+__STATIC_FORCEINLINE void write_q15x4_da (
+  q15_t ** pQ15,
+  q63_t    value)
+{
+  write_q15x4(*pQ15, value);
+  *pQ15 -= 4;
+}
+
+/**
+  @brief         Read 4 Q15 from Q15 pointer.
+  @param[in]     pQ15      points to input value
+  @return        Q63 value
+ */
+__STATIC_FORCEINLINE q63_t read_q15x4 (
+		q15_t const * pQ15)
+{
+  q63_t val;
+#ifndef __RISCV_FEATURE_UNALIGNED
+#if __RISCV_XLEN == 64
+  val = __LD((q15_t *)pQ15);
+#else
+  val = *((q63_t *)pQ15);
+#endif /* __RISCV_XLEN == 64 */
+#else
+  memcpy((void *)(&val), (void *)(pQ15), 8);
+#endif
+  return (val);
+}
+
+/**
   @brief         Read 4 Q15 from Q15 pointer and increment pointer afterwards.
   @param[in]     pQ15      points to input value
   @return        Q63 value
  */
 __STATIC_FORCEINLINE q63_t read_q15x4_ia (
-		q15_t ** pQ15)
+  q15_t ** pQ15)
 {
   q63_t val;
-#ifndef __RISCV_FEATURE_UNALIGNED
-#if __RISCV_XLEN == 64
-  val = __LD(*pQ15);
-#else
-  val = *((q63_t *)*pQ15);
-#endif
-#else
-  memcpy((void *)(&val), (void *)(*pQ15), 8);
-#endif
+
+  val = read_q15x4(*pQ15);
   *pQ15 += 4;
 
   return (val);
@@ -359,41 +325,32 @@ __STATIC_FORCEINLINE q63_t read_q15x4_ia (
   @return        Q31 value
  */
 __STATIC_FORCEINLINE q63_t read_q15x4_da (
-		q15_t ** pQ15)
+  q15_t ** pQ15)
 {
-	q63_t val;
-#ifndef __RISCV_FEATURE_UNALIGNED
-#if __RISCV_XLEN == 64
-  val = __LD(*pQ15);
-#else
-  val = *((q63_t *)*pQ15);
-#endif
-#else
-  memcpy((void *)(&val), (void *)(*pQ15), 8);
-#endif
+  q63_t val;
+
+  val = read_q15x4(*pQ15);
   *pQ15 -= 4;
 
   return (val);
 }
 
 /**
-  @brief         Read 4 Q15 from Q15 pointer.
-  @param[in]     pQ15      points to input value
-  @return        Q63 value
+  @brief         Read 4 Q7 from Q7 pointer
+  @param[in]     pQ7       points to input value
+  @return        Q31 value
  */
-__STATIC_FORCEINLINE q63_t read_q15x4 (
-		q15_t * pQ15)
+__STATIC_FORCEINLINE q31_t read_q7x4 (
+  q7_t const * pQ7)
 {
-  q63_t val;
-#ifndef __RISCV_FEATURE_UNALIGNED
-#if __RISCV_XLEN == 64
-  val = __LD(pQ15);
+  q31_t val;
+
+#ifdef __RISCV_FEATURE_UNALIGNED
+  memcpy (&val, pQ7, 4);
 #else
-  val = *((q63_t *)pQ15);
-#endif /* __RISCV_XLEN == 64 */
-#else
-  memcpy((void *)(&val), (void *)(pQ15), 8);
+  val = __LW((q7_t *)pQ7);
 #endif
+
   return (val);
 }
 
@@ -407,13 +364,7 @@ __STATIC_FORCEINLINE q31_t read_q7x4_ia (
 {
   q31_t val;
 
-
-#ifdef __RISCV_FEATURE_UNALIGNED
-  memcpy (&val, *pQ7, 4);
-#else
-  val = __LW(*pQ7);
-#endif
-
+  val = read_q7x4(*pQ7);
   *pQ7 += 4;
 
   return (val);
@@ -428,33 +379,65 @@ __STATIC_FORCEINLINE q31_t read_q7x4_da (
   q7_t ** pQ7)
 {
   q31_t val;
-#ifdef __RISCV_FEATURE_UNALIGNED
-  memcpy (&val, *pQ7, 4);
-#else
-  val = __LW(*pQ7);
-#endif
+
+  val = read_q7x4(*pQ7);
   *pQ7 -= 4;
 
   return (val);
 }
 
 /**
-  @brief         Write 4 Q7 to Q7 pointer and increment pointer afterwards.
+  @brief         Read 8 Q7 from Q7 pointer.
   @param[in]     pQ7       points to input value
-  @param[in]     value     Q31 value
-  @return        none
+  @return        Q63 value
  */
-__STATIC_FORCEINLINE void write_q7x4_ia (
-  q7_t ** pQ7,
-  q31_t   value)
+__STATIC_FORCEINLINE q63_t read_q7x8 (
+		q7_t const * pQ7)
 {
-#ifdef __RISCV_FEATURE_UNALIGNED
-  q31_t val = value;
-  memcpy (*pQ7, &val, 4);
+	q63_t val;
+#ifndef __RISCV_FEATURE_UNALIGNED
+#if __RISCV_XLEN == 64
+  val = __LD((q7_t *)pQ7);
 #else
-  __SW(*pQ7, value);
+  val = *((q63_t *)pQ7);
 #endif
-  *pQ7 += 4;
+#else
+  memcpy((void *)(&val), (void *)pQ7, 8);
+#endif
+
+  return val;
+}
+
+/**
+  @brief         Read 8 Q7 from Q7 pointer and increment pointer afterwards.
+  @param[in]     pQ7       points to input value
+  @return        Q63 value
+ */
+__STATIC_FORCEINLINE q63_t read_q7x8_ia (
+  q7_t ** pQ7)
+{
+  q63_t val;
+
+  val = read_q7x8(*pQ7);
+  *pQ7 += 8;
+
+  return val;
+}
+
+/**
+  @brief         Read 8 Q7 from Q7 pointer and decrement pointer afterwards.
+  @param[in]     pQ7       points to input value
+  @return        Q63 value
+ */
+__STATIC_FORCEINLINE q63_t read_q7x8_da (
+  q7_t ** pQ7)
+{
+  q63_t val;
+
+  val = read_q7x8(*pQ7);
+  *pQ7 -= 8;
+
+  return val;
 }
 
 /**
@@ -467,57 +450,26 @@ __STATIC_FORCEINLINE void write_q7x4 (
   q7_t * pQ7,
   q31_t   value)
 {
-#ifdef __RISCV_FEATURE_UNALIGNED
   q31_t val = value;
+#ifdef __RISCV_FEATURE_UNALIGNED
   memcpy (pQ7, &val, 4);
 #else
-  __SW(pQ7, value);
+  __SW(pQ7, val);
 #endif
 }
 
 /**
-  @brief         Read 8 Q7 from Q7 pointer and increment pointer afterwards.
+  @brief         Write 4 Q7 to Q7 pointer and increment pointer afterwards.
   @param[in]     pQ7       points to input value
-  @return        Q63 value
+  @param[in]     value     Q31 value
+  @return        none
  */
-__STATIC_FORCEINLINE q63_t read_q7x8_ia (
-		q7_t ** pQ7)
+__STATIC_FORCEINLINE void write_q7x4_ia (
+  q7_t ** pQ7,
+  q31_t   value)
 {
-	q63_t val;
-#ifndef __RISCV_FEATURE_UNALIGNED
-#if __RISCV_XLEN == 64
-  val = __LD(*pQ7);
-#else
-  val = *((q63_t *)*pQ7);
-#endif
-#else
-  memcpy((void *)(&val), (void *)(*pQ7), 8);
-#endif
-  *pQ7 += 8;
-
-  return val;
-}
-
-/**
-  @brief         Read 8 Q7 from Q7 pointer and decrement pointer afterwards.
-  @param[in]     pQ7       points to input value
-  @return        Q63 value
- */
-__STATIC_FORCEINLINE q63_t read_q7x8_da (
-		q7_t ** pQ7)
-{
-	q63_t val;
-#ifndef __RISCV_FEATURE_UNALIGNED
-#if __RISCV_XLEN == 64
-  val = __LD(*pQ7);
-#else
-  val = *((q63_t *)*pQ7);
-#endif
-#else
-  memcpy((void *)(&val), (void *)(*pQ7), 8);
-#endif
-  *pQ7 -= 8;
-  return val;
+  write_q7x4(*pQ7, value);
+  *pQ7 += 4;
 }
 
 /**

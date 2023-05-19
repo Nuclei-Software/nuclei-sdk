@@ -20866,19 +20866,19 @@ __STATIC_FORCEINLINE long __SMUADX (unsigned long op1, unsigned long op2)
 /** \brief Q setting saturating subtract. */
 #define __QSUB(x, y)                __RV_KSUBW((x), (y))
 /** \brief Q setting dual 16-bit signed multiply with single 32-bit accumulator. */
-__STATIC_FORCEINLINE long __SMLAD(unsigned long op1, unsigned long op2, long op3)
+__STATIC_FORCEINLINE long __SMLAD(unsigned long op1, unsigned long op2, long acc)
 {
-    return __RV_KMADA(op3, op1, op2);
+    return __RV_KMADA(acc, op1, op2);
 }
 /** \brief Q setting pre-exchanged dual 16-bit signed multiply with single 32-bit accumulator.  */
-__STATIC_FORCEINLINE long __SMLADX(unsigned long op1, unsigned long op2, long op3)
+__STATIC_FORCEINLINE long __SMLADX(unsigned long op1, unsigned long op2, long acc)
 {
-    return __RV_KMAXDA(op3, op1, op2);
+    return __RV_KMAXDA(acc, op1, op2);
 }
 /** \brief Q setting dual 16-bit signed multiply with exchange subtract with 32-bit accumulate.  */
-__STATIC_FORCEINLINE long __SMLSDX(unsigned long op1, unsigned long op2, long op3)
+__STATIC_FORCEINLINE long __SMLSDX(unsigned long op1, unsigned long op2, long acc)
 {
-    return (op3 - __RV_SMXDS(op1, op2));
+    return (acc - __RV_SMXDS(op1, op2));
 }
 /** \brief Dual 16-bit signed multiply with single 64-bit accumulator. */
 __STATIC_FORCEINLINE long long __SMLALD(unsigned long op1, unsigned long op2, long long acc)
@@ -20910,11 +20910,11 @@ __STATIC_FORCEINLINE unsigned long __SXTAB16(unsigned long op1, unsigned long op
 #define __SXTAB16_RORn(ARG1, ARG2, ROTATE)        __SXTAB16(ARG1, __ROR(ARG2, ROTATE))
 
 /** \brief 32-bit signed multiply with 32-bit truncated accumulator. */
-__STATIC_FORCEINLINE long __SMMLA(long op1, long op2, long op3)
+__STATIC_FORCEINLINE long __SMMLA(long op1, long op2, long acc)
 {
     long mul;
     mul = __RV_SMMUL(op1, op2);
-    return (op3 + mul);
+    return (acc + mul);
 }
 #define __DKHM8                 __RV_DKHM8
 #define __DKHM16                __RV_DKHM16
@@ -20947,6 +20947,7 @@ __STATIC_FORCEINLINE long __SMMLA(long op1, long op2, long op3)
 #define __SSUB8                 __RV_KSUB8
 #define __SADD8                 __RV_KADD8
 #define __USAT16                __RV_UCLIP16
+#define __SMALTT                __RV_SMALTT
 
 /** \brief Halfword packing instruction. Combines bits[15:0] of val1 with bits[31:16] of val2 levitated with the val3. */
 #define __PKHBT(ARG1, ARG2, ARG3)  ((ARG3 == 0) ? __RV_PKTB16(ARG2, ARG1) :              \

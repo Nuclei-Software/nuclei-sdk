@@ -42,6 +42,8 @@ extern "C"
     
 #if defined(RISCV_FLOAT16_SUPPORTED)
 
+#define DEFAULT_HOUSEHOLDER_THRESHOLD_F16 (1.0e-3f)
+
  /**
    * @brief Instance structure for the floating-point matrix structure.
    */
@@ -213,6 +215,46 @@ void riscv_mat_init_f16(
   riscv_matrix_instance_f16 * dst);
 
 
+/**
+  @brief         QR decomposition of a m x n floating point matrix with m >= n.
+  @param[in]     pSrc      points to input matrix structure. The source matrix is modified by the function.
+  @param[in]     threshold norm2 threshold.
+  @param[out]    pOutR     points to output R matrix structure of dimension m x n
+  @param[out]    pOutQ     points to output Q matrix structure of dimension m x m
+  @param[out]    pOutTau   points to Householder scaling factors of dimension n
+  @param[inout]  pTmpA     points to a temporary vector of dimension m.
+  @param[inout]  pTmpB     points to a temporary vector of dimension n.
+  @return        execution status
+                   - \ref RISCV_MATH_SUCCESS       : Operation successful
+                   - \ref RISCV_MATH_SIZE_MISMATCH : Matrix size check failed
+                   - \ref RISCV_MATH_SINGULAR      : Input matrix is found to be singular (non-invertible)
+ */
+
+riscv_status riscv_mat_qr_f16(
+    const riscv_matrix_instance_f16 * pSrc,
+    const float16_t threshold,
+    riscv_matrix_instance_f16 * pOutR,
+    riscv_matrix_instance_f16 * pOutQ,
+    float16_t * pOutTau,
+    float16_t *pTmpA,
+    float16_t *pTmpB
+    );
+
+/**
+  @brief         Householder transform of a half floating point vector.
+  @param[in]     pSrc        points to the input vector.
+  @param[in]     threshold   norm2 threshold.
+  @param[in]     blockSize   dimension of the vector space.
+  @param[outQ]   pOut        points to the output vector.
+  @return        beta        return the scaling factor beta
+ */
+
+float16_t riscv_householder_f16(
+    const float16_t * pSrc,
+    const float16_t threshold,
+    uint32_t    blockSize,
+    float16_t * pOut
+    );
 
 #endif /*defined(RISCV_FLOAT16_SUPPORTED)*/
 #ifdef   __cplusplus

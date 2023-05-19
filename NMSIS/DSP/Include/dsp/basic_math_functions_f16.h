@@ -28,17 +28,16 @@
 #ifndef _BASIC_MATH_FUNCTIONS_F16_H_
 #define _BASIC_MATH_FUNCTIONS_F16_H_
 
-#ifdef   __cplusplus
-extern "C"
-{
-#endif
-
 #include "riscv_math_types_f16.h"
 #include "riscv_math_memory.h"
 
 #include "dsp/none.h"
 #include "dsp/utils.h"
 
+#ifdef   __cplusplus
+extern "C"
+{
+#endif
 
 #if defined(RISCV_FLOAT16_SUPPORTED)
 

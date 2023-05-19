@@ -30,31 +30,51 @@
    * \section intro Introduction
    *
    * This user manual describes the NMSIS DSP software library,
-   * a suite of common signal processing functions for use on Nuclei N/NX processor based devices.
+   * a suite of common compute processing functions for use on RISC-V processor
+   * based devices.
    *
    * The library is divided into a number of functions each covering a specific category:
-   * - Basic math functions
-   * - Fast math functions
-   * - Complex math functions
-   * - Filtering functions
-   * - Matrix functions
-   * - Transform functions
-   * - Motor control functions
-   * - Statistical functions
-   * - Support functions
-   * - Interpolation functions
-   * - Support Vector Machine functions (SVM)
-   * - Bayes classifier functions
-   * - Distance functions
-   * - Quaternion functions
+   * - \ref groupMath "Basic math functions"
+   * - \ref groupFastMath "Fast math functions"
+   * - \ref groupCmplxMath "Complex math functions"
+   * - \ref groupFilters "Filtering functions"
+   * - \ref groupMatrix "Matrix functions"
+   * - \ref groupTransforms "Transform functions"
+   * - \ref groupController "Motor control functions"
+   * - \ref groupStats "Statistical functions"
+   * - \ref groupSupport "Support functions"
+   * - \ref groupInterpolation "Interpolation functions"
+   * - \ref groupSVM "Support Vector Machine functions (SVM)"
+   * - \ref groupBayes "Bayes classifier functions"
+   * - \ref groupDistance "Distance functions"
+   * - \ref groupQuaternionMath "Quaternion functions"
+   * - \ref groupWindow "Window functions"
    *
    * The library has generally separate functions for operating on 8-bit integers, 16-bit integers,
-   * 32-bit integer and 32-bit floating-point values.
+   * 32-bit integer and 32-bit floating-point values and 64-bit floating-point values.
    *
-   * The library functions are declared in the public file <code>riscv_math.h</code> which is placed in the <code>Include</code> folder.
-   * Simply include this file and link the appropriate library in the application and begin calling the library functions.
-   * The Library supports single public header file <code>riscv_math.h</code> for Nuclei N cores with little endian.
-   * Same header file will be used for floating point unit(FPU) variants.
+   * The library is providing vectorized versions of most algorithms for Helium
+   * and of most f32 algorithms for Neon.
+   *
+   * When using a vectorized version, provide a little bit of padding after the end of
+   * a buffer (3 words) because the vectorized code may read a little bit after the end
+   * of a buffer. You don't have to modify your buffers but just ensure that the
+   * end of buffer + padding is not outside of a memory region.
+   *
+   * NMSIS-DSP pack is containing an optional project : The NMSIS-DSP
+   * Compute Graph. The documentation for this project is available
+   * on the <a href="https://github.com/RISCV-software/NMSIS-DSP/blob/main/ComputeGraph/README.md">NMSIS-DSP github repository.</a>
+   *
+   * A Python wrapper is also available with a Python API as close as possible
+   * to the C one. It can be used to start developing and testing an algorithm with NumPy and
+   * SciPy before writing the C version. Is is available on <a href="https://pypi.org/project/nmsisdsp/">PyPI.org</a>.
+   * It can be installed with : pip install nmsisdsp
+   *
+   *
+   * \section using Using the Library
+   *
+   * The library is released in source form. It is strongly advised to compile the library using -Ofast to
+   * have the best performances.
    *
    * \note Please refer to [NMSIS-DSP](../../../dsp/index.html)
    *
@@ -113,6 +133,7 @@
 #include "dsp/transform_functions.h"
 #include "dsp/filtering_functions.h"
 #include "dsp/quaternion_math_functions.h"
+#include "dsp/window_functions.h"
 
 
 

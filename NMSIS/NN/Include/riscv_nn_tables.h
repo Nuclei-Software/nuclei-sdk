@@ -1,15 +1,5 @@
-/* ----------------------------------------------------------------------
- * Project:      NMSIS NN Library
- * Title:        riscv_nn_tables.h
- * Description:  Extern declaration for NN tables
- *
- * $Date:        17. August 2021
- * $Revision:    V.1.0.2
- *
- * Target Processor: RISC-V Cores
- * -------------------------------------------------------------------- */
 /*
- * Copyright (C) 2010-2018 Arm Limited or its affiliates. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright 2010-2022 Arm Limited and/or its affiliates <open-source-office@arm.com>
  * Copyright (c) 2019 Nuclei Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -27,6 +17,17 @@
  * limitations under the License.
  */
 
+/* ----------------------------------------------------------------------
+ * Project:      NMSIS NN Library
+ * Title:        riscv_nn_tables.h
+ * Description:  Extern declaration for NN tables
+ *
+ * $Date:        28 October 2022
+ * $Revision:    V.2.1.0
+ *
+ * Target Processor:  RISC-V Cores
+ * -------------------------------------------------------------------- */
+
 #ifndef _RISCV_NN_TABLES_H
 #define _RISCV_NN_TABLES_H
 
@@ -37,6 +38,7 @@
  *
  */
 
+extern const uint16_t sigmoid_table_uint16[256];
 extern const q15_t sigmoidTable_q15[256];
 extern const q7_t sigmoidTable_q7[256];
 

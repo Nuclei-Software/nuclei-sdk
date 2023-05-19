@@ -172,6 +172,9 @@ extern "C"
 }
 #endif
 
+#if defined(RISCV_DSP_CONFIG_TABLES)
+#error("-DRISCV_DSP_CONFIG_TABLES no more supported. Use the new initialization functions to let the linker optimize the code size.")
+#endif
 
 #ifdef   __cplusplus
 extern "C"

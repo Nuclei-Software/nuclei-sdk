@@ -37,93 +37,48 @@ extern "C"
 {
 #endif
 
-#if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_FFT_ALLOW_TABLES)
 
   /* F16 */
   #if defined(RISCV_FLOAT16_SUPPORTED)
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_F16_16)
     extern const float16_t twiddleCoefF16_16[32];
-  #endif /* !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) */
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_F16_32)
     extern const float16_t twiddleCoefF16_32[64];
-  #endif /* !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) */
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_F16_64)
     extern const float16_t twiddleCoefF16_64[128];
-  #endif /* !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) */
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_F16_128)
     extern const float16_t twiddleCoefF16_128[256];
-  #endif /* !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) */
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_F16_256)
     extern const float16_t twiddleCoefF16_256[512];
-  #endif /* !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) */
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_F16_512)
     extern const float16_t twiddleCoefF16_512[1024];
-  #endif /* !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) */
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_F16_1024)
     extern const float16_t twiddleCoefF16_1024[2048];
-  #endif /* !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) */
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_F16_2048)
     extern const float16_t twiddleCoefF16_2048[4096];
-  #endif /* !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) */
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_F16_4096)
     extern const float16_t twiddleCoefF16_4096[8192];
     #define twiddleCoefF16 twiddleCoefF16_4096
-  #endif /* !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) */
-  
- 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_RFFT_F16_32)
-  extern const float16_t twiddleCoefF16_rfft_32[32];
-  #endif
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_RFFT_F16_64)
-  extern const float16_t twiddleCoefF16_rfft_64[64];
-  #endif
+    extern const float16_t twiddleCoefF16_rfft_32[32];
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_RFFT_F16_128)
-  extern const float16_t twiddleCoefF16_rfft_128[128];
-  #endif
+    extern const float16_t twiddleCoefF16_rfft_64[64];
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_RFFT_F16_256)
-  extern const float16_t twiddleCoefF16_rfft_256[256];
-  #endif
+    extern const float16_t twiddleCoefF16_rfft_128[128];
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_RFFT_F16_512)
-  extern const float16_t twiddleCoefF16_rfft_512[512];
-  #endif
+    extern const float16_t twiddleCoefF16_rfft_256[256];
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_RFFT_F16_1024)
-  extern const float16_t twiddleCoefF16_rfft_1024[1024];
-  #endif
+    extern const float16_t twiddleCoefF16_rfft_512[512];
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_RFFT_F16_2048)
-  extern const float16_t twiddleCoefF16_rfft_2048[2048];
-  #endif
+    extern const float16_t twiddleCoefF16_rfft_1024[1024];
 
-  #if !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_ALL_FFT_TABLES) || defined(RISCV_TABLE_TWIDDLECOEF_RFFT_F16_4096)
-  extern const float16_t twiddleCoefF16_rfft_4096[4096];
-  #endif
+    extern const float16_t twiddleCoefF16_rfft_2048[2048];
 
-  #endif /* ARMAC5 */
-    
-#endif /* !defined(RISCV_DSP_CONFIG_TABLES) || defined(RISCV_FFT_ALLOW_TABLES) */
+    extern const float16_t twiddleCoefF16_rfft_4096[4096];
 
-#if defined(RISCV_FLOAT16_SUPPORTED)
-
-#endif 
-       
+  #endif /* #if defined(RISCV_FLOAT16_SUPPORTED) */
 
 #ifdef   __cplusplus
 }
 #endif
 
 #endif /*  _RISCV_COMMON_TABLES_F16_H */
-
-  

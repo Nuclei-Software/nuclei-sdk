@@ -1,12 +1,5 @@
-/******************************************************************************
- * @file     riscv_nn_math_types.h
- * @brief    Compiler include and basic types
- * @version  V1.1.0
- * @date     09 March 2022
- * Target Processor: RISC-V Cores
- ******************************************************************************/
 /*
- * Copyright (c) 2010-2022 Arm Limited or its affiliates.
+ * SPDX-FileCopyrightText: Copyright 2010-2023 Arm Limited and/or its affiliates <open-source-office@arm.com>
  * Copyright (c) 2022 Nuclei Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -24,12 +17,24 @@
  * limitations under the License.
  */
 
-#ifndef _RISCV_NN_MATH_TYPES_H_
+/* ----------------------------------------------------------------------
+ * Project:      NMSIS NN Library
+ * Title:        riscv_nn_math_types.h
+ * Description:  Compiler include and basic types
+ *
+ * $Date:        4 January 2023
+ * $Revision:    V.1.3.2
+ *
+ * Target :  RISC-V Cores
+ * -------------------------------------------------------------------- */
 
-#define _RISCV_NN_MATH_TYPES_H_
+#ifndef RISCV_NN_MATH_TYPES_H
 
-/* DSP inlcude for enum riscv_status. */
-#include "riscv_math_types.h"
+#define RISCV_NN_MATH_TYPES_H
+
+#include <limits.h>
+#include <stdint.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -176,29 +181,20 @@ extern "C" {
   typedef double float64_t;
 
 /**
- * @brief Add necessary typedefs
+ *
+ * @brief Limits macros
+ *
  */
 
-#define NN_Q31_MAX ((q31_t)(0x7FFFFFFFL))
-#define NN_Q15_MAX ((q15_t)(0x7FFF))
-#define NN_Q7_MAX ((q7_t)(0x7F))
-#define NN_Q31_MIN ((q31_t)(0x80000000L))
-#define NN_Q15_MIN ((q15_t)(0x8000))
-#define NN_Q7_MIN ((q7_t)(0x80))
-
-/**
- * @brief Error status returned by some functions in the library.
- */
-
-typedef enum
-{
-    RISCV_NMSIS_NN_SUCCESS = 0,        /**< No error */
-    RISCV_NMSIS_NN_ARG_ERROR = -1,     /**< One or more arguments are incorrect */
-    RISCV_NMSIS_NN_NO_IMPL_ERROR = -2, /**<  No implementation available */
-} riscv_nmsis_nn_status;
+#define NN_Q31_MAX ((int32_t)(0x7FFFFFFFL))
+#define NN_Q15_MAX ((int16_t)(0x7FFF))
+#define NN_Q7_MAX ((int8_t)(0x7F))
+#define NN_Q31_MIN ((int32_t)(0x80000000L))
+#define NN_Q15_MIN ((int16_t)(0x8000))
+#define NN_Q7_MIN ((int8_t)(0x80))
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /*ifndef _RISCV_NN_MATH_TYPES_H_ */
+#endif /*ifndef RISCV_NN_MATH_TYPES_H */

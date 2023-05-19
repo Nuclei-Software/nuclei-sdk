@@ -1,9 +1,9 @@
 /******************************************************************************
  * @file     statistics_functions.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.10.0
- * @date     08 July 2021
- * Target Processor: RISC-V Cores
+ * @version  V1.10.1
+ * @date     14 July 2022
+ * Target Processor: RISC-V cores
  ******************************************************************************/
 /*
  * Copyright (c) 2010-2020 Arm Limited or its affiliates. All rights reserved.
@@ -404,38 +404,38 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    * @brief  Minimum value of a Q7 vector.
    * @param[in]  pSrc       is input pointer
    * @param[in]  blockSize  is the number of samples to process
-   * @param[out] result     is output pointer
-   * @param[in]  index      is the array index of the minimum value in the input buffer.
+   * @param[out] pResult     is output pointer
+   * @param[in]  pIndex      is the array index of the minimum value in the input buffer.
    */
   void riscv_min_q7(
   const q7_t * pSrc,
         uint32_t blockSize,
-        q7_t * result,
-        uint32_t * index);
+        q7_t * pResult,
+        uint32_t * pIndex);
 
   /**
    * @brief  Minimum value of absolute values of a Q7 vector.
    * @param[in]  pSrc       is input pointer
    * @param[in]  blockSize  is the number of samples to process
-   * @param[out] result     is output pointer
-   * @param[in]  index      is the array index of the minimum value in the input buffer.
+   * @param[out] pResult    is output pointer
+   * @param[in]  pIndex     is the array index of the minimum value in the input buffer.
    */
   void riscv_absmin_q7(
   const q7_t * pSrc,
         uint32_t blockSize,
-        q7_t * result,
-        uint32_t * index);
+        q7_t * pResult,
+        uint32_t * pIndex);
 
     /**
    * @brief  Minimum value of absolute values of a Q7 vector.
    * @param[in]  pSrc       is input pointer
    * @param[in]  blockSize  is the number of samples to process
-   * @param[out] result     is output pointer
+   * @param[out] pResult    is output pointer
    */
   void riscv_absmin_no_idx_q7(
   const q7_t * pSrc,
         uint32_t blockSize,
-        q7_t * result);
+        q7_t * pResult);
 
 
   /**
@@ -785,7 +785,7 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    */
   void riscv_max_no_idx_f32(
       const float32_t *pSrc,
-      uint32_t blockSize,
+      uint32_t   blockSize,
       float32_t *pResult);
 
   /**
@@ -797,7 +797,7 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    */
   void riscv_min_no_idx_f32(
       const float32_t *pSrc,
-      uint32_t blockSize,
+      uint32_t   blockSize,
       float32_t *pResult);
 
   /**
@@ -809,7 +809,7 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    */
   void riscv_max_no_idx_f64(
       const float64_t *pSrc,
-      uint32_t blockSize,
+      uint32_t   blockSize,
       float64_t *pResult);
 
   /**
@@ -821,7 +821,7 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    */
   void riscv_max_no_idx_q31(
       const q31_t *pSrc,
-      uint32_t blockSize,
+      uint32_t   blockSize,
       q31_t *pResult);
 
   /**
@@ -833,7 +833,7 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    */
   void riscv_max_no_idx_q15(
       const q15_t *pSrc,
-      uint32_t blockSize,
+      uint32_t   blockSize,
       q15_t *pResult);
 
   /**
@@ -845,7 +845,7 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    */
   void riscv_max_no_idx_q7(
       const q7_t *pSrc,
-      uint32_t blockSize,
+      uint32_t   blockSize,
       q7_t *pResult);
 
   /**
@@ -857,7 +857,7 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    */
   void riscv_min_no_idx_f64(
       const float64_t *pSrc,
-      uint32_t blockSize,
+      uint32_t   blockSize,
       float64_t *pResult);
 
 /**
@@ -869,7 +869,7 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    */
   void riscv_min_no_idx_q31(
       const q31_t *pSrc,
-      uint32_t blockSize,
+      uint32_t   blockSize,
       q31_t *pResult);
 
   /**
@@ -881,7 +881,7 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    */
   void riscv_min_no_idx_q15(
       const q15_t *pSrc,
-      uint32_t blockSize,
+      uint32_t   blockSize,
       q15_t *pResult);
 
   /**
@@ -893,7 +893,7 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
    */
   void riscv_min_no_idx_q7(
       const q7_t *pSrc,
-      uint32_t blockSize,
+      uint32_t   blockSize,
       q7_t *pResult);
 
 /**
@@ -970,6 +970,32 @@ void riscv_mse_f64(
   const float64_t * pSrcB,
         uint32_t blockSize,
         float64_t * pResult);
+
+
+/**
+ * @brief  Accumulation value of a floating-point vector.
+ * @param[in]  pSrc       is input pointer
+ * @param[in]  blockSize  is the number of samples to process
+ * @param[out] pResult    is output value.
+ */
+
+void riscv_accumulate_f32(
+const float32_t * pSrc,
+      uint32_t blockSize,
+      float32_t * pResult);
+
+/**
+ * @brief  Accumulation value of a floating-point vector.
+ * @param[in]  pSrc       is input pointer
+ * @param[in]  blockSize  is the number of samples to process
+ * @param[out] pResult    is output value.
+ */
+
+void riscv_accumulate_f64(
+const float64_t * pSrc,
+      uint32_t blockSize,
+      float64_t * pResult);
+
 
 #ifdef   __cplusplus
 }

@@ -1,9 +1,9 @@
 /******************************************************************************
  * @file     support_functions.h
  * @brief    Public header file for NMSIS DSP Library
- * @version  V1.10.0
- * @date     08 July 2021
- * Target Processor: RISC-V Cores
+ * @version  V1.10.1
+ * @date     18 August 2022
+ * Target Processor: RISC-V cores
  ******************************************************************************/
 /*
  * Copyright (c) 2010-2020 Arm Limited or its affiliates. All rights reserved.
@@ -45,6 +45,63 @@ extern "C"
 
 
 /**
+   * @brief Converts the elements of the 64 bit floating-point vector to floating-point vector.
+   * @param[in]  pSrc       points to the floating-point 64 input vector
+   * @param[out] pDst       points to the floating-point output vector
+   * @param[in]  blockSize  length of the input vector
+   */
+  void riscv_f64_to_float(
+  const float64_t * pSrc,
+        float32_t * pDst,
+        uint32_t blockSize);
+
+/**
+   * @brief Converts the elements of the 64 bit floating-point vector to Q31 vector.
+   * @param[in]  pSrc       points to the floating-point 64 input vector
+   * @param[out] pDst       points to the Q31 output vector
+   * @param[in]  blockSize  length of the input vector
+   */
+  void riscv_f64_to_q31(
+  const float64_t * pSrc,
+        q31_t * pDst,
+        uint32_t blockSize);
+
+/**
+   * @brief Converts the elements of the 64 bit floating-point vector to Q15 vector.
+   * @param[in]  pSrc       points to the floating-point 64 input vector
+   * @param[out] pDst       points to the Q15 output vector
+   * @param[in]  blockSize  length of the input vector
+   */
+  void riscv_f64_to_q15(
+  const float64_t * pSrc,
+        q15_t * pDst,
+        uint32_t blockSize);
+
+/**
+   * @brief Converts the elements of the 64 bit floating-point vector to Q7 vector.
+   * @param[in]  pSrc       points to the floating-point 64 input vector
+   * @param[out] pDst       points to the Q7 output vector
+   * @param[in]  blockSize  length of the input vector
+   */
+  void riscv_f64_to_q7(
+  const float64_t * pSrc,
+        q7_t * pDst,
+        uint32_t blockSize);
+
+
+
+/**
+   * @brief Converts the elements of the floating-point  vector to 64 bit floating-point  vector.
+   * @param[in]  pSrc       points to the floating-point input vector
+   * @param[out] pDst       points to the 64 bit floating-point output vector
+   * @param[in]  blockSize  length of the input vector
+   */
+  void riscv_float_to_f64(
+  const float32_t * pSrc,
+        float64_t * pDst,
+        uint32_t blockSize);
+
+/**
    * @brief Converts the elements of the floating-point vector to Q31 vector.
    * @param[in]  pSrc       points to the floating-point input vector
    * @param[out] pDst       points to the Q31 output vector
@@ -79,6 +136,16 @@ extern "C"
         q7_t * pDst,
         uint32_t blockSize);
 
+/**
+ * @brief  Converts the elements of the Q31 vector to 64 bit floating-point vector.
+ * @param[in]  pSrc       is input pointer
+ * @param[out] pDst       is output pointer
+ * @param[in]  blockSize  is the number of samples to process
+ */
+void riscv_q31_to_f64(
+const q31_t * pSrc,
+      float64_t * pDst,
+      uint32_t blockSize);
 
   /**
    * @brief  Converts the elements of the Q31 vector to floating-point vector.
@@ -115,6 +182,16 @@ extern "C"
         q7_t * pDst,
         uint32_t blockSize);
 
+/**
+ * @brief  Converts the elements of the Q15 vector to 64 bit floating-point vector.
+ * @param[in]  pSrc       is input pointer
+ * @param[out] pDst       is output pointer
+ * @param[in]  blockSize  is the number of samples to process
+ */
+void riscv_q15_to_f64(
+const q15_t * pSrc,
+      float64_t * pDst,
+      uint32_t blockSize);
 
   /**
    * @brief  Converts the elements of the Q15 vector to floating-point vector.
@@ -151,6 +228,16 @@ extern "C"
         q7_t * pDst,
         uint32_t blockSize);
 
+/**
+ * @brief  Converts the elements of the Q7 vector to 64 bit floating-point vector.
+ * @param[in]  pSrc       is input pointer
+ * @param[out] pDst       is output pointer
+ * @param[in]  blockSize  is the number of samples to process
+ */
+void riscv_q7_to_f64(
+const q7_t * pSrc,
+      float64_t * pDst,
+      uint32_t blockSize);
 
   /**
    * @brief  Converts the elements of the Q7 vector to floating-point vector.

@@ -36,6 +36,7 @@
 
 #include "dsp/basic_math_functions.h"
 
+#include <math.h>
 
 #ifdef   __cplusplus
 extern "C"
@@ -54,6 +55,11 @@ extern "C"
   #define PI               3.14159265358979f
 #endif
 
+#ifndef PI_F64
+  #define PI_F64 3.14159265358979323846
+#endif
+
+
 
 /**
  * @defgroup groupFastMath Fast Math Functions
@@ -64,17 +70,8 @@ extern "C"
  *
  */
 
-  /**
-   * @ingroup groupFastMath
-   */
 
-
-/**
-  @addtogroup sin
-  @{
- */
-
-/**
+   /**
    * @brief  Fast approximation to the trigonometric sine function for floating-point data.
    * @param[in] x  input value in radians.
    * @return  sin(x).
@@ -91,7 +88,6 @@ extern "C"
   q31_t riscv_sin_q31(
   q31_t x);
 
-
   /**
    * @brief  Fast approximation to the trigonometric sine function for Q15 data.
    * @param[in] x  Scaled input value in radians.
@@ -100,14 +96,6 @@ extern "C"
   q15_t riscv_sin_q15(
   q15_t x);
 
-/**
-  @} end of sin group
- */
-
-/**
-  @addtogroup cos
-  @{
- */
 
   /**
    * @brief  Fast approximation to the trigonometric cosine function for floating-point data.
@@ -135,9 +123,6 @@ extern "C"
   q15_t riscv_cos_q15(
   q15_t x);
 
-/**
-  @} end of cos group
- */
 
 
 /**
@@ -163,8 +148,8 @@ extern "C"
  */
   void riscv_vlog_f64(
   const float64_t * pSrc,
-		float64_t * pDst,
-		uint32_t blockSize);
+        float64_t * pDst,
+        uint32_t blockSize);
 
 
 
