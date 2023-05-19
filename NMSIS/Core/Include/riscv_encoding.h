@@ -865,6 +865,30 @@
 #define CSR_SPMPADDR14          0x1BE
 #define CSR_SPMPADDR15          0x1BF
 
+#define CSR_SPMUCFG0            0x1A0
+#define CSR_SPMUCFG1            0x1A1
+#define CSR_SPMUCFG2            0x1A2
+#define CSR_SPMUCFG3            0x1A3
+#define CSR_SPMUADDR0           0x1B0
+#define CSR_SPMUADDR1           0x1B1
+#define CSR_SPMUADDR2           0x1B2
+#define CSR_SPMUADDR3           0x1B3
+#define CSR_SPMUADDR4           0x1B4
+#define CSR_SPMUADDR5           0x1B5
+#define CSR_SPMUADDR6           0x1B6
+#define CSR_SPMUADDR7           0x1B7
+#define CSR_SPMUADDR8           0x1B8
+#define CSR_SPMUADDR9           0x1B9
+#define CSR_SPMUADDR10          0x1BA
+#define CSR_SPMUADDR11          0x1BB
+#define CSR_SPMUADDR12          0x1BC
+#define CSR_SPMUADDR13          0x1BD
+#define CSR_SPMUADDR14          0x1BE
+#define CSR_SPMUADDR15          0x1BF
+
+#define CSR_SPMUSWITCH0         0x170
+#define CSR_SPMUSWITCH1         0x171
+
 /* === CLIC CSR Registers === */
 #define CSR_MTVT                0x307
 #define CSR_MNXTI               0x345
@@ -877,7 +901,7 @@
 #define CSR_UCODE               0x801
 
 /* === Nuclei custom CSR Registers === */
-#define CSR_MCOUNTINHIBIT       0x320
+//#define CSR_MCOUNTINHIBIT       0x320
 #define CSR_MILM_CTL            0x7C0
 #define CSR_MDLM_CTL            0x7C1
 #define CSR_MECC_CODE           0x7C2
@@ -904,12 +928,27 @@
 #define CSR_PUSHMEPC            0x7EF
 #define CSR_MPPICFG_INFO        0x7F0
 #define CSR_MFIOCFG_INFO        0x7F1
+
+/* === NCDEV === */
 #define CSR_MDEVB               0x7F3
 #define CSR_MDEVM               0x7F4
 #define CSR_MNOCB               0x7F5
 #define CSR_MNOCM               0x7F6
+#define CSR_MATTRI0_BASE        0x7F3
+#define CSR_MATTRI0_MASK        0x7F4
+#define CSR_MATTRI1_BASE        0x7F5
+#define CSR_MATTRI1_MASK        0x7F6
+#define CSR_MATTRI2_BASE        0x7F9
+#define CSR_MATTRI2_MASK        0x7FA
+#define CSR_MATTRI3_BASE        0x7FB
+#define CSR_MATTRI3_MASK        0x7FC
+#define CSR_MATTRI4_BASE        0x7FD
+#define CSR_MATTRI4_MASK        0x7FE
+
+/* === IREGION === */
 #define CSR_MSMPCFG_INFO        0x7F7
 #define CSR_MIRGB_INFO          0x7F7
+
 #define CSR_SLEEPVALUE          0x811
 #define CSR_TXEVT               0x812
 #define CSR_WFE                 0x810
@@ -922,6 +961,9 @@
 #define CSR_MDCFG_INFO          0xFC1
 #define CSR_MCFG_INFO           0xFC2
 #define CSR_MTLBCFG_INFO        0xFC3
+
+/* === ECC === */
+#define CSR_MECC_STATUS         0xBC4
 
 /* === Nuclei CCM Registers === */
 #define CSR_CCM_MBEGINADDR      0x7CB
