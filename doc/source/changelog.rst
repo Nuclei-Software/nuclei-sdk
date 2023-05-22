@@ -3,10 +3,10 @@
 Changelog
 =========
 
-V0.4.1-dev
-----------
+V0.4.1
+------
 
-This is release version ``0.4.1`` of Nuclei SDK, which is still in development.
+This is release version ``0.4.1`` of Nuclei SDK.
 
 * Application
 
@@ -18,6 +18,7 @@ This is release version ``0.4.1`` of Nuclei SDK, which is still in development.
 
 * NMSIS
 
+  - Bump NMSIS to 1.1.1 release version, NMSIS DSP/NN prebuilt libraries are built with 1.1.1 release.
   - Add CIDU support via core_feature_cidu.h, and ``__CIDU_PRESENT`` macro is required in ``<Device>.h`` to represent CIDU present or not
   - Add macros of HPM m/s/u event enable, events type, events idx
   - Fix define error of HPM_INIT macro
