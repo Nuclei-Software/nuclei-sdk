@@ -100,7 +100,7 @@ int main(void)
     clusterid = __get_cluster_id();
     misa = __RV_CSR_READ(CSR_MISA);
 
-    printf("Cluster %d, Hart %lu, MISA: 0x%lx\r\n", clusterid, hartid, misa);
+    printf("Cluster %lu, Hart %lu, MISA: 0x%lx\r\n", clusterid, hartid, misa);
     print_misa();
 
     // Generate random value with seed
