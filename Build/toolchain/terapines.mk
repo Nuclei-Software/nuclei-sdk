@@ -32,17 +32,17 @@ endif
 ifneq ($(findstring newlib,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has newlib in it
 ifeq ($(STDCLIB),newlib_full)
-COMMON_FLAGS += --config nosys.cfg
+LDLIBS += -lc -lclang_rt.builtins
 else ifeq ($(STDCLIB),newlib_fast)
-COMMON_FLAGS += --config nano-nosys.cfg
+LDLIBS += -lc_size -lclang_rt.builtins_size
 STDCLIB_LDFLAGS += -u _printf_float -u _scanf_float
 else ifeq ($(STDCLIB),newlib_small)
-COMMON_FLAGS += --config nano-nosys.cfg
+LDLIBS += -lc_size -lclang_rt.builtins_size
 STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
-COMMON_FLAGS += --config nano-nosys.cfg
+LDLIBS += -lc_size -lclang_rt.builtins_size
 else
-COMMON_FLAGS += --config nosys.cfg
+LDLIBS += -lc_size -lclang_rt.builtins_size
 endif
 ###
 else ifneq ($(findstring libncrt,$(STDCLIB)),)
@@ -59,7 +59,7 @@ else ifeq ($(STDCLIB),nospec)
 COMMON_FLAGS +=
 ###
 else
-COMMON_FLAGS += --config nosys.cfg
+LDLIBS += -lc_size -lclang_rt.builtins_size
 ###
 endif
 
@@ -101,6 +101,7 @@ COMMON_FLAGS +=
 endif
 
 ifneq ($(findstring newlib,$(STDCLIB)),)
-LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek -u __on_exit_args
+LDFLAGS += -u __on_exit_args
 endif
 
+LDFLAGS += -nodefaultlibs

@@ -40,7 +40,9 @@ LDLIBS += -lc_nano -lgcc
 # work around for relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references _printf_float when compile with rv64
 STDCLIB_LDFLAGS += -u _printf_float
 else
-LDLIBS +=
+LDLIBS += -lc_nano -lgcc
+# work around for relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references _printf_float when compile with rv64
+STDCLIB_LDFLAGS += -u _printf_float
 endif
 ###
 else ifneq ($(findstring libncrt,$(STDCLIB)),)
@@ -57,7 +59,7 @@ else ifeq ($(STDCLIB),nospec)
 COMMON_FLAGS +=
 ###
 else
-LDLIBS +=
+LDLIBS += -lc_nano -lgcc
 ###
 endif
 
@@ -72,6 +74,9 @@ ifneq ($(findstring libncrt,$(STDCLIB)),)
 LDLIBS += -lfileops_uart
 endif
 endif
+
+## Link with standard c++ library
+LDLIBS += -lstdc++
 
 ## Heap and stack size settings
 ## It will define symbols only used in linker script

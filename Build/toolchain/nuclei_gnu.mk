@@ -52,7 +52,6 @@ endif
 
 # Handle standard c library selection variable STDCLIB
 ifneq ($(findstring newlib,$(STDCLIB)),)
-LDLIBS += -lstdc++
 ### Handle cases when STDCLIB variable has newlib in it
 ifeq ($(STDCLIB),newlib_full)
 COMMON_FLAGS +=
@@ -65,7 +64,7 @@ STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
 COMMON_FLAGS += --specs=nano.specs
 else
-COMMON_FLAGS +=
+COMMON_FLAGS += --specs=nano.specs
 endif
 ###
 else ifneq ($(findstring libncrt,$(STDCLIB)),)
@@ -82,16 +81,7 @@ else ifeq ($(STDCLIB),nospec)
 COMMON_FLAGS +=
 ###
 else
-LDLIBS += -lstdc++
-### To be back compatiable with NEWLIB and PFLOAT variable
-ifeq ($(NEWLIB),nano)
-STDCLIB_LDFLAGS = --specs=nano.specs
-ifeq ($(PFLOAT),1)
-STDCLIB_LDFLAGS += -u _printf_float
-endif
-else
-STDCLIB_LDFLAGS +=
-endif
+COMMON_FLAGS = --specs=nano.specs
 ###
 endif
 
@@ -106,6 +96,9 @@ ifneq ($(findstring libncrt,$(STDCLIB)),)
 LDLIBS += -lfileops_uart
 endif
 endif
+
+## Link with standard c++ library
+LDLIBS += -lstdc++
 
 ## Heap and stack size settings
 ## It will define symbols only used in linker script
