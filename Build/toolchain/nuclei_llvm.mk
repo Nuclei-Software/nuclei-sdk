@@ -99,7 +99,8 @@ COMMON_FLAGS +=
 endif
 
 ifneq ($(findstring newlib,$(STDCLIB)),)
-#LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek -u __on_exit_args
+#LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
+LDFLAGS += -u __on_exit_args
 endif
 # -nodefaultlibs to ignore the auto added -lc -lgloss in RISCV::Linker::ConstructJob of clang/lib/Driver/ToolChains/RISCVToolchain.cpp
 LDFLAGS += -fuse-ld=lld -nodefaultlibs
