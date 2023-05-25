@@ -56,6 +56,9 @@ SECTIONS
   {
     *(.text.unlikely .text.unlikely.*)
     *(.text.startup .text.startup.*)
+    . = ALIGN(8);
+    PROVIDE( __jvt_base$ = . );
+    *(.text.tbljal .text.tbljal.*)
     *(.text .text.*)
     *(.gnu.linkonce.t.*)
   } >ROM AT>ROM

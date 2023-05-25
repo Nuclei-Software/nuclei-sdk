@@ -59,6 +59,8 @@ SECTIONS
   {
     *(.text.unlikely .text.unlikely.*)
     *(.text.startup .text.startup.*)
+    . = ALIGN(8);
+    *(.text.tbljal .text.tbljal.*)
     *(.text .text.*)
     *(.gnu.linkonce.t.*)
   } >ROM AT>ROM
