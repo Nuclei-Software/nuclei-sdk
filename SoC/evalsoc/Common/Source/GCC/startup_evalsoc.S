@@ -47,6 +47,8 @@
     .weak eclic_inter_core_int_handler
     .globl vector_base
     .type vector_base, @object
+    .option push
+    .option norelax
 vector_base:
 #ifndef VECTOR_TABLE_REMAPPED
     j _start                                                /* 0: Reserved, Jump to _start when reset for vector table not remapped cases.*/
@@ -140,8 +142,10 @@ vector_base:
 
     DECLARE_INT_HANDLER     default_intexc_handler          /* 68: Interrupt 68 */
 
-    .section .text.init
+    .option pop
 
+
+    .section .text.init
     .globl _start
     .type _start, @function
 
@@ -167,11 +171,15 @@ _start:
     bne a0, a1, __amp_wait
 #endif
 
-    /* Initialize GP and TP */
+    /* Initialize GP and TP and jump table base when zcmt enabled */
     .option push
     .option norelax
     la gp, __global_pointer$
     la tp, __tls_base
+#if defined(__riscv_zcmt)
+    la t0, __jvt_base$
+    csrw CSR_JVT, t0
+#endif
     .option pop
 
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
