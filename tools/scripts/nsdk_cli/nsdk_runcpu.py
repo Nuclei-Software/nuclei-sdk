@@ -155,7 +155,7 @@ def gen_runner_configs(casedir, caseconfig, genloc):
         pathkeys = ocdcfg.replace("\\","/").split("/")
         defbldcfg = {"SOC": pathkeys[1], "BOARD": pathkeys[3]}
     except:
-        defbldcfg = {"SOC": "demosoc"}
+        defbldcfg = {"SOC": "evalsoc"}
     # get build_config from caseconfig
     glbldcfg = caseconfig.get("build_config", defbldcfg)
     runcfg = os.path.join(casedir, "%s.json" % (core))
