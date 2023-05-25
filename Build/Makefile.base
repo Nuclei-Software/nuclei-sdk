@@ -4,7 +4,7 @@ NUCLEI_SDK_BUILD = $(NUCLEI_SDK_ROOT)/Build
 # Makefile.global should be placed in $(NUCLEI_SDK_ROOT)/Build
 # Makefile.local should be placed together with application Makefile in your own application folder
 # Sample content for this Makefile.local or Makefile.global
-# SOC ?= demosoc
+# SOC ?= evalsoc
 # DOWNLOAD ?= ilm
 EXTRA_MKS := $(wildcard Makefile.local $(NUCLEI_SDK_BUILD)/Makefile.global)
 ifneq ("$(strip $(EXTRA_MKS))", "")

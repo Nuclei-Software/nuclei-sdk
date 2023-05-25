@@ -1,6 +1,6 @@
-ifeq ($(SOC),hbird)
-$(warning SOC hbird is renamed to demosoc since Nuclei SDK 0.3.1, please use SOC=demosoc now)
-override SOC := demosoc
+ifeq ($(SOC),demosoc)
+$(warning SOC demosoc is deprecated since Nuclei SDK 0.5.0, please use SOC=evalsoc now)
+override SOC := evalsoc
 endif
 
 # Check if the SOC is valid, if there is only one SoC in this folder, force it to be the only SoC
