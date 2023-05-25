@@ -10,7 +10,7 @@
     "copy_objects": true,
     "build_target": "clean all",
     "build_config": {
-        "SOC": "demosoc",
+        "SOC": "evalsoc",
         "ARCH_EXT": "",
         "DOWNLOAD": "ilm"
     },

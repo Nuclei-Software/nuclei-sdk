@@ -59,41 +59,41 @@ configs:
         fpga: ddr200t
         bitstream: n200_software_best_config_ddr200t.bit
         ncycm: n200
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: appcases.json
         hwcfg: n200.json
     n300:
         fpga: ddr200t
         bitstream: n300_software_best_config_ddr200t.bit
         ncycm: n300
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: appcases.json
         hwcfg: n300.json
     n600:
         fpga: ku060
         bitstream: n600_software_best_config_ku060.bit
         ncycm: n600
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: appcases.json
         hwcfg: n600.json
     ux600:
         fpga: ku060
         bitstream: ux600_software_best_config_ku060.bit
         ncycm: ux600
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: appcases.json
         hwcfg: ux600.json
     n900:
         fpga: vcu118
         bitstream: n900_software_best_config_vcu118.bit
         ncycm: n900
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: appcases.json
         hwcfg: n900.json
     ux900:
         fpga: vcu118
         bitstream: ux900_software_best_config_vcu118.bit
         ncycm: ux900
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: appcases.json
         hwcfg: ux900.json

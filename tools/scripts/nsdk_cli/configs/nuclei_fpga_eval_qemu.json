@@ -11,7 +11,7 @@
     },
     "build_target": "clean all",
     "build_config": {
-        "SOC": "demosoc",
+        "SOC": "evalsoc",
         "BOARD": "nuclei_fpga_eval",
         "CORE": "ux600",
         "DOWNLOAD": "ilm",

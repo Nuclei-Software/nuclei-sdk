@@ -1,6 +1,6 @@
 {
     "build_config": {
-        "SOC": "demosoc",
+        "SOC": "evalsoc",
         "DOWNLOAD": "ilm",
         "CPU_SERIES": "200"
     },

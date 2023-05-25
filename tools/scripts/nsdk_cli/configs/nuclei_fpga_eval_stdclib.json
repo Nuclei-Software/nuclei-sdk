@@ -10,7 +10,7 @@
     "copy_objects": true,
     "build_target": "clean all",
     "build_config": {
-        "SOC": "demosoc",
+        "SOC": "evalsoc",
         "BOARD": "nuclei_fpga_eval",
         "ARCH_EXT": "",
         "DOWNLOAD": "ilm"

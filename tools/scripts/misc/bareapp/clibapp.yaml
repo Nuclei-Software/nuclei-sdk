@@ -55,7 +55,7 @@ configs:
         # bitstream path related to this yaml's loc or abs path
         bitstream: n200_software_best_config_ddr200t.bit
         ncycm: n200b
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: bareapp.json
         hwcfg: n200_clib.json
     # cpu core name
@@ -63,7 +63,7 @@ configs:
         fpga: ddr200t
         bitstream: n300_software_best_config_ddr200t.bit
         ncycm: n300fdbp
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: bareapp.json
         hwcfg: n300_clib.json
     # cpu core name
@@ -71,7 +71,7 @@ configs:
         fpga: ku060
         bitstream: n600_software_best_config_ku060.bit
         ncycm: n600fdbp
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: bareapp.json
         hwcfg: n600_clib.json
     # cpu core name
@@ -79,7 +79,7 @@ configs:
         fpga: ku060
         bitstream: ux600_software_best_config_ku060.bit
         ncycm: ux600fdbp
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: bareapp.json
         hwcfg: ux600_clib.json
     # cpu core name
@@ -87,7 +87,7 @@ configs:
         fpga: vcu118
         bitstream: n900_software_best_config_vcu118.bit
         ncycm: n900fdbp
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: bareapp.json
         hwcfg: n900_clib.json
     # cpu core name
@@ -95,6 +95,6 @@ configs:
         fpga: vcu118
         bitstream: ux900_software_best_config_vcu118.bit
         ncycm: ux900fdbp
-        openocd_cfg: SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg
+        openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
         appcfg: bareapp.json
         hwcfg: ux900_clib.json
