@@ -823,7 +823,7 @@ def find_local_appconfig(appdir, localcfgs):
     else:
         return None
 
-def fix_demosoc_verilog_ncycm(verilog):
+def fix_evalsoc_verilog_ncycm(verilog):
     if os.path.isfile(verilog) == False:
         return ""
     vfct = ""

@@ -7,7 +7,7 @@
 SIMU_OPTS=${SIMU_OPTS-"SIMULATION=1 SIMU=xlspike"}
 RUNTARGET=${RUNTARGET-xlspike}
 DATALOC=${DATALOC:-dlm}
-SOC=${SOC:-demosoc}
+SOC=${SOC:-evalsoc}
 
 SCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
 SCRIPTDIR=$(readlink -f $SCRIPTDIR)

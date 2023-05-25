@@ -28,7 +28,7 @@ if __name__ == '__main__':
     parser.add_argument('--appcfg', required=True, help="Application JSON Configuration File")
     parser.add_argument('--hwcfg', help="Hardware Target JSON Configuration File, if specified, will overwrite configuration defined in appcfg")
     parser.add_argument('--logdir', required=True, help="logs directory where saved the report json files")
-    parser.add_argument('--socs', default="evalsoc,demosoc", help="SOC choices")
+    parser.add_argument('--socs', default="evalsoc", help="SOC choices")
     parser.add_argument('--downloads', default="ilm,flash,flashxip,ddr", help="DOWNLOAD choices")
     parser.add_argument('--stdclibs', default="newlib_small,newlib_full,libncrt_small,libncrt_balanced,libncrt_fast", help="STDCLIB choices")
     parser.add_argument('--run_target', default="qemu", help="Run target which program will run, such as hardware, qemu or xlspike")

@@ -400,7 +400,7 @@ if __name__ == '__main__':
     parser.add_argument('--ncycmloc', help="Where nuclei cycle model located in")
     parser.add_argument('--cfgloc', help="Where nsdk bench configurations located in")
     parser.add_argument('--sdk', help="Where SDK located in")
-    parser.add_argument('--ocdcfg', help="OpenOCD Configuration File location relative to SDK, such as SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg")
+    parser.add_argument('--ocdcfg', help="OpenOCD Configuration File location relative to SDK, such as SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg")
     parser.add_argument('--make_options', help="Extra make options passed to overwrite default build configuration passed via appcfg and hwcfg")
     parser.add_argument('--config', help="Configurations to be run, split via comma, such as n300,n600")
     parser.add_argument('--runon', default='qemu', choices=RUNNER_LIST, help="Where to run these application")

@@ -26,7 +26,7 @@ from nsdk_utils import *
 
 VALID_MAKEFILE_NAMES = ['Makefile', 'makefile', "GNUMakefile"]
 
-def is_nuclei_demosoc(soc):
+def is_nuclei_evalsoc(soc):
     if soc == "hbird" or soc == "demosoc" or soc == "evalsoc" or soc == "xlspike":
         return True
     else:
@@ -661,7 +661,7 @@ class nsdk_runner(nsdk_builder):
             if build_smp != "":
                 qemu_extraopt = "%s -smp %s" % (qemu_extraopt, build_smp)
             if qemu_machine is None:
-                if is_nuclei_demosoc(build_soc):
+                if is_nuclei_evalsoc(build_soc):
                     machine = "nuclei_n"
                 else:
                     if build_board == "gd32vf103v_rvstar":
@@ -730,7 +730,7 @@ class nsdk_runner(nsdk_builder):
             build_smp = build_info.get("SMP", "")
             if build_smp != "":
                 xlspike_extraopt = "%s -p%s" % (xlspike_extraopt, build_smp)
-            if not is_nuclei_demosoc(build_soc):
+            if not is_nuclei_evalsoc(build_soc):
                 xlspike_exe = None
                 print("SOC=%s BOARD=%s is not supported by xlspike" % (build_soc, build_board))
             timeout = hwconfig.get("timeout", 60)
@@ -786,7 +786,7 @@ class nsdk_runner(nsdk_builder):
                 ret = check_tool_exist(ncycm_exe) or os.path.isfile(ncycm_exe)
                 if ret:
                     if (verstr == "v1"):
-                        ncycm_verilog = fix_demosoc_verilog_ncycm(build_objects["verilog"])
+                        ncycm_verilog = fix_evalsoc_verilog_ncycm(build_objects["verilog"])
                         if ncycm_verilog == "":
                             command = ""
                         else:

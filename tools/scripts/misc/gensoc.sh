@@ -1,6 +1,6 @@
 #!/bin/env bash
-SOC=${1:-demosoc}
-NEWSOC=${2:-evalsoc}
+SOC=${1:-evalsoc}
+NEWSOC=${2:-ctsoc}
 
 SCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
 SCRIPTDIR=$(readlink -f $SCRIPTDIR)
