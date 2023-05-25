@@ -138,7 +138,7 @@ def gencfg_from_arch(cfgloc, core, cpuarch, maxnum):
 #    "fpga_serial": "xxxx",
 #    "ftdi_serial": "xxxx",
 #    "boardtype": "ddr200t",
-#    "ocdcfg": "SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg",
+#    "ocdcfg": "SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg",
 #    "cpucfg": "n300.json"
 # }
 
@@ -149,7 +149,7 @@ def gen_runner_configs(casedir, caseconfig, genloc):
         print("No core is specified, please check!")
         return False
     core = caseconfig["core"]
-    ocdcfg = caseconfig.get("ocdcfg", "SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg")
+    ocdcfg = caseconfig.get("ocdcfg", "SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg")
     defbldcfg = dict()
     try:
         pathkeys = ocdcfg.replace("\\","/").split("/")
