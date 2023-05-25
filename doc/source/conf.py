@@ -21,10 +21,10 @@ copyright = '2019-Present, Nuclei'
 author = 'Nuclei'
 
 # The short X.Y version
-version = '0.4.1'
+version = '0.5.0-dev'
 
 # The full version, including alpha/beta/rc tags
-release = '0.4.1'
+release = '0.5.0-dev'
 
 # -- General configuration ---------------------------------------------------
 

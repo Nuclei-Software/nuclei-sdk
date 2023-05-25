@@ -3,6 +3,22 @@
 Changelog
 =========
 
+V0.5.0-dev
+----------
+
+This is release version ``0.5.0-dev`` of Nuclei SDK.
+
+* Application
+
+* NMSIS
+
+* SOC
+
+* Build System
+
+* Tools
+
+
 V0.4.1
 ------
 
