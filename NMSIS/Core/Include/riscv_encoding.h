@@ -456,6 +456,7 @@
 #define CSR_VXRM 0xa
 #define CSR_VCSR 0xf
 #define CSR_SEED 0x15
+#define CSR_JVT 0x17
 #define CSR_CYCLE 0xc00
 #define CSR_TIME 0xc01
 #define CSR_INSTRET 0xc02
