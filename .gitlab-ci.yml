@@ -188,9 +188,9 @@ sdk_run_newlib_job_nuclei_fpga_eval:
         #- "2022.05"
   script:
     - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
-    # change ilm/dlm size from 64K to 128K for demosoc to be able to build with newlib full library
-    - sed -i "s/64K/128K/g" SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
-    - sed -i "s/64K/128K/g" SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_flash.ld
+    # change ilm/dlm size from 64K to 128K for evalsoc to be able to build with newlib full library
+    - sed -i "s/64K/128K/g" SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
+    - sed -i "s/64K/128K/g" SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_flash.ld
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
 
 sdk_run_libncrt_job_nuclei_fpga_eval:
@@ -291,7 +291,6 @@ sdk_run_sanity_check:
     RUNTARGET: qemu
     RANDTIMES: 4
   script:
-    - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
     - git diff
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
@@ -304,11 +303,9 @@ sdk_run_datalma_inilm:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
     HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_sanity.json
     RUNTARGET: qemu
-    SOCS: "evalsoc,demosoc"
+    SOCS: "evalsoc"
   script:
-    - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
-    - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", rom)/' SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ddr.ld
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", rom)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ddr.ld
     - git diff
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
