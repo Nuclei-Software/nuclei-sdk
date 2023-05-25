@@ -46,13 +46,8 @@
 #endif /* __RISCV_XLEN */
 
 /** \brief Type of Control and Status Register(CSR), depends on the XLEN defined in RISC-V */
-#if __RISCV_XLEN == 32
-  typedef uint32_t rv_csr_t;
-#elif __RISCV_XLEN == 64
-  typedef uint64_t rv_csr_t;
-#else
-  typedef uint32_t rv_csr_t;
-#endif
+typedef unsigned long rv_csr_t;
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_Registers */
 /**
  * \defgroup NMSIS_Core_Base_Registers     Base Register Define and Type Definitions
