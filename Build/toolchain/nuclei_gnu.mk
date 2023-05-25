@@ -55,17 +55,17 @@ ifneq ($(findstring newlib,$(STDCLIB)),)
 LDLIBS += -lstdc++
 ### Handle cases when STDCLIB variable has newlib in it
 ifeq ($(STDCLIB),newlib_full)
-COMMON_FLAGS += --specs=nosys.specs
+COMMON_FLAGS +=
 else ifeq ($(STDCLIB),newlib_fast)
-COMMON_FLAGS += --specs=nano.specs --specs=nosys.specs
+COMMON_FLAGS += --specs=nano.specs
 STDCLIB_LDFLAGS += -u _printf_float -u _scanf_float
 else ifeq ($(STDCLIB),newlib_small)
-COMMON_FLAGS += --specs=nano.specs --specs=nosys.specs
+COMMON_FLAGS += --specs=nano.specs
 STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
-COMMON_FLAGS += --specs=nano.specs --specs=nosys.specs
+COMMON_FLAGS += --specs=nano.specs
 else
-COMMON_FLAGS += --specs=nosys.specs
+COMMON_FLAGS +=
 endif
 ###
 else ifneq ($(findstring libncrt,$(STDCLIB)),)
@@ -85,12 +85,12 @@ else
 LDLIBS += -lstdc++
 ### To be back compatiable with NEWLIB and PFLOAT variable
 ifeq ($(NEWLIB),nano)
-STDCLIB_LDFLAGS = --specs=nano.specs --specs=nosys.specs
+STDCLIB_LDFLAGS = --specs=nano.specs
 ifeq ($(PFLOAT),1)
 STDCLIB_LDFLAGS += -u _printf_float
 endif
 else
-STDCLIB_LDFLAGS += --specs=nosys.specs
+STDCLIB_LDFLAGS +=
 endif
 ###
 endif
@@ -129,10 +129,10 @@ COMMON_FLAGS += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
 ## Append mtune options when RISCV_TUNE is defined
 ## It might be defined in SoC/<SOC>/build.mk, and can be overwritten by make
 ifneq ($(RISCV_TUNE),)
-#COMMON_FLAGS += -mtune=$(RISCV_TUNE)
+COMMON_FLAGS += -mtune=$(RISCV_TUNE)
 endif
 
 ifneq ($(findstring newlib,$(STDCLIB)),)
-LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
+#LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
 endif
 
