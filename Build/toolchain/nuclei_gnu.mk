@@ -54,17 +54,17 @@ endif
 ifneq ($(findstring newlib,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has newlib in it
 ifeq ($(STDCLIB),newlib_full)
-COMMON_FLAGS +=
+LDLIBS += -lc -lgcc
 else ifeq ($(STDCLIB),newlib_fast)
-COMMON_FLAGS += --specs=nano.specs
+LDLIBS += -lc_nano -lgcc
 STDCLIB_LDFLAGS += -u _printf_float -u _scanf_float
 else ifeq ($(STDCLIB),newlib_small)
-COMMON_FLAGS += --specs=nano.specs
+LDLIBS += -lc_nano -lgcc
 STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
-COMMON_FLAGS += --specs=nano.specs
+LDLIBS += -lc_nano -lgcc
 else
-COMMON_FLAGS += --specs=nano.specs
+LDLIBS += -lc_nano -lgcc
 endif
 ###
 else ifneq ($(findstring libncrt,$(STDCLIB)),)
@@ -81,7 +81,7 @@ else ifeq ($(STDCLIB),nospec)
 COMMON_FLAGS +=
 ###
 else
-COMMON_FLAGS = --specs=nano.specs
+LDLIBS += -lc_nano -lgcc
 ###
 endif
 
@@ -124,6 +124,8 @@ COMMON_FLAGS += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
 ifneq ($(RISCV_TUNE),)
 COMMON_FLAGS += -mtune=$(RISCV_TUNE)
 endif
+
+LDFLAGS += -nodefaultlibs
 
 ifneq ($(findstring newlib,$(STDCLIB)),)
 #LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
