@@ -125,7 +125,7 @@ ifneq ($(RISCV_TUNE),)
 COMMON_FLAGS += -mtune=$(RISCV_TUNE)
 endif
 
-LDFLAGS += -nodefaultlibs
+LDFLAGS += -nodefaultlibs -Wl,--no-warn-rwx-segments
 
 ifneq ($(findstring newlib,$(STDCLIB)),)
 #LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
