@@ -18,15 +18,15 @@
         "ux900-newlib-small": {"CORE": "ux900", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
         "ux900b-newlib-small": {"CORE": "ux900", "STDCLIB": "newlib_small", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
         "ux900p-newlib-small": {"CORE": "ux900", "STDCLIB": "newlib_small", "ARCH_EXT": "_xxldspn1x"},
-        "ux900bp-newlib-small": {"CORE": "ux900", "STDCLIB": "newlib_small", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"},
+        "ux900bp-newlib-small": {"CORE": "ux900", "STDCLIB": "newlib_small", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
         "ux900f-newlib-small": {"CORE": "ux900f", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
         "ux900fb-newlib-small": {"CORE": "ux900f", "STDCLIB": "newlib_small", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
         "ux900fp-newlib-small": {"CORE": "ux900f", "STDCLIB": "newlib_small", "ARCH_EXT": "_xxldspn1x"},
-        "ux900fbp-newlib-small": {"CORE": "ux900f", "STDCLIB": "newlib_small", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"},
+        "ux900fbp-newlib-small": {"CORE": "ux900f", "STDCLIB": "newlib_small", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
         "ux900fd-newlib-small": {"CORE": "ux900fd", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
         "ux900fdb-newlib-small": {"CORE": "ux900fd", "STDCLIB": "newlib_small", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
         "ux900fdp-newlib-small": {"CORE": "ux900fd", "STDCLIB": "newlib_small", "ARCH_EXT": "_xxldspn1x"},
-        "ux900fdbp-newlib-small": {"CORE": "ux900fd", "STDCLIB": "newlib_small", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"}
+        "ux900fdbp-newlib-small": {"CORE": "ux900fd", "STDCLIB": "newlib_small", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"}
     },
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": false},

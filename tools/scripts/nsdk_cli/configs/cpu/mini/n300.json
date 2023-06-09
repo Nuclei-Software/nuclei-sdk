@@ -4,8 +4,8 @@
     },
     "build_configs": {
         "rv32imacb": {"CORE":"n300", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
-        "rv32imacbp": {"CORE":"n300", "ARCH_EXT":"zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imacbp": {"CORE":"n300", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
         "rv32imafdcb": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
-        "rv32imafdcbp": {"CORE":"n300fd", "ARCH_EXT":"zba_zbb_zbc_zbs_xxldspn1x"}
+        "rv32imafdcbp": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"}
     }
 }

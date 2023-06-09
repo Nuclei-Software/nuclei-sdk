@@ -15,10 +15,10 @@
         "DOWNLOAD": "ilm"
     },
     "build_configs": {
-        "n600bp-newlib-small": {"CORE": "n600", "STDCLIB": "newlib_small", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"},
-        "n600bp-libncrt-small": {"CORE": "n600", "STDCLIB": "libncrt_small", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"},
-        "n600fdbp-newlib-small": {"CORE": "n600fd", "STDCLIB": "newlib_small", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"},
-        "n600fdbp-libncrt-small": {"CORE": "n600fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"}
+        "n600bp-newlib-small": {"CORE": "n600", "STDCLIB": "newlib_small", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
+        "n600bp-libncrt-small": {"CORE": "n600", "STDCLIB": "libncrt_small", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
+        "n600fdbp-newlib-small": {"CORE": "n600fd", "STDCLIB": "newlib_small", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
+        "n600fdbp-libncrt-small": {"CORE": "n600fd", "STDCLIB": "libncrt_small", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"}
     },
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": false},
