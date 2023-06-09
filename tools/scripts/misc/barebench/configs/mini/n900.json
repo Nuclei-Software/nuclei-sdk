@@ -5,7 +5,7 @@
         "CPU_SERIES": "900"
     },
     "build_configs": {
-        "rv32imacbp": {"CORE":"n900", "ARCH_EXT":"bp"},
-        "rv32imafdcbp": {"CORE":"n900fd", "ARCH_EXT":"bp"}
+        "rv32imacbp": {"CORE":"n900", "ARCH_EXT":"zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafdcbp": {"CORE":"n900fd", "ARCH_EXT":"zba_zbb_zbc_zbs_xxldspn1x"}
     }
 }

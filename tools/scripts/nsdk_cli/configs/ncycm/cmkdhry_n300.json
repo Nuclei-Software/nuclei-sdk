@@ -34,20 +34,20 @@
     ],
     "build_configs": {
         "n300-newlib_small": {"STDCLIB": "newlib_small"},
-        "n300b-newlib_small": {"STDCLIB": "newlib_small", "ARCH_EXT": "b"},
-        "n300p-newlib_small": {"STDCLIB": "newlib_small", "ARCH_EXT": "p"},
-        "n300bp-newlib_small": {"STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
+        "n300b-newlib_small": {"STDCLIB": "newlib_small", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n300p-newlib_small": {"STDCLIB": "newlib_small", "ARCH_EXT": "_xxldspn1x"},
+        "n300bp-newlib_small": {"STDCLIB": "newlib_small", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"},
         "n300-libncrt_small": {"STDCLIB": "libncrt_small"},
         "n300-libncrt_balanced": {"STDCLIB": "libncrt_balanced"},
         "n300-libncrt_fast": {"STDCLIB": "libncrt_fast"},
-        "n300b-libncrt_small": {"STDCLIB": "libncrt_small", "ARCH_EXT": "b"},
-        "n300b-libncrt_balanced": {"STDCLIB": "libncrt_balanced", "ARCH_EXT": "b"},
-        "n300b-libncrt_fast": {"STDCLIB": "libncrt_fast", "ARCH_EXT": "b"},
-        "n300p-libncrt_small": {"STDCLIB": "libncrt_small", "ARCH_EXT": "p"},
-        "n300p-libncrt_balanced": {"STDCLIB": "libncrt_balanced", "ARCH_EXT": "p"},
-        "n300p-libncrt_fast": {"STDCLIB": "libncrt_fast", "ARCH_EXT": "p"},
-        "n300bp-libncrt_small": {"STDCLIB": "libncrt_small", "ARCH_EXT": "bp"},
-        "n300bp-libncrt_balanced": {"STDCLIB": "libncrt_balanced", "ARCH_EXT": "bp"},
-        "n300bp-libncrt_fast": {"STDCLIB": "libncrt_fast", "ARCH_EXT": "bp"}
+        "n300b-libncrt_small": {"STDCLIB": "libncrt_small", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n300b-libncrt_balanced": {"STDCLIB": "libncrt_balanced", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n300b-libncrt_fast": {"STDCLIB": "libncrt_fast", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n300p-libncrt_small": {"STDCLIB": "libncrt_small", "ARCH_EXT": "_xxldspn1x"},
+        "n300p-libncrt_balanced": {"STDCLIB": "libncrt_balanced", "ARCH_EXT": "_xxldspn1x"},
+        "n300p-libncrt_fast": {"STDCLIB": "libncrt_fast", "ARCH_EXT": "_xxldspn1x"},
+        "n300bp-libncrt_small": {"STDCLIB": "libncrt_small", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"},
+        "n300bp-libncrt_balanced": {"STDCLIB": "libncrt_balanced", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"},
+        "n300bp-libncrt_fast": {"STDCLIB": "libncrt_fast", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"}
     }
 }

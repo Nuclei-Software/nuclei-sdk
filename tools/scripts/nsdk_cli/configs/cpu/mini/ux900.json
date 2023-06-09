@@ -3,9 +3,9 @@
         "CPU_SERIES": "900"
     },
     "build_configs": {
-        "rv64imacb": {"CORE":"nx900", "ARCH_EXT":"b"},
-        "rv64imacbp": {"CORE":"nx900", "ARCH_EXT":"bp"},
-        "rv64imafdcb": {"CORE":"nx900fd", "ARCH_EXT":"b"},
-        "rv64imafdcbp": {"CORE":"nx900fd", "ARCH_EXT":"bp"}
+        "rv64imacb": {"CORE":"nx900", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv64imacbp": {"CORE":"nx900", "ARCH_EXT":"zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv64imafdcb": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv64imafdcbp": {"CORE":"nx900fd", "ARCH_EXT":"zba_zbb_zbc_zbs_xxldspn1x"}
     }
 }

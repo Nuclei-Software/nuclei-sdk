@@ -4,15 +4,15 @@
     },
     "build_configs": {
         "rv32imac": {"CORE":"n900"},
-        "rv32imacb": {"CORE":"n900", "ARCH_EXT":"b"},
-        "rv32imacbp": {"CORE":"n900", "ARCH_EXT":"bp"},
+        "rv32imacb": {"CORE":"n900", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imacbp": {"CORE":"n900", "ARCH_EXT":"zba_zbb_zbc_zbs_xxldspn1x"},
         "rv32imafc": {"CORE":"n900f", "ARCH_EXT":""},
-        "rv32imafcb": {"CORE":"n900f", "ARCH_EXT":"b"},
-        "rv32imafcp": {"CORE":"n900f", "ARCH_EXT":"p"},
-        "rv32imafcbp": {"CORE":"n900f", "ARCH_EXT":"bp"},
+        "rv32imafcb": {"CORE":"n900f", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imafcp": {"CORE":"n900f", "ARCH_EXT":"_xxldspn1x"},
+        "rv32imafcbp": {"CORE":"n900f", "ARCH_EXT":"zba_zbb_zbc_zbs_xxldspn1x"},
         "rv32imafdc": {"CORE":"n900fd", "ARCH_EXT":""},
-        "rv32imafdcb": {"CORE":"n900fd", "ARCH_EXT":"b"},
-        "rv32imafdcp": {"CORE":"n900fd", "ARCH_EXT":"p"},
-        "rv32imafdcbp": {"CORE":"n900fd", "ARCH_EXT":"bp"}
+        "rv32imafdcb": {"CORE":"n900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imafdcp": {"CORE":"n900fd", "ARCH_EXT":"_xxldspn1x"},
+        "rv32imafdcbp": {"CORE":"n900fd", "ARCH_EXT":"zba_zbb_zbc_zbs_xxldspn1x"}
     }
 }

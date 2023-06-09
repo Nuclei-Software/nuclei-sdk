@@ -26,9 +26,9 @@
     "appconfig": {
         "application/baremetal/demo_dsp": {
             "build_configs" : {
-                "n305-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "p"},
-                "n307-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n307", "ARCH_EXT": "p"},
-                "n307fd-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "p"}
+                "n305-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_xxldspn1x"},
+                "n307-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n307", "ARCH_EXT": "_xxldspn1x"},
+                "n307fd-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_xxldspn1x"}
             },
             "checks": {
                 "PASS": ["all test are passed"],

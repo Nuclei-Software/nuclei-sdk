@@ -20,11 +20,11 @@
         "n201e-ilm": {"DOWNLOAD": "ilm", "CORE": "n201e", "ARCH_EXT": ""},
         "n205e-ilm": {"DOWNLOAD": "ilm", "CORE": "n205e", "ARCH_EXT": ""},
         "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": ""},
-        "n305b-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "b"},
-        "n305bp-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "bp"},
+        "n305b-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n305bp-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"},
         "n307fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": ""},
-        "n307fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "b"},
-        "n307fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "bp"}
+        "n307fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n307fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"}
     },
     "appconfig": {
         "application/baremetal/demo_dsp": {

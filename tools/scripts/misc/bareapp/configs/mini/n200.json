@@ -5,7 +5,7 @@
         "CPU_SERIES": "200"
     },
     "build_configs": {
-        "rv32imacb": {"CORE":"n203", "ARCH_EXT":"b"}
+        "rv32imacb": {"CORE":"n203", "ARCH_EXT":"_zba_zbb_zbc_zbs"}
     },
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": false},

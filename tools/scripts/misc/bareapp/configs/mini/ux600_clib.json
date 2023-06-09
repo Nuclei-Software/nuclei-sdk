@@ -15,8 +15,8 @@
         "DOWNLOAD": "ilm"
     },
     "build_configs": {
-        "ux600bp-newlib-small": {"CORE": "ux600", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"},
-        "ux600fdbp-newlib-small": {"CORE": "ux600fd", "STDCLIB": "newlib_small", "ARCH_EXT": "bp"}
+        "ux600bp-newlib-small": {"CORE": "ux600", "STDCLIB": "newlib_small", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"},
+        "ux600fdbp-newlib-small": {"CORE": "ux600fd", "STDCLIB": "newlib_small", "ARCH_EXT": "zba_zbb_zbc_zbs_xxldspn1x"}
     },
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": false},

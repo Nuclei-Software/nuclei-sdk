@@ -3,6 +3,6 @@
         "CPU_SERIES": "900"
     },
     "build_configs": {
-        "rv32imafdcb": {"CORE":"n900fd", "ARCH_EXT":"b"}
+        "rv32imafdcb": {"CORE":"n900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"}
     }
 }
