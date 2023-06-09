@@ -38,7 +38,7 @@ def fix_archext_in_json(jsonfile):
                 newext = "\"%s_zba_zbb_zbc_zbs\"" % (vext_name)
             elif '"bp"' in line:
                 oldext = '"bp"'
-                newext = "\"zba_zbb_zbc_zbs_xxldspn1x\""
+                newext = "\"_zba_zbb_zbc_zbs_xxldspn1x\""
             elif '"pv"' in line:
                 oldext = '"pv"'
                 newext = "\"%s_xxldspn1x\"" % (vext_name)
