@@ -656,20 +656,26 @@ class nsdk_runner(nsdk_builder):
             build_download = build_info["DOWNLOAD"]
             build_smp = build_info.get("SMP", "")
             build_arch_ext = build_config.get("ARCH_EXT", "")
+            build_semihost = False
+            if build_config.get("SEMIHOST", "") != "":
+                build_semihost = True
+
             if build_arch_ext == "":
                 build_arch_ext = build_info.get("ARCH_EXT", "")
             if build_smp != "":
                 qemu_extraopt = "%s -smp %s" % (qemu_extraopt, build_smp)
+            if build_semihost: # use qemu semihosting, if program build with semihost feature
+                qemu_extraopt = "%s -semihosting " % (qemu_extraopt)
             if qemu_machine is None:
                 if is_nuclei_evalsoc(build_soc):
-                    machine = "nuclei_n"
+                    machine = "nuclei_evalsoc"
                 else:
                     if build_board == "gd32vf103v_rvstar":
                         machine = "gd32vf103_rvstar"
                     elif build_board == "gd32vf103v_eval":
                         machine = "gd32vf103_eval"
                     else:
-                        machine = "nuclei_n"
+                        machine = "nuclei_evalsoc"
                 # machine combined with download
                 machine = machine + ",download=%s" %(build_download.lower())
             else:
@@ -726,7 +732,7 @@ class nsdk_runner(nsdk_builder):
             riscv_arch = build_info["RISCV_ARCH"]
             # replace e with i for xlspike
             riscv_arch = riscv_arch.replace("e", "i")
-            #build_arch_ext = build_info.get("ARCH_EXT", "")
+            build_arch_ext = build_info.get("ARCH_EXT", "")
             build_smp = build_info.get("SMP", "")
             if build_smp != "":
                 xlspike_extraopt = "%s -p%s" % (xlspike_extraopt, build_smp)
@@ -743,7 +749,7 @@ class nsdk_runner(nsdk_builder):
                 verchk = "RISC-V ISA Simulator"
                 ret, verstr = check_tool_version(vercmd, verchk)
                 if ret:
-                    command = "%s %s --isa %s %s" % (xlspike_exe, xlspike_extraopt, riscv_arch, build_objects["elf"])
+                    command = "%s %s --isa %s%s %s" % (xlspike_exe, xlspike_extraopt, riscv_arch, build_arch_ext, build_objects["elf"])
                     print("Run command: %s" %(command))
                     runner = {"cmd": command, "version": verstr}
                     cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
