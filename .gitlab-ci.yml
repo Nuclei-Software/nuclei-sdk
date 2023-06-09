@@ -99,7 +99,8 @@ deploy_website:
   stage: build
   before_script:
     - apt update
-    - apt install -y python3 make python3-pip
+    # install libncursesw5 for ubuntu 20.04 and later for libtinfo.so.5 missing
+    - apt install -y python3 make python3-pip libncursesw5
     - pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
     - python3 -m pip install --upgrade pip
     - pip3 install -r tools/scripts/requirements.txt
