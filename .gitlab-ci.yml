@@ -213,6 +213,8 @@ sdk_run_libncrt_job_nuclei_fpga_eval:
 sdk_run_test_job_nuclei_fpga_eval:
   <<: *build_job_template_default
   timeout: 4h
+  # TODO: qemu 7.2 not work for this jobs, disable it for now
+  when: manual
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/test.json
     RUNTARGET: qemu
