@@ -9,7 +9,7 @@ workflow:
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /draft|wip|stash/i
       when: never
-    - if: $CI_COMMIT_BRANCH =~ /master|develop/
+    - if: $CI_COMMIT_BRANCH =~ /master|develop|feature/
     - if: $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_TAG
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /master|develop/ && $CI_PIPELINE_SOURCE == "merge_request_event"
 
