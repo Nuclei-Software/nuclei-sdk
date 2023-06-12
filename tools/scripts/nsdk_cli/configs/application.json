@@ -22,7 +22,6 @@
         "application"
     ],
     "appdirs_ignore": [
-        "application/baremetal/lowpower",
         "application/baremetal/smphello",
         "application/baremetal/demo_cidu",
         "application/baremetal/dsp_examples",
