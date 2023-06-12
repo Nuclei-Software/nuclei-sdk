@@ -72,15 +72,15 @@ SECTIONS
     *(.rodata .rodata.*)
     *(.gnu.linkonce.r.*)
     /* below sections are used for rt-thread */
-    . = ALIGN(4);
+    . = ALIGN(8);
     __rt_init_start = .;
     KEEP(*(SORT(.rti_fn*)))
     __rt_init_end = .;
-    . = ALIGN(4);
+    . = ALIGN(8);
     __fsymtab_start = .;
     KEEP(*(FSymTab))
     __fsymtab_end = .;
-    . = ALIGN(4);
+    . = ALIGN(8);
     __vsymtab_start = .;
     KEEP(*(VSymTab))
     __vsymtab_end = .;
@@ -88,11 +88,13 @@ SECTIONS
 
   .fini           :
   {
+    . = ALIGN(8);
     KEEP (*(SORT_NONE(.fini)))
   } >ROM AT>ROM
 
   .preinit_array  :
   {
+    . = ALIGN(8);
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array))
     PROVIDE_HIDDEN (__preinit_array_end = .);
@@ -100,6 +102,7 @@ SECTIONS
 
   .init_array     :
   {
+    . = ALIGN(8);
     PROVIDE_HIDDEN (__init_array_start = .);
     KEEP (*(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*)))
     KEEP (*(.init_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .ctors))
@@ -108,6 +111,7 @@ SECTIONS
 
   .fini_array     :
   {
+    . = ALIGN(8);
     PROVIDE_HIDDEN (__fini_array_start = .);
     KEEP (*(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*)))
     KEEP (*(.fini_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .dtors))
@@ -126,6 +130,7 @@ SECTIONS
      * doesn't matter which directory crtbegin.o
      * is in.
      */
+    . = ALIGN(8);
     KEEP (*crtbegin.o(.ctors))
     KEEP (*crtbegin?.o(.ctors))
     /* We don't want to include the .ctor section from
@@ -140,6 +145,7 @@ SECTIONS
 
   .dtors          :
   {
+    . = ALIGN(8);
     KEEP (*crtbegin.o(.dtors))
     KEEP (*crtbegin?.o(.dtors))
     KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .dtors))
