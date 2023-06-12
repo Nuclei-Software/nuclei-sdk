@@ -642,18 +642,22 @@ def get_elfsize(elf):
     sizeinfo = {"text": -1, "data": -1, "bss": -1, "total": -1}
     if os.path.isfile(elf) == False:
         return sizeinfo
-    sizecmd = "riscv-nuclei-elf-size %s" % (elf)
-    sizelog = tempfile.mktemp()
-    ret, _ = run_command(sizecmd, show_output=False, logfile=sizelog)
-    if ret == COMMAND_RUNOK:
-        with open(sizelog, "r", errors='ignore') as sf:
-            lines = sf.readlines()
-            datas = lines[-1].strip().split()
-            sizeinfo["text"] = int(datas[0])
-            sizeinfo["data"] = int(datas[1])
-            sizeinfo["bss"] = int(datas[2])
-            sizeinfo["total"] = int(datas[3])
-    os.remove(sizelog)
+    for sizetool in [ "riscv-nuclei-elf-size", "riscv64-unknown-elf-size", "size" ]:
+        sizecmd = "%s %s" % (sizetool, elf)
+        sizelog = tempfile.mktemp()
+        ret, _ = run_command(sizecmd, show_output=False, logfile=sizelog)
+        if ret == COMMAND_RUNOK:
+            with open(sizelog, "r", errors='ignore') as sf:
+                lines = sf.readlines()
+                datas = lines[-1].strip().split()
+                sizeinfo["text"] = int(datas[0])
+                sizeinfo["data"] = int(datas[1])
+                sizeinfo["bss"] = int(datas[2])
+                sizeinfo["total"] = int(datas[3])
+            os.remove(sizelog)
+            break
+        else:
+            os.remove(sizelog)
     return sizeinfo
 
 def merge_config_with_makeopts(config, make_options):
