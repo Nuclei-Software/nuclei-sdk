@@ -106,6 +106,7 @@ deploy_website:
     - pip3 install -r tools/scripts/requirements.txt
     - which riscv64-unknown-elf-gcc && riscv64-unknown-elf-gcc --version
     - which riscv64-unknown-elf-clang && riscv64-unknown-elf-clang --version
+    - which qemu-system-riscv32 && qemu-system-riscv32 --version
     - which make && make --version
     - which python3 && python3 --version
   artifacts:
@@ -174,6 +175,18 @@ sdk_run_newlib_nano_job_nuclei_fpga_eval:
   script:
     - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
+
+sdk_run_newlib_nano_semihost_job_nuclei_fpga_eval:
+  <<: *build_job_template_default
+  timeout: 5h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
+    RUNTARGET: qemu
+    SEMIHOST: "1"
+  script:
+    - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET  --make_options "SEMIHOST=$SEMIHOST"
 
 sdk_run_newlib_job_nuclei_fpga_eval:
   <<: *build_job_template_default
