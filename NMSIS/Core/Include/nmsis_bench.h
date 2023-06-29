@@ -80,21 +80,43 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #ifndef DISABLE_NMSIS_BENCH
 
 /** Declare benchmark required variables, need to be placed above all BENCH_xxx macros in each c source code if BENCH_xxx used */
-#define BENCH_DECLARE_VAR()     static volatile uint64_t _bc_sttcyc, _bc_endcyc, _bc_usecyc, _bc_ercd;
+#define BENCH_DECLARE_VAR()     static volatile uint64_t _bc_sttcyc, _bc_endcyc, _bc_usecyc, _bc_sumcyc, _bc_lpcnt, _bc_ercd;
 
 /** Initialize benchmark environment, need to called in before other BENCH_xxx macros are called */
 #define BENCH_INIT()            printf("Benchmark initialized\n"); \
                                 __prepare_bench_env(); \
-                                _bc_ercd = 0;
+                                _bc_ercd = 0; _bc_sumcyc = 0;
 
-/** Start to do benchmark for proc, and record start cycle */
+/** Reset benchmark sum cycle and use cycle for proc */
+#define BENCH_RESET(proc)       _bc_sumcyc = 0; _bc_usecyc = 0; _bc_lpcnt = 0; _bc_ercd = 0;
+
+/** Start to do benchmark for proc, and record start cycle, and reset error code */
 #define BENCH_START(proc)       _bc_ercd = 0; \
                                 _bc_sttcyc = READ_CYCLE();
 
-/** Mark end of benchmark for proc, and calc used cycle, and print it */
-#define BENCH_END(proc)         _bc_endcyc = READ_CYCLE(); \
+/** Sample a benchmark for proc, and record this start -> sample cost cycle, and accumulate it to sum cycle */
+#define BENCH_SAMPLE(proc)      _bc_endcyc = READ_CYCLE(); \
                                 _bc_usecyc = _bc_endcyc - _bc_sttcyc; \
-                                printf("CSV, %s, %lu\n", #proc, _bc_usecyc);
+                                _bc_sumcyc += _bc_usecyc; _bc_lpcnt += 1;
+
+/** Mark end of benchmark for proc, and calc used cycle, and print it */
+#define BENCH_END(proc)         BENCH_SAMPLE(proc); \
+                                printf("CSV, %s, %lu\n", #proc, (uint32_t)_bc_usecyc);
+
+/** Mark stop of benchmark, start -> sample -> sample -> stop, and print the sum cycle of a proc */
+#define BENCH_STOP(proc)        printf("CSV, %s, %lu\n", #proc, (uint32_t)_bc_sumcyc);
+
+/** Show statistics of benchmark, format: STAT, proc, loopcnt, sumcyc */
+#define BENCH_STAT(proc)        printf("STAT, %s, %lu, %lu\n", #proc, (uint32_t)_bc_lpcnt, (uint32_t)_bc_sumcyc);
+
+/** Get benchmark use cycle */
+#define BENCH_GET_USECYC()      (_bc_usecyc)
+
+/** Get benchmark sum cycle */
+#define BENCH_GET_SUMCYC()      (_bc_sumcyc)
+
+/** Get benchmark loop count */
+#define BENCH_GET_LPCNT()       (_bc_lpcnt)
 
 /** Mark benchmark for proc is errored */
 #define BENCH_ERROR(proc)       _bc_ercd = 1;
@@ -105,10 +127,17 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
                                     printf("SUCCESS, %s\n", #proc); \
                                 }
 #else
-#define BENCH_DECLARE_VAR()     static volatile uint64_t _bc_ercd;
+#define BENCH_DECLARE_VAR()     static volatile uint64_t _bc_ercd, _bc_lpcnt;
 #define BENCH_INIT()            _bc_ercd = 0; __prepare_bench_env();
+#define BENCH_RESET(proc)
 #define BENCH_START(proc)       _bc_ercd = 0;
+#define BENCH_SAMPLE(proc)      _bc_lpcnt += 1;
 #define BENCH_END(proc)
+#define BENCH_STOP(proc)
+#define BENCH_STAT(proc)
+#define BENCH_GET_USECYC()      (0)
+#define BENCH_GET_SUMCYC()      (0)
+#define BENCH_GET_LPCNT()       (_bc_lpcnt)
 #define BENCH_ERROR(proc)       _bc_ercd = 1;
 #define BENCH_STATUS(proc)      if (_bc_ercd) { \
                                     printf("ERROR, %s\n", #proc); \
@@ -176,7 +205,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #define UEVENT_EN                                                                  0x01
 
 /** Declare high performance monitor counter idx benchmark required variables, need to be placed above all HPM_xxx macros in each c source code if HPM_xxx used */
-#define HPM_DECLARE_VAR(idx)    static volatile uint64_t __hpm_sttcyc##idx, __hpm_endcyc##idx, __hpm_usecyc##idx, __hpm_val##idx;
+#define HPM_DECLARE_VAR(idx)    static volatile uint64_t __hpm_sttcyc##idx, __hpm_endcyc##idx, __hpm_usecyc##idx, __hpm_sumcyc##idx, __hpm_lpcnt##idx, __hpm_val##idx;
 
 #define HPM_SEL_ENABLE(ena)         (ena << 28)
 #define HPM_SEL_EVENT(sel, idx)     ((sel) | (idx << 4))
@@ -188,6 +217,9 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #define HPM_INIT()              printf("High performance monitor initialized\n"); \
                                 __prepare_bench_env();
 
+/** Reset high performance benchmark for proc using counter which index is idx */
+#define HPM_RESET(idx, proc, event)                  __hpm_sumcyc##idx = 0; __hpm_lpcnt##idx = 0;
+
 /** Start to do high performance benchmark for proc, and record start hpm counter */
 #define HPM_START(idx, proc, event)                  \
                                 __hpm_val##idx = (event);                                   \
@@ -195,18 +227,48 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
                                 __set_hpm_counter(idx, 0);                                  \
                                 __hpm_sttcyc##idx = __get_hpm_counter(idx);
 
-/** Mark end of high performance benchmark for proc, and calc used hpm counter value */
-#define HPM_END(idx, proc, event)                    \
+/** Do high performance benchmark sample for proc, and sum it into sum counter */
+#define HPM_SAMPLE(idx, proc, event)                 \
                                 __hpm_endcyc##idx = __get_hpm_counter(idx);                 \
                                 __hpm_usecyc##idx = __hpm_endcyc##idx - __hpm_sttcyc##idx;  \
-                                printf("HPM%d:0x%x, %s, %lu\n", idx, event, #proc, __hpm_usecyc##idx);
+                                __hpm_sumcyc##idx += __hpm_usecyc##idx;                     \
+                                __hpm_lpcnt##idx += 1;
+
+/** Mark end of high performance benchmark for proc, and calc used hpm counter value */
+#define HPM_END(idx, proc, event)                    \
+                                HPM_SAMPLE(idx, proc, event);                               \
+                                printf("HPM%d:0x%x, %s, %lu\n", idx, event, #proc, (uint32_t)__hpm_usecyc##idx);
+
+/** Mark stop of hpm benchmark, start -> sample -> sample -> stop, and print the sum cycle of a proc */
+#define HPM_STOP(idx, proc, event)                   \
+                                printf("HPM%d:0x%x, %s, %lu\n", idx, event, #proc, (uint32_t)__hpm_sumcyc##idx);
+
+/** Show statistics of hpm benchmark, format: STATHPM#idx:event, proc, loopcnt, sumcyc */
+#define HPM_STAT(idx, proc, event)                   \
+                                printf("STATHPM%d:0x%x, %s, %lu, %lu\n", idx, event, #proc, (uint32_t)__hpm_lpcnt##idx, (uint32_t)__hpm_sumcyc##idx);
+
+/** Get hpm benchmark use cycle for counter idx */
+#define HPM_GET_USECYC(idx)             (__hpm_usecyc##idx)
+
+/** Get hpm benchmark sum cycle for counter idx */
+#define HPM_GET_SUMCYC(idx)             (__hpm_sumcyc##idx)
+
+/** Get hpm benchmark loop count for counter idx */
+#define HPM_GET_LPCNT(idx)              (__hpm_lpcnt##idx)
 
 #else
 #define HPM_DECLARE_VAR(idx)
 #define HPM_EVENT(sel, idx, ena)
 #define HPM_INIT()
+#define HPM_RESET(idx, proc, event)
 #define HPM_START(idx, proc, event)
+#define HPM_SAMPLE(idx, proc, event)
 #define HPM_END(idx, proc, event)
+#define HPM_STOP(idx, proc, event)
+#define HPM_STAT(idx, proc, event)
+#define HPM_GET_USECYC(idx)        (0)
+#define HPM_GET_SUMCYC(idx)        (0)
+#define HPM_GET_LPCNT(idx)         (1)
 #endif
 
 // NMSIS Helpers
