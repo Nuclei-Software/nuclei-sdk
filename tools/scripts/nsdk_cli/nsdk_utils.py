@@ -1118,8 +1118,18 @@ def gen_runcfg(cpucfg, runcfg, buildconfig=dict()):
         finalruncfg["build_configs"] = bcfgs
     return finalruncfg
 
-def gen_coreruncfg(core, runcfg, choice="mini", buildconfig=dict()):
-    cpucfg = os.path.join(GL_CPUCFGs, choice, "%s.json" % (core))
+def gen_coreruncfg(core, runcfg, choice="mini", buildconfig=dict(), casedir=None):
+    cpucfgsloc = os.path.join(GL_CPUCFGs, choice)
+    if casedir is not None:
+        tmp = os.path.join(casedir, choice)
+        if os.path.isdir(tmp) == True:
+            cpucfgsloc = os.path.realpath(tmp)
+    print("Use cpu configs in location %s directory" % (cpucfgsloc))
+    cpucfg = os.path.join(cpucfgsloc, "%s.json" % (core))
+    return gen_runcfg(cpucfg, runcfg, buildconfig)
+
+def gen_coreruncfg_custom(core, runcfg, customcfgdir, buildconfig=dict()):
+    cpucfg = os.path.join(customcfgdir, "%s.json" % (core))
     return gen_runcfg(cpucfg, runcfg, buildconfig)
 
 def gen_runyaml(core, locs, fpga_serial, ftdi_serial, cycm, fpgabit, boardtype, ocdcfg, appcfg, hwcfg):

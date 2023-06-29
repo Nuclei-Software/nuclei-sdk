@@ -181,7 +181,8 @@ def gen_runner_configs(casedir, caseconfig, genloc):
         cpucfgpath = gencfg_from_arch(genloc, core, cpuarch, maxnum)
         runcfgdict = gen_runcfg(cpucfgpath, runcfg, glbldcfg)
     else:
-        runcfgdict = gen_coreruncfg(core, runcfg, choice, glbldcfg)
+        # if not cpuarch or cpucfg file specified, then select cpu config via choice defined path
+        runcfgdict = gen_coreruncfg(core, runcfg, choice, glbldcfg, casedir)
 
     caseconfig["gencfgtimestamp"] = str(datetime.datetime.now())
     # save casecfg.json/app.json/hw.json
