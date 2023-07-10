@@ -5,9 +5,9 @@
 #define mtimer_irq_handler     eclic_mtip_handler
 #define mtimer_sw_irq_handler  eclic_msip_handler
 
-static uint32_t int0_cnt = 0;    /* msip timer interrupt test counter */
-static uint32_t int1_cnt = 0;    /* mtip timer interrupt test counter */
-unsigned int msip_trig_flag = 1; /* sw trigger mtimer sw interrupt flag */
+static volatile uint32_t int0_cnt = 0;    /* mtip timer interrupt test counter */
+static volatile uint32_t int1_cnt = 0;    /* msip timer interrupt test counter */
+volatile unsigned int msip_trig_flag = 1; /* sw trigger mtimer sw interrupt flag */
 
 void wait_mseconds(size_t n)
 {
