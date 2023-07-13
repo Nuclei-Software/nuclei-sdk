@@ -143,6 +143,12 @@
                 "PASS": [", 0 failed"],
                 "FAIL": ["[FAIL]", "MEPC"]
             }
+        },
+        "application/baremetal/cpuinfo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["End of Nuclei CPU INFO"]
+            }
         }
     }
 }
