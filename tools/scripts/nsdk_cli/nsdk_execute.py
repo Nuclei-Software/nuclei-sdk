@@ -293,7 +293,7 @@ if __name__ == '__main__':
         save_execute_csv(result, csvfile)
         print("Generate report csv file to %s" % (csvfile))
     # Exit with ret value
-    if ret:
+    if ret && cmdsts:
         sys.exit(0)
     else:
         sys.exit(1)
