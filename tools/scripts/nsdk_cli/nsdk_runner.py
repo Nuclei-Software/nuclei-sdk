@@ -317,7 +317,7 @@ class nsdk_runner(object):
         locret = check_expected(result, subappcfg, need2run)
         print("Application build as expected: %s" % (locret))
         # if build or run apps failed, it also should fail unless the locret status
-        if locret == False || cmdsts == False:
+        if locret == False or cmdsts == False:
             ret = False
         # generate STATUS.txt file in log directory
         gen_STATUS(sublogdir, ret)
