@@ -63,4 +63,8 @@ COMMON_FLAGS += -DRUNMODE_DC_EN=$(DC_EN)
 COMMON_FLAGS += -DRUNMODE_CCM_EN=$(CCM_EN)
 else # RUNMODE is not defined
 # please don't define RUNMODE_CONTROL
+CCM_EN ?=
+ifneq ($(CCM_EN),)
+COMMON_FLAGS += -DRUNMODE_CCM_EN=$(CCM_EN)
+endif
 endif
