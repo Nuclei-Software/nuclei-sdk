@@ -770,10 +770,16 @@ void _premain_init(void)
     // No need to use in your code
 #ifdef RUNMODE_CONTROL
 #if defined(RUNMODE_ILM_EN) && RUNMODE_ILM_EN == 0
-    __RV_CSR_CLEAR(CSR_MILM_CTL, MILM_CTL_ILM_EN);
+    // Only disable ilm when it is present
+    if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_ILM) {
+        __RV_CSR_CLEAR(CSR_MILM_CTL, MILM_CTL_ILM_EN);
+    }
 #endif
 #if defined(RUNMODE_DLM_EN) && RUNMODE_DLM_EN == 0
-    __RV_CSR_CLEAR(CSR_MDLM_CTL, MDLM_CTL_DLM_EN);
+    // Only disable dlm when it is present
+    if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_DLM) {
+        __RV_CSR_CLEAR(CSR_MDLM_CTL, MDLM_CTL_DLM_EN);
+    }
 #endif
 #endif
 
