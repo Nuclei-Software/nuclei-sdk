@@ -272,7 +272,6 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 #ifndef RUNMODE_CONTROL
 #define __ICACHE_PRESENT          1                     /*!< Set to 1 if I-Cache is present */
 #define __DCACHE_PRESENT          1                     /*!< Set to 1 if D-Cache is present */
-#define __CCM_PRESENT             0                     /*!< Set to 1 if Cache Control and Mantainence Unit is present */
 #else // RUNMODE_CONTROL is defined in SoC/evalsoc/runmode.mk, for internal usage not intend for widely usage
 #ifdef RUNMODE_IC_EN
 #define __ICACHE_PRESENT          RUNMODE_IC_EN         /*!< Set to 1 if I-Cache is present */
@@ -284,11 +283,12 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 #else
 #define __DCACHE_PRESENT          0                     /*!< Set to 1 if D-Cache is present */
 #endif
+#endif
+
 #ifdef RUNMODE_CCM_EN
-#define __CCM_PRESENT             RUNMODE_CCM_EN        /*!< Set to 1 if Cache Control and Mantainence Unit is present */
+#define __CCM_PRESENT             RUNMODE_CCM_EN        /*!< Controlled by macro RUNMODE_CCM_EN */
 #else
 #define __CCM_PRESENT             0                     /*!< Set to 1 if Cache Control and Mantainence Unit is present */
-#endif
 #endif
 
 /* TEE feature depends on PMP */
