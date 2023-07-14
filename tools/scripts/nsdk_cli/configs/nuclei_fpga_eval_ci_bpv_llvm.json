@@ -1,0 +1,79 @@
+{
+    "run_config": {
+        "target" : "qemu",
+        "xlspike" : {
+            "timeout": 240
+        },
+        "qemu" : {
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "build_target": "clean all",
+    "build_config": {
+        "TOOLCHAIN": "nuclei_llvm",
+        "SOC": "evalsoc",
+        "BOARD": "nuclei_fpga_eval"
+    },
+    "build_configs": {
+        "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": ""},
+        "n305b-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n307fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": ""},
+        "n307fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "ux600-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": ""},
+        "ux600b-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "ux600fd-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": ""},
+        "ux600fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"}
+    },
+    "appconfig": {
+        "application/baremetal/demo_dsp": {
+            "build_configs" : {
+                "n600fdv-ilm": {"DOWNLOAD": "ilm", "CORE": "n600fd", "ARCH_EXT": "_zve32f"},
+                "n600fdbv-ilm": {"DOWNLOAD": "ilm", "CORE": "n600fd", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs"},
+                "n600fv-ilm": {"DOWNLOAD": "ilm", "CORE": "n600f", "ARCH_EXT": "_zve32f"},
+                "n600fbv-ilm": {"DOWNLOAD": "ilm", "CORE": "n600f", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs"},
+                "nx600fdv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600fd", "ARCH_EXT": "v"},
+                "nx600fdbv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs"},
+                "nx600fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600f", "ARCH_EXT": "v"},
+                "nx600fbv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600f", "ARCH_EXT": "v_zba_zbb_zbc_zbs"}
+            },
+            "checks": {
+                "PASS": ["all test are passed"],
+                "FAIL": ["test error apprears", "MEPC"]
+            }
+        },
+        "application/rtthread/msh": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["msh >", "Hello RT-Thread!"]
+            }
+        },
+        "application/baremetal/benchmark/dhrystone": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["1000000/(User_Cycle/Number_Of_Runs)", "Please increase number"]
+            }
+        }
+    },
+    "expecteds": {
+        "application/baremetal/benchmark/whetstone" : {
+            "n201-ilm": { "build": true, "run": false },
+            "n201e-ilm" : {"build": true, "run": false}
+        },
+        "application" : {
+            "n201e-ilm" : {"build": true, "run": false}
+        },
+        "test" : {
+            "n201e-ilm" : {"build": true, "run": false}
+        }
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": true},
+        "application/rtthread/msh" : {"build": true, "run": false},
+        "application/baremetal/demo_spmp": {"build": true, "run": true},
+        "application/baremetal/demo_smode_eclic": {"build": true, "run": true},
+        "application/baremetal/demo_cidu": {"build": true, "run": false},
+        "application/baremetal/demo_cache": {"build": true, "run": false},
+        "test/core": {"build": true, "run": true}
+    }
+}
