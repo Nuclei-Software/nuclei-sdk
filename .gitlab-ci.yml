@@ -176,6 +176,21 @@ sdk_run_newlib_nano_job_nuclei_fpga_eval:
     - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
 
+sdk_run_llvm_newlib_nano_job_nuclei_fpga_eval:
+  <<: *build_job_template_default
+  timeout: 5h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    RUNTARGET: qemu
+  parallel:
+    matrix:
+      - HWCFG:
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_llvm.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv_llvm.json
+  script:
+    - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
+
 # Disable semihost testing in qemu
 # can't capture output from ether stdout or stderr
 #sdk_run_newlib_nano_semihost_job_nuclei_fpga_eval:
