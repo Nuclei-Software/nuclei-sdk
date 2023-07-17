@@ -327,10 +327,13 @@ _start_premain:
      */
     call SystemInit
 
-    /* Call global constructors */
-    la a0, __libc_fini_array
-    call atexit
-    /* Call C/C++ constructor start up code */
+    /*
+     * Call C/C++ constructor start up code,
+     * __libc_fini is defined in linker script,
+     * so register_fini function will be called
+     * and will run atexit (__libc_fini_array)
+     * to do previous call atexit function
+     */
     call __libc_init_array
 
 __skip_init:
