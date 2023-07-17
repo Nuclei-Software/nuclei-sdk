@@ -186,7 +186,8 @@ _start:
     /* Set correct sp for each cpu
      * each stack size is __STACK_SIZE
      * defined in linker script */
-    la t0, __STACK_SIZE
+    lui t0, %hi(__STACK_SIZE)
+    addi t0, t0, %lo(__STACK_SIZE)
     la sp, _sp
     csrr a0, CSR_MHARTID
     andi a0, a0, 0xFF
