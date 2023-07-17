@@ -19,5 +19,10 @@ DOWNLOAD ?= ddr
 CORE ?= ux900
 # SMP CORE Number Settings
 SMP ?= 2
+CIDU ?= 0
+
+ifneq ($(CIDU),0)
+COMMON_FLAGS += -D__CIDU_PRESENT=1
+endif
 
 include $(NUCLEI_SDK_ROOT)/Build/Makefile.base
