@@ -23,6 +23,7 @@
     ],
     "appdirs_ignore": [
         "application/baremetal/smphello",
+        "application/baremetal/demo_cidu",
         "application/baremetal/dsp_examples",
         "application/baremetal/Internal"
     ],
@@ -90,7 +91,7 @@
         "application/baremetal/demo_cidu": {
             "build_config" : {},
             "checks": {
-                "PASS": ["[ERROR]__CIDU_PRESENT must be defined as 1 in <Device>.h!"]
+                "PASS": ["[ERROR]__CIDU_PRESENT must be defined as 1 in <Device>.h!", "Core 1 has received interrupt from core 0"]
             }
         },
         "application/baremetal/demo_pmp": {
