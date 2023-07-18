@@ -127,6 +127,10 @@ int main(void)
 {
     int ret = 0;
     unsigned long hartid = __get_hart_id();
+    if ((__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_SMP) == 0) {
+        printf("[WARN] SMP & CIDU not present! Exit now!\n");
+        return 0;
+    }
 #if defined(__CIDU_PRESENT) && (__CIDU_PRESENT == 1)
     if (hartid == BOOT_HARTID) { // boot hart
         /* CIDU_BroadcastExtInterrupt(IRQn_MAP_TO_EXT_ID(UART0_IRQn), CIDU_RECEIVE_INTERRUPT_EN(0)
