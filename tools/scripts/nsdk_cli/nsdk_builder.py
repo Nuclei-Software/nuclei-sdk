@@ -901,8 +901,8 @@ class nsdk_runner(nsdk_builder):
             appcmdsts, appsts = self.build_app_with_config(appdir, appconfig, show_output, applogfile)
             build_status[appdir] = appsts
             if appcmdsts == False:
-                cmdsts = appcmdsts
                 if stoponfail == True:
+                    cmdsts = appcmdsts
                     print("Stop build apps with config due to fail on application %s" %(appdir))
                     return cmdsts, build_status
         return cmdsts, build_status
@@ -926,8 +926,8 @@ class nsdk_runner(nsdk_builder):
                 appcmdsts, appsts = self.build_app_with_config(appdir, appconfig, show_output, applogfile)
                 build_status[appdir][cfgname] = appsts
                 if appcmdsts == False:
-                    cmdsts = appcmdsts
                     if stoponfail == True:
+                        cmdsts = appcmdsts
                         print("Stop build apps with config due to fail on application %s" %(appdir))
                         return cmdsts, build_status
         return cmdsts, build_status
@@ -948,8 +948,8 @@ class nsdk_runner(nsdk_builder):
             appcmdsts, appsts = self.run_app_with_config(appdir, appconfig, show_output, app_buildlogfile, app_runlogfile)
             build_status[appdir] = appsts
             if appcmdsts == False:
-                cmdsts = appcmdsts
                 if stoponfail == True:
+                    cmdsts = appcmdsts
                     print("ERROR: Stop run apps with config due to fail on application %s" %(appdir))
                     return cmdsts, build_status
             # error exit check
@@ -982,8 +982,8 @@ class nsdk_runner(nsdk_builder):
                 appcmdsts, appsts = self.run_app_with_config(appdir, appconfig, show_output, app_buildlogfile, app_runlogfile)
                 build_status[appdir][cfgname] = appsts
                 if appcmdsts == False:
-                    cmdsts = appcmdsts
                     if stoponfail == True:
+                        cmdsts = appcmdsts
                         print("ERROR: Stop run apps with config due to fail on application %s" %(appdir))
                         return cmdsts, build_status
                 # error exit check
