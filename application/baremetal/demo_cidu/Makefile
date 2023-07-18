@@ -19,7 +19,7 @@ DOWNLOAD ?= ddr
 CORE ?= ux900
 # SMP CORE Number Settings
 SMP ?= 2
-CIDU ?= 0
+CIDU ?= 1
 
 ifneq ($(CIDU),0)
 COMMON_FLAGS += -D__CIDU_PRESENT=1
