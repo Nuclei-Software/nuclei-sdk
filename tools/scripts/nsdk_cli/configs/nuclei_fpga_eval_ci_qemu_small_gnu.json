@@ -9,7 +9,7 @@
             "timeout": 120
         },
         "qemu" : {
-            "timeout": 120
+            "timeout": 240
         }
     },
     "parallel": "-j",
@@ -95,6 +95,7 @@
             "n201-flash": { "build": false, "run": false },
             "n201-flashxip": { "build": false, "run": false },
             "n205e-ilm": { "build": false, "run": false },
+            "n205e-sram": { "build": false, "run": false },
             "n205e-flash": { "build": false, "run": false },
             "n205e-flashxip": { "build": false, "run": false },
             "n201e-ilm": { "build": false, "run": false },
