@@ -81,14 +81,24 @@ jobs:
           cd ..
           echo "NUCLEI_TOOL_ROOT=$(pwd)/prebuilt_tools" > setup_config.sh
 
-    - name: Build SDK for Nuclei Eval SoC
+    - name: Build SDK for Nuclei Eval SoC Using GCC
       if: matrix.soc == 'evalsoc'
       run: |
         echo "Setup build environment"
         source setup.sh
         export APPCFG=tools/scripts/nsdk_cli/configs/application.json
-        export HWCFG=tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
-        export LOGDIR=logs/nuclei_fpga_eval_ci
+        export HWCFG=tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
+        export LOGDIR=logs/nuclei_fpga_eval_ci_gcc
+        python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run_target qemu --run
+
+    - name: Build SDK for Nuclei Eval SoC Using LLVM
+      if: matrix.soc == 'evalsoc'
+      run: |
+        echo "Setup build environment"
+        source setup.sh
+        export APPCFG=tools/scripts/nsdk_cli/configs/application.json
+        export HWCFG=tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_llvm.json
+        export LOGDIR=logs/nuclei_fpga_eval_ci_llvm
         python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run_target qemu --run
 
     - name: Build SDK for GD32VF103 SoC
