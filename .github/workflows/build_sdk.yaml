@@ -34,7 +34,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
-        soc: [demosoc, gd32vf103]
+        soc: [evalsoc, gd32vf103]
 
     steps:
     - uses: actions/checkout@v3
@@ -54,30 +54,38 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu')
       run: |
           sudo apt-get update
-          sudo apt install -y python3 python3-pip
+          sudo apt install -y python3 python3-pip unzip
           sudo python3 -m pip install --upgrade pip
           # install to user local storage
           # ERROR: Cannot uninstall 'pyserial'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall.
           pip3 install -r tools/scripts/requirements.txt
           mkdir -p prebuilt_tools
           cd prebuilt_tools
-          toolzip=nuclei_riscv_newlibc_prebuilt_linux64_2022.04.tar.bz2
+          toolzip=nuclei_riscv_newlibc_prebuilt_linux64_nuclei-2023.07.19.tar.bz2
           if [ ! -e $toolzip ] ; then
             wget --no-check-certificate https://nucleisys.com/upload/files/toochain/gcc/$toolzip
           fi
           tar -xjf $toolzip
+          toolzip=nuclei_qemu-2023.07.19-linux.zip
+          if [ ! -e $toolzip ] ; then
+            wget --no-check-certificate https://nucleisys.com/upload/files/toochain/qemu/$toolzip
+          fi
+          unzip $toolzip
+          if [ -d linux_qemu ] ; then
+            mv linux_qemu qemu
+          fi
           cd ..
           echo "NUCLEI_TOOL_ROOT=$(pwd)/prebuilt_tools" > setup_config.sh
 
-    - name: Build SDK for Nuclei Demo SoC
-      if: matrix.soc == 'demosoc'
+    - name: Build SDK for Nuclei Eval SoC
+      if: matrix.soc == 'evalsoc'
       run: |
         echo "Setup build environment"
         source setup.sh
         export APPCFG=tools/scripts/nsdk_cli/configs/application.json
         export HWCFG=tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
         export LOGDIR=logs/nuclei_fpga_eval_ci
-        python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
+        python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run_target qemu --run
 
     - name: Build SDK for GD32VF103 SoC
       if: matrix.soc == 'gd32vf103'
