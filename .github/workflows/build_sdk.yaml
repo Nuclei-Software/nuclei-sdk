@@ -15,6 +15,7 @@ on:
         - "test/**"
         - ".github/**"
         - ".ci/**"
+        - "tools/**"
 
   pull_request:
     paths:
@@ -26,6 +27,7 @@ on:
         - "test/**"
         - ".github/**"
         - ".ci/**"
+        - "tools/**"
 
 jobs:
   build:
