@@ -63,17 +63,20 @@ jobs:
           cd prebuilt_tools
           toolzip=nuclei_riscv_newlibc_prebuilt_linux64_nuclei-2023.07.19.tar.bz2
           if [ ! -e $toolzip ] ; then
-            wget --no-check-certificate https://nucleisys.com/upload/files/toochain/gcc/$toolzip
+            wget -q --no-check-certificate https://nucleisys.com/upload/files/toochain/gcc/$toolzip
           fi
           tar -xjf $toolzip
           toolzip=nuclei_qemu-2023.07.19-linux.zip
           if [ ! -e $toolzip ] ; then
-            wget --no-check-certificate https://nucleisys.com/upload/files/toochain/qemu/$toolzip
+            wget -q --no-check-certificate https://nucleisys.com/upload/files/toochain/qemu/$toolzip
           fi
-          unzip $toolzip
+          unzip -q $toolzip
           if [ -d linux_qemu ] ; then
             mv linux_qemu qemu
           fi
+          echo "Check gcc and qemu version"
+          ./qemu/bin/qemu-system-riscv32 --version
+          ./gcc/bin/riscv64-unknown-elf-gcc -v
           cd ..
           echo "NUCLEI_TOOL_ROOT=$(pwd)/prebuilt_tools" > setup_config.sh
 
