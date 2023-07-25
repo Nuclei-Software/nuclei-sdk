@@ -128,6 +128,7 @@ endif
 LDFLAGS += -nodefaultlibs -Wl,--no-warn-rwx-segments
 
 ifneq ($(findstring newlib,$(STDCLIB)),)
-#LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
+# when compiled with -flto, need to pass the following options
+LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek -u errno
 endif
 
