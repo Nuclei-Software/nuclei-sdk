@@ -186,6 +186,7 @@ sdk_run_newlib_nano_job_nuclei_fpga_eval:
     matrix:
       - HWCFG:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
   script:
     - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
