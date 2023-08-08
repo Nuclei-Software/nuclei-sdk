@@ -2,15 +2,17 @@
 
 import os
 import argparse
+import json
 
-def get_all_jsonfiles(rootdir):
+def get_all_jsonfiles(rootdir, debug=False):
     jsonfiles = []
     try:
         for root, dirs, files in os.walk(rootdir):
             for file in files:
                 if file.endswith(".json") or file.endswith(".json.libncrt"):
                     filepath = "%s/%s" %(root, file)
-                    print("Found %s" % (filepath) )
+                    if debug:
+                        print("Found %s" % (filepath) )
                     jsonfiles.append(filepath)
     except:
         pass
@@ -69,7 +71,8 @@ def fix_archext_in_json(jsonfile):
                 line = line.replace(oldext, newext)
                 fixcnt = fixcnt + 1
             f.write(line)
-    print("Fix json file %s, replace count %s" % (jsonfile, fixcnt))
+    if fixcnt > 0:
+        print("Fix json file %s, replace count %s" % (jsonfile, fixcnt))
     return True
 
 def fix_jsonfiles(rootdir):
@@ -79,6 +82,11 @@ def fix_jsonfiles(rootdir):
     for jsfile in jsonfiles:
         #print("Fix file %s" % (jsfile))
         fix_archext_in_json(jsfile)
+    for jsfile in jsonfiles:
+        try:
+            json.load(open(jsfile, 'r'))
+        except:
+            print("ERROR:Json file %s is invalid" % (jsfile))
     return True
 
 if __name__ == '__main__':
