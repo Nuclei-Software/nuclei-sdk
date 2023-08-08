@@ -16,7 +16,11 @@ function rename_nmsis_lib() {
                 newext=""
                 vext=_zve32f
                 if [ "$xlen" == "64" ] ; then
-                    vext=v
+                    if [[ $arch == *fd* ]] ; then
+                        vext=v
+                    else
+                        vext=_zve64f
+                    fi
                 fi
                 case $ext in
                     bpv)

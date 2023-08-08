@@ -28,7 +28,10 @@ def fix_archext_in_json(jsonfile):
         for line in lines:
             vext_name = "_zve32f"
             if "\"nx" in line or "\"ux" in line:
-                vext_name = "v"
+                if "fd" in line:
+                    vext_name = "v"
+                else:
+                    vext_name = "_zve64f"
             oldext=''
             if '"bpv"' in line:
                 oldext = '"bpv"'
