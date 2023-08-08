@@ -27,7 +27,9 @@ def fix_archext_in_json(jsonfile):
     with open(jsonfile, "w") as f:
         for line in lines:
             vext_name = "_zve32f"
+            pext_name = "_xxldspn1x"
             if "\"nx" in line or "\"ux" in line:
+                pext_name = "_xxldsp"
                 if "fd" in line:
                     vext_name = "v"
                 else:
@@ -35,22 +37,22 @@ def fix_archext_in_json(jsonfile):
             oldext=''
             if '"bpv"' in line:
                 oldext = '"bpv"'
-                newext = "\"%s_zba_zbb_zbc_zbs_xxldspn1x\"" % (vext_name)
+                newext = "\"%s_zba_zbb_zbc_zbs%s\"" % (vext_name, pext_name)
             elif '"bv"' in line:
                 oldext = '"bv"'
                 newext = "\"%s_zba_zbb_zbc_zbs\"" % (vext_name)
             elif '"bp"' in line:
                 oldext = '"bp"'
-                newext = "\"_zba_zbb_zbc_zbs_xxldspn1x\""
+                newext = "\"_zba_zbb_zbc_zbs%s\"" % (pext_name)
             elif '"pv"' in line:
                 oldext = '"pv"'
-                newext = "\"%s_xxldspn1x\"" % (vext_name)
+                newext = "\"%s%s\"" % (vext_name, pext_name)
             elif '"v"' in line:
                 oldext = '"v"'
                 newext = "\"%s\"" % (vext_name)
             elif '"p"' in line:
                 oldext = '"p"'
-                newext = "\"_xxldspn1x\""
+                newext = "\"%s\"" % (pext_name)
             elif '"b"' in line:
                 oldext = '"b"'
                 newext = "\"_zba_zbb_zbc_zbs\""
