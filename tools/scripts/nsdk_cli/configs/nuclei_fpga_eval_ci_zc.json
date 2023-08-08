@@ -1,8 +1,11 @@
 {
     "run_config": {
-        "target" : "hardware",
+        "target" : "qemu",
         "hardware" : {
             "baudrate": 115200,
+            "timeout": 240
+        },
+        "qemu" : {
             "timeout": 240
         }
     },
@@ -35,10 +38,7 @@
         "ux600fbp-flashxip": {"DOWNLOAD": "flashxip", "CORE": "ux600f", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldsp"},
         "ux600fbp-ddr": {"DOWNLOAD": "ddr", "CORE": "ux600f", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldsp"},
         "ux600fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": "v_zca_zcb_zcd_zba_zbb_zbc_zbs_xxldsp"},
-        "ux600fdbp-flash": {"DOWNLOAD": "flash", "CORE": "ux600fd", "ARCH_EXT": "_zca_zcb_zcd_zba_zbb_zbc_zbs_xxldsp"},
-        "ux600fdbp_zc-flashxip": {"DOWNLOAD": "flashxip", "CORE": "ux600fd", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldsp"},
-        "ux600fdbpv_zc-ddr": {"DOWNLOAD": "ddr", "CORE": "ux600fd", "ARCH_EXT": "v_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldsp"}
-
+        "ux600fdbp-flash": {"DOWNLOAD": "flash", "CORE": "ux600fd", "ARCH_EXT": "_zca_zcb_zcd_zba_zbb_zbc_zbs_xxldsp"}
     },
     "appconfig": {
     },
