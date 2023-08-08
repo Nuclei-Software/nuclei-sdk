@@ -56,6 +56,12 @@ def fix_archext_in_json(jsonfile):
             elif '"b"' in line:
                 oldext = '"b"'
                 newext = "\"_zba_zbb_zbc_zbs\""
+            elif 'xxldspn1x' in line and pext_name == "_xxldsp":
+                oldext = 'xxldspn1x'
+                newext = 'xxldsp'
+            elif '"v' in line and vext_name == "_zve64f":
+                oldext = '"v'
+                newext = "\"%s" % (vext_name)
             else:
                 oldext = ""
                 newext = ""
