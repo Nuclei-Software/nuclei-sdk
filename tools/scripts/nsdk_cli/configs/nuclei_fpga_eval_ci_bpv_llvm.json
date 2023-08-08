@@ -34,8 +34,8 @@
                 "n600fbv-ilm": {"DOWNLOAD": "ilm", "CORE": "n600f", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs"},
                 "nx600fdv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600fd", "ARCH_EXT": "v"},
                 "nx600fdbv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs"},
-                "nx600fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600f", "ARCH_EXT": "v"},
-                "nx600fbv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600f", "ARCH_EXT": "v_zba_zbb_zbc_zbs"}
+                "nx600fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600f", "ARCH_EXT": "_zve64f"},
+                "nx600fbv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600f", "ARCH_EXT": "_zve64f_zba_zbb_zbc_zbs"}
             },
             "checks": {
                 "PASS": ["all test are passed"],

@@ -80,7 +80,7 @@
             "build_configs" : {
                 "n307fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
                 "n900fdbv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900fd", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs"},
-                "nx900fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "v"},
+                "nx900fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f"},
                 "nx900fdv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v"},
                 "nx900fdbv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs"}
             },

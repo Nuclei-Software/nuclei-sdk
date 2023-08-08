@@ -45,7 +45,7 @@
                 "nx600fdbv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs"},
                 "nx600fdpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600fd", "ARCH_EXT": "v_xxldspn1x"},
                 "nx600fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldspn1x"},
-                "nx600fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600f", "ARCH_EXT": "v"},
+                "nx600fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600f", "ARCH_EXT": "_zve64f"},
                 "nx600fbv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600f", "ARCH_EXT": "v_zba_zbb_zbc_zbs"},
                 "nx600fpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600f", "ARCH_EXT": "v_xxldspn1x"},
                 "nx600fbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx600f", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldspn1x"}
