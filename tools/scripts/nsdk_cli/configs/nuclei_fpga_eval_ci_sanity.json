@@ -19,10 +19,10 @@
         "n307fd": {"CORE": "n307fd", "ARCH_EXT": ""},
         "n307fdbp": {"CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
         "ux600": {"CORE": "ux600", "ARCH_EXT": ""},
-        "ux600bp": {"CORE": "ux600", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
-        "ux600fbpv": {"CORE": "ux600f", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldspn1x"},
+        "ux600bp": {"CORE": "ux600", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldsp"},
+        "ux600fbpv": {"CORE": "ux600f", "ARCH_EXT": "_zve64f_zba_zbb_zbc_zbs_xxldsp"},
         "ux600fd": {"CORE": "ux600fd", "ARCH_EXT": ""},
-        "ux600fdbpv": {"CORE": "ux600fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldspn1x"}
+        "ux600fdbpv": {"CORE": "ux600fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldsp"}
     },
     "appconfig": {
         "application/baremetal/demo_dsp": {

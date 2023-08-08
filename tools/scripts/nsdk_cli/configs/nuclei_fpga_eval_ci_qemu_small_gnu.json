@@ -66,14 +66,14 @@
                 "n307fdp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_xxldspn1x"},
                 "n307fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
                 "n900fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900fd", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs_xxldspn1x"},
-                "nx900p-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900", "ARCH_EXT": "_xxldspn1x"},
-                "nx900fp-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_xxldspn1x"},
+                "nx900p-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900", "ARCH_EXT": "_xxldsp"},
+                "nx900fp-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_xxldsp"},
                 "nx900fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f"},
-                "nx900fpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "v_xxldspn1x"},
-                "nx900fdp-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "_xxldspn1x"},
+                "nx900fpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f_xxldsp"},
+                "nx900fdp-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "_xxldsp"},
                 "nx900fdv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v"},
-                "nx900fdpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_xxldspn1x"},
-                "nx900fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldspn1x"}
+                "nx900fdpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_xxldsp"},
+                "nx900fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldsp"}
             },
             "checks": {
                 "PASS": ["all test are passed"],
