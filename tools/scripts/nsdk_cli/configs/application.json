@@ -142,7 +142,7 @@
         "application/rtthread/msh": {
             "build_config" : {},
             "checks": {
-                "PASS": ["msh >"]
+                "PASS": ["msh >", "Hello RT-Thread!"]
             }
         },
         "application/ucosii/demo": {
