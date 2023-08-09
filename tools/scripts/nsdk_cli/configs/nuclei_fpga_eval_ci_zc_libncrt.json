@@ -1,0 +1,45 @@
+{
+    "run_config": {
+        "target" : "qemu",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 240
+        },
+        "qemu" : {
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "evalsoc",
+        "BOARD": "nuclei_fpga_eval",
+        "ARCH_EXT": ""
+    },
+    "build_configs": {
+        "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt"},
+        "n305b-flash": {"DOWNLOAD": "flash", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs"},
+        "n305bp-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x"},
+        "n307bp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn1x"},
+        "n307-flash": {"DOWNLOAD": "flash", "CORE": "n307", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt"},
+        "n307bpv-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n307", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_zve32f_xxldspn2x"},
+        "n307fdp_zc-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_xxldsp"},
+        "n307fdbp_zc-flash": {"DOWNLOAD": "flash", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x"},
+        "n307fdbpv_zc-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x"},
+        "n307fdp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcd_xxldsp"},
+        "n307fdbp-flash": {"DOWNLOAD": "flash", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcd_zba_zbb_zbc_zbs_xxldspn3x"},
+        "n307fdbpv-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcd_zba_zbb_zbc_zbs_xxldspn3x"}
+    },
+    "appconfig": {
+    },
+    "expected": {
+        "application/baremetal/demo_nice" : {
+            "run": true,
+            "build": true
+        },
+        "application/baremetal/demo_dsp" : {
+            "run": false,
+            "build": false
+        }
+    }
+}

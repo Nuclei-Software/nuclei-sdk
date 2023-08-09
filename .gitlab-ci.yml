@@ -217,8 +217,8 @@ sdk_run_libncrt_zc_job_nuclei_fpga_eval:
   parallel:
     matrix:
       - HWCFG:
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc.json
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_xxlcz.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc_libncrt.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_xxlcz_libncrt.json
         STDCLIB:
         - libncrt_small
         - libncrt_fast
