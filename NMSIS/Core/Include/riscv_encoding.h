@@ -222,6 +222,7 @@
 #define MMISC_CTL_NMI_CAUSE_FFF     (1<<9)
 #define MMISC_CTL_CODE_BUS_ERR      (1<<8)
 #define MMISC_CTL_MISALIGN          (1<<6)
+#define MMISC_CTL_ZC                (1<<7)
 #define MMISC_CTL_BPU               (1<<3)
 
 #define MCACHE_CTL_IC_EN            (1<<0)
