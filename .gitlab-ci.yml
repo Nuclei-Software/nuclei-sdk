@@ -186,11 +186,44 @@ sdk_run_newlib_nano_job_nuclei_fpga_eval:
     matrix:
       - HWCFG:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
   script:
     - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
+
+sdk_run_newlib_nano_zc_job_nuclei_fpga_eval:
+  <<: *build_job_template_default
+  timeout: 5h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    RUNTARGET: qemu
+  parallel:
+    matrix:
+      - HWCFG:
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_xxlcz.json
+  script:
+    - export LOGDIR=logs/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
+
+sdk_run_libncrt_zc_job_nuclei_fpga_eval:
+  <<: *build_job_template_default
+  timeout: 5h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    RUNTARGET: qemu
+  parallel:
+    matrix:
+      - HWCFG:
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_xxlcz.json
+        STDCLIB:
+        - libncrt_small
+        - libncrt_fast
+        - libncrt_balanced
+  script:
+    - export LOGDIR=logs/${STDCLIB}/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "STDCLIB=$STDCLIB SIMU=$RUNTARGET"
 
 sdk_run_llvm_newlib_nano_job_nuclei_fpga_eval:
   <<: *build_job_template_default
