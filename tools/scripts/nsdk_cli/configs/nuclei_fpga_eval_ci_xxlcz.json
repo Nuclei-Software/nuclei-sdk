@@ -1,0 +1,55 @@
+{
+    "run_config": {
+        "target" : "qemu",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 240
+        },
+        "qemu" : {
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "evalsoc",
+        "BOARD": "nuclei_fpga_eval",
+        "ARCH_EXT": ""
+    },
+    "build_configs": {
+        "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_xxlcz"},
+        "n305b-flash": {"DOWNLOAD": "flash", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxlcz"},
+        "n305bp-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
+        "n307bp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn1x_xxlcz"},
+        "n307-flash": {"DOWNLOAD": "flash", "CORE": "n307", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_xxlcz"},
+        "n307bpv-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n307", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_zve32f_xxldspn2x_xxlcz"},
+        "n307fdp_zc-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_xxldsp_xxlcz"},
+        "n307fdbp_zc-flash": {"DOWNLOAD": "flash", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
+        "n307fdbpv_zc-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
+        "n307fdp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcd_xxldsp_xxlcz"},
+        "n307fdbp-flash": {"DOWNLOAD": "flash", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcd_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
+        "n307fdbpv-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcd_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
+        "ux600b-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxlcz"},
+        "ux600-flash": {"DOWNLOAD": "flash", "CORE": "ux600", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_xxlcz"},
+        "ux600bp-flashxip": {"DOWNLOAD": "flashxip", "CORE": "ux600", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldsp_xxlcz"},
+        "ux600bp-ddr": {"DOWNLOAD": "ddr", "CORE": "ux600", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldsp_xxlcz"},
+        "ux600fbp-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600f", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldsp_xxlcz"},
+        "ux600fbp-flash": {"DOWNLOAD": "flash", "CORE": "ux600f", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldsp_xxlcz"},
+        "ux600fbp-flashxip": {"DOWNLOAD": "flashxip", "CORE": "ux600f", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldsp_xxlcz"},
+        "ux600fbp-ddr": {"DOWNLOAD": "ddr", "CORE": "ux600f", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldsp_xxlcz"},
+        "ux600fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": "v_zca_zcb_zcd_zba_zbb_zbc_zbs_xxldsp_xxlcz"},
+        "ux600fdbp-flash": {"DOWNLOAD": "flash", "CORE": "ux600fd", "ARCH_EXT": "_zca_zcb_zcd_zba_zbb_zbc_zbs_xxldsp_xxlcz"}
+    },
+    "appconfig": {
+    },
+    "expected": {
+        "application/baremetal/demo_nice" : {
+            "run": true,
+            "build": true
+        },
+        "application/baremetal/demo_dsp" : {
+            "run": false,
+            "build": false
+        }
+    }
+}
