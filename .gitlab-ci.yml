@@ -93,7 +93,7 @@ deploy_website:
     - host::whss1
 
 ## Job template
-.build_job_template: &build_job_template_default
+.job_template: &job_template_default
   image: $IMAGE:$IMAGE_TAG
   interruptible: true
   rules:
@@ -118,53 +118,32 @@ deploy_website:
       - logs
     expire_in: 2 day
 
-sdk_build_job_gd32vf103c_longan_nano:
-  <<: *build_job_template_default
+build_gd32vf103:
+  <<: *job_template_default
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
-    HWCFG: tools/scripts/nsdk_cli/configs/gd32vf103c_longan_nano.json
-    LOGDIR: logs/gd32vf103c_longan_nano
+  parallel:
+    matrix:
+      - HWCFG:
+        - tools/scripts/nsdk_cli/configs/gd32vf103v_rvstar.json
+        - tools/scripts/nsdk_cli/configs/gd32vf103v_eval.json
+        - tools/scripts/nsdk_cli/configs/gd32vf103c_longan_nano.json
+        - tools/scripts/nsdk_cli/configs/gd32vf103c_t_display.json
   script:
+    - export LOGDIR=logs/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
 
-sdk_build_job_gd32vf103c_t_display:
-  <<: *build_job_template_default
-  variables:
-    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-    HWCFG: tools/scripts/nsdk_cli/configs/gd32vf103c_t_display.json
-    LOGDIR: logs/gd32vf103c_t_display
-  script:
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
-
-sdk_build_job_gd32vf103v_eval:
-  <<: *build_job_template_default
-  variables:
-    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-    HWCFG: tools/scripts/nsdk_cli/configs/gd32vf103v_eval.json
-    LOGDIR: logs/gd32vf103v_eval
-  script:
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
-
-sdk_build_job_gd32vf103v_rvstar:
-  <<: *build_job_template_default
-  variables:
-    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-    HWCFG: tools/scripts/nsdk_cli/configs/gd32vf103v_rvstar.json
-    LOGDIR: logs/gd32vf103v_rvstar
-  script:
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
-
-sdk_build_job_nuclei_fpga_eval:
-  <<: *build_job_template_default
+build_evalsoc:
+  <<: *job_template_default
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
     HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
-    LOGDIR: logs/nuclei_fpga_eval_ci
   script:
+    - export LOGDIR=logs/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
 
-sdk_run_newlib_nano_job_nuclei_fpga_eval_small:
-  <<: *build_job_template_default
+run_newlib_nano_evalsoc_small:
+  <<: *job_template_default
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -178,8 +157,8 @@ sdk_run_newlib_nano_job_nuclei_fpga_eval_small:
     - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
 
-sdk_run_newlib_nano_job_nuclei_fpga_eval:
-  <<: *build_job_template_default
+run_newlib_nano_evalsoc:
+  <<: *job_template_default
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -190,74 +169,28 @@ sdk_run_newlib_nano_job_nuclei_fpga_eval:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
   script:
-    - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
-
-sdk_run_newlib_nano_zc_job_nuclei_fpga_eval:
-  <<: *build_job_template_default
-  timeout: 5h
-  variables:
-    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-    RUNTARGET: qemu
-  parallel:
-    matrix:
-      - HWCFG:
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc.json
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_xxlcz.json
-  script:
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
 
-sdk_run_libncrt_zc_job_nuclei_fpga_eval:
-  <<: *build_job_template_default
-  timeout: 5h
+run_libncrt_evalsoc:
+  <<: *job_template_default
+  timeout: 4h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_libncrt.json
     RUNTARGET: qemu
   parallel:
     matrix:
-      - HWCFG:
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc_libncrt.json
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_xxlcz_libncrt.json
-        STDCLIB:
+      - STDCLIB:
         - libncrt_small
         - libncrt_fast
         - libncrt_balanced
   script:
-    - export LOGDIR=logs/${STDCLIB}/$(basename ${HWCFG%.json})
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "STDCLIB=$STDCLIB SIMU=$RUNTARGET"
+    - export LOGDIR=logs/evalsoc_$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "STDCLIB=$STDCLIB"
 
-sdk_run_llvm_newlib_nano_job_nuclei_fpga_eval:
-  <<: *build_job_template_default
-  timeout: 5h
-  variables:
-    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-    RUNTARGET: qemu
-  parallel:
-    matrix:
-      - HWCFG:
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_llvm.json
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv_llvm.json
-  script:
-    - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
-
-# Disable semihost testing in qemu
-# can't capture output from ether stdout or stderr
-#sdk_run_newlib_nano_semihost_job_nuclei_fpga_eval:
-#  <<: *build_job_template_default
-#  timeout: 5h
-#  variables:
-#    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-#    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
-#    RUNTARGET: qemu
-#    SEMIHOST: "1"
-#  script:
-#    - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
-#    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET  --make_options "SEMIHOST=$SEMIHOST"
-
-sdk_run_newlib_job_nuclei_fpga_eval:
-  <<: *build_job_template_default
+run_newlib_full_evalsoc:
+  <<: *job_template_default
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -277,25 +210,74 @@ sdk_run_newlib_job_nuclei_fpga_eval:
     - sed -i "s/64K/128K/g" SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_flash.ld
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
 
-sdk_run_libncrt_job_nuclei_fpga_eval:
-  <<: *build_job_template_default
-  timeout: 4h
+# Test zc feature
+run_newlib_nano_zc_evalsoc:
+  <<: *job_template_default
+  timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
-    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_libncrt.json
     RUNTARGET: qemu
   parallel:
     matrix:
-      - STDCLIB:
+      - HWCFG:
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_xxlcz.json
+  script:
+    - export LOGDIR=logs/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
+
+run_libncrt_zc_evalsoc:
+  <<: *job_template_default
+  timeout: 5h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    RUNTARGET: qemu
+  parallel:
+    matrix:
+      - HWCFG:
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc_libncrt.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_xxlcz_libncrt.json
+        STDCLIB:
         - libncrt_small
         - libncrt_fast
         - libncrt_balanced
   script:
-    - export LOGDIR=logs/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${STDCLIB}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "STDCLIB=$STDCLIB SIMU=$RUNTARGET"
 
-sdk_run_test_job_nuclei_fpga_eval:
-  <<: *build_job_template_default
+# Test llvm toolchain
+run_llvm_newlib_nano_evalsoc:
+  <<: *job_template_default
+  timeout: 5h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    RUNTARGET: qemu
+  parallel:
+    matrix:
+      - HWCFG:
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_llvm.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv_llvm.json
+  script:
+    - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
+
+# Disable semihost testing in qemu
+# can't capture output from ether stdout or stderr
+#run_newlib_nano_semihost_evalsoc:
+#  <<: *job_template_default
+#  timeout: 5h
+#  variables:
+#    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+#    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
+#    RUNTARGET: qemu
+#    SEMIHOST: "1"
+#  script:
+#    - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
+#    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET  --make_options "SEMIHOST=$SEMIHOST"
+
+# Test extra test suites
+run_test_evalsoc:
+  <<: *job_template_default
   timeout: 4h
   rules:
     - if: $JOBCTRL == "RUN"
@@ -312,8 +294,8 @@ sdk_run_test_job_nuclei_fpga_eval:
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
 
-sdk_run_smp_job_nuclei_fpga_eval:
-  <<: *build_job_template_default
+run_smp_evalsoc:
+  <<: *job_template_default
   timeout: 4h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/smp_application.json
@@ -328,49 +310,9 @@ sdk_run_smp_job_nuclei_fpga_eval:
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
 
-sdk_build_job_evalsoc:
-  <<: *build_job_template_default
-  variables:
-    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
-    LOGDIR: logs/evalsoc
-  script:
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SOC=evalsoc"
-
-sdk_run_newlib_job_evalsoc:
-  <<: *build_job_template_default
-  timeout: 5h
-  variables:
-    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-    RUNTARGET: qemu
-  parallel:
-    matrix:
-      - HWCFG:
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
-  script:
-    - export LOGDIR=logs/evalsoc_$(basename ${HWCFG%.json})
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "SOC=evalsoc"
-
-sdk_run_libncrt_job_evalsoc:
-  <<: *build_job_template_default
-  timeout: 4h
-  variables:
-    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_libncrt.json
-    RUNTARGET: qemu
-  parallel:
-    matrix:
-      - STDCLIB:
-        - libncrt_small
-        - libncrt_fast
-        - libncrt_balanced
-  script:
-    - export LOGDIR=logs/evalsoc_$(basename ${HWCFG%.json})
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "STDCLIB=$STDCLIB SOC=evalsoc"
-
-sdk_run_sanity_check:
-  <<: *build_job_template_default
+# random and sanity checks
+run_sanity_check:
+  <<: *job_template_default
   timeout: 4h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -381,10 +323,10 @@ sdk_run_sanity_check:
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
     - git diff
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
-    - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes ${RANDTIMES} --run_target ${RUNTARGET}
+    - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes ${RANDTIMES} --run_target ${RUNTARGET} --toolchains "nuclei_gnu"
 
-sdk_run_datalma_inilm:
-  <<: *build_job_template_default
+run_datalma_inilm:
+  <<: *job_template_default
   timeout: 4h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -398,8 +340,8 @@ sdk_run_datalma_inilm:
     - export LOGDIR=logs/$(basename ${HWCFG%.json})
     - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes 2 --run_target ${RUNTARGET} --socs ${SOCS} --downloads "ilm,ddr"
 
-sdk_run_on_ncycm:
-  <<: *build_job_template_default
+run_on_ncycm:
+  <<: *job_template_default
   timeout: 12h
   rules:
     - if: $JOBCTRL == "RUN"
@@ -428,7 +370,7 @@ sdk_run_on_ncycm:
     - find $LOGROOT -name "result.csv" | xargs cat
 
 sdk_gen_benchmark:
-  <<: *build_job_template_default
+  <<: *job_template_default
   script:
     - export LOGROOT=gen
     - export RUNTARGET=
