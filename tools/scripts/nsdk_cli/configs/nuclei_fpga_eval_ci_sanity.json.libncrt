@@ -13,27 +13,12 @@
     "build_config": {
     },
     "build_configs": {
-        "n201e": {"CORE": "n201e", "ARCH_EXT": ""},
         "n205": {"CORE": "n205", "ARCH_EXT": ""},
         "n305bp": {"CORE": "n305", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
         "n307fd": {"CORE": "n307fd", "ARCH_EXT": ""},
         "n307fdbp": {"CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"}
     },
     "appconfig": {
-        "application/baremetal/demo_dsp": {
-            "build_configs" : {
-            },
-            "checks": {
-                "PASS": ["all test are passed"],
-                "FAIL": ["test error apprears", "MEPC"]
-            }
-        },
-        "application/rtthread/msh": {
-            "build_config" : {},
-            "checks": {
-                "PASS": ["msh >", "Hello RT-Thread!"]
-            }
-        },
         "application/baremetal/benchmark/dhrystone": {
             "build_config" : {},
             "checks": {

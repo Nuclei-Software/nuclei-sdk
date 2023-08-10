@@ -31,6 +31,7 @@ if __name__ == '__main__':
     parser.add_argument('--socs', default="evalsoc", help="SOC choices")
     parser.add_argument('--downloads', default="ilm,flash,flashxip,ddr", help="DOWNLOAD choices")
     parser.add_argument('--stdclibs', default="newlib_small,newlib_full,libncrt_small,libncrt_balanced,libncrt_fast", help="STDCLIB choices")
+    parser.add_argument('--toolchains', default="nuclei_gnu,nuclei_llvm", help="TOOLCHAIN choices")
     parser.add_argument('--run_target', default="qemu", help="Run target which program will run, such as hardware, qemu or xlspike")
     parser.add_argument('--randtimes', default=1, help="Random run times")
 
@@ -39,16 +40,18 @@ if __name__ == '__main__':
     soc_choices = args.socs.split(",")
     download_choices = args.downloads.split(",")
     stdclib_choices = args.stdclibs.split(",")
+    toolchain_choices = args.toolchains.split(",")
 
     for i in range(int(args.randtimes)):
         soc = random.choice(soc_choices)
         download = random.choice(download_choices)
         stdclib = random.choice(stdclib_choices)
+        toolchain = random.choice(toolchain_choices)
         # when use newlib full, some case might link fail due size issue, so change to other download mode
         if stdclib == "newlib_full" and download in ("ilm", "flash"):
             download = random.choice(["ddr", "flashxip"])
 
-        makeopts = "SOC=%s DOWNLOAD=%s STDCLIB=%s" % (soc, download, stdclib)
+        makeopts = "SOC=%s DOWNLOAD=%s STDCLIB=%s TOOLCHAIN=%s" % (soc, download, stdclib, toolchain)
         logdir = args.logdir + "/%s/%s/%s" % (soc, download, stdclib)
         print("Random select choice: %s" % (makeopts))
         sys.stdout.flush()

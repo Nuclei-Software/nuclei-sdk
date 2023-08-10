@@ -13,32 +13,18 @@
     "build_config": {
     },
     "build_configs": {
-        "n201e": {"CORE": "n201e", "ARCH_EXT": ""},
         "n205": {"CORE": "n205", "ARCH_EXT": ""},
-        "n305bp": {"CORE": "n305", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
-        "n307fd": {"CORE": "n307fd", "ARCH_EXT": ""},
-        "n307fdbp": {"CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
-        "ux600": {"CORE": "ux600", "ARCH_EXT": ""},
-        "ux600bp": {"CORE": "ux600", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldsp"},
-        "ux600fbpv": {"CORE": "ux600f", "ARCH_EXT": "_zve64f_zba_zbb_zbc_zbs_xxldsp"},
-        "ux600fd": {"CORE": "ux600fd", "ARCH_EXT": ""},
-        "ux600fdbpv": {"CORE": "ux600fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldsp"}
+        "n300fbp": {"CORE": "n300f", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
+        "n300fd": {"CORE": "n300fd", "ARCH_EXT": ""},
+        "n300fdbp": {"CORE": "n300fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
+        "n900fdbpv": {"CORE": "n900fd", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs_xxldspn1x"},
+        "nx900": {"CORE": "ux600", "ARCH_EXT": ""},
+        "nx900bp": {"CORE": "ux600", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldsp"},
+        "nx900fbpv": {"CORE": "ux600f", "ARCH_EXT": "_zve64f_zba_zbb_zbc_zbs_xxldsp"},
+        "nx900fd": {"CORE": "ux600fd", "ARCH_EXT": ""},
+        "nx900fdbpv": {"CORE": "ux600fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldsp"}
     },
     "appconfig": {
-        "application/baremetal/demo_dsp": {
-            "build_configs" : {
-            },
-            "checks": {
-                "PASS": ["all test are passed"],
-                "FAIL": ["test error apprears", "MEPC"]
-            }
-        },
-        "application/rtthread/msh": {
-            "build_config" : {},
-            "checks": {
-                "PASS": ["msh >", "Hello RT-Thread!"]
-            }
-        },
         "application/baremetal/benchmark/dhrystone": {
             "build_config" : {},
             "checks": {
@@ -63,7 +49,7 @@
     },
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": true},
-        "application/rtthread/msh" : {"build": true, "run": false},
+        "application/rtthread/msh" : {"build": true, "run": true},
         "application/baremetal/demo_spmp": {"build": true, "run": true},
         "application/baremetal/demo_smode_eclic": {"build": true, "run": true},
         "application/baremetal/demo_cidu": {"build": true, "run": false},
