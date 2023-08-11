@@ -29,7 +29,7 @@ static void thread_entry(void* parameter)
 
     while (1) {
         rt_kprintf("thread %d count: %d\n", (rt_uint32_t)parameter, count++);
-        rt_thread_mdelay(500);
+        rt_thread_mdelay(250);
     }
 }
 
@@ -59,6 +59,6 @@ int main(void)
 
     while (1) {
         rt_kprintf("Main thread count: %d\n", count++);
-        rt_thread_mdelay(1000);
+        rt_thread_mdelay(500);
     }
 }

@@ -9,19 +9,7 @@ static volatile uint32_t int0_cnt = 0;    /* mtip timer interrupt test counter *
 static volatile uint32_t int1_cnt = 0;    /* msip timer interrupt test counter */
 volatile unsigned int msip_trig_flag = 1; /* sw trigger mtimer sw interrupt flag */
 
-void wait_mseconds(size_t n)
-{
-    uint64_t start_mtime, delta_mtime;
-
-    uint64_t tmp = SysTimer_GetLoadValue();
-    do {
-        start_mtime = SysTimer_GetLoadValue();
-    } while (start_mtime == tmp);
-
-    do {
-        delta_mtime = SysTimer_GetLoadValue() - start_mtime;
-    } while (delta_mtime < (n * (SOC_TIMER_FREQ / 1000)));
-}
+#define LOOP_COUNT      5
 
 void mtimer_irq_handler(void)
 {
@@ -59,7 +47,7 @@ int main(void)
 
     setup_timer(); /* initialize timer */
 
-    while (int0_cnt < 10);
+    while (int0_cnt < 5);
     ECLIC_DisableIRQ(SysTimer_IRQn); /* Disable MTIP iterrupt */
 
     returnCode = ECLIC_Register_IRQ(
@@ -71,9 +59,9 @@ int main(void)
         if (msip_trig_flag == 1) {
             msip_trig_flag = 0;
             SysTimer_SetSWIRQ(); /* trigger timer sw interrupt */
-            wait_mseconds(100);
+            delay_1ms(10);
         }
-    } while (int1_cnt < 10); /* check test end condition */
+    } while (int1_cnt < 5); /* check test end condition */
 
     printf("MTimer msip and mtip interrupt test finish and pass\r\n");
 

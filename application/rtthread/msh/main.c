@@ -24,6 +24,6 @@ int main(void)
 {
     rt_kprintf("Hello RT-Thread!\n");
     while (1) {
-        rt_thread_mdelay(1000);
+        rt_thread_mdelay(100);
     }
 }
