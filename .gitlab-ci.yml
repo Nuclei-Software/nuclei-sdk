@@ -109,6 +109,8 @@ deploy_website:
     - which qemu-system-riscv32 && qemu-system-riscv32 --version
     - which make && make --version
     - which python3 && python3 --version
+    # CI_JOB_NAME_SLUG is introduced >=15.4 gitlab release
+    - export CI_JOB_NAME_SHORT=${JOBNAME/[\[ :\/ ]*}
   artifacts:
     when: always
     name: "nsdkcli_logs-job${CI_JOB_ID}-${CI_COMMIT_SHA::8}"
@@ -133,7 +135,7 @@ build_gd32vf103:
         - tools/scripts/nsdk_cli/configs/gd32vf103c_longan_nano.json
         - tools/scripts/nsdk_cli/configs/gd32vf103c_t_display.json
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
 
 build_evalsoc:
@@ -142,7 +144,7 @@ build_evalsoc:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
     HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
 
 run_newlib_nano_evalsoc_small:
@@ -157,7 +159,7 @@ run_newlib_nano_evalsoc_small:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_small_gnu.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_small_llvm.json
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
 
 run_newlib_nano_evalsoc:
@@ -172,7 +174,7 @@ run_newlib_nano_evalsoc:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
 
 run_libncrt_evalsoc:
@@ -189,7 +191,7 @@ run_libncrt_evalsoc:
         - libncrt_fast
         - libncrt_balanced
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "STDCLIB=$STDCLIB"
 
 run_newlib_full_evalsoc:
@@ -207,7 +209,7 @@ run_newlib_full_evalsoc:
         #- "2022.05-eng2"
         #- "2022.05"
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/${IMAGE_TAG}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/${IMAGE_TAG}/$(basename ${HWCFG%.json})
     # change ilm/dlm size from 64K to 128K for evalsoc to be able to build with newlib full library
     - sed -i "s/64K/128K/g" SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
     - sed -i "s/64K/128K/g" SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_flash.ld
@@ -226,7 +228,7 @@ run_newlib_nano_zc_evalsoc:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_xxlcz.json
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
 
 run_libncrt_zc_evalsoc:
@@ -245,7 +247,7 @@ run_libncrt_zc_evalsoc:
         - libncrt_fast
         - libncrt_balanced
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/${STDCLIB}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/${STDCLIB}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "STDCLIB=$STDCLIB SIMU=$RUNTARGET"
 
 # Test llvm toolchain
@@ -261,7 +263,7 @@ run_llvm_newlib_nano_evalsoc:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_llvm.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv_llvm.json
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
 
 # Test extra test suites
@@ -277,7 +279,7 @@ run_test_evalsoc:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
 
 run_smp_evalsoc:
@@ -293,7 +295,7 @@ run_smp_evalsoc:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_libncrt.json
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
 
 # random and sanity checks
@@ -308,7 +310,7 @@ run_sanity_check:
   script:
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
     - git diff
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/$(basename ${HWCFG%.json})
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes ${RANDTIMES} --run_target ${RUNTARGET} --toolchains "nuclei_gnu"
 
 run_datalma_inilm:
@@ -323,8 +325,8 @@ run_datalma_inilm:
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", rom)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ddr.ld
     - git diff
-    - export LOGDIR=logs/${CI_JOB_NAME_SLUG}/$(basename ${HWCFG%.json})
-    - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes 2 --run_target ${RUNTARGET} --socs ${SOCS} --downloads "ilm,ddr"
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes 2 --run_target ${RUNTARGET} --socs ${SOCS} --downloads "ilm,ddr" --toolchains "nuclei_gnu"
 
 run_on_ncycm:
   <<: *job_template_default
@@ -341,7 +343,7 @@ run_on_ncycm:
         - n300
         - n900
   script:
-    - export LOGROOT=logs/${CI_JOB_NAME_SLUG}/ncycm
+    - export LOGROOT=logs/${CI_JOB_NAME_SHORT}/ncycm
     - echo "Run for CORE=$CORE, evaluate dhrystone and coremark"
     - export LOGDIR=$LOGROOT/$CORE/cmkdhry
     - export HWCFG=tools/scripts/nsdk_cli/configs/ncycm/cmkdhry_$CORE.json
