@@ -261,20 +261,6 @@ run_llvm_newlib_nano_evalsoc:
     - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
 
-# Disable semihost testing in qemu
-# can't capture output from ether stdout or stderr
-#run_newlib_nano_semihost_evalsoc:
-#  <<: *job_template_default
-#  timeout: 5h
-#  variables:
-#    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-#    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
-#    RUNTARGET: qemu
-#    SEMIHOST: "1"
-#  script:
-#    - export LOGDIR=logs/${IMAGE_TAG}/$(basename ${HWCFG%.json})
-#    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET  --make_options "SEMIHOST=$SEMIHOST"
-
 # Test extra test suites
 run_test_evalsoc:
   <<: *job_template_default
@@ -344,8 +330,7 @@ run_on_ncycm:
   <<: *job_template_default
   timeout: 12h
   rules:
-    - if: $JOBCTRL == "RUN"
-      when: manual
+    - when: manual
   tags:
     - hardware::high-freq-linux
   variables:
