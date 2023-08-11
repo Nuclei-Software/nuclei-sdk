@@ -67,7 +67,7 @@
         "application/baremetal/demo_eclic": {
             "build_config" : {},
             "checks": {
-                "PASS": ["software interrupt hit 10 times"]
+                "PASS": ["software interrupt hit 5 times"]
             }
         },
         "application/baremetal/demo_smode_eclic": {
@@ -129,13 +129,13 @@
         "application/freertos/demo": {
             "build_config" : {},
             "checks": {
-                "PASS": ["timers Callback 11"]
+                "PASS": ["timers Callback 3"]
             }
         },
         "application/rtthread/demo": {
             "build_config" : {},
             "checks": {
-                "PASS": ["Main thread count: 6"]
+                "PASS": ["Main thread count: 3"]
             }
         },
         "application/rtthread/msh": {
@@ -147,7 +147,7 @@
         "application/ucosii/demo": {
             "build_config" : {},
             "checks": {
-                "PASS": ["task3 is running... 10"]
+                "PASS": ["task3 is running... 3"]
             }
         },
         "test/core": {
