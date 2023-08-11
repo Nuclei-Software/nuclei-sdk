@@ -96,8 +96,6 @@ deploy_website:
 .job_template: &job_template_default
   image: $IMAGE:$IMAGE_TAG
   interruptible: true
-  rules:
-    - if: $JOBCTRL == "RUN"
   stage: build
   before_script:
     - apt update
@@ -117,6 +115,11 @@ deploy_website:
     paths:
       - logs
     expire_in: 2 day
+
+.job_ctrl_template: &job_ctrl_template_default
+  <<: *job_template_default
+  rules:
+    - if: $JOBCTRL == "RUN"
 
 build_gd32vf103:
   <<: *job_template_default
@@ -265,9 +268,6 @@ run_llvm_newlib_nano_evalsoc:
 run_test_evalsoc:
   <<: *job_template_default
   timeout: 4h
-  rules:
-    - if: $JOBCTRL == "RUN"
-      when: always
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/test.json
     RUNTARGET: qemu
@@ -329,8 +329,7 @@ run_datalma_inilm:
 run_on_ncycm:
   <<: *job_template_default
   timeout: 12h
-  rules:
-    - when: manual
+  when: manual
   tags:
     - hardware::high-freq-linux
   variables:
