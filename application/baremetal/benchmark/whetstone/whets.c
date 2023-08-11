@@ -229,7 +229,7 @@ int main(void)
 #if CFG_SIMULATION
     int duration = 1;
 #else
-    int duration = 10;
+    int duration = 3;
 #endif
 
     printf("\n");
@@ -249,7 +249,7 @@ int main(void)
 #if CFG_SIMULATION
         if (TimeUsed > 0.02)
 #else
-        if (TimeUsed > 2.0)
+        if (TimeUsed > 0.2)
 #endif
         {
             count = 0;
