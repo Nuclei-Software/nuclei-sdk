@@ -193,7 +193,7 @@ void whetstones(long xtra, long x100, int calibrate);
 void pa(SPDP e[4], SPDP t, SPDP t2);
 void po(SPDP e1[4], long j, long k, long l);
 void p3(SPDP* x, SPDP* y, SPDP* z, SPDP t, SPDP t1, SPDP t2);
-void pout(char title[22], float ops, int type, SPDP checknum, SPDP time,
+void pout(char *title, float ops, int type, SPDP checknum, SPDP time,
           int calibrate, int section);
 
 static SPDP loop_time[9];
@@ -201,7 +201,7 @@ static SPDP loop_mops[9];
 static SPDP loop_mflops[9];
 static SPDP TimeUsed;
 static SPDP mwips, mwips_mhz;
-static char headings[9][18];
+static char headings[9][22];
 static SPDP Check;
 static SPDP results[9];
 
@@ -267,7 +267,7 @@ int main(void)
 
     calibrate = 0;
 
-    printf("\nUse %d  passes (x 100)\n", xtra);
+    printf("\nUse %u  passes (x 100)\n", (uint32_t)xtra);
     printf("\n          %s Precision C/C++ Whetstone Benchmark", Precision);
 
 #ifdef PRECOMP
@@ -531,7 +531,7 @@ void p3(SPDP* x, SPDP* y, SPDP* z, SPDP t, SPDP t1, SPDP t2)
     return;
 }
 
-void pout(char title[18], float ops, int type, SPDP checknum, SPDP time,
+void pout(char *title, float ops, int type, SPDP checknum, SPDP time,
           int calibrate, int section)
 {
     SPDP mops, mflops;
