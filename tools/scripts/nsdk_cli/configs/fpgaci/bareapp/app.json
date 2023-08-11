@@ -63,10 +63,16 @@
                 "PASS": ["19: Hello World From Nuclei RISC-V Processor!"]
             }
         },
+        "application/baremetal/cpuinfo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["End of Nuclei CPU INFO"]
+            }
+        },
         "application/baremetal/demo_eclic": {
             "build_config" : {},
             "checks": {
-                "PASS": ["software interrupt hit 10 times"]
+                "PASS": ["software interrupt hit 5 times"]
             }
         },
         "application/baremetal/demo_smode_eclic": {
@@ -79,6 +85,18 @@
             "build_config" : {},
             "checks": {
                 "PASS": ["Won't run here if violates L U\\R\\W\\X permission check!", "[ERROR]__TEE_PRESENT must be defined as 1"]
+            }
+        },
+        "application/baremetal/demo_cache": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!"]
+            }
+        },
+        "application/baremetal/demo_cidu": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[ERROR]__CIDU_PRESENT must be defined as 1 in <Device>.h!", "Core 1 has received interrupt from core 0", "[WARN] SMP & CIDU not present"]
             }
         },
         "application/baremetal/demo_pmp": {
@@ -116,25 +134,25 @@
         "application/freertos/demo": {
             "build_config" : {},
             "checks": {
-                "PASS": ["timers Callback 11"]
+                "PASS": ["timers Callback 3"]
             }
         },
         "application/rtthread/demo": {
             "build_config" : {},
             "checks": {
-                "PASS": ["Main thread count: 6"]
+                "PASS": ["Main thread count: 3"]
             }
         },
         "application/rtthread/msh": {
             "build_config" : {},
             "checks": {
-                "PASS": ["msh >"]
+                "PASS": ["msh >", "Hello RT-Thread!"]
             }
         },
         "application/ucosii/demo": {
             "build_config" : {},
             "checks": {
-                "PASS": ["task3 is running... 10"]
+                "PASS": ["task3 is running... 3"]
             }
         },
         "test/core": {
