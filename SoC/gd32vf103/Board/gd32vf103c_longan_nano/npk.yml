@@ -79,7 +79,7 @@ debugconfig:
          value: auto  # auto, adaptive, fixed value(KHz) such as 1000
 
 buildconfig:
-  - type: gcc
+  - type: common
     linkscript:
       - script: "Source/GCC/gcc_gd32vf103xb_flashxip.ld"
         condition: $( ${board_variant} == "normal" )

@@ -87,8 +87,8 @@ debugconfig:
     configs:
        - key: nuclei_core
          value: ${nuclei_core}
-       - key: dsp_present
-         value: ${dsp_present}
+       - key: nuclei_archext
+         value: ${nuclei_archext}
        - key: download_mode
          value: ${download_mode}
        - key: riscv_arch
@@ -96,7 +96,7 @@ debugconfig:
        - key: riscv_abi
          value: ${nuclei_core.abi}
        - key: machine
-         value: nuclei_n
+         value: nuclei_evalsoc
        - key: smp
          value: ${nuclei_smp}
          condition: $( ${nuclei_smp} > 1 )
@@ -119,7 +119,7 @@ debugconfig:
 
 ## Build Configuration
 buildconfig:
-  - type: gcc
+  - type: common
     linkscript:
       - script: "Source/GCC/gcc_evalsoc_${download_mode}.ld"
         condition: $( "x${linker_script}" == "x" )

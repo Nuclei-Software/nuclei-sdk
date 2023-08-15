@@ -28,6 +28,6 @@ codemanage:
 
 ## Build Configuration
 buildconfig:
-  - type: gcc
+  - type: common
     common_defines:
       - defines: RTOS_UCOSII

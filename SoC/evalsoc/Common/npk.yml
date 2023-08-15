@@ -117,7 +117,7 @@ configuration:
         arch: rv32imac
         abi: ilp32
         cmodel: medlow
-        tune: nuclei-300-series
+        tune: nuclei-600-series
         description: N600 Core(ARCH=rv32imac, ABI=ilp32)
       - name: n600f
         arch: rv32imafc
@@ -222,101 +222,49 @@ configuration:
         tune: nuclei-900-series
         description: UX900FD Core(ARCH=rv64imafdc, ABI=lp64d)
   nuclei_archext:
-    default_value: []
-    type: multicheckbox
+    default_value: ""
+    type: text
     global: true
     description: Nuclei ARCH Extensions
-    choices:
-      - name: b
-        description: Bitmanip Extension
-      - name: p
-        description: Packed SIMD Extension
-      - name: v
-        description: Vector Extension
   nuclei_cache:
     default_value: []
-    type: multicheckbox
+    type: multicheckbox_v2
     global: true
     description: Nuclei Cache Extensions
-    choices:
-      - name: ic
-        description: ICache Extension
-      - name: dc
-        description: DCache Extension
-      - name: ccm
-        description: CCM Extension
+    param:
+      name:
+        [ic, dc, ccm]
+      description:
+        [ICache, DCache, CCM]
   nuclei_smp:
     default_value: 0
-    type: choice
+    type: spinner
     global: true
     description: Nuclei SMP Count
-    choices:
-      - name: 0
-        description: No SMP
-      - name: 1
-        description: 1 Core
-      - name: 2
-        description: 2 Core
-      - name: 4
-        description: 4 Core
-      - name: 6
-        description: 6 Core
-      - name: 8
-        description: 8 Core
-      - name: 10
-        description: 10 Core
-      - name: 12
-        description: 12 Core
-      - name: 14
-        description: 14 Core
-      - name: 16
-        description: 16 Core
+    param:
+      range: >-
+          [0, 16, 1]
   boothartid:
     default_value: 0
-    type: choice
+    type: spinner
     global: true
     description: Boot HartID
-    choices:
-      - name: 0
-        description: Hart 0
-      - name: 1
-        description: Hart 1
-      - name: 2
-        description: Hart 2
-      - name: 3
-        description: Hart 3
-      - name: 4
-        description: Hart 4
-      - name: 5
-        description: Hart 5
-      - name: 6
-        description: Hart 6
-      - name: 7
-        description: Hart 7
-      - name: 8
-        description: Hart 8
-      - name: 9
-        description: Hart 9
-      - name: 10
-        description: Hart 10
-      - name: 11
-        description: Hart 11
-      - name: 12
-        description: Hart 12
-      - name: 13
-        description: Hart 13
-      - name: 14
-        description: Hart 14
-      - name: 15
-        description: Hart 15
+    global: true
+    param:
+      range: >-
+          [0, 15, 1]
   heapsz:
-      value: ""
-      type: text
-      description: Heap Size
+    value: ""
+    type: text
+    description: Heap Size
   stacksz:
-      value: ""
-      type: text
-      description: Stack Size Per CPU
+    value: ""
+    type: text
+    description: Stack Size Per CPU
+  semihost:
+    default_value: 0
+    type: checkbox
+    description: Enable Semihosting
   stdclib:
     default_value: newlib_nano
     type: choice
@@ -357,7 +305,7 @@ codemanage:
   copyfiles:
     - path: ["Source/*.c", "Source/Drivers/*.c", "Source/GCC/", "Include/", "evalsoc.svd"]
     - path: ["Source/Stubs/newlib"]
-      condition: $( startswith(${stdclib}, "newlib") )
+      condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 0 )
     - path: ["Source/Stubs/libncrt"]
       condition: $( startswith(${stdclib}, "libncrt") )
   incdirs:
@@ -366,7 +314,7 @@ codemanage:
 ## Set Configuration for other packages
 setconfig:
   - config: nmsislibarch
-    value: ${nuclei_core.arch}$(join(${nuclei_archext},''))
+    value: ${nuclei_core.arch}${nuclei_archext}
 
 ## Debug Configuration for this SoC
 debugconfig:
@@ -384,36 +332,34 @@ debugconfig:
 
 ## Build Configuration
 buildconfig:
-  - type: gcc
-    description: Nuclei GNU Toolchain
-    cross_prefix: riscv-nuclei-elf- # optional
+  - type: common
     common_flags: # flags need to be combined together across all packages
       - flags: -g -fno-common -ffunction-sections -fdata-sections
-      - flags: -march=${nuclei_core.arch}$(join(${nuclei_archext},'')) -mabi=${nuclei_core.abi}
-      - flags: -mtune=${nuclei_core.tune}
-        condition: $( ${nuclei_core.tune} != "" )
+      - flags: -march=${nuclei_core.arch}${nuclei_archext} -mabi=${nuclei_core.abi}
       - flags: -mcmodel=${nuclei_core.cmodel}
-      - flags:
-        condition: $( ${stdclib} == "newlib_full" )
-      - flags: --specs=nano.specs -u _printf_float -u _scanf_float
-        condition: $( ${stdclib} == "newlib_fast" )
-      - flags: --specs=nano.specs -u _printf_float
-        condition: $( ${stdclib} == "newlib_small" )
-      - flags: --specs=nano.specs
-        condition: $( ${stdclib} == "newlib_nano" )
-      - flags: --specs=${stdclib}.specs
-        condition: $( startswith(${stdclib}, "libncrt") )
       - flags: -nostdinc
         condition: $( ${stdclib} == "nostd" )
       - flags:
         condition: $( ${stdclib} == "nospec" )
     ldflags:
-      - flags: -nostartfiles
+      - flags: -nostartfiles -nodefaultlibs
       - flags: -lstdc++
         condition: $( startswith(${stdclib}, "newlib") )
+      - flags: -lc -lgcc
+        condition: $( ${stdclib} == "newlib_full" )
+      - flags: -lc_nano -lgcc -u _printf_float -u _scanf_float
+        condition: $( ${stdclib} == "newlib_fast" )
+      - flags: -lc_nano -lgcc -u _printf_float
+        condition: $( ${stdclib} == "newlib_small" )
+      - flags: -l$(replace(${stdclib},"lib")) -lheapops_basic
+        condition: $( startswith(${stdclib}, "libncrt") )
+      - flags: -lsemihost
+        condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
+      - flags: -lfileops_semi
+        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 1 )
+      - flags: -lfileops_uart
+        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 0 )
       - flags: -Wl,--gc-sections -Wl,--check-sections
-      - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
-        condition: $( startswith(${stdclib}, "newlib") )
       - flags: -Wl,--defsym=__SMP_CPU_CNT=${nuclei_smp}
         condition: $( ${nuclei_smp} > 1 )
       - flags: -Wl,--defsym=__HEAP_SIZE=${heapsz}
@@ -454,3 +400,35 @@ buildconfig:
     postbuild_steps: # could be override by app/bsp type
       command:
       description:
+
+  - type: gcc
+    description: Nuclei GNU Toolchain
+    toolchain_name: RISC-V GCC/Newlib
+    cross_prefix: riscv64-unknown-elf- # optional
+    common_flags: # flags need to be combined together across all packages
+      - flags: -mtune=${nuclei_core.tune}
+        condition: $( ${nuclei_core.tune} != "" )
+      - flags: --specs=${stdclib}.specs
+        condition: $( startswith(${stdclib}, "libncrt") )
+    ldflags:
+      - flags: -Wl,--no-warn-rwx-segments
+      - flags: -lc_nano -lgcc
+        condition: $( ${stdclib} == "newlib_nano" )
+      - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek -u errno
+        condition: $( startswith(${stdclib}, "newlib") )
+
+  - type: clang
+    description: Nuclei LLVM Toolchain
+    toolchain_name: RISC-V Clang/Newlib
+    cross_prefix: riscv64-unknown-elf- # optional
+    common_flags: # flags need to be combined together across all packages
+      - flags:
+        condition: $( startswith(${stdclib}, "libncrt") )
+    ldflags:
+      - flags: -fuse-ld=lld
+      - flags: -u __on_exit_args
+        condition: $( startswith(${stdclib}, "newlib") )
+      - flags: -lc_nano -lgcc -u _printf_float
+        condition: $( ${stdclib} == "newlib_nano" )
+      - flags: -l$(subst(${stdclib},lib,))
+        condition: $( startswith(${stdclib}, "libncrt") )

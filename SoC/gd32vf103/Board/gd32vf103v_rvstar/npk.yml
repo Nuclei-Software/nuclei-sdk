@@ -54,20 +54,6 @@ debugconfig:
       - key: config
         value: "openocd_gd32vf103.cfg"
 
-  - type: qemu
-    description: Nuclei QEMU
-    configs:
-       - key: nuclei_core
-         value: ${nuclei_core}
-       - key: download_mode
-         value: ${download_mode}
-       - key: riscv_arch
-         value: ${nuclei_core.arch}
-       - key: riscv_abi
-         value: ${nuclei_core.abi}
-       - key: machine
-         value: gd32vf103v_rvstar
-
   - type: jlink
     description: Segger Jlink
     configs:
@@ -81,7 +67,7 @@ debugconfig:
          value: auto  # auto, adaptive, fixed value(KHz) such as 1000
 
 buildconfig:
-  - type: gcc
+  - type: common
     linkscript:
       - script: "Source/GCC/gcc_gd32vf103_${download_mode}.ld"
     common_flags:

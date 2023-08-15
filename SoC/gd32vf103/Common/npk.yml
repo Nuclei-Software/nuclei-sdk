@@ -119,15 +119,13 @@ configuration:
       - name: n205
         arch: rv32imac
         abi: ilp32
+        cmodel: medlow
+        tune: nuclei-200-series
         description: N205/Bumblebee Core(ARCH=rv32imac, ABI=ilp32)
-  heapsz:
-      value:
-      type: text
-      description: Heap Size
-  stacksz:
-      value:
-      type: text
-      description: Stack Size
+  semihost:
+    default_value: 0
+    type: checkbox
+    description: Enable Semihosting
   stdclib:
     default_value: newlib_nano
     type: choice
@@ -163,7 +161,7 @@ codemanage:
   copyfiles:
     - path: ["Source/*.c", "Source/Drivers/*.c", "Source/GCC/", "Include/*.h", "gd32vf103.svd"]
     - path: ["Source/Stubs/newlib"]
-      condition: $( startswith(${stdclib}, "newlib") )
+      condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 0 )
     - path: ["Source/Stubs/libncrt"]
       condition: $( startswith(${stdclib}, "libncrt") )
     - path: ["Source/Drivers/Usb/drv_usb_core.c", "Include/Usb/*.h",
@@ -194,47 +192,40 @@ debugconfig:
     description: Nuclei OpenOCD
     svd: gd32vf103.svd
 
-  - type: qemu
-    description: Nuclei QEMU
-    svd: gd32vf103.svd
-
   - type: jlink
     description: Segger Jlink
     svd: gd32vf103.svd
 
 ## Build Configuration
 buildconfig:
-  - type: gcc
-    description: Nuclei RISC-V GNU Toolchain #must
-    cross_prefix: riscv-nuclei-elf- # optional
+  - type: common
     common_flags: # flags need to be combined together across all packages
       - flags: -g -fno-common -ffunction-sections -fdata-sections
-      - flags: -march=${nuclei_core.arch} -mabi=${nuclei_core.abi} -mcmodel=medany
-      - flags:
-        condition: $( ${stdclib} == "newlib_full" )
-      - flags: --specs=nano.specs -u _printf_float -u _scanf_float
-        condition: $( ${stdclib} == "newlib_fast" )
-      - flags: --specs=nano.specs -u _printf_float
-        condition: $( ${stdclib} == "newlib_small" )
-      - flags: --specs=nano.specs
-        condition: $( ${stdclib} == "newlib_nano" )
-      - flags: --specs=${stdclib}.specs
-        condition: $( startswith(${stdclib}, "libncrt") )
+      - flags: -march=${nuclei_core.arch}${nuclei_archext} -mabi=${nuclei_core.abi}
+      - flags: -mcmodel=${nuclei_core.cmodel}
       - flags: -nostdinc
         condition: $( ${stdclib} == "nostd" )
       - flags:
         condition: $( ${stdclib} == "nospec" )
     ldflags:
-      - flags: -nostartfiles
+      - flags: -nostartfiles -nodefaultlibs
       - flags: -lstdc++
         condition: $( startswith(${stdclib}, "newlib") )
+      - flags: -lc -lgcc
+        condition: $( ${stdclib} == "newlib_full" )
+      - flags: -lc_nano -lgcc -u _printf_float -u _scanf_float
+        condition: $( ${stdclib} == "newlib_fast" )
+      - flags: -lc_nano -lgcc -u _printf_float
+        condition: $( ${stdclib} == "newlib_small" )
+      - flags: -l$(replace(${stdclib},"lib")) -lheapops_basic
+        condition: $( startswith(${stdclib}, "libncrt") )
+      - flags: -lsemihost
+        condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
+      - flags: -lfileops_semi
+        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 1 )
+      - flags: -lfileops_uart
+        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 0 )
       - flags: -Wl,--gc-sections -Wl,--check-sections
-      - flags: # -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
-        condition: $( startswith(${stdclib}, "newlib") )
-      - flags: -Wl,--defsym=__HEAP_SIZE=${heapsz}
-        condition: $( ${heapsz} != "" )
-      - flags: -Wl,--defsym=__STACK_SIZE=${stacksz}
-        condition: $( ${stacksz} != "" )
     cflags:
     asmflags:
       - flags: -x assembler-with-cpp
@@ -248,3 +239,35 @@ buildconfig:
     postbuild_steps: # could be override by app/bsp type
       command:
       description:
+
+  - type: gcc
+    description: Nuclei GNU Toolchain
+    toolchain_name: RISC-V GCC/Newlib
+    cross_prefix: riscv64-unknown-elf- # optional
+    common_flags: # flags need to be combined together across all packages
+      - flags: -mtune=${nuclei_core.tune}
+        condition: $( ${nuclei_core.tune} != "" )
+      - flags: --specs=${stdclib}.specs
+        condition: $( startswith(${stdclib}, "libncrt") )
+    ldflags:
+      - flags: -Wl,--no-warn-rwx-segments
+      - flags: -lc_nano -lgcc
+        condition: $( ${stdclib} == "newlib_nano" )
+      - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek -u errno
+        condition: $( startswith(${stdclib}, "newlib") )
+
+  - type: clang
+    description: Nuclei LLVM Toolchain
+    toolchain_name: RISC-V Clang/Newlib
+    cross_prefix: riscv64-unknown-elf- # optional
+    common_flags: # flags need to be combined together across all packages
+      - flags:
+        condition: $( startswith(${stdclib}, "libncrt") )
+    ldflags:
+      - flags: -fuse-ld=lld
+      - flags: -u __on_exit_args
+        condition: $( startswith(${stdclib}, "newlib") )
+      - flags: -lc_nano -lgcc -u _printf_float
+        condition: $( ${stdclib} == "newlib_nano" )
+      - flags: -l$(subst(${stdclib},lib,))
+        condition: $( startswith(${stdclib}, "libncrt") )

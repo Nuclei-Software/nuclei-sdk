@@ -14,28 +14,13 @@ homepage: https://github.com/Nuclei-Software/NMSIS
 ## Package Configurations
 configuration:
   nmsislibarch:
-    default_value: rv32imac
-    type: list
+    value: "rv32imac"
+    type: text
     global: false
     description: RISC-V ARCH for NMSIS library
-    value: >-
-      [ "rv32imac", "rv32imafc", "rv32imafdc",
-        "rv32imacb", "rv32imafcb", "rv32imafdcb",
-        "rv32imacp", "rv32imafcp", "rv32imafdcp",
-        "rv32imacbp", "rv32imafcbp", "rv32imafdcbp",
-        "rv32imafcv", "rv32imafcbv", "rv32imafcpv", "rv32imafcbpv",
-        "rv32imafdcv", "rv32imafdcbv", "rv32imafdcpv", "rv32imafdcbpv",
-        "rv64imac", "rv64imafc", "rv64imafdc",
-        "rv64imacb", "rv64imafcb", "rv64imafdcb",
-        "rv64imacp", "rv64imafcp", "rv64imafdcp",
-        "rv64imacbp", "rv64imafcbp", "rv64imafdcbp",
-        "rv64imafcv", "rv64imafdcv",
-        "rv64imafcbv", "rv64imafdcbv",
-        "rv64imafcpv", "rv64imafdcpv",
-        "rv64imafcbpv", "rv64imafdcbpv" ]
   nmsislibsel:
     default_value: none
-    type: choices
+    type: choice
     global: true
     description: Select NMSIS Library
     choices:
