@@ -122,9 +122,7 @@ size: $(TARGET_ELF)
 
 upload: $(TARGET_ELF)
 	@$(ECHO) "Download and run $<"
-	$(GDB) -ex "set remotetimeout 240" \
-	-ex "target remote $(GDBREMOTE)" \
-	$(GDB_UPLOAD_ARGS) $(GDB_UPLOAD_CMDS)
+	$(GDB) -ex "set remotetimeout 240" -ex "target remote $(GDBREMOTE)" $(GDB_UPLOAD_ARGS) $(GDB_UPLOAD_CMDS)
 
 run_openocd:
 	@$(ECHO) "Start openocd server"
@@ -136,31 +134,28 @@ run_gdb: $(TARGET_ELF)
 
 debug: $(TARGET_ELF)
 	@$(ECHO) "Download and debug $<"
-	$(GDB) $< -ex "set remotetimeout 240" \
-	-ex "target remote $(GDBREMOTE)"
+	$(GDB) $< -ex "set remotetimeout 240" -ex "target remote $(GDBREMOTE)"
 
 # just for evalsoc purpose
 run_qemu: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(QEMU)"
-	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) \
-		-nodefaults -nographic -serial stdio -kernel $<
+	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) -nodefaults -nographic -serial stdio -kernel $<
 
 # just for evalsoc purpose
 run_qemu_debug: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(QEMU), and waiting for gdb connection on port $(GDB_PORT)"
 	@$(ECHO) "Then you can open a new terminal in the same directory and run make target: run_gdb to connect to this gdb connection"
-	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) \
-		-nodefaults -nographic -serial stdio -kernel $< -S -gdb tcp::$(GDB_PORT)
+	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) -nodefaults -nographic -serial stdio -kernel $< -S -gdb tcp::$(GDB_PORT)
 
 # just works on evalsoc purpose, experimental support
 run_xlspike: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(XLSPIKE)"
-	$(XLSPIKE) $(XLSPIKE_OPT) --isa $(RISCV_ARCH) $<
+	$(XLSPIKE) $(XLSPIKE_OPT) --isa $(XLSPIKE_ARCH) $<
 
 run_xlspike_rbb: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(XLSPIKE), and waiting for remote bitbang connection on port $(RBB_PORT)"
 	@$(ECHO) "Then you need open a new terminal in the same directory and run make target: run_xlspike_openocd to connect to this remote bitbang connection"
-	$(XLSPIKE) $(XLSPIKE_OPT) --rbb-port=$(RBB_PORT) -H --isa $(RISCV_ARCH) $<
+	$(XLSPIKE) $(XLSPIKE_OPT) --rbb-port=$(RBB_PORT) -H --isa $(XLSPIKE_ARCH) $<
 
 run_xlspike_openocd:
 	@$(ECHO) "Run openocd to connect to remote bitbang connection"

@@ -134,8 +134,9 @@ RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
 RISCV_TUNE ?= $(word 3, $(CORE_ARCH_ABI))
 
 # Handle QEMU Emulation
-QEMU_MACHINE := nuclei_evalsoc,download=$(DOWNLOAD)
-QEMU_CPU := nuclei-$(CORE),ext=$(ARCH_EXT)
+QEMU_MACHINE ?= nuclei_evalsoc,download=$(DOWNLOAD)
+QEMU_ARCHEXT ?= ${ARCH_EXT}
+QEMU_CPU ?= nuclei-$(CORE),ext=$(QEMU_ARCHEXT)
 ifneq ($(SEMIHOST),)
 QEMU_OPT += -semihosting
 endif
