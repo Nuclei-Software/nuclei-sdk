@@ -14,7 +14,7 @@
     "build_config": {
         "SOC": "evalsoc",
         "BOARD": "nuclei_fpga_eval",
-        "APP_COMMON_FLAGS" : "-fomit-frame-pointer",
+        "APP_COMMON_FLAGS" : "-fomit-frame-pointer -fno-shrink-wrap-separate",
         "BENCH_FLAGS": "-Os"
     },
     "build_configs": {
