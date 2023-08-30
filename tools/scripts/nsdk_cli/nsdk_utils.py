@@ -252,13 +252,22 @@ def save_json(file, data):
 def save_csv(file, csvlines, display=True):
     if isinstance(csvlines, list) == False:
         return False
+    # Flush stdout buffer
+    sys.stdout.flush()
     try:
         with open(file, "w") as cf:
             for line in csvlines:
                 csvline = line + "\n"
                 cf.write(csvline)
+                cf.flush()
                 if display:
-                    print("CSV, %s" % line)
+                    try:
+                        # sometimes facing issue BlockingIOError: [Errno 11] write could not complete without blocking here
+                        # maybe related to https://bugs.python.org/issue40634 since we are using async in this tool
+                        sys.stdout.flush()
+                        print("CSV, %s" % line)
+                    except:
+                        pass
         return True
     except:
         print("Error: Data can't be saved to file!")
