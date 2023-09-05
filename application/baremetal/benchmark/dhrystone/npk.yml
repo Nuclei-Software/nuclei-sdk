@@ -38,7 +38,7 @@ setconfig:
 ## Source Code Management
 codemanage:
   copyfiles:
-    - path: ["*.c", "*.h"]
+    - path: ["*.c", "*.h", "*.S"]
   incdirs:
     - path: ["./"]
   libdirs:
