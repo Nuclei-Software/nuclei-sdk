@@ -26,6 +26,13 @@
 extern  int     Int_Glob;
 extern  char    Ch_1_Glob;
 
+extern int strcmp_xlcz(const char* str1, const char* str2);
+
+#if __riscv_xxlcz
+#define STRCMP(str1, str2) strcmp_xlcz(str1, str2)
+#else
+#define STRCMP(str1, str2) strcmp(str1, str2)
+#endif
 
 Proc_6(Enum_Val_Par, Enum_Ref_Par)
 /*********************************/
@@ -169,7 +176,7 @@ Str_30  Str_2_Par_Ref;
     {
         return (true);
     } else { /* executed */
-        if (strcmp(Str_1_Par_Ref, Str_2_Par_Ref) > 0)
+        if (STRCMP(Str_1_Par_Ref, Str_2_Par_Ref) > 0)
             /* then, not executed */
         {
             Int_Loc += 7;
@@ -181,6 +188,7 @@ Str_30  Str_2_Par_Ref;
     } /* if Ch_Loc */
 } /* Func_2 */
 
+#undef STRCMP
 
 Boolean Func_3(Enum_Par_Val)
 /***************************/

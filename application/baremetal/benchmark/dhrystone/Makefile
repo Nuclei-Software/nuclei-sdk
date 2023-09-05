@@ -25,6 +25,8 @@ endif
 
 COMMON_FLAGS := $(BENCH_FLAGS)
 
+SRCDIRS = .
+
 C_SRCDIRS = .
 
 INCDIRS = .
