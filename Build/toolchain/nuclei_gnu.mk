@@ -125,6 +125,11 @@ ifneq ($(RISCV_TUNE),)
 COMMON_FLAGS += -mtune=$(RISCV_TUNE)
 endif
 
+# Generate zcmp related asm by passing extra options
+ifneq ($(findstring zc,$(ARCH_EXT)),)
+COMMON_FLAGS += -fomit-frame-pointer -fno-shrink-wrap-separate
+endif
+
 LDFLAGS += -nodefaultlibs -Wl,--no-warn-rwx-segments
 
 ifneq ($(findstring newlib,$(STDCLIB)),)
