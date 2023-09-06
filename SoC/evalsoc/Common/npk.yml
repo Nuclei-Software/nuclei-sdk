@@ -313,8 +313,14 @@ codemanage:
 
 ## Set Configuration for other packages
 setconfig:
-  - config: nmsislibarch
+  - config: nuclei_arch
+    value: $(subst(${nuclei_core.arch},c,))${nuclei_archext}
+    condition: $( contains(${nuclei_archext}, "zc"))
+  - config: nuclei_arch
     value: ${nuclei_core.arch}${nuclei_archext}
+    condition: $( ! contains(${nuclei_archext}, "zc"))
+  - config: nmsislibarch
+    value: ${nuclei_arch}
 
 ## Debug Configuration for this SoC
 debugconfig:
@@ -335,7 +341,7 @@ buildconfig:
   - type: common
     common_flags: # flags need to be combined together across all packages
       - flags: -g -fno-common -ffunction-sections -fdata-sections
-      - flags: -march=${nuclei_core.arch}${nuclei_archext} -mabi=${nuclei_core.abi}
+      - flags: -march=${nuclei_arch} -mabi=${nuclei_core.abi}
       - flags: -mcmodel=${nuclei_core.cmodel}
       - flags: -nostdinc
         condition: $( ${stdclib} == "nostd" )
@@ -410,6 +416,9 @@ buildconfig:
         condition: $( ${nuclei_core.tune} != "" )
       - flags: --specs=${stdclib}.specs
         condition: $( startswith(${stdclib}, "libncrt") )
+      # pass extra flags when zc extension enabled
+      - flags: -fomit-frame-pointer -fno-shrink-wrap-separate
+        condition: $( contains(${nuclei_archext}, "zc"))
     ldflags:
       - flags: -Wl,--no-warn-rwx-segments
       - flags: -lc_nano -lgcc
