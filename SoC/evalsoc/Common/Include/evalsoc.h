@@ -324,11 +324,6 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 
 
 /* ========================================  Start of section using anonymous unions  ======================================== */
-#if   defined (__GNUC__)
-/* anonymous unions are enabled by default */
-#else
-#warning Not supported compiler type
-#endif
 
 #define RTC_FREQ                    32768
 // The TIMER frequency is just the RTC frequency
@@ -401,11 +396,6 @@ typedef struct {
 
 
 /* =========================================  End of section using anonymous unions  ========================================= */
-#if defined (__GNUC__)
-/* anonymous unions are enabled by default */
-#else
-#warning Not supported compiler type
-#endif
 
 /* Macros for memory access operations */
 #define _REG8P(p, i)                        ((volatile uint8_t *) ((uintptr_t)((p) + (i))))

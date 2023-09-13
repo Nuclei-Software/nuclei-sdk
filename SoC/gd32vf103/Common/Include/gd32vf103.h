@@ -229,12 +229,6 @@ typedef enum EXCn {
 
 
 /* ========================================  Start of section using anonymous unions  ======================================== */
-#if   defined (__GNUC__)
-/* anonymous unions are enabled by default */
-#else
-#warning Not supported compiler type
-#endif
-
 
 // The TIMER frequency is just the RTC frequency
 #define SOC_TIMER_FREQ     ((uint32_t)SystemCoreClock >> 2)  //LXTAL_VALUE units HZ
@@ -289,11 +283,6 @@ typedef enum {
 
 
 /* =========================================  End of section using anonymous unions  ========================================= */
-#if defined (__GNUC__)
-/* anonymous unions are enabled by default */
-#else
-#warning Not supported compiler type
-#endif
 
 
 /* =========================================================================================================================== */
