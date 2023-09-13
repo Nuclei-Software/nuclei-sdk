@@ -37,7 +37,9 @@
 #if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
 
 #if defined(__INC_INTRINSIC_API) && (__INC_INTRINSIC_API == 1)
+#ifndef __ICCRISCV__
 #include <rvp_intrinsic.h>
+#endif
 #endif
 
 /* ###########################  CPU SIMD DSP Intrinsic Functions ########################### */
