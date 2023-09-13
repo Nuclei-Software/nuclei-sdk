@@ -187,73 +187,27 @@
   #define __INTERRUPT                            __attribute__((interrupt))
 #endif
 
-/** @} */ /* End of Doxygen Group NMSIS_Core_CompilerControl */
-
-/* IO definitions (access restrictions to peripheral registers) */
-/**
- * \defgroup NMSIS_Core_PeriphAccess     Peripheral Access
- * \brief  Naming conventions and optional features for accessing peripherals.
- *
- * The section below describes the naming conventions, requirements, and optional features
- * for accessing device specific peripherals.
- * Most of the rules also apply to the core peripherals.
- *
- * The **Device Header File <device.h>** contains typically these definition
- * and also includes the core specific header files.
- *
- * @{
- */
-/** \brief Defines 'read only' permissions */
-#ifdef __cplusplus
-  #define   __I     volatile
-#else
-  #define   __I     volatile const
+/** \brief Use this attribute to indicate that the specified function is an interrupt handler run in Machine Mode. */
+#ifndef   __INTERRUPT
+  #define __INTERRUPT                            __attribute__((interrupt))
 #endif
-/** \brief Defines 'write only' permissions */
-#define     __O     volatile
-/** \brief Defines 'read / write' permissions */
-#define     __IO    volatile
 
-/* following defines should be used for structure members */
-/** \brief Defines 'read only' structure member permissions */
-#define     __IM     volatile const
-/** \brief Defines 'write only' structure member permissions */
-#define     __OM     volatile
-/** \brief Defines 'read/write' structure member permissions */
-#define     __IOM    volatile
+/** \brief Use this attribute to indicate that the specified function is an interrupt handler run in Machine Mode. */
+#ifndef   __MACHINE_INTERRUPT
+  #define __MACHINE_INTERRUPT                    __attribute__ ((interrupt ("machine")))
+#endif
 
-/**
- * \brief   Mask and shift a bit field value for use in a register bit range.
- * \details The macro \ref _VAL2FLD uses the #define's _Pos and _Msk of the related bit
- * field to shift bit-field values for assigning to a register.
- *
- * **Example**:
- * \code
- * ECLIC->CFG = _VAL2FLD(CLIC_CLICCFG_NLBIT, 3);
- * \endcode
- * \param[in] field  Name of the register bit field.
- * \param[in] value  Value of the bit field. This parameter is interpreted as an uint32_t type.
- * \return           Masked and shifted value.
- */
-#define _VAL2FLD(field, value)    (((uint32_t)(value) << field ## _Pos) & field ## _Msk)
+/** \brief Use this attribute to indicate that the specified function is an interrupt handler run in Supervisor Mode. */
+#ifndef   __SUPERVISOR_INTERRUPT
+  #define __SUPERVISOR_INTERRUPT                 __attribute__ ((interrupt ("supervisor")))
+#endif
 
-/**
- * \brief   Mask and shift a register value to extract a bit filed value.
- * \details The macro \ref _FLD2VAL uses the #define's _Pos and _Msk of the related bit
- * field to extract the value of a bit field from a register.
- *
- * **Example**:
- * \code
- * nlbits = _FLD2VAL(CLIC_CLICCFG_NLBIT, ECLIC->CFG);
- * \endcode
- * \param[in] field  Name of the register bit field.
- * \param[in] value  Value of register. This parameter is interpreted as an uint32_t type.
- * \return           Masked and shifted bit field value.
- */
-#define _FLD2VAL(field, value)    (((uint32_t)(value) & field ## _Msk) >> field ## _Pos)
+/** \brief Use this attribute to indicate that the specified function is an interrupt handler run in User Mode. */
+#ifndef   __USER_INTERRUPT
+  #define __USER_INTERRUPT                       __attribute__ ((interrupt ("user")))
+#endif
 
-/** @} */ /* end of group NMSIS_Core_PeriphAccess */
-
+/** @} */ /* End of Doxygen Group NMSIS_Core_CompilerControl */
 
 #ifdef __cplusplus
 }
