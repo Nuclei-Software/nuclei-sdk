@@ -1,4 +1,4 @@
-*.i*
+*.i
 *.o*
 *.d*
 *.elf*
@@ -55,3 +55,10 @@ fpga_runner.yaml
 *.gcda
 *.gcno
 *.gcov
+
+# IAR Embedded Workbench generated dirs/files
+settings/
+Debug/
+Release/
+*.dep
+*.ewt
