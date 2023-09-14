@@ -442,6 +442,8 @@ typedef union {
 
 #ifndef __ASSEMBLY__
 
+#ifndef __ICCRISCV__
+
 /**
  * \brief CSR operation Macro for csrrw instruction.
  * \details
@@ -570,6 +572,20 @@ typedef union {
                      : "rK"(__v)                                \
                      : "memory");                               \
     })
+#else
+
+#include <intrinsics.h>
+
+#define __RV_CSR_SWAP         __write_csr
+#define __RV_CSR_READ         __read_csr
+#define __RV_CSR_WRITE        __write_csr
+#define __RV_CSR_READ_SET     __set_bits_csr
+#define __RV_CSR_SET          __set_bits_csr
+#define __RV_CSR_READ_CLEAR   __clear_bits_csr
+#define __RV_CSR_CLEAR        __clear_bits_csr
+
+#endif /* __ICCRISCV__ */
+
 #endif /* __ASSEMBLY__ */
 
 /**
@@ -594,7 +610,7 @@ __STATIC_FORCEINLINE void __switch_mode(uint8_t mode, uintptr_t stack, void(*ent
     __RV_CSR_WRITE(CSR_MSTATUS, val);
 
     /* Set the entry point in MEPC */
-    __RV_CSR_WRITE(CSR_MEPC, entry_point);
+    __RV_CSR_WRITE(CSR_MEPC, (unsigned long)entry_point);
 
     /* Set the register file */
     __ASM volatile("mv sp, %0" ::"r"(stack));
