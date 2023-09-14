@@ -2,7 +2,7 @@
 #include <time.h>
 #include <nuclei_sdk_hal.h>
 
-int metal_tty_putc(int c)
+__USED int metal_tty_putc(int c)
 {
     if (c == '\n') {
         uart_write(SOC_DEBUG_UART, '\r');
@@ -11,7 +11,7 @@ int metal_tty_putc(int c)
     return 0;
 }
 
-int metal_tty_getc(void)
+__USED int metal_tty_getc(void)
 {
     int c = (int)uart_read(SOC_DEBUG_UART);
     return c;
