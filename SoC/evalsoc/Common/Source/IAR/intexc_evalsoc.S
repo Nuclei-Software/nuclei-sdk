@@ -83,7 +83,7 @@ RESTORE_CSR_CONTEXT MACRO
     PUBLIC Undef_Handler
     EXTERN core_exception_handler
 
-    SECTION `.mtext`:CODE:NOROOT(2)
+    SECTION `.text`:CODE:NOROOT(2)
     CODE
 
     ALIGN 6
