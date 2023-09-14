@@ -80,7 +80,7 @@ RESTORE_CSR_CONTEXT MACRO
   ENDM
 
     PUBWEAK exc_entry, irq_entry, early_exc_entry, default_intexc_handler
-    PUBLIC Undef_Handler
+    PUBWEAK Undef_Handler
     EXTERN core_exception_handler
 
     SECTION `.text`:CODE:NOROOT(2)
@@ -114,7 +114,7 @@ exc_entry:
 
     /* Return to regular code */
     mret
-    
+
     ALIGN 2
 irq_entry:
     /* Save the caller saving registers (context) */
@@ -143,9 +143,9 @@ irq_entry:
 default_intexc_handler:
 Undef_Handler:
     j Undef_Handler
-    
+
     ALIGN 6
 early_exc_entry:
     j early_exc_entry
-  
+
     END

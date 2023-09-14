@@ -7,6 +7,10 @@ extern void default_intexc_handler();
 
 typedef void(*__fp)();
 
+/* If rodata is placed in real readonly section,
+ * if you want to register vector interrupt with new entry,
+ * you need to place it in ram
+ */
 #pragma data_alignment = 256
 static const __fp vector_base[] = {
     0,
@@ -122,6 +126,15 @@ int __low_level_init(void)
 
     /* Call IAR Internal data initial function */
     IAR_DATA_INIT();
+
+    /*
+     * You can place it before calling IAR_DATA_INIT
+     * if in this SystemInit function use no global variable.
+     * Call vendor defined SystemInit to
+     * initialize the micro-controller system
+     * SystemInit will just be called by boot cpu
+     */
+    SystemInit();
 
     /* Get CPU frequency and initialize uart for print */
     _premain_init();

@@ -1,0 +1,35 @@
+//////////////////////////////////////////////////////////////////////
+// RISC-V ilink configuration file
+// for the Nuclei Evaluation SoC FlashXIP Linker File
+//
+
+define exported symbol _link_file_version_2 = 1;
+
+define memory mem with size = 4G;
+define exported symbol _max_vector = 4096;
+
+define region ROM_region32 = mem:[from 0x20000000 to 0x203FFFFF];
+define region ILM_region32 = mem:[from 0x80000000 to 0x8000FFFF];
+define region RAM_region32 = mem:[from 0x90000000 to 0x9000FFFF];
+
+initialize by copy { rw };
+do not initialize  { section *.noinit };
+keep symbol __iar_cstart_init_gp; // defined in cstartup.s
+
+define block CSTACK with alignment = 16, size = CSTACK_SIZE { };
+define block HEAP   with alignment = 16, size = HEAP_SIZE   { };
+
+define block MINTERRUPTS with maximum size =  1024k { ro section .mtext };
+
+define block RW_DATA with static base GPREL { rw data };
+keep { ro section .alias.hwreset };
+
+"CSTARTUP32" : place at start of ROM_region32 { ro section .alias.hwreset,
+                                                ro section .cstartup };
+
+"ROM32":place in ROM_region32        { ro,
+                                       block MINTERRUPTS };
+
+"RAM32":place in RAM_region32        { block RW_DATA,
+                                       block HEAP,
+                                       block CSTACK };
