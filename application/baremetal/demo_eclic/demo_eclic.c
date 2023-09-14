@@ -86,11 +86,11 @@ int main(int argc, char** argv)
 
     // initialize software interrupt as vector interrupt
     returnCode = ECLIC_Register_IRQ(SysTimerSW_IRQn, ECLIC_VECTOR_INTERRUPT,
-                                    ECLIC_LEVEL_TRIGGER, swirq_intlevel, 0, eclic_msip_handler);
+                                    ECLIC_LEVEL_TRIGGER, swirq_intlevel, 0, (void*)eclic_msip_handler);
 
     // inital timer interrupt as non-vector interrupt
     returnCode = ECLIC_Register_IRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
-                                    ECLIC_LEVEL_TRIGGER, timer_intlevel, 0, eclic_mtip_handler);
+                                    ECLIC_LEVEL_TRIGGER, timer_intlevel, 0, (void*)eclic_mtip_handler);
 
     // Enable interrupts in general.
     __enable_irq();
