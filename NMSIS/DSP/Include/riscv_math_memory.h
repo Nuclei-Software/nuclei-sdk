@@ -50,6 +50,8 @@ extern "C"
   #define __SIMD32_TYPE __un(aligned) int32_t
 #elif defined(_MSC_VER )
   #define __SIMD32_TYPE int32_t
+#elif defined(__ICCRISCV__ )
+  #define __SIMD32_TYPE int32_t
 #else
   #error Unknown compiler
 #endif
