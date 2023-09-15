@@ -1,37 +1,63 @@
 #include <stdlib.h>
+#include <string.h>
 #include "evalsoc.h"
 
 extern __weak void eclic_msip_handler();
 extern __weak void eclic_mtip_handler();
 extern void default_intexc_handler();
 
+/*
+ * Uncomment it if your vector table is placed in readonly section,
+ * and you have defined .mintvec_rw section in a writable section in iar
+ * linker icf file
+ * In this implementation, when use with iar_evalsoc_flashxip.icf, you can
+ * try this FLASH_RAM_VECTOR
+ */
+// #define FLASH_RAM_VECTOR        1
+
 typedef void(*__fp)();
 
-/* If rodata is placed in real readonly section,
+/* If .mintvec section is placed in real readonly section,
  * if you want to register vector interrupt with new entry,
- * you need to place it in ram
+ * you need to place it in writable section or create a ram vector
+ * after bootup.
+ * This alignment is set to 256 byte for up to 64 interrupts,
+ * If you have more interrupts, you need to adjust the alignment
+ * to other value, for details, please check mtvt csr documented
+ * in Nuclei RISC-V ISA Spec
  */
 #pragma data_alignment = 256
-static const __fp vector_base[] = {
-    0,
-    0,
-    0,
+static const __fp vector_base[SOC_INT_MAX] __attribute__((section (".mintvec"))) = {
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
     eclic_msip_handler,
-    0,
-    0,
-    0,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
     eclic_mtip_handler,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
+    default_intexc_handler,
     default_intexc_handler,
     default_intexc_handler,
     default_intexc_handler,
@@ -67,6 +93,17 @@ static const __fp vector_base[] = {
     default_intexc_handler,
     default_intexc_handler
 };
+
+#if defined(FLASH_RAM_VECTOR)
+#pragma data_alignment = 256
+static __fp vector_base_ram[SOC_INT_MAX] __attribute__((section (".mintvec_rw")));
+
+static void prepare_ram_vector(void)
+{
+    memcpy((void *)vector_base_ram, (const void *)vector_base, (size_t)(sizeof(__fp) * SOC_INT_MAX));
+    __RV_CSR_WRITE(CSR_MTVT, (unsigned long)(&vector_base_ram));
+}
+#endif
 
 extern void exc_entry(void);
 extern void irq_entry(void);
@@ -123,6 +160,11 @@ int __low_level_init(void)
 
     /* Enable mcycle and minstret counter */
     __RV_CSR_CLEAR(CSR_MCOUNTINHIBIT, 0x5);
+
+    /* Prepare ram vector table for initial vector table located in readonly section case */
+#if defined(FLASH_RAM_VECTOR)
+    prepare_ram_vector();
+#endif
 
     /* Call IAR Internal data initial function */
     IAR_DATA_INIT();
