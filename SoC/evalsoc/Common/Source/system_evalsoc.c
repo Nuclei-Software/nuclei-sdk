@@ -104,94 +104,87 @@ void eclic_stip_handler(void) __attribute__((weak));
  */
 static unsigned long vector_table_s[SOC_INT_MAX] __attribute__((section (".text.vtable_s"), aligned(512))) =
 {
-    (unsigned long)(&default_intexc_handler),        /* 0: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 1: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 2: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 0: Reserved */
+    (unsigned long)(eclic_ssip_handler),            /* 1: supervisor software interrupt */
+    (unsigned long)(default_intexc_handler),        /* 2: Reserved */
 
-    (unsigned long)(&eclic_ssip_handler),            /* 3: supervisor software interrupt */
+    (unsigned long)(eclic_ssip_handler),            /* 3: machine software interrupt */
 
-    (unsigned long)(&default_intexc_handler),        /* 4: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 5: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 6: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 4: Reserved */
+    (unsigned long)(eclic_stip_handler),            /* 5: supervisor timer interrupt */
+    (unsigned long)(default_intexc_handler),        /* 6: Reserved */
 
-    (unsigned long)(&eclic_stip_handler),            /* 7: supervisor timer interrupt */
+    (unsigned long)(eclic_stip_handler),            /* 7: machine timer interrupt */
 
-    (unsigned long)(&default_intexc_handler),        /* 8: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 9: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 10: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 11: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 8: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 9: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 10: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 11: Reserved */
 
-    (unsigned long)(&default_intexc_handler),        /* 12: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 13: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 14: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 15: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 12: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 13: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 14: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 15: Reserved */
 
-    (unsigned long)(&default_intexc_handler),        /* 16: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 17: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 18: Reserved */
-    (unsigned long)(&default_intexc_handler),        /* 19: Interrupt 19 */
+    (unsigned long)(default_intexc_handler),        /* 16: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 17: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 18: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 19: Interrupt 19 */
 
-    (unsigned long)(&default_intexc_handler),        /* 20: Interrupt 20 */
-    (unsigned long)(&default_intexc_handler),        /* 21: Interrupt 21 */
-    (unsigned long)(&default_intexc_handler),        /* 22: Interrupt 22 */
-    (unsigned long)(&default_intexc_handler),        /* 23: Interrupt 23 */
+    (unsigned long)(default_intexc_handler),        /* 20: Interrupt 20 */
+    (unsigned long)(default_intexc_handler),        /* 21: Interrupt 21 */
+    (unsigned long)(default_intexc_handler),        /* 22: Interrupt 22 */
+    (unsigned long)(default_intexc_handler),        /* 23: Interrupt 23 */
 
-    (unsigned long)(&default_intexc_handler),        /* 24: Interrupt 24 */
-    (unsigned long)(&default_intexc_handler),        /* 25: Interrupt 25 */
-    (unsigned long)(&default_intexc_handler),        /* 26: Interrupt 26 */
-    (unsigned long)(&default_intexc_handler),        /* 27: Interrupt 27 */
+    (unsigned long)(default_intexc_handler),        /* 24: Interrupt 24 */
+    (unsigned long)(default_intexc_handler),        /* 25: Interrupt 25 */
+    (unsigned long)(default_intexc_handler),        /* 26: Interrupt 26 */
+    (unsigned long)(default_intexc_handler),        /* 27: Interrupt 27 */
 
-    (unsigned long)(&default_intexc_handler),        /* 28: Interrupt 28 */
-    (unsigned long)(&default_intexc_handler),        /* 29: Interrupt 29 */
-    (unsigned long)(&default_intexc_handler),        /* 30: Interrupt 30 */
-    (unsigned long)(&default_intexc_handler),        /* 31: Interrupt 31 */
+    (unsigned long)(default_intexc_handler),        /* 28: Interrupt 28 */
+    (unsigned long)(default_intexc_handler),        /* 29: Interrupt 29 */
+    (unsigned long)(default_intexc_handler),        /* 30: Interrupt 30 */
+    (unsigned long)(default_intexc_handler),        /* 31: Interrupt 31 */
 
-    (unsigned long)(&default_intexc_handler),        /* 32: Interrupt 32 */
-    (unsigned long)(&default_intexc_handler),        /* 33: Interrupt 33 */
-    (unsigned long)(&default_intexc_handler),        /* 34: Interrupt 34 */
-    (unsigned long)(&default_intexc_handler),        /* 35: Interrupt 35 */
+    (unsigned long)(default_intexc_handler),        /* 32: Interrupt 32 */
+    (unsigned long)(default_intexc_handler),        /* 33: Interrupt 33 */
+    (unsigned long)(default_intexc_handler),        /* 34: Interrupt 34 */
+    (unsigned long)(default_intexc_handler),        /* 35: Interrupt 35 */
 
-    (unsigned long)(&default_intexc_handler),        /* 36: Interrupt 36 */
-    (unsigned long)(&default_intexc_handler),        /* 37: Interrupt 37 */
-    (unsigned long)(&default_intexc_handler),        /* 38: Interrupt 38 */
-    (unsigned long)(&default_intexc_handler),        /* 39: Interrupt 39 */
+    (unsigned long)(default_intexc_handler),        /* 36: Interrupt 36 */
+    (unsigned long)(default_intexc_handler),        /* 37: Interrupt 37 */
+    (unsigned long)(default_intexc_handler),        /* 38: Interrupt 38 */
+    (unsigned long)(default_intexc_handler),        /* 39: Interrupt 39 */
 
-    (unsigned long)(&default_intexc_handler),        /* 40: Interrupt 40 */
-    (unsigned long)(&default_intexc_handler),        /* 41: Interrupt 41 */
-    (unsigned long)(&default_intexc_handler),        /* 42: Interrupt 42 */
-    (unsigned long)(&default_intexc_handler),        /* 43: Interrupt 43 */
+    (unsigned long)(default_intexc_handler),        /* 40: Interrupt 40 */
+    (unsigned long)(default_intexc_handler),        /* 41: Interrupt 41 */
+    (unsigned long)(default_intexc_handler),        /* 42: Interrupt 42 */
+    (unsigned long)(default_intexc_handler),        /* 43: Interrupt 43 */
 
-    (unsigned long)(&default_intexc_handler),        /* 44: Interrupt 44 */
-    (unsigned long)(&default_intexc_handler),        /* 45: Interrupt 45 */
-    (unsigned long)(&default_intexc_handler),        /* 46: Interrupt 46 */
-    (unsigned long)(&default_intexc_handler),        /* 47: Interrupt 47 */
+    (unsigned long)(default_intexc_handler),        /* 44: Interrupt 44 */
+    (unsigned long)(default_intexc_handler),        /* 45: Interrupt 45 */
+    (unsigned long)(default_intexc_handler),        /* 46: Interrupt 46 */
+    (unsigned long)(default_intexc_handler),        /* 47: Interrupt 47 */
 
-    (unsigned long)(&default_intexc_handler),        /* 48: Interrupt 48 */
-    (unsigned long)(&default_intexc_handler),        /* 49: Interrupt 49 */
-    (unsigned long)(&default_intexc_handler),        /* 50: Interrupt 50 */
-    (unsigned long)(&default_intexc_handler),        /* 51: Interrupt 51 */
+    (unsigned long)(default_intexc_handler),        /* 48: Interrupt 48 */
+    (unsigned long)(default_intexc_handler),        /* 49: Interrupt 49 */
+    (unsigned long)(default_intexc_handler),        /* 50: Interrupt 50 */
+    (unsigned long)(default_intexc_handler),        /* 51: Interrupt 51 */
 
-    (unsigned long)(&default_intexc_handler),        /* 52: Interrupt 52 */
-    (unsigned long)(&default_intexc_handler),        /* 53: Interrupt 53 */
-    (unsigned long)(&default_intexc_handler),        /* 54: Interrupt 54 */
-    (unsigned long)(&default_intexc_handler),        /* 55: Interrupt 55 */
+    (unsigned long)(default_intexc_handler),        /* 52: Interrupt 52 */
+    (unsigned long)(default_intexc_handler),        /* 53: Interrupt 53 */
+    (unsigned long)(default_intexc_handler),        /* 54: Interrupt 54 */
+    (unsigned long)(default_intexc_handler),        /* 55: Interrupt 55 */
 
-    (unsigned long)(&default_intexc_handler),        /* 56: Interrupt 56 */
-    (unsigned long)(&default_intexc_handler),        /* 57: Interrupt 57 */
-    (unsigned long)(&default_intexc_handler),        /* 58: Interrupt 58 */
-    (unsigned long)(&default_intexc_handler),        /* 59: Interrupt 59 */
+    (unsigned long)(default_intexc_handler),        /* 56: Interrupt 56 */
+    (unsigned long)(default_intexc_handler),        /* 57: Interrupt 57 */
+    (unsigned long)(default_intexc_handler),        /* 58: Interrupt 58 */
+    (unsigned long)(default_intexc_handler),        /* 59: Interrupt 59 */
 
-    (unsigned long)(&default_intexc_handler),        /* 60: Interrupt 60 */
-    (unsigned long)(&default_intexc_handler),        /* 61: Interrupt 61 */
-    (unsigned long)(&default_intexc_handler),        /* 62: Interrupt 62 */
-    (unsigned long)(&default_intexc_handler),        /* 63: Interrupt 63 */
-
-    (unsigned long)(&default_intexc_handler),        /* 64: Interrupt 64 */
-    (unsigned long)(&default_intexc_handler),        /* 65: Interrupt 65 */
-    (unsigned long)(&default_intexc_handler),        /* 66: Interrupt 66 */
-    (unsigned long)(&default_intexc_handler),        /* 67: Interrupt 67 */
-
-    (unsigned long)(&default_intexc_handler),        /* 68: Interrupt 68 */
+    (unsigned long)(default_intexc_handler),        /* 60: Interrupt 60 */
+    (unsigned long)(default_intexc_handler),        /* 61: Interrupt 61 */
+    (unsigned long)(default_intexc_handler),        /* 62: Interrupt 62 */
+    (unsigned long)(default_intexc_handler),        /* 63: Interrupt 63 */
 };
 #endif
 /*----------------------------------------------------------------------------

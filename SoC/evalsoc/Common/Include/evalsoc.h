@@ -151,11 +151,6 @@ typedef enum IRQn {
     SOC_INT61_IRQn           = 61,                /*!< Device Interrupt */
     SOC_INT62_IRQn           = 62,                /*!< Device Interrupt */
     SOC_INT63_IRQn           = 63,                /*!< Device Interrupt */
-    SOC_INT64_IRQn           = 64,                /*!< Device Interrupt */
-    SOC_INT65_IRQn           = 65,                /*!< Device Interrupt */
-    SOC_INT66_IRQn           = 66,                /*!< Device Interrupt */
-    SOC_INT67_IRQn           = 67,                /*!< Device Interrupt */
-    SOC_INT68_IRQn           = 68,                /*!< Device Interrupt */
     SOC_INT_MAX,
 } IRQn_Type;
 

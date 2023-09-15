@@ -135,13 +135,6 @@ vector_base:
     DECLARE_INT_HANDLER     default_intexc_handler          /* 62: Interrupt 62 */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 63: Interrupt 63 */
 
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 64: Interrupt 64 */
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 65: Interrupt 65 */
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 66: Interrupt 66 */
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 67: Interrupt 67 */
-
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 68: Interrupt 68 */
-
     .option pop
 
 
