@@ -23,9 +23,11 @@ configuration:
 codemanage:
   installdir: FreeRTOS
   copyfiles:
-    - path: ["Source/*.c", "Source/portable/GCC", "Source/portable/MemMang/heap_4.c", "Source/include"]
+    - path: ["Source/*.c", "Source/portable/MemMang/heap_4.c", "Source/include"]
+    - path: ["Source/portable/port.c", "Source/portable/portmacro.h"]
+    - path: ["Source/portable/GCC"]
   incdirs:
-    - path: ["Source/include", "Source/portable/GCC"]
+    - path: ["Source/include", "Source/portable"]
   libdirs:
   ldlibs:
 
