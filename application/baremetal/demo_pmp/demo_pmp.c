@@ -15,7 +15,16 @@
 volatile uint8_t protected_data[0x2000] __attribute__((aligned(0x2000))) =    \
 {0xaa, 0x1, 0x02, 0x03, 0x04, 0x05, 0x06, 0xaa};
 
-static void __attribute__((section (".text"), aligned(0x2000))) protected_execute(void)
+#ifndef __ICCRISCV__
+#define __PMP_PROTECT   __attribute__((section (".text"), aligned(0x2000)))
+#else
+/* IAR CC currently don't support align function in section,
+ * so we provide a workaround using a customized iar_evalsoc_ilm.icf in this demo
+ * we define a block called PMPFUNC alignment set to 0x2000 */
+#define __PMP_PROTECT   __attribute__((section (".text.pmpfunc")))
+#endif
+
+static void __PMP_PROTECT protected_execute(void)
 {
     printf("----protected_execute succeed!----\r\n");
 
@@ -46,6 +55,8 @@ static void pmp_violation_fault_handler(unsigned long mcause, unsigned long sp)
     }
     while(1);
 }
+
+typedef void(*__funcpt)();
 
 int main(void)
 {
@@ -124,7 +135,7 @@ int main(void)
     Exception_Register_EXC(StAccessFault_EXCn, (unsigned long)pmp_violation_fault_handler);
 
     /* In case compiler use inline optimization of protected_execute */
-    void (*fncptr)(void) = ((void *)protected_execute);
+    __funcpt fncptr = ((__funcpt)protected_execute);
     printf("Attempting to fetch instruction from protected address\n");
     fncptr();
 
