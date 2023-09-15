@@ -56,7 +56,7 @@ static void pmp_violation_fault_handler(unsigned long mcause, unsigned long sp)
     while(1);
 }
 
-typedef void(*__funcpt)();
+typedef void(*__funcpt)(void);
 
 int main(void)
 {
