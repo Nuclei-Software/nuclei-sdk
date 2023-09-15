@@ -8,21 +8,18 @@
 
 #define portCONTEXT_SIZE    ( portRegNum * REGBYTES )
 
-#********************************************************************************************************
-#                                          PUBLIC FUNCTIONS
-#********************************************************************************************************
-
-    .extern  OSTCBCur
-    .extern  OSTCBHighRdy
+    .extern OSTCBCur
+    .extern OSTCBHighRdy
+    .extern xPortTaskSwitch
 
     .global prvPortStartFirstTask
+    .global exc_entry
+    .global irq_entry
+    .global default_intexc_handler
+    .global eclic_msip_handler
 
 
-#********************************************************************************************************
-#                                     CODE GENERATION DIRECTIVES
-#********************************************************************************************************
-
-.section    .text.entry
+.section .text.entry
 .align 8
 
 /**
@@ -153,7 +150,6 @@
 .section .text.trap
 /* In CLIC mode, the exeception entry must be 64bytes aligned */
 .align 6
-.global exc_entry
 exc_entry:
     /* Save the caller saving registers (context) */
     SAVE_CONTEXT
@@ -195,7 +191,6 @@ exc_entry:
 .section      .text.irq
 /* In CLIC mode, the interrupt entry must be 4bytes aligned */
 .align 2
-.global irq_entry
 /* This label will be set to MTVT2 register */
 irq_entry:
     /* Save the caller saving registers (context) */
@@ -222,7 +217,6 @@ irq_entry:
     mret
 
 /* Default Handler for Exceptions / Interrupts */
-.global default_intexc_handler
 Undef_Handler:
 default_intexc_handler:
 1:
@@ -292,7 +286,6 @@ prvPortStartFirstTask:
 .section    .text
 
 .align 2
-.global eclic_msip_handler
 eclic_msip_handler:
     addi sp, sp, -portCONTEXT_SIZE
     STORE x1,  1  * REGBYTES(sp)    /* RA */
@@ -341,7 +334,7 @@ eclic_msip_handler:
     jal xPortTaskSwitch
 
     /* Switch task context */
-    LOAD t0, OSTCBHighRdy           /* Load pxCurrentTCB. */
+    LOAD t0, OSTCBHighRdy           /* Load OSTCBHighRdy. */
     LOAD sp, 0x0(t0)                /* Read sp from first TCB member */
 
     /* Pop PC from stack and set MEPC */

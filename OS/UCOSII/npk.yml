@@ -22,7 +22,7 @@ configuration:
 codemanage:
   installdir: UCOSII
   copyfiles:
-    - path: ["source", "arch"]
+    - path: ["source", "arch/gcc", "arch/*.h", "arch/*.c"]
   incdirs:
     - path: ["source", "arch"]
 
