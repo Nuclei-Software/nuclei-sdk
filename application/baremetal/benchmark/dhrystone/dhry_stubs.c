@@ -1,8 +1,5 @@
 #include "nuclei_sdk_soc.h"
 
-/* The functions in this file are only meant to support Dhrystone on an
- * embedded RV32 system and are obviously incorrect in general. */
-
 long csr_cycle(void)
 {
     return __get_rv_cycle();

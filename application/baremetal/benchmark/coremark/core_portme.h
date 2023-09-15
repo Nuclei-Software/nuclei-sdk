@@ -2,11 +2,10 @@
 #define CORE_PORTME_H
 
 #include "nuclei_sdk_soc.h"
-//Bob: put some macro here such that the IDE SDK do not need to specify the macro specially
-//#define FLAGS_STR "-O3 -fno-common -funroll-loops -finline-functions  -falign-functions=4 -falign-jumps=4 -falign-loops=4 -funswitch-loops -fpeel-loops -fgcse-sm -fgcse-las"
-//#define FLAGS_STR "-O2 -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4"
+
+
 #ifndef FLAGS_STR
-#define FLAGS_STR "-O2 -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4"
+#define FLAGS_STR "Please check your compiler options!"
 #endif
 
 #ifndef PERFORMANCE_RUN
@@ -52,8 +51,10 @@
 
 #ifdef __GNUC__
 # define COMPILER_VERSION "GCC"__VERSION__
+#elif defined(__ICCRISCV__)
+# define COMPILER_VERSION "IAR "__VERSION__
 #else
-# error
+# define COMPILER_VERSION "Unknown Compiler"
 #endif
 
 #define MEM_METHOD MEM_STACK

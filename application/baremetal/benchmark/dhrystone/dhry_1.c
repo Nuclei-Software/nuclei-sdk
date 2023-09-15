@@ -17,10 +17,10 @@
 #include "dhry.h"
 
 #include <stdint.h>
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
-/* Global Variables: */
 
+/* Global Variables: */
 Rec_Pointer     Ptr_Glob,
                 Next_Ptr_Glob;
 int             Int_Glob;
@@ -29,10 +29,6 @@ char            Ch_1_Glob,
                 Ch_2_Glob;
 int             Arr_1_Glob [50];
 int             Arr_2_Glob [50] [50];
-
-//extern char     *malloc ();
-Enumeration     Func_1();
-/* forward declaration necessary since Enumeration may not simply be int */
 
 #ifndef REG
 Boolean Reg = false;
@@ -53,11 +49,20 @@ extern  int     times();
 /* Measurements should last at least about 2 seconds */
 #endif
 #ifdef TIME
-extern long     time();
+extern long     time(void);
 /* see library function "time"  */
 #define Too_Small_Time 2
 /* Measurements should last at least 2 seconds */
 #endif
+
+extern long csr_cycle(void);
+extern long csr_instret(void);
+extern Enumeration Func_1(Capital_Letter   Ch_1_Par_Val, Capital_Letter Ch_2_Par_Val);
+extern Boolean Func_2(Str_30 Str_1_Par_Ref, Str_30 Str_2_Par_Ref);
+extern Boolean Func_3(Enumeration Enum_Par_Val);
+extern void Proc_6(Enumeration Enum_Val_Par, Enumeration* Enum_Ref_Par);
+extern void Proc_7(One_Fifty Int_1_Par_Val, One_Fifty Int_2_Par_Val, One_Fifty* Int_Par_Ref);
+extern void Proc_8(Arr_1_Dim Arr_1_Par_Ref, Arr_2_Dim Arr_2_Par_Ref, int Int_1_Par_Val, int Int_2_Par_Val);
 
 long            Begin_Cycle,
                 End_Cycle,
@@ -88,6 +93,100 @@ static char *dec2str(uint32_t val)
     str[3] = '\0';
     return str;
 }
+
+void Proc_3(Rec_Pointer* Ptr_Ref_Par)
+/******************/
+/* executed once */
+/* Ptr_Ref_Par becomes Ptr_Glob */
+{
+    if (Ptr_Glob != Null)
+        /* then, executed */
+    {
+        *Ptr_Ref_Par = Ptr_Glob->Ptr_Comp;
+    }
+    Proc_7(10, Int_Glob, &Ptr_Glob->variant.var_1.Int_Comp);
+} /* Proc_3 */
+
+void Proc_1(REG Rec_Pointer Ptr_Val_Par)
+/******************/
+/* executed once */
+{
+    REG Rec_Pointer Next_Record = Ptr_Val_Par->Ptr_Comp;
+    /* == Ptr_Glob_Next */
+    /* Local variable, initialized with Ptr_Val_Par->Ptr_Comp,    */
+    /* corresponds to "rename" in Ada, "with" in Pascal           */
+
+    structassign(*Ptr_Val_Par->Ptr_Comp, *Ptr_Glob);
+    Ptr_Val_Par->variant.var_1.Int_Comp = 5;
+    Next_Record->variant.var_1.Int_Comp
+        = Ptr_Val_Par->variant.var_1.Int_Comp;
+    Next_Record->Ptr_Comp = Ptr_Val_Par->Ptr_Comp;
+    Proc_3(&Next_Record->Ptr_Comp);
+    /* Ptr_Val_Par->Ptr_Comp->Ptr_Comp
+                        == Ptr_Glob->Ptr_Comp */
+    if (Next_Record->Discr == Ident_1)
+        /* then, executed */
+    {
+        Next_Record->variant.var_1.Int_Comp = 6;
+        Proc_6(Ptr_Val_Par->variant.var_1.Enum_Comp,
+               &Next_Record->variant.var_1.Enum_Comp);
+        Next_Record->Ptr_Comp = Ptr_Glob->Ptr_Comp;
+        Proc_7(Next_Record->variant.var_1.Int_Comp, 10,
+               &Next_Record->variant.var_1.Int_Comp);
+    } else { /* not executed */
+        structassign(*Ptr_Val_Par, *Ptr_Val_Par->Ptr_Comp);
+    }
+} /* Proc_1 */
+
+void Proc_2(One_Fifty* Int_Par_Ref)
+/******************/
+/* executed once */
+/* *Int_Par_Ref == 1, becomes 4 */
+{
+    One_Fifty  Int_Loc;
+    Enumeration   Enum_Loc;
+
+    Int_Loc = *Int_Par_Ref + 10;
+    do /* executed once */
+        if (Ch_1_Glob == 'A')
+            /* then, executed */
+        {
+            Int_Loc -= 1;
+            *Int_Par_Ref = Int_Loc - Int_Glob;
+            Enum_Loc = Ident_1;
+        } /* if */
+    while (Enum_Loc != Ident_1); /* true */
+} /* Proc_2 */
+
+void Proc_4(void)  /* without parameters */
+/*******/
+/* executed once */
+{
+    Boolean Bool_Loc;
+
+    Bool_Loc = Ch_1_Glob == 'A';
+    Bool_Glob = Bool_Loc | Bool_Glob;
+    Ch_2_Glob = 'B';
+} /* Proc_4 */
+
+void Proc_5(void)  /* without parameters */
+/*******/
+/* executed once */
+{
+    Ch_1_Glob = 'A';
+    Bool_Glob = false;
+} /* Proc_5 */
+
+/* Procedure for the assignment of structures,          */
+/* if the C compiler doesn't support this feature       */
+#ifdef  NOSTRUCTASSIGN
+void memcpy(register char* d, register char* s, register int l)
+{
+    while (l--) {
+        *d++ = *s++;
+    }
+}
+#endif
 
 int main(void)
 /*****/
@@ -136,8 +235,6 @@ int main(void)
     }
     printf("Please give the number of runs through the benchmark: \n");
     {
-        int n;
-        //Bob: We dont use scanf
 #ifdef CFG_SIMULATION
         //Bob: for simulation we make it small
         Number_Of_Runs = 200;
@@ -158,7 +255,7 @@ int main(void)
     Begin_Time = (long) time_info.tms_utime;
 #endif
 #ifdef TIME
-    Begin_Time = time((long*) 0);
+    Begin_Time = time();
 #endif
     Begin_Instret =  csr_instret();
     Begin_Cycle =  csr_cycle();
@@ -218,7 +315,7 @@ int main(void)
     End_Time = (long) time_info.tms_utime;
 #endif
 #ifdef TIME
-    End_Time = time((long*) 0);
+    End_Time = time();
 #endif
 
     printf("Execution ends\n");
@@ -315,115 +412,5 @@ int main(void)
 
     return 0;
 }
-
-
-Proc_1(Ptr_Val_Par)
-/******************/
-
-REG Rec_Pointer Ptr_Val_Par;
-/* executed once */
-{
-    REG Rec_Pointer Next_Record = Ptr_Val_Par->Ptr_Comp;
-    /* == Ptr_Glob_Next */
-    /* Local variable, initialized with Ptr_Val_Par->Ptr_Comp,    */
-    /* corresponds to "rename" in Ada, "with" in Pascal           */
-
-    structassign(*Ptr_Val_Par->Ptr_Comp, *Ptr_Glob);
-    Ptr_Val_Par->variant.var_1.Int_Comp = 5;
-    Next_Record->variant.var_1.Int_Comp
-        = Ptr_Val_Par->variant.var_1.Int_Comp;
-    Next_Record->Ptr_Comp = Ptr_Val_Par->Ptr_Comp;
-    Proc_3(&Next_Record->Ptr_Comp);
-    /* Ptr_Val_Par->Ptr_Comp->Ptr_Comp
-                        == Ptr_Glob->Ptr_Comp */
-    if (Next_Record->Discr == Ident_1)
-        /* then, executed */
-    {
-        Next_Record->variant.var_1.Int_Comp = 6;
-        Proc_6(Ptr_Val_Par->variant.var_1.Enum_Comp,
-               &Next_Record->variant.var_1.Enum_Comp);
-        Next_Record->Ptr_Comp = Ptr_Glob->Ptr_Comp;
-        Proc_7(Next_Record->variant.var_1.Int_Comp, 10,
-               &Next_Record->variant.var_1.Int_Comp);
-    } else { /* not executed */
-        structassign(*Ptr_Val_Par, *Ptr_Val_Par->Ptr_Comp);
-    }
-} /* Proc_1 */
-
-
-Proc_2(Int_Par_Ref)
-/******************/
-/* executed once */
-/* *Int_Par_Ref == 1, becomes 4 */
-
-One_Fifty*   Int_Par_Ref;
-{
-    One_Fifty  Int_Loc;
-    Enumeration   Enum_Loc;
-
-    Int_Loc = *Int_Par_Ref + 10;
-    do /* executed once */
-        if (Ch_1_Glob == 'A')
-            /* then, executed */
-        {
-            Int_Loc -= 1;
-            *Int_Par_Ref = Int_Loc - Int_Glob;
-            Enum_Loc = Ident_1;
-        } /* if */
-    while (Enum_Loc != Ident_1); /* true */
-} /* Proc_2 */
-
-
-Proc_3(Ptr_Ref_Par)
-/******************/
-/* executed once */
-/* Ptr_Ref_Par becomes Ptr_Glob */
-
-Rec_Pointer* Ptr_Ref_Par;
-
-{
-    if (Ptr_Glob != Null)
-        /* then, executed */
-    {
-        *Ptr_Ref_Par = Ptr_Glob->Ptr_Comp;
-    }
-    Proc_7(10, Int_Glob, &Ptr_Glob->variant.var_1.Int_Comp);
-} /* Proc_3 */
-
-
-Proc_4()  /* without parameters */
-/*******/
-/* executed once */
-{
-    Boolean Bool_Loc;
-
-    Bool_Loc = Ch_1_Glob == 'A';
-    Bool_Glob = Bool_Loc | Bool_Glob;
-    Ch_2_Glob = 'B';
-} /* Proc_4 */
-
-
-Proc_5()  /* without parameters */
-/*******/
-/* executed once */
-{
-    Ch_1_Glob = 'A';
-    Bool_Glob = false;
-} /* Proc_5 */
-
-
-/* Procedure for the assignment of structures,          */
-/* if the C compiler doesn't support this feature       */
-#ifdef  NOSTRUCTASSIGN
-memcpy(d, s, l)
-register char*   d;
-register char*   s;
-register int    l;
-{
-    while (l--) {
-        *d++ = *s++;
-    }
-}
-#endif
 
 

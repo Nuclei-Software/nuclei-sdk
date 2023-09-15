@@ -344,6 +344,9 @@
  *
  ***************************************************************************
  */
+#ifndef _DHRY_H_
+#define _DHRY_H_
+
 //Bob: here we add define TIME and NOENUM
 #define TIME
 #define NOENUM
@@ -386,8 +389,7 @@ Enumeration;
 
 /* General definitions: */
 
-#include <stdio.h>
-/* for strcpy, strcmp */
+#include <string.h>
 
 #define Null 0
 /* Value of a Null pointer */
@@ -422,4 +424,4 @@ typedef struct record {
     } variant;
 } Rec_Type, *Rec_Pointer;
 
-
+#endif
