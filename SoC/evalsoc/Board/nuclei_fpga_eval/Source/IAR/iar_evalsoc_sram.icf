@@ -4,6 +4,7 @@
 //
 
 define exported symbol _link_file_version_2 = 1;
+define exported symbol _max_vector = 4096;
 
 define memory mem with size = 4G;
 
@@ -18,6 +19,7 @@ define block CSTACK with alignment = 16, size = CSTACK_SIZE { };
 define block HEAP   with alignment = 16, size = HEAP_SIZE   { };
 
 define block MINTERRUPTS with maximum size =  64k { ro section .mtext };
+define block MVECTOR with alignment = 64, maximum size = _max_vector*4 { ro section .mintvec };
 
 define block RW_DATA with static base GPREL { rw data };
 keep { ro section .alias.hwreset };
@@ -26,7 +28,8 @@ keep { ro section .alias.hwreset };
                                                 ro section .cstartup };
 
 "ROM32":place in ROM_region32        { ro,
-                                       block MINTERRUPTS };
+                                       block MINTERRUPTS,
+                                       block MVECTOR };
 
 "RAM32":place in RAM_region32        { block RW_DATA,
                                        block HEAP,
