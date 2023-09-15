@@ -27,11 +27,12 @@ configuration:
 codemanage:
   installdir: RTThread
   copyfiles:
-    - path: ["src", "libcpu/risc-v/nuclei", "include"]
+    - path: ["src", "include"]
+    - path: ["libcpu/risc-v/nuclei/gcc", "libcpu/risc-v/nuclei/cpuport.c", "libcpu/risc-v/nuclei/cpuport.h"]
     - path: ["components/finsh"]
       condition: $( ${rtthread_msh} == 1 )
   incdirs:
-    - path: ["include", "include/libc", "libcpu/risc-v/nuclei"]
+    - path: ["include"]
     - path: ["components/finsh"]
       condition: $( ${rtthread_msh} == 1 )
   libdirs:
