@@ -2,9 +2,9 @@
 #include <string.h>
 #include "evalsoc.h"
 
-extern __weak void eclic_msip_handler();
-extern __weak void eclic_mtip_handler();
-extern void default_intexc_handler();
+extern __weak void eclic_msip_handler(void);
+extern __weak void eclic_mtip_handler(void);
+extern void default_intexc_handler(void);
 
 /*
  * Uncomment it if your vector table is placed in readonly section,
@@ -15,7 +15,7 @@ extern void default_intexc_handler();
  */
 // #define FLASH_RAM_VECTOR        1
 
-typedef void(*__fp)();
+typedef void(*__fp)(void);
 
 /* If .mintvec section is placed in real readonly section,
  * if you want to register vector interrupt with new entry,
@@ -98,10 +98,19 @@ static const __fp vector_base[SOC_INT_MAX] __attribute__((section (".mintvec")))
 #pragma data_alignment = 256
 static __fp vector_base_ram[SOC_INT_MAX] __attribute__((section (".mintvec_rw")));
 
+#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+static unsigned long vector_base_s_ram[SOC_INT_MAX] __attribute__((section (".sintvec_rw")));
+extern const unsigned long vector_table_s[SOC_INT_MAX];
+#endif
+
 static void prepare_ram_vector(void)
 {
     memcpy((void *)vector_base_ram, (const void *)vector_base, (size_t)(sizeof(__fp) * SOC_INT_MAX));
     __RV_CSR_WRITE(CSR_MTVT, (unsigned long)(&vector_base_ram));
+#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+    memcpy((void *)vector_base_s_ram, (const void *)vector_table_s, (size_t)(sizeof(unsigned long) * SOC_INT_MAX));
+    __RV_CSR_WRITE(CSR_STVT, (unsigned long)(&vector_base_s_ram));
+#endif
 }
 #endif
 
@@ -161,11 +170,6 @@ int __low_level_init(void)
     /* Enable mcycle and minstret counter */
     __RV_CSR_CLEAR(CSR_MCOUNTINHIBIT, 0x5);
 
-    /* Prepare ram vector table for initial vector table located in readonly section case */
-#if defined(FLASH_RAM_VECTOR)
-    prepare_ram_vector();
-#endif
-
     /* Call IAR Internal data initial function */
     IAR_DATA_INIT();
 
@@ -180,6 +184,17 @@ int __low_level_init(void)
 
     /* Get CPU frequency and initialize uart for print */
     _premain_init();
+
+    /* Prepare ram vector table for initial vector table located in readonly section case */
+#if defined(FLASH_RAM_VECTOR)
+    prepare_ram_vector();
+#endif
+
+#ifdef RTOS_RTTHREAD
+    /* Directly jump to rtthread startup process, no longer return */
+    extern int rtthread_startup(void);
+    rtthread_startup();
+#endif
 
     /* No need to call it again, since it is initialized */
     return 0;

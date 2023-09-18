@@ -74,7 +74,7 @@ typedef void (*fnptr)(void);
 /* for the following variables, see intexc_evalsoc.S and intexc_evalsoc_s.S */
 extern fnptr irq_entry_s;
 extern fnptr exc_entry_s;
-extern fnptr default_intexc_handler;
+extern void default_intexc_handler(void);
 
 /**
  * \brief      Supervisor mode system Default Exception Handler
@@ -91,7 +91,7 @@ void eclic_stip_handler(void) __attribute__((weak));
  * \brief vector interrupt storing ISRs for supervisor mode
  * \details
  *  vector_table_s is hold by stvt register, the address must align according
- *  to actual interrupt numbers as below, now align to 512 bytes considering we put 69 interrupts here
+ *  to actual interrupt numbers as below, now align to 256 bytes considering we put 64 interrupts here
  *  alignment must comply to table below if you increase or decrease vector interrupt number
  *  interrupt number      alignment
  *    0 to 16               64-byte
@@ -102,19 +102,24 @@ void eclic_stip_handler(void) __attribute__((weak));
  *    257 to 512              2KB
  *    513 to 1024             4KB
  */
-static unsigned long vector_table_s[SOC_INT_MAX] __attribute__((section (".text.vtable_s"), aligned(512))) =
+#ifndef __ICCRISCV__
+#define __SMODE_VECTOR_ATTR   __attribute__((section (".text.vtable_s"), aligned(256)))
+#else
+#define __SMODE_VECTOR_ATTR   __attribute__((section (".sintvec"), aligned(256)))
+#endif
+const unsigned long vector_table_s[SOC_INT_MAX] __SMODE_VECTOR_ATTR =
 {
     (unsigned long)(default_intexc_handler),        /* 0: Reserved */
-    (unsigned long)(eclic_ssip_handler),            /* 1: supervisor software interrupt */
+    (unsigned long)(default_intexc_handler),        /* 1: Reserved */
     (unsigned long)(default_intexc_handler),        /* 2: Reserved */
 
-    (unsigned long)(eclic_ssip_handler),            /* 3: machine software interrupt */
+    (unsigned long)(eclic_ssip_handler),            /* 3: supervisor software interrupt in eclic mode */
 
     (unsigned long)(default_intexc_handler),        /* 4: Reserved */
-    (unsigned long)(eclic_stip_handler),            /* 5: supervisor timer interrupt */
+    (unsigned long)(default_intexc_handler),        /* 5: Reserved */
     (unsigned long)(default_intexc_handler),        /* 6: Reserved */
 
-    (unsigned long)(eclic_stip_handler),            /* 7: machine timer interrupt */
+    (unsigned long)(eclic_stip_handler),            /* 7: supervisor timer interrupt in eclic mode */
 
     (unsigned long)(default_intexc_handler),        /* 8: Reserved */
     (unsigned long)(default_intexc_handler),        /* 9: Reserved */
@@ -725,18 +730,18 @@ static void Trap_Init(void)
      * Intialize ECLIC supervisor mode vector interrupt
      * base address stvt to vector_table_s
      */
-    __RV_CSR_WRITE(CSR_STVT, vector_table_s);
+    __RV_CSR_WRITE(CSR_STVT, (unsigned long)&vector_table_s);
     /*
      * Set ECLIC supervisor mode non-vector entry to be controlled
      * by stvt2 CSR register.
      * Intialize supervisor mode ECLIC non-vector interrupt
      * base address stvt2 to irq_entry_s.
     */
-    __RV_CSR_WRITE(CSR_STVT2, &irq_entry_s);
+    __RV_CSR_WRITE(CSR_STVT2, (unsigned long)&irq_entry_s);
     __RV_CSR_SET(CSR_STVT2, 0x01);
     /*
      * Set supervisor exception entry stvec to exc_entry_s */
-    __RV_CSR_WRITE(CSR_STVEC, &exc_entry_s);
+    __RV_CSR_WRITE(CSR_STVEC, (unsigned long)&exc_entry_s);
 #endif
 }
 

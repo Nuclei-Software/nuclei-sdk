@@ -26,8 +26,8 @@
 
 #include "riscv_encoding.h"
 
-DISABLE_MIE MACRO
-  csrci CSR_MSTATUS, MSTATUS_MIE
+DISABLE_SIE MACRO
+  csrci CSR_SSTATUS, MSTATUS_SIE
   ENDM
 
 SAVE_CONTEXT MACRO
@@ -87,91 +87,78 @@ RESTORE_CONTEXT MACRO
 
   ENDM
 
-SAVE_CSR_CONTEXT MACRO
-    /* Store CSR mcause to stack using pushmcause */
-    csrrwi  x0, CSR_PUSHMCAUSE, 11
-    /* Store CSR mepc to stack using pushmepc */
-    csrrwi  x0, CSR_PUSHMEPC, 12
-    /* Store CSR msub to stack using pushmsub */
-    csrrwi  x0, CSR_PUSHMSUBM, 13
+SAVE_CSR_CONTEXT_S MACRO
+    /* Store CSR scause to stack using pushscause */
+    csrrwi  x0, CSR_PUSHSCAUSE, 11
+    /* Store CSR sepc to stack using pushsepc */
+    csrrwi  x0, CSR_PUSHSEPC, 12
   ENDM
 
-RESTORE_CSR_CONTEXT MACRO
-    LOAD x5,  13*REGBYTES(sp)
-    csrw CSR_MSUBM, x5
+RESTORE_CSR_CONTEXT_S MACRO
     LOAD x5,  12*REGBYTES(sp)
-    csrw CSR_MEPC, x5
+    csrw CSR_SEPC, x5
     LOAD x5,  11*REGBYTES(sp)
-    csrw CSR_MCAUSE, x5
+    csrw CSR_SCAUSE, x5
   ENDM
 
-    PUBWEAK exc_entry, irq_entry, early_exc_entry, default_intexc_handler
-    PUBWEAK Undef_Handler
-    EXTERN core_exception_handler
+    PUBWEAK exc_entry_s, irq_entry_s
+    EXTERN core_exception_handler_s
 
     SECTION `.text`:CODE:NOROOT(2)
     CODE
 
     ALIGN 6
-exc_entry:
+exc_entry_s:
     /* Save the caller saving registers (context) */
     SAVE_CONTEXT
     /* Save the necessary CSR registers */
-    SAVE_CSR_CONTEXT
+    SAVE_CSR_CONTEXT_S
 
     /*
      * Set the exception handler function arguments
-     * argument 1: mcause value
+     * argument 1: scause value
      * argument 2: current stack point(SP) value
      */
-    csrr a0, mcause
+    csrr a0, scause
     mv a1, sp
     /*
      * TODO: Call the exception handler function
      * By default, the function template is provided in
      * system_Device.c, you can adjust it as you want
      */
-    call core_exception_handler
+    call core_exception_handler_s
 
     /* Restore the necessary CSR registers */
-    RESTORE_CSR_CONTEXT
+    RESTORE_CSR_CONTEXT_S
     /* Restore the caller saving registers (context) */
     RESTORE_CONTEXT
 
     /* Return to regular code */
-    mret
+    sret
 
     ALIGN 2
-irq_entry:
+irq_entry_s:
     /* Save the caller saving registers (context) */
     SAVE_CONTEXT
     /* Save the necessary CSR registers */
-    SAVE_CSR_CONTEXT
+    SAVE_CSR_CONTEXT_S
 
     /* This special CSR read/write operation, which is actually
      * claim the CLIC to find its pending highest ID, if the ID
-     * is not 0, then automatically enable the mstatus.MIE, and
+     * is not 0, then automatically enable the sstatus.SIE, and
      * jump to its vector-entry-label, and update the link register
      */
-    csrrw ra, CSR_JALMNXTI, ra
+    csrrw ra, CSR_JALSNXTI, ra
 
     /* Critical section with interrupts disabled */
-    DISABLE_MIE
+    DISABLE_SIE
 
     /* Restore the necessary CSR registers */
-    RESTORE_CSR_CONTEXT
+    RESTORE_CSR_CONTEXT_S
     /* Restore the caller saving registers (context) */
     RESTORE_CONTEXT
 
     /* Return to regular code */
-    mret
-
-default_intexc_handler:
-Undef_Handler:
-    j Undef_Handler
-
-    ALIGN 6
-early_exc_entry:
-    j early_exc_entry
+    sret
 
     END
