@@ -772,7 +772,7 @@ void finsh_system_var_init(const void *begin, const void *end)
     _sysvar_table_end = (struct finsh_sysvar *) end;
 }
 
-#if defined(__ICCARM__) || defined(__ICCRX__)               /* for IAR compiler */
+#if defined(__ICCARM__) || defined(__ICCRX__) || defined(__ICCRISCV__)  /* for IAR compiler */
 #ifdef FINSH_USING_SYMTAB
 #pragma section="FSymTab"
 #pragma section="VSymTab"
@@ -826,7 +826,7 @@ int finsh_system_init(void)
 #ifndef FINSH_USING_MSH_ONLY
     finsh_system_var_init(&VSymTab$$Base, &VSymTab$$Limit);
 #endif
-#elif defined (__ICCARM__) || defined(__ICCRX__)      /* for IAR Compiler */
+#elif defined (__ICCARM__) || defined(__ICCRX__) || defined(__ICCRISCV__) /* for IAR Compiler */
     finsh_system_function_init(__section_begin("FSymTab"),
                                __section_end("FSymTab"));
     finsh_system_var_init(__section_begin("VSymTab"),
@@ -844,7 +844,7 @@ int finsh_system_init(void)
     finsh_system_var_init(&__vsymtab_start, &__vsymtab_end);
 #elif defined(_MSC_VER)
     unsigned int *ptr_begin, *ptr_end;
-		
+
     if(shell)
     {
         rt_kprintf("finsh shell already init.\n");
