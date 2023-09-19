@@ -41,7 +41,7 @@ int main(void)
 
     returnCode = ECLIC_Register_IRQ(
                      SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT, ECLIC_LEVEL_TRIGGER, 1, 0,
-                     mtimer_irq_handler); /* register system timer interrupt */
+                     (void *)mtimer_irq_handler); /* register system timer interrupt */
 
     __enable_irq(); /* enable global interrupt */
 
@@ -53,7 +53,7 @@ int main(void)
     returnCode = ECLIC_Register_IRQ(
                      SysTimerSW_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
                      ECLIC_POSTIVE_EDGE_TRIGGER, 2, 0,
-                     mtimer_sw_irq_handler); /* register system timer SW interrupt */
+                     (void *)mtimer_sw_irq_handler); /* register system timer SW interrupt */
 
     do {
         if (msip_trig_flag == 1) {
