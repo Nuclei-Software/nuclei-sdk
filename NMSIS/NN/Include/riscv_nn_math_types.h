@@ -55,6 +55,8 @@ extern "C" {
 
 #elif defined(_MSC_VER)
 
+#elif defined ( __ICCRISCV__ )
+
 #else
 #error Unknown compiler
 #endif
@@ -136,6 +138,8 @@ extern "C" {
 #elif defined(__TASKING__)
 
 #elif defined(_MSC_VER)
+
+#elif defined ( __ICCRISCV__ )
 
 #else
 #error Unknown compiler
