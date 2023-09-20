@@ -28,6 +28,7 @@
 uint8_t smode_stack[SMODE_STACK_SIZE] __attribute__((aligned(16)));
 
 uintptr_t smode_sp = (uintptr_t) (smode_stack + sizeof(smode_stack));
+static volatile uint32_t int_check_cnt = 0;
 
 void print_sp_judge_privilege_mode(void)
 {
@@ -78,7 +79,7 @@ void eclic_stip_handler(void)
 
 // timer software interrupt S-mode handler
 // vector mode interrupt
-void __attribute__ ((interrupt("supervisor"))) eclic_ssip_handler(void)
+__SUPERVISOR_INTERRUPT void eclic_ssip_handler(void)
 {
     static uint32_t int_sw_cnt = 0;   /* software interrupt counter */
 
@@ -91,10 +92,12 @@ void __attribute__ ((interrupt("supervisor"))) eclic_ssip_handler(void)
     print_sp_judge_privilege_mode();
     printf("[IN S-MODE SOFTWARE INTERRUPT]software interrupt end\r\n");
 
+    int_check_cnt ++;
     // restore CSR context
     RESTORE_IRQ_CSR_CONTEXT_S();
 }
 
+#define RUN_LOOPS   20
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
 static void supervisor_mode_entry_point(void)
 {
@@ -118,16 +121,19 @@ static void supervisor_mode_entry_point(void)
 
     // initialize software interrupt as vector interrupt
     returnCode = ECLIC_Register_IRQ_S(SysTimerSW_IRQn, ECLIC_VECTOR_INTERRUPT,
-                                        ECLIC_LEVEL_TRIGGER, swirq_intlevel, 0, eclic_ssip_handler);
+                                        ECLIC_LEVEL_TRIGGER, swirq_intlevel, 0, (void *)eclic_ssip_handler);
 
     // inital timer interrupt as non-vector interrupt
     returnCode = ECLIC_Register_IRQ_S(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
-                                        ECLIC_LEVEL_TRIGGER, timer_intlevel, 0, eclic_stip_handler);
+                                        ECLIC_LEVEL_TRIGGER, timer_intlevel, 0, (void *)eclic_stip_handler);
 
     // Enable interrupts in general.
     __enable_irq_s();
 
     // Wait for timer interrupt and software interrupt triggered periodically
+    while (int_check_cnt < RUN_LOOPS);
+    __disable_irq_s();
+    printf("ECLIC S-Mode Demo finished sucessfully in %d loops\n", RUN_LOOPS);
     while(1);
 }
 #endif
