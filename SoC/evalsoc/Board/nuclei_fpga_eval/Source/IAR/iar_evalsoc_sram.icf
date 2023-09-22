@@ -21,7 +21,7 @@ define block HEAP   with alignment = 16, size = HEAP_SIZE   { };
 define block MINTERRUPTS with maximum size =  64k { ro section .mtext };
 define block MVECTOR with alignment = 64, maximum size = _max_vector*4 { ro section .mintvec };
 define block SVECTOR with alignment = 64, maximum size = _max_vector*4 { ro section .sintvec };
-define block RTT_INIT_FUNC with fixed order { ro section .rti_fn* };
+define block RTT_INIT_FUNC with fixed order { ro section .rti_fn*, ro section FSymTab, ro section VSymTab };
 
 define block RW_DATA with static base GPREL { rw data };
 keep { ro section .alias.hwreset };

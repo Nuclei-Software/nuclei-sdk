@@ -25,14 +25,19 @@ define block MVECTOR with alignment = 64, maximum size = _max_vector*4 { section
 define block MVECTOR_RW with alignment = 64, maximum size = _max_vector*4 { section .mintvec_rw };
 define block SVECTOR with alignment = 64, maximum size = _max_vector*4 { section .sintvec };
 define block SVECTOR_RW with alignment = 64, maximum size = _max_vector*4 { section .sintvec_rw };
+define block RTT_INIT_FUNC with fixed order { ro section .rti_fn*, ro section FSymTab, ro section VSymTab };
 
 define block RW_DATA with static base GPREL { rw data };
 keep { ro section .alias.hwreset };
+keep { section FSymTab };
+keep { section VSymTab };
+keep { section .rti_fn* };
 
 "CSTARTUP32" : place at start of ROM_region32 { ro section .alias.hwreset,
                                                 ro section .cstartup };
 
 "ROM32":place in ROM_region32        { ro,
+                                       block RTT_INIT_FUNC,
                                        block MINTERRUPTS,
                                        block MVECTOR,
                                        block SVECTOR };
