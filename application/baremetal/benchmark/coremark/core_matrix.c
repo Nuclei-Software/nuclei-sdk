@@ -18,7 +18,8 @@ El Dorado Hills, CA, 95762
 */
 #include "coremark.h"
 
-#if __riscv_xxlcz
+// TODO: clang not yet provide any xxlcz instruction support
+#if defined(__riscv_xxlcz) && !defined(__clang__)
 #include "riscv_nuclei_xlcz.h"
 #endif
 
@@ -49,7 +50,7 @@ void matrix_add_const(ee_u32 N, MATDAT* A, MATDAT val);
 #define matrix_test_next(x) (x+1)
 #define matrix_clip(x,y) ((y) ? (x) & 0x0ff : (x) & 0x0ffff)
 #define matrix_big(x) (0xf000 | (x))
-#if __riscv_xxlcz
+#if defined(__riscv_xxlcz) && !defined(__clang__)
 #define BIT_EXTRACT(x, from, to) (__xl_extractu(x, from, to))
 #else
 #define BIT_EXTRACT(x, from, to) (((x)>>(from)) & (~(0xffffffff << (to))))

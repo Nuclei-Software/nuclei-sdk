@@ -1,4 +1,5 @@
-#if __riscv_xxlcz
+// TODO: clang not yet provide any xxlcz instruction support
+#if defined(__riscv_xxlcz) && !defined(__clang__)
 .global strcmp_xlcz
 strcmp_xlcz:
     xl.addrchk a0, a1, unalgns
