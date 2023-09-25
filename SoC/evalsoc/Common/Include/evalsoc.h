@@ -181,6 +181,8 @@ typedef enum EXCn {
     InsPageFault_EXCn        =  12,              /*!<  Instruction page fault */
     LdPageFault_EXCn         =  13,              /*!<  Load page fault */
     StPageFault_EXCn         =  15,              /*!<  Store or AMO page fault */
+    StackOverflow_EXCn       =  24,              /*!<  Stack overflow fault */
+    StackUnderflow_EXCn      =  25,              /*!<  Stack underflow fault */
     NMI_EXCn                 =  0xfff,           /*!<  NMI interrupt */
 } EXCn_Type;
 
