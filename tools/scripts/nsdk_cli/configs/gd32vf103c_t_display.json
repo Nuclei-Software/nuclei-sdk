@@ -15,6 +15,10 @@
         "ARCH_EXT": ""
     },
     "expected": {
+        "application/baremetal/demo_stack_check" : {
+            "run": false,
+            "build": false
+        },
         "application/baremetal/demo_nice" : {
             "run": false,
             "build": true
