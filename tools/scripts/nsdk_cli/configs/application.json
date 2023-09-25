@@ -76,6 +76,12 @@
                 "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "[ERROR]__TEE_PRESENT must be defined as 1"]
             }
         },
+        "application/baremetal/demo_stack_check": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Stack check demo over!"]
+            }
+        },
         "application/baremetal/demo_spmp": {
             "build_config" : {},
             "checks": {
