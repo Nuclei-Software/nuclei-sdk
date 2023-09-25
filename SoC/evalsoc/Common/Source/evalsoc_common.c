@@ -5,6 +5,15 @@ __STATIC_FORCEINLINE uint64_t get_timer_freq(void)
     return (uint64_t)SOC_TIMER_FREQ;
 }
 
+// optimize measure_cpu_freq function with Os/O0
+// to get a correct cpu frequency, which
+// is important for flashxip linker script
+#if defined ( __GNUC__ )
+#pragma GCC push_options
+#pragma GCC optimize ("Os")
+#elif defined ( __ICCRISCV__ )
+#pragma optimize=medium
+#endif
 uint32_t measure_cpu_freq(uint32_t n)
 {
     uint32_t start_mcycle, delta_mcycle;
@@ -26,6 +35,10 @@ uint32_t measure_cpu_freq(uint32_t n)
     return (delta_mcycle / delta_mtime) * mtime_freq
            + ((delta_mcycle % delta_mtime) * mtime_freq) / delta_mtime;
 }
+#if defined ( __GNUC__ )
+#pragma GCC pop_options
+#elif defined ( __ICCRISCV__ )
+#endif
 
 uint32_t get_cpu_freq(void)
 {
