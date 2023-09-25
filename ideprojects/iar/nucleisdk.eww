@@ -28,6 +28,9 @@
         <path>$WS_DIR$\baremetal\demo_spmp.ewp</path>
     </project>
     <project>
+        <path>$WS_DIR$\baremetal\demo_stack_check.ewp</path>
+    </project>
+    <project>
         <path>$WS_DIR$\baremetal\demo_timer.ewp</path>
     </project>
     <project>
