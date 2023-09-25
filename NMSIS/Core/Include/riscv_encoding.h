@@ -305,6 +305,11 @@
 #define IREGION_DPREFETCH_OFS       (0x70000)
 #define IREGION_PLIC_OFS            (0x4000000)
 
+/* === Stack protect === */
+#define MSTACK_CTRL_MODE            (0x1<<2)
+#define MSTACK_CTRL_UDF_EN          (0x1<<1)
+#define MSTACK_CTRL_OVF_TRACK_EN    (0x1)
+
 #define SIP_SSIP MIP_SSIP
 #define SIP_STIP MIP_STIP
 
@@ -966,6 +971,11 @@
 
 /* === ECC === */
 #define CSR_MECC_STATUS         0xBC4
+
+/* === Stack protect === */
+#define CSR_MSTACK_CTRL         0x7C6
+#define CSR_MSTACK_BOUND        0x7C7
+#define CSR_MSTACK_BASE         0x7C8
 
 /* === Nuclei CCM Registers === */
 #define CSR_CCM_MBEGINADDR      0x7CB
