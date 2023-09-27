@@ -39,6 +39,12 @@ SMP ?=
 # other harts other than boot hartid will do wfi when in AMP mode,
 # or run application in smp mode
 BOOT_HARTID ?= 0
+# HARTID_OFS is used to set hartid offset to the cpu hartid to get current hart index
+# for example, cpu hartid maybe 1, but hart index is 0, so the offset is 1
+# This is not neccessary for most cases, only useful in cases such as a multiple cpu
+# system, cpu0 has 1 hart, hartid is 0, cpu1 has 1 hart, hartid is 1, but cpu1
+# hart index is 0, so in this case set this value to 1
+HARTID_OFS ?=
 # JTAGSN must be a jtag serial number
 # If not specified, it will not bind serial number
 JTAGSN ?=
@@ -92,6 +98,11 @@ endif
 # if JTAGSN is not empty, pass it via openocd command
 ifneq ($(JTAGSN),)
 OPENOCD_CMD_ARGS += set JTAGSN $(JTAGSN);
+endif
+
+# If HARTID_OFS is not empty
+ifneq ($(HARTID_OFS),)
+COMMON_FLAGS += -D__HARTID_OFFSET=$(HARTID_OFS)
 endif
 
 ifneq ($(CPU_CNT),)
