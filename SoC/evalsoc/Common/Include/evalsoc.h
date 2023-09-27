@@ -213,6 +213,15 @@ typedef enum EXCn {
 extern volatile IRegion_Info_Type SystemIRegionInfo;
 
 /* ToDo: define the correct core features for the evalsoc */
+/**
+ * If your hart index is different to your hartid, you must define this __HARTID_OFFSET macro.
+ * For example, if your cpu has 4 harts, and hartid start from 3, so the __HARTID_OFFSET should set to 3.
+ * Which means hartid 3-6 means hart index 0-3, this is useful for the timer software interrupt and timer interrupt trigger register location
+ */
+#ifndef __HARTID_OFFSET
+#define __HARTID_OFFSET           0
+#endif
+
 #define __ECLIC_PRESENT           1                     /*!< Set to 1 if ECLIC is present */
 #define __ECLIC_BASEADDR          SystemIRegionInfo.eclic_base          /*!< Set to ECLIC baseaddr of your device */
 
@@ -220,6 +229,7 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 #define __ECLIC_INTNUM            51                    /*!< Set to 1 - 1024, total interrupt number of ECLIC Unit */
 #define __SYSTIMER_PRESENT        1                     /*!< Set to 1 if System Timer is present */
 #define __SYSTIMER_BASEADDR       SystemIRegionInfo.systimer_base          /*!< Set to SysTimer baseaddr of your device */
+//#define __SYSTIMER_HARTID         0                     /*!< Set this timer hartid if you have only 1 hart in your cpu, and you know the timer hartid, just set it */
 
 #ifndef __CIDU_PRESENT
 #define __CIDU_PRESENT            0                     /*!< Set to 1 if CIDU is present */
