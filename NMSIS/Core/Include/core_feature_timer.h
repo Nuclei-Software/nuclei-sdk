@@ -105,6 +105,20 @@ typedef struct {
  * \brief    Functions that configure the Core System Timer.
  * @{
  */
+
+/**
+ * SysTimer_GetHartID() is used to get timer hartid which might not be the same as cpu hart id,
+ * for example, cpu hartid may be 1, but timer hartid may be 0, then timer hartid offset is 1.
+ * If defined __SYSTIMER_HARTID, it will use __SYSTIMER_HARTID as timer hartid,
+ * otherwise, it will use __get_hart_index().
+ * The cpu hartid is get by using __get_hart_id function
+ */
+#ifndef __SYSTIMER_HARTID
+#define SysTimer_GetHartID()                    (__get_hart_index())
+#else
+#define SysTimer_GetHartID()                    (__SYSTIMER_HARTID)
+#endif
+
 /**
  * \brief  Set system timer load value
  * \details
@@ -196,7 +210,7 @@ __STATIC_FORCEINLINE void SysTimer_SetHartCompareValue(uint64_t value, unsigned 
 }
 
 /**
- * \brief  Set system timer compare value in machined mode
+ * \brief  Set system timer compare value in machine mode
  * \details
  * This function set the system Timer compare value in MTIMERCMP register.
  * \param [in]  value   compare value to set system timer MTIMERCMP register.
@@ -204,12 +218,12 @@ __STATIC_FORCEINLINE void SysTimer_SetHartCompareValue(uint64_t value, unsigned 
  * - Compare value is 64bits wide.
  * - If compare value is larger than current value timer interrupt generate.
  * - Modify the load value or compare value less to clear the interrupt.
- * - __get_hart_id function can only be accessed in machined mode, or else exception will occur.
+ * - __get_hart_id function can only be accessed in machine mode, or else exception will occur.
  * - \ref SysTimer_GetCompareValue
  */
 __STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
 {
-    unsigned long hartid = __get_hart_id();
+    unsigned long hartid = SysTimer_GetHartID();
     SysTimer_SetHartCompareValue(value, hartid);
 }
 
@@ -256,7 +270,7 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetHartCompareValue(unsigned long hartid)
  */
 __STATIC_FORCEINLINE uint64_t SysTimer_GetCompareValue(void)
 {
-    unsigned long hartid = __get_hart_id();
+    unsigned long hartid = SysTimer_GetHartID();
     return SysTimer_GetHartCompareValue(hartid);
 }
 
@@ -346,7 +360,7 @@ __STATIC_FORCEINLINE void SysTimer_SetHartSWIRQ(unsigned long hartid)
  */
 __STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
 {
-    unsigned long hartid = __get_hart_id();
+    unsigned long hartid = SysTimer_GetHartID();
     SysTimer_SetHartSWIRQ(hartid);
 }
 
@@ -382,7 +396,7 @@ __STATIC_FORCEINLINE void SysTimer_ClearHartSWIRQ(unsigned long hartid)
  */
 __STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
 {
-    unsigned long hartid = __get_hart_id();
+    unsigned long hartid = SysTimer_GetHartID();
     SysTimer_ClearHartSWIRQ(hartid);
 }
 
@@ -424,7 +438,7 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetHartMsipValue(unsigned long hartid)
  */
 __STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
 {
-    unsigned long hartid = __get_hart_id();
+    unsigned long hartid = SysTimer_GetHartID();
     return SysTimer_GetHartMsipValue(hartid);
 }
 
@@ -457,7 +471,7 @@ __STATIC_FORCEINLINE void SysTimer_SetHartMsipValue(uint32_t msip, unsigned long
  */
 __STATIC_FORCEINLINE void SysTimer_SetMsipValue(uint32_t msip)
 {
-    unsigned long hartid = __get_hart_id();
+    unsigned long hartid = SysTimer_GetHartID();
     SysTimer_SetHartMsipValue(msip, hartid);
 }
 

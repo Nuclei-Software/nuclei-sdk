@@ -760,17 +760,37 @@ __STATIC_FORCEINLINE unsigned long __get_cluster_id(void)
 }
 
 /**
+ * \brief   Get hart index of current cluster
+ * \details This function will get hart index of current cluster in a multiple cluster system,
+ * hart index is hartid - hartid offset, for example if your hartid is 1, and offset is 1, then
+ * hart index is 0
+ * \return  The hart index of current cluster
+ * \attention function is allowed in machine mode only
+ */
+__STATIC_FORCEINLINE unsigned long __get_hart_index(void)
+{
+    unsigned long id;
+#ifdef __HARTID_OFFSET
+    id = __RV_CSR_READ(CSR_MHARTID) - __HARTID_OFFSET;
+#else
+    id = __RV_CSR_READ(CSR_MHARTID);
+#endif
+    return id;
+}
+
+/**
  * \brief   Get hart id of current cluster
  * \details This function will get hart id of current cluster in a multiple cluster system
  * \return  The hart id of current cluster
- * \remarks mhartid bit 7-0 is designed for hart id in nuclei subsystem reference design
+ * \remarks it will return full hartid not part of it for reference subsystem design,
+ * if your reference subsystem design has hartid offset, please define __HARTID_OFFSET in
+ * <Device>.h
  * \attention function is allowed in machine mode only
  */
 __STATIC_FORCEINLINE unsigned long __get_hart_id(void)
 {
     unsigned long id;
-
-    id = __RV_CSR_READ(CSR_MHARTID) & 0xFF;
+    id = __RV_CSR_READ(CSR_MHARTID);
     return id;
 }
 
