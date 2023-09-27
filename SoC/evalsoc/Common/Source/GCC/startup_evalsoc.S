@@ -268,7 +268,6 @@ _start:
 
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     csrr a0, CSR_MHARTID
-    andi a0, a0, 0xFF
     li a1, BOOT_HARTID
     bne a0, a1, __skip_init
 #endif
@@ -402,7 +401,6 @@ smp_main:
     STORE ra, 0*REGBYTES(sp)
     /* only boot hart goto main, other harts do wfi */
     csrr t0, CSR_MHARTID
-    andi t0, t0, 0xFF
     li t1, BOOT_HARTID
     beq t0, t1, 2f
 1:
