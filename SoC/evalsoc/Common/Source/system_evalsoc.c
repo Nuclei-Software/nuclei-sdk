@@ -681,6 +681,7 @@ __attribute__((section(".text.init"))) void __sync_harts(void)
 // Only do synchronize when SMP_CPU_CNT is defined and number > 0
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     unsigned long hartid = __get_hart_id();
+    unsigned long tmr_hartid = __get_hart_index();
     unsigned long clint_base, irgb_base, smp_base;
     unsigned long mcfg_info;
 
@@ -710,10 +711,10 @@ __attribute__((section(".text.init"))) void __sync_harts(void)
         __SMP_RWMB();
     } else {
         // Set machine software interrupt pending to 1
-        CLINT_MSIP(clint_base, hartid) = 1;
+        CLINT_MSIP(clint_base, tmr_hartid) = 1;
         __SMP_RWMB();
         // wait for pending bit cleared by boot hart
-        while (CLINT_MSIP(clint_base, hartid) == 1);
+        while (CLINT_MSIP(clint_base, tmr_hartid) == 1);
     }
 #endif
 }
