@@ -26,7 +26,7 @@
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
 #endif
 
-#define portINITIAL_MSTATUS                         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL)
+#define portINITIAL_MSTATUS                         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
 
 volatile rt_ubase_t  rt_interrupt_from_thread = 0;
 volatile rt_ubase_t  rt_interrupt_to_thread   = 0;

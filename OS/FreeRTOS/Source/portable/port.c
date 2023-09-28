@@ -64,7 +64,7 @@
 #define portMTH_MASK                ( 0xFFUL )
 
 /* Constants required to set up the initial stack. */
-#define portINITIAL_MSTATUS         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL)
+#define portINITIAL_MSTATUS         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
 #define portINITIAL_EXC_RETURN      ( 0xfffffffd )
 
 /* The systick is a 64-bit counter. */
