@@ -340,7 +340,7 @@ debugconfig:
 buildconfig:
   - type: common
     common_flags: # flags need to be combined together across all packages
-      - flags: -g -fno-common -ffunction-sections -fdata-sections
+      - flags: -g -fno-common -ffunction-sections -fdata-sections -msave-restore
       - flags: -march=${nuclei_arch} -mabi=${nuclei_core.abi}
       - flags: -mcmodel=${nuclei_core.cmodel}
       - flags: -nostdinc
@@ -357,7 +357,7 @@ buildconfig:
         condition: $( ${stdclib} == "newlib_fast" )
       - flags: -lc_nano -lgcc -u _printf_float
         condition: $( ${stdclib} == "newlib_small" )
-      - flags: -l$(replace(${stdclib},"lib")) -lheapops_basic
+      - flags: -l$(subst(${stdclib},lib,)) -lheapops_basic
         condition: $( startswith(${stdclib}, "libncrt") )
       - flags: -lsemihost
         condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
