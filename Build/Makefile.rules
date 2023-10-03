@@ -122,7 +122,7 @@ size: $(TARGET_ELF)
 
 upload: $(TARGET_ELF)
 	@$(ECHO) "Download and run $<"
-	$(GDB) -ex "set remotetimeout 240" \
+	$(GDB) $< -ex "set remotetimeout 240" \
 	-ex "target remote $(GDBREMOTE)" \
 	$(GDB_UPLOAD_ARGS) $(GDB_UPLOAD_CMDS)
 
