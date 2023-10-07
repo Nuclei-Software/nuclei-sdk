@@ -4,13 +4,18 @@
 DOWNLOAD=${1:-ilm}
 # TODO: Change CORE is not yet supported
 CORE=n300
+UPLOAD=${UPLOAD:-1}
 
-# you need to modify the default remote to your real machine gdb remote such as localhost:3333
+# TODO: Change this ROOTs according to your environment settings
+IAR_WORKBENCH_ROOT="/c/Program Files/IAR Systems/Embedded Workbench 9.1"
+NUCLEI_TOOLCHAIN_ROOT="/d/Software/NucleiStudio/toolchain"
+
+# TODO: you need to modify the default remote to your real machine gdb remote such as localhost:3333
 GDBREMOTE=${GDBREMOTE:-whss3.corp.nucleisys.com:20005}
 
 # Export riscv gdb and iarbuild into system PATH, please modify it according to your environment settings
-export PATH=/d/Software/NucleiStudio/toolchain/gcc/bin/:$PATH
-export PATH="/c/Program Files/IAR Systems/Embedded Workbench 9.1/common/bin":$PATH
+export PATH="${NUCLEI_TOOLCHAIN_ROOT}/gcc/bin/":$PATH
+export PATH="${IAR_WORKBENCH_ROOT}/common/bin":"${IAR_WORKBENCH_ROOT}/riscv/bin":$PATH
 
 SCRIPTDIR=$(dirname $(readlink -f $BASH_SOURCE))
 IARPRODIR=$(readlink -f ${SCRIPTDIR}/..)
@@ -46,6 +51,13 @@ function build_iar_project() {
     iarbuild $iarprj -build Debug -log errors -parallel 8
 }
 
+function disa_out() {
+    local iarout=$1
+    local iardis=${iarout}.dasm
+    echo "Disassemble $iarout to ${iardis}"
+    ielfdumpriscv -a $iarout > $iardis
+}
+
 function change_linkscript() {
     local iarprj=$1
     local download=${2:-flashxip}
@@ -74,9 +86,14 @@ do
         build_iar_project $file
         outfile="$(dirname $file)/Debug/Exe/$(basename $file ewp)out"
         if [ -f $outfile ] ; then
-            upload_program $outfile
+            disa_out $outfile
+            if [ "x$UPLOAD" != "x1" ] ; then
+                echo "Will not upload and test $file"
+            else
+                upload_program $outfile
+                sleep 15
+            fi
         fi
-        sleep 15
     done
 done
 
