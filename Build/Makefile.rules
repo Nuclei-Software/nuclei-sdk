@@ -40,6 +40,9 @@ showflags:
 	@$(ECHO) CFLAGS: $(CFLAGS)
 	@$(ECHO) CXXFLAGS: $(CXXFLAGS)
 	@$(ECHO) LDFLAGS: $(LDFLAGS)
+	@$(ECHO) CC: $(CC)
+	@$(ECHO) CXX: $(CXX)
+	@$(ECHO) GDB: $(GDB)
 
 showtoolver:
 	@$(ECHO) Show $(CC) version
