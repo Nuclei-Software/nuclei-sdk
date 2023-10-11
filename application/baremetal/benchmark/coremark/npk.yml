@@ -69,7 +69,7 @@ buildconfig:
               -falign-jumps=4 -falign-loops=4 -finline-limit=200 -fno-if-conversion -fno-if-conversion2 -fipa-pta
               -fselective-scheduling -fno-tree-loop-distribute-patterns -funroll-loops -funroll-all-loops
               -fno-delete-null-pointer-checks -fno-rename-registers -mbranch-cost=1 --param fsm-scale-path-stmts=5
-              --param max-average-unrolled-insns=200 --param max-grow-copy-bb-insns=16 --param max-jump-thread-duplication-stmts=8
+              --param max-average-unrolled-insns=200 --param max-grow-copy-bb-insns=20 --param max-jump-thread-duplication-stmts=25
               --param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
 
         condition: $( ${cpu_series} == 300 )
