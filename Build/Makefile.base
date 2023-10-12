@@ -51,11 +51,17 @@ RTOS ?=
 ### nospec: Don't pass any --specs options
 STDCLIB ?= newlib_nano
 ## Available choices:
-### only available for libncrt
+### Use to choose heapops type for libncrt, only available for libncrt
 ### basic: A low-overhead best-fit heap where allocation and deallocation have very little internal fragmentation
 ### realtime: A real-time heap where allocation and deallocation have O(1) performance
 ### minimal: An allocate-only heap where deallocation and reallocation are not implemented
 NCRTHEAP ?= basic
+## Available choices:
+### Use to choose fileops type for libncrt, only available for libncrt
+### uart: lower level input/output via uart, developer need to implement metal_tty_putc/getc
+### semi: input/output via semihosting
+### rtt: input/output via jlink rtt, require to use JLink tool
+NCRTIO ?= uart
 ## If NOGC=1, it will not gc any sections during compiling to save code size
 NOGC ?=
 ## If BANNER=0, it will not display sdk banner when program run

@@ -93,7 +93,7 @@ LDLIBS += -lsemihost
 endif
 else
 ifneq ($(findstring libncrt,$(STDCLIB)),)
-LDLIBS += -lfileops_uart
+LDLIBS += -lfileops_$(NCRTIO)
 endif
 endif
 
