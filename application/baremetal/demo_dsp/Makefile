@@ -26,7 +26,10 @@ STDCLIB ?= newlib_small
 # If I want to use Nuclei BPV extensions
 # For RV32: when ARCH_EXT=_zve32f_zba_zbb_zbc_zbs_xxldspn1x
 # For RV64: when ARCH_EXT=v_zba_zbb_zbc_zbs_xxldspn1x
-# see NMSIS/build.mk
+# And If you want to specify other NMSIS DSP/NN library
+# you can set NMSIS_LIB_ARCH make variable see NMSIS/build.mk
+# eg. If you want to use rv32imafdc NMSIS DSP library for N300FD + B + K extension
+# eg. NMSIS_LIB_ARCH := rv32imafdc
 ARCH_EXT ?=
 LDLIBS ?= -lm
 
