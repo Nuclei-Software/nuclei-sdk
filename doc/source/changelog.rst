@@ -8,15 +8,95 @@ V0.5.0-dev
 
 This is release version ``0.5.0-dev`` of Nuclei SDK.
 
+.. note::
+
+   - This 0.5.0 version is a big change version for Nuclei SDK, it now support Nuclei Toolchain 2023.10,
+     which have gnu toolchain and llvm toolchain in it, gcc version increased to gcc 13, and clang version
+     used is clang 17. It will no longer support old gcc 10 version, since gcc and clang ``-march`` option
+     changed a lot, such as b extension changed to ``_zba_zbb_zbc_zbs``.
+   - This version also introduced other compiler support such as terapines zcc and IAR compiler.
+     For terapines zcc compiler, please visit https://www.terapines.com/ to contact them for toolchain evaluation, pass ``TOOLCHAIN=terapines`` during make to select terapines zcc compiler.
+     For IAR compiler, please visit https://www.iar.com/riscv for IAR workbench evaluation, we provided iar projects to take a try with it.
+   - This version introduced libncrt v3.0.0 support, which split libncrt library into three parts, you need to take care when using newer toolchain.
+   - This version removed demosoc support, please use evalsoc instead.
+   - This version introduced qemu 8.0 support, old qemu will not be supported.
+   - This version introduced Nuclei Studio 2023.10 support which introduced llvm toolchain support via npk, so it can only works with 2023.10 or later version.
+
 * Application
+
+  - Add cpuinfo case to dump nuclei cpu feature
+  - Add stack check demo to demostrate nuclei stack check feature
+  - Add support for gcc13/clang17/terapines/iar compiler
+  - For different compiler option support, we introduced ``toolchain_$(TOOLCHAIN).mk`` file to place toolchain specified options, see benchmark examples' Makefile
+  - Optimize demo_cidu smp case
+  - Optimize application code and makefile when port for clang, terapines zcc and iar compiler
+  - Change ARCH_EXT makefile comment for demo_dsp when using gcc 13
+  - Auto choose proper CPU_SERIES and proper optimization flags for benchmark cases
+  - Optimize whetstone cost to decrease execution time for better ci testing in qemu and fpga
+  - Add Zc and Xxlcz extension optimization for coremark and dhrystone cases
+  - Do specical adaption for demo_pmp/demo_spmp for iar compiler which require customized iar linker icf for this cases
+  - Optimize benchmark flags when using gcc 13
 
 * NMSIS
 
+  - Add bench reset/sample/stop/stat and get usecyc/sumcyc/lpcnt APIs in NMSIS Core
+  - Add more CSRs such as Zc/Stack Check in riscv_encoding.h
+  - Rename NMSIS DSP/NN library name to match gcc 13 changes, eg. b -> zba_zbb_zbc_zbs
+  - Add IAR compiler support in NMSIS Core
+  - No more bitmanip extension intrinsic header <rvintrin.h> for gcc13
+  - Fix __RV_CLAMP macro and add __MACHINE/SUPERVISOR/USER_INTERRUPT macros
+  - Add __get_hart_index and SysTimer_GetHartID and modify __get_hart_id API
+  - In <Device.h>, we introduced __HARTID_OFFSET and __SYSTIMER_HARTID macro to represent timer hart index relation with cpu hartid for AMP SoC
+
 * SOC
+
+  - Demosoc support is removed since evalsoc is the successor
+  - Set RUNMODE_CCM_EN macro when CCM_EN make variable passed and allow __CCM_PRESENT overwrite by RUNMODE_CCM_EN macro
+  - Enable __CIDU_PRESENT macro passed via compiler option
+  - Update cpu startup asm code to fix clang compile issue such as STB_WEAK warning and non-ABS relocation error
+  - Update cpu startup asm code to support zcmt jump table
+  - Update gnu linker files to support zcmt extension
+  - Update gnu linker files to fix 2 byte gap issue, and align section to 8bytes and reorg sections
+  - Update openocd configuration files to support openocd new version
+  - Make metal_tty_putc/getc with __USED attribute to avoid -flto build fail
+  - Add startup and exception code and iar linker icf files for IAR compiler support
+  - Add new macros __HARTID_OFFSET and __SYSTIMER_HARTID in evalsoc.h
+  - Add HARTID_OFFSET make variable to control hartid offset for evalsoc
+  - Boot hartid check no longer only compare lower 8bits for evalsoc
+  - Currently IAR compiler support is only for single core support, smp support is not yet ready and need to use in IAR workbench
+  - Update Nuclei Studio NPK files to support both gcc and llvm toolchain support, this require 2023.10 Nuclei Studio, which is incompatiable with previous IDE version.
 
 * Build System
 
+  - Fix semihost not working when link with semihost library
+  - Add support for gcc 13, clang 17, terapines zcc toolchain using TOOLCHAIN make variable, eg. TOOLCHAIN=nuclei_gnu for gnu gcc toolchain, TOOLCHAIN=nuclei_llvm for llvm toolchain, TOOLCHAIN=terapines for terapines zcc toolchain
+  - Add support for libncrt v3.0.0, which spilt libncrt into 3 parts, the c library part, fileops part, and heapops part, so **NCRTHEAP** and **NCRTIO** makefile variable are added to support new version of libncrt
+  - To support both gcc, clang, zcc, now we no longer use ``--specs=nano.specs`` like options, since clang don't support it, we directly link the required library according to the library type you want to use
+  - The use of ARCH_EXT is changed for new toolchain, eg. you can't pass ARCH_EXT=bp to represent b/p extension, instead you need to pass ARCH_EXT=_zba_zbb_zbc_zbs_xxldspn1x
+  - Show CC/CXX/GDB when make showflags
+  - Add u900 series cores support
+  - No longer support gd32vf103 soc run on qemu
+  - Add extra ``-fomit-frame-pointer -fno-shrink-wrap-separate`` options for Zc extension to enable zcmp instruction generation
+  - Extra CPU_SERIES macro is passed such (200/300/600/900) during compiling for benchmark examples
+
 * Tools
+
+  - A lot of changes mainly in nsdk cli configs have been made to remove support of demosoc, and change it to evalsoc
+  - A lot of changes mainly in nsdk cli configs have been made to support newer ARCH_EXT variable format
+  - Add llvm ci related nsdk cli config files
+  - Add Zc/Xxlcz fpga benchmark config files
+  - Support qemu 8.0 in nsdk cli tools
+  - Update configurations due to application adding and updating
+
+* RTOS
+
+  - Add freertos/ucosii/rtthread porting code for IAR compiler
+  - Enable vector when startup new task for rtos for possible execute rvv related instruction exception
+
+* Misc
+
+  - Change gitlab ci to use gnu toolchain 2023.10
+  - Add IAR workbench workspace and projects for evalsoc, so user can quickly evaluate IAR support in IAR workbench
 
 
 V0.4.1
