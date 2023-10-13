@@ -14,8 +14,7 @@ it make developer can easily port this Nuclei SDK software code to other IDEs.
 
 Click :ref:`overview` to learn more about the Nuclei SDK project overview.
 
-For example, we have ported Nuclei SDK to use Segger embedded Studio and PlatformIO.
-
+For example, we have ported Nuclei SDK to use Segger embedded Studio, IAR Workbench and PlatformIO.
 
 Directory Structure
 -------------------
@@ -36,6 +35,7 @@ Here is the directory structure for this Nuclei SDK.
     │   └── rtthread
     ├── Build
     │   ├── gmsl
+    │   ├── toolchain
     │   ├── Makefile.base
     │   ├── Makefile.conf
     │   ├── Makefile.core
@@ -62,7 +62,7 @@ Here is the directory structure for this Nuclei SDK.
     │   └── RTThread
     ├── SoC
     │   ├── gd32vf103
-    │   └── demosoc
+    │   └── evalsoc
     ├── test
     │   ├── core
     │   ├── ctest.h
@@ -93,11 +93,11 @@ Here is the directory structure for this Nuclei SDK.
 
   This directory contains all the supported SoCs for this Nuclei SDK, the directory name for SoC and its boards should always in lower case.
 
-  Here we mainly support Nuclei processor cores running in Nuclei FPGA evaluation board, the support package placed in *SoC/demosoc/*.
+  Here we mainly support Nuclei processor cores running in Nuclei FPGA evaluation board, the support package placed in *SoC/evalsoc/*.
 
-  In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/demosoc/Common/Include/nuclei_sdk_soc.h*.
+  In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/evalsoc/Common/Include/nuclei_sdk_soc.h*.
 
-  In each SoC Board's include directory, *nuclei_sdk_hal.h* must be provided, and include the board header file, for example, *SoC/demosoc/Board/nuclei_fpga_eval/Include/nuclei_sdk_hal.h*.
+  In each SoC Board's include directory, *nuclei_sdk_hal.h* must be provided, and include the board header file, for example, *SoC/evalsoc/Board/nuclei_fpga_eval/Include/nuclei_sdk_hal.h*.
 
 * **Build**
 
@@ -140,6 +140,7 @@ Here is the directory structure for this Nuclei SDK.
 
   .. code-block:: shell
 
+     # you can export this variable to Nuclei Studio's toolchain folder
      NUCLEI_TOOL_ROOT=/path/to/your_tool_root
 
   In the **$NUCLEI_TOOL_ROOT** for **Linux**, you need to have Nuclei RISC-V GNU GCC toolchain and OpenOCD installed as below.
@@ -152,7 +153,7 @@ Here is the directory structure for this Nuclei SDK.
      │   ├── include
      │   ├── lib
      │   ├── libexec
-     │   ├── riscv-nuclei-elf
+     │   ├── riscv64-unknown-elf
      │   └── share
      └── openocd
          ├── bin
@@ -184,7 +185,7 @@ Here is the directory structure for this Nuclei SDK.
      │   ├── include
      │   ├── lib
      │   ├── libexec
-     │   ├── riscv-nuclei-elf
+     │   ├── riscv64-unknown-elf
      │   └── share
      └── openocd
          ├── bin

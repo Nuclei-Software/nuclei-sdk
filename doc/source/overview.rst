@@ -8,6 +8,11 @@ Overview
 Introduction
 ------------
 
+.. note::
+
+    Since 0.5.0 release of Nuclei SDK, we need to use Nuclei Studio >= 2023.10 or Nuclei Toolchain
+    >=2023.10 to build and run it, see release changelog.
+
 The **Nuclei Software Development Kit (SDK)** is an open-source software platform to
 speed up the software development of SoCs based on Nuclei Processor Cores.
 
@@ -44,7 +49,7 @@ As :ref:`figure_overview_1` shown, The Nuclei SDK provides the following feature
   port their SoCs to Nuclei SDK, and quickly evaluate software on their SoC.
 * **NMSIS-NN** and **NMSIS-DSP** library can be also used in Nuclei SDK, and the prebuilt libraries are
   included in **NMSIS/Library** folder of Nuclei SDK.
-* Mainly support two Nuclei Processor based SoCs, :ref:`design_soc_demosoc` and :ref:`design_soc_gd32vf103`
+* Mainly support two Nuclei Processor based SoCs, :ref:`design_soc_evalsoc` and :ref:`design_soc_gd32vf103`
 * Provided realtime operation system service via :ref:`design_rtos_freertos`, :ref:`design_rtos_ucosii` and
   :ref:`design_rtos_rtthread`
 * Provided bare-metal service for embedded system software beginners and resource-limited use-cases.

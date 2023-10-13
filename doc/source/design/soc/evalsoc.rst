@@ -11,7 +11,7 @@ Nuclei Eval SoC
     Nuclei DemoSoC is now removed in 0.5.0 release, and please use evalsoc now.
 
 Nuclei Eval SoC is an evaluation FPGA SoC from Nuclei
-for customer to evaluate Nuclei RISC-V Process Core.
+for customer to evaluate Nuclei RISC-V Process Core, and it is a successor for Demo SoC.
 
 .. _design_soc_evalsoc_overview:
 
@@ -19,7 +19,7 @@ Overview
 --------
 
 To easy user to evaluate Nuclei Processor Core, the prototype
-SoC (called Nuclei Demo SoC) is provided for evaluation purpose.
+SoC (called Nuclei Eval SoC) is provided for evaluation purpose.
 
 This prototype SoC includes:
 

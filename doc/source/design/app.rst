@@ -26,7 +26,10 @@ The provided applications can be divided into three categories:
 If you want to develop your own application in Nuclei SDK, please click
 :ref:`develop_appdev` to learn more about it.
 
-The following applications are running using RV-STAR board.
+The following applications are running using RV-STAR board or Nuclei Eval SoC.
+
+Some applications may not be able to be run on your Nuclei SoC due to lack
+of cpu feature required to run on it.
 
 Bare-metal applications
 -----------------------
@@ -393,9 +396,9 @@ so interrupt handler will not be entered, and will directly resume to next pc of
     # cd to the low-power directory
     cd application/baremetal/lowpower
     # Clean the application first
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
     # Build and upload the application
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
 
 **Expected output as below:**
 
@@ -415,7 +418,7 @@ smphello
 This `smphello application`_ is used to demonstrate how to use baremetal SMP feature.
 
 This demo requests the SMP cores share the same RAM and ROM, for example, in current
-demosoc system, ilm/dlm are private resource for cpu, only the DDR memory are shared
+evalsoc system, ilm/dlm are private resource for cpu, only the DDR memory are shared
 resource for all the cpu.
 
 And `RVA` atomic extension is required to run this application, this extension is used
@@ -427,15 +430,15 @@ to do spinlock in this example.
     * Need to enable I/D Cache in <Device.h> if I/D Cache present in CPU.
 
 Need to change ``__ICACHE_PRESENT``, ``__DCACHE_PRESENT`` and ``__CCM_PRESENT`` to 1 in
-``SoC/demosoc/Common/Include/demosoc.h`` before run this application, from 0.4.0 release,
+``SoC/evalsoc/Common/Include/evalsoc.h`` before run this application, from 0.4.0 release,
 for evalsoc/demosoc, ``__ICACHE_PRESENT`` and ``__DCACHE_PRESENT`` are default set to 1.
 
 .. code-block:: diff
 
-    diff --git a/SoC/demosoc/Common/Include/demosoc.h b/SoC/demosoc/Common/Include/demosoc.h
+    diff --git a/SoC/evalsoc/Common/Include/evalsoc.h b/SoC/evalsoc/Common/Include/evalsoc.h
     index 256cc614..fc9934ae 100644
-    --- a/SoC/demosoc/Common/Include/demosoc.h
-    +++ b/SoC/demosoc/Common/Include/demosoc.h
+    --- a/SoC/evalsoc/Common/Include/evalsoc.h
+    +++ b/SoC/evalsoc/Common/Include/evalsoc.h
     @@ -243,9 +243,9 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
      #define __PMP_ENTRY_NUM           16                    /*!< Set to 8 or 16, the number of PMP entries */
 
@@ -446,7 +449,7 @@ for evalsoc/demosoc, ``__ICACHE_PRESENT`` and ``__DCACHE_PRESENT`` are default s
      +#define __ICACHE_PRESENT          1                     /*!< Set to 1 if I-Cache is present */
      +#define __DCACHE_PRESENT          1                     /*!< Set to 1 if D-Cache is present */
      +#define __CCM_PRESENT             1                     /*!< Set to 1 if Cache Control and Mantainence Unit is present */
-     #else // RUNMODE_CONTROL is defined in SoC/demosoc/runmode.mk, for internal usage not intend for widely usage
+     #else // RUNMODE_CONTROL is defined in SoC/evalsoc/runmode.mk, for internal usage not intend for widely usage
      #define __ICACHE_PRESENT          RUNMODE_IC_EN         /*!< Set to 1 if I-Cache is present */
      #define __DCACHE_PRESENT          RUNMODE_DC_EN         /*!< Set to 1 if D-Cache is present */
 
@@ -455,14 +458,14 @@ for evalsoc/demosoc, ``__ICACHE_PRESENT`` and ``__DCACHE_PRESENT`` are default s
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # Use Nuclei UX600 SMP 2 Core RISC-V processor as example
+    # Use Nuclei UX900 SMP 2 Core RISC-V processor as example
     # application needs to run in ddr memory not in ilm memory
     # cd to the smphello directory
     cd application/baremetal/smphello
     # Clean the application first
-    make SOC=demosoc BOARD=nuclei_fpga_eval SMP=2 DOWNLOAD=ddr CORE=ux600 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=2 DOWNLOAD=ddr CORE=ux900 clean
     # Build and upload the application
-    make SOC=demosoc BOARD=nuclei_fpga_eval SMP=2 DOWNLOAD=ddr CORE=ux600 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=2 DOWNLOAD=ddr CORE=ux900 upload
 
 **Expected output as below:**
 
@@ -503,13 +506,13 @@ For more about **NICE** feature, please click `Nuclei User Extended Introduction
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei SDK environment
-    # Use Nuclei UX607 RISC-V processor as example, hardware NICE demo integrated
+    # Use Nuclei UX900 RISC-V processor as example, hardware NICE demo integrated
     # cd to the demo_dsp directory
     cd application/baremetal/demo_nice
     # Clean the application first
-    make SOC=demosoc BOARD=nuclei_fpga_eval CORE=ux600 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 clean
     # Build and upload the application
-    make SOC=demosoc BOARD=nuclei_fpga_eval CORE=ux600 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 upload
 
 **Expected output as below:**
 
@@ -563,10 +566,10 @@ In Nuclei SDK, we provided code and Makefile for this ``coremark`` application.
 You can also optimize the ``COMMON_FLAGS`` defined in coremark application Makefile
 to get different score number.
 
-* By default, this application runs for 600 iterations, you can also change this in Makefile.
-  e.g. Change this ``-DITERATIONS=600`` to value such as ``-DITERATIONS=5000``
+* By default, this application runs for 800 iterations, you can also change this in Makefile.
+  e.g. Change this ``-DITERATIONS=800`` to value such as ``-DITERATIONS=5000``
 * macro **PERFORMANCE_RUN=1** is defined
-* **PFLOAT = 1** is added in its Makefile to enable float value print
+* **STDCLIB ?= newlib_small** is added in its Makefile to enable float value print
 * For different Nuclei CPU series, the benchmark options are different, currently
   you can pass ``CPU_SERIES=900`` to select benchmark options for 900 series, otherwise
   the benchmark options for 200/300/600/900 will be selected which is also the default value.
@@ -577,7 +580,7 @@ to get different score number.
      the ``ITERATIONS`` defined in Makefile to proper value to let the coremark run at least
      10 seconds
    * For example, for the ``gd32vf103`` based boards supported in Nuclei SDK, we suggest
-     to change ``-DITERATIONS=600`` to ``-DITERATIONS=5000``
+     to change ``-DITERATIONS=800`` to ``-DITERATIONS=5000``
 
 **How to run this application:**
 
@@ -647,7 +650,7 @@ In Nuclei SDK, we provided code and Makefile for this ``dhrystone`` application.
 You can also optimize the ``COMMON_FLAGS`` defined in dhrystone application Makefile
 to get different score number.
 
-* **PFLOAT = 1** is added in its Makefile to enable float value print
+* **STDCLIB ?= newlib_small** is added in its Makefile to enable float value print
 * You can change ``Number_Of_Runs`` in ``dhry_1.c`` line 134 to increate or decrease
   number of iterations
 
@@ -750,7 +753,7 @@ In Nuclei SDK, we provided code and Makefile for this ``whetstone`` application.
 You can also optimize the ``COMMON_FLAGS`` defined in whetstone application Makefile
 to get different score number.
 
-* **PFLOAT = 1** is added in its Makefile to enable float value print
+* **STDCLIB ?= newlib_small** is added in its Makefile to enable float value print
 * Extra **LDFLAGS := -lm** is added in its Makefile to include the math library
 
 
@@ -853,9 +856,9 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
     # Change macro SWIRQ_INTLEVEL_HIGHER value in demo_smode_eclic.c
     # to see different working mode of this demo
     # Clean the application first
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
     # Build and upload the application
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
 
 **Expected output(SWIRQ_INTLEVEL_HIGHER=1) as below:**
 
@@ -1023,9 +1026,9 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
     # Change macro TRIGGER_SPMP_VIOLATION_MODE value in demo_spmp.c
     # to see different working mode of this demo
     # Clean the application first
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
     # Build and upload the application
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
 
 **Expected output(TRIGGER_SPMP_VIOLATION_MODE=INSTRUCTION_FETCH_PAGE_EXCEPTION) as below:**
 
@@ -1214,7 +1217,7 @@ This `demo_pmp_application`_ is used to demonstrate how to grant physical memory
   - If **TRIGGER_PMP_VIOLATION_MODE=STORE_EXCEPTION**, the unallowed memory is to write,
     which triggers ``Store/AMO access fault``, whose mcause.EXCODE = 7 and mdcause = 1
 
-  - If **TRIGGER_PMP_VIOLATION_MODE=RUN_WITH_NO_PMP_CHECK**,  no violation occurs
+  - If **TRIGGER_PMP_VIOLATION_MODE=RUN_WITH_NO_PMP_CHECK**, no violation occurs
 
 **How to run this application:**
 
@@ -1229,9 +1232,9 @@ This `demo_pmp_application`_ is used to demonstrate how to grant physical memory
     # Change macro TRIGGER_PMP_VIOLATION_MODE value in demo_pmp.c
     # to see different working mode of this demo
     # Clean the application first
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
     # Build and upload the application
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
 
 **Expected output(TRIGGER_PMP_VIOLATION_MODE=INSTRUCTION_FETCH_EXCEPTION) as below:**
 
@@ -1357,9 +1360,9 @@ for all the cpu.
     # cd to the demo_cidu directory
     cd application/baremetal/demo_cidu
     # Clean the application first
-    make SOC=demosoc BOARD=nuclei_fpga_eval SMP=4 DOWNLOAD=ddr CORE=ux900 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=4 DOWNLOAD=ddr CORE=ux900 clean
     # Build and upload the application
-    make SOC=demosoc BOARD=nuclei_fpga_eval SMP=4 DOWNLOAD=ddr CORE=ux900 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=4 DOWNLOAD=ddr CORE=ux900 upload
 
 **Expected output(inter core interrupt) as below:**
 
@@ -1521,9 +1524,9 @@ because cache will bypass when run in ilm, data in dlm(private resource for cpu)
     # cd to the demo_cache directory
     cd application/baremetal/demo_cache
     # Clean the application first
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ddr CORE=ux900 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ddr CORE=ux900 clean
     # Build and upload the application
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ddr CORE=ux900 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ddr CORE=ux900 upload
 
 **Expected output(DISABLE_NMSIS_HPM defined) as below:**
 
@@ -1879,7 +1882,7 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 * **RTTHREAD_MSH := 1** is added in its Makefile to include RT-Thread msh component
 * The **RT_TICK_PER_SECOND** in ``rtconfig.h`` is by default set to `100`, you can change it
   to other number according to your requirement.
-* To run this application in :ref:`design_soc_demosoc`, the SoC clock frequency must be above 16MHz,
+* To run this application in :ref:`design_soc_evalsoc`, the SoC clock frequency must be above 16MHz,
   if run in 8MHz, uart read is not correct due to bit error in uart rx process.
 
 **How to run this application:**

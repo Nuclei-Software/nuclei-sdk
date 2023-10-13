@@ -65,10 +65,12 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
            such  as uart, gpio, i2c, spi driver headers, usually get from the SoC firmware library,
            it should be placed in **Include** folder.
          * The **Stubs** folder contains the stub code files for newlib c library and nuclei c runtime
-           library porting code, take ``SoC/demosoc/Common/Stubs`` as reference.
+           library porting code, take ``SoC/evalsoc/Common/Stubs`` as reference.
          * The **GCC** folder contains *startup* and *exeception/interrupt* assemble code,
            if your board share the same linker script files, you can also put link script files here,
-           the linker script files name rules can refer to previously supported *demosoc* SoC.
+           the linker script files name rules can refer to previously supported *evalsoc* SoC.
+         * If you want to do IAR compiler support, you also need to implement IAR related stuff,
+           which is located in folder called IAR.
          * The **nuclei_sdk_soc.h** file is very important, it is a Nuclei SoC Header file used
            by common application which can run accoss different SoC, it should include the SoC device
            header file ``ncstar.h``
@@ -155,7 +157,7 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
 
    * If you need to place vector table in flash device, and copy it to ilm when startup, such as
      using ``DOWNLOAD=flash`` mode, then you need to define extra ``VECTOR_TABLE_REMAPPED`` macro
-     in this ``build.mk``, just take ``SoC/demosoc/build.mk`` as reference.
+     in this ``build.mk``, just take ``SoC/evalsoc/build.mk`` as reference.
 
      .. code-block:: Makefile
 
@@ -187,9 +189,11 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
 .. note::
 
    * You can always refer to previously supported SoCs for reference,
-     such as the ``demosoc`` and ``gd32vf103`` SoC.
-   * The ``demosoc`` SoC is a FPGA based evaluation platform, it have
-     ``ilm`` and ``dlm``, so it support three
+     such as the ``evalsoc`` and ``gd32vf103`` SoC, we suggest you follow
+     the ``evalsoc`` implementation, since it is well maintained to support
+     latest nuclei riscv cpu feature.
+   * The ``evalsoc`` SoC is a FPGA based evaluation platform, it have
+     ``ilm`` and ``dlm``, so it support many
      :ref:`download modes <develop_buildsystem_var_download>`
    * The ``gd32vf103`` SoC is a real silicon chip, it only have RAM and onchip
      flash, it only support FlashXIP mode.

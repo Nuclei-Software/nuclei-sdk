@@ -9,7 +9,7 @@ Overview
 --------
 
 Nuclei have customized different FPGA evaluation boards (called Nuclei FPGA Evaluation Kit),
-which can be programmed with Nuclei Demo SoC FPGA bitstream.
+which can be programmed with Nuclei Demo/Eval SoC FPGA bitstream.
 
 * **Nuclei FPGA Evaluation Kit, 100T version**
 
@@ -62,6 +62,9 @@ which can be programmed with Nuclei Demo SoC FPGA bitstream.
         :alt: Nuclei FPGA Evaluation Kit, MCU 200T Version
 
         Nuclei FPGA Evaluation Kit, MCU 200T Version
+
+There are also other fpga board we supported, such as KU060 and VCU118 board, please contact
+with our sales for details.
 
 Click `Nuclei FPGA Evaluation Kit Board Documents`_ to access the documents of these boards.
 
@@ -140,7 +143,6 @@ If you want to try other toolchain, such as nuclei llvm or terapines zcc, you ca
    * The FreeRTOS and UCOSII demos maybe not working in ``flashxip``
      download mode in Nuclei FPGA board due to program running in Flash is really too slow.
      If you want to try these demos, please use ``ilm`` or ``flash`` download mode.
-
 
 .. _Nuclei FPGA Evaluation Kit Board Documents: https://nucleisys.com/developboard.php
 .. _Memory Section: https://sourceware.org/binutils/docs/ld/MEMORY.html

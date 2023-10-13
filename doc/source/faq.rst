@@ -82,11 +82,14 @@ How to select correct FDTI debugger?
 From Nuclei SDK release 0.2.9, the openocd configuration file doesn't
 contain `ftdi_device_desc`_ line by default, so if there are more than
 one FTDI debuggers which has the same VID/PID(0x0403/0x6010) as Nuclei
-Debugger Kit use, then you might need to add extra ``ftdi_device_desc``
+Debugger Kit use, then you might need to add extra ``ftdi device_desc``
 line in the openocd configuration file to describe the FTDI device description.
 
+Or you can add extra ``adapter serial your_serial_no`` for your debugger, you can check
+its serial number via windows FT_PROG tool.
+
 * For **Nuclei FPGA Evaluation Board**, you can check the openocd configuration
-  file in *SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc.cfg*.
+  file in *SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg*.
 
 * For **Nuclei RVSTAR Board**, you can check the openocd configuration file
   in *SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg*.
@@ -153,20 +156,20 @@ If you met similar message as below when build an application:
     xxx/bin/ld: region `ilm' overflowed by 43832 bytes
     xxx/bin/ld: region `ram' overflowed by 0 bytes
 
-It is caused by the program is too big, our default link script is 64K ILM, 64K DLM, 4M SPIFlash for Nuclei Demo SoC.
+It is caused by the program is too big, our default link script is 64K ILM, 64K DLM, 4M SPIFlash for Nuclei Demo/Eval SoC.
 
 If your core has bigger ILM or DLM, you can change related linker script file according to your choice.
 
-For example, if you want to change linker script for nuclei_fpga_eval ilm download mode:
+For example, if you want to change linker script for evalsoc on nuclei_fpga_eval ilm download mode:
 ``ILM to 512K, DLM to 256K``, then you can change link script file
-``SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld`` as below:
+``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld`` as below:
 
 .. code-block:: diff
 
-    diff --git a/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld b/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
+    diff --git a/SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld b/SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
     index 1ac5b90..08451b3 100644
-    --- a/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
-    +++ b/SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld
+    --- a/SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
+    +++ b/SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
     @@ -28,8 +28,8 @@ ENTRY( _start )
      MEMORY
      {

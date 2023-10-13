@@ -1514,7 +1514,6 @@ e.g. To search C/CPP/ASM source files in directory ``.`` and ``src``
 
     SRCDIRS = . src
 
-
 .. _develop_buildsystem_var_c_srcdirs:
 
 C_SRCDIRS

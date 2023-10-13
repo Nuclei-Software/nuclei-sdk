@@ -102,8 +102,11 @@ Firmware Library Package provided by SoC Vendor.
 In Nuclei SDK, currently we just required developer to provide the following
 common resources:
 
-* A UART used to implement the ``_write`` and ``_read`` stub functions for
-  ``printf`` functions
+* A UART used to implement several stub functions for ``printf`` function
+
+  - When using newlib library, please check stub functions list in ``SoC/evalsoc/Common/Stubs/newlib``
+  - When using libncrt library, please check stub functions list in ``SoC/evalsoc/Common/Stubs/libncrt``
+  - When using iar dlib library, please check stub functions list in ``SoC/evalsoc/Common/Stubs/iardlib``
 * Common initialization code defined in **System_<Device>.c/h** in each
   SoC support package in Nuclei SDK.
 * Before enter to main function, these resources must be initialized:
