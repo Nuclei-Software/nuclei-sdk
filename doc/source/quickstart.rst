@@ -10,8 +10,15 @@ Use Nuclei SDK in Nuclei Studio
 
 .. caution::
 
+   For Nuclei SDK 0.5.0 version and later ones, please use Nuclei Studio 2023.10 or
+   Nuclei RISC-V Toolchain/OpenOCD/QEMU 2023.10.
+
    For Nuclei SDK 0.3.5 version and later ones, please use Nuclei Studio 2022.01 or
    Nuclei GNU Toolchain/OpenOCD/QEMU 2022.01.
+
+From Nuclei Toolchain 2023.10, both gnu and llvm toolchain are provided, and toolchain
+prefix changed from ``riscv-nuclei-elf-`` to ``riscv64-unknown-elf-``, and 0.5.0 SDK release
+will only support this ``2023.10`` or later toolchain.
 
 From **2020.08** release version of Nuclei Studio IDE, the nuclei-sdk **released**
 version will be deeply integrated with Nuclei Studio, and you can directly create
@@ -31,9 +38,9 @@ Setup Tools and Environment
 To start to use Nuclei SDK, you need to install the following tools:
 
 From **2020.10** release version of Nuclei Studio, you can directly use the prebuilt tools
-provided in Nuclei Studio(**strongly suggested**), please check :ref:`quickstart_setup_tools_env_nside`.
+provided in Nuclei Studio(**strongly suggested**), please following :ref:`quickstart_setup_tools_env_nside`.
 
-If you want to use latest toolchain, you can follow guides below:
+If you want to use latest toolchain(version newer than Nuclei Studio preinstalled), you can follow guides below:
 
 * For Windows users, please check :ref:`quickstart_setup_tools_env_windows`
 * For Linux users, please check :ref:`quickstart_setup_tools_env_linux`
@@ -49,12 +56,12 @@ no need to do the following steps below, the prebuilt tools are already included
 
 For example:
 
-* In Windows, if you have extracted the Nuclei Studio IDE to ``D:\Software\NucleiStudio_IDE_202010``,
-  then you can find the prebuilt tools in ``D:\Software\NucleiStudio_IDE_202010\NucleiStudio\toolchain``.
-* In Linux, if you have extracted the Nuclei Studio IDE to ``/home/labdev/NucleiStudio_IDE_202010``,
-  then you can find the prebuilt tools in ``/home/labdev/NucleiStudio_IDE_202010/NucleiStudio/toolchain``.
+* In Windows, if you have extracted the Nuclei Studio IDE to ``D:\Software\NucleiStudio_IDE_202310``,
+  then you can find the prebuilt tools in ``D:\Software\NucleiStudio_IDE_202310\NucleiStudio\toolchain``.
+* In Linux, if you have extracted the Nuclei Studio IDE to ``/home/labdev/NucleiStudio_IDE_202310``,
+  then you can find the prebuilt tools in ``/home/labdev/NucleiStudio_IDE_202310/NucleiStudio/toolchain``.
 
-If you have downloaded and extracted the Nuclei Studio, then you can jump to :ref:`quickstart_get_set_nuclei_sdk`.
+If you have downloaded and extracted the Nuclei Studio, then you can jump to :ref:`quickstart_get_set_nuclei_sdk` and ignore below steps.
 
 .. _quickstart_setup_tools_env_windows:
 
@@ -140,11 +147,12 @@ to download and install tools for you.
 2. Download the following tools from |nuclei_download_center|, please check and follow
    the figure :ref:`figure_quickstart_5`.
 
-   - **Nuclei RISC-V GNU Toolchain for Linux**, for **CentOS or Ubuntu** click number **1**
+   - **Nuclei RISC-V Toolchain for Linux**, for **CentOS or Ubuntu** click number **1**
      in the figure :ref:`figure_quickstart_5`
    - **Nuclei OpenOCD for Linux**, see number **2-1** for 64bit version in the figure :ref:`figure_quickstart_5`
    - **Make >= 3.82**: Install ``Make`` using ``sudo apt-get install make`` in Ubuntu,
      or ``sudo yum install make`` in CentOS.
+   - For ubuntu 2022.04, you need to install ``libtinfo5`` and ``libncursesw5`` packages to make gdb work.
 
 .. _figure_quickstart_5:
 
@@ -202,16 +210,16 @@ The source code of Nuclei SDK is maintained in |github| and |gitee|.
      create ``setup_config.bat`` in ``nuclei-sdk`` folder, and open this file
      your editor, and paste the following content, assuming you followed
      :ref:`quickstart_setup_tools_env`, and prebuilt tools located in
-     ``D:\Software\NucleiStudio_IDE_202010\NucleiStudio\toolchain``,
+     ``D:\Software\NucleiStudio_IDE_202310\NucleiStudio\toolchain``,
      otherwise please use your correct tool root path.
 
      .. code-block:: bat
 
-        set NUCLEI_TOOL_ROOT=D:\Software\NucleiStudio_IDE_202010\NucleiStudio\toolchain
+        set NUCLEI_TOOL_ROOT=D:\Software\NucleiStudio_IDE_202310\NucleiStudio\toolchain
 
      If you want to use Nuclei SDK in **Windows PowerShell** terminal, you need to create
      a ``setup_config.ps1`` in ``nuclei-sdk`` folder, and edit this file with content below
-     if your prebuilt tools are located in ``D:\Software\NucleiStudio_IDE_202010\NucleiStudio\toolchain``:
+     if your prebuilt tools are located in ``D:\Software\NucleiStudio_IDE_202310\NucleiStudio\toolchain``:
 
      .. code-block:: ps1
 
@@ -222,12 +230,12 @@ The source code of Nuclei SDK is maintained in |github| and |gitee|.
      Create ``setup_config.sh`` in ``nuclei-sdk`` folder, and open this file
      your editor, and paste the following content, assuming you followed
      :ref:`quickstart_setup_tools_env` and prebuilt tools located in
-     ``/home/labdev/NucleiStudio_IDE_202010/NucleiStudio/toolchain``,
+     ``/home/labdev/NucleiStudio_IDE_202310/NucleiStudio/toolchain``,
      otherwise please use your correct tool root path.
 
      .. code-block:: shell
 
-        NUCLEI_TOOL_ROOT=/home/labdev/NucleiStudio_IDE_202010/NucleiStudio/toolchain
+        NUCLEI_TOOL_ROOT=/home/labdev/NucleiStudio_IDE_202310/NucleiStudio/toolchain
 
 
 .. _quickstart_buildrundebug_app:
@@ -254,7 +262,7 @@ folder.
 
      setup.bat
      echo %PATH%
-     where riscv-nuclei-elf-gcc openocd make rm
+     where riscv64-unknown-elf-gcc openocd make rm
      make help
 
   .. _figure_quickstart_6:
@@ -275,7 +283,7 @@ folder.
 
      source setup.sh
      echo $PATH
-     which riscv-nuclei-elf-gcc openocd make rm
+     which riscv64-unknown-elf-gcc openocd make rm
      make help
 
   .. _figure_quickstart_7:
@@ -294,7 +302,7 @@ folder.
       The ``setup.bat`` and ``setup.sh`` are just used to append Nuclei RISC-V GCC Toolchain, OpenOCD and Build-Tools
       binary paths into environment variable **PATH**
     * line 2-4 are just used to check whether build environment is setup correctly, especially the **PATH** of
-      Nuclei Tools are setup correctly, so we can use the ``riscv-nuclei-elf-xxx``, ``openocd``, ``make`` and ``rm``
+      Nuclei Tools are setup correctly, so we can use the ``riscv64-unknown-elf-xxx``, ``openocd``, ``make`` and ``rm``
       tools
     * If you know how to append Nuclei RISC-V GCC Toolchain, OpenOCD and Build-Tools binary paths to **PATH** variable
       in your OS environment, you can also put the downloaded Nuclei Tools as you like, and no need to run ``setup.bat``
@@ -323,9 +331,10 @@ to setup your hardware, mainly **JTAG debugger driver setup and on-board connect
 * Open a UART terminal tool such as |teraterm| or |minicom|, and minitor the serial port of the Board,
   the UART baudrate is *115200 bps*
 * If you are building example for your own SoC and Board, please pass correct :ref:`develop_buildsystem_var_soc` and
-  :ref:`develop_buildsystem_var_board` make variable. eg. If you SoC is ``demosoc`` and Board is ``nuclei_fpga_eval``,
-  just pass ``SOC=demosoc BOARD=nuclei_fpga_eval`` to make instead of the one mentioned below. If your default board
-  for this ``demosoc`` is ``nuclei_fpga_eval``, then you don't need to pass ``BOARD=nuclei_fpga_eval``.
+  :ref:`develop_buildsystem_var_board` make variable. eg. If you SoC is ``evalsoc`` and Board is ``nuclei_fpga_eval``,
+  just pass ``SOC=evalsoc BOARD=nuclei_fpga_eval`` to make instead of the one mentioned below. If your default board
+  for this ``evalsoc`` is ``nuclei_fpga_eval``, then you don't need to pass ``BOARD=nuclei_fpga_eval``.
+* If you don't pass any SOC or BOARD via make, ``evalsoc`` and ``nuclei_fpga_eval`` are default SoC and Board.
 
 Build Application
 ~~~~~~~~~~~~~~~~~
@@ -406,10 +415,10 @@ Here is the sample output of this command:
 .. code-block::
 
     "Download and run hello_world.elf"
-    riscv-nuclei-elf-gdb hello_world.elf -ex "set remotetimeout 240" \
+    riscv64-unknown-elf-gdb hello_world.elf -ex "set remotetimeout 240" \
             -ex "target remote | openocd -c \"gdb_port pipe; log_output openocd.log\" -f ../../../SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg" \
             --batch -ex "monitor halt" -ex "monitor halt" -ex "monitor flash protect 0 0 last off" -ex "load" -ex "monitor resume" -ex "monitor shutdown" -ex "quit"
-    D:\Software\Nuclei\gcc\bin\riscv-nuclei-elf-gdb.exe: warning: Couldn't determine a path for the index cache directory.
+    D:\Software\Nuclei\gcc\bin\riscv64-unknown-elf-gdb.exe: warning: Couldn't determine a path for the index cache directory.
     Nuclei OpenOCD, 64-bit Open On-Chip Debugger 0.10.0+dev-00014-g0eae03214 (2019-12-12-07:43)
     Licensed under GNU GPL v2
     For bug reports, read
@@ -462,16 +471,16 @@ then you can debug it using this command line:
    .. code-block::
 
       "Download and debug hello_world.elf"
-      riscv-nuclei-elf-gdb hello_world.elf -ex "set remotetimeout 240" \
+      riscv64-unknown-elf-gdb hello_world.elf -ex "set remotetimeout 240" \
               -ex "target remote | openocd -c \"gdb_port pipe; log_output openocd.log\" -f ../../../SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg"
-      D:\Software\Nuclei\gcc\bin\riscv-nuclei-elf-gdb.exe: warning: Couldn't determine a path for the index cache directory.
+      D:\Software\Nuclei\gcc\bin\riscv64-unknown-elf-gdb.exe: warning: Couldn't determine a path for the index cache directory.
       GNU gdb (GDB) 8.3.0.20190516-git
       Copyright (C) 2019 Free Software Foundation, Inc.
       License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
       This is free software: you are free to change and redistribute it.
       There is NO WARRANTY, to the extent permitted by law.
       Type "show copying" and "show warranty" for details.
-      This GDB was configured as "--host=i686-w64-mingw32 --target=riscv-nuclei-elf".
+      This GDB was configured as "--host=i686-w64-mingw32 --target=riscv64-unknown-elf".
       Type "show configuration" for configuration details.
       For bug reporting instructions, please see:
       <http://www.gnu.org/software/gdb/bugs/>.
@@ -670,12 +679,15 @@ For more advanced usage, please follow the items as below:
       2. You can take a try using Segger embedded studio, we provided prebuilt projects using Nuclei
          SDK release version, click `Segger embedded studio projects for Nuclei SDK`_ to learn about it
 
-      3. You can also take a try with the Cross-platform PlatformIO IDE, we provided our Nuclei platform
+      3. You can take a try using IAR workbench, we provided prebuilt projects directly in Nuclei SDK,
+         just check the ``ideprojects/iar`` folder to learn about it.
+
+      4. You can also take a try with the Cross-platform PlatformIO IDE, we provided our Nuclei platform
          and Nuclei SDK release version in PlatformIO, click `Platform Nuclei in PlatformIO`_ to learn
          more about it, or you can visit `Light on onboard LED of RVSTAR board using PlatformIO(Chinese)`_
          to play with PlatformIO for Nuclei.
 
-      4. You can also use source code in Nuclei SDK as base, and easily integrate with other IDE tools,
+      5. You can also use source code in Nuclei SDK as base, and easily integrate with other IDE tools,
          such as IAR workbench for RISC-V, Compiler-IDE and others.
 
 

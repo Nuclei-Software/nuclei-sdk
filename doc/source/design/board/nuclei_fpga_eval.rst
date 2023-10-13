@@ -87,17 +87,17 @@ How to use
 
 For **Nuclei FPGA Evaluation board**:
 
-* ``evalsoc`` and ``demosoc`` can run on this fpga board, please choose the correct SoC.
+* ``evalsoc`` can run on this fpga board, please choose the correct SoC, ``demosoc`` support is removed in 0.5.0 release.
 
 * **DOWNLOAD** support all the modes list in :ref:`develop_buildsystem_var_download`
 
-  - You can find default used linker scripts for different download modes in ``SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/`` or ``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/``.
+  - You can find default used linker scripts for different download modes in ``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/``.
 
-    - The following ``demosoc`` can be changed to ``evalsoc`` if you want to use ``evalsoc``.
-    - ``gcc_demosoc_ilm.ld``: Linker script file for ``DOWNLOAD=ilm``
-    - ``gcc_demosoc_flash.ld``: Linker script file for ``DOWNLOAD=flash``
-    - ``gcc_demosoc_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip``
-    - ``gcc_demosoc_ddr.ld``: Linker script file for ``DOWNLOAD=ddr``. **Caution**:
+    - ``gcc_evalsoc_ilm.ld``: Linker script file for ``DOWNLOAD=ilm``
+    - ``gcc_evalsoc_flash.ld``: Linker script file for ``DOWNLOAD=flash``
+    - ``gcc_evalsoc_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip``
+    - ``gcc_evalsoc_sram.ld``: Linker script file for ``DOWNLOAD=sram``
+    - ``gcc_evalsoc_ddr.ld``: Linker script file for ``DOWNLOAD=ddr``. **Caution**:
       This download mode can be only used when DDR is connect to Nuclei RISC-V Core
 
   - If you want to specify your own modified linker script, you can follow steps described in :ref:`develop_appdev_linkscript`
@@ -106,31 +106,33 @@ For **Nuclei FPGA Evaluation board**:
 
 * **CORE** support all the cores list in :ref:`develop_buildsystem_var_core`
 
-* Its openocd configuration file can be found in ``SoC/nuclei/Board/nuclei_fpga_eval/openocd_demosoc.cfg``
+* Its openocd configuration file can be found in ``SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg``
 
 To run this application in Nuclei FPGA Evaluation board in Nuclei SDK,
 you just need to use this **SOC** and **BOARD** variables.
 
 .. code-block:: shell
 
-    ### For demosoc
+    ### For evalsoc
     # Clean the application with DOWNLOAD=ilm CORE=n307
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 clean
     # Build the application with DOWNLOAD=ilm CORE=n307
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 all
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 all
     # Upload the application using openocd and gdb with DOWNLOAD=ilm CORE=n307
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 upload
     # Debug the application using openocd and gdb with DOWNLOAD=ilm CORE=n307
-    make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 debug
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 debug
     ### For evalsoc
     # Clean the application with DOWNLOAD=ilm CORE=n307
     make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 clean
     # Upload the application using openocd and gdb with DOWNLOAD=ilm CORE=n307
     make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 upload
 
+If you want to try other toolchain, such as nuclei llvm or terapines zcc, you can pass an extra :ref:`develop_buildsystem_var_toolchain` make variable.
+
 .. note::
 
-   * If you want to run on ``evalsoc``, please change ``demosoc`` above to ``evalsoc``.
+   * ``demosoc`` support is removed, please use ``evalsoc`` now.
    * You can change the value passed to **CORE** according to
      the Nuclei Demo SoC Evaluation Core the Nuclei FPGA SoC you have.
    * You can also change the value passed to **DOWNLOAD** to run

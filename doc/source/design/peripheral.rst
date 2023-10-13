@@ -31,15 +31,15 @@ of each SoC, and ``nuclei_sdk_hal.h`` of each board.
 **For SoC firmware library APIs:**
 
 * You can find the **GD32VF103 SoC firmware library APIs** in ``SoC/gd32vf103/Common/Include``
-* You can find the **Nuclei Demo SoC firmware library APIs** in ``SoC/demosoc/Common/Include``
+* You can find the **Nuclei Eval SoC firmware library APIs** in ``SoC/evalsoc/Common/Include``
 
 If you just want to use SoC firmware library API, you just need to include ``nuclei_sdk_soc.h``,
 then you can use the all the APIs in that SoC include directory.
 
 .. note::
 
-    For GD32VF103 SoC, if you want to use the USB driver API, then you need to add ``USB_DRV_SUPPORT = 1``
-    in your application.
+    For GD32VF103 SoC, if you want to use the USB driver API, then you need to add ``USB_DRIVER = both``
+    in your application to enable both host and device driver.
 
 
 **For Board related APIs:**

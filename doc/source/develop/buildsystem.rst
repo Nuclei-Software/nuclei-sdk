@@ -26,6 +26,7 @@ The **<NUCLEI_SDK_ROOT>/Build** directory content list as below:
 .. code-block:: text
 
     gmsl/
+    toolchain/
     Makefile.base
     Makefile.conf
     Makefile.core
@@ -59,6 +60,7 @@ global Makefile configurations and local application Makefile configurations.
 This file will include the following makefiles:
 
 * :ref:`develop_buildsystem_gmsl`: additional library functions provided via gmsl
+* :ref:`develop_buildsystem_toolchain`: additional library functions provided via gmsl
 * :ref:`develop_buildsystem_makefile_misc`: misc functions and OS check helpers
 * :ref:`develop_buildsystem_makefile_conf`: main Makefile configuration entry
 * :ref:`develop_buildsystem_makefile_rules`: make rules of this build system
@@ -74,6 +76,22 @@ provides functionality not available in standard GNU Make.
 
 We use this **gmsl** tool to make sure we help us achieve some linux command
 which is only supported in Linux.
+
+.. _develop_buildsystem_toolchain:
+
+toolchain
+~~~~~~~~~
+
+The **toolchain** directory contains different toolchain support makefiles,
+such as Nuclei GNU toolchain, Nuclei LLVM toolchain and Terapines toolchain,
+if you want to add a different toolchain support, you also need to add a new
+toolchain makefile in it, you can refer to existing ones.
+
+Since different toolchain support is added, in application Makefile, if your
+toolchain options are not compatiable with others, to provide a compatiable
+application for different toolchain, we recommend you to add ``toolchain_$(TOOLCHAIN).mk``
+file in your application folder, and in application Makefile include this file,
+you can refer to ``application/baremetal/benchmark/coremark`` to see example usage.
 
 .. _develop_buildsystem_makefile_misc:
 
@@ -146,7 +164,7 @@ It will define the following items:
 
 * **DOWNLOAD** and **CORE** variables
 
-  - For :ref:`design_soc_demosoc`, we can support all the modes defined in
+  - For :ref:`design_soc_evalsoc`, we can support all the modes defined in
     :ref:`develop_buildsystem_var_download`, and **CORE** list defined in
     :ref:`develop_buildsystem_makefile_core`
   - For :ref:`design_soc_gd32vf103`, The **CORE** is fixed to N205, since
@@ -156,40 +174,46 @@ It will define the following items:
 * OpenOCD debug configuration file used for the SoC and Board
 * Some extra compiling or debugging options
 
-A valid SoC should be organized like this, take ``demosoc`` as example:
+A valid SoC should be organized like this, take ``evalsoc`` as example:
 
 .. code-block::
 
-    SoC/demosoc
+    SoC/evalsoc
     ├── Board
-    │   └── nuclei_fpga_eval
-    │       ├── Include
-    │       │   ├── board_nuclei_fpga_eval.h
-    │       │   └── nuclei_sdk_hal.h
-    │       ├── Source
-    │       │   └── GCC
-    │       └── openocd_demosoc.cfg
+    │   └── nuclei_fpga_eval
+    │       ├── Include
+    │       │   ├── board_nuclei_fpga_eval.h
+    │       │   └── nuclei_sdk_hal.h
+    │       ├── Source
+    │       │   ├── IAR
+    │       │   └── GCC
+    │       └── openocd_evalsoc.cfg
     ├── build.mk
     └── Common
         ├── Include
-        │   ├── demosoc.h
-        │   ├── ... ...
-        │   ├── demosoc_uart.h
-        │   ├── nuclei_sdk_soc.h
-        │   └── system_demosoc.h
+        │   ├── evalsoc.h
+        │   ├── ... ...
+        │   ├── evalsoc_uart.h
+        │   ├── nuclei_sdk_soc.h
+        │   └── system_evalsoc.h
         └── Source
             ├── Drivers
-            │   ├── ... ...
-            │   └── demosoc_uart.c
+            │   ├── ... ...
+            │   └── evalsoc_uart.c
             ├── GCC
-            │   ├── intexc_demosoc.S
-            │   └── startup_demosoc.S
+            │   ├── intexc_evalsoc.S
+            │   ├── intexc_evalsoc_s.S
+            │   └── startup_evalsoc.S
+            ├── IAR
+            │   ├── intexc_evalsoc.S
+            │   ├── intexc_evalsoc_s.S
+            │   └── startup_evalsoc.c
             ├── Stubs
-            │   ├── read.c
-            │   ├── ... ...
-            │   └── write.c
-            ├── demosoc_common.c
-            └── system_demosoc.c
+            │   ├── newlib
+            │   ├── libncrt
+            │   └── iardlib
+            ├── evalsoc_common.c
+            └── system_evalsoc.c
 
 
 .. _develop_buildsystem_makefile_rtos:
@@ -303,7 +327,7 @@ create the **<NUCLEI_SDK_ROOT>/Build/Makefile.global** as below:
     * If you create the **Makefile.global** like above sample code, you will also be able
       to use Nuclei SDK build system as usually, it will only change the default **SOC**,
       **BOARD** and **DOWNLOAD**, but you can still override the default variable using
-      make command, such as ``make SOC=demosoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm``
+      make command, such as ``make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm``
 
 .. _develop_buildsystem_makefile_local:
 
@@ -354,6 +378,10 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
      - display help message of Nuclei SDK build system
    * - info
      - display selected configuration information
+   * - showflags
+     - display asm/c/cxx/ld flags and other info
+   * - showtoolver
+     - display toolchain/qemu/openocd version
    * - all
      - build application with selected configuration
    * - clean
@@ -384,10 +412,10 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
    * For ``run_openocd`` and ``run_gdb`` target, if you want to
      change a new gdb port, you can pass the variable
      :ref:`develop_buildsystem_var_gdb_port`
-   * For ``run_qemu``, only ``SOC=demosoc or SOC=gd32vf103`` supported,
+   * For ``run_qemu``, only ``SOC=evalsoc`` supported,
      when do this target, you can pass ``SIMU=qemu`` to support auto-exit,
      project recompiling is required.
-   * For ``run_xlspike``, only ``SOC=demosoc`` supported,
+   * For ``run_xlspike``, only ``SOC=evalsoc`` supported,
      when do this target, you can pass ``SIMU=xlspike`` to support auto-exit,
      project recompiling is required.
 
@@ -402,9 +430,11 @@ which can be passed via make command.
 * :ref:`develop_buildsystem_var_soc`
 * :ref:`develop_buildsystem_var_board`
 * :ref:`develop_buildsystem_var_variant`
+* :ref:`develop_buildsystem_var_toolchain`
 * :ref:`develop_buildsystem_var_download`
 * :ref:`develop_buildsystem_var_core`
 * :ref:`develop_buildsystem_var_archext`
+* :ref:`develop_buildsystem_var_cpu_series`
 * :ref:`develop_buildsystem_var_simulation`
 * :ref:`develop_buildsystem_var_semihost`
 * :ref:`develop_buildsystem_var_gdb_port`
@@ -441,8 +471,6 @@ Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
      - Reference
    * - gd32vf103
      - :ref:`design_soc_gd32vf103`
-   * - demosoc
-     - :ref:`design_soc_demosoc`
    * - evalsoc
      - :ref:`design_soc_evalsoc`
 
@@ -490,7 +518,7 @@ Currently we support the following SoCs.
 
 .. _table_dev_buildsystem_3:
 
-.. list-table:: Supported Boards when SOC=demosoc
+.. list-table:: Supported Boards when SOC=evalsoc
    :widths: 10 60
    :header-rows: 1
    :align: center
@@ -519,6 +547,29 @@ It might only affect on only small piece of board, and this is SoC and Board dep
 
 This variable only affect the selected board or soc, and it is target dependent.
 
+
+.. _develop_buildsystem_var_toolchain:
+
+TOOLCHAIN
+~~~~~~~~~
+
+.. note::
+
+    This variable is added in 0.5.0 release.
+
+This variable is used to select different toolchain to compile application.
+Currently we support 3 toolchain in Nuclei SDK.
+
+* **nuclei_gnu**: default, it will choose nuclei gnu toolchain.
+* **nuclei_llvm**: still in experiment, nuclei customized extensions not yet supported.
+* **terapines**: still in experiment, it depends on the toolchain vendor about the supported extensions.
+
+For **nuclei_gnu/nuclei_llvm** toolchain both newlib and libncrt library are supported,
+but nuclei_llvm toolchain multilib selection mechanism is not as good as gnu toolchain,
+you need to take care of the arch isa string order, please see ``riscv64-unknown-unknown-elf-clang -v`` output for supported multilib and its isa string order.
+
+And IAR compiler support is also done in Nuclei SDK, you can take a try with it
+via ``ideprojects/iar`` folder provided prebuilt ide projects.
 
 .. _develop_buildsystem_var_download:
 
@@ -558,8 +609,7 @@ currently it has these modes supported as described in table
     * This variable now target dependent, and its meaning depending on how this
       variable is implemented in SoC's build.mk
     * :ref:`design_soc_gd32vf103` only support **DOWNLOAD=flashxip**
-    * :ref:`design_soc_demosoc` support all the download modes.
-    * **flashxip** mode in :ref:`design_soc_demosoc` is very slow due to
+    * **flashxip** mode in :ref:`design_soc_evalsoc` is very slow due to
       the CORE frequency is very slow, and flash execution speed is slow
     * **ddr** mode is introduced in release ``0.2.5`` of Nuclei SDK
     * macro ``DOWNLOAD_MODE`` and ``DOWNLOAD_MODE_STRING`` will be defined in Makefile,
@@ -569,14 +619,14 @@ currently it has these modes supported as described in table
       banner is print.
     * This download mode is also used to clarify whether in the link script,
       your eclic vector table is placed in ``.vtable_ilm`` or ``.vtable`` section, eg.
-      for demosoc, when ``DOWNLOAD=flash``, vector table is placed in ``.vtable_ilm`` section,
+      for evalsoc, when ``DOWNLOAD=flash``, vector table is placed in ``.vtable_ilm`` section,
       and an extra macro called ``VECTOR_TABLE_REMAPPED`` will be passed in Makefile.
       When ``VECTOR_TABLE_REMAPPED`` is defined, it means vector table's LMA and VMA are
       different, it is remapped.
     * From release ``0.3.2``, this ``DOWNLOAD_MODE`` should not be used, and macros
       ``DOWNLOAD_MODE_ILM``, ``DOWNLOAD_MODE_FLASH``, ``DOWNLOAD_MODE_FLASHXIP`` and
       ``DOWNLOAD_MODE_DDR`` previously defined in ``riscv_encoding.h`` now are moved to
-      ``<Device.h>`` such as ``demosoc.h``, and should be deprecated in future.
+      ``<Device.h>`` such as ``evalsoc.h``, and should be deprecated in future.
       Now we are directly using ``DOWNLOAD_MODE_STRING`` to pass the download mode string,
       no longer need to define it in source code as before.
     * From release ``0.3.2``, you can define **DOWNLOAD** not just the download mode list above,
@@ -627,6 +677,9 @@ Currently it has these cores supported as described in table
    n900      rv32imac   ilp32    nuclei-900-series
    n900f     rv32imafc  ilp32f   nuclei-900-series
    n900fd    rv32imafdc ilp32d   nuclei-900-series
+   u900      rv32imac   ilp32    nuclei-900-series
+   u900f     rv32imafc  ilp32f   nuclei-900-series
+   u900fd    rv32imafdc ilp32d   nuclei-900-series
    nx900     rv64imac   lp64     nuclei-900-series
    nx900f    rv64imafc  lp64f    nuclei-900-series
    nx900fd   rv64imafdc lp64d    nuclei-900-series
@@ -639,13 +692,13 @@ When **CORE** is selected, the **ARCH**, **ABI** and **TUNE** (optional) are set
 and it might affect the compiler options in combination with :ref:`develop_buildsystem_var_archext`
 depended on the implementation of SoC build.mk.
 
-Take ``SOC=demosoc`` as example.
+Take ``SOC=evalsoc`` as example.
 
 - If **CORE=n205 ARCH_EXT=**, then ``ARCH=rv32imac, ABI=ilp32 TUNE=nuclei-200-series``. 
   riscv arch related compile and link options will be passed, for this case, it will be
   ``-march=rv32imac -mabi=ilp32 -mtune=nuclei-200-series``.
 
-- If **CORE=n205 ARCH_EXT=b**, it will be ``-march=rv32imacb -mabi=ilp32 -mtune=nuclei-200-series``.
+- If **CORE=n205 ARCH_EXT=_zba_zbb_zbc_zbs**, it will be ``-march=rv32imac_zba_zbb_zbc_zbs -mabi=ilp32 -mtune=nuclei-200-series``.
 
 For riscv code model settings, the ``RISCV_CMODEL`` variable will be set to medlow
 for RV32 targets, otherwise it will be medany.
@@ -661,6 +714,51 @@ ARCH_EXT
 **ARCH_EXT** variable is used to select extra RISC-V arch extensions supported by Nuclei
 RISC-V Processor, except the ``iemafdc``.
 
+.. note::
+
+   Nuclei toolchain 2023.10 now bump gcc version from gcc 10 to gcc 13, which introduced
+   incompatiable ``-march`` option, so ``ARCH_EXT`` usage is also incompatiable now.
+
+   About the incompatiable march option change, please see https://github.com/riscv-non-isa/riscv-toolchain-conventions/pull/26, which is already present in latest gcc and clang release.
+
+When using gcc 13 or clang 17 toolchain in 2023.10 toolchain release, you need to use it like this in 0.5.0 sdk release or later version.
+
+Here are several examples when using ARCH_EXT for Nuclei RISC-V Processors:
+
+* If you want to use just B 1.0 extension, you can pass **ARCH_EXT=_zba_zbb_zbc_zbs**
+* If you want to use just Nuclei implemented P 0.5.4 extension and N1/N2/N3 customized extension
+
+  - Xxldsp: means P 0.5.4 + Nuclei default enabled additional 8 expd instructions for both RV32 and RV64, you can pass **ARCH_EXT=_xxldsp**
+  - Xxldspn1x: means Xxldsp + Nuclei N1 additional instructions for RV32 only, you can pass **ARCH_EXT=_xxldspn1x**
+  - Xxldspn2x: means Xxldspn1x + Nuclei N2 additional instructions for RV32 only, you can pass **ARCH_EXT=_xxldspn2x**
+  - Xxldspn3x: means Xxldspn1x + Nuclei N3 additional instructions for RV32 only, you can pass **ARCH_EXT=_xxldspn3x**
+* If you want to use K 1.0 extension, you can pass **ARCH_EXT=_zk_zks**
+* If you want to use V 1.0 extension
+
+  - For rv32 without f/d extension, you can pass **ARCH_EXT=_zve32x**
+  - For rv32 with f/d extension, you can pass **ARCH_EXT=_zve32f**
+  - For rv64 without f/d extension, you can pass **ARCH_EXT=_zve64x**
+  - For rv64 with f extension, you can pass **ARCH_EXT=_zve64f**
+  - For rv64 with fd extension, you can pass **ARCH_EXT=v**
+
+* If you want to use Zc 1.0 extension
+
+  - You can use it together with C extension, which means it should be concat with isa string like ``rv32imafd_zca_zcb_zcf_zcmp_zcmt``
+  - In Nuclei SDK, the isa string processing is done in build system
+  - If you want to use with n300/n900, you can pass **ARCH_EXT=_zca_zcb_zcmp_zcmt**
+  - If you want to use with n300f/n900f, you can pass **ARCH_EXT=_zca_zcb_zcf_zcmp_zcmt**
+  - If you want to use with n300fd/n900fd, you can pass **ARCH_EXT=_zca_zcb_zcf_zcmp_zcmt**
+  - If you want to use with n300fd/n900fd without zcmp/zcmt, you can pass **ARCH_EXT=_zca_zcb_zcf_zcd**
+  - If you want to use with extra Nuclei Code Size Reduction extension called Xxlcz, you can add extra ``_xxlcz`` in **ARCH_EXT**, eg. for n300, you can pass **ARCH_EXT=_zca_zcb_zcmp_zcmt_xxlcz**
+
+* When using customized extensions such as Xxldsp/Xxldspn1x/Xxldspn2x/Xxldspn3x/Xxlcz, the isa string must be placed after all ``_z`` started isa strings, here is an legal string such as ``rv32imafd_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_zk_zks_xxlcz_xxldspn3x`` for rv32 with imafd + Zc + B + K + Xxldspn3x + Xxlcz
+
+* You need to handle this **ARCH_EXT** carefully, expecially using with demo_dsp demo since it will default search library match the whole arch name but you can pass **NMSIS_LIB_ARCH** variable in Makefile to choose your desired library arch.
+
+* When using Nuclei LLVM toolchain, the isa string order must be treat carefully, it is not handled very good when searching different multilib.
+
+Here below are for using gcc 10 toolchain, you can use it like this below in old nuclei sdk release before 0.5.0.
+
 Currently, valid arch extension combination should match the order of ``bpv``.
 
 Here is a list of valid arch extensions:
@@ -673,8 +771,7 @@ Here is a list of valid arch extensions:
 * **ARCH_EXT=bpv**: RISC-V bitmanipulation, packed simd and vector extension.
 
 It is suggested to use this ARCH_EXT with other arch options like this, can be found in
-``SoC/demosoc/build.mk``:
-
+``SoC/evalsoc/build.mk``:
 
 .. code-block:: makefile
 
@@ -683,6 +780,31 @@ It is suggested to use this ARCH_EXT with other arch options like this, can be f
     CORE_ARCH_ABI := $($(CORE_UPPER)_CORE_ARCH_ABI)
     RISCV_ARCH ?= $(word 1, $(CORE_ARCH_ABI))$(ARCH_EXT)
     RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
+
+
+.. _develop_buildsystem_var_cpu_series:
+
+CPU_SERIES
+~~~~~~~~~~
+
+.. note::
+
+    * This variable is used to control different compiler options for different Nuclei CPU series such
+      as 200/300/600/900.
+
+This variable will be auto set if your CORE variable match the following rules:
+
+* **200**: CORE start with *20*, the CPU_SERIES will be 200.
+* **300**: CORE start with *30*, the CPU_SERIES will be 300.
+* **600**: CORE start with *60*, the CPU_SERIES will be 600.
+* **900**: CORE start with *90*, the CPU_SERIES will be 900.
+* **0**: CORE start with others, the CPU_SERIES will be 0.
+
+It can also be defined in Makefile itself directly or passed via make command.
+
+It will also define an macro called **CPU_SERIES**, eg. for CPU_SERIES=200, it will define macro CPU_SERIES=200.
+
+This variable is currently used in benchmark cases, and require application Makefile changes.
 
 .. _develop_buildsystem_var_semihost:
 
@@ -754,9 +876,9 @@ run_gdb and specify a different port other than ``3333``.
 
 You can do it like this, take ``nuclei_fpga_eval`` board for example, such as port ``3344``:
 
-* Open openocd server: ``make SOC=demosoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_openocd``
+* Open openocd server: ``make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_openocd``
 
-* connect gdb with openocd server: ``make SOC=demosoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_gdb``
+* connect gdb with openocd server: ``make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_gdb``
 
 .. _develop_buildsystem_var_jtagsn:
 
@@ -768,7 +890,7 @@ JTAGSN
    * This new variable **JTAGSN** is added in ``0.4.0`` release
 
 This variable is used specify jtag adapter serial number in openocd configuration, need to be supported in
-openocd configuration file and makefile, currently **demosoc** and **evalsoc** are supported.
+openocd configuration file and makefile, currently **evalsoc** is supported.
 It is used by openocd ``adapter serial``.
 
 Assume you have a jtag adapter, serial number is ``FT6S9RD6``, and you want to download program through
@@ -836,6 +958,7 @@ e.g. ``application/baremetal/demo_timer/Makefile``.
 * :ref:`develop_buildsystem_var_rtos`
 * :ref:`develop_buildsystem_var_stdclib`
 * :ref:`develop_buildsystem_var_nmsis_lib`
+* :ref:`develop_buildsystem_var_nmsis_lib_arch`
 * :ref:`develop_buildsystem_var_riscv_arch`
 * :ref:`develop_buildsystem_var_riscv_abi`
 * :ref:`develop_buildsystem_var_riscv_cmodel`
@@ -930,6 +1053,19 @@ Currently you can select the following libraries:
 You can select more than libraries of NMSIS. For example, if you want to use NMSIS NN library,
 NMSIS DSP library is also required. so you need to set **NMSIS_LIB** like this ``NMSIS_LIB := nmsis_nn nmsis_dsp``
 
+.. _develop_buildsystem_var_nmsis_lib_arch:
+
+NMSIS_LIB_ARCH
+~~~~~~~~~~~~~~
+
+This variable is used to select real nmsis dsp/nn library arch used, if not set, it will use **RISCV_ARCH** passed.
+
+This is useful when you want to specify a different arch for library.
+
+eg.
+
+When your cpu arch is ``rv32imafdc_zba_zbb_zbc_zbs_zk_zks_xxldspn3x``, and you want to use ``rv32imafdc_zba_zbb_zbc_zbs_xxldspn1x``, then you can set **NMSIS_LIB_ARCH=rv32imafdc_zba_zbb_zbc_zbs_xxldspn1x** in Makefile, otherwise it will use the real cpu arch passed by **CORE** and **ARCH_EXT** or directly via **RISCV_ARCH**.
+
 .. _develop_buildsystem_var_stdclib:
 
 STDCLIB
@@ -989,7 +1125,42 @@ can provided smaller code size and highly optimized floating point support compa
       history of nuclei sdk for support of libncrt.
     * Since there are different c runtime library can be chosen now, so developer
       need to provide different stub functions for different library, please check
-      ``SoC/demosoc/Common/Source/Stubs/`` and ``SoC/demosoc/build.mk`` for example.
+      ``SoC/evalsoc/Common/Source/Stubs/`` and ``SoC/evalsoc/build.mk`` for example.
+
+.. _develop_buildsystem_var_ncrtheap:
+
+NCRTHEAP
+~~~~~~~~
+
+.. note::
+
+    * This variable is added in 0.5.0 release to support libncrt v3.0.0.
+
+This variable is only valid when using libncrt c library >= v3.0.0, and you can choose different
+heapops when using libncrt c library to do heap related operations such as malloc or free.
+
+* **basic**: default, this is previous release of libncrt c library used one. A low-overhead best-fit heap where allocation and deallocation have very little internal fragmentation
+* **realtime**: A real-time heap where allocation and deallocation have O(1) performance
+* **minimal**: An allocate-only heap where deallocation and reallocation are not implemented
+
+For previous libncrt library, this heapops is default binded with libncrt library, so you can't
+choose different heap type, but now you can choose according to your requirements.
+
+.. _develop_buildsystem_var_ncrtio:
+
+NCRTIO
+~~~~~~
+
+.. note::
+
+    * This variable is added in 0.5.0 release to support libncrt v3.0.0.
+
+This variable is only valid when using libncrt c library >= v3.0.0, and you can choose different
+fileops when using libncrt c library to do basic input/output operations.
+
+* **uart**: default, lower level input/output via uart, developer need to implement metal_tty_putc/getc
+* **semi**: input/output via semihosting, if you pass **SEMIHOST=1** in make, it will default choose this one when using libncrt library.
+* **rtt**: input/output via jlink rtt, require to use JLink tool.
 
 .. _develop_buildsystem_var_smp:
 
@@ -1000,10 +1171,7 @@ SMP
 
 When **SMP** variable is defined, extra gcc options for ld is passed
 ``-Wl,--defsym=__SMP_CPU_CNT=$(SMP)``, and extra c macro ``-DSMP_CPU_CNT=$(SMP)``
-is defined this is passed in each SoC's build.mk, such as ``SoC/demosoc/build.mk``.
-
-And for demosoc, we use a different openocd configuration file for SMP named
-``SoC/demosoc/Board/nuclei_fpga_eval/openocd_demosoc_smp.cfg``.
+is defined this is passed in each SoC's build.mk, such as ``SoC/evalsoc/build.mk``.
 
 When SMP variable is defined, extra openocd command ``set SMP $(SMP)`` will also
 be passed when run openocd upload or create a openocd server.
@@ -1034,7 +1202,7 @@ For both amp and smp application, the program should execute on a share memory w
 harts can access, not hart private memory such as ilm/dlm.
 
 Currently **SMP** and **BOOT_HARTID** support all require SOC support code to implement it, currently
-demosoc/evalsoc support it, currently qemu simulation didn't work for SMP/AMP use case.
+evalsoc support it, currently qemu simulation didn't work for SMP/AMP use case.
 
 Here is some basic usage for SMP and BOOT_HARTID on UX900 x4, run on external ddr.
 
@@ -1049,6 +1217,22 @@ Here is some basic usage for SMP and BOOT_HARTID on UX900 x4, run on external dd
     cd <Nuclei SDK>/application/baremetal/smphello
     # SMP: choose hart 2 as boot hartid
     make SOC=evalsoc CORE=ux900 BOOT_HARTID=2 SMP=4 DOWNLOAD=ddr clean upload
+
+.. _develop_buildsystem_var_hartid_ofs:
+
+HARTID_OFS
+~~~~~~~~~~
+
+.. note::
+
+   * This new variable is added in ``0.5.0`` release
+
+This variable is used to set hartid offset relative to real hart index in a complex AMP SoC system.
+
+eg.
+
+In a SoC system, it has 2 CPU, CPU 0 has 2 smp core, CPU 1 has 1 core, and CPU 0 hartid is 0, 1,
+and CPU 1 hartid is 2, so for CPU 0, HARTID_OFS is 0, for CPU 1, HARTID_OFS is 2.
 
 .. _develop_buildsystem_var_stacksz:
 
@@ -1067,7 +1251,7 @@ ld options ``-Wl,--defsym=__STACK_SIZE=$(STACKSZ)`` to overwrite the default val
 
 For SMP version, stack size space need to reserve **STACKSZ** x SMP Core Count size.
 
-You can refer to ``SoC/demosoc/Board/nuclei_fpga_eval/Source/GCC/gcc_demosoc_ilm.ld`` for smp version.
+You can refer to ``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld`` for smp version.
 
 .. _develop_buildsystem_var_heapsz:
 
@@ -1095,10 +1279,10 @@ It might override RISCV_ARCH defined in SoC build.mk, according to your build.mk
 
 **RISCV_ARCH** might directly affect the gcc compiler option depended on the implementation of SoC build.mk.
 
-Take ``SOC=demosoc`` for example.
+Take ``SOC=evalsoc`` for example.
 
-* **CORE=n305 RISCV_ARCH=rv32imafdcp RISCV_ABI=ilp32d ARCH_EXT=bp**, then final compiler options will be
-  ``-march=rv32imafdcp -mabi=ilp32d -mtune=nuclei-300-series``. The **ARCH_EXT** is ignored.
+* **CORE=n305 RISCV_ARCH=rv32imafdc_zk_zks RISCV_ABI=ilp32d ARCH_EXT=_zba_zbb_zbc_zbs**, then final compiler options will be
+  ``-march=rv32imafdc_zk_zks -mabi=ilp32d -mtune=nuclei-300-series``. The **ARCH_EXT** is ignored.
 
 .. _develop_buildsystem_var_riscv_abi:
 
@@ -1130,6 +1314,48 @@ RISCV_TUNE
 It is defined in SoC build.mk, you can override it if your implementation
 allow it.
 
+.. _develop_buildsystem_var_app_common_flags:
+
+APP_COMMON_FLAGS
+~~~~~~~~~~~~~~~~
+
+.. note::
+
+    * Added in 0.4.0 release.
+
+This variable is used to define app common compiler flags to all c/asm/cpp compiler.
+You can pass it via make command to define extra flags to compile application.
+
+
+.. _develop_buildsystem_var_app_asmflags:
+
+APP_ASMFLAGS
+~~~~~~~~~~~~
+
+This variable is similiar to **APP_COMMON_FLAGS** but used to pass extra app asm flags.
+
+
+.. _develop_buildsystem_var_app_cflags:
+
+APP_CFLAGS
+~~~~~~~~~~
+
+This variable is similiar to **APP_COMMON_FLAGS** but used to pass extra app c flags.
+
+.. _develop_buildsystem_var_app_cxxflags:
+
+APP_CXXFLAGS
+~~~~~~~~~~~~
+
+This variable is similiar to **APP_COMMON_FLAGS** but used to pass extra app cxx flags.
+
+.. _develop_buildsystem_var_app_ldflags:
+
+APP_LDFLAGS
+~~~~~~~~~~~
+
+This variable is similiar to **APP_COMMON_FLAGS** but used to pass extra app linker flags.
+
 .. _develop_buildsystem_var_pfloat:
 
 PFLOAT
@@ -1137,6 +1363,7 @@ PFLOAT
 
 .. note::
 
+    * **Removed** in 0.5.0 release, no longer support it.
     * **Deprecated** variable, please use :ref:`develop_buildsystem_var_stdclib` now
     * ``NEWLIB=nano PFLOAT=1`` can be replaced by ``STDCLIB=newlib_small`` now
 
@@ -1147,6 +1374,7 @@ NEWLIB
 
 .. note::
 
+    * **Removed** in 0.5.0 release, no longer support it.
     * **Deprecated** variable, please use :ref:`develop_buildsystem_var_stdclib` now
 
 .. _develop_buildsystem_var_nogc:
@@ -1398,6 +1626,8 @@ This **COMMON_FLAGS** variable is used to define common compiler flags to all c/
 
 For example, you can add a newline ``COMMON_FLAGS += -O3 -funroll-loops -fpeel-loops``
 in your application Makefile and these options will be passed to C/ASM/CPP compiler.
+
+This variable should be defined in Makefile.
 
 
 .. _develop_buildsystem_var_cflags:

@@ -8,6 +8,8 @@ Nuclei Eval SoC
     Nuclei CPU IP now with iregion feature will use totally new evaluation SoC,
     this SoC is different from previous Demo SoC, please take care.
 
+    Nuclei DemoSoC is now removed in 0.5.0 release, and please use evalsoc now.
+
 Nuclei Eval SoC is an evaluation FPGA SoC from Nuclei
 for customer to evaluate Nuclei RISC-V Process Core.
 

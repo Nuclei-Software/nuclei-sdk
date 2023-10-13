@@ -78,6 +78,7 @@ This is release version ``0.5.0-dev`` of Nuclei SDK.
   - No longer support gd32vf103 soc run on qemu
   - Add extra ``-fomit-frame-pointer -fno-shrink-wrap-separate`` options for Zc extension to enable zcmp instruction generation
   - Extra CPU_SERIES macro is passed such (200/300/600/900) during compiling for benchmark examples
+  - When you want to select different nmsis library arch, please use **NMSIS_LIB_ARCH** make variable, see demo_dsp as example
 
 * Tools
 

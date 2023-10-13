@@ -86,9 +86,8 @@ Extra make variables supported only in this SoC:
 
     * Since this ``gd32vf103`` SoC is a real chip, it is using Nuclei RISC-V
       N205 core, so the **CORE** is fixed to ``n205``
-    * If you want to use **USB** related functions of **GD32VF103**, you need
-      add ``USB_DRV_SUPPORT = 1`` in your application Makefile.
-    * In the ``usb_conf.h`` file of GD32VF103 firmware library, you can configure
-      the USB driver.
+    * **USB_DRV_SUPPORT** make variable is no longer available, please use **USB_DRIVER** variable to select different usb driver.
+    * You need to provide ``usb_conf.h/usbd_conf.h/usbh_conf.h`` file in you application code,
+      if you want to use the usb driver of gd32vf103, see https://github.com/Nuclei-Software/nuclei-sdk/pull/54
 
 .. _GigaDevice Semiconductor: https://www.gigadevice.com/
