@@ -17,9 +17,11 @@ These projects demostrated the following features:
 - RISC-V DSP feature is still working in progress together with IAR team.
 - DSP/NN libraries are able to be used in this project, you can try with prebuilt libraries, but not able to
   use any dsp intrinsic API, since not yet full compatiable with IAR version.
+- For linker file used in IAR, the stack and heap are just following data/bss section, not at the end of ram,
+  so you need to take care of the stack and heap size setting in IAR workbench, which means if your application
+  code use a lot of heap or stack, the application may crash, you need to increase stack or heap size on demand.
 
 You can directly try with this iar workspace by click this nucleisdk.eww after you have installed [IAR Workbench](https://www.iar.com/riscv).
-
 ![IAR Projects for Nuclei](asserts/nsdk_iar_projects.png)
 
 If you want to debug using I-jet, you need to change Debugger Driver to I-jet in iar project options.
