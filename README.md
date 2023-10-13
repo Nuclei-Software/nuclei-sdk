@@ -36,6 +36,7 @@ $NUCLEI_SDK_ROOT
 │   └── rtthread
 ├── Build
 │   ├── gmsl
+│   ├── toolchain
 │   ├── Makefile.base
 │   ├── Makefile.conf
 │   ├── Makefile.core
@@ -62,7 +63,7 @@ $NUCLEI_SDK_ROOT
 │   └── RTThread
 ├── SoC
 │   ├── gd32vf103
-│   └── demosoc
+│   └── evalsoc
 ├── test
 │   ├── core
 │   ├── ctest.h
@@ -92,11 +93,11 @@ $NUCLEI_SDK_ROOT
 
   This directory contains all the supported SoCs for this Nuclei SDK, the directory name for SoC and its boards should always in lower case.
 
-  Here we mainly support Nuclei processor cores running on Nuclei FPGA evaluation board(MCU200T/DDR200T), the support package placed in *SoC/demosoc/*.
+  Here we mainly support Nuclei processor cores running on Nuclei FPGA evaluation board(MCU200T/DDR200T), the support package placed in *SoC/evalsoc/*.
 
-  In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/demosoc/Common/Include/nuclei_sdk_soc.h*.
+  In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/evalsoc/Common/Include/nuclei_sdk_soc.h*.
 
-  In each SoC Board's include directory, *nuclei_sdk_hal.h* must be provided, and include the board header file, for example, *SoC/demosoc/Board/nuclei_fpga_eval/Include/nuclei_sdk_hal.h*.
+  In each SoC Board's include directory, *nuclei_sdk_hal.h* must be provided, and include the board header file, for example, *SoC/evalsoc/Board/nuclei_fpga_eval/Include/nuclei_sdk_hal.h*.
 
 * **Build**
 
@@ -140,7 +141,7 @@ $NUCLEI_SDK_ROOT
   NUCLEI_TOOL_ROOT=/path/to/your_tool_root
   ~~~
 
-  In the **$NUCLEI_TOOL_ROOT** for **Linux**, you need to have Nuclei RISC-V GNU GCC toolchain and OpenOCD installed as below.
+  In the **$NUCLEI_TOOL_ROOT** for **Linux**, you need to have Nuclei RISC-V toolchain and OpenOCD installed as below.
   ~~~
   $NUCLEI_TOOL_ROOT
   ├── gcc
@@ -166,7 +167,7 @@ $NUCLEI_SDK_ROOT
   set NUCLEI_TOOL_ROOT=\path\to\your_tool_root
   ~~~
 
-  In the **%NUCLEI_TOOL_ROOT%** for **Windows**, you need to have Nuclei RISC-V GNU GCC toolchain, necessary Windows build tools and OpenOCD installed as below.
+  In the **%NUCLEI_TOOL_ROOT%** for **Windows**, you need to have Nuclei RISC-V toolchain, necessary Windows build tools and OpenOCD installed as below.
   ~~~console
   %NUCLEI_TOOL_ROOT%
   ├── build-tools
@@ -178,7 +179,7 @@ $NUCLEI_SDK_ROOT
   │   ├── include
   │   ├── lib
   │   ├── libexec
-  │   ├── riscv-nuclei-elf
+  │   ├── riscv64-unknown-elf
   │   └── share
   └── openocd
       ├── bin
@@ -190,6 +191,7 @@ $NUCLEI_SDK_ROOT
   ~~~
 
 ## How to use
+
 1. Create and modify your own setup config
    * For **Linux**, create `setup_config.sh` in **$NUCLEI_SDK_ROOT**.
    * For **Windows**, create `setup_config.bat` in **%NUCLEI_SDK_ROOT%**.
@@ -197,7 +199,7 @@ $NUCLEI_SDK_ROOT
    * For **Linux**: `source setup.sh`
    * For **Windows**: `setup.bat`
 3. Build and run application.
-   * **Note:** By default, the SoC and Board is set to ``demosoc`` and ``nuclei_fpga_eval``,
+   * **Note:** By default, the SoC and Board is set to ``evalsoc`` and ``nuclei_fpga_eval``,
      if you don't pass any **SOC** and **BOARD** variable in Make command,
      it will use the default SoC and Board.
    * Assume that you will run this application -> *application/baremetal/helloworld/*.
@@ -247,12 +249,14 @@ $NUCLEI_SDK_ROOT
 * Pass extra `V=1` to your make command, it will show verbose compiling information, otherwise it will only show basic information. Sample output with extra `V=1`
   ~~~console
   $ make V=1 all
-  Current Configuration: RISCV_ARCH=rv32imafdc RISCV_ABI=ilp32d SOC=demosoc BOARD=nuclei_fpga_eval CORE=n307fd DOWNLOAD=ilm
-  "Assembling : " ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S
-  riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common   -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/  portable/GCC -I../../../SoC/demosoc/Board/nuclei_fpga_eval/Include -I../../../SoC/demosoc/Common/Include -MMD -MT ../../../OS/FreeRTOS/Source/  portable/GCC/portasm.S.o -MF ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S.o.d -c -o ../../../OS/FreeRTOS/Source/portable/GCC/  portasm.S.o ../../../OS/FreeRTOS/Source/portable/GCC/portasm.S
-  "Assembling : " ../../../SoC/demosoc/Common/Source/GCC/intexc_demosoc.S
-  riscv-nuclei-elf-gcc -g -march=rv32imafdc -mabi=ilp32d -mcmodel=medany -ffunction-sections -fdata-sections -fno-common   -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -I. -I../../../NMSIS/Include -I../../../OS/FreeRTOS/Source/include -I../../../OS/FreeRTOS/Source/  portable/GCC -I../../../SoC/demosoc/Board/nuclei_fpga_eval/Include -I../../../SoC/demosoc/Common/Include -MMD -MT ../../../SoC/demosoc/Common/  Source/GCC/intexc_demosoc.S.o -MF ../../../SoC/demosoc/Common/Source/GCC/intexc_demosoc.S.o.d -c -o ../../../SoC/demosoc/Common/Source/GCC/  intexc_demosoc.S.o ../../../SoC/demosoc/Common/Source/GCC/intexc_demosoc.S
-  "Assembling : " ../../../SoC/demosoc/Common/Source/GCC/startup_demosoc.S
+  Current Configuration: TOOLCHAIN=nuclei_gnu RISCV_ARCH=rv32imafdc RISCV_ABI=ilp32d RISCV_TUNE=nuclei-300-series RISCV_CMODEL=medlow SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n307fd ARCH_EXT= DOWNLOAD=ilm STDCLIB=newlib_nano SMP= BOOT_HARTID=0
+  Assembling :  ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S
+  riscv64-unknown-elf-gcc -x assembler-with-cpp -O2 -DBOOT_HARTID=0 -march=rv32imafdc -mabi=ilp32d -mcmodel=medlow -mtune=nuclei-300-series -g -fno-common  -ffunction-sections -fdata-sections -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -DDOWNLOAD_MODE_STRING=\"ILM\" -DCPU_SERIES=300  -I. -I../../../NMSIS/Core/Include -I../../../SoC/evalsoc/Board/nuclei_fpga_eval/Include -I../../../SoC/evalsoc/Common/Include -Iinc -MMD -MT ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S.o -MF
+  ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S.o.d -c -o ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S.o ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S
+  Assembling :  ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc_s.S
+  riscv64-unknown-elf-gcc -x assembler-with-cpp -O2 -DBOOT_HARTID=0 -march=rv32imafdc -mabi=ilp32d -mcmodel=medlow -mtune=nuclei-300-series -g -fno-common  -ffunction-sections -fdata-sections -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -DDOWNLOAD_MODE_STRING=\"ILM\" -DCPU_SERIES=300  -I. -I../../../NMSIS/Core/Include -I../../../SoC/evalsoc/Board/nuclei_fpga_eval/Include -I../../../SoC/evalsoc/Common/Include -Iinc -MMD -MT ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc_s.S.o -MF
+  ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc_s.S.o.d -c -o ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc_s.S.o ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc_s.S
+  Assembling :  ../../../SoC/evalsoc/Common/Source/GCC/startup_evalsoc.S
   ~~~
 
 ## [Contributing](https://doc.nucleisys.com/nuclei_sdk/contribute.html)
