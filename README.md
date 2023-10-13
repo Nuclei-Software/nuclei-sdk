@@ -3,6 +3,7 @@
 [![Build Documentation](https://github.com/Nuclei-Software/nuclei-sdk/workflows/Build%20Documentation/badge.svg)](https://github.com/Nuclei-Software/nuclei-sdk/actions?query=workflow%3A%22Build+Documentation%22)
 [![Build SDK](https://github.com/Nuclei-Software/nuclei-sdk/workflows/Build%20SDK/badge.svg)](https://github.com/Nuclei-Software/nuclei-sdk/actions?query=workflow%3A%22Build+SDK%22)
 
+> Since 0.5.0 release, Nuclei Studio >= 2023.10 and Nuclei Toolchain >= 2023.10 are required to build and run.
 
 **Nuclei Software Development Kit(Nuclei SDK)** is developed for developing and evaluating software using our FPGA evaluation board.
 
@@ -20,8 +21,9 @@ Wanner to a try with Nuclei SDK, click [Quick Start with Nuclei SDK](https://doc
 * Ubuntu Linux >=16.04 LTS or Windows >=7
   - **Linux**: GNU Make >= 3.82
   - **Windows**: [Windows Build Tools](https://nucleisys.com/download.php)
-* [Nuclei RISCV GNU GCC Toolchain](https://nucleisys.com/download.php)
-* [Nuclei OpenOCD](https://nucleisys.com/download.php)
+* [Nuclei Studio >= 2023.10](https://nucleisys.com/download.php)
+  - Nuclei Studio can support import Nuclei SDK NPK package to provide IDE project wizard create/build/debug.
+  - Nuclei Studio also contains same release of Nuclei Toolchain/QEMU/OpenOCD, so just download IDE is enough.
 
 ## Directory Structure
 
@@ -138,18 +140,19 @@ $NUCLEI_SDK_ROOT
 
   Nuclei SDK environment setup script for **Linux**. You need to create your own `setup_config.sh`.
   ~~~shell
+  # This can be path to Nuclei Studio's toolchain folder
   NUCLEI_TOOL_ROOT=/path/to/your_tool_root
   ~~~
 
   In the **$NUCLEI_TOOL_ROOT** for **Linux**, you need to have Nuclei RISC-V toolchain and OpenOCD installed as below.
   ~~~
-  $NUCLEI_TOOL_ROOT
+  ${NUCLEI_TOOL_ROOT}
   ├── gcc
   │   ├── bin
   │   ├── include
   │   ├── lib
   │   ├── libexec
-  │   ├── riscv-nuclei-elf
+  │   ├── riscv64-unknown-elf
   │   └── share
   └── openocd
       ├── bin
@@ -232,6 +235,9 @@ $NUCLEI_SDK_ROOT
    * If you want to use UART terminal tool to view the UART message, you can choose `screen` or `minicom` in Linux, `teraterm` in Windows, the default UART baudrate we use is `115200`.
 
 ## Knowledge book
+
+* Since 0.5.0 release, Nuclei SDK only support Nuclei RISC-V Toolchain >= 2023.10, and toolchain prefix
+changed from `riscv-nuclei-elf-` to `riscv64-unknown-elf-`.
 
 * If you want to learn more about **Nuclei SDK documentation**, please click [Nuclei SDK documentation](http://doc.nucleisys.com/nuclei_sdk)
 
