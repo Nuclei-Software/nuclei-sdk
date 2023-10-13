@@ -10,8 +10,10 @@ from building import *
 
 BUILTIN_ALL_DOWNLOADED_MODES = {
     "gd32vf103": ("flashxip"),
-    "demosoc": ("ilm", "flash", "flashxip", "ddr")
+    "evalsoc": ("ilm", "flash", "flashxip", "ddr", "sram")
 }
+
+DEFAULT_DOWNLOAD_MODES = ("ilm", "flashxip", "ddr", "sram", "sramxip")
 
 default_arch_abi = ("rv32imac", "ilp32")
 cwd = GetCurrentDir()
@@ -52,6 +54,9 @@ if build_soc == "hbird":
     if build_board == "hbird_eval":
         print("Warning! Since Nuclei SDK 0.3.1, Board hbird_eval is renamed to nuclei_fpga_eval, please change NUCLEI_SDK_BOARD to nuclei_fpga_eval!")
         build_board = "nuclei_fpga_eval"
+if build_soc == "demosoc":
+    print("Warning! Since Nuclei SDK 0.5.0, SoC demosoc is removed, please change NUCLEI_SDK_SOC to evalsoc!")
+    build_soc = "evalsoc"
 
 if not build_march and not build_mabi and build_core in core_arch_abis:
     build_march, build_mabi = core_arch_abis[build_core]
@@ -63,8 +68,11 @@ else:
 if build_soc in BUILTIN_ALL_DOWNLOADED_MODES:
     supported_download_modes = BUILTIN_ALL_DOWNLOADED_MODES[build_soc]
 else:
-    print("SoC={} is not supported in Nuclei SDK".format(build_soc))
-    exit(0)
+    if os.path.isfile(os.path.join(cwd, build_soc, "build.mk")) == False:
+        print("SoC={} is not supported in Nuclei SDK".format(build_soc))
+        exit(0)
+    else:
+        supported_download_modes = DEFAULT_DOWNLOAD_MODES
 
 SoC_Common = 'SoC/{}/Common'.format(build_soc)
 SoC_Board = 'SoC/{}/Board/{}'.format(build_soc, build_board)
@@ -74,9 +82,9 @@ build_core_options = " -march=%s -mabi=%s -mcmodel=%s " % (build_march, build_ma
 rtconfig.NUCLEI_SDK_OPENOCD_CFG = os.path.join(FRAMEWORK_DIR, \
     "SoC", build_soc, "Board", build_board, "openocd_{}.cfg".format(build_soc))
 
-if build_soc == "hbird":
+if build_soc == "evalsoc":
     if build_download_mode not in supported_download_modes:
-        # If build.download not defined for hbird SoC, use default "ILM"
+        # If build.download not defined for Eval SoC, use default "ILM"
         chosen_download_mode = "ilm" if len(supported_download_modes) == 0 else supported_download_modes[0]
         print("Download mode %s is not supported for SOC %s, use default download mode %s" \
              % (build_download_mode, build_soc, chosen_download_mode))
@@ -113,9 +121,10 @@ src += Glob(SoC_Board + '/Source/*.c')
 
 CPPPATH = [ cwd + '/NMSIS/Core/Include',
             cwd + '/NMSIS/DSP/Include',
+            cwd + '/NMSIS/DSP/PrivateInclude',
             cwd + '/NMSIS/NN/Include',
             cwd + '/' + SoC_Common + '/Include',
-            cwd + '/' + SoC_Common + '/Source/Stubs/',
+            cwd + '/' + SoC_Common + '/Source/Stubs/newlib',
             cwd + '/' + SoC_Board + '/Include']
 
 LIBPATH = [ cwd + '/NMSIS/Library/DSP/GCC',
