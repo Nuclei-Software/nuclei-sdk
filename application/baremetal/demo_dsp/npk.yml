@@ -38,7 +38,10 @@ codemanage:
     - path: ["./"]
   libdirs:
   ldlibs:
+    # only link with math library when using newlib library
+    # no need for libncrt library
     - libs: ["m"]
+      condition: $( startswith(${stdclib}, "newlib") )
 
 ## Build Configuration
 buildconfig:
