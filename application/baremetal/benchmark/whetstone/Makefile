@@ -7,7 +7,8 @@ TOOLCHAIN ?= nuclei_gnu
 
 COMMON_FLAGS := $(BENCH_FLAGS)
 
-LDFLAGS := -lm
+# When using libncrt library, no need to link with -lm
+LDLIBS := -lm
 
 STDCLIB ?= newlib_small
 

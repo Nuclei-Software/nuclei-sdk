@@ -31,6 +31,7 @@ STDCLIB ?= newlib_small
 # eg. If you want to use rv32imafdc NMSIS DSP library for N300FD + B + K extension
 # eg. NMSIS_LIB_ARCH := rv32imafdc
 ARCH_EXT ?=
+# When using libncrt library, no need to link with -lm
 LDLIBS ?= -lm
 
 include $(NUCLEI_SDK_ROOT)/Build/Makefile.base

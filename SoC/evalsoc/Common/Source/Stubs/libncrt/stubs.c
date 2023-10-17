@@ -2,6 +2,12 @@
 #include <time.h>
 #include <nuclei_sdk_hal.h>
 
+
+// undefined reference to `__errno'`
+// libm.a(libm_a-math_err.o): in function `with_errno'`
+// When see issue above, please don't link -lm library
+// math library is already provided in libncrt library, no need to link -lm
+
 __USED int metal_tty_putc(int c)
 {
     if (c == '\n') {
