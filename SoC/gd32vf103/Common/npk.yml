@@ -207,6 +207,8 @@ buildconfig:
         condition: $( ${stdclib} == "nostd" )
       - flags:
         condition: $( ${stdclib} == "nospec" )
+      - flags: -isystem=/include/libncrt
+        condition: $( startswith(${stdclib}, "libncrt") )
     ldflags:
       - flags: -nostartfiles -nodefaultlibs
       - flags: -lstdc++
@@ -219,8 +221,6 @@ buildconfig:
         condition: $( ${stdclib} == "newlib_small" )
       - flags: -l$(subst(${stdclib},lib,)) -lheapops_basic
         condition: $( startswith(${stdclib}, "libncrt") )
-      - flags: -lsemihost
-        condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
       - flags: -lfileops_semi
         condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 1 )
       - flags: -lfileops_uart
@@ -247,12 +247,12 @@ buildconfig:
     common_flags: # flags need to be combined together across all packages
       - flags: -mtune=${nuclei_core.tune}
         condition: $( ${nuclei_core.tune} != "" )
-      - flags: --specs=${stdclib}.specs
-        condition: $( startswith(${stdclib}, "libncrt") )
     ldflags:
       - flags: -Wl,--no-warn-rwx-segments
       - flags: -lc_nano -lgcc
         condition: $( ${stdclib} == "newlib_nano" )
+      - flags: -lsemihost
+        condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
       - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek -u errno
         condition: $( startswith(${stdclib}, "newlib") )
 
@@ -261,13 +261,11 @@ buildconfig:
     toolchain_name: RISC-V Clang/Newlib
     cross_prefix: riscv64-unknown-elf- # optional
     common_flags: # flags need to be combined together across all packages
-      - flags:
-        condition: $( startswith(${stdclib}, "libncrt") )
     ldflags:
       - flags: -fuse-ld=lld
       - flags: -u __on_exit_args
         condition: $( startswith(${stdclib}, "newlib") )
       - flags: -lc_nano -lgcc -u _printf_float
         condition: $( ${stdclib} == "newlib_nano" )
-      - flags: -l$(subst(${stdclib},lib,))
-        condition: $( startswith(${stdclib}, "libncrt") )
+      - flags: -lsemihost
+        condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
