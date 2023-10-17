@@ -47,8 +47,10 @@ endif
 ###
 else ifneq ($(findstring libncrt,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has libncrt in it
-LDLIBS += -l$(patsubst lib%,%,$(STDCLIB)) -lheapops_$(NCRTHEAP)
-COMMON_FLAGS += -isystem=/include/libncrt
+LDLIBS += -l$(patsubst lib%,%,$(STDCLIB))
+ifneq ($(NCRTHEAP),)
+LDLIBS += -lheapops_$(NCRTHEAP)
+endif
 ###
 else ifeq ($(STDCLIB),nostd)
 ### Handle cases when no standard system directories for header files
@@ -71,7 +73,9 @@ LDLIBS += -lsemihost
 endif
 else
 ifneq ($(findstring libncrt,$(STDCLIB)),)
+ifneq ($(NCRTIO),)
 LDLIBS += -lfileops_$(NCRTIO)
+endif
 endif
 endif
 
