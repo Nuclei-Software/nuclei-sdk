@@ -79,6 +79,7 @@ This is release version ``0.5.0-dev`` of Nuclei SDK.
   - Add extra ``-fomit-frame-pointer -fno-shrink-wrap-separate`` options for Zc extension to enable zcmp instruction generation
   - Extra CPU_SERIES macro is passed such (200/300/600/900) during compiling for benchmark examples
   - When you want to select different nmsis library arch, please use **NMSIS_LIB_ARCH** make variable, see demo_dsp as example
+  - When using libncrt library, this is no need to link with other libgcc library, c library or math library, such as gcc libgcc library(``-lgcc``), newlib c library(``-lc/-lc_nano``) and math library(``-lm``), the c and math features are also provided in libncrt library.
 
 * Tools
 

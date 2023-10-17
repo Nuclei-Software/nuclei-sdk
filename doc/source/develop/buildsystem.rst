@@ -1117,8 +1117,9 @@ can provided smaller code size and highly optimized floating point support compa
 
     * About Newlib and Newlib nano difference, please check
       https://github.com/riscv-collab/riscv-newlib/blob/riscv-newlib-3.2.0/newlib/README
-    * About Nuclei C runtime library, it didn't provided all the features that
-      newlib can do, it is highly optimized for deeply embedded scenery
+    * About Nuclei C runtime library, it provided basic libgcc, c library and math library feature, but
+      it didn't provided all the features that newlib can do, it is highly optimized for deeply embedded scenery,
+      user no need to link with ``-lm`` when using libncrt library when math library is needed.
     * Nuclei C runtime library is only available in Nuclei GNU Toolchain released after Nov 2021,
       about how to use this library, please follow doc located in ``gcc\share\pdf``, changes need
       to be done in startup code, linker script, stub code, and compiler options, you can check commit
@@ -1665,10 +1666,10 @@ LDFLAGS
 ~~~~~~~
 
 This **LDFLAGS** is used to pass extra linker flags, for example,
-if you want to link extra math library, you can add a newline
-``LDFLAGS += -lm`` in you application Makefile.
+if you want to use standard system libraries when linking, you can add a newline
+``LDFLAGS += -nodefaultlibs`` in you application Makefile.
 
-Libraries (-lfoo) could also be added to the LDLIBS variable instead.
+If you want to link with other libraries, please use ``LDLIBS`` and ``LIBDIRS`` variables.
 
 .. _develop_buildsystem_var_ldlibs:
 
@@ -1678,7 +1679,7 @@ LDLIBS
 This **LDLIBS** variable is library flags or names given to compilers
 when they are supposed to invoke the linker.
 
-Non-library linker flags, such as -L, should go in the **LDFLAGS** variable.
+Non-library linker flags, such as -L, should go in the **LIBDIRS** or **LDFLAGS** variable.
 
 .. _develop_buildsystem_var_libdirs:
 

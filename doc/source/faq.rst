@@ -187,5 +187,27 @@ This `mtune` option is introduced in Nuclei SDK 0.3.5, used to select optimized 
 for Nuclei RISC-V Core series such as 200/300/600/900 series, and this feature required Nuclei GNU
 Toolchain 2022.01, please upgrade to this version or later ones.
 
+undefined reference to __errno when using libncrt library
+---------------------------------------------------------
+
+When you are using libncrt library, and linked with ``-lm``, you may face below issues
+
+.. code-block:: console
+
+   /home/share/devtools/toolchain/nuclei_gnu/linux64/newlibc/2023.10.14/gcc/bin/../lib/gcc/riscv64-unknown-elf/13.1.1/../../../../riscv64-unknown-elf/bin/ld: /home/share/devtools/toolchain/nuclei_gnu/linux64/newlibc/2023.10.14/gcc/bin/../lib/gcc/riscv64-unknown-elf/13.1.1/../../../../riscv64-unknown-elf/lib/rv32imafdc/ilp32d/libm.a(libm_a-w_exp.o): in function `.L1':
+   w_exp.c:(.text.exp+0x4a): undefined reference to `__errno'
+   /home/share/devtools/toolchain/nuclei_gnu/linux64/newlibc/2023.10.14/gcc/bin/../lib/gcc/riscv64-unknown-elf/13.1.1/../../../../riscv64-unknown-elf/bin/ld: /home/share/devtools/toolchain/nuclei_gnu/linux64/newlibc/2023.10.14/gcc/bin/../lib/gcc/riscv64-unknown-elf/13.1.1/../../../../riscv64-unknown-elf/lib/rv32imafdc/ilp32d/libm.a(libm_a-w_exp.o): in function `.L0 ':
+   w_exp.c:(.text.exp+0x6e): undefined reference to `__errno'
+   /home/share/devtools/toolchain/nuclei_gnu/linux64/newlibc/2023.10.14/gcc/bin/../lib/gcc/riscv64-unknown-elf/13.1.1/../../../../riscv64-unknown-elf/bin/ld: /home/share/devtools/toolchain/nuclei_gnu/linux64/newlibc/2023.10.14/gcc/bin/../lib/gcc/riscv64-unknown-elf/13.1.1/../../../../riscv64-unknown-elf/lib/rv32imafdc/ilp32d/libm.a(libm_a-w_log.o): in function `log':
+   w_log.c:(.text.log+0x28): undefined reference to `__errno'
+   /home/share/devtools/toolchain/nuclei_gnu/linux64/newlibc/2023.10.14/gcc/bin/../lib/gcc/riscv64-unknown-elf/13.1.1/../../../../riscv64-unknown-elf/bin/ld: w_log.c:(.text.log+0x46): undefined reference to `__errno'
+   /home/share/devtools/toolchain/nuclei_gnu/linux64/newlibc/2023.10.14/gcc/bin/../lib/gcc/riscv64-unknown-elf/13.1.1/../../../../riscv64-unknown-elf/bin/ld: /home/share/devtools/toolchain/nuclei_gnu/linux64/newlibc/2023.10.14/gcc/bin/../lib/gcc/riscv64-unknown-elf/13.1.1/../../../../riscv64-unknown-elf/lib/rv32imafdc/ilp32d/libm.a(libm_a-math_err.o): in function `with_errno':
+   math_err.c:(.text.with_errno+0x12): undefined reference to `__errno'
+   collect2: error: ld returned 1 exit status
+
+You can fix it by not link ``-lm`` library, since libncrt library already provided math library feature, so
+no need to link this math library.
+
+
 .. _debugger kit manual: https://www.nucleisys.com/theme/package/Nuclei_FPGA_DebugKit_Intro.pdf
 .. _ftdi_device_desc: http://openocd.org/doc/html/Debug-Adapter-Configuration.html
