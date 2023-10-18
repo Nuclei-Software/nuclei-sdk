@@ -16,7 +16,7 @@ STACKSZ ?= 2K
 # where all cpus share the same code/data ram
 # such as external ddr/sram, core local ilm is not ok
 DOWNLOAD ?= ddr
-CORE ?= ux900
+CORE ?= nx900
 # SMP CORE Number Settings
 SMP ?= 2
 CIDU ?= 1
