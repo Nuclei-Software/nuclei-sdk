@@ -2,7 +2,7 @@
 name: app-nsdk_demo_eclic
 owner: nuclei
 version:
-description: ECLIC Demo
+description: ECLIC Interrupt Demo
 type: app
 keywords:
   - baremetal

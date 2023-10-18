@@ -2,7 +2,7 @@
 name: app-nsdk_demo_timer
 owner: nuclei
 version:
-description: Timer Demo
+description: Timer and Software Interrupt Demo
 type: app
 keywords:
   - baremetal

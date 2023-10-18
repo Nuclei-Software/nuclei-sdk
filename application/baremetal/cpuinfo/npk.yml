@@ -2,7 +2,7 @@
 name: app-nsdk_cpuinfo
 owner: nuclei
 version:
-description: Probe and dump nuclei risc-v processor info
+description: Probe and dump Nuclei RISC-V Processor Info
 type: app
 keywords:
   - baremetal

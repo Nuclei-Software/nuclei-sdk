@@ -2,7 +2,7 @@
 name: app-nsdk_pmp
 owner: nuclei
 version:
-description: Physical Memory Protection
+description: Physical Memory Protection(PMP) Demo
 type: app
 keywords:
   - baremetal

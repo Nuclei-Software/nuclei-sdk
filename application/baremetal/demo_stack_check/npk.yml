@@ -2,7 +2,7 @@
 name: app-nsdk_demo_stack_check
 owner: nuclei
 version:
-description: Stack Check Demo
+description: Stack Check Demo for Nuclei Hardware Stack Check Feature
 type: app
 keywords:
   - baremetal

@@ -2,7 +2,7 @@
 name: app-nsdk_demo_smode_eclic
 owner: nuclei
 version:
-description: ECLIC Smode Demo
+description: S-Mode ECLIC Interrupt Demo
 type: app
 keywords:
   - baremetal

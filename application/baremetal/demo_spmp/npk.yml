@@ -2,7 +2,7 @@
 name: app-nsdk_spmp
 owner: nuclei
 version:
-description: Supervisor mode Physical Memory Protection
+description: S-Mode Physical Memory Protection(sPMP) Demo
 type: app
 keywords:
   - baremetal

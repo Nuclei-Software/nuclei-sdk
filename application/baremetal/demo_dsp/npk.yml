@@ -2,7 +2,7 @@
 name: app-nsdk_demo_dsp
 owner: nuclei
 version:
-description: RISC-V DSP Demo
+description: Nuclei NMSIS DSP Library Demo
 type: app
 keywords:
   - baremetal

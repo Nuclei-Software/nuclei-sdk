@@ -2,7 +2,7 @@
 name: app-nsdk_lowpower
 owner: nuclei
 version:
-description: Lowpower Example
+description: Lowpower Demo for Nuclei Lowpower Feature
 type: app
 keywords:
   - baremetal

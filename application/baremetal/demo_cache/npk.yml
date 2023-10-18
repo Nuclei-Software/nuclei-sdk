@@ -2,7 +2,7 @@
 name: app-nsdk_demo_cache
 owner: nuclei
 version:
-description: Nuclei cache demo to show how to use Nuclei CCM feature
+description: Nuclei Cache Demo using Nuclei CCM feature
 type: app
 keywords:
   - baremetal
