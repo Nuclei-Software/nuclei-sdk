@@ -208,6 +208,15 @@ When you are using libncrt library, and linked with ``-lm``, you may face below 
 You can fix it by not link ``-lm`` library, since libncrt library already provided math library feature, so
 no need to link this math library.
 
+undefined reference to fclose/sprintf similar API provided in system libraries
+------------------------------------------------------------------------------
+
+From 0.5.0 release, we no longer use ``--specs=`` option to select library we want to use, and we also passed
+``-nodefaultlibs`` options to not use standard system libraries, this changes are made to support both gcc and clang
+toolchain, so in Nuclei SDK build system, we control the needed system libraries to be linked as required by ``STDCLIB`` make variable, for details, please check ``Build/toolchain/*.mk`` makefiles, and also we use linker's group
+libraries feature ``--start-group archives --end-group`` to repeatly search undefined reference in the group libraries,
+but this feature is not enabled in Eclipse CDT based IDE like Nuclei Studio, which undefined reference is searched in the order of library specified on the command line, so you may meet issue like undefined fclose reference even you linked newlib nano c library ``-lc_nano`` if the library order is not good, so to fix this issue, you may need to place
+the library in a good order and need to repeatly link it, such as ``-lgcc -lc_nano -lm -lsemihost -lgcov -lgcc -lc_nano``, and also we have opened an issue to track it, see https://github.com/eclipse-embed-cdt/eclipse-plugins/issues/592
 
 .. _debugger kit manual: https://www.nucleisys.com/theme/package/Nuclei_FPGA_DebugKit_Intro.pdf
 .. _ftdi_device_desc: http://openocd.org/doc/html/Debug-Adapter-Configuration.html

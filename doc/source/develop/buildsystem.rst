@@ -1072,7 +1072,7 @@ STDCLIB
 ~~~~~~~
 
 **STDCLIB** variable is used to select which standard c runtime library will be used.
-If not defined, the default value will be ``newlib_small``.
+If not defined, the default value will be ``newlib_nano``.
 
 In Nuclei GNU Toolchain, we destributed newlib/newlib-nano/Nuclei c runtime library,
 so user can select different c runtime library according to their requirement.
@@ -1081,6 +1081,19 @@ Newlib is a simple ANSI C library, math library, available for both RV32 and RV6
 
 Nuclei C runtime library is a highly optimized c library designed for deeply embedded user cases,
 can provided smaller code size and highly optimized floating point support compared to Newlib.
+
+From 0.5.0 release, to support both gcc and clang compiler, we decided not to use ``--specs=`` option to
+select system library, instead of that, we start to use ``--nodefaultlibs`` options, and link the required
+system libraries by the ``STDCLIB`` variable choice, so need to link desired libraries such as:
+
+* ``-lgcc``: a standard library (linked by default, excluded by -nodefaultlibs) that provides internal subroutines to overcome shortcomings of particular machines, see https://gcc.gnu.org/onlinedocs/gccint/Libgcc.html.
+* ``-lgcov``: a library used to test coverage program, known as ``gcov/gprof``, see https://gcc.gnu.org/onlinedocs/gcc/Gcov.html
+* ``-lc/-lc_nano``: newlib c library or newlib nano c library, see https://sourceware.org/newlib/docs.html
+* ``-lm``: newlib math library, see https://sourceware.org/newlib/libm.html
+* ``-lstdc++``: gnu standard c++ library, see https://gcc.gnu.org/onlinedocs/libstdc++
+* ``-lsemihost``: riscv semihosting library which implement a set of standard I/O and file I/O operations, see https://github.com/riscv-mcu/riscv-newlib/tree/nuclei/newlib-4.3.0/libgloss/riscv
+* ``-lnosys``: a set of stub functions which implement a set of standard I/O operations but does nothing, and when link with it, it will throw link warning, see https://github.com/riscv-mcu/riscv-newlib/blob/nuclei/newlib-4.3.0/libgloss/libnosys
+* ``-lncrt_pico/-lncrt_nano/-lncrt_small/-lncrt_balanced/-lncrt_fast``: Nuclei libncrt library, it provides pico/nano/small/balanced/fast variant to provide standard c library, math library, and libgcc library features, and need to use together with ``-lheapops_minimal/-lheapops_basic/-lheapops_realtime`` heap operation API, and ``-lfileops_uart/-lfileops_semi/-lfileops_rtt`` file io operation API, when using this libncrt library, please don't link ``-lgcc -lc_nano/-lc -lm -lsemihost -lnosys``, and it also can't link with ``-lstdc++``
 
 .. list-table:: Available STDCLIB choices
    :widths: 10 70

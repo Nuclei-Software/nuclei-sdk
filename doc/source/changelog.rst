@@ -41,7 +41,7 @@ This is release version ``0.5.0-dev`` of Nuclei SDK.
 
   - Add bench reset/sample/stop/stat and get usecyc/sumcyc/lpcnt APIs in NMSIS Core
   - Add more CSRs such as Zc/Stack Check in riscv_encoding.h
-  - Rename NMSIS DSP/NN library name to match gcc 13 changes, eg. b -> zba_zbb_zbc_zbs
+  - Rename NMSIS DSP/NN library name to match gcc 13 changes, eg. b -> zba_zbb_zbc_zbs, so the library name changed a lot
   - Add IAR compiler support in NMSIS Core
   - No more bitmanip extension intrinsic header <rvintrin.h> for gcc13
   - Fix __RV_CLAMP macro and add __MACHINE/SUPERVISOR/USER_INTERRUPT macros
@@ -71,7 +71,10 @@ This is release version ``0.5.0-dev`` of Nuclei SDK.
   - Fix semihost not working when link with semihost library
   - Add support for gcc 13, clang 17, terapines zcc toolchain using TOOLCHAIN make variable, eg. TOOLCHAIN=nuclei_gnu for gnu gcc toolchain, TOOLCHAIN=nuclei_llvm for llvm toolchain, TOOLCHAIN=terapines for terapines zcc toolchain
   - Add support for libncrt v3.0.0, which spilt libncrt into 3 parts, the c library part, fileops part, and heapops part, so **NCRTHEAP** and **NCRTIO** makefile variable are added to support new version of libncrt
-  - To support both gcc, clang, zcc, now we no longer use ``--specs=nano.specs`` like options, since clang don't support it, we directly link the required library according to the library type you want to use
+  - To support both gcc, clang, zcc, now we no longer use ``--specs=nano.specs`` like ``--specs=`` gcc only options, since clang don't support it, we directly link the required libraries according to the library type you want to use in Makefile, group all the required libraries using ``--start-group archives --end-group`` of linker option, see https://sourceware.org/binutils/docs/ld/Options.html, but when using Nuclei Studio, the Eclipse CDT based IDE didn't provided a good way to do library group, here is an issue tracking it, see https://github.com/eclipse-embed-cdt/eclipse-plugins/issues/592
+    - And also now we defaultly enabled ``-nodefaultlibs`` option to not use any standard system libraries when linking, so we need to specify the system libraries we want to use during linking, which is the best way to support both gcc and clang toolchain.
+  - When using libncrt library, this is no need to link with other libgcc library, c library or math library, such as gcc libgcc library(``-lgcc``), newlib c library(``-lc/-lc_nano``) and math library(``-lm``), the c and math features are also provided in libncrt library
+  - When using Nuclei Studio with imported Nuclei SDK NPK package, you might meet with undefined reference issue during link 
   - The use of ARCH_EXT is changed for new toolchain, eg. you can't pass ARCH_EXT=bp to represent b/p extension, instead you need to pass ARCH_EXT=_zba_zbb_zbc_zbs_xxldspn1x
   - Show CC/CXX/GDB when make showflags
   - Add u900 series cores support
@@ -79,7 +82,6 @@ This is release version ``0.5.0-dev`` of Nuclei SDK.
   - Add extra ``-fomit-frame-pointer -fno-shrink-wrap-separate`` options for Zc extension to enable zcmp instruction generation
   - Extra CPU_SERIES macro is passed such (200/300/600/900) during compiling for benchmark examples
   - When you want to select different nmsis library arch, please use **NMSIS_LIB_ARCH** make variable, see demo_dsp as example
-  - When using libncrt library, this is no need to link with other libgcc library, c library or math library, such as gcc libgcc library(``-lgcc``), newlib c library(``-lc/-lc_nano``) and math library(``-lm``), the c and math features are also provided in libncrt library.
 
 * Tools
 
