@@ -101,13 +101,13 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 
 /** Mark end of benchmark for proc, and calc used cycle, and print it */
 #define BENCH_END(proc)         BENCH_SAMPLE(proc); \
-                                printf("CSV, %s, %lu\n", #proc, (uint32_t)_bc_usecyc);
+                                printf("CSV, %s, %lu\n", #proc, (unsigned long)_bc_usecyc);
 
 /** Mark stop of benchmark, start -> sample -> sample -> stop, and print the sum cycle of a proc */
-#define BENCH_STOP(proc)        printf("CSV, %s, %lu\n", #proc, (uint32_t)_bc_sumcyc);
+#define BENCH_STOP(proc)        printf("CSV, %s, %lu\n", #proc, (unsigned long)_bc_sumcyc);
 
 /** Show statistics of benchmark, format: STAT, proc, loopcnt, sumcyc */
-#define BENCH_STAT(proc)        printf("STAT, %s, %lu, %lu\n", #proc, (uint32_t)_bc_lpcnt, (uint32_t)_bc_sumcyc);
+#define BENCH_STAT(proc)        printf("STAT, %s, %lu, %lu\n", #proc, (unsigned long)_bc_lpcnt, (unsigned long)_bc_sumcyc);
 
 /** Get benchmark use cycle */
 #define BENCH_GET_USECYC()      (_bc_usecyc)
@@ -237,15 +237,15 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 /** Mark end of high performance benchmark for proc, and calc used hpm counter value */
 #define HPM_END(idx, proc, event)                    \
                                 HPM_SAMPLE(idx, proc, event);                               \
-                                printf("HPM%d:0x%x, %s, %lu\n", idx, event, #proc, (uint32_t)__hpm_usecyc##idx);
+                                printf("HPM%d:0x%x, %s, %lu\n", idx, event, #proc, (unsigned long)__hpm_usecyc##idx);
 
 /** Mark stop of hpm benchmark, start -> sample -> sample -> stop, and print the sum cycle of a proc */
 #define HPM_STOP(idx, proc, event)                   \
-                                printf("HPM%d:0x%x, %s, %lu\n", idx, event, #proc, (uint32_t)__hpm_sumcyc##idx);
+                                printf("HPM%d:0x%x, %s, %lu\n", idx, event, #proc, (unsigned long)__hpm_sumcyc##idx);
 
 /** Show statistics of hpm benchmark, format: STATHPM#idx:event, proc, loopcnt, sumcyc */
 #define HPM_STAT(idx, proc, event)                   \
-                                printf("STATHPM%d:0x%x, %s, %lu, %lu\n", idx, event, #proc, (uint32_t)__hpm_lpcnt##idx, (uint32_t)__hpm_sumcyc##idx);
+                                printf("STATHPM%d:0x%x, %s, %lu, %lu\n", idx, event, #proc, (unsigned long)__hpm_lpcnt##idx, (unsigned long)__hpm_sumcyc##idx);
 
 /** Get hpm benchmark use cycle for counter idx */
 #define HPM_GET_USECYC(idx)             (__hpm_usecyc##idx)
