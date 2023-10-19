@@ -26,7 +26,10 @@
  * 1. __ICACHE_PRESENT:  Define whether I-Cache Unit is present or not.
  *   * 0: Not present
  *   * 1: Present
- * 1. __DCACHE_PRESENT:  Define whether D-Cache Unit is present or not.
+ * 2. __DCACHE_PRESENT:  Define whether D-Cache Unit is present or not.
+ *   * 0: Not present
+ *   * 1: Present
+ * 3. __CCM_PRESENT:  Define whether Nuclei Cache Control and Maintainence(CCM) Unit is present or not.
  *   * 0: Not present
  *   * 1: Present
  */

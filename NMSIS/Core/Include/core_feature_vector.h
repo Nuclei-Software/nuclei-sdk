@@ -45,13 +45,14 @@
  *
  * RISC-V Vector Intrinsic APIs are provided directly through compiler generated intrinsic function.
  *
- * This intrinsic function support in compiler is introduced in nuclei riscv gcc 10.2.
+ * This intrinsic function support by compiler:
  *
- * API header file can be found in lib/gcc/riscv-nuclei-elf/<gcc_ver>/include/riscv_vector.h
+ * For Nuclei RISC-V GCC 10.2, it is an very old and not ratified version(no longer supported).
  *
- * API Reference Manual can be found here:
+ * - API header file can be found in lib/gcc/riscv-nuclei-elf/<gcc_ver>/include/riscv_vector.h
  *
- * - https://github.com/riscv-non-isa/rvv-intrinsic-doc/blob/master/rvv-intrinsic-api.md
+ * For Nuclei RISC-V GCC 13/Clang 17, the intrinsic API supported is v0.12 version, see
+ * https://github.com/riscv-non-isa/rvv-intrinsic-doc/releases/tag/v0.12.0
  *
  *   @{
  */

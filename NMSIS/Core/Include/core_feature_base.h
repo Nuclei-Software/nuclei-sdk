@@ -22,6 +22,12 @@
  * @file     core_feature_base.h
  * @brief    Base core feature API for Nuclei N/NX Core
  */
+/*
+ * Core Base Feature Configuration Macro:
+ * 1. __HARTID_OFFSET:  Optional, define this macro when your cpu system first hart hartid and hart index is different.
+ *    eg. If your cpu system, first hart hartid is 2, hart index is 0, then set this macro to 2
+ *
+ */
 #include <stdint.h>
 
 #ifdef __cplusplus

@@ -49,6 +49,8 @@
  *
  * API header file can be found in lib/gcc/riscv-nuclei-elf/<gcc_ver>/include/rvintrin.h
  *
+ * For Nuclei GCC 13/Clang 17, this intrinsic header no longer existed, please take care.
+ *
  *   @{
  */
 /** @} */ /* End of Doxygen Group NMSIS_Core_Bitmanip_Intrinsic */

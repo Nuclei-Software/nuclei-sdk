@@ -23,10 +23,11 @@
  */
 /*
  * System Timer Feature Configuration Macro:
- * 1. __SYSTIMER_PRESENT:  Define whether Private System Timer is present or not.
+ * 1. __SYSTIMER_PRESENT: Must, Define whether Private System Timer is present or not.
  *   * 0: Not present
  *   * 1: Present
- * 2. __SYSTIMER_BASEADDR:  Define the base address of the System Timer.
+ * 2. __SYSTIMER_BASEADDR: Must, Define the base address of the System Timer.
+ * 3. __SYSTIMER_HARTID:  Optional, Define the system timer hart index of the cpu, important for case when cpu hartid and cpu hart index are different, only set it if your cpu is single core.
  */
 #ifdef __cplusplus
 extern "C" {

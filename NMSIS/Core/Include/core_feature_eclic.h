@@ -27,9 +27,12 @@
  *   * 0: Not present
  *   * 1: Present
  * 2. __ECLIC_BASEADDR:  Base address of the ECLIC unit.
- * 3. ECLIC_GetInfoCtlbits():  Define the number of hardware bits are actually implemented in the clicintctl registers.
+ * 3. __ECLIC_INTCTLBITS:  Optional, if defined, it should set to the value of ECLIC_GetInfoCtlbits(), define the number of hardware bits are actually implemented in the clicintctl registers.
  *   Valid number is 1 - 8.
- * 4. __ECLIC_INTNUM  : Define the external interrupt number of ECLIC Unit
+ * 4. __ECLIC_INTNUM:  Define the external interrupt number of ECLIC Unit
+ * 5. __TEE_PRESENT:  Define whether TEE feature present, if present, ECLIC will present with S-Mode ECLIC feature
+ *   * 0: Not present
+ *   * 1: Present
  *
  */
 #ifdef __cplusplus

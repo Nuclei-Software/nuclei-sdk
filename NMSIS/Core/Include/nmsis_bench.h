@@ -51,7 +51,7 @@
  *
  * If you want to disable the benchmark calculation, you can place `#define DISABLE_NMSIS_BENCH`
  * before include `nmsis_bench.h`
- * 
+ *
  * If in your c test source code, you can add `NMSIS_TEST_PASS();` and `NMSIS_TEST_FAIL();` to mark c test
  * is pass or fail.
  *
