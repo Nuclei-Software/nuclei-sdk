@@ -50,6 +50,7 @@ jobs:
         path: |
           prebuilt_tools/*.tar.bz2
           prebuilt_tools/*.zip
+          prebuilt_tools/*.tar.gz
         key: build
 
     - name: Prepare Tools for Ubuntu
@@ -63,16 +64,24 @@ jobs:
           pip3 install -q -r tools/scripts/requirements.txt
           mkdir -p prebuilt_tools
           cd prebuilt_tools
-          toolzip=nuclei_riscv_newlibc_prebuilt_linux64_nuclei-2023.07.19.tar.bz2
+          echo "Prepare Nuclei Toolchain......"
+          toolzip=nuclei_riscv_newlibc_prebuilt_linux64_2023.10.tar.bz2
           if [ ! -e $toolzip ] ; then
-            wget -q --no-check-certificate https://nucleisys.com/upload/files/toochain/gcc/$toolzip
+            echo "Download Nuclei toolchain now!"
+            wget --progress=dot:giga --no-check-certificate https://www.nucleisys.com/upload/files/toochain/gcc/$toolzip
+            ls -lh $toolzip
+            md5sum $toolzip
           fi
           tar -xjf $toolzip
-          toolzip=nuclei_qemu-2023.07.19-linux.zip
+          echo "Prepare Nuclei QEMU......"
+          toolzip=nuclei-qemu-2023.10-linux-x64.tar.gz
           if [ ! -e $toolzip ] ; then
-            wget -q --no-check-certificate https://nucleisys.com/upload/files/toochain/qemu/$toolzip
+            echo "Download Nuclei qemu now!"
+            wget --progress=dot:giga --no-check-certificate https://www.nucleisys.com/upload/files/toochain/qemu/$toolzip
+            ls -lh $toolzip
+            md5sum $toolzip
           fi
-          unzip -q $toolzip
+          tar -xzf $toolzip
           if [ -d linux_qemu ] ; then
             mv linux_qemu qemu
           fi
@@ -83,25 +92,18 @@ jobs:
           cd ..
           echo "NUCLEI_TOOL_ROOT=$(pwd)/prebuilt_tools" > setup_config.sh
 
-    - name: Build SDK for Nuclei Eval SoC Using GCC
+    - name: Build and Run SDK for Nuclei Eval SoC
       if: matrix.soc == 'evalsoc'
       run: |
         echo "Setup build environment"
         source setup.sh
         export APPCFG=tools/scripts/nsdk_cli/configs/application.json
-        export HWCFG=tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_small_gnu.json
-        export LOGDIR=logs/nuclei_fpga_eval_ci_gnu
-        python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run_target qemu --run
-
-    - name: Build SDK for Nuclei Eval SoC Using LLVM
-      if: matrix.soc == 'evalsoc'
-      run: |
-        echo "Setup build environment"
-        source setup.sh
-        export APPCFG=tools/scripts/nsdk_cli/configs/application.json
-        export HWCFG=tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_small_llvm.json
-        export LOGDIR=logs/nuclei_fpga_eval_ci_llvm
-        python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run_target qemu --run
+        for hwcfg in "nuclei_fpga_eval_ci_qemu_small_gnu" "nuclei_fpga_eval_ci_qemu_small_llvm" ; do
+            export HWCFG=tools/scripts/nsdk_cli/configs/${hwcfg}.json
+            export LOGDIR=logs/${hwcfg}
+            echo "Build and run for ${hwcfg}"
+            python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run_target qemu --run
+        done
 
     - name: Build SDK for GD32VF103 SoC
       if: matrix.soc == 'gd32vf103'
