@@ -119,14 +119,14 @@ int main(void)
     /* Verify the configuration takes effect */
     memset(&pmp_config_x, 0, sizeof(pmp_config));
     __get_PMPENTRYx(0, &pmp_config_x);
-    printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%x, order_out: %d\r\n", \
+    printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%lx, order_out: %lu\r\n", \
         0, pmp_config_x.protection, pmp_config_x.base_addr, pmp_config_x.order);
 
     __set_PMPENTRYx(1, &pmp_config_rw);
     /* Verify the configuration takes effect */
     memset(&pmp_config_rw, 0, sizeof(pmp_config));
     __get_PMPENTRYx(1, &pmp_config_rw);
-    printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%x, order_out: %d\r\n", \
+    printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%lx, order_out: %lu\r\n", \
         1, pmp_config_rw.protection, pmp_config_rw.base_addr, pmp_config_rw.order);
 
     /* register corresponding exception */

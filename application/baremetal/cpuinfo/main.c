@@ -5,7 +5,7 @@
 #define MB                  (KB * 1024)
 #define GB                  (MB * 1024)
 #define EXTENSION_NUM       (26)
-#define POWER_FOR_TWO(n)    (1 << n)
+#define POWER_FOR_TWO(n)    (1UL << (n))
 
 void print_size(rv_csr_t bytes)
 {
@@ -208,8 +208,8 @@ void nuclei_cpuinfo(void)
         printf("                  mpasize : %lu\r\n", mpasize);
         rv_csr_t cmo_info = *(rv_csr_t*)(iregion_base + 4);
         if (cmo_info & BIT(1)) {
-            printf("                  cbozero : %luByte\r\n", POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 6) + 2));
-            printf("                  cmo     : %luByte\r\n", POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 2) + 2));
+            printf("                  cbozero : %luByte\r\n", (unsigned long)POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 6) + 2));
+            printf("                  cmo     : %luByte\r\n", (unsigned long)POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 2) + 2));
             if (cmo_info & BIT(2)) {
                 printf("                  has_prefecth\r\n");
             }

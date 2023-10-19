@@ -2,7 +2,7 @@
 #include "nuclei_sdk_hal.h"
 
 #if !defined(__CIDU_PRESENT) || (__CIDU_PRESENT != 1)
-/* __CIDU_PRESENT should be defined in <Device>.h */
+/* __CIDU_PRESENT shoulu be defined in <Device>.h */
 #warning "__CIDU_PRESENT is not defined or equal to 1, please check!"
 #endif
 
@@ -40,7 +40,7 @@ void eclic_uart0_int_handler()
 
     /* Protect the uart0, in case that other core access */
     CIDU_AcquireSemaphore_Block(UART0_SEMAPHORE, hartid);
-    printf("Core %d enters uart0_receive_handler\n", hartid);
+    printf("Core %lu enters uart0_receive_handler\n", hartid);
     /* Job finished, release the semaphore */
     CIDU_ReleaseSemaphore(UART0_SEMAPHORE);
 
@@ -54,14 +54,14 @@ void eclic_uart0_int_handler()
     /* Protect the uart0, in case that other core access */
     CIDU_AcquireSemaphore_Block(UART0_SEMAPHORE, hartid);
 
-    printf("Core %d wants to process rx input\n", hartid);
+    printf("Core %lu wants to process rx input\n", hartid);
     status = uart_get_status(SOC_DEBUG_UART);
     if (status & UART_IP_RXIP_MASK) {
         unsigned char c_get;
         // Clear rx pending
         uart_clear_status(SOC_DEBUG_UART, UART_IP_RXIP_MASK);
         c_get = getchar();
-        printf("Core %d processed input:%c\n", hartid, c_get);
+        printf("Core %lu processed input:%c\n", hartid, c_get);
     }
     /* Job finished, release the semaphore */
     CIDU_ReleaseSemaphore(UART0_SEMAPHORE);
@@ -84,7 +84,7 @@ void eclic_inter_core_int_handler()
         sender_id++;
         if (val & 0x01) {
             /* find one sender */
-            printf("Core %d has received interrupt from core %d\n", hartid, sender_id - 1);
+            printf("Core %lu has received interrupt from core %u\n", hartid, sender_id - 1);
             /* Job finished, reset the core interrupt status */
             CIDU_ClearInterCoreIntReq(sender_id - 1, hartid);
         }

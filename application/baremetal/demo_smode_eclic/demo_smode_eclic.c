@@ -36,7 +36,7 @@ void print_sp_judge_privilege_mode(void)
 
     __asm__ volatile("add  %0, x0, sp" :"=r"(sp));
 
-    printf("Current sp is %p, ", sp);
+    printf("Current sp is 0x%lx, ", (unsigned long)sp);
 
     if ( ((uint8_t *)sp <= &(smode_stack[SMODE_STACK_SIZE - 1])) && ((uint8_t *)sp >= &(smode_stack[0])) ) {
         printf("so it is in Supervisor Mode!\r\n");

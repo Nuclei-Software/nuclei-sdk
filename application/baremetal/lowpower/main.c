@@ -27,8 +27,8 @@ int main(void)
     RECORD_END();
     end = __get_rv_cycle();
 
-    printf("CSV, WFI Start/End, %llu/%llu\n", start, end);
-    printf("CSV, WFI Cost, %llu\n", (end - start));
+    printf("CSV, WFI Start/End, %lu/%lu\n", (unsigned long)start, (unsigned long)end);
+    printf("CSV, WFI Cost, %lu\n", (unsigned long)(end - start));
 
     return 0;
 }

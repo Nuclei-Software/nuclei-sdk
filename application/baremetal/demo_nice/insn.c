@@ -38,15 +38,15 @@ void print_array(unsigned int array[ROW_LEN][COL_LEN])
     int i, j;
     printf("the element of array is :\r\n\t");
     for (i = 0; i < ROW_LEN; i++) {
-        printf("%d\t", array[0][i]);
+        printf("%u\t", array[0][i]);
     }
     printf("\r\n\t");
     for (i = 0; i < ROW_LEN; i++) {
-        printf("%d\t", array[1][i]);
+        printf("%u\t", array[1][i]);
     }
     printf("\r\n\t");
     for (i = 0; i < ROW_LEN; i++) {
-        printf("%d\t", array[2][i]);
+        printf("%u\t", array[2][i]);
     }
     printf("\r\n\r\n");
 }
@@ -56,12 +56,12 @@ void print_result(unsigned int col_sum[COL_LEN], unsigned int row_sum[ROW_LEN])
     int i, j;
     printf("the sum of each row is :\r\n\t\t");
     for (i = 0; i < ROW_LEN; i++) {
-        printf("%d\t", row_sum[i]);
+        printf("%u\t", row_sum[i]);
     }
     printf("\r\n");
     printf("the sum of each col is :\r\n\t\t");
     for (j = 0; j < COL_LEN; j++) {
-        printf("%d\t", col_sum[j]);
+        printf("%u\t", col_sum[j]);
     }
     printf("\r\n");
 }
@@ -73,7 +73,7 @@ int compare_result(unsigned int ref_cs[COL_LEN], unsigned int ref_rs[ROW_LEN], \
     for (i = 0; i < COL_LEN; i ++) {
         if (ref_cs[i] != nice_cs[i]) {
 #ifdef _DEBUG_INFO_
-            printf("Column %d result not match: %d vs %d\r\n", ref_cs[i], nice_cs[i]);
+            printf("Column %d result not match: %u vs %u\r\n", i, ref_cs[i], nice_cs[i]);
 #endif
             ret = -1;
         }
@@ -81,7 +81,7 @@ int compare_result(unsigned int ref_cs[COL_LEN], unsigned int ref_rs[ROW_LEN], \
     for (i = 0; i < ROW_LEN; i ++) {
         if (ref_rs[i] != nice_rs[i]) {
 #ifdef _DEBUG_INFO_
-            printf("Row %d result not match: %d vs %d\r\n", ref_rs[i], nice_rs[i]);
+            printf("Row %d result not match: %u vs %u\r\n", i, ref_rs[i], nice_rs[i]);
 #endif
             ret = -1;
         }

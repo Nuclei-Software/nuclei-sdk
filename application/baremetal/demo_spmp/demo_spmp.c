@@ -132,7 +132,7 @@ int main(void)
     /* Verify the configuration takes effect */
     memset(&pmp_cfg, 0, sizeof(pmp_cfg));
     __get_PMPENTRYx(0, &pmp_cfg);
-    printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%x, order_out: %d\r\n", \
+    printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%lx, order_out: %lu\r\n", \
         0, pmp_cfg.protection, pmp_cfg.base_addr, pmp_cfg.order);
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)

@@ -70,9 +70,9 @@ int main(void)
     printf("4. Performance summary\r\n");
 
     printf("\t normal: \r\n");
-    printf("\t      instret: %u, cycle: %u\r\n", instret_normal, cycle_normal);
+    printf("\t      instret: %lu, cycle: %lu\r\n", instret_normal, cycle_normal);
     printf("\t nice  : \r\n");
-    printf("\t      instret: %u, cycle: %u\r\n", instret_nice, cycle_nice);
+    printf("\t      instret: %lu, cycle: %lu\r\n", instret_nice, cycle_nice);
 
     return ret;
 }

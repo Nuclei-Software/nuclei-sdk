@@ -86,7 +86,7 @@ int boot_hart_main(unsigned long hartid)
 {
     volatile unsigned long waitcnt = 0;
     spinlock_lock(&lock);
-    printf("Hello world from hart %d\n", hartid);
+    printf("Hello world from hart %lu\n", hartid);
     cpu_count += 1;
     spinlock_unlock(&lock);
     // wait for all harts boot and print hello
@@ -112,7 +112,7 @@ int boot_hart_main(unsigned long hartid)
 int other_harts_main(unsigned long hartid)
 {
     spinlock_lock(&lock);
-    printf("Hello world from hart %d\n", hartid);
+    printf("Hello world from hart %lu\n", hartid);
     cpu_count += 1;
     spinlock_unlock(&lock);
     // wait for all harts boot and print hello
