@@ -1,10 +1,11 @@
 PROGRAM :=baremetal/helloworld
 
-.PHONY: __help ctags
+.PHONY: __help ctags cleanall buildall tags
 __help:
 	@echo "Help about Build/Run/Debug/Clean Nuclei SDK Application"
 	@echo "make [PROGRAM=/path/to/app]  help                        Show Build System Help Message"
 	@echo "make [EXTRA_APP_ROOTDIRS=/path/to/extraapps] cleanall    Clean all the applications"
+	@echo "make [EXTRA_APP_ROOTDIRS=/path/to/extraapps] buildall    Rebuild all the applications"
 	@echo "Examples:"
 	@echo "make PROGRAM=application/baremetal/helloworld all"
 	@echo "make PROGRAM=application/baremetal/helloworld SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean all"
@@ -34,6 +35,7 @@ PROGS_makefile := $(foreach progdir, $(PROGS_TO_SEARCH), $(sort $(dir $(wildcard
 PROGS_Makefile := $(foreach progdir, $(PROGS_TO_SEARCH), $(sort $(dir $(wildcard $(progdir)/Makefile))))
 PROGS_DIRS := $(sort $(PROGS_makefile) $(PROGS_Makefile))
 CLEAN_DIRS_RULES := $(addprefix __CLEAN__, $(PROGS_DIRS))
+BUILD_DIRS_RULES := $(addprefix __BUILD__, $(PROGS_DIRS))
 
 ifeq ($(VALID_PROGRAM_MAKEFILE), )
 APP_PROGRAM=application/$(PROGRAM)
@@ -46,8 +48,13 @@ endif
 
 cleanall: $(CLEAN_DIRS_RULES)
 
+buildall: $(BUILD_DIRS_RULES)
+
 $(CLEAN_DIRS_RULES):
 	make -C $(patsubst __CLEAN__%, %, $@) clean
+
+$(BUILD_DIRS_RULES):
+	make -C $(patsubst __BUILD__%, %, $@) clean all
 
 $(VALID_SDK_RULES):
 	make -C $(VALID_PROGRAM) $@
