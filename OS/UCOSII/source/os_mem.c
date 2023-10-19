@@ -103,7 +103,7 @@ OS_MEM  *OSMemCreate (void   *addr,
         *perr = OS_ERR_MEM_INVALID_ADDR;
         return ((OS_MEM *)0);
     }
-    if (((INT32U)addr & (sizeof(void *) - 1u)) != 0u){  /* Must be pointer size aligned                */
+    if (((unsigned long)addr & (sizeof(void *) - 1u)) != 0u){  /* Must be pointer size aligned                */
         *perr = OS_ERR_MEM_INVALID_ADDR;
         return ((OS_MEM *)0);
     }
