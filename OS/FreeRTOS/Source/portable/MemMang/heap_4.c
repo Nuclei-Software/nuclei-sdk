@@ -442,7 +442,7 @@ uint8_t *puc;
 void vPortGetHeapStats( HeapStats_t *pxHeapStats )
 {
 BlockLink_t *pxBlock;
-size_t xBlocks = 0, xMaxSize = 0, xMinSize = portMAX_DELAY; /* portMAX_DELAY used as a portable way of getting the maximum value. */
+size_t xBlocks = 0, xMaxSize = 0, xMinSize = (size_t)(portMAX_DELAY); /* portMAX_DELAY used as a portable way of getting the maximum value. */
 
 	vTaskSuspendAll();
 	{
