@@ -975,7 +975,7 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
     * Need to enable TEE in <Device.h> if TEE present in CPU.
     * Need to enable SPMP in <Device.h> if SPMP present in CPU.
 
-* ``spmp_violation_fault_handler`` is registered, which is to excute when spmp violation
+* ``spmp_violation_fault_handler`` is registered, which is to execute when spmp violation
   exception occurs
 * The sPMP values are checked after the physical address to be accessed passes PMP checks
 * There're three config structures, ``pmp_config`` inits that M-mode grants full permission
@@ -991,7 +991,7 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
   sPMP working feature:
 
   - If **TRIGGER_SPMP_VIOLATION_MODE=INSTRUCTION_FETCH_PAGE_EXCEPTION**, the unallowed memory is to
-    excute, which triggers ``Instruction page fault``, whose scause.EXCCODE = 12 and sdcause = 6
+    execute, which triggers ``Instruction page fault``, whose scause.EXCCODE = 12 and sdcause = 6
 
   - If **TRIGGER_SPMP_VIOLATION_MODE=LOAD_PAGE_EXCEPTION**, the unallowed memory is to read,
     which triggers ``Load page fault``, whose scause.EXCODE = 13 and sdcause = 6
@@ -1196,7 +1196,7 @@ This `demo_pmp_application`_ is used to demonstrate how to grant physical memory
 
     * Need to enable PMP in <Device.h> if PMP present in CPU.
 
-* ``pmp_violation_fault_handler`` is registered, which is to excute when pmp violation
+* ``pmp_violation_fault_handler`` is registered, which is to execute when pmp violation
   exception occurs
 * There're two config structures, ``pmp_config_x`` sets protected executable address range
   as 2^12 bytes; ``pmp_config_rw`` sets protected readable/writable address range as 2^12
@@ -1209,7 +1209,7 @@ This `demo_pmp_application`_ is used to demonstrate how to grant physical memory
   PMP working feature:
 
   - If **TRIGGER_PMP_VIOLATION_MODE=INSTRUCTION_FETCH_EXCEPTION**, the unallowed memory is to
-    excute, which triggers ``Instruction access fault``, whose mcause.EXCCODE = 1 and mdcause = 1
+    execute, which triggers ``Instruction access fault``, whose mcause.EXCCODE = 1 and mdcause = 1
 
   - If **TRIGGER_PMP_VIOLATION_MODE=LOAD_EXCEPTION**, the unallowed memory is to read,
     which triggers ``Load access fault``, whose mcause.EXCODE = 5 and mdcause = 1
@@ -1649,6 +1649,95 @@ Cache miss brought by ``HPM`` itself ignored, array update by col has **43 times
 That's because when first byte access brings one cache misse, **one cache line(64 bytes in this demo) is fetched to cache**,
 and it works best if other 63 cached bytes can be accessed before getting dirty as soon as possible, as update by row does.
 
+.. _design_app_demo_stack_check:
+
+demo_stack_check
+~~~~~~~~~~~~~~~~
+
+This `demo_stack_check_application`_ is used to demonstrate how to check stack overflow and underflow and track the ``sp``.
+
+For now, this demo needs to run on **only 300 Series v4.2.0 or later**, which supports this ``Stack Check`` function.
+
+.. note::
+    * The Stack Check can work as expected only when the stack downwardly grows.
+
+* ``STACK_TOP``, ``STACK_BOTTOM``, ``STACK_SIZE`` refers to stack's high/low address and size in bytes, which gets from the linker script
+* ``stack_corrupt_exception_handler`` is registered as exception handler to process stack overflow and underflow
+* A simple recursive function of calculating factorial is reformed, which will consume stack more or less by the ``n`` input, thus may cause
+  overflow; a trick is used to cause underflow that when it iterates over, decrease the stack base value to make the underflow condition on purpose
+* The ``sp`` has grown downwardly 0x50 bytes in the exception entry saving context, in this demo, add ``sp`` by 0x50 is the ``sp`` value that triggered overflow/underflow
+* When it comes into exception and handle it over, the flow doesn't stop in it as usual, and ``pc`` continues to execute, which is on purpose to show
+  ``overflow``, ``underflow`` and ``track sp`` mode in one-time run
+* In ``sp track mode``, logging is enabled in ``factorial``, to show the ``sp`` value change; and the BOUND won't track sp(won't change) if sp is bigger in the second run
+
+.. note::
+    * Must set the BOUND and BASE before setting the check mode
+    * Reserve 0x200 bytes for exception stack push/pop
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei n300 Core RISC-V processor as example
+    # cd to the demo_stack_check directory
+    cd application/baremetal/demo_stack_check
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ddr CORE=n300 clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ddr CORE=n300 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Oct 18 2023, 18:45:02
+    Download Mode: ILM
+    CPU Frequency 15996682 Hz
+    CPU HartID: 0
+    Stack's top high address: 0x90010000, stack's bottom low address: 0x9000fa00, stack size: 0x600
+
+    --------OVERFLOW CHECK MODE--------
+    BOUND register set to: 0x9000fa00
+    BASE register set to: 0x90010000
+    Stack overflow fault occurs at iteration 84, cause: 0x30000018, epc: 0x80000e90, sp: 0x9000f990
+
+    --------UNDERFLOW CHECK MODE--------
+    BASE register set to: 0x9000fd00
+    Stack underflow fault occurs at iteration 1, cause: 0x30000019, epc: 0x80000fd0, sp: 0x9000fd00
+    BASE register set to: 0x90010000
+
+    --------TRACK SP MODE--------
+    BOUND register set to: 0x90010000
+    Iterations: 1, stack bound: 0x9000fdc0
+    Iterations: 2, stack bound: 0x9000fd70
+    Iterations: 3, stack bound: 0x9000fd20
+    Iterations: 4, stack bound: 0x9000fcd0
+    Iterations: 5, stack bound: 0x9000fc80
+    Iterations: 6, stack bound: 0x9000fc30
+    Iterations: 7, stack bound: 0x9000fbe0
+    Iterations: 8, stack bound: 0x9000fb90
+    Iterations: 9, stack bound: 0x9000fb40
+    Iterations: 10, stack bound: 0x9000faf0
+    Iterations: 11, stack bound: 0x9000faa0
+    Iterations: 12, stack bound: 0x9000fa50
+    Iterations: 13, stack bound: 0x9000fa00
+    Iterations: 14, stack bound: 0x9000f9b0
+    Iterations: 15, stack bound: 0x9000f960
+    Iterations: 16, stack bound: 0x9000f910
+    Iterations: 17, stack bound: 0x9000f8c0
+    Iterations: 18, stack bound: 0x9000f870
+    Calculate factorial over, the max stack used downwards to: 0x9000f820
+
+    Rerun it. The BOUND won't track sp if sp is bigger:
+    Iterations: 1, stack bound: 0x9000f820
+    Iterations: 2, stack bound: 0x9000f820
+    Iterations: 3, stack bound: 0x9000f820
+    Iterations: 4, stack bound: 0x9000f820
+    Iterations: 5, stack bound: 0x9000f820
+
+    Stack check demo over!
+
 
 FreeRTOS applications
 ---------------------
@@ -1951,4 +2040,5 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 .. _demo_pmp_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pmp
 .. _demo_cidu_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cidu
 .. _demo_cache_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cache
+.. _demo_stack_check_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_stack_check
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html
