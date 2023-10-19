@@ -26,10 +26,10 @@ __STATIC_FORCEINLINE void set_stack_check_mode(uint8_t mode);
 static unsigned long stack_check_detected = 0;
 static unsigned long factorial_iter = 0;
 
-static void stack_corrupt_exeception_handler(unsigned long mcause, unsigned long sp)
+static void stack_corrupt_exception_handler(unsigned long mcause, unsigned long sp)
 {
     EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
-    // Note that the sp has grown downwardly 0x50 bytes in the exeception entry saving context
+    // Note that the sp has grown downwardly 0x50 bytes in the exception entry saving context
     // In this demo, add sp by 0x50 is the sp value that triggered overflow/underflow
     set_stack_check_mode(STACK_CHECK_DIS_MODE);
     switch (mcause & MCAUSE_CAUSE) {
@@ -44,7 +44,7 @@ static void stack_corrupt_exeception_handler(unsigned long mcause, unsigned long
         default: break;
     }
     factorial_iter = 0;
-    // Comment it on purpose, continue to excute
+    // Comment it on purpose, continue to execute
     // while(1);
 }
 
@@ -81,7 +81,7 @@ __STATIC_FORCEINLINE void set_stack_base(unsigned long base)
 }
 
 // A simple recursive function of calculating factorial
-// It will casue the stack to grow downwards, maybe overflow if only n is big enough
+// It will cause the stack to grow downwards, and overflow if only n is big enough
 static long factorial(int n, int log_en, int change_base)
 {
     static int iter_cnt = 0;
@@ -115,8 +115,8 @@ int main(void)
     printf("Stack's top high address: 0x%lx, stack's bottom low address: 0x%lx, stack size: 0x%lx\n", STACK_TOP, STACK_BOTTOM, STACK_SIZE);
 
     /* register corresponding exception */
-    Exception_Register_EXC(StackOverflow_EXCn, (unsigned long)stack_corrupt_exeception_handler);
-    Exception_Register_EXC(StackUnderflow_EXCn, (unsigned long)stack_corrupt_exeception_handler);
+    Exception_Register_EXC(StackOverflow_EXCn, (unsigned long)stack_corrupt_exception_handler);
+    Exception_Register_EXC(StackUnderflow_EXCn, (unsigned long)stack_corrupt_exception_handler);
 
     printf("\n--------OVERFLOW CHECK MODE--------\r\n");
     /* set the stack bound for overflow check to the default */
