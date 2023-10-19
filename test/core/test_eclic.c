@@ -99,6 +99,8 @@ void get_max_lvl_pri(uint8_t* maxpri, uint8_t* maxlvl)
 
     if (nlbits < intctlbits) {
         *maxpri = ((1 << (intctlbits - nlbits)) - 1);
+    } else { // see #56 if nlbits set to bigger than CLICINTCTLBITS
+        nlbits = intctlbits;
     }
     if (nlbits > 0) {
         *maxlvl = (1 << nlbits) - 1;
@@ -169,6 +171,8 @@ CTEST(eclic, lvl_pri_irq)
 CTEST(eclic, reg_read_write)
 {
     uint32_t orig = ECLIC_GetCfgNlbits();
+    // Check whether __ECLIC_INTCTLBITS macro is set to real hardware implemented one
+    ASSERT_EQUAL(ECLIC_GetInfoCtlbits(), __ECLIC_INTCTLBITS);
     ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS - 1);
     ASSERT_EQUAL(ECLIC_GetCfgNlbits(), __ECLIC_INTCTLBITS - 1);
     ECLIC_SetCfgNlbits(orig);
