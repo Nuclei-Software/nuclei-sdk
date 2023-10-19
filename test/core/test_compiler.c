@@ -101,13 +101,13 @@ CTEST(compiler, aligned)
     uint32_t __ALIGNED(16) data[4];
     uint32_t __ALIGNED(64) data2[4];
     unsigned long p_data = (unsigned long)(&data_aligned1);
-    CTEST_LOG("Aligned 2 Byte Data address 0x%x", p_data);
+    CTEST_LOG("Aligned 2 Byte Data address 0x%lx", p_data);
     ASSERT_EQUAL(p_data & (2 - 1), 0);
     p_data = (unsigned long)(&data[0]);
-    CTEST_LOG("Aligned 16 Byte Data address 0x%x", p_data);
+    CTEST_LOG("Aligned 16 Byte Data address 0x%lx", p_data);
     ASSERT_EQUAL(p_data & (16 - 1), 0);
     p_data = (unsigned long)(&data2[0]);
-    CTEST_LOG("Aligned 64 Byte Data address 0x%x", p_data);
+    CTEST_LOG("Aligned 64 Byte Data address 0x%lx", p_data);
     ASSERT_EQUAL(p_data & (64 - 1), 0);
 }
 

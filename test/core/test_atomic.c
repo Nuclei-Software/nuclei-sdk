@@ -22,7 +22,7 @@ CTEST(atomic, amoadd_w)
 {
     uint32_t data = INIT_VALUE;
     unsigned long pdata = (unsigned long)(&data);
-    uint32_t result = __AMOADD_W((uint32_t*)pdata, TEST_VALUE);
+    uint32_t result = __AMOADD_W((int32_t*)pdata, TEST_VALUE);
     uint32_t expected = INIT_VALUE + TEST_VALUE;
     CTEST_LOG("AMOADD: 0x%x vs 0x%x", result, expected);
     ASSERT_EQUAL(result, expected);
@@ -32,7 +32,7 @@ CTEST(atomic, amoand_w)
 {
     uint32_t data = INIT_VALUE;
     unsigned long pdata = (unsigned long)(&data);
-    uint32_t result = __AMOAND_W((uint32_t*)pdata, TEST_VALUE);
+    uint32_t result = __AMOAND_W((int32_t*)pdata, TEST_VALUE);
     uint32_t expected = INIT_VALUE & TEST_VALUE;
     CTEST_LOG("AMOAND: 0x%x vs 0x%x", result, expected);
     ASSERT_EQUAL(result, expected);
@@ -42,7 +42,7 @@ CTEST(atomic, amoor_w)
 {
     uint32_t data = INIT_VALUE;
     unsigned long pdata = (unsigned long)(&data);
-    uint32_t result = __AMOOR_W((uint32_t*)pdata, TEST_VALUE);
+    uint32_t result = __AMOOR_W((int32_t*)pdata, TEST_VALUE);
     uint32_t expected = INIT_VALUE | TEST_VALUE;
     CTEST_LOG("AMOXOR: 0x%x vs 0x%x", result, expected);
     ASSERT_EQUAL(result, expected);
@@ -52,7 +52,7 @@ CTEST(atomic, amoxor_w)
 {
     uint32_t data = INIT_VALUE;
     unsigned long pdata = (unsigned long)(&data);
-    uint32_t result = __AMOXOR_W((uint32_t*)pdata, TEST_VALUE);
+    uint32_t result = __AMOXOR_W((int32_t*)pdata, TEST_VALUE);
     uint32_t expected = INIT_VALUE ^ TEST_VALUE;
     CTEST_LOG("AMOXOR: 0x%x vs 0x%x", result, expected);
     ASSERT_EQUAL(result, expected);
@@ -117,9 +117,9 @@ CTEST(atomic, amoadd_d)
 {
     uint64_t data = INIT_VALUE;
     unsigned long pdata = (unsigned long)(&data);
-    uint64_t result = __AMOADD_D((uint64_t*)pdata, TEST_VALUE);
+    uint64_t result = __AMOADD_D((int64_t*)pdata, TEST_VALUE);
     uint64_t expected = INIT_VALUE + TEST_VALUE;
-    CTEST_LOG("AMOADD: 0x%x vs 0x%x", result, expected);
+    CTEST_LOG("AMOADD: 0x%lx vs 0x%lx", result, expected);
     ASSERT_EQUAL(result, expected);
 }
 
@@ -127,9 +127,9 @@ CTEST(atomic, amoand_d)
 {
     uint64_t data = INIT_VALUE;
     unsigned long pdata = (unsigned long)(&data);
-    uint64_t result = __AMOAND_D((uint64_t*)pdata, TEST_VALUE);
+    uint64_t result = __AMOAND_D((int64_t*)pdata, TEST_VALUE);
     uint64_t expected = INIT_VALUE & TEST_VALUE;
-    CTEST_LOG("AMOAND: 0x%x vs 0x%x", result, expected);
+    CTEST_LOG("AMOAND: 0x%lx vs 0x%lx", result, expected);
     ASSERT_EQUAL(result, expected);
 }
 
@@ -137,9 +137,9 @@ CTEST(atomic, amoor_d)
 {
     uint64_t data = INIT_VALUE;
     unsigned long pdata = (unsigned long)(&data);
-    uint64_t result = __AMOOR_D((uint64_t*)pdata, TEST_VALUE);
+    uint64_t result = __AMOOR_D((int64_t*)pdata, TEST_VALUE);
     uint64_t expected = INIT_VALUE | TEST_VALUE;
-    CTEST_LOG("AMOXOR: 0x%x vs 0x%x", result, expected);
+    CTEST_LOG("AMOXOR: 0x%lx vs 0x%lx", result, expected);
     ASSERT_EQUAL(result, expected);
 }
 
@@ -147,9 +147,9 @@ CTEST(atomic, amoxor_d)
 {
     uint64_t data = INIT_VALUE;
     unsigned long pdata = (unsigned long)(&data);
-    uint64_t result = __AMOXOR_D((uint64_t*)pdata, TEST_VALUE);
+    uint64_t result = __AMOXOR_D((int64_t*)pdata, TEST_VALUE);
     uint64_t expected = INIT_VALUE ^ TEST_VALUE;
-    CTEST_LOG("AMOXOR: 0x%x vs 0x%x", result, expected);
+    CTEST_LOG("AMOXOR: 0x%lx vs 0x%lx", result, expected);
     ASSERT_EQUAL(result, expected);
 }
 
@@ -159,7 +159,7 @@ CTEST(atomic, amomaxu_d)
     unsigned long pdata = (unsigned long)(&data);
     uint64_t result = __AMOMAXU_D((uint64_t*)pdata, TEST_VALUE);
     uint64_t expected = (uint64_t)(INIT_VALUE) > (uint64_t)(TEST_VALUE) ? INIT_VALUE : TEST_VALUE;
-    CTEST_LOG("AMOMAXU: %u vs %u", result, expected);
+    CTEST_LOG("AMOMAXU: %lu vs %lu", result, expected);
     ASSERT_EQUAL(result, expected);
 }
 
@@ -169,7 +169,7 @@ CTEST(atomic, amomax_d)
     unsigned long pdata = (unsigned long)(&data);
     int64_t result = __AMOMAX_D((int64_t*)pdata, TEST_VALUE);
     int64_t expected = (int64_t)(INIT_VALUE) > (int64_t)(TEST_VALUE) ? INIT_VALUE : TEST_VALUE;
-    CTEST_LOG("AMOMAX: %d vs %d", result, expected);
+    CTEST_LOG("AMOMAX: %ld vs %ld", result, expected);
     ASSERT_EQUAL(result, expected);
 }
 
@@ -179,7 +179,7 @@ CTEST(atomic, amominu_d)
     unsigned long pdata = (unsigned long)(&data);
     uint64_t result = __AMOMINU_D((uint64_t*)pdata, TEST_VALUE);
     uint64_t expected = (uint64_t)(INIT_VALUE) < (uint64_t)(TEST_VALUE) ? INIT_VALUE : TEST_VALUE;
-    CTEST_LOG("AMOMINU: %u vs %u", result, expected);
+    CTEST_LOG("AMOMINU: %lu vs %lu", result, expected);
     ASSERT_EQUAL(result, expected);
 }
 
@@ -189,7 +189,7 @@ CTEST(atomic, amomin_d)
     unsigned long pdata = (unsigned long)(&data);
     int64_t result = __AMOMIN_D((int64_t*)pdata, TEST_VALUE);
     int64_t expected = (int64_t)(INIT_VALUE) < (int64_t)(TEST_VALUE) ? INIT_VALUE : TEST_VALUE;
-    CTEST_LOG("AMOMIN: %d vs %d", result, expected);
+    CTEST_LOG("AMOMIN: %ld vs %ld", result, expected);
     ASSERT_EQUAL(result, expected);
 }
 #endif

@@ -44,7 +44,7 @@ CTEST(eclic, en_dis_irq)
 
     // Register test interrupt handler.
     ECLIC_SetVector(SysTimer_IRQn, (rv_csr_t)eclic_mtip_handler);
-    CTEST_LOG("Register irq vector 0x%x vs 0x%x", ECLIC_GetVector(SysTimer_IRQn), (rv_csr_t)eclic_mtip_handler);
+    CTEST_LOG("Register irq vector 0x%lx vs 0x%lx", ECLIC_GetVector(SysTimer_IRQn), (rv_csr_t)eclic_mtip_handler);
     ASSERT_EQUAL(ECLIC_GetVector(SysTimer_IRQn), (rv_csr_t)eclic_mtip_handler);
 
     // Enable the interrupt
@@ -207,7 +207,7 @@ void new_nonvec_entry(void)
 CTEST(eclic, nonvec_entry)
 {
     rv_csr_t entry = __get_nonvec_entry();
-    CTEST_LOG("Non vector entry is 0x%x", entry);
+    CTEST_LOG("Non vector entry is 0x%lx", entry);
 
     __disable_irq();
     __set_nonvec_entry((rv_csr_t)new_nonvec_entry);
@@ -228,9 +228,9 @@ void new_exc_entry(void)
 CTEST(eclic, exc_entry)
 {
     rv_csr_t entry = __get_exc_entry();
-    CTEST_LOG("Exception entry is 0x%x", entry);
+    CTEST_LOG("Exception entry is 0x%lx", entry);
     __set_exc_entry((rv_csr_t)new_exc_entry);
-    CTEST_LOG("Exception set entry is 0x%x, 0x%x", __get_exc_entry(), (rv_csr_t)new_exc_entry);
+    CTEST_LOG("Exception set entry is 0x%lx, 0x%lx", __get_exc_entry(), (rv_csr_t)new_exc_entry);
 
     ASSERT_EQUAL(__get_exc_entry(), (rv_csr_t)new_exc_entry & (rv_csr_t)(~0x3F));
 

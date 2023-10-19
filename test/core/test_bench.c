@@ -30,7 +30,7 @@ CTEST(bench, bench)
     }
     BENCH_STOP(memsetloop);
     BENCH_STAT(memsetloop);
-    printf("usecyc:%lu, lpcnt:%lu, sumcyc:%lu\n", (uint32_t)BENCH_GET_USECYC(), (uint32_t)BENCH_GET_LPCNT(), (uint32_t)BENCH_GET_SUMCYC());
+    printf("usecyc:%lu, lpcnt:%lu, sumcyc:%lu\n", (unsigned long)BENCH_GET_USECYC(), (unsigned long)BENCH_GET_LPCNT(), (unsigned long)BENCH_GET_SUMCYC());
 
 }
 // Declare HPMCOUNTER3 and HPMCOUNTER4
@@ -74,7 +74,7 @@ CTEST(bench, hpm)
 
     HPM_STAT(3, memsetloop, HPM_EVENT3);
     HPM_STAT(4, memsetloop, HPM_EVENT4);
-    printf("hpm3, usecyc:%lu, lpcnt:%lu, sumcyc:%lu\n", (uint32_t)HPM_GET_USECYC(3), (uint32_t)HPM_GET_LPCNT(3), (uint32_t)HPM_GET_SUMCYC(3));
-    printf("hpm4, usecyc:%lu, lpcnt:%lu, sumcyc:%lu\n", (uint32_t)HPM_GET_USECYC(4), (uint32_t)HPM_GET_LPCNT(4), (uint32_t)HPM_GET_SUMCYC(4));
+    printf("hpm3, usecyc:%lu, lpcnt:%lu, sumcyc:%lu\n", (unsigned long)HPM_GET_USECYC(3), (unsigned long)HPM_GET_LPCNT(3), (unsigned long)HPM_GET_SUMCYC(3));
+    printf("hpm4, usecyc:%lu, lpcnt:%lu, sumcyc:%lu\n", (unsigned long)HPM_GET_USECYC(4), (unsigned long)HPM_GET_LPCNT(4), (unsigned long)HPM_GET_SUMCYC(4));
 }
 

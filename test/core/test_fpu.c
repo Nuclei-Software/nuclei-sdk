@@ -7,9 +7,9 @@
 
 CTEST(fpu, CSR)
 {
-    CTEST_LOG("FCSR 0x%x", __get_FCSR());
-    CTEST_LOG("FRM 0x%x", __get_FRM());
-    CTEST_LOG("FFLAGS 0x%x", __get_FFLAGS());
+    CTEST_LOG("FCSR 0x%lx", __get_FCSR());
+    CTEST_LOG("FRM 0x%lx", __get_FRM());
+    CTEST_LOG("FFLAGS 0x%lx", __get_FFLAGS());
     ASSERT_EQUAL(__get_FCSR(), __get_FRM() << 5 | (__get_FFLAGS()));
     rv_csr_t old_fcsr = __get_FCSR();
     rv_csr_t newval = FFLAGS_AE_NX | (FRM_RNDMODE_DYN << 5);
@@ -26,9 +26,9 @@ CTEST(fpu, CSR)
     ASSERT_EQUAL(__get_FCSR(), FFLAGS_AE_NV | (FRM_RNDMODE_RUP << 5));
     __set_FCSR(old_fcsr);
     CTEST_LOG("After operation");
-    CTEST_LOG("FCSR 0x%x", __get_FCSR());
-    CTEST_LOG("FRM 0x%x", __get_FRM());
-    CTEST_LOG("FFLAGS 0x%x", __get_FFLAGS());
+    CTEST_LOG("FCSR 0x%lx", __get_FCSR());
+    CTEST_LOG("FRM 0x%lx", __get_FRM());
+    CTEST_LOG("FFLAGS 0x%lx", __get_FFLAGS());
 }
 
 CTEST(fpu, enable_disable)
