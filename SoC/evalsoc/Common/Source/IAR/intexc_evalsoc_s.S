@@ -19,7 +19,7 @@
  * \file     intexc_evalsoc_s.S
  * \brief    NMSIS supervisor-mode Interrupt and Exception Handling Template File
  *  for Nuclei Eval SoC which support Nuclei N/NX class cores
- * \version  V1.00
+ * \version  V1.0.0
  * \date     15 Sept 2023
  *
  ******************************************************************************/

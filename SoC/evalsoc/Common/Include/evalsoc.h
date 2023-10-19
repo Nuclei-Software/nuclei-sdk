@@ -52,6 +52,7 @@ typedef enum {
     DOWNLOAD_MODE_FLASH = 1,            /*!< Flash download mode */
     DOWNLOAD_MODE_ILM = 2,              /*!< ilm download mode */
     DOWNLOAD_MODE_DDR = 3,              /*!< ddr download mode */
+    DOWNLOAD_MODE_SRAM = 4,             /*!< sram download mode */
     DOWNLOAD_MODE_MAX,
 } DownloadMode_Type;
 
@@ -192,6 +193,7 @@ typedef enum EXCn {
 
 /* ToDo: set the defines according your Device */
 /* ToDo: define the correct core revision */
+// NOTE: These macros is not yet useful for evalsoc, since it is an fpga softcore, it can 200/300/600/900 series, any revision according to the fpga bit it use
 #if __riscv_xlen == 32
 
 #ifndef __NUCLEI_CORE_REV
@@ -210,6 +212,8 @@ typedef enum EXCn {
 
 #endif /* __riscv_xlen == 64 */
 
+#define __NUCLEI_CPU_REV          0x030600              /*!< Nuclei CPU Core Revision, version X.Y.Z, this is for the CPU Core Version, you get from Nuclei, eg. N300 v3.10.1, it should be 0x030A01 */
+#define __NUCLEI_CPU_SERIES       0x0300                /*!< Nuclei CPU Series, such as 200/300/600/900, eg. 900 will be 0x0900 */
 extern volatile IRegion_Info_Type SystemIRegionInfo;
 
 /* ToDo: define the correct core features for the evalsoc */
@@ -226,7 +230,7 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
 #define __ECLIC_BASEADDR          SystemIRegionInfo.eclic_base          /*!< Set to ECLIC baseaddr of your device */
 
 //#define __ECLIC_INTCTLBITS        3                     /*!< Set to 1 - 8, the number of hardware bits are actually implemented in the clicintctl registers. */
-#define __ECLIC_INTNUM            51                    /*!< Set to 1 - 1024, total interrupt number of ECLIC Unit */
+#define __ECLIC_INTNUM            64                    /*!< Set to 1 - 1024, total interrupt number of ECLIC Unit */
 #define __SYSTIMER_PRESENT        1                     /*!< Set to 1 if System Timer is present */
 #define __SYSTIMER_BASEADDR       SystemIRegionInfo.systimer_base          /*!< Set to SysTimer baseaddr of your device */
 //#define __SYSTIMER_HARTID         0                     /*!< Set this timer hartid if you have only 1 hart in your cpu, and you know the timer hartid, just set it */
