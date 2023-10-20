@@ -195,6 +195,17 @@ void nuclei_cpuinfo(void)
             printf(" PMON_NUM=%ld", __RV_EXTRACT_FIELD(smp_cfg, 0x3F << 13));
             printf("\r\n");
         }
+        /* ECLIC */
+        if (mcfg.b.clic) {
+            printf("         ECLIC:");
+            printf(" VERSION=0x%x", (unsigned int)ECLIC_GetInfoVer());
+            printf(" NUM_INTERRUPT=%u", (unsigned int)ECLIC_GetInfoNum());
+            printf(" CLICINTCTLBITS=%u", (unsigned int)ECLIC_GetInfoCtlbits());
+            printf(" MTH=%u", (unsigned int)ECLIC_GetMth());
+            printf(" NLBITS=%u", (unsigned int)ECLIC_GetCfgNlbits());
+            printf("\r\n");
+        }
+
         /* L2CACHE */
         if (smp_cfg & BIT(1)) {
             rv_csr_t cc_cfg = *(rv_csr_t*)(iregion_base + 0x40008);
