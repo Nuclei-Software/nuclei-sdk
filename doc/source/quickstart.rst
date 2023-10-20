@@ -61,7 +61,16 @@ For example:
 * In Linux, if you have extracted the Nuclei Studio IDE to ``/home/labdev/NucleiStudio_IDE_202310``,
   then you can find the prebuilt tools in ``/home/labdev/NucleiStudio_IDE_202310/NucleiStudio/toolchain``.
 
+You can also update tools located in the Nuclei Studio prebuilt tools ``toolchain`` by downloading newer version
+from `Nuclei Tools`_ and replace it.
+
 If you have downloaded and extracted the Nuclei Studio, then you can jump to :ref:`quickstart_get_set_nuclei_sdk` and ignore below steps.
+
+.. note::
+
+    The steps :ref:`quickstart_setup_tools_env_windows` and :ref:`quickstart_setup_tools_env_linux` are not recommended
+    as steps to setup tools and environment unless you want to use different toolchain/openocd/qemu, we **strongly recommend**
+    you just follow the simple steps in :ref:`quickstart_setup_tools_env_nside`.
 
 .. _quickstart_setup_tools_env_windows:
 
@@ -152,7 +161,7 @@ to download and install tools for you.
    - **Nuclei OpenOCD for Linux**, see number **2-1** for 64bit version in the figure :ref:`figure_quickstart_5`
    - **Make >= 3.82**: Install ``Make`` using ``sudo apt-get install make`` in Ubuntu,
      or ``sudo yum install make`` in CentOS.
-   - For ubuntu 2022.04, you need to install ``libtinfo5`` and ``libncursesw5`` packages to make gdb work.
+   - **For ubuntu 22.04**, you need to install ``libtinfo5`` and ``libncursesw5`` packages to make gdb work.
 
 .. _figure_quickstart_5:
 
@@ -223,7 +232,7 @@ The source code of Nuclei SDK is maintained in |github| and |gitee|.
 
      .. code-block:: ps1
 
-        $NUCLEI_TOOL_ROOT="D:\Software\NucleiStudio_IDE_202009\NucleiStudio\toolchain"
+        $NUCLEI_TOOL_ROOT="D:\Software\NucleiStudio_IDE_202310\NucleiStudio\toolchain"
 
 
   - **Linux**
