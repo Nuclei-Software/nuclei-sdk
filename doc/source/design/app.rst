@@ -38,8 +38,8 @@ The following applications are running using RV-STAR board or Nuclei Eval SoC.
     * Almost all the applications required Nuclei CPU configured with
       ECLIC and System Timer hardware feature.
     * Almost all the application required UART to print message, so you need to
-      implement an UART drivers and clib stub functions, if you use semihost to
-      do print message, it is not required.
+      implement an UART drivers and clib stub functions, if you use
+      :ref:`develop_buildsystem_var_semihost` to print message, it is not required.
 
 Bare-metal applications
 -----------------------
@@ -60,9 +60,9 @@ will check this RISC-V CSR **MISA** register value.
     # cd to the helloworld directory
     cd application/baremetal/helloworld
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 upload
 
 **Expected output as below:**
 
@@ -115,9 +115,9 @@ the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
     # cd to the demo_timer directory
     cd application/baremetal/demo_timer
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 upload
 
 **Expected output as below:**
 
@@ -236,9 +236,9 @@ the ECLIC API and Interrupt.
     # Change macro SWIRQ_INTLEVEL_HIGHER value in demo_eclic.c
     # to see different working mode of this demo
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 upload
 
 **Expected output(SWIRQ_INTLEVEL_HIGHER=1) as below:**
 
@@ -349,9 +349,9 @@ This `demo_dsp application`_ is used to demonstrate how to NMSIS-DSP API.
     # cd to the demo_dsp directory
     cd application/baremetal/demo_dsp
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 upload
 
 **Expected output as below:**
 
@@ -604,9 +604,9 @@ to get different score number.
     cd application/baremetal/benchmark/coremark
     # change ITERATIONS value in Makefile for gd32vf103 based board to 5000
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 upload
 
 **Expected output as below:**
 
@@ -675,9 +675,9 @@ to get different score number.
     # cd to the dhrystone directory
     cd application/baremetal/benchmark/dhrystone
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 upload
 
 **Expected output as below:**
 
@@ -778,9 +778,9 @@ to get different score number.
     # cd to the whetstone directory
     cd application/baremetal/benchmark/whetstone
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 upload
 
 **Expected output as below:**
 
@@ -1797,9 +1797,9 @@ In Nuclei SDK, we provided code and Makefile for this ``freertos demo`` applicat
     # cd to the freertos demo directory
     cd application/freertos/demo
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 upload
 
 **Expected output as below:**
 
@@ -1871,9 +1871,9 @@ In Nuclei SDK, we provided code and Makefile for this ``ucosii demo`` applicatio
     # cd to the ucosii demo directory
     cd application/ucosii/demo
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 upload
 
 **Expected output as below:**
 
@@ -1945,9 +1945,9 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread demo`` applicat
     # cd to the rtthread demo directory
     cd application/rtthread/demo
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 upload
 
 **Expected output as below:**
 
@@ -2013,9 +2013,9 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
     # cd to the rtthread msh directory
     cd application/rtthread/msh
     # Clean the application first
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    make SOC=gd32vf103 clean
     # Build and upload the application
-    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar upload
+    make SOC=gd32vf103 upload
 
 **Expected output as below:**
 
