@@ -32,7 +32,7 @@ extern __weak void eclic_mtip_handler(void);
 extern void default_intexc_handler(void);
 
 /*
- * Uncomment it if your vector table is placed in readonly section,
+ * TODO: Uncomment it if your vector table is placed in readonly section,
  * and you have defined .mintvec_rw section in a writable section in iar
  * linker icf file
  * In this implementation, when use with iar_evalsoc_flashxip.icf, you can
@@ -173,6 +173,7 @@ extern void early_exc_entry(void);
 
 extern void IAR_DATA_INIT(void);
 
+// TODO: Currently only single core is supported
 int __low_level_init(void)
 {
     __disable_interrupt();
