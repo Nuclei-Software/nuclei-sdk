@@ -341,14 +341,28 @@ Build Application
 
 We need to build application for this board :ref:`design_board_gd32vf103v_rvstar` using this command line:
 
+.. note::
+
+    * Since below steps are taking gd32vf103 SoC based board gd32vf103v_rvstar to do demostration,
+      and when you pass ``SOC=gd32vf103``, the default BOARD will be ``gd32vf103v_rvstar``, so
+      do you don't need to pass ``BOARD=gd32vf103v_rvstar``
+    * You can check default SOC/BOARD/CORE information passed by using make target ``info``, eg.
+      ``make SOC=gd32vf103 info``, for more information, please check :ref:`develop_buildsystem_make_targets`.
+
 .. code-block:: shell
 
+    # clean application if build in other application before or build for other board
+    make SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean
+    # first build choice: using full command line
     make SOC=gd32vf103 BOARD=gd32vf103v_rvstar all
+    # second build choice: using simple command line, since when SOC=gd32vf103, default BOARD is gd32vf103v_rvstar
+    make SOC=gd32vf103 all
 
 Here is the sample output of this command:
 
 .. code-block::
 
+    # NOTICE: You can check this configuration whether it matched your desired configuration
     Current Configuration: RISCV_ARCH=rv32imac RISCV_ABI=ilp32 SOC=gd32vf103 BOARD=gd32vf103v_rvstar CORE=n205 DOWNLOAD=flashxip
     "Assembling : " ../../../SoC/gd32vf103/Common/Source/GCC/intexc_gd32vf103.S
     "Assembling : " ../../../SoC/gd32vf103/Common/Source/GCC/startup_gd32vf103.S
