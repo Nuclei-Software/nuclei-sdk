@@ -201,7 +201,7 @@ buildconfig:
   - type: common
     common_flags: # flags need to be combined together across all packages
       - flags: -g -fno-common -ffunction-sections -fdata-sections -msave-restore
-      - flags: -march=${nuclei_core.arch}${nuclei_archext} -mabi=${nuclei_core.abi}
+      - flags: -march=${nuclei_core.arch} -mabi=${nuclei_core.abi}
       - flags: -mcmodel=${nuclei_core.cmodel}
       - flags: -nostdinc
         condition: $( ${stdclib} == "nostd" )
