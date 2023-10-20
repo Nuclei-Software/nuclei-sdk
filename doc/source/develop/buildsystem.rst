@@ -813,11 +813,24 @@ SEMIHOST
 
 If **SEMIHOST=1**, it means it will enable semihost support using openocd.
 
-Currently in Nuclei SDK, only newlibc support semihosting feature, libncrt is not yet ready.
+From 0.5.0, both newlib and libncrt support semihosting feature, and when using semihost,
+no need to implement the clib stub functions, which is done by newlib or libncrt semihosting
+library.
 
-When using semihosting feature, debug message will print via openocd console.
+And for qemu 2023.10 verison, you can also use semihosting feature, simple usage is like below for qemu:
 
-You need to use it like this(Assume you are run on evalsoc, CORE=n300):
+.. code-block:: shell
+
+    cd application/baremetal/helloworld
+    # clean project first
+    make SOC=evalsoc SEMIHOST=1 clean
+    make SOC=evalsoc SEMIHOST=1 all
+    # run on qemu, SEMIHOST=1 is required to pass when run qemu
+    make SOC=evalsoc SEMIHOST=1 run_qemu
+
+When using semihosting feature with openocd, debug message will print via openocd console.
+
+You need to use it like this(assume you are run on evalsoc, CORE=n300):
 
 In terminal 1, open openocd and monitor the output:
 
