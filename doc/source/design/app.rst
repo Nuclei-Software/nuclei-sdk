@@ -28,8 +28,18 @@ If you want to develop your own application in Nuclei SDK, please click
 
 The following applications are running using RV-STAR board or Nuclei Eval SoC.
 
-Some applications may not be able to be run on your Nuclei SoC due to lack
-of cpu feature required to run on it.
+.. note::
+
+    * Most of the application demostrated below using ``SOC=gd32vf103``,
+      you can easily change it to other SoC such as evalsoc by change it to
+      ``SOC=evalsoc``
+    * Some applications may not be able to be run on your SoC using Nuclei CPU
+      due to lack of cpu feature required to run on it.
+    * Almost all the applications required Nuclei CPU configured with
+      ECLIC and System Timer hardware feature.
+    * Almost all the application required UART to print message, so you need to
+      implement an UART drivers and clib stub functions, if you use semihost to
+      do print message, it is not required.
 
 Bare-metal applications
 -----------------------
@@ -428,6 +438,7 @@ to do spinlock in this example.
 
     * It doesn't work with gd32vf103 processor.
     * Need to enable I/D Cache in <Device.h> if I/D Cache present in CPU.
+    * It need at least a 2-Core SMP CPU
 
 Need to change ``__ICACHE_PRESENT``, ``__DCACHE_PRESENT`` and ``__CCM_PRESENT`` to 1 in
 ``SoC/evalsoc/Common/Include/evalsoc.h`` before run this application, from 0.4.0 release,
@@ -483,6 +494,11 @@ for evalsoc/demosoc, ``__ICACHE_PRESENT`` and ``__DCACHE_PRESENT`` are default s
 demo_nice
 ~~~~~~~~~
 
+.. note::
+
+    * It doesn't work with gd32vf103 processor.
+    * Need nice feature enabled, and Nuclei NICE hardware demo integrated such as evalsoc
+
 This `demo_nice application`_ is used to demonstrate how to Nuclei NICE feature.
 
 **NICE** is short for Nuclei Instruction Co-unit Extension, which is used to
@@ -497,9 +513,6 @@ For more about **NICE** feature, please click `Nuclei User Extended Introduction
 * Mainly show how to use NICE intrinsic function with compiler.
 * It only works with Nuclei RISC-V Processor with the hardware NICE demo integrated.
 
-.. note::
-
-    * It doesn't work with gd32vf103 processor.
 
 **How to run this application:**
 
@@ -814,9 +827,10 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
 
 .. note::
 
+    * It doesn't work with gd32vf103 processor.
+    * It need Nuclei CPU configured with TEE feature and S-Mode ECLIC
     * In this application's Makefile, we provided comments in Makefile about optimization
       for code size, please refer to chapter :ref:`design_app_demo_eclic` for details.
-    * It doesn't work with gd32vf103 processor.
     * Need to enable TEE in <Device.h> if TEE present in CPU.
 
 * The timer interrupt and timer software interrupt are used
@@ -971,6 +985,7 @@ This `demo_spmp_application`_ is used to demonstrate how to grant physical memor
 .. note::
 
     * It doesn't work with gd32vf103 processor.
+    * It need Nuclei CPU configured with TEE, PMP, sPMP feature
     * Need to enable PMP in <Device.h> if PMP present in CPU.
     * Need to enable TEE in <Device.h> if TEE present in CPU.
     * Need to enable SPMP in <Device.h> if SPMP present in CPU.
@@ -1194,6 +1209,8 @@ This `demo_pmp_application`_ is used to demonstrate how to grant physical memory
 
 .. note::
 
+    * It doesn't work with gd32vf103 processor.
+    * It need Nuclei CPU configured with PMP feature
     * Need to enable PMP in <Device.h> if PMP present in CPU.
 
 * ``pmp_violation_fault_handler`` is registered, which is to execute when pmp violation
@@ -1334,6 +1351,10 @@ evalsoc/demosoc system, ilm/dlm are private resource for cpu, only the DDR memor
 for all the cpu.
 
 .. note::
+
+    * It doesn't work with gd32vf103 processor.
+    * It need Nuclei SMP CPU configured with CIDU feature
+    * It need Nuclei EvalSoC's uart and its interrupt, if you want to port it, you need to port uart driver of your SoC
     * Need to enable CIDU in <Device.h> if CIDU present in cluster.
     * Multicore SoC is needed.
 
@@ -1486,6 +1507,11 @@ but process nothing (keyboard input has been received and rx interrupt pending c
 
 demo_cache
 ~~~~~~~~~~
+
+.. note::
+
+    * It doesn't work with gd32vf103 processor.
+    * It need Nuclei CPU configured with CCM feature
 
 This `demo_cache_application`_ is used to demonstrate how to understand cache mechanism.
 
@@ -1653,6 +1679,11 @@ and it works best if other 63 cached bytes can be accessed before getting dirty 
 
 demo_stack_check
 ~~~~~~~~~~~~~~~~
+
+.. note::
+
+    * It doesn't work with gd32vf103 processor.
+    * It need Nuclei CPU configured with stack check feature
 
 This `demo_stack_check_application`_ is used to demonstrate how to check stack overflow and underflow and track the ``sp``.
 
