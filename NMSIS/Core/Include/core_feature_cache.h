@@ -427,9 +427,8 @@ __STATIC_FORCEINLINE unsigned long MLockICacheLines(unsigned long addr, unsigned
                 return fail_info;
             }
         }
-    } else {
-        return CCM_OP_SUCCESS;
     }
+    return CCM_OP_SUCCESS;
 }
 
 /**
@@ -474,9 +473,8 @@ __STATIC_FORCEINLINE unsigned long SLockICacheLines(unsigned long addr, unsigned
                 return fail_info;
             }
         }
-    } else {
-        return CCM_OP_SUCCESS;
     }
+    return CCM_OP_SUCCESS;
 }
 
 /**
@@ -521,9 +519,8 @@ __STATIC_FORCEINLINE unsigned long ULockICacheLines(unsigned long addr, unsigned
                 return fail_info;
             }
         }
-    } else {
-        return CCM_OP_SUCCESS;
     }
+    return CCM_OP_SUCCESS;
 }
 
 /**
@@ -1173,9 +1170,8 @@ __STATIC_FORCEINLINE unsigned long MLockDCacheLines(unsigned long addr, unsigned
                 return fail_info;
             }
         }
-    } else {
-        return CCM_OP_SUCCESS;
     }
+    return CCM_OP_SUCCESS;
 }
 
 /**
@@ -1220,9 +1216,8 @@ __STATIC_FORCEINLINE unsigned long SLockDCacheLines(unsigned long addr, unsigned
                 return fail_info;
             }
         }
-    } else {
-        return CCM_OP_SUCCESS;
     }
+    return CCM_OP_SUCCESS;
 }
 
 /**
@@ -1267,9 +1262,8 @@ __STATIC_FORCEINLINE unsigned long ULockDCacheLines(unsigned long addr, unsigned
                 return fail_info;
             }
         }
-    } else {
-        return CCM_OP_SUCCESS;
     }
+    return CCM_OP_SUCCESS;
 }
 
 /**
