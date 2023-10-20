@@ -91,7 +91,7 @@ void eclic_stip_handler(void) __attribute__((weak));
  * \brief vector interrupt storing ISRs for supervisor mode
  * \details
  *  vector_table_s is hold by stvt register, the address must align according
- *  to actual interrupt numbers as below, now align to 256 bytes considering we put 64 interrupts here
+ *  to actual interrupt numbers as below, now align to 512 bytes considering we put up to 128 interrupts here
  *  alignment must comply to table below if you increase or decrease vector interrupt number
  *  interrupt number      alignment
  *    0 to 16               64-byte
@@ -102,11 +102,13 @@ void eclic_stip_handler(void) __attribute__((weak));
  *    257 to 512              2KB
  *    513 to 1024             4KB
  */
+// TODO: change the aligned(512) to match stvt alignment requirement according to your eclic max interrupt number
 #ifndef __ICCRISCV__
-#define __SMODE_VECTOR_ATTR   __attribute__((section (".text.vtable_s"), aligned(256)))
+#define __SMODE_VECTOR_ATTR   __attribute__((section (".text.vtable_s"), aligned(512)))
 #else
-#define __SMODE_VECTOR_ATTR   __attribute__((section (".sintvec"), aligned(256)))
+#define __SMODE_VECTOR_ATTR   __attribute__((section (".sintvec"), aligned(512)))
 #endif
+// TODO: place your interrupt handler into this vector table, important if your vector table is in flash
 const unsigned long vector_table_s[SOC_INT_MAX] __SMODE_VECTOR_ATTR =
 {
     (unsigned long)(default_intexc_handler),        /* 0: Reserved */

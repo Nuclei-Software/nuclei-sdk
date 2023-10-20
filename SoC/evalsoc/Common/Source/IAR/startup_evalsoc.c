@@ -46,11 +46,13 @@ typedef void(*__fp)(void);
  * if you want to register vector interrupt with new entry,
  * you need to place it in writable section or create a ram vector
  * after bootup.
- * This alignment is set to 512 byte for up to 128 interrupts,
- * If you have more interrupts, you need to adjust the alignment
+ * TODO: This data_alignment is set to 512 byte for up to 128 interrupts,
+ * If you have more interrupts, you need to adjust the data_alignment
  * to other value, for details, please check mtvt csr documented
  * in Nuclei RISC-V ISA Spec
  */
+// TODO: change the data_alignment = 512 to match mtvt alignment requirement according to your eclic max interrupt number
+// TODO: place your interrupt handler into this vector table, important if your vector table is in flash
 #pragma data_alignment = 512
 static const __fp vector_base[SOC_INT_MAX] __attribute__((section (".mintvec"))) = {
     default_intexc_handler,
@@ -120,10 +122,13 @@ static const __fp vector_base[SOC_INT_MAX] __attribute__((section (".mintvec")))
 };
 
 #if defined(FLASH_RAM_VECTOR)
+// TODO: change the data_alignment = 512 to match mtvt alignment requirement according to your eclic max interrupt number
 #pragma data_alignment = 512
 static __fp vector_base_ram[SOC_INT_MAX] __attribute__((section (".mintvec_rw")));
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+// TODO: change the data_alignment = 512 to match stvt alignment requirement according to your eclic max interrupt number
+#pragma data_alignment = 512
 static unsigned long vector_base_s_ram[SOC_INT_MAX] __attribute__((section (".sintvec_rw")));
 extern const unsigned long vector_table_s[SOC_INT_MAX];
 #endif
