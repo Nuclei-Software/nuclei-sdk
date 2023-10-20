@@ -249,7 +249,6 @@ configuration:
     type: spinner
     global: true
     description: Boot HartID
-    global: true
     param:
       range: >-
           [0, 15, 1]
