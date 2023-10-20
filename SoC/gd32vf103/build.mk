@@ -23,9 +23,17 @@ USB_DRIVER ?=
 # even though it was set with a command argument
 override CORE := n205
 override DOWNLOAD := flashxip
+DEFAULT_BOARD := gd32vf103v_rvstar
 
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
+
+VALID_NUCLEI_SDK_SOC_BOARD := $(wildcard $(NUCLEI_SDK_SOC_BOARD))
+ifeq ($(VALID_NUCLEI_SDK_SOC_BOARD),)
+$(warning $(BOARD) for $(SOC) doesn't exist, change it to default $(DEFAULT_BOARD)!)
+override NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(DEFAULT_BOARD)
+override VALID_NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC_BOARD)
+endif
 
 OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_gd32vf103.cfg
 
@@ -114,7 +122,6 @@ ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_gd32vf103.S \
 		$(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_gd32vf103.S
 
 # Add extra board related source files and header files
-VALID_NUCLEI_SDK_SOC_BOARD := $(wildcard $(NUCLEI_SDK_SOC_BOARD))
 ifneq ($(VALID_NUCLEI_SDK_SOC_BOARD),)
 INCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Include
 C_SRCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Source
