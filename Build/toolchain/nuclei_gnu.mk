@@ -135,7 +135,12 @@ ifneq ($(findstring zc,$(ARCH_EXT)),)
 COMMON_FLAGS += -fomit-frame-pointer -fno-shrink-wrap-separate
 endif
 
-LDFLAGS += -nodefaultlibs -Wl,--no-warn-rwx-segments
+LDFLAGS += -nodefaultlibs
+# For binutils 2.40 in Nuclei GNU Toolchain, need add below option
+# to remove link warning
+ifeq ($(COMPILE_PREFIX),riscv64-unknown-elf-)
+LDFLAGS += -Wl,--no-warn-rwx-segments
+endif
 
 ifneq ($(findstring newlib,$(STDCLIB)),)
 # when compiled with -flto, need to pass the following options
