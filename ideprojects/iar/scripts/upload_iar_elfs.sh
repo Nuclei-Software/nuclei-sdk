@@ -7,7 +7,7 @@ CORE=n300
 UPLOAD=${UPLOAD:-1}
 
 # TODO: Change this ROOTs according to your environment settings
-IAR_WORKBENCH_ROOT="/c/Program Files/IAR Systems/Embedded Workbench 9.1"
+IAR_WORKBENCH_ROOT="/c/Program Files/IAR Systems/Embedded Workbench 9.2"
 NUCLEI_TOOLCHAIN_ROOT="/d/Software/NucleiStudio/toolchain"
 
 # TODO: you need to modify the default remote to your real machine gdb remote such as localhost:3333
@@ -70,7 +70,7 @@ function change_linkscript() {
 tool_check $GDB
 tool_check iarbuild
 
-#upload_program baremetal/Debug/Exe/dhrystone.out
+#upload_program rtos/Debug/Exe/freertos_demo.out
 #exit 0
 
 folders=(rtos baremetal)
