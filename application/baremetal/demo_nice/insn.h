@@ -35,15 +35,16 @@ extern "C" {
 #define ROW_LEN     3
 #define COL_LEN     3
 
-// In latest Nuclei CPU, 0x7b changed to 0x5b
-// custom2 reserved for nice instructions now
+// TODO: demo nice opcode change according to rtl updates:
+// demo nice is just an demo used to prove Nuclei NICE feature, so this opcode might change frequently
+// 20231023: 0x5b -> 0xb
+// 20220721: 0x7b -> 0x5b
 
 /** custom nice instruction lbuf */
 __STATIC_FORCEINLINE void custom_lbuf(unsigned long* addr)
 {
     int zero = 0;
-
-    asm volatile(".insn r 0x5b, 2, 1, x0, %1, x0" : "=r"(zero) : "r"(addr));
+    asm volatile(".insn r 0xb, 2, 1, x0, %1, x0" : "=r"(zero) : "r"(addr));
 }
 
 /** custom nice instruction sbuf */
@@ -51,7 +52,7 @@ __STATIC_FORCEINLINE void custom_sbuf(unsigned long* addr)
 {
     int zero = 0;
 
-    asm volatile(".insn r 0x5b, 2, 2, x0, %1, x0" : "=r"(zero) : "r"(addr));
+    asm volatile(".insn r 0xb, 2, 2, x0, %1, x0" : "=r"(zero) : "r"(addr));
 }
 
 /** custom nice instruction rowsum */
@@ -59,7 +60,7 @@ __STATIC_FORCEINLINE int custom_rowsum(unsigned long* addr)
 {
     int rowsum;
 
-    asm volatile(".insn r 0x5b, 6, 6, %0, %1, x0" : "=r"(rowsum) : "r"(addr));
+    asm volatile(".insn r 0xb, 6, 6, %0, %1, x0" : "=r"(rowsum) : "r"(addr));
 
     return rowsum;
 }
