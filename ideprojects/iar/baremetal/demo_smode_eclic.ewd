@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-    <fileVersion>3</fileVersion>
+    <fileVersion>4</fileVersion>
     <configuration>
         <name>Debug</name>
         <toolchain>
@@ -448,11 +448,15 @@
             <name>SIMRISCV</name>
             <archiveVersion>5</archiveVersion>
             <data>
-                <version>0</version>
+                <version>1</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
                     <name>SIMMandatory</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CSimMisalignedDataAccess</name>
                     <state>0</state>
                 </option>
             </data>
@@ -956,11 +960,15 @@
             <name>SIMRISCV</name>
             <archiveVersion>5</archiveVersion>
             <data>
-                <version>0</version>
+                <version>1</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
                     <name>SIMMandatory</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>CSimMisalignedDataAccess</name>
                     <state>0</state>
                 </option>
             </data>

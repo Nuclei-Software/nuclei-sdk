@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-    <fileVersion>3</fileVersion>
+    <fileVersion>4</fileVersion>
     <configuration>
         <name>Debug</name>
         <toolchain>
@@ -11,7 +11,7 @@
             <name>General</name>
             <archiveVersion>5</archiveVersion>
             <data>
-                <version>10</version>
+                <version>11</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -248,13 +248,33 @@
                     <name>GDeviceCacheEswinSlave</name>
                     <state>0</state>
                 </option>
+                <option>
+                    <name>GDeviceCodesizeBasicSlave</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>GDeviceCodesizePushPopSlave</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>GDeviceCryptoNistSlave</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>GDeviceCryptoShangMiSlave</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>GGeneralMisalignedDataAccess</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>ICCRISCV</name>
             <archiveVersion>5</archiveVersion>
             <data>
-                <version>8</version>
+                <version>9</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -450,6 +470,10 @@
                     <name>ICodeModel</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>IMisalignedDataAccess</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -635,18 +659,10 @@
             </data>
         </settings>
         <settings>
-            <name>BUILDACTION</name>
-            <archiveVersion>1</archiveVersion>
-            <data>
-                <prebuild></prebuild>
-                <postbuild></postbuild>
-            </data>
-        </settings>
-        <settings>
             <name>ILINK</name>
             <archiveVersion>5</archiveVersion>
             <data>
-                <version>9</version>
+                <version>10</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -998,6 +1014,10 @@
                     <name>ILinkCoDenseJal</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>ILinkMisalignedDataAccess</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1021,6 +1041,11 @@
                 </option>
             </data>
         </settings>
+        <settings>
+            <name>BUILDACTION</name>
+            <archiveVersion>2</archiveVersion>
+            <data />
+        </settings>
     </configuration>
     <configuration>
         <name>Release</name>
@@ -1032,7 +1057,7 @@
             <name>General</name>
             <archiveVersion>5</archiveVersion>
             <data>
-                <version>10</version>
+                <version>11</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1269,13 +1294,33 @@
                     <name>GDeviceCacheEswinSlave</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>GDeviceCodesizeBasicSlave</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>GDeviceCodesizePushPopSlave</name>
+                    <state>0</state>
+                </option>
+                <option>
+                    <name>GDeviceCryptoNistSlave</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>GDeviceCryptoShangMiSlave</name>
+                    <state>1</state>
+                </option>
+                <option>
+                    <name>GGeneralMisalignedDataAccess</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
             <name>ICCRISCV</name>
             <archiveVersion>5</archiveVersion>
             <data>
-                <version>8</version>
+                <version>9</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1468,6 +1513,10 @@
                     <name>ICodeModel</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>IMisalignedDataAccess</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1653,18 +1702,10 @@
             </data>
         </settings>
         <settings>
-            <name>BUILDACTION</name>
-            <archiveVersion>1</archiveVersion>
-            <data>
-                <prebuild></prebuild>
-                <postbuild></postbuild>
-            </data>
-        </settings>
-        <settings>
             <name>ILINK</name>
             <archiveVersion>5</archiveVersion>
             <data>
-                <version>9</version>
+                <version>10</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -2016,6 +2057,10 @@
                     <name>ILinkCoDenseJal</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>ILinkMisalignedDataAccess</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -2038,6 +2083,11 @@
                     <state>###Uninitialized###</state>
                 </option>
             </data>
+        </settings>
+        <settings>
+            <name>BUILDACTION</name>
+            <archiveVersion>2</archiveVersion>
+            <data />
         </settings>
     </configuration>
     <group>
