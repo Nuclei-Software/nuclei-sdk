@@ -8,22 +8,6 @@ AR      := llvm-ar
 SIZE    := llvm-size
 OPENOCD := openocd
 
-ifeq ($(NOGC),1)
-GC_CFLAGS =
-GC_LDFLAGS =
-else
-GC_CFLAGS = -ffunction-sections -fdata-sections
-GC_LDFLAGS = -Wl,--gc-sections -Wl,--check-sections
-endif
-
-ifeq ($(SIMULATION),1)
-COMMON_FLAGS += -DCFG_SIMULATION
-endif
-
-ifeq ($(BANNER),0)
-COMMON_FLAGS += -DNUCLEI_BANNER=0
-endif
-
 ifneq ($(findstring libncrt,$(STDCLIB)),)
 $(error terapine toolchain don't provide libncrt library support)
 endif

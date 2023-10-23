@@ -34,22 +34,6 @@ SIZE    := $(COMPILE_PREFIX)size
 OPENOCD := openocd
 endif
 
-ifeq ($(NOGC),1)
-GC_CFLAGS =
-GC_LDFLAGS =
-else
-GC_CFLAGS = -ffunction-sections -fdata-sections
-GC_LDFLAGS = -Wl,--gc-sections -Wl,--check-sections
-endif
-
-ifeq ($(SIMULATION),1)
-COMMON_FLAGS += -DCFG_SIMULATION
-endif
-
-ifeq ($(BANNER),0)
-COMMON_FLAGS += -DNUCLEI_BANNER=0
-endif
-
 # Handle standard c library selection variable STDCLIB
 ifneq ($(findstring newlib,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has newlib in it
@@ -71,7 +55,9 @@ else ifneq ($(findstring libncrt,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has libncrt in it
 LDLIBS += -l$(patsubst lib%,%,$(STDCLIB))
 ifneq ($(NCRTHEAP),)
+ifeq ($(COMPILE_PREFIX),riscv64-unknown-elf-)
 LDLIBS += -lheapops_$(NCRTHEAP)
+endif
 endif
 COMMON_FLAGS += -isystem=/include/libncrt
 ###
@@ -90,14 +76,18 @@ endif
 
 ifneq ($(SEMIHOST),)
 ifneq ($(findstring libncrt,$(STDCLIB)),)
+ifeq ($(COMPILE_PREFIX),riscv64-unknown-elf-)
 LDLIBS += -lfileops_semi
+endif
 else
 LDLIBS += -lsemihost
 endif
 else
 ifneq ($(findstring libncrt,$(STDCLIB)),)
 ifneq ($(NCRTIO),)
+ifeq ($(COMPILE_PREFIX),riscv64-unknown-elf-)
 LDLIBS += -lfileops_$(NCRTIO)
+endif
 endif
 endif
 endif
