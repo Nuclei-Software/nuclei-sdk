@@ -1107,6 +1107,11 @@ system libraries by the ``STDCLIB`` variable choice, so need to link desired lib
 * ``-lsemihost``: riscv semihosting library which implement a set of standard I/O and file I/O operations, see https://github.com/riscv-mcu/riscv-newlib/tree/nuclei/newlib-4.3.0/libgloss/riscv
 * ``-lnosys``: a set of stub functions which implement a set of standard I/O operations but does nothing, and when link with it, it will throw link warning, see https://github.com/riscv-mcu/riscv-newlib/blob/nuclei/newlib-4.3.0/libgloss/libnosys
 * ``-lncrt_pico/-lncrt_nano/-lncrt_small/-lncrt_balanced/-lncrt_fast``: Nuclei libncrt library, it provides pico/nano/small/balanced/fast variant to provide standard c library, math library, and libgcc library features, and need to use together with ``-lheapops_minimal/-lheapops_basic/-lheapops_realtime`` heap operation API, and ``-lfileops_uart/-lfileops_semi/-lfileops_rtt`` file io operation API, when using this libncrt library, please don't link ``-lgcc -lc_nano/-lc -lm -lsemihost -lnosys``, and it also can't link with ``-lstdc++``
+* Upgrading libncrt from Nuclei GNU Toolchain 2022.12 to Nuclei Toolchain 2023.10, please change it like this, take **libncrt_small** as example:
+
+  - **asm/c/c++ options**: ``--specs=libncrt_small.specs`` -> ``--specs=libncrt_small.specs`` works for gcc, or ``-isystem=/include/libncrt`` works for both gcc and clang
+  - **ld options**: ``--specs=libncrt_small.specs`` -> ``--specs=libncrt_small.specs -lheapops_basic -lfileops_uart`` works for gcc, ``-nodefaultlibs -lncrt_small -lheapops_basic -lfileops_uart`` works for both gcc and clang
+  - We recommend you to use later version works for both gcc and clang, ``-nodefaultlibs`` is used to exclude startup crt, libgcc and c library in default gcc or clang, use the version specified by us to use libncrt.
 
 .. list-table:: Available STDCLIB choices
    :widths: 10 70
