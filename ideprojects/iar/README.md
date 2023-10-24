@@ -2,7 +2,9 @@
 
 In this folder, we provided a prebuilt IAR workspace with baremetal and rtos projects.
 
-> You can refer to this demo projects to build your own iar projects.
+> You can refer to these demo projects to build your own iar projects, please use **IAR Embedded Workbench for RISC-V 3.30** released at **October 23, 2023**.
+
+> If you want to evaluate Nuclei N300 DSP feature(P-ext 0.5.4), you can change the file `C:\Program Files\IAR Systems\Embedded Workbench 9.2\riscv\config\devices\Nuclei\N300.menu`, change `RV32IMAFDCB_Zkn_Zks_Zcb_Zcmp` to `RV32IMAFDCB_Zkn_Zks_Zcb_Zcmp_Xandesdsp`, `Xandesdsp` is based on P-ext 0.5.0, there are some intruction encoding updates from 0.5.0 to 0.5.4, and we use IAR custom instruction intrinsic to implement the different instructions, please check `NMSIS/Core/core_feature_dsp.h` for details, and in future, we will co-operate with IAR to support full Nuclei DSP feature including(N1/N2/N3 custom enhancement instructions).
 
 These projects demostrated the following features:
 
@@ -14,14 +16,14 @@ These projects demostrated the following features:
   for IAR Compiler, please check the commit histories for the changes we have made.
 - These projects are using iar linker script icf file provided in this project not the one in IAR workbench.
 - Currently both Nuclei RV32 and RV64 processors are supported in this project.
-- RISC-V DSP feature is still working in progress together with IAR team.
+- Full Nuclei RISC-V DSP feature is still working in progress together with IAR team.
 - DSP/NN libraries are able to be used in this project, you can try with prebuilt libraries, but not able to
   use any dsp intrinsic API, since not yet full compatiable with IAR version.
 - For linker file used in IAR, the stack and heap are just following data/bss section, not at the end of ram,
   so you need to take care of the stack and heap size setting in IAR workbench, which means if your application
   code use a lot of heap or stack, the application may crash, you need to increase stack or heap size on demand.
 
-You can directly try with this iar workspace by click this nucleisdk.eww after you have installed [IAR Workbench](https://www.iar.com/riscv).
+You can directly try with this iar workspace by click this `nucleisdk.eww` after you have installed [IAR Workbench](https://www.iar.com/riscv).
 ![IAR Projects for Nuclei](asserts/nsdk_iar_projects.png)
 
 If you want to debug using I-jet, you need to change Debugger Driver to I-jet in iar project options.
