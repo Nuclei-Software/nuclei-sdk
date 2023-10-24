@@ -81,9 +81,9 @@ extern fnptr exc_entry_s;
 extern void default_intexc_handler(void);
 
 /** eclic s-mode software interrupt handler in eclic mode */
-extern void eclic_ssip_handler(void) __attribute__((weak));
+extern void eclic_ssip_handler(void) __WEAK;
 /** eclic s-mode time interrupt handler in eclic mode */
-extern void eclic_stip_handler(void) __attribute__((weak));
+extern void eclic_stip_handler(void) __WEAK;
 
 /* default s-mode exception handler, which user can modify it at your need */
 static void system_default_exception_handler_s(unsigned long scause, unsigned long sp);
