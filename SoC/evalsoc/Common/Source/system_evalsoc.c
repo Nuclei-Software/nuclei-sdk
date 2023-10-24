@@ -44,9 +44,10 @@
  * the silicon vendor to match their actual device. As a <b>minimum requirement</b>,
  * this file must provide:
  *  -  A device-specific system configuration function, \ref SystemInit.
- *  -  A global variable that contains the system frequency, \ref SystemCoreClock.
- *  -  A global eclic configuration initialization, \ref ECLIC_Init.
- *  -  Global c library \ref _init and \ref _fini functions called right before calling main function.
+ *  -  Global c library \ref _premain_init and \ref _postmain_fini functions called right before calling main function.
+ *     -  A global variable that contains the system frequency, \ref SystemCoreClock.
+ *     -  A global eclic configuration initialization, \ref ECLIC_Init.
+ *     -  A global exception and trap configuration initialization, \ref Trap_Init and \ref Exception_Init.
  *  -  Vendor customized interrupt, exception and nmi handling code, see \ref NMSIS_Core_IntExcNMI_Handling
  *
  * The file configures the device and, typically, initializes the oscillator (PLL) that is part
@@ -72,22 +73,30 @@
 typedef void (*fnptr)(void);
 
 /* for the following variables, see intexc_evalsoc.S and intexc_evalsoc_s.S */
+/** default entry for s-mode non-vector irq entry */
 extern fnptr irq_entry_s;
+/** default entry for s-mode exception entry */
 extern fnptr exc_entry_s;
+/** default eclic interrupt or exception interrupt handler */
 extern void default_intexc_handler(void);
 
-/**
- * \brief      Supervisor mode system Default Exception Handler
- * \details
- * This function provides a default supervisor mode exception handler for all exception ids.
- * By default, It will just print some information for debug, Vendor can customize it according to its requirements.
- */
+/** eclic s-mode software interrupt handler in eclic mode */
+extern void eclic_ssip_handler(void) __attribute__((weak));
+/** eclic s-mode time interrupt handler in eclic mode */
+extern void eclic_stip_handler(void) __attribute__((weak));
+
+/* default s-mode exception handler, which user can modify it at your need */
 static void system_default_exception_handler_s(unsigned long scause, unsigned long sp);
 
-void eclic_ssip_handler(void) __attribute__((weak));
-void eclic_stip_handler(void) __attribute__((weak));
-
+#ifndef __ICCRISCV__
+#define __SMODE_VECTOR_ATTR   __attribute__((section (".text.vtable_s"), aligned(512)))
+#else
+#define __SMODE_VECTOR_ATTR   __attribute__((section (".sintvec"), aligned(512)))
+#endif
+// TODO: change the aligned(512) to match stvt alignment requirement according to your eclic max interrupt number
+// TODO: place your interrupt handler into this vector table, important if your vector table is in flash
 /**
+ * \var unsigned long vector_table_s[SOC_INT_MAX]
  * \brief vector interrupt storing ISRs for supervisor mode
  * \details
  *  vector_table_s is hold by stvt register, the address must align according
@@ -102,13 +111,6 @@ void eclic_stip_handler(void) __attribute__((weak));
  *    257 to 512              2KB
  *    513 to 1024             4KB
  */
-// TODO: change the aligned(512) to match stvt alignment requirement according to your eclic max interrupt number
-#ifndef __ICCRISCV__
-#define __SMODE_VECTOR_ATTR   __attribute__((section (".text.vtable_s"), aligned(512)))
-#else
-#define __SMODE_VECTOR_ATTR   __attribute__((section (".sintvec"), aligned(512)))
-#endif
-// TODO: place your interrupt handler into this vector table, important if your vector table is in flash
 const unsigned long vector_table_s[SOC_INT_MAX] __SMODE_VECTOR_ATTR =
 {
     (unsigned long)(default_intexc_handler),        /* 0: Reserved */
@@ -436,81 +438,6 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
     }
     return 0;
 }
-/** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
-
-/** Banner Print for Nuclei SDK */
-void SystemBannerPrint(void)
-{
-#if defined(NUCLEI_BANNER) && (NUCLEI_BANNER == 1)
-    printf("Nuclei SDK Build Time: %s, %s\r\n", __DATE__, __TIME__);
-#ifdef DOWNLOAD_MODE_STRING
-    printf("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
-#endif
-    printf("CPU Frequency %u Hz\r\n", (unsigned int)SystemCoreClock);
-    printf("CPU HartID: %u\r\n", (unsigned int)__get_hart_id());
-#endif
-}
-
-/**
- * \brief initialize eclic config
- * \details
- * ECLIC needs be initialized after boot up,
- * Vendor could also change the initialization
- * configuration.
- */
-void ECLIC_Init(void)
-{
-    /* Global Configuration about MTH and NLBits.
-     * TODO: Please adapt it according to your system requirement.
-     * This function is called in _init function */
-    ECLIC_SetMth(0);
-    ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
-
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-    /* Global Configuration about STH */
-    ECLIC_SetSth(0);
-#endif
-}
-
-/**
- * \brief  Initialize a specific IRQ and register the handler
- * \details
- * This function set vector mode, trigger mode and polarity, interrupt level and priority,
- * assign handler for specific IRQn.
- * \param [in]  IRQn        NMI interrupt handler address
- * \param [in]  shv         \ref ECLIC_NON_VECTOR_INTERRUPT means non-vector mode, and \ref ECLIC_VECTOR_INTERRUPT is vector mode
- * \param [in]  trig_mode   see \ref ECLIC_TRIGGER_Type
- * \param [in]  lvl         interupt level
- * \param [in]  priority    interrupt priority
- * \param [in]  handler     interrupt handler, if NULL, handler will not be installed
- * \return       -1 means invalid input parameter. 0 means successful.
- * \remarks
- * - This function use to configure specific eclic interrupt and register its interrupt handler and enable its interrupt.
- * - If the vector table is placed in read-only section(FLASHXIP mode), handler could not be installed
- */
-int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler)
-{
-    if ((IRQn > SOC_INT_MAX) || (shv > ECLIC_VECTOR_INTERRUPT) \
-        || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER)) {
-        return -1;
-    }
-
-    /* set interrupt vector mode */
-    ECLIC_SetShvIRQ(IRQn, shv);
-    /* set interrupt trigger mode and polarity */
-    ECLIC_SetTrigIRQ(IRQn, trig_mode);
-    /* set interrupt level */
-    ECLIC_SetLevelIRQ(IRQn, lvl);
-    /* set interrupt priority */
-    ECLIC_SetPriorityIRQ(IRQn, priority);
-    if (handler != NULL) {
-        /* set interrupt handler entry to vector table */
-        ECLIC_SetVector(IRQn, (rv_csr_t)handler);
-    }
-    /* enable interrupt */
-    ECLIC_EnableIRQ(IRQn);
-    return 0;
-}
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
 /**
@@ -598,7 +525,85 @@ uint32_t core_exception_handler_s(unsigned long scause, unsigned long sp)
     }
     return 0;
 }
+#endif
 
+/** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
+
+/** Banner Print for Nuclei SDK */
+void SystemBannerPrint(void)
+{
+#if defined(NUCLEI_BANNER) && (NUCLEI_BANNER == 1)
+    printf("Nuclei SDK Build Time: %s, %s\r\n", __DATE__, __TIME__);
+#ifdef DOWNLOAD_MODE_STRING
+    printf("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
+#endif
+    printf("CPU Frequency %u Hz\r\n", (unsigned int)SystemCoreClock);
+    printf("CPU HartID: %u\r\n", (unsigned int)__get_hart_id());
+#endif
+}
+
+/**
+ * \brief initialize eclic config
+ * \details
+ * ECLIC needs be initialized after boot up,
+ * Vendor could also change the initialization
+ * configuration.
+ */
+void ECLIC_Init(void)
+{
+    /* Global Configuration about MTH and NLBits.
+     * TODO: Please adapt it according to your system requirement.
+     * This function is called in _init function */
+    ECLIC_SetMth(0);
+    ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
+
+#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+    /* Global Configuration about STH */
+    ECLIC_SetSth(0);
+#endif
+}
+
+/**
+ * \brief  Initialize a specific IRQ and register the handler
+ * \details
+ * This function set vector mode, trigger mode and polarity, interrupt level and priority,
+ * assign handler for specific IRQn.
+ * \param [in]  IRQn        NMI interrupt handler address
+ * \param [in]  shv         \ref ECLIC_NON_VECTOR_INTERRUPT means non-vector mode, and \ref ECLIC_VECTOR_INTERRUPT is vector mode
+ * \param [in]  trig_mode   see \ref ECLIC_TRIGGER_Type
+ * \param [in]  lvl         interupt level
+ * \param [in]  priority    interrupt priority
+ * \param [in]  handler     interrupt handler, if NULL, handler will not be installed
+ * \return       -1 means invalid input parameter. 0 means successful.
+ * \remarks
+ * - This function use to configure specific eclic interrupt and register its interrupt handler and enable its interrupt.
+ * - If the vector table is placed in read-only section(FLASHXIP mode), handler could not be installed
+ */
+int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler)
+{
+    if ((IRQn > SOC_INT_MAX) || (shv > ECLIC_VECTOR_INTERRUPT) \
+        || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER)) {
+        return -1;
+    }
+
+    /* set interrupt vector mode */
+    ECLIC_SetShvIRQ(IRQn, shv);
+    /* set interrupt trigger mode and polarity */
+    ECLIC_SetTrigIRQ(IRQn, trig_mode);
+    /* set interrupt level */
+    ECLIC_SetLevelIRQ(IRQn, lvl);
+    /* set interrupt priority */
+    ECLIC_SetPriorityIRQ(IRQn, priority);
+    if (handler != NULL) {
+        /* set interrupt handler entry to vector table */
+        ECLIC_SetVector(IRQn, (rv_csr_t)handler);
+    }
+    /* enable interrupt */
+    ECLIC_EnableIRQ(IRQn);
+    return 0;
+}
+
+#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
 /**
  * \brief  Initialize a specific IRQ and register the handler for supervisor mode
  * \details
@@ -639,12 +644,20 @@ int32_t ECLIC_Register_IRQ_S(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type tri
     return 0;
 }
 #endif
-/** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
 
 #define FALLBACK_DEFAULT_ECLIC_BASE             0x0C000000UL
 #define FALLBACK_DEFAULT_SYSTIMER_BASE          0x02000000UL
 
+/** Nuclei RISC-V CPU IRegion Information Variable used to store probed info */
 volatile IRegion_Info_Type SystemIRegionInfo;
+/**
+ * \brief Get Nuclei Internal Region Information
+ * \details
+ * This function is used to get nuclei cpu internal region
+ * information, such as iregion base, eclic base, smp base,
+ * timer base and idu base, and fallback to old evalsoc
+ * timer and eclic base if no iregion feature found
+ */
 static void _get_iregion_info(IRegion_Info_Type *iregion)
 {
     unsigned long mcfg_info;
@@ -664,6 +677,10 @@ static void _get_iregion_info(IRegion_Info_Type *iregion)
     }
 }
 
+#define CLINT_MSIP(base, hartid)    (*(volatile uint32_t *)((uintptr_t)((base) + ((hartid) * 4))))
+#define SMP_CTRLREG(base, ofs)      (*(volatile uint32_t *)((uintptr_t)((base) + (ofs))))
+
+void __sync_harts(void) __attribute__((section(".text.init")));
 /**
  * \brief Synchronize all harts
  * \details
@@ -675,10 +692,7 @@ static void _get_iregion_info(IRegion_Info_Type *iregion)
  * and static variable should be avoid to use in this function,
  * and avoid to call other functions
  */
-#define CLINT_MSIP(base, hartid)    (*(volatile uint32_t *)((uintptr_t)((base) + ((hartid) * 4))))
-#define SMP_CTRLREG(base, ofs)      (*(volatile uint32_t *)((uintptr_t)((base) + (ofs))))
-
-__attribute__((section(".text.init"))) void __sync_harts(void)
+void __sync_harts(void)
 {
 // Only do synchronize when SMP_CPU_CNT is defined and number > 0
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
@@ -805,6 +819,7 @@ void _premain_init(void)
     __FENCE_I();
 
     if (hartid == BOOT_HARTID) { // only required for boot hartid
+        // TODO implement get_cpu_freq function to get real cpu clock freq in HZ or directly give the real cpu HZ
         SystemCoreClock = get_cpu_freq();
         uart_init(SOC_DEBUG_UART, 115200);
         /* Display banner after UART initialized */
@@ -814,6 +829,7 @@ void _premain_init(void)
         /* ECLIC initialization, mainly MTH and NLBIT */
         ECLIC_Init();
         Trap_Init();
+        // TODO: internal usage for Nuclei
 #ifdef RUNMODE_CONTROL
         printf("Current RUNMODE=%s, ilm:%d, dlm %d, icache %d, dcache %d, ccm %d\n", \
             RUNMODE_STRING, RUNMODE_ILM_EN, RUNMODE_DLM_EN, \
@@ -869,4 +885,4 @@ void _fini(void)
     /* Don't put any code here, please use _postmain_fini now */
 }
 
-/** @} */ /* End of Doxygen Group NMSIS_Core_SystemAndClock */
+/** @} */ /* End of Doxygen Group NMSIS_Core_SystemConfig */
