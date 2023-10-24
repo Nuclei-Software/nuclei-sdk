@@ -16,6 +16,7 @@ These projects demostrated the following features:
   for IAR Compiler, please check the commit histories for the changes we have made.
 - These projects are using iar linker script icf file provided in this project not the one in IAR workbench.
 - Currently both Nuclei RV32 and RV64 processors are supported in this project.
+- If you want to **enable P extension**, choose ``Xandesdsp``(based on P-ext 0.5.0) option in IAR project settings: ``the Options->General Options-> ISA Extensions->DSP``, and link with P-ext 0.5.4 optimized library.
 - Full Nuclei RISC-V DSP feature is still working in progress together with IAR team.
 - DSP/NN libraries are able to be used in this project, you can try with prebuilt libraries, but not able to
   use any dsp intrinsic API, since not yet full compatiable with IAR version.
