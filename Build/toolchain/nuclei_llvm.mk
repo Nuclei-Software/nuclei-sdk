@@ -17,17 +17,21 @@ LDLIBS += -lc -lgcc
 else ifeq ($(STDCLIB),newlib_fast)
 LDLIBS += -lc_nano -lgcc
 STDCLIB_LDFLAGS += -u _printf_float -u _scanf_float
+COMMON_FLAGS += -isystem=/include/newlib-nano
 else ifeq ($(STDCLIB),newlib_small)
 LDLIBS += -lc_nano -lgcc
 STDCLIB_LDFLAGS += -u _printf_float
+COMMON_FLAGS += -isystem=/include/newlib-nano
 else ifeq ($(STDCLIB),newlib_nano)
 LDLIBS += -lc_nano -lgcc
 # work around for relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references _printf_float when compile with rv64
 STDCLIB_LDFLAGS += -u _printf_float
+COMMON_FLAGS += -isystem=/include/newlib-nano
 else
 LDLIBS += -lc_nano -lgcc
 # work around for relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references _printf_float when compile with rv64
 STDCLIB_LDFLAGS += -u _printf_float
+COMMON_FLAGS += -isystem=/include/newlib-nano
 endif
 ###
 else ifneq ($(findstring libncrt,$(STDCLIB)),)

@@ -42,13 +42,17 @@ LDLIBS += -lc -lgcc
 else ifeq ($(STDCLIB),newlib_fast)
 LDLIBS += -lc_nano -lgcc
 STDCLIB_LDFLAGS += -u _printf_float -u _scanf_float
+COMMON_FLAGS += -isystem=/include/newlib-nano
 else ifeq ($(STDCLIB),newlib_small)
 LDLIBS += -lc_nano -lgcc
 STDCLIB_LDFLAGS += -u _printf_float
+COMMON_FLAGS += -isystem=/include/newlib-nano
 else ifeq ($(STDCLIB),newlib_nano)
 LDLIBS += -lc_nano -lgcc
+COMMON_FLAGS += -isystem=/include/newlib-nano
 else
 LDLIBS += -lc_nano -lgcc
+COMMON_FLAGS += -isystem=/include/newlib-nano
 endif
 ###
 else ifneq ($(findstring libncrt,$(STDCLIB)),)
