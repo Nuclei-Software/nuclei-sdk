@@ -13,6 +13,15 @@
         "rv32imafdc": {"CORE":"n900fd", "ARCH_EXT":""},
         "rv32imafdcb": {"CORE":"n900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
         "rv32imafdcp": {"CORE":"n900fd", "ARCH_EXT":"_xxldspn1x"},
-        "rv32imafdcbp": {"CORE":"n900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"}
+        "rv32imafdcbp": {"CORE":"n900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafcv": {"CORE":"n900f", "ARCH_EXT":"_zve32f"},
+        "rv32imafcbv": {"CORE":"n900f", "ARCH_EXT":"_zve32f_zba_zbb_zbc_zbs"},
+        "rv32imafcpv": {"CORE":"n900f", "ARCH_EXT":"_zve32f_xxldspn1x"},
+        "rv32imafcbpv": {"CORE":"n900f", "ARCH_EXT":"_zve32f_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafdcv": {"CORE":"n900fd", "ARCH_EXT":"_zve32f"},
+        "rv32imafdcbv": {"CORE":"n900fd", "ARCH_EXT":"_zve32f_zba_zbb_zbc_zbs"},
+        "rv32imafdcpv": {"CORE":"n900fd", "ARCH_EXT":"_zve32f_xxldspn1x"},
+        "rv32imafdcbpv": {"CORE":"n900fd", "ARCH_EXT":"_zve32f_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafdcbpv_zfh_zvfh": {"CORE":"n900fd", "ARCH_EXT":"_zfh_zvfh_zve32f_zba_zbb_zbc_zbs_xxldspn1x"}
     }
 }

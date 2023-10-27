@@ -22,6 +22,7 @@
         "rv64imafcpv": { "CORE": "nx900f", "ARCH_EXT": "_zve64f_xxldsp" },
         "rv64imafdcpv": { "CORE": "nx900fd", "ARCH_EXT": "v_xxldsp" },
         "rv64imafcbpv": { "CORE": "nx900f", "ARCH_EXT": "_zve64f_zba_zbb_zbc_zbs_xxldsp" },
-        "rv64imafdcbpv": { "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldsp" }
+        "rv64imafdcbpv": { "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldsp" },
+        "rv64imafdcbpv_zfh_zvfh": { "CORE": "nx900fd", "ARCH_EXT": "v_zfh_zvfh_zba_zbb_zbc_zbs_xxldsp" }
     }
 }
