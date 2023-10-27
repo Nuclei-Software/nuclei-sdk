@@ -3,10 +3,10 @@
 Changelog
 =========
 
-V0.5.0-dev
-----------
+V0.5.0
+------
 
-This is release version ``0.5.0-dev`` of Nuclei SDK.
+This is release version ``0.5.0`` of Nuclei SDK.
 
 .. note::
 
@@ -47,6 +47,8 @@ This is release version ``0.5.0-dev`` of Nuclei SDK.
   - Fix __RV_CLAMP macro and add __MACHINE/SUPERVISOR/USER_INTERRUPT macros
   - Add __get_hart_index and SysTimer_GetHartID and modify __get_hart_id API
   - In <Device.h>, we introduced __HARTID_OFFSET and __SYSTIMER_HARTID macro to represent timer hart index relation with cpu hartid for AMP SoC
+  - Update NMSIS Core/DSP/NN header files to v1.2.0
+  - Update NMSIS DSP/NN prebuilt library to v1.2.0, and added F16 prebuilt library
 
 * SOC
 
