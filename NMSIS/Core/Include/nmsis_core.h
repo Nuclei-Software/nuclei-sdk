@@ -29,9 +29,10 @@
  * \ingroup NMSIS_Core_VersionControl
  * @{
  */
-/* The following enum __NUCLEI_N_REV/__NUCLEI_NX_REV definition in this file
+/* The following macro __NUCLEI_N_REV/__NUCLEI_NX_REV/
+ * __NUCLEI_CPU_REV/__NUCLEI_CPU_SERIES definition in this file
  * is only used for doxygen documentation generation,
- * The <device>.h is the real file to define it by vendor
+ * The <Device>.h is the real file to define it by vendor
  */
 #if defined(__ONLY_FOR_DOXYGEN_DOCUMENT_GENERATION__)
 /**
@@ -39,7 +40,7 @@
  * \details
  * Reversion number format: [15:8] revision number, [7:0] patch number
  * \attention
- * This define is exclusive with \ref __NUCLEI_NX_REV
+ * Deprecated, this define is exclusive with \ref __NUCLEI_NX_REV
  */
 #define __NUCLEI_N_REV                   (0x0309)
 /**
@@ -47,9 +48,26 @@
  * \details
  * Reversion number format: [15:8] revision number, [7:0] patch number
  * \attention
- * This define is exclusive with \ref __NUCLEI_N_REV
+ * Deprecated, this define is exclusive with \ref __NUCLEI_N_REV
  */
 #define __NUCLEI_NX_REV                  (0x0207)
+/**
+ * \brief Nuclei CPU core revision number
+ * \details
+ * Nuclei RISC-V CPU Revision Number vX.Y.Z, eg. v3.10.1
+ * \attention
+ * This define is exclusive with \ref __NUCLEI_CPU_SERIES
+ */
+#define __NUCLEI_CPU_REV                 (0x030A01)
+/**
+ * \brief Nuclei CPU core series
+ * \details
+ * Nuclei RISC-V CPU Series Number, eg, 0x200, 0x300, 0x600, 0x900
+ * for 200, 300, 600, 900 series.
+ * \attention
+ * This define is used together with \ref __NUCLEI_CPU_REV
+ */
+#define __NUCLEI_CPU_SERIES              (0x0200)
 #endif /* __ONLY_FOR_DOXYGEN_DOCUMENT_GENERATION__ */
 /** @} */ /* End of Group NMSIS_Core_VersionControl */
 

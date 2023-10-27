@@ -27,7 +27,7 @@
 #ifndef _RISCV_MATH_F16_H
 #define _RISCV_MATH_F16_H
 
-#include "riscv_math.h"
+//#include "riscv_math.h"
 
 #ifdef   __cplusplus
 extern "C"

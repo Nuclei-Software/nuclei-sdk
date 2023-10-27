@@ -35,6 +35,10 @@
 #include "riscv_common_tables.h"
 #include "dsp/transform_functions.h"
 
+#if defined (RISCV_FLOAT16_SUPPORTED)
+#include "riscv_const_structs_f16.h"
+#endif /* defined (RISCV_FLOAT16_SUPPORTED) */
+
 #ifdef   __cplusplus
 extern "C"
 {

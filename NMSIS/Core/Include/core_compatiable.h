@@ -244,6 +244,28 @@ __STATIC_FORCEINLINE unsigned long __CTZ(unsigned long data)
     return ret;
 }
 
+/**
+ * \brief   Expand byte to unsigned long value
+ * \details Expand byte value x to unsigned long value's each byte.
+ * \param [in] x   the byte value to be expand, the input must be uint8_t type
+ * \return         Expanded value in unsigned long
+ */
+#if __RISCV_XLEN == 32
+#define __EXPD_BYTE(x)      ((unsigned long)(((unsigned long)(x) <<  0) | \
+                                    ((unsigned long)(x) <<  8) | \
+                                    ((unsigned long)(x) << 16) | \
+                                    ((unsigned long)(x) << 24)))
+#elif __RISCV_XLEN == 64
+#define __EXPD_BYTE(x)      ((unsigned long)(((unsigned long)(x) <<  0) | \
+                                    ((unsigned long)(x) <<  8) | \
+                                    ((unsigned long)(x) << 16) | \
+                                    ((unsigned long)(x) << 24) | \
+                                    ((unsigned long)(x) << 32) | \
+                                    ((unsigned long)(x) << 40) | \
+                                    ((unsigned long)(x) << 48) | \
+                                    ((unsigned long)(x) << 56)))
+#endif
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_ARMCompatiable_Functions */
 
 #ifdef __cplusplus

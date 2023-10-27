@@ -33,6 +33,10 @@
 #include "riscv_math_types.h"
 #include "dsp/fast_math_functions.h"
 
+#if defined (RISCV_FLOAT16_SUPPORTED)
+#include "riscv_common_tables_f16.h"
+#endif /* defined (RISCV_FLOAT16_SUPPORTED) */
+
 #ifdef   __cplusplus
 extern "C"
 {

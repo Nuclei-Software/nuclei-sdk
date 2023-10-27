@@ -560,6 +560,11 @@ __STATIC_FORCEINLINE uint32_t __ROR(uint32_t op1, uint32_t op2)
 
 #endif /* !defined (RISCV_MATH_DSP) */
 
+#if !(defined (RISCV_MATH_DSP) && defined(NUCLEI_DSP_DEFAULT))
+/* __EXPD_BYTE defined in core_compatiable.h from NMSIS 1.2.0  */
+#define __EXPD80(x)        __EXPD_BYTE((uint8_t)((x) & 0xff))
+#endif /* !(defined (RISCV_MATH_DSP) && defined(NUCLEI_DSP_DEFAULT)) */
+
 
 #ifdef   __cplusplus
 }

@@ -135,6 +135,10 @@
 #include "dsp/quaternion_math_functions.h"
 #include "dsp/window_functions.h"
 
+#if defined (RISCV_FLOAT16_SUPPORTED)
+#include "riscv_math_f16.h"
+#endif /* defined (RISCV_FLOAT16_SUPPORTED) */
+
 
 
 #ifdef   __cplusplus

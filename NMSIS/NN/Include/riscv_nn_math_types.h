@@ -55,7 +55,7 @@ extern "C" {
 
 #elif defined(_MSC_VER)
 
-#elif defined ( __ICCRISCV__ )
+#elif defined (__ICCRISCV__ )
 
 #else
 #error Unknown compiler
@@ -114,6 +114,24 @@ extern "C" {
 /* evaluate RISCV DSP feature */
 #if (defined(__RISCV_FEATURE_DSP) && (__RISCV_FEATURE_DSP == 1))
   #define RISCV_MATH_DSP                    1
+/* only define N1/N2/N3 when rv32 dsp extension enabled */
+#if (defined (__riscv_xxldsp))
+  #undef NUCLEI_DSP_DEFAULT
+  #define NUCLEI_DSP_DEFAULT 1
+#endif
+#if (defined (__riscv_xxldspn1x))
+  #undef NUCLEI_DSP_N1
+  #define NUCLEI_DSP_N1 1
+#endif
+#if (defined (__riscv_xxldspn2x))
+  #undef NUCLEI_DSP_N2
+  #define NUCLEI_DSP_N2 1
+#endif
+#if (defined (__riscv_xxldspn3x))
+  #undef NUCLEI_DSP_N3
+  #define NUCLEI_DSP_N3 1
+#endif
+
 #endif
 
 /* evaluate RISCV Vector feature */
@@ -139,7 +157,7 @@ extern "C" {
 
 #elif defined(_MSC_VER)
 
-#elif defined ( __ICCRISCV__ )
+#elif defined (__ICCRISCV__ )
 
 #else
 #error Unknown compiler

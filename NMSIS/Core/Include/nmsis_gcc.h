@@ -182,11 +182,6 @@
   #define __RARELY(exp)                          __builtin_expect((exp), 0)
 #endif
 
-/** \brief Use this attribute to indicate that the specified function is an interrupt handler. */
-#ifndef   __INTERRUPT
-  #define __INTERRUPT                            __attribute__((interrupt))
-#endif
-
 /** \brief Use this attribute to indicate that the specified function is an interrupt handler run in Machine Mode. */
 #ifndef   __INTERRUPT
   #define __INTERRUPT                            __attribute__((interrupt))

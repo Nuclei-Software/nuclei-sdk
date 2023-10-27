@@ -1324,22 +1324,22 @@ __STATIC_FORCEINLINE int32_t riscv_nn_requantize(const int32_t val, const int32_
 __STATIC_FORCEINLINE vint32m4_t riscv_nn_requantize_m4_rvv(vint32m4_t valm4, size_t l, const q31_t multiplier, const q31_t shift)
 {
     if (shift >= 0) {
-        valm4 = vsmul_vx_i32m4(vsll_vx_i32m4(valm4, shift, l), multiplier, l);
+        valm4 = __riscv_vsmul_vx_i32m4(__riscv_vsll_vx_i32m4(valm4, shift, l), multiplier, __RISCV_VXRM_RNU, l);
     } else {
         q31_t exponent = -shift;
         q31_t remainder_mask = (1 << exponent) - 1;
         q31_t threshold = remainder_mask >> 1;
         vint32m4_t b32m4, c32m4;
-        valm4 = vsmul_vx_i32m4(valm4, multiplier, l);
-        b32m4 = vsra_vx_i32m4(valm4, exponent, l);
-        valm4 = vand_vx_i32m4(valm4, remainder_mask, l);
+        valm4 = __riscv_vsmul_vx_i32m4(valm4, multiplier, __RISCV_VXRM_RNU, l);
+        b32m4 = __riscv_vsra_vx_i32m4(valm4, exponent, l);
+        valm4 = __riscv_vand_vx_i32m4(valm4, remainder_mask, l);
 
-        c32m4 = vmv_v_x_i32m4(threshold, l);
-        vbool8_t mask = vmslt_vx_i32m4_b8(b32m4, 0, l);
-        c32m4 = vadd_vx_i32m4_m(mask, c32m4, c32m4, 1, l);
+        c32m4 = __riscv_vmv_v_x_i32m4(threshold, l);
+        vbool8_t mask = __riscv_vmslt_vx_i32m4_b8(b32m4, 0, l);
+        c32m4 = __riscv_vadd_vx_i32m4_tumu(mask, c32m4, c32m4, 1, l);
 
-        mask = vmsgt_vv_i32m4_b8(valm4, c32m4, l);
-        valm4 = vadd_vx_i32m4_m(mask, b32m4, b32m4, 1, l);
+        mask = __riscv_vmsgt_vv_i32m4_b8(valm4, c32m4, l);
+        valm4 = __riscv_vadd_vx_i32m4_tumu(mask, b32m4, b32m4, 1, l);
     }
     return valm4;
 }
@@ -1347,22 +1347,22 @@ __STATIC_FORCEINLINE vint32m4_t riscv_nn_requantize_m4_rvv(vint32m4_t valm4, siz
 __STATIC_FORCEINLINE vint32m8_t riscv_nn_requantize_m8_rvv(vint32m8_t valm8, size_t l, const q31_t multiplier, const q31_t shift)
 {
     if (shift >= 0) {
-        valm8 = vsmul_vx_i32m8(vsll_vx_i32m8(valm8, shift, l), multiplier, l);
+        valm8 = __riscv_vsmul_vx_i32m8(__riscv_vsll_vx_i32m8(valm8, shift, l), multiplier, __RISCV_VXRM_RNU, l);
     } else {
         q31_t exponent = -shift;
         q31_t remainder_mask = (1 << exponent) - 1;
         q31_t threshold = remainder_mask >> 1;
         vint32m8_t b32m8, c32m8;
-        valm8 = vsmul_vx_i32m8(valm8, multiplier, l);
-        b32m8 = vsra_vx_i32m8(valm8, exponent, l);
-        valm8 = vand_vx_i32m8(valm8, remainder_mask, l);
+        valm8 = __riscv_vsmul_vx_i32m8(valm8, multiplier, __RISCV_VXRM_RNU, l);
+        b32m8 = __riscv_vsra_vx_i32m8(valm8, exponent, l);
+        valm8 = __riscv_vand_vx_i32m8(valm8, remainder_mask, l);
 
-        c32m8 = vmv_v_x_i32m8(threshold, l);
-        vbool4_t mask = vmslt_vx_i32m8_b4(b32m8, 0, l);
-        c32m8 = vadd_vx_i32m8_m(mask, c32m8, c32m8, 1, l);
+        c32m8 = __riscv_vmv_v_x_i32m8(threshold, l);
+        vbool4_t mask = __riscv_vmslt_vx_i32m8_b4(b32m8, 0, l);
+        c32m8 = __riscv_vadd_vx_i32m8_tumu(mask, c32m8, c32m8, 1, l);
 
-        mask = vmsgt_vv_i32m8_b4(valm8, c32m8, l);
-        valm8 = vadd_vx_i32m8_m(mask, b32m8, b32m8, 1, l);
+        mask = __riscv_vmsgt_vv_i32m8_b4(valm8, c32m8, l);
+        valm8 = __riscv_vadd_vx_i32m8_tumu(mask, b32m8, b32m8, 1, l);
     }
     return valm8;
 }
