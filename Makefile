@@ -1,5 +1,7 @@
 PROGRAM :=baremetal/helloworld
 
+PARALLEL ?=
+
 .PHONY: __help ctags cleanall buildall tags
 __help:
 	@echo "Help about Build/Run/Debug/Clean Nuclei SDK Application"
@@ -54,7 +56,8 @@ $(CLEAN_DIRS_RULES):
 	make -C $(patsubst __CLEAN__%, %, $@) clean
 
 $(BUILD_DIRS_RULES):
-	make -C $(patsubst __BUILD__%, %, $@) clean all
+	make -C $(patsubst __BUILD__%, %, $@) clean
+	make -C $(patsubst __BUILD__%, %, $@) $(PARALLEL) all
 
 $(VALID_SDK_RULES):
 	make -C $(VALID_PROGRAM) $@
