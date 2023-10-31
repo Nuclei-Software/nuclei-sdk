@@ -16,17 +16,19 @@ endif
 ifneq ($(findstring newlib,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has newlib in it
 ifeq ($(STDCLIB),newlib_full)
-LDLIBS += -lc -lclang_rt.builtins
+LDLIBS += -lc_size -lclang_rt.builtins
 else ifeq ($(STDCLIB),newlib_fast)
-LDLIBS += -lc_size -lclang_rt.builtins_size
+LDLIBS += -lc_nano -lclang_rt.builtins_size
 STDCLIB_LDFLAGS += -u _printf_float -u _scanf_float
 else ifeq ($(STDCLIB),newlib_small)
-LDLIBS += -lc_size -lclang_rt.builtins_size
+LDLIBS += -lc_nano -lclang_rt.builtins_size
 STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
-LDLIBS += -lc_size -lclang_rt.builtins_size
+LDLIBS += -lc_nano -lclang_rt.builtins_size
+STDCLIB_LDFLAGS += -u _printf_float
 else
-LDLIBS += -lc_size -lclang_rt.builtins_size
+LDLIBS += -lc_nano -lclang_rt.builtins_size
+STDCLIB_LDFLAGS += -u _printf_float
 endif
 ###
 else ifneq ($(findstring libncrt,$(STDCLIB)),)
@@ -43,7 +45,8 @@ else ifeq ($(STDCLIB),nospec)
 COMMON_FLAGS +=
 ###
 else
-LDLIBS += -lc_size -lclang_rt.builtins_size
+LDLIBS += -lc_nano -lclang_rt.builtins_size
+STDCLIB_LDFLAGS += -u _printf_float
 ###
 endif
 
