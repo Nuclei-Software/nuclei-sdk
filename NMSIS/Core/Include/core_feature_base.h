@@ -1025,35 +1025,35 @@ __STATIC_FORCEINLINE void __disable_all_counter(void)
 __STATIC_FORCEINLINE void __set_hpm_event(unsigned long idx, unsigned long event)
 {
     switch (idx) {
-        case 3: __RV_CSR_WRITE(CSR_MHPMEVENT3, event);
-        case 4: __RV_CSR_WRITE(CSR_MHPMEVENT4, event);
-        case 5: __RV_CSR_WRITE(CSR_MHPMEVENT5, event);
-        case 6: __RV_CSR_WRITE(CSR_MHPMEVENT6, event);
-        case 7: __RV_CSR_WRITE(CSR_MHPMEVENT7, event);
-        case 8: __RV_CSR_WRITE(CSR_MHPMEVENT8, event);
-        case 9: __RV_CSR_WRITE(CSR_MHPMEVENT9, event);
-        case 10: __RV_CSR_WRITE(CSR_MHPMEVENT10, event);
-        case 11: __RV_CSR_WRITE(CSR_MHPMEVENT11, event);
-        case 12: __RV_CSR_WRITE(CSR_MHPMEVENT12, event);
-        case 13: __RV_CSR_WRITE(CSR_MHPMEVENT13, event);
-        case 14: __RV_CSR_WRITE(CSR_MHPMEVENT14, event);
-        case 15: __RV_CSR_WRITE(CSR_MHPMEVENT15, event);
-        case 16: __RV_CSR_WRITE(CSR_MHPMEVENT16, event);
-        case 17: __RV_CSR_WRITE(CSR_MHPMEVENT17, event);
-        case 18: __RV_CSR_WRITE(CSR_MHPMEVENT18, event);
-        case 19: __RV_CSR_WRITE(CSR_MHPMEVENT19, event);
-        case 20: __RV_CSR_WRITE(CSR_MHPMEVENT20, event);
-        case 21: __RV_CSR_WRITE(CSR_MHPMEVENT21, event);
-        case 22: __RV_CSR_WRITE(CSR_MHPMEVENT22, event);
-        case 23: __RV_CSR_WRITE(CSR_MHPMEVENT23, event);
-        case 24: __RV_CSR_WRITE(CSR_MHPMEVENT24, event);
-        case 25: __RV_CSR_WRITE(CSR_MHPMEVENT25, event);
-        case 26: __RV_CSR_WRITE(CSR_MHPMEVENT26, event);
-        case 27: __RV_CSR_WRITE(CSR_MHPMEVENT27, event);
-        case 28: __RV_CSR_WRITE(CSR_MHPMEVENT28, event);
-        case 29: __RV_CSR_WRITE(CSR_MHPMEVENT29, event);
-        case 30: __RV_CSR_WRITE(CSR_MHPMEVENT30, event);
-        case 31: __RV_CSR_WRITE(CSR_MHPMEVENT31, event);
+        case 3: __RV_CSR_WRITE(CSR_MHPMEVENT3, event); break;
+        case 4: __RV_CSR_WRITE(CSR_MHPMEVENT4, event); break;
+        case 5: __RV_CSR_WRITE(CSR_MHPMEVENT5, event); break;
+        case 6: __RV_CSR_WRITE(CSR_MHPMEVENT6, event); break;
+        case 7: __RV_CSR_WRITE(CSR_MHPMEVENT7, event); break;
+        case 8: __RV_CSR_WRITE(CSR_MHPMEVENT8, event); break;
+        case 9: __RV_CSR_WRITE(CSR_MHPMEVENT9, event); break;
+        case 10: __RV_CSR_WRITE(CSR_MHPMEVENT10, event); break;
+        case 11: __RV_CSR_WRITE(CSR_MHPMEVENT11, event); break;
+        case 12: __RV_CSR_WRITE(CSR_MHPMEVENT12, event); break;
+        case 13: __RV_CSR_WRITE(CSR_MHPMEVENT13, event); break;
+        case 14: __RV_CSR_WRITE(CSR_MHPMEVENT14, event); break;
+        case 15: __RV_CSR_WRITE(CSR_MHPMEVENT15, event); break;
+        case 16: __RV_CSR_WRITE(CSR_MHPMEVENT16, event); break;
+        case 17: __RV_CSR_WRITE(CSR_MHPMEVENT17, event); break;
+        case 18: __RV_CSR_WRITE(CSR_MHPMEVENT18, event); break;
+        case 19: __RV_CSR_WRITE(CSR_MHPMEVENT19, event); break;
+        case 20: __RV_CSR_WRITE(CSR_MHPMEVENT20, event); break;
+        case 21: __RV_CSR_WRITE(CSR_MHPMEVENT21, event); break;
+        case 22: __RV_CSR_WRITE(CSR_MHPMEVENT22, event); break;
+        case 23: __RV_CSR_WRITE(CSR_MHPMEVENT23, event); break;
+        case 24: __RV_CSR_WRITE(CSR_MHPMEVENT24, event); break;
+        case 25: __RV_CSR_WRITE(CSR_MHPMEVENT25, event); break;
+        case 26: __RV_CSR_WRITE(CSR_MHPMEVENT26, event); break;
+        case 27: __RV_CSR_WRITE(CSR_MHPMEVENT27, event); break;
+        case 28: __RV_CSR_WRITE(CSR_MHPMEVENT28, event); break;
+        case 29: __RV_CSR_WRITE(CSR_MHPMEVENT29, event); break;
+        case 30: __RV_CSR_WRITE(CSR_MHPMEVENT30, event); break;
+        case 31: __RV_CSR_WRITE(CSR_MHPMEVENT31, event); break;
         default: break;
     }
 }
