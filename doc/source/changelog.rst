@@ -27,6 +27,7 @@ This is release version ``0.5.0`` of Nuclei SDK.
   - Add cpuinfo case to dump nuclei cpu feature
   - Add stack check demo to demostrate nuclei stack check feature
   - Add support for gcc13/clang17/terapines/iar compiler
+  - Fix missing break in ``__set_hpm_event`` function
   - For different compiler option support, we introduced ``toolchain_$(TOOLCHAIN).mk`` file to place toolchain specified options, see benchmark examples' Makefile
   - Optimize demo_cidu smp case
   - Optimize application code and makefile when port for clang, terapines zcc and iar compiler
