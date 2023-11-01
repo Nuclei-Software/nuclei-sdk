@@ -218,5 +218,12 @@ libraries feature ``--start-group archives --end-group`` to repeatly search unde
 but this feature is not enabled in Eclipse CDT based IDE like Nuclei Studio, which undefined reference is searched in the order of library specified on the command line, so you may meet issue like undefined fclose reference even you linked newlib nano c library ``-lc_nano`` if the library order is not good, so to fix this issue, you may need to place
 the library in a good order and need to repeatly link it, such as ``-lgcc -lc_nano -lm -lsemihost -lgcov -lgcc -lc_nano``, and also we have opened an issue to track it, see https://github.com/eclipse-embed-cdt/eclipse-plugins/issues/592
 
+fatal error: rvintrin.h: No such file or directory
+--------------------------------------------------
+
+If you are using Nuclei Toolchain 2023.10, ``rvintrin.h`` no longer exist for B extension, please
+don't include this header file. If you want to use an intrinsic API for B extension, you need to write
+using c asm intrinsic.
+
 .. _debugger kit manual: https://www.nucleisys.com/theme/package/Nuclei_FPGA_DebugKit_Intro.pdf
 .. _ftdi_device_desc: http://openocd.org/doc/html/Debug-Adapter-Configuration.html
