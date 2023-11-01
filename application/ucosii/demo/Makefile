@@ -1,4 +1,4 @@
-TARGET = demo
+TARGET = ucosii_demo
 RTOS = UCOSII
 
 NUCLEI_SDK_ROOT = ../../..

@@ -1,4 +1,4 @@
-TARGET = demo
+TARGET = rtthread_demo
 RTOS = RTThread
 
 NUCLEI_SDK_ROOT = ../../..

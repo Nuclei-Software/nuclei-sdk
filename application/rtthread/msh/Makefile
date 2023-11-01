@@ -1,4 +1,4 @@
-TARGET = msh
+TARGET = rtthread_msh
 RTOS = RTThread
 RTTHREAD_MSH := 1
 

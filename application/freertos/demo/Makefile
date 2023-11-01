@@ -1,4 +1,4 @@
-TARGET = demo
+TARGET = freertos_demo
 RTOS = FreeRTOS
 
 NUCLEI_SDK_ROOT = ../../..
