@@ -79,7 +79,7 @@
         "application/baremetal/demo_stack_check": {
             "build_config" : {},
             "checks": {
-                "PASS": ["Stack check demo over!"]
+                "PASS": ["Stack check demo over"]
             }
         },
         "application/baremetal/demo_spmp": {
