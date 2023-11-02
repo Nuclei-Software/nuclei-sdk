@@ -3,34 +3,43 @@
 Appendix
 ========
 
-* **Nuclei RISCV Tools and Documents**: https://nucleisys.com/download.php
+* **Nuclei Tools and Documents**: https://nucleisys.com/download.php
 
-* **Nuclei riscv-openocd**: https://github.com/riscv-mcu/riscv-openocd
+* **Nuclei Software Opensource Organization**: https://github.com/Nuclei-Software
 
-* **Nuclei riscv-binutils-gdb**: https://github.com/riscv-mcu/riscv-binutils-gdb
+* **RISC-V MCU Opensource Organization**: https://github.com/riscv-mcu
 
-* **Nuclei riscv-gnu-toolchain**: https://github.com/riscv-mcu/riscv-gnu-toolchain
+* **Nuclei Toolchain Repo**: https://github.com/riscv-mcu/riscv-gnu-toolchain
 
-* **Nuclei riscv-newlib**: https://github.com/riscv-mcu/riscv-newlib
+* **Nuclei OpenOCD Repo**: https://github.com/riscv-mcu/riscv-openocd
 
-* **Nuclei riscv-gcc**: https://github.com/riscv-mcu/riscv-gcc
-
-* **Nuclei Software Organization in Github**: https://github.com/Nuclei-Software/
-
-* **Nuclei Software Organization in Gitee**: https://gitee.com/Nuclei-Software/
+* **Nuclei QEMU Repo**: https://github.com/riscv-mcu/qemu
 
 * **Nuclei SDK**: https://github.com/Nuclei-Software/nuclei-sdk
 
 * **NMSIS**: https://github.com/Nuclei-Software/NMSIS
 
-* **Nuclei Bumblebee Core Document**: https://github.com/nucleisys/Bumblebee_Core_Doc
-
 * **Nuclei RISC-V IP Products**: https://www.nucleisys.com/product.php
 
 * **RISC-V MCU Community Website**: https://www.riscv-mcu.com/
 
-* **Nuclei Spec Documentation**: https://doc.nucleisys.com/nuclei_spec/
+* **Nuclei RISC-V CPU Spec**: https://doc.nucleisys.com/nuclei_spec
 
-* **Nuclei SDK Documentation**: https://doc.nucleisys.com/nuclei_sdk/
+* **RISC-V ISA Specfications(Ratified)**: https://riscv.org/technical/specifications
 
-* **NMSIS Documentation**: https://doc.nucleisys.com/nmsis/
+* **RISC-V Architecture Profiles**: https://github.com/riscv/riscv-profiles
+
+* **RISC-V Bitmanip(B) Extension Spec**: https://github.com/riscv/riscv-bitmanip
+
+* **RISC-V Packed SIMD(P) Extension Spec**: https://github.com/riscv/riscv-p-spec
+
+* **RISC-V Cryptography(K) Extension Spec**: https://github.com/riscv/riscv-crypto
+
+* **RISC-V Vector(V) Extension Spec**: https://github.com/riscv/riscv-v-spec
+
+* **RISC-V Vector Intrinsic API Spec**: https://github.com/riscv-non-isa/rvv-intrinsic-doc
+
+* **RISC-V ISA Extension Spec Status**: https://wiki.riscv.org/display/HOME/Specification+Status
+
+* **Nuclei Bumblebee Core Document**: https://github.com/nucleisys/Bumblebee_Core_Doc
+
