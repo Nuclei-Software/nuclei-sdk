@@ -9,7 +9,7 @@ SIZE    := llvm-size
 OPENOCD := openocd
 
 ifneq ($(findstring libncrt,$(STDCLIB)),)
-$(error terapine toolchain don't provide libncrt library support)
+$(error Terapines toolchain dont provide libncrt library support)
 endif
 
 # Handle standard c library selection variable STDCLIB
@@ -25,6 +25,8 @@ LDLIBS += -lc_nano -lclang_rt.builtins_size
 STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
 LDLIBS += -lc_nano -lclang_rt.builtins_size
+# work around for relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references _printf_float when compile with rv64
+# so with this change below, newlib_nano = newlib_small now
 STDCLIB_LDFLAGS += -u _printf_float
 else
 LDLIBS += -lc_nano -lclang_rt.builtins_size
@@ -61,6 +63,9 @@ ifneq ($(findstring libncrt,$(STDCLIB)),)
 LDLIBS += -lfileops_$(NCRTIO)
 endif
 endif
+
+## Link with standard c++ library
+LDLIBS += -lc++
 
 ## Heap and stack size settings
 ## It will define symbols only used in linker script

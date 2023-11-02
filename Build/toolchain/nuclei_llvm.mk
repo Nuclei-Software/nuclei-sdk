@@ -25,6 +25,7 @@ COMMON_FLAGS += -isystem=/include/newlib-nano
 else ifeq ($(STDCLIB),newlib_nano)
 LDLIBS += -lc_nano -lgcc
 # work around for relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references _printf_float when compile with rv64
+# so with this change below, newlib_nano = newlib_small now
 STDCLIB_LDFLAGS += -u _printf_float
 COMMON_FLAGS += -isystem=/include/newlib-nano
 else
