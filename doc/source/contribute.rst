@@ -20,6 +20,12 @@ Port your Nuclei SoC into Nuclei SDK
 If you want to port you Nuclei Processor Core based Board to Nuclei SDK,
 you need to follow these steps:
 
+And the best example is our evalsoc support, although it may contains many unused features you may
+not want to use, but it is our evaluation SoC and will supply to provide best support for Nuclei RISC-V
+CPU features, if you are already using it, please keep in update of the evalsoc support changes in each
+release, you can track it by diff each release changes, and please also remember Nuclei SDK release may
+also bump with NMSIS release.
+
 Assume your SoC name is ``ncstar``, based on Nuclei core **n307**, and **RISCV_ARCH**
 is ``rv32imafc``, **RISCV_ABI** is ``ilp32f``, and you made a new board called ``ncstar_eval``,
 and this SoC only support **FlashXIP** download mode.

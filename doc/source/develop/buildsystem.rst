@@ -560,9 +560,9 @@ TOOLCHAIN
 This variable is used to select different toolchain to compile application.
 Currently we support 3 toolchain in Nuclei SDK.
 
-* **nuclei_gnu**: default, it will choose nuclei gnu toolchain.
-* **nuclei_llvm**: still in experiment, nuclei customized extensions not yet supported.
-* **terapines**: still in experiment, it depends on the toolchain vendor about the supported extensions.
+* **nuclei_gnu**: default, it will choose nuclei gnu toolchain, distributed with Nuclei Toolchain.
+* **nuclei_llvm**: still in experiment, nuclei customized extensions not yet supported, distributed with Nuclei Toolchain.
+* **terapines**: still in experiment, it depends on the toolchain vendor about the supported extensions, if you want to take a try with it, just visit https://www.terapines.com/ and request an terapines toolchain evaluation.
 
 For **nuclei_gnu/nuclei_llvm** toolchain both newlib and libncrt library are supported,
 but nuclei_llvm toolchain multilib selection mechanism is not as good as gnu toolchain,
@@ -570,6 +570,8 @@ you need to take care of the arch isa string order, please see ``riscv64-unknown
 
 And IAR compiler support is also done in Nuclei SDK, you can take a try with it
 via ``ideprojects/iar`` folder provided prebuilt ide projects.
+
+If you want to use old Nuclei GNU Toolchain <= 2022.12 in Nuclei SDK 0.5.0, you need to pass extra ``COMPILE_PREFIX=riscv-nuclei-elf-`` when build any application, such as ``make CORE=n307fd COMPILE_PREFIX=riscv-nuclei-elf-  STDCLIB=libncrt_small clean all``, but this is not recommended, and will be deprecated in future any time.
 
 .. _develop_buildsystem_var_download:
 
@@ -1146,6 +1148,11 @@ system libraries by the ``STDCLIB`` variable choice, so need to link desired lib
 
 .. note::
 
+    * For clang based compiler, if ``-u _print_float`` is not passed in linker options, it may fail
+      during link process, so here we pass ``-u _print_float`` for newlib_nano, then it means for
+      nuclei_llvm and terapines toolchain, ``STDCLIB=newlib_nano`` equals to ``STDCLIB=newlib_small``
+    * Nuclei libncrt library couldn't be used with terapines toolchain, so you can't use any libncrt library
+      when you are using terapines toolchain.
     * About Newlib and Newlib nano difference, please check
       https://github.com/riscv-collab/riscv-newlib/blob/riscv-newlib-3.2.0/newlib/README
     * About Nuclei C runtime library, it provided basic libgcc, c library and math library feature, but
