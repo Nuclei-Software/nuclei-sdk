@@ -3,7 +3,7 @@
 [![Build Documentation](https://github.com/Nuclei-Software/nuclei-sdk/workflows/Build%20Documentation/badge.svg)](https://github.com/Nuclei-Software/nuclei-sdk/actions?query=workflow%3A%22Build+Documentation%22)
 [![Build SDK](https://github.com/Nuclei-Software/nuclei-sdk/workflows/Build%20SDK/badge.svg)](https://github.com/Nuclei-Software/nuclei-sdk/actions?query=workflow%3A%22Build+SDK%22)
 
-> Since 0.5.0 release, Nuclei Studio >= 2023.10 and Nuclei Toolchain >= 2023.10 are required to build and run.
+> Since 0.5.0 release, Nuclei Studio >= 2023.10 and Nuclei RISC-V Toolchain/Qemu/OpenOCD >= 2023.10 are required to build and run.
 
 **Nuclei Software Development Kit(Nuclei SDK)** is developed for developing and evaluating software using our FPGA evaluation board.
 
@@ -210,7 +210,7 @@ $NUCLEI_SDK_ROOT
    * you can run *make help* to show help message.
    * We provided different Nuclei Core configurations(CORE=<your_core>) we supported, see *Build/Makefile.core*.
      - such as `CORE=n305`
-   * We support three download modes(DOWNLOAD=<mode>) for different applications.
+   * We support several download modes(DOWNLOAD=<mode>) for different applications.
      - **flashxip**: Program will to be download into flash and run directly in Flash
      - **flash**: Program will be download into flash, when running, program will be copied to ilm/ram and run in ilm/ram
      - **ilm**: Program will be download into ilm/ram and run directly in ilm/ram, program lost when poweroff
