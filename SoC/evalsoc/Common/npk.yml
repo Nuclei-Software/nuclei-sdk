@@ -285,7 +285,7 @@ configuration:
     type: text
     # hints and tips are introduced in Nuclei Studio 2023.10
     # used to show tool tips and input hints
-    tips: "Heap size in bytes for each cpu, eg. 4K or 4096, leave it blank for default linker script settings"
+    tips: "Heap size in bytes, eg. 4K or 4096, leave it blank for default linker script settings"
     hints: "4K"
     description: Heap Size
   stacksz:
