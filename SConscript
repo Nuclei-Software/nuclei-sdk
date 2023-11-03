@@ -113,7 +113,8 @@ build_download_mode_upper = build_download_mode.upper()
 
 src = Glob(SoC_Common + '/Source/*.c')
 src += Glob(SoC_Common + '/Source/Drivers/*.c')
-src += Glob(SoC_Common + '/Source/Drivers/Usb/*.c')
+if build_soc == "gd32vf103":
+    src += Glob(SoC_Common + '/Source/Drivers/Usb/*.c')
 src += Glob(SoC_Common + '/Source/Stubs/newlib/*.c')
 src += Glob(SoC_Common + '/Source/GCC/*.S')
 
