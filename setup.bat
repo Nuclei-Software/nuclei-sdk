@@ -3,7 +3,7 @@ set NUCLEI_TOOL_ROOT=D:\NucleiStudio\toolchain
 
 REM Create your setup_config.bat
 REM and define NUCLEI_TOOL_ROOT like below
-REM set NUCLEI_TOOL_ROOT=D:\NucleiStudio_IDE_202201\NucleiStudio\toolchain
+REM set NUCLEI_TOOL_ROOT=D:\NucleiStudio_IDE_202310-win64\NucleiStudio\toolchain
 set SETUP_CONFIG=setup_config.bat
 
 if exist %SETUP_CONFIG% call %SETUP_CONFIG%

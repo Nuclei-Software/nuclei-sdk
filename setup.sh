@@ -1,7 +1,7 @@
 NUCLEI_TOOL_ROOT=~/NucleiStudio/toolchain
 # Create your setup_config.sh
 # and define NUCLEI_TOOL_ROOT like below
-# NUCLEI_TOOL_ROOT=~/NucleiStudio_IDE_202201/NucleiStudio/toolchain
+# NUCLEI_TOOL_ROOT=~/NucleiStudio_IDE_202310-lin64/NucleiStudio/toolchain
 SETUP_CONFIG=setup_config.sh
 
 [ -f $SETUP_CONFIG ] && source $SETUP_CONFIG
