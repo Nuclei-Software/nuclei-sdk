@@ -21,6 +21,7 @@ This is release version ``0.5.0`` of Nuclei SDK.
    - This version removed demosoc support, please use evalsoc instead.
    - This version introduced qemu 8.0 support, old qemu will not be supported.
    - This version introduced Nuclei Studio 2023.10 support which introduced llvm toolchain support via npk, so it can only works with 2023.10 or later version.
+   - This version required a lot of new npk features introduced in Nuclei Studio 2023.10, so it can only be imported as npk package in Nuclei Studio 2023.10 or later version.
 
 * Application
 

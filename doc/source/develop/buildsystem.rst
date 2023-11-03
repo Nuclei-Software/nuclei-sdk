@@ -1162,6 +1162,7 @@ system libraries by the ``STDCLIB`` variable choice, so need to link desired lib
       about how to use this library, please follow doc located in ``gcc\share\pdf``, changes need
       to be done in startup code, linker script, stub code, and compiler options, you can check commit
       history of nuclei sdk for support of libncrt.
+    * Nuclei C runtime library(libncrt) only support RV32 CPU target, so you cannot use it with RV64 CPU.
     * Since there are different c runtime library can be chosen now, so developer
       need to provide different stub functions for different library, please check
       ``SoC/evalsoc/Common/Source/Stubs/`` and ``SoC/evalsoc/build.mk`` for example.
