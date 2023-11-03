@@ -1,4 +1,5 @@
 ## Package Base Information
+## This npk.yml only works with Nuclei Studio 2023.10 or later
 name: ssp-nsdk_gd32vf103
 owner: nuclei
 description: GD32VF103 SoC Support Package
@@ -125,11 +126,13 @@ configuration:
   semihost:
     default_value: 0
     type: checkbox
+    tips: "If semihosting is enabled, c library stub source files will not be copied"
     description: Enable Semihosting
   stdclib:
     default_value: newlib_nano
     type: choice
     global: true
+    tips: "Select proper c library, code size usage newlib_full > nuclei_nano > libncrt, libncrt only works for rv32"
     description: Standard C Library
     choices:
       - name: newlib_full

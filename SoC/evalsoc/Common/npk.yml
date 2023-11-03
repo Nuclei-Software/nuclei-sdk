@@ -1,4 +1,5 @@
 ## Package Base Information
+## This npk.yml only works with Nuclei Studio 2023.10 or later
 name: ssp-nsdk_evalsoc
 owner: nuclei
 description: Nuclei EvalSoC Support Package
@@ -34,6 +35,8 @@ configuration:
     type: choice
     global: true
     description: Nuclei RISC-V Core
+    # tips introduced in Nuclei Studio 2023.10
+    tips: "Select Nuclei Core to match basic RISC-V ARCH and ABI, used together with below Nuclei ARCH Extensions"
     choices:
       - name: n200
         arch: rv32imc
@@ -242,12 +245,17 @@ configuration:
   nuclei_archext:
     default_value: ""
     type: text
+    # hints and tips are introduced in Nuclei Studio 2023.10
+    # used to show tool tips and input hints
+    tips: "Possible other ISA extensions, seperated by underscores, like '_zba_zbb_zbc_zbs_xxldspn1x'"
+    hints: "_zba_zbb_zbc_zbs_xxldsp"
     global: true
     description: Nuclei ARCH Extensions
   nuclei_cache:
     default_value: []
     type: multicheckbox_v2
     global: true
+    tips: "Click to select whether Nuclei I/D cache present and Cache CCM unit present"
     description: Nuclei Cache Extensions
     param:
       name:
@@ -258,6 +266,7 @@ configuration:
     default_value: 0
     type: spinner
     global: true
+    tips: "SMP CPU Number, if above 1, you should set proper heap and stack size"
     description: Nuclei SMP Count
     param:
       range: >-
@@ -266,6 +275,7 @@ configuration:
     default_value: 0
     type: spinner
     global: true
+    tips: "Select which hart chosen by hartid is the boot hart"
     description: Boot HartID
     param:
       range: >-
@@ -273,19 +283,29 @@ configuration:
   heapsz:
     value: ""
     type: text
+    # hints and tips are introduced in Nuclei Studio 2023.10
+    # used to show tool tips and input hints
+    tips: "Heap size in bytes for each cpu, eg. 4K or 4096, leave it blank for default linker script settings"
+    hints: "4K"
     description: Heap Size
   stacksz:
     value: ""
     type: text
+    # hints and tips are introduced in Nuclei Studio 2023.10
+    # used to show tool tips and input hints
+    tips: "Stack size in bytes for each cpu, eg. 4K or 4096, leave it blank for default linker script settings"
+    hints: "4K"
     description: Stack Size Per CPU
   semihost:
     default_value: 0
     type: checkbox
+    tips: "If semihosting is enabled, c library stub source files will not be copied"
     description: Enable Semihosting
   stdclib:
     default_value: newlib_nano
     type: choice
     global: true
+    tips: "Select proper c library, code size usage newlib_full > nuclei_nano > libncrt, libncrt only works for rv32"
     description: Standard C Library
     choices:
       - name: newlib_full
@@ -313,6 +333,7 @@ configuration:
   linker_script:
     default_value: ""
     type: text
+    # used as npk pass variable, not a global configuration
     global: false
     description: Alternative linker script
 
