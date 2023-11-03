@@ -203,6 +203,24 @@ configuration:
         cmodel: medany
         tune: nuclei-900-series
         description: NX900FD Core(ARCH=rv64imafdc, ABI=lp64d)
+      - name: u900
+        arch: rv32imac
+        abi: ilp32
+        cmodel: medlow
+        tune: nuclei-900-series
+        description: U900 Core(ARCH=rv32imac, ABI=ilp32)
+      - name: u900f
+        arch: rv32imafc
+        abi: ilp32f
+        cmodel: medlow
+        tune: nuclei-900-series
+        description: U900F Core(ARCH=rv32imafc, ABI=ilp32f)
+      - name: u900fd
+        arch: rv32imafdc
+        abi: ilp32d
+        cmodel: medlow
+        tune: nuclei-900-series
+        description: U900FD Core(ARCH=rv32imafdc, ABI=ilp32d)
       - name: ux900
         arch: rv64imac
         abi: lp64
