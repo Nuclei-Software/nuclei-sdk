@@ -6,7 +6,7 @@ Changelog
 V0.5.0
 ------
 
-This is release version ``0.5.0`` of Nuclei SDK.
+This is release version ``0.5.0`` of Nuclei SDK, please use it with Nuclei Studio 2023.10 release.
 
 .. note::
 
