@@ -225,5 +225,12 @@ If you are using Nuclei Toolchain 2023.10, ``rvintrin.h`` no longer exist for B 
 don't include this header file. If you want to use an intrinsic API for B extension, you need to write
 using c asm intrinsic.
 
-.. _debugger kit manual: https://www.nucleisys.com/theme/package/Nuclei_FPGA_DebugKit_Intro.pdf
+riscv-nuclei-elf-gcc: not found when using Nuclei Studio 2023.10
+----------------------------------------------------------------
+
+``riscv-nuclei-elf-gcc``(gcc10) has changed to ``riscv64-unknown-elf-gcc``(gcc13) since Nuclei Studio 2023.10 or
+Nuclei RISC-V Toolchain 2023.10, so if you are using older toolchain created npk package or ide project, you
+may face this build fail issue, you can follow the user guide of Nuclei Studio 2023.10 to fix this issue, see chapter 8.
+
+.. _debugger kit manual: https://nucleisys.com/developboard.php#ddr200t
 .. _ftdi_device_desc: http://openocd.org/doc/html/Debug-Adapter-Configuration.html
