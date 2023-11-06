@@ -456,6 +456,10 @@ SOC
 
 **SOC** variable is used to declare which SoC is used in application during compiling.
 
+**evalsoc** is the default SoC, if no **SOC** passed or environment variable set, you can check
+default settings by run ``make info``, it will will show default settings without any overriding
+make variable.
+
 You can easily find the supported SoCs in the **<NUCLEI_SDK_ROOT>/SoC** directory.
 
 Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
