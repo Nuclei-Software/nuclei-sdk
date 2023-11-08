@@ -88,6 +88,9 @@ line in the openocd configuration file to describe the FTDI device description.
 Or you can add extra ``adapter serial your_serial_no`` for your debugger, you can check
 its serial number via windows FT_PROG tool.
 
+**NOTE**: for windows, you need to add an extra ``A`` to the serial number, eg. your serial number is
+``FT6S9RD6``, then this extra openocd config line should be ``adapter serial "FT6S9RD6A"`` for windows.
+
 * For **Nuclei FPGA Evaluation Board**, you can check the openocd configuration
   file in *SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg*.
 

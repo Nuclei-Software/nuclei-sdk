@@ -6,11 +6,11 @@ Changelog
 V0.5.0
 ------
 
-This is release version ``0.5.0`` of Nuclei SDK, please use it with Nuclei Studio 2023.10 release.
+This is release version ``0.5.0`` of Nuclei SDK, please use it with `Nuclei Studio 2023.10`_ release.
 
 .. note::
 
-   - This 0.5.0 version is a big change version for Nuclei SDK, it now support Nuclei Toolchain 2023.10,
+   - This 0.5.0 version is a big change version for Nuclei SDK, it now support `Nuclei Toolchain 2023.10`_,
      which have gnu toolchain and llvm toolchain in it, gcc version increased to gcc 13, and clang version
      used is clang 17. It will no longer support old gcc 10 version, since gcc and clang ``-march`` option
      changed a lot, such as b extension changed to ``_zba_zbb_zbc_zbs``.
@@ -21,7 +21,7 @@ This is release version ``0.5.0`` of Nuclei SDK, please use it with Nuclei Studi
    - This version removed demosoc support, please use evalsoc instead.
    - This version introduced qemu 8.0 support, old qemu will not be supported.
    - This version introduced Nuclei Studio 2023.10 support which introduced llvm toolchain support via npk, so it can only works with 2023.10 or later version.
-   - This version required a lot of new npk features introduced in Nuclei Studio 2023.10, so it can only be imported as npk package in Nuclei Studio 2023.10 or later version.
+   - This version required a lot of new npk features introduced in `Nuclei Studio 2023.10`_, so it can only be imported as npk package in `Nuclei Studio 2023.10`_ or later version.
 
 * Application
 
@@ -32,7 +32,7 @@ This is release version ``0.5.0`` of Nuclei SDK, please use it with Nuclei Studi
   - For different compiler option support, we introduced ``toolchain_$(TOOLCHAIN).mk`` file to place toolchain specified options, see benchmark examples' Makefile
   - Optimize demo_cidu smp case
   - Optimize application code and makefile when port for clang, terapines zcc and iar compiler
-  - Change ARCH_EXT makefile comment for demo_dsp when using gcc 13
+  - Change :ref:`develop_buildsystem_var_archext` makefile comment for demo_dsp when using gcc 13
   - Auto choose proper CPU_SERIES and proper optimization flags for benchmark cases
   - Optimize whetstone cost to decrease execution time for better ci testing in qemu and fpga
   - Add Zc and Xxlcz extension optimization for coremark and dhrystone cases
@@ -43,54 +43,56 @@ This is release version ``0.5.0`` of Nuclei SDK, please use it with Nuclei Studi
 
   - Add bench reset/sample/stop/stat and get usecyc/sumcyc/lpcnt APIs in NMSIS Core
   - Add more CSRs such as Zc/Stack Check in riscv_encoding.h
-  - Rename NMSIS DSP/NN library name to match gcc 13 changes, eg. b -> zba_zbb_zbc_zbs, so the library name changed a lot
+  - Rename NMSIS DSP/NN library name to match gcc 13 changes, eg. ``b -> zba_zbb_zbc_zbs``, so the library name changed a lot
   - Add IAR compiler support in NMSIS Core
-  - No more bitmanip extension intrinsic header <rvintrin.h> for gcc13
-  - Fix __RV_CLAMP macro and add __MACHINE/SUPERVISOR/USER_INTERRUPT macros
-  - Add __get_hart_index and SysTimer_GetHartID and modify __get_hart_id API
-  - In <Device.h>, we introduced __HARTID_OFFSET and __SYSTIMER_HARTID macro to represent timer hart index relation with cpu hartid for AMP SoC
-  - Update NMSIS Core/DSP/NN header files to v1.2.0
+  - No more bitmanip extension intrinsic header ``<rvintrin.h>`` for gcc13
+  - Fix ``__RV_CLAMP`` macro and add ``__MACHINE/SUPERVISOR/USER_INTERRUPT`` macros
+  - Add ``__get_hart_index`` and ``SysTimer_GetHartID`` and modify ``__get_hart_id`` API
+  - In <Device.h>, we introduced ``__HARTID_OFFSET`` and ``__SYSTIMER_HARTID`` macro to represent timer hart index relation with cpu hartid for AMP SoC
+  - Update NMSIS Core/DSP/NN header files to `NMSIS 1.2.0`_
   - Update NMSIS DSP/NN prebuilt library to v1.2.0, and added F16 prebuilt library
 
 * SOC
 
   - **CAUTION**: Demosoc support is removed since evalsoc is the successor, please use **evalsoc** now.
-  - Set RUNMODE_CCM_EN macro when CCM_EN make variable passed and allow __CCM_PRESENT overwrite by RUNMODE_CCM_EN macro
-  - Enable __CIDU_PRESENT macro passed via compiler option
+  - Set **RUNMODE_CCM_EN** macro when **CCM_EN** make variable passed and allow ``__CCM_PRESENT`` overwrite by **RUNMODE_CCM_EN** macro
+  - Enable ``__CIDU_PRESENT`` macro passed via compiler option
   - Update cpu startup asm code to fix clang compile issue such as STB_WEAK warning and non-ABS relocation error
   - Update cpu startup asm code to support zcmt jump table
   - Update gnu linker files to support zcmt extension
   - Update gnu linker files to fix 2 byte gap issue, and align section to 8bytes and reorg sections
   - Update openocd configuration files to support openocd new version
-  - Make metal_tty_putc/getc with __USED attribute to avoid -flto build fail
+  - Make ``metal_tty_putc/getc`` with ``__USED`` attribute to avoid ``-flto`` build and link fail
   - Add startup and exception code and iar linker icf files for IAR compiler support
-  - Add new macros __HARTID_OFFSET and __SYSTIMER_HARTID in evalsoc.h
-  - Add HARTID_OFFSET make variable to control hartid offset for evalsoc
+  - Add new macros ``__HARTID_OFFSET`` and ``__SYSTIMER_HARTID`` in evalsoc.h
+  - Add **HARTID_OFFSET** make variable to control hartid offset for evalsoc
   - Boot hartid check no longer only compare lower 8bits for evalsoc
   - Currently IAR compiler support is only for single core support, smp support is not yet ready and need to use in IAR workbench
-  - Update Nuclei Studio NPK files to support both gcc and llvm toolchain support, this require 2023.10 Nuclei Studio, which is incompatiable with previous IDE version.
+  - Update Nuclei Studio NPK files to support both gcc and llvm toolchain support, this require `Nuclei Studio 2023.10`_, which is incompatiable with previous IDE version.
 
 * Build System
 
   - Fix semihost not working when link with semihost library
-  - Add support for gcc 13, clang 17, terapines zcc toolchain using TOOLCHAIN make variable, eg. TOOLCHAIN=nuclei_gnu for gnu gcc toolchain, TOOLCHAIN=nuclei_llvm for llvm toolchain, TOOLCHAIN=terapines for terapines zcc toolchain
-  - Add support for libncrt v3.0.0, which spilt libncrt into 3 parts, the c library part, fileops part, and heapops part, so **NCRTHEAP** and **NCRTIO** makefile variable are added to support new version of libncrt, about upgrading libncrt, please check :ref:`develop_buildsystem_var_stdclib`
+  - Add support for gcc 13, clang 17, terapines zcc toolchain using :ref:`develop_buildsystem_var_toolchain` make variable, eg. ``TOOLCHAIN=nuclei_gnu`` for gnu gcc toolchain, ``TOOLCHAIN=nuclei_llvm`` for llvm toolchain, ``TOOLCHAIN=terapines`` for terapines zcc toolchain
+  - Add support for libncrt v3.0.0, which spilt libncrt into 3 parts, the c library part, fileops part, and heapops part, so :ref:`develop_buildsystem_var_ncrtheap` and :ref:`develop_buildsystem_var_ncrtio` makefile variable are added to support new version of libncrt, about upgrading libncrt, please check :ref:`develop_buildsystem_var_stdclib`
   - To support both gcc, clang, zcc, now we no longer use ``--specs=nano.specs`` like ``--specs=`` gcc only options, since clang don't support it, we directly link the required libraries according to the library type you want to use in Makefile, group all the required libraries using ``--start-group archives --end-group`` of linker option, see https://sourceware.org/binutils/docs/ld/Options.html, but when using Nuclei Studio, the Eclipse CDT based IDE didn't provided a good way to do library group, here is an issue tracking it, see https://github.com/eclipse-embed-cdt/eclipse-plugins/issues/592
+
     - And also now we defaultly enabled ``-nodefaultlibs`` option to not use any standard system libraries when linking, so we need to specify the system libraries we want to use during linking, which is the best way to support both gcc and clang toolchain.
+
   - When using libncrt library, this is no need to link with other libgcc library, c library or math library, such as gcc libgcc library(``-lgcc``), newlib c library(``-lc/-lc_nano``) and math library(``-lm``), the c and math features are also provided in libncrt library
-  - When using Nuclei Studio with imported Nuclei SDK NPK package, you might meet with undefined reference issue during link 
-  - The use of ARCH_EXT is changed for new toolchain, eg. you can't pass ARCH_EXT=bp to represent b/p extension, instead you need to pass ARCH_EXT=_zba_zbb_zbc_zbs_xxldspn1x
+  - When using Nuclei Studio with imported Nuclei SDK NPK package, you might meet with undefined reference issue during link
+  - The use of :ref:`develop_buildsystem_var_archext` is changed for new toolchain, eg. you can't pass ``ARCH_EXT=bp`` to represent b/p extension, instead you need to pass ``ARCH_EXT=_zba_zbb_zbc_zbs_xxldspn1x``
   - Show CC/CXX/GDB when make showflags
   - Add u900 series cores support
   - No longer support gd32vf103 soc run on qemu
   - Add extra ``-fomit-frame-pointer -fno-shrink-wrap-separate`` options for Zc extension to enable zcmp instruction generation
-  - Extra CPU_SERIES macro is passed such (200/300/600/900) during compiling for benchmark examples
-  - When you want to select different nmsis library arch, please use **NMSIS_LIB_ARCH** make variable, see demo_dsp as example
+  - Extra **CPU_SERIES** macro is passed such (200/300/600/900) during compiling for benchmark examples
+  - When you want to select different nmsis library arch, please use :ref:`develop_buildsystem_var_nmsis_lib_arch` make variable, see demo_dsp as example
 
 * Tools
 
   - A lot of changes mainly in nsdk cli configs have been made to remove support of demosoc, and change it to evalsoc
-  - A lot of changes mainly in nsdk cli configs have been made to support newer ARCH_EXT variable format
+  - A lot of changes mainly in nsdk cli configs have been made to support newer :ref:`develop_buildsystem_var_archext` variable format
   - Add llvm ci related nsdk cli config files
   - Add Zc/Xxlcz fpga benchmark config files
   - Support qemu 8.0 in nsdk cli tools
@@ -103,7 +105,7 @@ This is release version ``0.5.0`` of Nuclei SDK, please use it with Nuclei Studi
 
 * Misc
 
-  - Change gitlab ci to use gnu toolchain 2023.10
+  - Change gitlab ci to use `Nuclei Toolchain 2023.10`_
   - Add IAR workbench workspace and projects for evalsoc, so user can quickly evaluate IAR support in IAR workbench
 
 
@@ -980,3 +982,6 @@ Here are the main features of this release:
 .. _RomanBuchert: https://github.com/RomanBuchert
 .. _michahoiting: https://github.com/michahoiting
 .. _NMSIS 1.0.3 Changelog: https://doc.nucleisys.com/nmsis/changelog.html#v1-0-3
+.. _Nuclei Studio 2023.10: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2023.10
+.. _Nuclei Toolchain 2023.10: https://github.com/riscv-mcu/riscv-gnu-toolchain/releases/tag/nuclei-2023.10
+.. _NMSIS 1.2.0: https://github.com/Nuclei-Software/NMSIS/releases/tag/1.2.0
