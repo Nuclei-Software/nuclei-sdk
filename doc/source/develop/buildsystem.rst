@@ -722,7 +722,7 @@ RISC-V Processor, except the ``iemafdc``.
 
 .. note::
 
-   Nuclei toolchain 2023.10 now bump gcc version from gcc 10 to gcc 13, which introduced
+   `Nuclei Toolchain 2023.10`_ now bump gcc version from gcc 10 to gcc 13, which introduced
    incompatiable ``-march`` option, so ``ARCH_EXT`` usage is also incompatiable now.
 
    About the incompatiable march option change, please see https://github.com/riscv-non-isa/riscv-toolchain-conventions/pull/26, which is already present in latest gcc and clang release.
@@ -731,15 +731,15 @@ When using gcc 13 or clang 17 toolchain in 2023.10 toolchain release, you need t
 
 Here are several examples when using ARCH_EXT for Nuclei RISC-V Processors:
 
-* If you want to use just B 1.0 extension, you can pass **ARCH_EXT=_zba_zbb_zbc_zbs**
-* If you want to use just Nuclei implemented P 0.5.4 extension and N1/N2/N3 customized extension
+* If you want to use just `B 1.0 extension`_, you can pass **ARCH_EXT=_zba_zbb_zbc_zbs**
+* If you want to use just Nuclei implemented `P 0.5.4 extension`_ and N1/N2/N3 customized extension
 
   - Xxldsp: means P 0.5.4 + Nuclei default enabled additional 8 expd instructions for both RV32 and RV64, you can pass **ARCH_EXT=_xxldsp**
   - Xxldspn1x: means Xxldsp + Nuclei N1 additional instructions for RV32 only, you can pass **ARCH_EXT=_xxldspn1x**
   - Xxldspn2x: means Xxldspn1x + Nuclei N2 additional instructions for RV32 only, you can pass **ARCH_EXT=_xxldspn2x**
   - Xxldspn3x: means Xxldspn1x + Nuclei N3 additional instructions for RV32 only, you can pass **ARCH_EXT=_xxldspn3x**
-* If you want to use K 1.0 extension, you can pass **ARCH_EXT=_zk_zks**
-* If you want to use V 1.0 extension
+* If you want to use `K 1.0 extension`_, you can pass **ARCH_EXT=_zk_zks**
+* If you want to use `V 1.0 extension`_
 
   - For rv32 without f/d extension, you can pass **ARCH_EXT=_zve32x**
   - For rv32 with f/d extension, you can pass **ARCH_EXT=_zve32f**
@@ -747,7 +747,14 @@ Here are several examples when using ARCH_EXT for Nuclei RISC-V Processors:
   - For rv64 with f extension, you can pass **ARCH_EXT=_zve64f**
   - For rv64 with fd extension, you can pass **ARCH_EXT=v**
 
-* If you want to use Zc 1.0 extension
+* If you want to use F16(zfh/zvfh) extension, you can follow below steps
+
+  - For case without vector extension, you can add extra ``_zfh`` to **ARCH_EXT**, eg, **ARCH_EXT=_zfh**
+  - For case with vector extension, you can add extra ``_zfh_zvfh`` to **ARCH_EXT**, eg, **ARCH_EXT=_zfh_zvfh**
+  - And the prebuilt NMSIS DSP library also provide F16 support with prebuilt F16 library, you can check library name with ``zfh``, such as ``NMSIS/Library/DSP/GCC/libnmsis_dsp_rv32imafc_zfh_zvfh_zve32f.a``
+  - Spec about `zfh extension`_ and `zvfh extension`_
+
+* If you want to use `Zc 1.0 extension`_
 
   - You can use it together with C extension, which means it should be concat with isa string like ``rv32imafd_zca_zcb_zcf_zcmp_zcmt``
   - In Nuclei SDK, the isa string processing is done in build system
@@ -759,9 +766,13 @@ Here are several examples when using ARCH_EXT for Nuclei RISC-V Processors:
 
 * When using customized extensions such as Xxldsp/Xxldspn1x/Xxldspn2x/Xxldspn3x/Xxlcz, the isa string must be placed after all ``_z`` started isa strings, here is an legal string such as ``rv32imafd_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_zk_zks_xxlcz_xxldspn3x`` for rv32 with imafd + Zc + B + K + Xxldspn3x + Xxlcz
 
-* You need to handle this **ARCH_EXT** carefully, expecially using with demo_dsp demo since it will default search library match the whole arch name but you can pass **NMSIS_LIB_ARCH** variable in Makefile to choose your desired library arch.
+* You need to handle this **ARCH_EXT** carefully, expecially using with demo_dsp demo since it will default search library match the whole arch name but you can pass :ref:`develop_buildsystem_var_nmsis_lib_arch` variable in Makefile to choose your desired library arch.
 
-* When using Nuclei LLVM toolchain, the isa string order must be treat carefully, it is not handled very good when searching different multilib.
+* LLVM Clang in Nuclei RISC-V Toolchain 2023.10 don't support ``Xxldsp`` and ``Xxlcz`` extension now, please take care.
+
+* When using llvm clang compiler, the isa string order must be treat carefully, it is not handled very good when searching different multilib.
+
+* You can check prebuilt multilib for gcc and clang using ``riscv64-unknown-elf-gcc --print-multi-lib`` and ``riscv64-unknown-elf-clang --print-multi-lib``
 
 Here below are for using gcc 10 toolchain, you can use it like this below in old nuclei sdk release before 0.5.0.
 
@@ -914,6 +925,8 @@ It is used by openocd ``adapter serial``.
 
 Assume you have a jtag adapter, serial number is ``FT6S9RD6``, and you want to download program through
 this jtag to a fpga with ux900 bitstream on it, you can do it like this.
+
+For windows, you need to pass extra ``A``, eg. ``JTAGSN=FT6S9RD6A``
 
 .. code-block:: shell
 
@@ -1079,11 +1092,11 @@ NMSIS_LIB_ARCH
 
 This variable is used to select real nmsis dsp/nn library arch used, if not set, it will use **RISCV_ARCH** passed.
 
+The **NMSIS_LIB_ARCH** need to match the prebuilt libraries located in **NMSIS/Library/DSP/GCC** and **NMSIS/Library/NN/GCC**, eg. ``NMSIS_LIB_ARCH := rv32imafc_zfh_zvfh_zve32f_zba_zbb_zbc_zbs_xxldspn1x`` will select ``libnmsis_dsp_rv32imafc_zfh_zvfh_zve32f_zba_zbb_zbc_zbs_xxldspn1x.a`` if ``NMSIS_LIB := nmsis_dsp``
+
 This is useful when you want to specify a different arch for library.
 
-eg.
-
-When your cpu arch is ``rv32imafdc_zba_zbb_zbc_zbs_zk_zks_xxldspn3x``, and you want to use ``rv32imafdc_zba_zbb_zbc_zbs_xxldspn1x``, then you can set **NMSIS_LIB_ARCH=rv32imafdc_zba_zbb_zbc_zbs_xxldspn1x** in Makefile, otherwise it will use the real cpu arch passed by **CORE** and **ARCH_EXT** or directly via **RISCV_ARCH**.
+eg. When your cpu arch is ``rv32imafdc_zba_zbb_zbc_zbs_zk_zks_xxldspn3x``, and you want to use ``rv32imafdc_zba_zbb_zbc_zbs_xxldspn1x``, then you can set **NMSIS_LIB_ARCH=rv32imafdc_zba_zbb_zbc_zbs_xxldspn1x** in Makefile, otherwise it will use the real cpu arch passed by **CORE** and **ARCH_EXT** or directly via **RISCV_ARCH**.
 
 .. _develop_buildsystem_var_stdclib:
 
@@ -1755,3 +1768,11 @@ For example, ``LINKER_SCRIPT := gcc.ld``.
 
 
 .. _GNU Make Standard Library (GMSL): http://sourceforge.net/projects/gmsl/
+.. _B 1.0 extension: https://github.com/riscv/riscv-bitmanip/releases/tag/1.0.0
+.. _P 0.5.4 extension: https://github.com/riscv/riscv-p-spec/blob/33be869910077afd52653031f18a235b1f9d4442/P-ext-proposal.adoc
+.. _K 1.0 extension: https://github.com/riscv/riscv-crypto/releases/tag/v1.0.0
+.. _V 1.0 extension: https://github.com/riscv/riscv-v-spec/releases/tag/v1.0
+.. _Zc 1.0 extension: https://github.com/riscv/riscv-code-size-reduction/releases/tag/v1.0.4-3
+.. _zfh extension: https://wiki.riscv.org/display/HOME/Recently+Ratified+Extensions
+.. _zvfh extension: https://github.com/riscv/riscv-v-spec/releases/tag/zvfh
+.. _Nuclei Toolchain 2023.10: https://github.com/riscv-mcu/riscv-gnu-toolchain/releases/tag/nuclei-2023.10

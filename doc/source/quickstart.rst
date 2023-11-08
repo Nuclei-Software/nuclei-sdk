@@ -10,13 +10,13 @@ Use Nuclei SDK in Nuclei Studio
 
 .. caution::
 
-   For Nuclei SDK 0.5.0 version and later ones, please use Nuclei Studio 2023.10 or
+   For Nuclei SDK 0.5.0 version and later ones, please use `Nuclei Studio 2023.10`_ or
    Nuclei RISC-V Toolchain/OpenOCD/QEMU 2023.10.
 
    For Nuclei SDK 0.3.5 version and later ones, please use Nuclei Studio 2022.01 or
    Nuclei GNU Toolchain/OpenOCD/QEMU 2022.01.
 
-From Nuclei Toolchain 2023.10, both gnu and llvm toolchain are provided, and toolchain
+From `Nuclei Toolchain 2023.10`_, both gnu and llvm toolchain are provided, and toolchain
 prefix changed from ``riscv-nuclei-elf-`` to ``riscv64-unknown-elf-``, and 0.5.0 SDK release
 will only support this ``2023.10`` or later toolchain.
 
@@ -720,3 +720,5 @@ For more advanced usage, please follow the items as below:
 .. _Platform Nuclei in PlatformIO: https://platformio.org/platforms/nuclei
 .. _Nuclei_Studio_User_Guide.pdf: https://www.nucleisys.com/upload/files/doc/nucleistudio/Nuclei_Studio_User_Guide.pdf
 .. _Light on onboard LED of RVSTAR board using PlatformIO(Chinese): https://www.rvmcu.com/community-topic-id-310.html
+.. _Nuclei Toolchain 2023.10: https://github.com/riscv-mcu/riscv-gnu-toolchain/releases/tag/nuclei-2023.10
+.. _Nuclei Studio 2023.10: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2023.10
