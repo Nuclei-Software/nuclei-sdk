@@ -84,13 +84,13 @@ buildconfig:
 
         condition: $( ${cpu_series} == 600 )
       - flags: >-
-              -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=500
+              -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=600
               -ftree-dominator-opts -fselective-scheduling -funroll-loops -finline-functions -falign-functions=4
-              -falign-jumps=4 -falign-loops=4 -fipa-pta -fno-code-hoisting -fno-common -fno-if-conversion
+              -falign-jumps=8 -falign-loops=8 -fipa-pta -fno-code-hoisting -fno-common -fno-if-conversion
               -fno-if-conversion2 -fno-tree-loop-distribute-patterns -fno-tree-vectorize -fno-tree-loop-ivcanon
               -ftree-vrp -fgcse-las --param=max-loop-header-insns=4 --param loop-max-datarefs-for-datadeps=0
               --param=unroll-jam-min-percent=0 --param=max-goto-duplication-insns=0
-              --param max-jump-thread-duplication-stmts=19 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
+              --param max-jump-thread-duplication-stmts=9 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
 
         condition: $( ${cpu_series} == 900 )
   - type: clang
