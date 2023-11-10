@@ -3,8 +3,8 @@ $(info Using Nuclei $(CPU_SERIES) series optimization compiling flags!)
 ifeq ($(CPU_SERIES),900)
 # Benchmark options for 900
 # Change max-jump-thread-duplication-stmts=19 to 9 perform well for n900
-BENCH_FLAGS ?= -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=600 \
-	-ftree-dominator-opts -fselective-scheduling -funroll-loops -finline-functions -falign-functions=4 \
+BENCH_FLAGS ?= -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=500 \
+	-ftree-dominator-opts -fselective-scheduling -funroll-loops -finline-functions -falign-functions=8 \
 	-falign-jumps=8 -falign-loops=8 -fipa-pta -fno-code-hoisting -fno-common -fno-if-conversion \
 	-fno-if-conversion2 -fno-tree-loop-distribute-patterns -fno-tree-vectorize -fno-tree-loop-ivcanon \
 	-ftree-vrp -fgcse-las --param=max-loop-header-insns=2 --param loop-max-datarefs-for-datadeps=0 \

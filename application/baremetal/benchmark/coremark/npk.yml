@@ -84,8 +84,8 @@ buildconfig:
 
         condition: $( ${cpu_series} == 600 )
       - flags: >-
-              -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=600
-              -ftree-dominator-opts -fselective-scheduling -funroll-loops -finline-functions -falign-functions=4
+              -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=500
+              -ftree-dominator-opts -fselective-scheduling -funroll-loops -finline-functions -falign-functions=8
               -falign-jumps=8 -falign-loops=8 -fipa-pta -fno-code-hoisting -fno-common -fno-if-conversion
               -fno-if-conversion2 -fno-tree-loop-distribute-patterns -fno-tree-vectorize -fno-tree-loop-ivcanon
               -ftree-vrp -fgcse-las --param=max-loop-header-insns=4 --param loop-max-datarefs-for-datadeps=0
