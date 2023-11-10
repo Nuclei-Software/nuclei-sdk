@@ -156,6 +156,12 @@
                 "FAIL": ["[FAIL]", "MEPC"]
             }
         },
+        "application/baremetal/demo_stack_check": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Stack check demo over"]
+            }
+        },
         "application/baremetal/cpuinfo": {
             "build_config" : {},
             "checks": {
