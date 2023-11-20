@@ -49,31 +49,31 @@ buildconfig:
   - type: gcc
     common_flags: # flags need to be combined together across all packages
       - flags: >-
-              -O3 -flto -fno-inline -funroll-loops
+              -O3 -flto -fno-inline -fno-builtin-printf -funroll-loops
               -falign-functions=4 -falign-jumps=4 -falign-loops=8
 
         condition: $( ${dhry_mode} == 'ground' )
       - flags: >-
-              -O3 -flto -finline -funroll-loops
+              -O3 -flto -finline -fno-builtin-printf -funroll-loops
               -falign-functions=4 -falign-jumps=4 -falign-loops=8 -finline-functions
 
         condition: $( ${dhry_mode} == 'inline' )
       - flags: >-
-              -Ofast -flto -fwhole-program -finline -funroll-loops
+              -Ofast -flto -fwhole-program -finline -fno-builtin-printf -funroll-loops
               -falign-functions=4 -falign-jumps=4 -falign-loops=8 -finline-functions
 
         condition: $( ${dhry_mode} == 'best' )
   - type: clang
     common_flags: # flags need to be combined together across all packages
       - flags: >-
-              -Ofast -flto -fno-inline -funroll-loops -falign-functions=4 -falign-loops=4
+              -Ofast -flto -fno-inline -fno-builtin-printf -funroll-loops -falign-functions=4 -falign-loops=4
 
         condition: $( ${dhry_mode} == 'ground' )
       - flags: >-
-              -Ofast -flto -finline -funroll-loops -falign-functions=4 -falign-loops=4 -finline-functions
+              -Ofast -flto -finline -fno-builtin-printf -funroll-loops -falign-functions=4 -falign-loops=4 -finline-functions
 
         condition: $( ${dhry_mode} == 'inline' )
       - flags: >-
-              -O3 -flto -finline -funroll-loops -falign-functions=4 -falign-loops=4 -finline-functions
+              -O3 -flto -finline -fno-builtin-printf -funroll-loops -falign-functions=4 -falign-loops=4 -finline-functions
 
         condition: $( ${dhry_mode} == 'best' )
