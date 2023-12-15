@@ -23,6 +23,8 @@
  extern "C" {
 #endif
 
+// NOTE: Modified for N100
+
 #include "nmsis_version.h"
 
 /**
@@ -85,21 +87,13 @@
 #include "core_feature_vector.h"
 /* Include core bitmanip feature header file */
 #include "core_feature_bitmanip.h"
-/* Include core pmp feature header file */
-#include "core_feature_pmp.h"
-/* Include core spmp feature header file */
- #include "core_feature_spmp.h"
-/* Include core cache feature header file */
-#include "core_feature_cache.h"
-/* Include core cidu feature header file */
- #include "core_feature_cidu.h"
 
 /* Include compatiable functions header file */
 #include "core_compatiable.h"
 
 #ifndef __NMSIS_GENERIC
 /* Include core eclic feature header file */
-#include "core_feature_eclic.h"
+#include "core_feature_irqc.h"
 /* Include core systimer feature header file */
 #include "core_feature_timer.h"
 #endif
