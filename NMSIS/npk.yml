@@ -1,8 +1,8 @@
 ## Package Base Information
-name: csp-nsdk_nmsis
+name: csp-nsdk_nmsis_n100
 owner: nuclei
 version: 1.2.0
-description: NMSIS in Nuclei SDK
+description: NMSIS For N100 in Nuclei SDK
 type: csp
 keywords:
   - nmsis
@@ -14,47 +14,15 @@ homepage: https://github.com/Nuclei-Software/NMSIS
 ## Package Configurations
 configuration:
   nmsislibarch:
-    value: "rv32imac"
+    value: "rv32imc"
     type: text
     global: false
     description: RISC-V ARCH for NMSIS library
-  nmsislibsel:
-    default_value: none
-    type: choice
-    global: true
-    description: Select NMSIS Library
-    choices:
-      - name: none
-        description: No NMSIS Library used
-      - name: nmsis_dsp
-        description: NMSIS DSP Library
-      - name: nmsis_nn
-        description: NMSIS NN Library
-      - name: nmsis_dsp_nn
-        description: NMSIS DSP and NN Library
 
 ## Source Code Management
 codemanage:
   installdir: NMSIS
   copyfiles:
     - path: ["Core"]
-    - path: ["DSP", "Library/DSP"]
-      condition: $( contains(${nmsislibsel}, "nmsis_dsp") || contains(${nmsislibsel}, "nmsis_dsp_nn") )
-    - path: ["NN", "Library/NN"]
-      condition: $( contains(${nmsislibsel}, "nmsis_nn") || contains(${nmsislibsel}, "nmsis_dsp_nn") )
   incdirs:
     - path: ["Core/Include"]
-    - path: ["DSP/Include", "DSP/PrivateInclude"]
-      condition: $( contains(${nmsislibsel}, "nmsis_dsp") || contains(${nmsislibsel}, "nmsis_dsp_nn") )
-    - path: ["NN/Include"]
-      condition: $( contains(${nmsislibsel}, "nmsis_nn") || contains(${nmsislibsel}, "nmsis_dsp_nn") )
-  libdirs:
-    - path: ["Library/DSP/GCC"]
-      condition: $( contains(${nmsislibsel}, "nmsis_dsp") || contains(${nmsislibsel}, "nmsis_dsp_nn") )
-    - path: ["Library/NN/GCC"]
-      condition: $( contains(${nmsislibsel}, "nmsis_nn") || contains(${nmsislibsel}, "nmsis_dsp_nn") )
-  ldlibs:
-    - libs: ["nmsis_nn_${nmsislibarch}"]
-      condition: $( contains(${nmsislibsel}, "nmsis_nn") || contains(${nmsislibsel}, "nmsis_dsp_nn") )
-    - libs: ["nmsis_dsp_${nmsislibarch}"]
-      condition: $( contains(${nmsislibsel}, "nmsis_dsp") || contains(${nmsislibsel}, "nmsis_dsp_nn") )
