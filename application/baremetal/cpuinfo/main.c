@@ -7,6 +7,27 @@
 #define EXTENSION_NUM       (26)
 #define POWER_FOR_TWO(n)    (1UL << (n))
 
+void show_safety_mechanism(rv_csr_t safetyMode)
+{
+    switch (safetyMode) {
+        case 0b00:
+            printf(" No-Safety-Mechanism");
+            break;
+        case 0b01:
+            printf(" Lockstep");
+            break;
+        case 0b10:
+            printf(" Lockstep+Split");
+            break;
+        case 0b11:
+            printf(" ASIL-B\n");
+            break;
+        default:
+            printf(" Invalid-safety-mechanism");
+            break;
+    }
+}
+
 void print_size(rv_csr_t bytes)
 {
     if (bytes / GB) {
@@ -105,21 +126,31 @@ void nuclei_cpuinfo(void)
     if (mcfg.b.dcache) {
         printf(" DCACHE");
     }
-    if (mcfg.d & BIT(11)) {
+    if (mcfg.b.smp) {
         printf(" SMP");
     }
-    if (mcfg.d & BIT(12)) {
+    if (mcfg.b.dsp_n1) {
         printf(" DSP-N1");
     }
-    if (mcfg.d & BIT(13)) {
+    if (mcfg.b.dsp_n2) {
         printf(" DSP-N2");
     }
-    if (mcfg.d & BIT(14)) {
+    if (mcfg.b.dsp_n3) {
         printf(" DSP-N3");
     }
-    if (mcfg.d & BIT(16)) {
+    if (mcfg.b.zc_xlcz) {
+        printf(" Zc Xxlcz");
+    }
+    if (mcfg.b.iregion) {
         printf(" IREGION");
     }
+    if (mcfg.b.sec_mode) {
+        printf(" Smwg");
+    }
+    if (mcfg.b.etrace) {
+        printf(" ETRACE");
+    }
+    show_safety_mechanism(mcfg.b.safety_mecha);
     printf("\r\n");
 
     /* ILM */
@@ -162,7 +193,7 @@ void nuclei_cpuinfo(void)
     }
 
     /* IREGION */
-    if (mcfg.d & BIT(16)) {
+    if (mcfg.b.iregion) {
         rv_csr_t csr_mirgb = __RV_CSR_READ(CSR_MIRGB_INFO);
         printf("         IREGION:");
         iregion_base = csr_mirgb & (~0x3FF);
@@ -176,7 +207,7 @@ void nuclei_cpuinfo(void)
             printf("                  ECLIC       64KB        %#lx\r\n", iregion_base + IREGION_ECLIC_OFS);
         }
         printf("                  TIMER       64KB        %#lx\r\n", iregion_base + IREGION_TIMER_OFS);
-        if (mcfg.d & BIT(11)) {
+        if (mcfg.b.smp) {
             printf("                  SMP         64KB        %#lx\r\n", iregion_base + IREGION_SMP_OFS);
         }
         rv_csr_t smp_cfg = *(rv_csr_t*)(iregion_base + 0x40004);
@@ -187,7 +218,7 @@ void nuclei_cpuinfo(void)
             printf("                  PLIC        64MB        %#lx\r\n", iregion_base + IREGION_PLIC_OFS);
         }
         /* SMP */
-        if (mcfg.d & BIT(11)) {
+        if (mcfg.b.smp) {
             printf("         SMP_CFG:");
             printf(" CC_PRESENT=%ld", __RV_EXTRACT_FIELD(smp_cfg, 0x1));
             printf(" SMP_CORE_NUM=%ld", __RV_EXTRACT_FIELD(smp_cfg, 0x1F << 1));
