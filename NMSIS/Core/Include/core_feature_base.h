@@ -337,7 +337,17 @@ typedef union {
         rv_csr_t dlm:1;                         /*!< DLM present */
         rv_csr_t icache:1;                      /*!< ICache present */
         rv_csr_t dcache:1;                      /*!< DCache present */
-        rv_csr_t _reserved0:__RISCV_XLEN-11;
+        rv_csr_t smp:1;                         /*!< SMP present*/
+        rv_csr_t dsp_n1:1;                      /*!< DSP N1 present*/
+        rv_csr_t dsp_n2:1;                      /*!< DSP N2 present*/
+        rv_csr_t dsp_n3:1;                      /*!< DSP N3 present*/
+        rv_csr_t zc_xlcz:1;                     /*!< Zc and xlcz extension present*/
+        rv_csr_t iregion:1;                     /*!< IREGION present*/
+        rv_csr_t _reserved0:2;
+        rv_csr_t sec_mode:1;                    /*!< Smwg extension present*/
+        rv_csr_t etrace:1;                      /*!< Etrace present*/
+        rv_csr_t safety_mecha:2;                /*!< Indicate Core’s safety mechanism*/
+        rv_csr_t _reserved1:__RISCV_XLEN-23;
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MCFGINFO_Type;
