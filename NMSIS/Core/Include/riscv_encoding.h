@@ -305,6 +305,10 @@
 #define IREGION_DPREFETCH_OFS       (0x70000)
 #define IREGION_PLIC_OFS            (0x4000000)
 
+/* Interrupt mode definition */
+#define INTMODE_ECLIC       0       /*!< Eclic interrupt mode */
+#define INTMODE_PLIC        1       /*!< Plic interrupt mode */
+
 /* === Stack protect === */
 #define MSTACK_CTRL_MODE            (0x1<<2)
 #define MSTACK_CTRL_UDF_EN          (0x1<<1)
@@ -989,6 +993,19 @@
 #define CSR_CCM_UCOMMAND        0x4CC
 #define CSR_CCM_UDATA           0x4CD
 #define CSR_CCM_FPIPE           0x4CF
+
+/* === Nuclei N100 TIMER */
+#define CSR_MSIP                0xBD8
+#define CSR_MTIMECMP            0xBD9
+#define CSR_MTIME               0xBDA
+#define CSR_MSTOP               0xBDB
+
+/* === Nuclei N100 IRQC */
+#define CSR_IRQCIP              0xBD0
+#define CSR_IRQCIE              0xBD1
+#define CSR_IRQCLVL             0xBD2
+#define CSR_IRQCEDGE            0xBD3
+#define CSR_IRQCINFO            0xBD4
 
 /** @} */ /** End of Doxygen Group NMSIS_Core_CSR_Registers **/
 
