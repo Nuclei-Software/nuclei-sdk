@@ -10,21 +10,11 @@
 void show_safety_mechanism(rv_csr_t safetyMode)
 {
     switch (safetyMode) {
-        case 0b00:
-            printf(" No-Safety-Mechanism");
-            break;
-        case 0b01:
-            printf(" Lockstep");
-            break;
-        case 0b10:
-            printf(" Lockstep+Split");
-            break;
-        case 0b11:
-            printf(" ASIL-B\n");
-            break;
-        default:
-            printf(" Invalid-safety-mechanism");
-            break;
+        case 0b00: printf(" No-Safety-Mechanism"); break;
+        case 0b01: printf(" Lockstep"); break;
+        case 0b10: printf(" Lockstep+Split"); break;
+        case 0b11: printf(" ASIL-B"); break;
+        default: return;
     }
 }
 
