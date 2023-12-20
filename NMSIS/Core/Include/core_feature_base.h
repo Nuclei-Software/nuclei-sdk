@@ -396,16 +396,16 @@ __STATIC_FORCEINLINE uint32_t __get_rv_instret(void)
 
 /**
  * \brief   Read whole 32 bits value of real-time clock
- * \details This function will read the whole 32 bits of TIME register
- * \return  The whole 32 bits value of TIME CSR
+ * \details This function will read the whole 32 bits of MTIME register
+ * \return  The whole 32 bits value of MTIME CSR
  * \remarks time in N100 is only 24 bits long, so upper bits are all zeros
- * \attention only available when user mode available
+ * \attention this is using N100 MTIME CSR
  */
 __STATIC_FORCEINLINE uint32_t __get_rv_time(void)
 {
     volatile uint32_t full;
 
-    full = __RV_CSR_READ(CSR_TIME);
+    full = __RV_CSR_READ(CSR_MTIME);
     return full;
 }
 
