@@ -19,15 +19,13 @@
 #define __CORE_FEATURE_TIMER_H__
 /*!
  * @file     core_feature_timer.h
- * @brief    System Timer feature API header file for Nuclei N/NX Core
+ * @brief    Timer feature API header file for Nuclei N100 Core
  */
 /*
  * System Timer Feature Configuration Macro:
- * 1. __SYSTIMER_PRESENT: Must, Define whether Private System Timer is present or not.
+ * 1. __TIMER_PRESENT: Must, Define whether Private System Timer is present or not.
  *   * 0: Not present
  *   * 1: Present
- * 2. __SYSTIMER_BASEADDR: Must, Define the base address of the System Timer.
- * 3. __SYSTIMER_HARTID:  Optional, Define the system timer hart index of the cpu, important for case when cpu hartid and cpu hart index are different, only set it if your cpu is single core.
  */
 #ifdef __cplusplus
 extern "C" {
@@ -35,90 +33,13 @@ extern "C" {
 
 #include "core_feature_base.h"
 
-#if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
-/**
- * \defgroup NMSIS_Core_SysTimer_Registers     Register Define and Type Definitions Of System Timer
- * \ingroup NMSIS_Core_Registers
- * \brief   Type definitions and defines for system timer registers.
- *
- * @{
- */
-/**
- * \brief  Structure type to access the System Timer (SysTimer).
- * \details
- * Structure definition to access the system timer(SysTimer).
- * \remarks
- * - MSFTRST register is introduced in Nuclei N Core version 1.3(\ref __NUCLEI_N_REV >= 0x0103)
- * - MSTOP register is renamed to MTIMECTL register in Nuclei N Core version 1.4(\ref __NUCLEI_N_REV >= 0x0104)
- * - CMPCLREN and CLKSRC bit in MTIMECTL register is introduced in Nuclei N Core version 1.4(\ref __NUCLEI_N_REV >= 0x0104)
- */
-typedef struct {
-    __IOM uint64_t MTIMER;                  /*!< Offset: 0x000 (R/W)  System Timer current value 64bits Register */
-    __IOM uint64_t MTIMERCMP;               /*!< Offset: 0x008 (R/W)  System Timer compare Value 64bits Register */
-    __IOM uint32_t RESERVED0[0x3F8];        /*!< Offset: 0x010 - 0xFEC Reserved */
-    __IOM uint32_t MSFTRST;                 /*!< Offset: 0xFF0 (R/W)  System Timer Software Core Reset Register */
-    __IOM uint32_t RESERVED1;               /*!< Offset: 0xFF4 Reserved */
-    __IOM uint32_t MTIMECTL;                /*!< Offset: 0xFF8 (R/W)  System Timer Control Register, previously MSTOP register */
-    __IOM uint32_t MSIP;                    /*!< Offset: 0xFFC (R/W)  System Timer SW interrupt Register */
-} SysTimer_Type;
-
-/* Timer Control / Status Register Definitions */
-#define SysTimer_MTIMECTL_TIMESTOP_Pos      0U                                          /*!< SysTick Timer MTIMECTL: TIMESTOP bit Position */
-#define SysTimer_MTIMECTL_TIMESTOP_Msk      (1UL << SysTimer_MTIMECTL_TIMESTOP_Pos)     /*!< SysTick Timer MTIMECTL: TIMESTOP Mask */
-#define SysTimer_MTIMECTL_CMPCLREN_Pos      1U                                          /*!< SysTick Timer MTIMECTL: CMPCLREN bit Position */
-#define SysTimer_MTIMECTL_CMPCLREN_Msk      (1UL << SysTimer_MTIMECTL_CMPCLREN_Pos)     /*!< SysTick Timer MTIMECTL: CMPCLREN Mask */
-#define SysTimer_MTIMECTL_CLKSRC_Pos        2U                                          /*!< SysTick Timer MTIMECTL: CLKSRC bit Position */
-#define SysTimer_MTIMECTL_CLKSRC_Msk        (1UL << SysTimer_MTIMECTL_CLKSRC_Pos)       /*!< SysTick Timer MTIMECTL: CLKSRC Mask */
-
-#define SysTimer_MSIP_MSIP_Pos              0U                                          /*!< SysTick Timer MSIP: MSIP bit Position */
-#define SysTimer_MSIP_MSIP_Msk              (1UL << SysTimer_MSIP_MSIP_Pos)             /*!< SysTick Timer MSIP: MSIP Mask */
-
-#define SysTimer_MTIMER_Msk                 (0xFFFFFFFFFFFFFFFFULL)                     /*!< SysTick Timer MTIMER value Mask */
-#define SysTimer_MTIMERCMP_Msk              (0xFFFFFFFFFFFFFFFFULL)                     /*!< SysTick Timer MTIMERCMP value Mask */
-#define SysTimer_MTIMECTL_Msk               (0xFFFFFFFFUL)                              /*!< SysTick Timer MTIMECTL/MSTOP value Mask */
-#define SysTimer_MSIP_Msk                   (0xFFFFFFFFUL)                              /*!< SysTick Timer MSIP   value Mask */
-#define SysTimer_MSFTRST_Msk                (0xFFFFFFFFUL)                              /*!< SysTick Timer MSFTRST value Mask */
-
-#define SysTimer_MSFRST_KEY                 (0x80000A5FUL)                              /*!< SysTick Timer Software Reset Request Key */
-
-#define SysTimer_CLINT_MSIP_OFS             (0x1000UL)                                  /*!< Software interrupt register offset of clint mode in SysTick Timer */
-#define SysTimer_CLINT_MTIMECMP_OFS         (0x5000UL)                                  /*!< MTIMECMP register offset of clint mode in SysTick Timer */
-#define SysTimer_CLINT_MTIME_OFS            (0xCFF8UL)                                  /*!< MTIME register offset of clint mode in SysTick Timer */
-
-#ifndef __SYSTIMER_BASEADDR
-/* Base address of SYSTIMER(__SYSTIMER_BASEADDR) should be defined in <Device.h> */
-#error "__SYSTIMER_BASEADDR is not defined, please check!"
-#endif
-/* System Timer Memory mapping of Device  */
-#define SysTimer_BASE                       __SYSTIMER_BASEADDR                         /*!< SysTick Base Address */
-#define SysTimer                            ((SysTimer_Type *) SysTimer_BASE)           /*!< SysTick configuration struct */
-
-/* System Timer Clint register base */
-#define SysTimer_CLINT_MSIP_BASE(hartid)        (unsigned long)((SysTimer_BASE) + (SysTimer_CLINT_MSIP_OFS) + ((hartid) << 2))
-#define SysTimer_CLINT_MTIMECMP_BASE(hartid)    (unsigned long)((SysTimer_BASE) + (SysTimer_CLINT_MTIMECMP_OFS) + ((hartid) << 3))
-#define SysTimer_CLINT_MTIME_BASE               (unsigned long)((SysTimer_BASE) + (SysTimer_CLINT_MTIME_OFS))
-
-/** @} */ /* end of group NMSIS_Core_SysTimer_Registers */
-
+#if defined(__TIMER_PRESENT) && (__TIMER_PRESENT == 1)
 /* ##################################    SysTimer function  ############################################ */
 /**
  * \defgroup NMSIS_Core_SysTimer SysTimer Functions
  * \brief    Functions that configure the Core System Timer.
  * @{
  */
-
-/**
- * SysTimer_GetHartID() is used to get timer hartid which might not be the same as cpu hart id,
- * for example, cpu hartid may be 1, but timer hartid may be 0, then timer hartid offset is 1.
- * If defined __SYSTIMER_HARTID, it will use __SYSTIMER_HARTID as timer hartid,
- * otherwise, it will use __get_hart_index().
- * The cpu hartid is get by using __get_hart_id function
- */
-#ifndef __SYSTIMER_HARTID
-#define SysTimer_GetHartID()                    (__get_hart_index())
-#else
-#define SysTimer_GetHartID()                    (__SYSTIMER_HARTID)
-#endif
 
 /**
  * \brief  Set system timer load value
@@ -538,7 +459,7 @@ __STATIC_FORCEINLINE void SysTimer_ClearIPI(unsigned long hartid)
  *   of this function.
  * - If user need this function to start a period timer interrupt, then in timer interrupt handler
  *   routine code, user should call \ref SysTick_Reload with ticks to reload the timer.
- * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
+ * - This function only available when __TIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
  * \sa
  * - \ref SysTimer_SetCompareValue; SysTimer_SetLoadValue
  */
@@ -573,7 +494,7 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
  *   of this function.
  * - If user need this function to start a period timer interrupt, then in timer interrupt handler
  *   routine code, user should call \ref SysTick_Reload with ticks to reload the timer.
- * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
+ * - This function only available when __TIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
  * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * \sa
  * - \ref SysTimer_SetCompareValue; SysTimer_SetLoadValue
@@ -605,7 +526,7 @@ __STATIC_INLINE uint32_t SysTick_HartConfig(uint64_t ticks, unsigned long hartid
  *   function \ref SysTick_Reload is not included.
  * - In this case, the file <b><Device>.h</b> must contain a vendor-specific implementation
  *   of this function.
- * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
+ * - This function only available when __TIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
  * - Since the MTIMERCMP value might overflow, if overflowed, MTIMER will be set to 0, and MTIMERCMP set to ticks
  * \sa
  * - \ref SysTimer_SetCompareValue
@@ -647,7 +568,7 @@ __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
  *   function \ref SysTick_Reload is not included.
  * - In this case, the file <b><Device>.h</b> must contain a vendor-specific implementation
  *   of this function.
- * - This function only available when __SYSTIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
+ * - This function only available when __TIMER_PRESENT == 1 and __ECLIC_PRESENT == 1 and __Vendor_SysTickConfig == 0
  * - Since the MTIMERCMP value might overflow, if overflowed, MTIMER will be set to 0, and MTIMERCMP set to ticks
  * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * \sa
@@ -675,7 +596,7 @@ __STATIC_FORCEINLINE uint32_t SysTick_HartReload(uint64_t ticks, unsigned long h
 #endif /* defined(__Vendor_SysTickConfig) && (__Vendor_SysTickConfig == 0U) */
 /** @} */ /* End of Doxygen Group NMSIS_Core_SysTimer */
 
-#endif /* defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1) */
+#endif /* defined(__TIMER_PRESENT) && (__TIMER_PRESENT == 1) */
 
 #ifdef __cplusplus
 }

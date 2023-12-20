@@ -674,25 +674,12 @@ __STATIC_FORCEINLINE void __disable_irq_s(void)
  * \return  The whole 64 bits value of MCYCLE
  * \remarks It will work for both RV32 and RV64 to get full 64bits value of MCYCLE
  */
-__STATIC_FORCEINLINE uint64_t __get_rv_cycle(void)
+__STATIC_FORCEINLINE uint32_t __get_rv_cycle(void)
 {
-#if __RISCV_XLEN == 32
-    volatile uint32_t high0, low, high;
-    uint64_t full;
+    volatile uint32_t full;
 
-    high0 = __RV_CSR_READ(CSR_MCYCLEH);
-    low = __RV_CSR_READ(CSR_MCYCLE);
-    high = __RV_CSR_READ(CSR_MCYCLEH);
-    if (high0 != high) {
-        low = __RV_CSR_READ(CSR_MCYCLE);
-    }
-    full = (((uint64_t)high) << 32) | low;
+    full = __RV_CSR_READ(CSR_MCYCLE);
     return full;
-#elif __RISCV_XLEN == 64
-    return (uint64_t)__RV_CSR_READ(CSR_MCYCLE);
-#else // TODO Need cover for XLEN=128 case in future
-    return (uint64_t)__RV_CSR_READ(CSR_MCYCLE);
-#endif
 }
 
 /**
@@ -701,53 +688,27 @@ __STATIC_FORCEINLINE uint64_t __get_rv_cycle(void)
  * \return  The whole 64 bits value of MINSTRET
  * \remarks It will work for both RV32 and RV64 to get full 64bits value of MINSTRET
  */
-__STATIC_FORCEINLINE uint64_t __get_rv_instret(void)
+__STATIC_FORCEINLINE uint32_t __get_rv_instret(void)
 {
-#if __RISCV_XLEN == 32
-    volatile uint32_t high0, low, high;
-    uint64_t full;
+    volatile uint32_t full;
 
-    high0 = __RV_CSR_READ(CSR_MINSTRETH);
-    low = __RV_CSR_READ(CSR_MINSTRET);
-    high = __RV_CSR_READ(CSR_MINSTRETH);
-    if (high0 != high) {
-        low = __RV_CSR_READ(CSR_MINSTRET);
-    }
-    full = (((uint64_t)high) << 32) | low;
+    full = __RV_CSR_READ(CSR_MINSTRET);
     return full;
-#elif __RISCV_XLEN == 64
-    return (uint64_t)__RV_CSR_READ(CSR_MINSTRET);
-#else // TODO Need cover for XLEN=128 case in future
-    return (uint64_t)__RV_CSR_READ(CSR_MINSTRET);
-#endif
 }
 
 /**
- * \brief   Read whole 64 bits value of real-time clock
- * \details This function will read the whole 64 bits of TIME register
+ * \brief   Read whole 32 bits value of real-time clock
+ * \details This function will read the whole 32 bits of TIME register
  * \return  The whole 64 bits value of TIME CSR
- * \remarks It will work for both RV32 and RV64 to get full 64bits value of TIME
+ * \remarks It will work for both RV32 and RV64 to get full 32bits value of TIME
  * \attention only available when user mode available
  */
-__STATIC_FORCEINLINE uint64_t __get_rv_time(void)
+__STATIC_FORCEINLINE uint32_t __get_rv_time(void)
 {
-#if __RISCV_XLEN == 32
-    volatile uint32_t high0, low, high;
-    uint64_t full;
+    volatile uint32_t full;
 
-    high0 = __RV_CSR_READ(CSR_TIMEH);
-    low = __RV_CSR_READ(CSR_TIME);
-    high = __RV_CSR_READ(CSR_TIMEH);
-    if (high0 != high) {
-        low = __RV_CSR_READ(CSR_TIME);
-    }
-    full = (((uint64_t)high) << 32) | low;
+    full = __RV_CSR_READ(CSR_TIME);
     return full;
-#elif __RISCV_XLEN == 64
-    return (uint64_t)__RV_CSR_READ(CSR_TIME);
-#else // TODO Need cover for XLEN=128 case in future
-    return (uint64_t)__RV_CSR_READ(CSR_TIME);
-#endif
 }
 
 /**
