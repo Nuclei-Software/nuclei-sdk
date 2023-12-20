@@ -60,7 +60,7 @@
  * \attention
  * This define is exclusive with \ref __NUCLEI_CPU_SERIES
  */
-#define __NUCLEI_CPU_REV                 (0x030A01)
+#define __NUCLEI_CPU_REV                 (0x010201)
 /**
  * \brief Nuclei CPU core series
  * \details
@@ -69,7 +69,7 @@
  * \attention
  * This define is used together with \ref __NUCLEI_CPU_REV
  */
-#define __NUCLEI_CPU_SERIES              (0x0200)
+#define __NUCLEI_CPU_SERIES              (0x0100)
 #endif /* __ONLY_FOR_DOXYGEN_DOCUMENT_GENERATION__ */
 /** @} */ /* End of Group NMSIS_Core_VersionControl */
 
@@ -78,15 +78,6 @@
 /* === Include Nuclei Core Related Headers === */
 /* Include core base feature header file */
 #include "core_feature_base.h"
-
-/* Include core fpu feature header file */
-#include "core_feature_fpu.h"
-/* Include core dsp feature header file */
-#include "core_feature_dsp.h"
-/* Include core vector feature header file */
-#include "core_feature_vector.h"
-/* Include core bitmanip feature header file */
-#include "core_feature_bitmanip.h"
 
 /* Include compatiable functions header file */
 #include "core_compatiable.h"

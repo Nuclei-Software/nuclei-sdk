@@ -173,25 +173,6 @@
 #define SCAUSE_INTR         MCAUSE_INTR
 #define SCAUSE_CAUSE        0x000003FFUL
 
-#define MENVCFG_CBIE_EN                 (0x11 << 4)
-#define MENVCFG_CBIE_FLUSH              (0x01 << 4)
-#define MENVCFG_CBIE_INVAL              (0x11 << 4)
-#define MENVCFG_CBCFE                   (0x1 << 6)
-#define MENVCFG_CBZE                    (0x1 << 7)
-#define SENVCFG_CBIE_EN                 (0x11 << 4)
-#define SENVCFG_CBIE_FLUSH              (0x01 << 4)
-#define SENVCFG_CBIE_INVAL              (0x11 << 4)
-#define SENVCFG_CBCFE                   (0x1 << 6)
-#define SENVCFG_CBZE                    (0x1 << 7)
-
-/* === P-ext CSR bit mask === */
-
-#define UCODE_OV            (0x1)
-
-/* === Nuclei custom CSR bit mask === */
-#define CSR_MCACHE_CTL_IE               0x00000001
-#define CSR_MCACHE_CTL_DE               0x00010000
-
 #define WFE_WFE                     (0x1)
 #define TXEVT_TXEVT                 (0x1)
 #define SLEEPVALUE_SLEEPVALUE       (0x1)
@@ -199,120 +180,9 @@
 #define MCOUNTINHIBIT_IR            (1<<2)
 #define MCOUNTINHIBIT_CY            (1<<0)
 
-#define MILM_CTL_ILM_BPA            (((1ULL<<((__riscv_xlen)-10))-1)<<10)
-#define MILM_CTL_ILM_RWECC          (1<<3)
-#define MILM_CTL_ILM_ECC_EXCP_EN    (1<<2)
-#define MILM_CTL_ILM_ECC_EN         (1<<1)
-#define MILM_CTL_ILM_EN             (1<<0)
-
-#define MDLM_CTL_DLM_BPA            (((1ULL<<((__riscv_xlen)-10))-1)<<10)
-#define MDLM_CTL_DLM_RWECC          (1<<3)
-#define MDLM_CTL_DLM_ECC_EXCP_EN    (1<<2)
-#define MDLM_CTL_DLM_ECC_EN         (1<<1)
-#define MDLM_CTL_DLM_EN             (1<<0)
-
-#define MSUBM_PTYP                  (0x3<<8)
-#define MSUBM_TYP                   (0x3<<6)
-
-#define MDCAUSE_MDCAUSE             (0x3)
-
-#define MMISC_CTL_LDSPEC_ENABLE     (1<<12)
-#define MMISC_CTL_SIJUMP_ENABLE     (1<<11)
-#define MMISC_CTL_IMRETURN_ENABLE   (1<<10)
-#define MMISC_CTL_NMI_CAUSE_FFF     (1<<9)
-#define MMISC_CTL_CODE_BUS_ERR      (1<<8)
-#define MMISC_CTL_MISALIGN          (1<<6)
-#define MMISC_CTL_ZC                (1<<7)
-#define MMISC_CTL_BPU               (1<<3)
-
-#define MCACHE_CTL_IC_EN            (1<<0)
-#define MCACHE_CTL_IC_SCPD_MOD      (1<<1)
-#define MCACHE_CTL_IC_ECC_EN        (1<<2)
-#define MCACHE_CTL_IC_ECC_EXCP_EN   (1<<3)
-#define MCACHE_CTL_IC_RWTECC        (1<<4)
-#define MCACHE_CTL_IC_RWDECC        (1<<5)
-#define MCACHE_CTL_IC_PF_EN         (1<<6)
-#define MCACHE_CTL_IC_CANCEL_EN     (1<<7)
-#define MCACHE_CTL_DC_EN            (1<<16)
-#define MCACHE_CTL_DC_ECC_EN        (1<<17)
-#define MCACHE_CTL_DC_ECC_EXCP_EN   (1<<18)
-#define MCACHE_CTL_DC_RWTECC        (1<<19)
-#define MCACHE_CTL_DC_RWDECC        (1<<20)
-
-#define MTVT2_MTVT2EN               (1<<0)
-#define MTVT2_COMMON_CODE_ENTRY     (((1ULL<<((__riscv_xlen)-2))-1)<<2)
-
-#define MCFG_INFO_TEE               (1<<0)
-#define MCFG_INFO_ECC               (1<<1)
-#define MCFG_INFO_CLIC              (1<<2)
-#define MCFG_INFO_PLIC              (1<<3)
-#define MCFG_INFO_FIO               (1<<4)
-#define MCFG_INFO_PPI               (1<<5)
-#define MCFG_INFO_NICE              (1<<6)
-#define MCFG_INFO_ILM               (1<<7)
-#define MCFG_INFO_DLM               (1<<8)
-#define MCFG_INFO_ICACHE            (1<<9)
-#define MCFG_INFO_DCACHE            (1<<10)
-#define MCFG_INFO_SMP               (1<<11)
-#define MCFG_INFO_DSP_N1            (1<<12)
-#define MCFG_INFO_DSP_N2            (1<<13)
-#define MCFG_INFO_DSP_N3            (1<<14)
-#define MCFG_INFO_IREGION_EXIST     (1<<16)
-#define MCFG_INFO_VP                (0x3<<17)
-
-#define MICFG_IC_SET                (0xF<<0)
-#define MICFG_IC_WAY                (0x7<<4)
-#define MICFG_IC_LSIZE              (0x7<<7)
-#define MICFG_IC_ECC                (0x1<<10)
-#define MICFG_ILM_SIZE              (0x1F<<16)
-#define MICFG_ILM_XONLY             (0x1<<21)
-#define MICFG_ILM_ECC               (0x1<<22)
-
-#define MDCFG_DC_SET                (0xF<<0)
-#define MDCFG_DC_WAY                (0x7<<4)
-#define MDCFG_DC_LSIZE              (0x7<<7)
-#define MDCFG_DC_ECC                (0x1<<10)
-#define MDCFG_DLM_SIZE              (0x1F<<16)
-#define MDCFG_DLM_ECC               (0x1<<21)
-
-#define MIRGB_INFO_IRG_BASE_ADDR_BOFS       (10)
-#define MIRGB_INFO_IREGION_SIZE_BOFS        (1)
-
-#define MPPICFG_INFO_PPI_SIZE       (0x1F<<1)
-#define MPPICFG_INFO_PPI_BPA        (((1ULL<<((__riscv_xlen)-10))-1)<<10)
-
-#define MFIOCFG_INFO_FIO_SIZE       (0x1F<<1)
-#define MFIOCFG_INFO_FIO_BPA        (((1ULL<<((__riscv_xlen)-10))-1)<<10)
-
-#define MECC_LOCK_ECC_LOCK          (0x1)
-
-#define MECC_CODE_CODE              (0x1FF)
-#define MECC_CODE_RAMID             (0x1F<<16)
-#define MECC_CODE_SRAMID            (0x1F<<24)
-
-#define CCM_SUEN_SUEN               (0x1<<0)
-#define CCM_DATA_DATA               (0x7<<0)
-#define CCM_COMMAND_COMMAND         (0x1F<<0)
-
 /* IREGION Offsets */
 #define IREGION_IINFO_OFS           (0x0)
 #define IREGION_DEBUG_OFS           (0x10000)
-#define IREGION_ECLIC_OFS           (0x20000)
-#define IREGION_TIMER_OFS           (0x30000)
-#define IREGION_SMP_OFS             (0x40000)
-#define IREGION_IDU_OFS             (0x50000)
-#define IREGION_PL2_OFS             (0x60000)
-#define IREGION_DPREFETCH_OFS       (0x70000)
-#define IREGION_PLIC_OFS            (0x4000000)
-
-/* Interrupt mode definition */
-#define INTMODE_ECLIC       0       /*!< Eclic interrupt mode */
-#define INTMODE_PLIC        1       /*!< Plic interrupt mode */
-
-/* === Stack protect === */
-#define MSTACK_CTRL_MODE            (0x1<<2)
-#define MSTACK_CTRL_UDF_EN          (0x1<<1)
-#define MSTACK_CTRL_OVF_TRACK_EN    (0x1)
 
 #define SIP_SSIP MIP_SSIP
 #define SIP_STIP MIP_STIP
@@ -342,19 +212,6 @@
 #define SATP_MODE_SV48 9
 #define SATP_MODE_SV57 10
 #define SATP_MODE_SV64 11
-
-#define IRQ_S_SOFT   1
-#define IRQ_H_SOFT   2
-#define IRQ_M_SOFT   3
-#define IRQ_S_TIMER  5
-#define IRQ_H_TIMER  6
-#define IRQ_M_TIMER  7
-#define IRQ_S_EXT    9
-#define IRQ_H_EXT    10
-#define IRQ_M_EXT    11
-#define IRQ_COP      12
-#define IRQ_HOST     13
-
 
 /* === FPU FRM Rounding Mode === */
 /** FPU Round to Nearest, ties to Even*/
@@ -386,66 +243,6 @@
 
 /** Floating Point Register f0-f31, eg. f0 -> FREG(0) */
 #define FREG(idx)           f##idx
-
-
-/* === PMP CFG Bits === */
-#define PMP_R                0x01
-#define PMP_W                0x02
-#define PMP_X                0x04
-#define PMP_A                0x18
-#define PMP_A_TOR            0x08
-#define PMP_A_NA4            0x10
-#define PMP_A_NAPOT          0x18
-#define PMP_L                0x80
-
-#define PMP_SHIFT            2
-#define PMP_COUNT            16
-
-/* === sPMP CFG Bits === */
-#define SPMP_R               PMP_R
-#define SPMP_W               PMP_W
-#define SPMP_X               PMP_X
-#define SPMP_A               PMP_A
-#define SPMP_A_TOR           PMP_A_TOR
-#define SPMP_A_NA4           PMP_A_NA4
-#define SPMP_A_NAPOT         PMP_A_NAPOT
-#define SPMP_U               0x40
-#define SPMP_L               PMP_L
-
-#define SPMP_SHIFT           PMP_SHIFT
-#define SPMP_COUNT           16
-
-// page table entry (PTE) fields
-#define PTE_V     0x001 // Valid
-#define PTE_R     0x002 // Read
-#define PTE_W     0x004 // Write
-#define PTE_X     0x008 // Execute
-#define PTE_U     0x010 // User
-#define PTE_G     0x020 // Global
-#define PTE_A     0x040 // Accessed
-#define PTE_D     0x080 // Dirty
-#define PTE_SOFT  0x300 // Reserved for Software
-
-#define PTE_PPN_SHIFT 10
-
-#define PTE_TABLE(PTE) (((PTE) & (PTE_V | PTE_R | PTE_W | PTE_X)) == PTE_V)
-
-#ifdef __riscv
-
-#ifdef __riscv64
-# define MSTATUS_SD MSTATUS64_SD
-# define SSTATUS_SD SSTATUS64_SD
-# define RISCV_PGLEVEL_BITS 9
-#else
-# define MSTATUS_SD MSTATUS32_SD
-# define SSTATUS_SD SSTATUS32_SD
-# define RISCV_PGLEVEL_BITS 10
-#endif /* __riscv64 */
-
-#define RISCV_PGSHIFT 12
-#define RISCV_PGSIZE (1 << RISCV_PGSHIFT)
-
-#endif /* __riscv */
 
 /**
  * \defgroup NMSIS_Core_CSR_Registers    Core CSR Registers
@@ -854,145 +651,15 @@
 #define CSR_MHPMCOUNTER30H 0xb9e
 #define CSR_MHPMCOUNTER31H 0xb9f
 
-/* === TEE CSR Registers === */
-#define CSR_SPMPCFG0            0x1A0
-#define CSR_SPMPCFG1            0x1A1
-#define CSR_SPMPCFG2            0x1A2
-#define CSR_SPMPCFG3            0x1A3
-#define CSR_SPMPADDR0           0x1B0
-#define CSR_SPMPADDR1           0x1B1
-#define CSR_SPMPADDR2           0x1B2
-#define CSR_SPMPADDR3           0x1B3
-#define CSR_SPMPADDR4           0x1B4
-#define CSR_SPMPADDR5           0x1B5
-#define CSR_SPMPADDR6           0x1B6
-#define CSR_SPMPADDR7           0x1B7
-#define CSR_SPMPADDR8           0x1B8
-#define CSR_SPMPADDR9           0x1B9
-#define CSR_SPMPADDR10          0x1BA
-#define CSR_SPMPADDR11          0x1BB
-#define CSR_SPMPADDR12          0x1BC
-#define CSR_SPMPADDR13          0x1BD
-#define CSR_SPMPADDR14          0x1BE
-#define CSR_SPMPADDR15          0x1BF
-
-#define CSR_SPMUCFG0            0x1A0
-#define CSR_SPMUCFG1            0x1A1
-#define CSR_SPMUCFG2            0x1A2
-#define CSR_SPMUCFG3            0x1A3
-#define CSR_SPMUADDR0           0x1B0
-#define CSR_SPMUADDR1           0x1B1
-#define CSR_SPMUADDR2           0x1B2
-#define CSR_SPMUADDR3           0x1B3
-#define CSR_SPMUADDR4           0x1B4
-#define CSR_SPMUADDR5           0x1B5
-#define CSR_SPMUADDR6           0x1B6
-#define CSR_SPMUADDR7           0x1B7
-#define CSR_SPMUADDR8           0x1B8
-#define CSR_SPMUADDR9           0x1B9
-#define CSR_SPMUADDR10          0x1BA
-#define CSR_SPMUADDR11          0x1BB
-#define CSR_SPMUADDR12          0x1BC
-#define CSR_SPMUADDR13          0x1BD
-#define CSR_SPMUADDR14          0x1BE
-#define CSR_SPMUADDR15          0x1BF
-
-#define CSR_SPMUSWITCH0         0x170
-#define CSR_SPMUSWITCH1         0x171
-
-/* === CLIC CSR Registers === */
-#define CSR_MTVT                0x307
-#define CSR_MNXTI               0x345
-#define CSR_MINTSTATUS          0x346
-#define CSR_MSCRATCHCSW         0x348
-#define CSR_MSCRATCHCSWL        0x349
-#define CSR_MCLICBASE           0x350
-
-/* === P-Extension Registers === */
-#define CSR_UCODE               0x801
 
 /* === Nuclei custom CSR Registers === */
-//#define CSR_MCOUNTINHIBIT       0x320
-#define CSR_MILM_CTL            0x7C0
-#define CSR_MDLM_CTL            0x7C1
-#define CSR_MECC_CODE           0x7C2
-#define CSR_MNVEC               0x7C3
-#define CSR_MSUBM               0x7C4
-#define CSR_MDCAUSE             0x7C9
-#define CSR_MCACHE_CTL          0x7CA
-#define CSR_MMISC_CTL           0x7D0
-#define CSR_MSAVESTATUS         0x7D6
-#define CSR_MSAVEEPC1           0x7D7
-#define CSR_MSAVECAUSE1         0x7D8
-#define CSR_MSAVEEPC2           0x7D9
-#define CSR_MSAVECAUSE2         0x7DA
-#define CSR_MSAVEDCAUSE1        0x7DB
-#define CSR_MSAVEDCAUSE2        0x7DC
-#define CSR_MTLB_CTL            0x7DD
-#define CSR_MECC_LOCK           0x7DE
-#define CSR_MFP16MODE           0x7E2
-#define CSR_LSTEPFORC           0x7E9
-#define CSR_PUSHMSUBM           0x7EB
-#define CSR_MTVT2               0x7EC
-#define CSR_JALMNXTI            0x7ED
-#define CSR_PUSHMCAUSE          0x7EE
-#define CSR_PUSHMEPC            0x7EF
-#define CSR_MPPICFG_INFO        0x7F0
-#define CSR_MFIOCFG_INFO        0x7F1
-
-/* === NCDEV === */
-#define CSR_MDEVB               0x7F3
-#define CSR_MDEVM               0x7F4
-#define CSR_MNOCB               0x7F5
-#define CSR_MNOCM               0x7F6
-#define CSR_MATTRI0_BASE        0x7F3
-#define CSR_MATTRI0_MASK        0x7F4
-#define CSR_MATTRI1_BASE        0x7F5
-#define CSR_MATTRI1_MASK        0x7F6
-#define CSR_MATTRI2_BASE        0x7F9
-#define CSR_MATTRI2_MASK        0x7FA
-#define CSR_MATTRI3_BASE        0x7FB
-#define CSR_MATTRI3_MASK        0x7FC
-#define CSR_MATTRI4_BASE        0x7FD
-#define CSR_MATTRI4_MASK        0x7FE
 
 /* === IREGION === */
-#define CSR_MSMPCFG_INFO        0x7F7
 #define CSR_MIRGB_INFO          0x7F7
 
 #define CSR_SLEEPVALUE          0x811
 #define CSR_TXEVT               0x812
 #define CSR_WFE                 0x810
-#define CSR_JALSNXTI            0x947
-#define CSR_STVT2               0x948
-#define CSR_PUSHSCAUSE          0x949
-#define CSR_PUSHSEPC            0x94A
-#define CSR_SDCAUSE             0x9C0
-#define CSR_MICFG_INFO          0xFC0
-#define CSR_MDCFG_INFO          0xFC1
-#define CSR_MCFG_INFO           0xFC2
-#define CSR_MTLBCFG_INFO        0xFC3
-
-/* === ECC === */
-#define CSR_MECC_STATUS         0xBC4
-
-/* === Stack protect === */
-#define CSR_MSTACK_CTRL         0x7C6
-#define CSR_MSTACK_BOUND        0x7C7
-#define CSR_MSTACK_BASE         0x7C8
-
-/* === Nuclei CCM Registers === */
-#define CSR_CCM_MBEGINADDR      0x7CB
-#define CSR_CCM_MCOMMAND        0x7CC
-#define CSR_CCM_MDATA           0x7CD
-#define CSR_CCM_SUEN            0x7CE
-#define CSR_CCM_SBEGINADDR      0x5CB
-#define CSR_CCM_SCOMMAND        0x5CC
-#define CSR_CCM_SDATA           0x5CD
-#define CSR_CCM_UBEGINADDR      0x4CB
-#define CSR_CCM_UCOMMAND        0x4CC
-#define CSR_CCM_UDATA           0x4CD
-#define CSR_CCM_FPIPE           0x4CF
 
 /* === Nuclei N100 TIMER */
 #define CSR_MSIP                0xBD8
@@ -1039,17 +706,6 @@
 #define FETCH_PAGE_FAULT            (1 << CAUSE_FETCH_PAGE_FAULT)
 #define LOAD_PAGE_FAULT             (1 << CAUSE_LOAD_PAGE_FAULT)
 #define STORE_PAGE_FAULT            (1 << CAUSE_STORE_PAGE_FAULT)
-
-/* Exception Subcode in MDCAUSE CSR */
-#define DCAUSE_FAULT_FETCH_PMP      0x1
-#define DCAUSE_FAULT_FETCH_INST     0x2
-
-#define DCAUSE_FAULT_LOAD_PMP       0x1
-#define DCAUSE_FAULT_LOAD_INST      0x2
-#define DCAUSE_FAULT_LOAD_NICE      0x3
-
-#define DCAUSE_FAULT_STORE_PMP      0x1
-#define DCAUSE_FAULT_STORE_INST     0x2
 
 /** @} */ /** End of Doxygen Group NMSIS_Core_CSR_Encoding **/
 
