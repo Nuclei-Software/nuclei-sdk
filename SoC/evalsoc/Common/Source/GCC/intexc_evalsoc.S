@@ -18,9 +18,9 @@
 /******************************************************************************
  * \file     intexc_evalsoc.S
  * \brief    NMSIS Interrupt and Exception Handling Template File
- *  for Nuclei Eval SoC which support Nuclei N/NX class cores
+ *  for Nuclei Eval SoC which support Nuclei N100
  * \version  V1.00
- * \date     17 Dec 2019
+ * \date     20 Dec 2023
  *
  ******************************************************************************/
 
@@ -116,25 +116,21 @@
 /**
  * \brief  Macro for save necessary CSRs to stack
  * \details
- * This macro store MCAUSE, MEPC, MSUBM to stack.
+ * This macro store MCAUSE, MEPC to stack.
  */
 .macro SAVE_CSR_CONTEXT
-    /* Store CSR mcause to stack using pushmcause */
-    csrrwi  x0, CSR_PUSHMCAUSE, 11
-    /* Store CSR mepc to stack using pushmepc */
-    csrrwi  x0, CSR_PUSHMEPC, 12
-    /* Store CSR msub to stack using pushmsub */
-    csrrwi  x0, CSR_PUSHMSUBM, 13
+    csrr x5, CSR_MCAUSE
+    STORE x5,  11*REGBYTES(sp)
+    csrr x5, CSR_MEPC
+    STORE x5,  12*REGBYTES(sp)
 .endm
 
 /**
  * \brief  Macro for restore necessary CSRs from stack
  * \details
- * This macro restore MSUBM, MEPC, MCAUSE from stack.
+ * This macro restore MEPC, MCAUSE from stack.
  */
 .macro RESTORE_CSR_CONTEXT
-    LOAD x5,  13*REGBYTES(sp)
-    csrw CSR_MSUBM, x5
     LOAD x5,  12*REGBYTES(sp)
     csrw CSR_MEPC, x5
     LOAD x5,  11*REGBYTES(sp)
@@ -142,16 +138,16 @@
 .endm
 
 /**
- * \brief  Exception/NMI Entry
+ * \brief  Exception Entry, fixed entry for N100
  * \details
- * This function provide common entry functions for exception/nmi.
+ * This function provide common entry functions for exception.
+ * .text.trap must be placed at the rtl configured mtvec address
  * \remarks
- * This function provide a default exception/nmi entry.
+ * This function provide a default exception entry.
  * ABI defined caller save register and some CSR registers
  * to be saved before enter interrupt handler and be restored before return.
  */
 .section .text.trap
-/* In CLIC mode, the exeception entry must be 64bytes aligned */
 .align 6
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
@@ -175,47 +171,6 @@ exc_entry:
      * system_Device.c, you can adjust it as you want
      */
     call core_exception_handler
-
-    /* Restore the necessary CSR registers */
-    RESTORE_CSR_CONTEXT
-    /* Restore the caller saving registers (context) */
-    RESTORE_CONTEXT
-
-    /* Return to regular code */
-    mret
-
-/**
- * \brief  Non-Vector Interrupt Entry
- * \details
- * This function provide common entry functions for handling
- * non-vector interrupts
- * \remarks
- * This function provide a default non-vector interrupt entry.
- * ABI defined caller save register and some CSR registers need
- * to be saved before enter interrupt handler and be restored before return.
- */
-.section      .text.irq
-/* In CLIC mode, the interrupt entry must be 4bytes aligned */
-.align 2
-# gnu let .weak override .globl, but llvm will show warning
-# see https://reviews.llvm.org/D90108
-.weak irq_entry
-/* This label will be set to MTVT2 register */
-irq_entry:
-    /* Save the caller saving registers (context) */
-    SAVE_CONTEXT
-    /* Save the necessary CSR registers */
-    SAVE_CSR_CONTEXT
-
-    /* This special CSR read/write operation, which is actually
-     * claim the CLIC to find its pending highest ID, if the ID
-     * is not 0, then automatically enable the mstatus.MIE, and
-     * jump to its vector-entry-label, and update the link register
-     */
-    csrrw ra, CSR_JALMNXTI, ra
-
-    /* Critical section with interrupts disabled */
-    DISABLE_MIE
 
     /* Restore the necessary CSR registers */
     RESTORE_CSR_CONTEXT

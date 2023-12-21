@@ -88,27 +88,24 @@ RESTORE_CONTEXT MACRO
   ENDM
 
 SAVE_CSR_CONTEXT MACRO
-    /* Store CSR mcause to stack using pushmcause */
-    csrrwi  x0, CSR_PUSHMCAUSE, 11
-    /* Store CSR mepc to stack using pushmepc */
-    csrrwi  x0, CSR_PUSHMEPC, 12
-    /* Store CSR msub to stack using pushmsub */
-    csrrwi  x0, CSR_PUSHMSUBM, 13
+    csrr x5, CSR_MCAUSE
+    STORE x5,  11*REGBYTES(sp)
+    csrr x5, CSR_MEPC
+    STORE x5,  12*REGBYTES(sp)
   ENDM
 
 RESTORE_CSR_CONTEXT MACRO
-    LOAD x5,  13*REGBYTES(sp)
-    csrw CSR_MSUBM, x5
     LOAD x5,  12*REGBYTES(sp)
     csrw CSR_MEPC, x5
     LOAD x5,  11*REGBYTES(sp)
     csrw CSR_MCAUSE, x5
   ENDM
 
-    PUBWEAK exc_entry, irq_entry, early_exc_entry, default_intexc_handler
+    PUBWEAK exc_entry, default_intexc_handler
     PUBWEAK Undef_Handler
     EXTERN core_exception_handler
 
+    /* TODO Need to place to a special section in iar */
     SECTION `.text`:CODE:NOROOT(2)
     CODE
 
@@ -141,37 +138,8 @@ exc_entry:
     /* Return to regular code */
     mret
 
-    ALIGN 2
-irq_entry:
-    /* Save the caller saving registers (context) */
-    SAVE_CONTEXT
-    /* Save the necessary CSR registers */
-    SAVE_CSR_CONTEXT
-
-    /* This special CSR read/write operation, which is actually
-     * claim the CLIC to find its pending highest ID, if the ID
-     * is not 0, then automatically enable the mstatus.MIE, and
-     * jump to its vector-entry-label, and update the link register
-     */
-    csrrw ra, CSR_JALMNXTI, ra
-
-    /* Critical section with interrupts disabled */
-    DISABLE_MIE
-
-    /* Restore the necessary CSR registers */
-    RESTORE_CSR_CONTEXT
-    /* Restore the caller saving registers (context) */
-    RESTORE_CONTEXT
-
-    /* Return to regular code */
-    mret
-
 default_intexc_handler:
 Undef_Handler:
     j Undef_Handler
-
-    ALIGN 6
-early_exc_entry:
-    j early_exc_entry
 
     END

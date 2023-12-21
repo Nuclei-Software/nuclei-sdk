@@ -49,7 +49,7 @@ typedef struct EXC_Frame {
     unsigned long a5;                /* a5: x15, function argument 5 */
     unsigned long cause;             /* cause: machine/supervisor mode cause csr register */
     unsigned long epc;               /* epc: machine/ supervisor mode exception program counter csr register */
-    unsigned long msubm;             /* msubm: machine sub-mode csr register, nuclei customized, exclusive to machine mode */
+    unsigned long reserved0;         /* reserved */
 #ifndef __riscv_32e
     unsigned long a6;                /* a6: x16, function argument 6 */
     unsigned long a7;                /* a7: x17, function argument 7 */
@@ -92,7 +92,7 @@ extern unsigned long Exception_Get_EXC(uint32_t EXCn);
 /**
  * \brief Initialize eclic config
  */
-extern void ECLIC_Init(void);
+extern void Interrupt_Init(void);
 
 /**
  * \brief  Initialize a specific IRQ and register the handler
@@ -100,28 +100,8 @@ extern void ECLIC_Init(void);
  * This function set vector mode, trigger mode and polarity, interrupt level and priority,
  * assign handler for specific IRQn.
  */
-extern int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler);
+extern int32_t IRQC_Register_IRQ(IRQn_Type IRQn, IRQC_TRIGGER_Type trig_mode, void* handler);
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-/**
- * \brief Register an exception handler for exception code EXCn of supervisor mode
- */
-extern void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler);
-
-/**
- * \brief Get current exception handler for exception code EXCn of supervisor mode
- */
-extern unsigned long Exception_Get_EXC_S(uint32_t EXCn);
-
-/**
- * \brief  Initialize a specific IRQ and register the handler of supervisor mode
- * \details
- * This function set vector mode, trigger mode and polarity, interrupt level and priority,
- * assign handler for specific IRQn.
- */
-extern int32_t ECLIC_Register_IRQ_S(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler);
-
-#endif
 
 #ifdef __cplusplus
 }

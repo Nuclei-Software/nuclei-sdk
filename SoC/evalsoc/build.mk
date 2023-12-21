@@ -29,24 +29,7 @@
 ##### Put your SoC build configurations below #####
 
 override BOARD := nuclei_fpga_eval
-CORE ?= n307fd
-# SMP must be a number, and above 1, means smp cpu count in a cluster
-# it will define c macro SMP_CPU_CNT to be SMP value
-# and define a ld symbol __SMP_CPU_CNT to be used by linker script
-SMP ?=
-# BOOT_HARTID must be a number, and above 0, the hartid is taken the mhartid bit 0-7
-# it will define a c macro BOOT_HARTID to be boot hart id,
-# other harts other than boot hartid will do wfi when in AMP mode,
-# or run application in smp mode
-BOOT_HARTID ?= 0
-# HARTID_OFS is used to set hartid offset to the cpu hartid to get current hart index
-# for example, cpu hartid maybe 1, but hart index is 0, so the offset is 1
-# This is not neccessary for most cases, only useful in cases such as a multiple cpu
-# system, cpu0 has 1 hart, hartid is 0, cpu1 has 1 hart, hartid is 1, but cpu1
-# hart index is 0, so in this case set this value to 1
-HARTID_OFS ?=
-# JTAGSN must be a jtag serial number
-# If not specified, it will not bind serial number
+CORE ?= n100
 JTAGSN ?=
 
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
@@ -54,11 +37,6 @@ NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
 
 OPENOCD_XLSPIKE_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_xlspike.cfg
 OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_evalsoc.cfg
-# smp use a different openocd configuration file
-# and will set SMP value in the openocd configuration file
-ifneq ($(SMP),)
-OPENOCD_CMD_ARGS += set SMP $(SMP);
-endif
 LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_evalsoc_$(DOWNLOAD).ld
 
 # File existence check for OPENOCD_CFG and LINKER_SCRIPT
@@ -70,48 +48,16 @@ ifeq ($(wildcard $(LINKER_SCRIPT)),)
 $(warning The link script file $(LINKER_SCRIPT) for $(SOC) doesn't exist, please check!)
 endif
 
--include $(NUCLEI_SDK_SOC)/runmode.mk
-
 # Add extra cflags for SoC related
 ifeq ($(DOWNLOAD), flash)
 COMMON_FLAGS += -DVECTOR_TABLE_REMAPPED
 endif
 
-ifneq ($(SMP),)
-$(call assert,$(call gt,$(SMP),1),SMP must be a integer number >= 2)
-ifneq ($(BOOT_HARTID),)
-$(call assert,$(call gt,$(SMP),$(BOOT_HARTID)),BOOT_HARTID must be small than SMP)
-endif
-CPU_CNT := $(SMP)
-COMMON_FLAGS += -DSMP_CPU_CNT=$(CPU_CNT)
-LDFLAGS += -Wl,--defsym=__SMP_CPU_CNT=$(CPU_CNT)
-endif
-ifneq ($(BOOT_HARTID),)
-$(call assert,$(call gte,$(BOOT_HARTID),0),BOOT_HARTID must be a integer number >= 0)
-ifeq ($(CPU_CNT),)
-CPU_CNT := $(call inc,$(BOOT_HARTID))
-endif
-# if BOOT_HARTID is set, will set the BOOT_HARTID in openocd configuration file
-OPENOCD_CMD_ARGS += set BOOT_HARTID $(BOOT_HARTID);
-COMMON_FLAGS += -DBOOT_HARTID=$(BOOT_HARTID)
-endif
 # if JTAGSN is not empty, pass it via openocd command
 ifneq ($(JTAGSN),)
 OPENOCD_CMD_ARGS += set JTAGSN $(JTAGSN);
 endif
 
-# If HARTID_OFS is not empty
-ifneq ($(HARTID_OFS),)
-COMMON_FLAGS += -D__HARTID_OFFSET=$(HARTID_OFS)
-endif
-
-ifneq ($(CPU_CNT),)
-QEMU_OPT += -smp $(CPU_CNT)
-endif
-## xlspike is only valid for nuclei demosoc/evalsoc
-ifneq ($(CPU_CNT),)
-XLSPIKE_OPT += -p$(CPU_CNT)
-endif
 
 # Set RISCV_ARCH and RISCV_ABI
 CORE_UPPER := $(call uc, $(CORE))
@@ -173,8 +119,7 @@ C_SRCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Source/Stubs/libncrt
 endif
 
 ASM_SRCS += $(NUCLEI_SDK_SOC_COMMON)/Source/GCC/startup_evalsoc.S \
-		$(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_evalsoc.S      \
-		$(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_evalsoc_s.S
+		$(NUCLEI_SDK_SOC_COMMON)/Source/GCC/intexc_evalsoc.S
 
 # Add extra board related source files and header files
 VALID_NUCLEI_SDK_SOC_BOARD := $(wildcard $(NUCLEI_SDK_SOC_BOARD))

@@ -44,10 +44,15 @@ SECTIONS
 
   .init           :
   {
-    /* vector table locate at ROM */
-    *(.text.vtable)
-    *(.text.vtable_s)
+    __start_of_init = .;
     *(.text.init)
+    /* MUST KEEP .mintvec and .text.trap */
+    /* mtvt readonly, configured by hardware */
+    . = __start_of_init + 0x100;
+    KEEP (*(.mintvec))
+    /* mtvec readonly, configured by hardware */
+    . = __start_of_init + 0x180;
+    KEEP (*(.text.trap))
     KEEP (*(SORT_NONE(.init)))
     . = ALIGN(4);
   } >ROM AT>ROM

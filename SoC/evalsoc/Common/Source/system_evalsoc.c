@@ -46,7 +46,7 @@
  *  -  A device-specific system configuration function, \ref SystemInit.
  *  -  Global c library \ref _premain_init and \ref _postmain_fini functions called right before calling main function.
  *     -  A global variable that contains the system frequency, \ref SystemCoreClock.
- *     -  A global eclic configuration initialization, \ref ECLIC_Init.
+ *     -  A global interrupt configuration initialization, \ref Interrupt_Init.
  *     -  A global exception and trap configuration initialization, \ref Trap_Init and \ref Exception_Init.
  *  -  Vendor customized interrupt, exception and nmi handling code, see \ref NMSIS_Core_IntExcNMI_Handling
  *
@@ -68,134 +68,6 @@
  *
  * @{
  */
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-
-typedef void (*fnptr)(void);
-
-/* for the following variables, see intexc_evalsoc.S and intexc_evalsoc_s.S */
-/** default entry for s-mode non-vector irq entry */
-extern fnptr irq_entry_s;
-/** default entry for s-mode exception entry */
-extern fnptr exc_entry_s;
-/** default eclic interrupt or exception interrupt handler */
-extern void default_intexc_handler(void);
-
-/** eclic s-mode software interrupt handler in eclic mode */
-extern void eclic_ssip_handler(void) __WEAK;
-/** eclic s-mode time interrupt handler in eclic mode */
-extern void eclic_stip_handler(void) __WEAK;
-
-/* default s-mode exception handler, which user can modify it at your need */
-static void system_default_exception_handler_s(unsigned long scause, unsigned long sp);
-
-#ifndef __ICCRISCV__
-#define __SMODE_VECTOR_ATTR   __attribute__((section (".text.vtable_s"), aligned(512)))
-#else
-#define __SMODE_VECTOR_ATTR   __attribute__((section (".sintvec"), aligned(512)))
-#endif
-// TODO: change the aligned(512) to match stvt alignment requirement according to your eclic max interrupt number
-// TODO: place your interrupt handler into this vector table, important if your vector table is in flash
-/**
- * \var unsigned long vector_table_s[SOC_INT_MAX]
- * \brief vector interrupt storing ISRs for supervisor mode
- * \details
- *  vector_table_s is hold by stvt register, the address must align according
- *  to actual interrupt numbers as below, now align to 512 bytes considering we put up to 128 interrupts here
- *  alignment must comply to table below if you increase or decrease vector interrupt number
- *  interrupt number      alignment
- *    0 to 16               64-byte
- *    17 to 32              128-byte
- *    33 to 64              256-byte
- *    65 to 128             512-byte
- *    129 to 256              1KB
- *    257 to 512              2KB
- *    513 to 1024             4KB
- */
-const unsigned long vector_table_s[SOC_INT_MAX] __SMODE_VECTOR_ATTR =
-{
-    (unsigned long)(default_intexc_handler),        /* 0: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 1: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 2: Reserved */
-
-    (unsigned long)(eclic_ssip_handler),            /* 3: supervisor software interrupt in eclic mode */
-
-    (unsigned long)(default_intexc_handler),        /* 4: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 5: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 6: Reserved */
-
-    (unsigned long)(eclic_stip_handler),            /* 7: supervisor timer interrupt in eclic mode */
-
-    (unsigned long)(default_intexc_handler),        /* 8: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 9: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 10: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 11: Reserved */
-
-    (unsigned long)(default_intexc_handler),        /* 12: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 13: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 14: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 15: Reserved */
-
-    (unsigned long)(default_intexc_handler),        /* 16: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 17: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 18: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 19: Interrupt 19 */
-
-    (unsigned long)(default_intexc_handler),        /* 20: Interrupt 20 */
-    (unsigned long)(default_intexc_handler),        /* 21: Interrupt 21 */
-    (unsigned long)(default_intexc_handler),        /* 22: Interrupt 22 */
-    (unsigned long)(default_intexc_handler),        /* 23: Interrupt 23 */
-
-    (unsigned long)(default_intexc_handler),        /* 24: Interrupt 24 */
-    (unsigned long)(default_intexc_handler),        /* 25: Interrupt 25 */
-    (unsigned long)(default_intexc_handler),        /* 26: Interrupt 26 */
-    (unsigned long)(default_intexc_handler),        /* 27: Interrupt 27 */
-
-    (unsigned long)(default_intexc_handler),        /* 28: Interrupt 28 */
-    (unsigned long)(default_intexc_handler),        /* 29: Interrupt 29 */
-    (unsigned long)(default_intexc_handler),        /* 30: Interrupt 30 */
-    (unsigned long)(default_intexc_handler),        /* 31: Interrupt 31 */
-
-    (unsigned long)(default_intexc_handler),        /* 32: Interrupt 32 */
-    (unsigned long)(default_intexc_handler),        /* 33: Interrupt 33 */
-    (unsigned long)(default_intexc_handler),        /* 34: Interrupt 34 */
-    (unsigned long)(default_intexc_handler),        /* 35: Interrupt 35 */
-
-    (unsigned long)(default_intexc_handler),        /* 36: Interrupt 36 */
-    (unsigned long)(default_intexc_handler),        /* 37: Interrupt 37 */
-    (unsigned long)(default_intexc_handler),        /* 38: Interrupt 38 */
-    (unsigned long)(default_intexc_handler),        /* 39: Interrupt 39 */
-
-    (unsigned long)(default_intexc_handler),        /* 40: Interrupt 40 */
-    (unsigned long)(default_intexc_handler),        /* 41: Interrupt 41 */
-    (unsigned long)(default_intexc_handler),        /* 42: Interrupt 42 */
-    (unsigned long)(default_intexc_handler),        /* 43: Interrupt 43 */
-
-    (unsigned long)(default_intexc_handler),        /* 44: Interrupt 44 */
-    (unsigned long)(default_intexc_handler),        /* 45: Interrupt 45 */
-    (unsigned long)(default_intexc_handler),        /* 46: Interrupt 46 */
-    (unsigned long)(default_intexc_handler),        /* 47: Interrupt 47 */
-
-    (unsigned long)(default_intexc_handler),        /* 48: Interrupt 48 */
-    (unsigned long)(default_intexc_handler),        /* 49: Interrupt 49 */
-    (unsigned long)(default_intexc_handler),        /* 50: Interrupt 50 */
-    (unsigned long)(default_intexc_handler),        /* 51: Interrupt 51 */
-
-    (unsigned long)(default_intexc_handler),        /* 52: Interrupt 52 */
-    (unsigned long)(default_intexc_handler),        /* 53: Interrupt 53 */
-    (unsigned long)(default_intexc_handler),        /* 54: Interrupt 54 */
-    (unsigned long)(default_intexc_handler),        /* 55: Interrupt 55 */
-
-    (unsigned long)(default_intexc_handler),        /* 56: Interrupt 56 */
-    (unsigned long)(default_intexc_handler),        /* 57: Interrupt 57 */
-    (unsigned long)(default_intexc_handler),        /* 58: Interrupt 58 */
-    (unsigned long)(default_intexc_handler),        /* 59: Interrupt 59 */
-
-    (unsigned long)(default_intexc_handler),        /* 60: Interrupt 60 */
-    (unsigned long)(default_intexc_handler),        /* 61: Interrupt 61 */
-    (unsigned long)(default_intexc_handler),        /* 62: Interrupt 62 */
-    (unsigned long)(default_intexc_handler),        /* 63: Interrupt 63 */
-};
-#endif
 /*----------------------------------------------------------------------------
   System Core Clock Variable
  *----------------------------------------------------------------------------*/
@@ -264,29 +136,60 @@ void SystemInit(void)
  *
  * @{
  */
-/** \brief Max exception handler number, don't include the NMI(0xFFF) one */
-#define MAX_SYSTEM_EXCEPTION_NUM        26
+/** \brief Max exception handler number */
+#define MAX_SYSTEM_EXCEPTION_NUM        12
 /**
  * \brief      Store the exception handlers for each exception ID
  * \note
  * - This SystemExceptionHandlers are used to store all the handlers for all
- * the exception codes Nuclei N/NX core provided.
- * - Exception code 0 - 25, totally 26 exceptions are mapped to SystemExceptionHandlers[0:25]
- * - Exception for NMI is also re-routed to exception handling(exception code 0xFFF) in startup code configuration, the handler itself is mapped to SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM]
+ * the exception codes Nuclei N100 core provided.
+ * - Exception code 0 - 11, totally 12 exceptions are mapped to SystemExceptionHandlers[0:11]
  */
-static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM + 1];
+static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
 
-/**
- * \brief      Store the exception handlers for each exception ID in supervisor mode
- * \note
- * - This SystemExceptionHandlers_S are used to store all the handlers for all
- * the exception codes Nuclei N/NX core provided.
- * - Exception code 0 - 11, totally 12 exceptions are mapped to SystemExceptionHandlers_S[0:11]
- * - The NMI (Non-maskable-interrupt) cannot be trapped to the supervisor-mode or user-mode for any configuration
- */
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-static unsigned long SystemExceptionHandlers_S[MAX_SYSTEM_EXCEPTION_NUM];
-#endif
+extern __WEAK void irqc_mtip_handler(void);
+extern __WEAK void irqc_msip_handler(void);
+extern __WEAK void irqc_mbwe_handler(void);
+extern void default_intexc_handler(void);
+
+typedef void (*__fp)(void);
+// TODO irqc vector table
+// Please fill in this irq vector table with your real interrupt function name
+static const __fp vector_base[32] __attribute__((section (".mintvec"))) = {
+    irqc_msip_handler,          /* irq 0 ,  internal irq 0  */
+    irqc_mtip_handler,          /* irq 1 ,  internal irq 1  */
+    irqc_mbwe_handler,          /* irq 2 ,  internal irq 2  */
+    default_intexc_handler,     /* irq 3 ,  ext_irq 0       */
+    default_intexc_handler,     /* irq 4 ,  ext_irq 1       */
+    default_intexc_handler,     /* irq 5 ,  ext_irq 2       */
+    default_intexc_handler,     /* irq 6 ,  ext_irq 3       */
+    default_intexc_handler,     /* irq 7 ,  ext_irq 4       */
+    default_intexc_handler,     /* irq 8 ,  ext_irq 5       */
+    default_intexc_handler,     /* irq 9 ,  ext_irq 6       */
+    default_intexc_handler,     /* irq 10,  ext_irq 7       */
+    default_intexc_handler,     /* irq 11,  ext_irq 8       */
+    default_intexc_handler,     /* irq 12,  ext_irq 9       */
+    default_intexc_handler,     /* irq 13,  ext_irq 10      */
+    default_intexc_handler,     /* irq 14,  ext_irq 11      */
+    default_intexc_handler,     /* irq 15,  ext_irq 12      */
+    default_intexc_handler,     /* irq 16,  ext_irq 13      */
+    default_intexc_handler,     /* irq 17,  ext_irq 14      */
+    default_intexc_handler,     /* irq 18,  ext_irq 15      */
+    default_intexc_handler,     /* irq 19,  ext_irq 16      */
+    default_intexc_handler,     /* irq 20,  ext_irq 17      */
+    default_intexc_handler,     /* irq 21,  ext_irq 18      */
+    default_intexc_handler,     /* irq 22,  ext_irq 19      */
+    default_intexc_handler,     /* irq 23,  ext_irq 20      */
+    default_intexc_handler,     /* irq 24,  ext_irq 21      */
+    default_intexc_handler,     /* irq 25,  ext_irq 22      */
+    default_intexc_handler,     /* irq 26,  ext_irq 23      */
+    default_intexc_handler,     /* irq 27,  ext_irq 24      */
+    default_intexc_handler,     /* irq 28,  ext_irq 25      */
+    default_intexc_handler,     /* irq 29,  ext_irq 26      */
+    default_intexc_handler,     /* irq 30,  ext_irq 27      */
+    default_intexc_handler      /* irq 31,  ext_irq 28      */
+};
+
 /**
  * \brief      Exception Handler Function Typedef
  * \note
@@ -307,9 +210,7 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
 {
     /* TODO: Uncomment this if you have implement printf function */
     printf("MCAUSE : 0x%lx\r\n", mcause);
-    printf("MDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_MDCAUSE));
     printf("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
-    printf("MTVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
     printf("HARTID : %u\r\n", (unsigned int)__get_hart_id());
     Exception_DumpFrame(sp, PRV_M);
 #if defined(SIMULATION_MODE)
@@ -333,11 +234,7 @@ static void Exception_Init(void)
 {
     for (int i = 0; i < MAX_SYSTEM_EXCEPTION_NUM; i++) {
         SystemExceptionHandlers[i] = (unsigned long)system_default_exception_handler;
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-        SystemExceptionHandlers_S[i] = (unsigned long)system_default_exception_handler_s;
-#endif
     }
-    SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] = (unsigned long)system_default_exception_handler;
 }
 
 /**
@@ -365,18 +262,12 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
            exc_frame->t1, exc_frame->t2, exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, \
            exc_frame->a4, exc_frame->a5, exc_frame->cause, exc_frame->epc);
 #endif
-
-    if (PRV_M == mode) {
-        /* msubm is exclusive to machine mode */
-        printf("msubm: 0x%lx\n", exc_frame->msubm);
-    }
 }
 
 /**
  * \brief       Register an exception handler for exception code EXCn
  * \details
  * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers[EXCn-1].
- * - For EXCn == NMI_EXCn, it will be registered into SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM].
  * \param [in]  EXCn    See \ref EXCn_Type
  * \param [in]  exc_handler     The exception handler for this exception code EXCn
  */
@@ -384,8 +275,6 @@ void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
 {
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         SystemExceptionHandlers[EXCn] = exc_handler;
-    } else if (EXCn == NMI_EXCn) {
-        SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] = exc_handler;
     }
 }
 
@@ -393,7 +282,6 @@ void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
  * \brief       Get current exception handler for exception code EXCn
  * \details
  * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers[EXCn-1].
- * - For EXCn == NMI_EXCn, it will return SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM].
  * \param [in]  EXCn    See \ref EXCn_Type
  * \return  Current exception handler for exception code EXCn, if not found, return 0.
  */
@@ -401,10 +289,6 @@ unsigned long Exception_Get_EXC(uint32_t EXCn)
 {
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         return SystemExceptionHandlers[EXCn];
-    } else if (EXCn == NMI_EXCn) {
-        return SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
-    } else {
-        return 0;
     }
 }
 
@@ -428,8 +312,6 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
 
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         exc_handler = (EXC_HANDLER)SystemExceptionHandlers[EXCn];
-    } else if (EXCn == NMI_EXCn) {
-        exc_handler = (EXC_HANDLER)SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
     } else {
         exc_handler = (EXC_HANDLER)system_default_exception_handler;
     }
@@ -439,93 +321,6 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
     return 0;
 }
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-/**
- * \brief      Supervisor mode system Default Exception Handler
- * \details
- * This function provided a default supervisor mode exception and NMI handling code for all exception ids.
- * By default, It will just print some information for debug, Vendor can customize it according to its requirements.
- * \param [in]  scause    code indicating the reason that caused the trap in supervisor mode
- * \param [in]  sp        stack pointer
- */
-static void system_default_exception_handler_s(unsigned long scause, unsigned long sp)
-{
-    /* TODO: Uncomment this if you have implement printf function */
-    printf("SCAUSE : 0x%lx\r\n", scause);
-    printf("SDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_SDCAUSE));
-    printf("SEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_SEPC));
-    printf("STVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_STVAL));
-    Exception_DumpFrame(sp, PRV_S);
-#if defined(SIMULATION_MODE)
-    // directly exit if in SIMULATION
-    extern void simulation_exit(int status);
-    simulation_exit(1);
-#else
-    while (1);
-#endif
-}
-
-/**
- * \brief       Register an exception handler for exception code EXCn of supervisor mode
- * \details
- * -For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers_S[EXCn-1].
- * -For EXCn == NMI_EXCn, The NMI (Non-maskable-interrupt) cannot be trapped to the supervisor-mode or user-mode for any
- *    configuration, so NMI won't be registered into SystemExceptionHandlers_S.
- * \param [in]  EXCn            See \ref EXCn_Type
- * \param [in]  exc_handler     The exception handler for this exception code EXCn
- */
-void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler)
-{
-    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
-        SystemExceptionHandlers_S[EXCn] = exc_handler;
-    }
-}
-
-/**
- * \brief       Get current exception handler for exception code EXCn of supervisor mode
- * \details
- * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers_S[EXCn-1].
- * \param [in]  EXCn    See \ref EXCn_Type
- * \return  Current exception handler for exception code EXCn, if not found, return 0.
- */
-unsigned long Exception_Get_EXC_S(uint32_t EXCn)
-{
-    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
-        return SystemExceptionHandlers[EXCn];
-    } else {
-        return 0;
-    }
-}
-
-/**
- * \brief      common Exception handler entry of supervisor mode
- * \details
- * This function provided a supervisor mode common entry for exception. Silicon Vendor could modify
- * this template implementation according to requirement.
- * \param [in]  scause    code indicating the reason that caused the trap in supervisor mode
- * \param [in]  sp        stack pointer
- * \remarks
- * - RISCV provided supervisor mode common entry for all types of exception. This is proposed code template
- *   for exception entry function, Silicon Vendor could modify the implementation.
- * - For the core_exception_handler_s template, we provided exception register function \ref Exception_Register_EXC_S
- *   which can help developer to register your exception handler for specific exception number.
- */
-uint32_t core_exception_handler_s(unsigned long scause, unsigned long sp)
-{
-    uint32_t EXCn = (uint32_t)(scause & 0X00000fff);
-    EXC_HANDLER exc_handler;
-
-    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
-        exc_handler = (EXC_HANDLER)SystemExceptionHandlers_S[EXCn];
-    } else {
-        exc_handler = (EXC_HANDLER)system_default_exception_handler_s;
-    }
-    if (exc_handler != NULL) {
-        exc_handler(scause, sp);
-    }
-    return 0;
-}
-#endif
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
 
@@ -533,7 +328,7 @@ uint32_t core_exception_handler_s(unsigned long scause, unsigned long sp)
 void SystemBannerPrint(void)
 {
 #if defined(NUCLEI_BANNER) && (NUCLEI_BANNER == 1)
-    printf("Nuclei SDK Build Time: %s, %s\r\n", __DATE__, __TIME__);
+    printf("N100 Nuclei SDK Build Time: %s, %s\r\n", __DATE__, __TIME__);
 #ifdef DOWNLOAD_MODE_STRING
     printf("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
 #endif
@@ -543,24 +338,12 @@ void SystemBannerPrint(void)
 }
 
 /**
- * \brief initialize eclic config
+ * \brief initialize interrupt config
  * \details
- * ECLIC needs be initialized after boot up,
- * Vendor could also change the initialization
- * configuration.
+ * interrupt needs be initialized after boot up
  */
-void ECLIC_Init(void)
+void Interrupt_Init(void)
 {
-    /* Global Configuration about MTH and NLBits.
-     * TODO: Please adapt it according to your system requirement.
-     * This function is called in _init function */
-    ECLIC_SetMth(0);
-    ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
-
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-    /* Global Configuration about STH */
-    ECLIC_SetSth(0);
-#endif
 }
 
 /**
@@ -579,160 +362,16 @@ void ECLIC_Init(void)
  * - This function use to configure specific eclic interrupt and register its interrupt handler and enable its interrupt.
  * - If the vector table is placed in read-only section(FLASHXIP mode), handler could not be installed
  */
-int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler)
+int32_t IRQC_Register_IRQ(IRQn_Type IRQn, IRQC_TRIGGER_Type trig_mode, void* handler)
 {
-    if ((IRQn > SOC_INT_MAX) || (shv > ECLIC_VECTOR_INTERRUPT) \
-        || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER)) {
-        return -1;
+    if (IRQn >= SOC_INT_MAX) {
     }
-
-    /* set interrupt vector mode */
-    ECLIC_SetShvIRQ(IRQn, shv);
-    /* set interrupt trigger mode and polarity */
-    ECLIC_SetTrigIRQ(IRQn, trig_mode);
-    /* set interrupt level */
-    ECLIC_SetLevelIRQ(IRQn, lvl);
-    /* set interrupt priority */
-    ECLIC_SetPriorityIRQ(IRQn, priority);
+    IRQC_SetTrigIRQ(IRQn, trig_mode);
     if (handler != NULL) {
-        /* set interrupt handler entry to vector table */
-        ECLIC_SetVector(IRQn, (rv_csr_t)handler);
+        IRQC_SetVector(IRQn, (rv_csr_t)handler);
     }
-    /* enable interrupt */
-    ECLIC_EnableIRQ(IRQn);
+    IRQC_EnableIRQ(IRQn);
     return 0;
-}
-
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-/**
- * \brief  Initialize a specific IRQ and register the handler for supervisor mode
- * \details
- * This function set vector mode, trigger mode and polarity, interrupt level and priority,
- * assign handler for specific IRQn.
- * \param [in]  IRQn        NMI interrupt handler address
- * \param [in]  shv         \ref ECLIC_NON_VECTOR_INTERRUPT means non-vector mode, and \ref ECLIC_VECTOR_INTERRUPT is vector mode
- * \param [in]  trig_mode   see \ref ECLIC_TRIGGER_Type
- * \param [in]  lvl         interupt level
- * \param [in]  priority    interrupt priority
- * \param [in]  handler     interrupt handler, if NULL, handler will not be installed
- * \return       -1 means invalid input parameter. 0 means successful.
- * \remarks
- * - This function use to configure specific eclic S-mode interrupt and register its interrupt handler and enable its interrupt.
- * - If the vector table is placed in read-only section (FLASHXIP mode), handler could not be installed.
- */
-int32_t ECLIC_Register_IRQ_S(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler)
-{
-    if ((IRQn > SOC_INT_MAX) || (shv > ECLIC_VECTOR_INTERRUPT) \
-        || (trig_mode > ECLIC_NEGTIVE_EDGE_TRIGGER)) {
-        return -1;
-    }
-
-    /* set interrupt vector mode */
-    ECLIC_SetShvIRQ_S(IRQn, shv);
-    /* set interrupt trigger mode and polarity */
-    ECLIC_SetTrigIRQ_S(IRQn, trig_mode);
-    /* set interrupt level */
-    ECLIC_SetLevelIRQ_S(IRQn, lvl);
-    /* set interrupt priority */
-    ECLIC_SetPriorityIRQ_S(IRQn, priority);
-    if (handler != NULL) {
-        /* set interrupt handler entry to vector table */
-        ECLIC_SetVector_S(IRQn, (rv_csr_t)handler);
-    }
-    /* enable interrupt */
-    ECLIC_EnableIRQ_S(IRQn);
-    return 0;
-}
-#endif
-
-#define FALLBACK_DEFAULT_ECLIC_BASE             0x0C000000UL
-#define FALLBACK_DEFAULT_SYSTIMER_BASE          0x02000000UL
-
-/** Nuclei RISC-V CPU IRegion Information Variable used to store probed info */
-volatile IRegion_Info_Type SystemIRegionInfo;
-/**
- * \brief Get Nuclei Internal Region Information
- * \details
- * This function is used to get nuclei cpu internal region
- * information, such as iregion base, eclic base, smp base,
- * timer base and idu base, and fallback to old evalsoc
- * timer and eclic base if no iregion feature found
- */
-static void _get_iregion_info(IRegion_Info_Type *iregion)
-{
-    unsigned long mcfg_info;
-    if (iregion == NULL) {
-        return;
-    }
-    mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
-    if (mcfg_info & MCFG_INFO_IREGION_EXIST) { // IRegion Info present
-        iregion->iregion_base = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
-        iregion->eclic_base = iregion->iregion_base + IREGION_ECLIC_OFS;
-        iregion->systimer_base = iregion->iregion_base + IREGION_TIMER_OFS;
-        iregion->smp_base = iregion->iregion_base + IREGION_SMP_OFS;
-        iregion->idu_base = iregion->iregion_base + IREGION_IDU_OFS;
-    } else {
-        iregion->eclic_base = FALLBACK_DEFAULT_ECLIC_BASE;
-        iregion->systimer_base = FALLBACK_DEFAULT_SYSTIMER_BASE;
-    }
-}
-
-#define CLINT_MSIP(base, hartid)    (*(volatile uint32_t *)((uintptr_t)((base) + ((hartid) * 4))))
-#define SMP_CTRLREG(base, ofs)      (*(volatile uint32_t *)((uintptr_t)((base) + (ofs))))
-
-void __sync_harts(void) __attribute__((section(".text.init")));
-/**
- * \brief Synchronize all harts
- * \details
- * This function is used to synchronize all the harts,
- * especially to wait the boot hart finish initialization of
- * data section, bss section and c runtines initialization
- * This function must be placed in .text.init section, since
- * section initialization is not ready, global variable
- * and static variable should be avoid to use in this function,
- * and avoid to call other functions
- */
-void __sync_harts(void)
-{
-// Only do synchronize when SMP_CPU_CNT is defined and number > 0
-#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
-    unsigned long hartid = __get_hart_id();
-    unsigned long tmr_hartid = __get_hart_index();
-    unsigned long clint_base, irgb_base, smp_base;
-    unsigned long mcfg_info;
-
-    mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
-    if (mcfg_info & MCFG_INFO_IREGION_EXIST) { // IRegion Info present
-        // clint base = system timer base + 0x1000
-        irgb_base = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
-        clint_base = irgb_base + IREGION_TIMER_OFS + 0x1000;
-        smp_base = irgb_base + IREGION_SMP_OFS;
-    } else {
-        clint_base = FALLBACK_DEFAULT_SYSTIMER_BASE + 0x1000;
-        smp_base = (__RV_CSR_READ(CSR_MSMPCFG_INFO) >> 4) << 4;
-    }
-    // Enable SMP and L2, disable cluster local memory
-    SMP_CTRLREG(smp_base, 0xc) = 0xFFFFFFFF;
-    SMP_CTRLREG(smp_base, 0x10) = 0x1;
-    SMP_CTRLREG(smp_base, 0xd8) = 0x0;
-    __SMP_RWMB();
-
-    // pre-condition: interrupt must be disabled, this is done before calling this function
-    // BOOT_HARTID is defined <Device.h>
-    if (hartid == BOOT_HARTID) { // boot hart
-        // clear msip pending
-        for (int i = 0; i < SMP_CPU_CNT; i ++) {
-            CLINT_MSIP(clint_base, i) = 0;
-        }
-        __SMP_RWMB();
-    } else {
-        // Set machine software interrupt pending to 1
-        CLINT_MSIP(clint_base, tmr_hartid) = 1;
-        __SMP_RWMB();
-        // wait for pending bit cleared by boot hart
-        while (CLINT_MSIP(clint_base, tmr_hartid) == 1);
-    }
-#endif
 }
 
 /**
@@ -742,24 +381,6 @@ void __sync_harts(void)
  */
 static void Trap_Init(void)
 {
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-    /*
-     * Intialize ECLIC supervisor mode vector interrupt
-     * base address stvt to vector_table_s
-     */
-    __RV_CSR_WRITE(CSR_STVT, (unsigned long)&vector_table_s);
-    /*
-     * Set ECLIC supervisor mode non-vector entry to be controlled
-     * by stvt2 CSR register.
-     * Intialize supervisor mode ECLIC non-vector interrupt
-     * base address stvt2 to irq_entry_s.
-    */
-    __RV_CSR_WRITE(CSR_STVT2, (unsigned long)&irq_entry_s);
-    __RV_CSR_SET(CSR_STVT2, 0x01);
-    /*
-     * Set supervisor exception entry stvec to exc_entry_s */
-    __RV_CSR_WRITE(CSR_STVEC, (unsigned long)&exc_entry_s);
-#endif
 }
 
 /**
@@ -772,73 +393,16 @@ static void Trap_Init(void)
  */
 void _premain_init(void)
 {
-    // TODO to make it possible for configurable boot hartid
-    unsigned long hartid = __get_hart_id();
-
-    // BOOT_HARTID is defined <Device.h>
-    if (hartid == BOOT_HARTID) { // only done in boot hart
-        // IREGION INFO MUST BE SET BEFORE ANY PREMAIN INIT STEPS
-        _get_iregion_info((IRegion_Info_Type *)(&SystemIRegionInfo));
-    }
-    /* TODO: Add your own initialization code here, called before main */
-    // This code located in RUNMODE_CONTROL ifdef endif block just for internal usage
-    // No need to use in your code
-#ifdef RUNMODE_CONTROL
-#if defined(RUNMODE_ILM_EN) && RUNMODE_ILM_EN == 0
-    // Only disable ilm when it is present
-    if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_ILM) {
-        __RV_CSR_CLEAR(CSR_MILM_CTL, MILM_CTL_ILM_EN);
-    }
-#endif
-#if defined(RUNMODE_DLM_EN) && RUNMODE_DLM_EN == 0
-    // Only disable dlm when it is present
-    if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_DLM) {
-        __RV_CSR_CLEAR(CSR_MDLM_CTL, MDLM_CTL_DLM_EN);
-    }
-#endif
-#endif
-
-    /* __ICACHE_PRESENT and __DCACHE_PRESENT are defined in demosoc.h */
-    // For our internal cpu testing, they want to set demosoc __ICACHE_PRESENT/__DCACHE_PRESENT to be 1
-    // __CCM_PRESENT is still default to 0 in demosoc.h, since it is used in core_feature_eclic.h to register interrupt, if set to 1, it might cause exception
-    // but in the cpu, icache or dcache might not exist due to cpu configuration, so here
-    // we need to check whether icache/dcache really exist, if yes, then turn on it
-#if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1)
-    if (ICachePresent()) { // Check whether icache real present or not
-        EnableICache();
-    }
-#endif
-#if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1)
-    if (DCachePresent()) { // Check whether dcache real present or not
-        EnableDCache();
-    }
-#endif
-
-    /* Do fence and fence.i to make sure previous ilm/dlm/icache/dcache control done */
-    __RWMB();
-    __FENCE_I();
-
-    if (hartid == BOOT_HARTID) { // only required for boot hartid
-        // TODO implement get_cpu_freq function to get real cpu clock freq in HZ or directly give the real cpu HZ
-        SystemCoreClock = get_cpu_freq();
-        uart_init(SOC_DEBUG_UART, 115200);
-        /* Display banner after UART initialized */
-        SystemBannerPrint();
-        /* Initialize exception default handlers */
-        Exception_Init();
-        /* ECLIC initialization, mainly MTH and NLBIT */
-        ECLIC_Init();
-        Trap_Init();
-        // TODO: internal usage for Nuclei
-#ifdef RUNMODE_CONTROL
-        printf("Current RUNMODE=%s, ilm:%d, dlm %d, icache %d, dcache %d, ccm %d\n", \
-            RUNMODE_STRING, RUNMODE_ILM_EN, RUNMODE_DLM_EN, \
-            RUNMODE_IC_EN, RUNMODE_DC_EN, RUNMODE_CCM_EN);
-        printf("CSR: MILM_CTL 0x%x, MDLM_CTL 0x%x, MCACHE_CTL 0x%x\n", \
-            __RV_CSR_READ(CSR_MILM_CTL), __RV_CSR_READ(CSR_MDLM_CTL), \
-            __RV_CSR_READ(CSR_MCACHE_CTL));
-#endif
-    }
+    // TODO implement get_cpu_freq function to get real cpu clock freq in HZ or directly give the real cpu HZ
+    SystemCoreClock = 16000000; //get_cpu_freq();
+    uart_init(SOC_DEBUG_UART, 115200);
+    /* Display banner after UART initialized */
+    SystemBannerPrint();
+    /* Initialize exception default handlers */
+    Exception_Init();
+    /* ECLIC initialization, mainly MTH and NLBIT */
+    Interrupt_Init();
+    Trap_Init();
 }
 
 /**
@@ -855,34 +419,6 @@ void _postmain_fini(int status)
     /* TODO: Add your own finishing code here, called after main */
     extern void simulation_exit(int status);
     simulation_exit(status);
-}
-
-/**
- * \brief _init function called in __libc_init_array()
- * \details
- * This `__libc_init_array()` function is called during startup code,
- * user need to implement this function, otherwise when link it will
- * error init.c:(.text.__libc_init_array+0x26): undefined reference to `_init'
- * \note
- * Please use \ref _premain_init function now
- */
-void _init(void)
-{
-    /* Don't put any code here, please use _premain_init now */
-}
-
-/**
- * \brief _fini function called in __libc_fini_array()
- * \details
- * This `__libc_fini_array()` function is called when exit main.
- * user need to implement this function, otherwise when link it will
- * error fini.c:(.text.__libc_fini_array+0x28): undefined reference to `_fini'
- * \note
- * Please use \ref _postmain_fini function now
- */
-void _fini(void)
-{
-    /* Don't put any code here, please use _postmain_fini now */
 }
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_SystemConfig */
