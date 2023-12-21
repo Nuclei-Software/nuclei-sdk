@@ -9,7 +9,7 @@ volatile SPDP  secs;
 
 SPDP time()
 {
-    return (SPDP) SysTimer_GetLoadValue() / SOC_TIMER_FREQ;
+    return (SPDP) __get_rv_time() / SOC_TIMER_FREQ;
 }
 
 void getSecs()

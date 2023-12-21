@@ -12,6 +12,6 @@ long csr_instret(void)
 
 long time(void)
 {
-    return SysTimer_GetLoadValue() / SOC_TIMER_FREQ;
+    return __get_rv_time() / SOC_TIMER_FREQ;
 }
 

@@ -239,7 +239,7 @@ int main(void)
         //Bob: for simulation we make it small
         Number_Of_Runs = 200;
 #else
-        Number_Of_Runs = 500000;
+        Number_Of_Runs = 5000;
 #endif
     }
 

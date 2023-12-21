@@ -28,7 +28,7 @@
 #define HAS_STDIO 1
 #define HAS_PRINTF 1
 #define SEED_METHOD SEED_VOLATILE
-#define CORE_TICKS uint64_t
+#define CORE_TICKS uint32_t
 #define ee_u8 uint8_t
 #define ee_u16 uint16_t
 #if defined(__riscv_xlen) && (__riscv_xlen == 64)
