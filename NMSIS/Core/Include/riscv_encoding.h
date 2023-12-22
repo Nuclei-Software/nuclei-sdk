@@ -670,9 +670,6 @@
 /* === Nuclei N100 IRQC */
 #define CSR_IRQCIP              0xBD0
 #define CSR_IRQCIE              0xBD1
-#define CSR_IRQCLVL             0xBD2
-#define CSR_IRQCEDGE            0xBD3
-#define CSR_IRQCINFO            0xBD4
 
 /** @} */ /** End of Doxygen Group NMSIS_Core_CSR_Registers **/
 

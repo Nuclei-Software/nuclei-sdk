@@ -47,27 +47,6 @@ extern "C" {
 // IRQC only support vector interrupt
 #define IRQC_VECTOR_INTERRUPT                 0x1                                      /*!< Vector Interrupt Mode of IRQC */
 
-/**\brief IRQC Trigger Enum for different Trigger Type */
-typedef enum IRQC_TRIGGER {
-    IRQC_LEVEL_TRIGGER = 0x0,          /*!< Level Triggerred, trig[0] = 0 */
-    IRQC_POSTIVE_EDGE_TRIGGER = 0x1,   /*!< Postive/Rising Edge Triggered, trig[0] = 1, trig[1] = 0 */
-    IRQC_NEGTIVE_EDGE_TRIGGER = 0x3,   /*!< Negtive/Falling Edge Triggered, trig[0] = 1, trig[1] = 1 */
-    IRQC_MAX_TRIGGER = 0x3             /*!< MAX Supported Trigger Mode */
-} IRQC_TRIGGER_Type;
-
-/**
- * \brief  Get the IRQC Info
- * \details
- * This function gets the hardware information from IRQCINFO CSR register.
- * \return   IRQCINFO CSR register content.
- * \remarks
- * - Bit 5:0 for irq source number
-*/
-__STATIC_FORCEINLINE uint32_t IRQC_GetInfo(void)
-{
-    return __RV_CSR_READ(CSR_IRQCINFO);
-}
-
 /**
  * \brief  Enable a specific interrupt
  * \details
@@ -170,66 +149,6 @@ __STATIC_FORCEINLINE void IRQC_ClearPendingIRQ(IRQn_Type IRQn)
 }
 
 /**
- * \brief  Set trigger mode and polarity for a specific interrupt
- * \details
- * This function set trigger mode and polarity of the specific interrupt \em IRQn.
- * \param [in]      IRQn  Interrupt number
- * \param [in]      trig
- *                   - 00  level trigger, \ref IRQC_LEVEL_TRIGGER
- *                   - 01  positive edge trigger, \ref IRQC_POSTIVE_EDGE_TRIGGER
- *                   - 02  level trigger, \ref IRQC_LEVEL_TRIGGER
- *                   - 03  negative edge trigger, \ref IRQC_NEGTIVE_EDGE_TRIGGER
- * \remarks
- * - IRQn must not be negative.
- *
- * \sa
- * - \ref IRQC_GetTrigIRQ
- */
-__STATIC_FORCEINLINE void IRQC_SetTrigIRQ(IRQn_Type IRQn, uint32_t trig)
-{
-    if (trig & 0x1) { // level trigger
-        __RV_CSR_SET(CSR_IRQCLVL, (1<<IRQn));
-    } else {
-        __RV_CSR_CLEAR(CSR_IRQCLVL, (1<<IRQn));
-        if (trig & 0x2) { // negative edge
-            __RV_CSR_SET(CSR_IRQCEDGE, (1<<IRQn));
-        } else {
-            __RV_CSR_CLEAR(CSR_IRQCEDGE, (1<<IRQn));
-        }
-    }
-}
-
-/**
- * \brief  Get trigger mode and polarity for a specific interrupt
- * \details
- * This function get trigger mode and polarity of the specific interrupt \em IRQn.
- * \param [in]      IRQn  Interrupt number
- * \return
- *                 - 00  level trigger, \ref IRQC_LEVEL_TRIGGER
- *                 - 01  positive edge trigger, \ref IRQC_POSTIVE_EDGE_TRIGGER
- *                 - 02  level trigger, \ref IRQC_LEVEL_TRIGGER
- *                 - 03  negative edge trigger, \ref IRQC_NEGTIVE_EDGE_TRIGGER
- * \remarks
- *     - IRQn must not be negative.
- * \sa
- *     - \ref IRQC_SetTrigIRQ
- */
-__STATIC_FORCEINLINE uint32_t IRQC_GetTrigIRQ(IRQn_Type IRQn)
-{
-    unsigned long tmp;
-    tmp = __RV_CSR_READ(CSR_IRQCLVL);
-
-    if (tmp & 0x1) {
-        return IRQC_LEVEL_TRIGGER;
-    }
-    tmp = __RV_CSR_READ(CSR_IRQCEDGE);
-    if (tmp & 0x1) {
-        return IRQC_NEGTIVE_EDGE_TRIGGER;
-    }
-    return IRQC_POSTIVE_EDGE_TRIGGER;
-}
-
-/**
  * \brief  Set Interrupt Vector of a specific interrupt
  * \details
  * This function set interrupt handler address of the specific interrupt \em IRQn.
@@ -287,57 +206,6 @@ __STATIC_FORCEINLINE rv_csr_t __get_exc_entry(void)
     unsigned long addr = __RV_CSR_READ(CSR_MTVEC);
     return (addr & ~(0x2F));
 }
-
-
-/**
- * \brief   Save necessary CSRs into variables for vector interrupt nesting
- * \details
- * This macro is used to declare variables which are used for saving
- * CSRs(MCAUSE, MEPC), and it will read these CSR content into
- * these variables, it need to be used in a vector-interrupt if nesting
- * is required.
- * \remarks
- * - Interrupt will be enabled after this macro is called
- * - It need to be used together with \ref RESTORE_IRQ_CSR_CONTEXT
- * - Don't use variable names __mcause, __mpec, __msubm in your ISR code
- * - If you want to enable interrupt nesting feature for vector interrupt,
- * you can do it like this:
- * \code
- * // __INTERRUPT attribute will generates function entry and exit sequences suitable
- * // for use in an interrupt handler when this attribute is present
- * __INTERRUPT void eclic_mtip_handler(void)
- * {
- *     // Must call this to save CSRs
- *     SAVE_IRQ_CSR_CONTEXT();
- *     // !!!Interrupt is enabled here!!!
- *     // !!!Higher priority interrupt could nest it!!!
- *
- *     // put you own interrupt handling code here
- *
- *     // Must call this to restore CSRs
- *     RESTORE_IRQ_CSR_CONTEXT();
- * }
- * \endcode
- */
-#define SAVE_IRQ_CSR_CONTEXT()                                              \
-        rv_csr_t __mcause = __RV_CSR_READ(CSR_MCAUSE);                      \
-        rv_csr_t __mepc = __RV_CSR_READ(CSR_MEPC);                          \
-        __enable_irq();
-
-
-/**
- * \brief   Restore necessary CSRs from variables for vector interrupt nesting
- * \details
- * This macro is used restore CSRs(MCAUSE, MEPC) from pre-defined variables
- * in \ref SAVE_IRQ_CSR_CONTEXT macro.
- * \remarks
- * - Interrupt will be disabled after this macro is called
- * - It need to be used together with \ref SAVE_IRQ_CSR_CONTEXT
- */
-#define RESTORE_IRQ_CSR_CONTEXT()                                           \
-        __disable_irq();                                                    \
-        __RV_CSR_WRITE(CSR_MEPC, __mepc);                                   \
-        __RV_CSR_WRITE(CSR_MCAUSE, __mcause);
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_IntExc */
 

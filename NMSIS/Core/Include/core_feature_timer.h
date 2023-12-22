@@ -41,6 +41,9 @@ extern "C" {
  * @{
  */
 
+#define SysTimer_MTIME_Msk                 (0x00FFFFFF)                     /*!< SysTick Timer MTIME value Mask */
+#define SysTimer_MTIMECMP_Msk              (0x00FFFFFF)                     /*!< SysTick Timer MTIMECMP value Mask */
+
 /**
  * \brief  Set system timer load value
  * \details
@@ -108,7 +111,7 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetCompareValue(void)
  */
 __STATIC_FORCEINLINE void SysTimer_Start(void)
 {
-    __RV_CSR_CLEAR(CSR_MSTOP, 0x1);
+    //__RV_CSR_CLEAR(CSR_MSTOP, 0x1);
 }
 
 /**
@@ -119,7 +122,7 @@ __STATIC_FORCEINLINE void SysTimer_Start(void)
  */
 __STATIC_FORCEINLINE void SysTimer_Stop(void)
 {
-    __RV_CSR_SET(CSR_MSTOP, 0x1);
+    //__RV_CSR_SET(CSR_MSTOP, 0x1);
 }
 /**
  * \brief  Trigger or set software interrupt via system timer in machine mode
@@ -173,8 +176,8 @@ __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
 {
     uint32_t loadticks = SysTimer_GetLoadValue();
     SysTimer_SetCompareValue(ticks + loadticks);
+    SysTimer_Start();
     // TODO add IRQC related API
-    IRQC_SetTrigIRQ(SysTimer_IRQn, IRQC_LEVEL_TRIGGER);
     IRQC_EnableIRQ(SysTimer_IRQn);
     return (0UL);
 }
@@ -204,8 +207,8 @@ __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint32_t ticks)
     uint32_t reload_ticks = ticks + cur_ticks;
 
     // TODO: Need to consider mtimecmp  and mtime are 24bit long
-    if (reload_ticks >= 0x01000000) { // overflow 24bits
-        reload_ticks = reload_ticks - 0x01000000;
+    if (reload_ticks > SysTimer_MTIMECMP_Msk) { // overflow 24bits
+        reload_ticks = reload_ticks - SysTimer_MTIMECMP_Msk - 1;
     }
     SysTimer_SetCompareValue(reload_ticks);
 
