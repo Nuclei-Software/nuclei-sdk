@@ -111,7 +111,7 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetCompareValue(void)
  */
 __STATIC_FORCEINLINE void SysTimer_Start(void)
 {
-    //__RV_CSR_CLEAR(CSR_MSTOP, 0x1);
+    __RV_CSR_CLEAR(CSR_MSTOP, 0x1);
 }
 
 /**
@@ -122,7 +122,7 @@ __STATIC_FORCEINLINE void SysTimer_Start(void)
  */
 __STATIC_FORCEINLINE void SysTimer_Stop(void)
 {
-    //__RV_CSR_SET(CSR_MSTOP, 0x1);
+    __RV_CSR_SET(CSR_MSTOP, 0x1);
 }
 /**
  * \brief  Trigger or set software interrupt via system timer in machine mode

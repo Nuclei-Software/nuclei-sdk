@@ -80,7 +80,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #ifndef DISABLE_NMSIS_BENCH
 
 /** Declare benchmark required variables, need to be placed above all BENCH_xxx macros in each c source code if BENCH_xxx used */
-#define BENCH_DECLARE_VAR()     static volatile uint64_t _bc_sttcyc, _bc_endcyc, _bc_usecyc, _bc_sumcyc, _bc_lpcnt, _bc_ercd;
+#define BENCH_DECLARE_VAR()     static volatile uint32_t _bc_sttcyc, _bc_endcyc, _bc_usecyc, _bc_sumcyc, _bc_lpcnt, _bc_ercd;
 
 /** Initialize benchmark environment, need to called in before other BENCH_xxx macros are called */
 #define BENCH_INIT()            printf("Benchmark initialized\n"); \
@@ -127,7 +127,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
                                     printf("SUCCESS, %s\n", #proc); \
                                 }
 #else
-#define BENCH_DECLARE_VAR()     static volatile uint64_t _bc_ercd, _bc_lpcnt;
+#define BENCH_DECLARE_VAR()     static volatile uint32_t _bc_ercd, _bc_lpcnt;
 #define BENCH_INIT()            _bc_ercd = 0; __prepare_bench_env();
 #define BENCH_RESET(proc)
 #define BENCH_START(proc)       _bc_ercd = 0;

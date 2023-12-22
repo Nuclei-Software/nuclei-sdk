@@ -410,21 +410,6 @@ __STATIC_FORCEINLINE uint32_t __get_rv_time(void)
 }
 
 /**
- * \brief   Get cluster id of current cluster
- * \details This function will get cluster id of current cluster in a multiple cluster system
- * \return  The cluster id of current cluster
- * \remarks mhartid bit 15-8 is designed for cluster id in nuclei subsystem reference design
- * \attention function is allowed in machine mode only
- */
-__STATIC_FORCEINLINE unsigned long __get_cluster_id(void)
-{
-    unsigned long id;
-
-    id = (__RV_CSR_READ(CSR_MHARTID) >> 8) & 0xFF;
-    return id;
-}
-
-/**
  * \brief   Get hart index of current cluster
  * \details This function will get hart index of current cluster in a multiple cluster system,
  * hart index is hartid - hartid offset, for example if your hartid is 1, and offset is 1, then
