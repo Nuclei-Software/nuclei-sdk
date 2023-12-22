@@ -56,7 +56,7 @@ typedef enum {
     DOWNLOAD_MODE_MAX,
 } DownloadMode_Type;
 
-/* Simulation mode macros */
+/* Simulation mode macros, internal usage */
 #define SIMULATION_MODE_XLSPIKE   0     /*!< xlspike simulation mode */
 #define SIMULATION_MODE_QEMU      1     /*!< qemu simulation mode */
 
@@ -70,12 +70,12 @@ typedef enum IRQn {
 
     SysTimerSW_IRQn           =   0,              /*!<  CPU Timer SW interrupt for m-mode in IRQC */
     SysTimer_IRQn             =   1,              /*!<  CPU Timer Interrupt for m-mode in IRQC */
-    SysBwe_IRQn               =   2,              /*!<  CPU Storage access error interrupt */
 
     /* ===========================================  evalsoc Specific Interrupt Numbers  ========================================= */
-    /* ToDo: add here your device specific external interrupt numbers.3~31 is reserved number for user. Maxmum interrupt supported
-             could get from irqcinfo.NUM_INTERRUPT. According the interrupt handlers defined in startup_Device.s
+    /* ToDo: add here your device specific external interrupt numbers.2~31 is reserved number for user. Maxmum interrupt supported
+             could get from irqcinfo.NUM_INTERRUPT. According the interrupt handlers defined in system_<Device>.c
              eg.: Interrupt for Timer#1       irqc_tim1_handler   ->   TIM1_IRQn */
+    SOC_INT2_IRQn            = 2,                 /*!< Device Interrupt */
     SOC_INT3_IRQn            = 3,                 /*!< Device Interrupt */
     SOC_INT4_IRQn            = 4,                 /*!< Device Interrupt */
     SOC_INT5_IRQn            = 5,                 /*!< Device Interrupt */
@@ -109,12 +109,11 @@ typedef enum IRQn {
 } IRQn_Type;
 
 // TODO need to adapt for n100 soc
-/* UART0 Interrupt */
-#define UART0_IRQn                                 SOC_INT3_IRQn
-/* QSPI Interrupt */
-#define QSPI0_IRQn                                 SOC_INT53_IRQn
-#define QSPI1_IRQn                                 SOC_INT54_IRQn
-#define QSPI2_IRQn                                 SOC_INT55_IRQn
+#define UART0_IRQn                                 SOC_INT2_IRQn
+//#define UART1_IRQn                                 SOC_INT3_IRQn
+#define QSPI0_IRQn                                 SOC_INT4_IRQn
+#define QSPI1_IRQn                                 SOC_INT5_IRQn
+#define QSPI2_IRQn                                 SOC_INT6_IRQn
 
 /* =========================================================================================================================== */
 /* ================                                  Exception Code Definition                                ================ */
@@ -152,19 +151,10 @@ typedef enum EXCn {
 #define __IRQC_PRESENT            1                     /*!< Set to 1 if IRQC is present */
 #define __TIMER_PRESENT           1                     /*!< Set to 1 if Timer is present */
 
-#ifndef __INC_INTRINSIC_API
-#define __INC_INTRINSIC_API       0                     /*!< Set to 1 if intrinsic api header files need to be included */
-#endif
-
 #define __Vendor_SysTickConfig    0                     /*!< Set to 1 if different SysTick Config is used */
 #define __Vendor_EXCEPTION        0                     /*!< Set to 1 if vendor exception hander is present */
 
 /** @} */ /* End of group Configuration_of_NMSIS */
-
-/* Define boot hart id */
-#ifndef BOOT_HARTID
-#define BOOT_HARTID               0                     /*!< Choosen boot hart id in current cluster when in soc system, need to align with the value defined in startup_<Device>.S, should start from 0, taken the mhartid bit 0-7 value */
-#endif
 
 #include <nmsis_core.h>                         /*!< Nuclei N/NX class processor and core peripherals */
 /* ToDo: include your system_evalsoc.h file
@@ -321,7 +311,7 @@ typedef struct {
 /* Peripheral memory map */
 #define UART0_BASE              (EVALSOC_PERIPH_BASE + 0x13000)          /*!< (UART0) Base Address */
 #define QSPI0_BASE              (EVALSOC_PERIPH_BASE + 0x14000)          /*!< (QSPI0) Base Address */
-#define UART1_BASE              (EVALSOC_PERIPH_BASE + 0x23000)          /*!< (UART1) Base Address */
+//#define UART1_BASE              (EVALSOC_PERIPH_BASE + 0x23000)          /*!< (UART1) Base Address */
 #define QSPI1_BASE              (EVALSOC_PERIPH_BASE + 0x24000)          /*!< (QSPI1) Base Address */
 #define QSPI2_BASE              (EVALSOC_PERIPH_BASE + 0x34000)          /*!< (QSPI2) Base Address */
 

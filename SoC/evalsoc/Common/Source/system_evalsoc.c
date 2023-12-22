@@ -130,12 +130,16 @@ void SystemInit(void)
  * \defgroup  NMSIS_Core_IntExcNMI_Handling   Interrupt and Exception and NMI Handling
  * \brief Functions for interrupt, exception and nmi handle available in system_<device>.c.
  * \details
- * Nuclei provide a template for interrupt, exception and NMI handling. Silicon Vendor could adapat according
+ * Nuclei provide a template for interrupt, exception handling. Silicon Vendor could adapat according
  * to their requirement. Silicon vendor could implement interface for different exception code and
  * replace current implementation.
  *
  * @{
  */
+// TODO If you don't want any exception handler print any thing, uncomment below macro
+// Define this will reduce code size and less debug message when exception happened
+//#define DISABLE_EXCEPTION_DEBUG
+
 /** \brief Max exception handler number */
 #define MAX_SYSTEM_EXCEPTION_NUM        12
 /**
@@ -149,45 +153,46 @@ static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
 
 extern __WEAK void irqc_mtip_handler(void);
 extern __WEAK void irqc_msip_handler(void);
-extern __WEAK void irqc_mbwe_handler(void);
+extern __WEAK void irqc_uart0_handler(void);
 extern void default_intexc_handler(void);
 
 typedef void (*__fp)(void);
 // TODO irqc vector table
 // Please fill in this irq vector table with your real interrupt function name
-static const __fp vector_base[32] __attribute__((section (".mintvec"))) = {
+// MUST marked as __USED to avoid unused variable elimination
+static const __fp vector_base[32] __USED __attribute__((section (".mintvec"))) = {
     irqc_msip_handler,          /* irq 0 ,  internal irq 0  */
     irqc_mtip_handler,          /* irq 1 ,  internal irq 1  */
-    irqc_mbwe_handler,          /* irq 2 ,  internal irq 2  */
-    default_intexc_handler,     /* irq 3 ,  ext_irq 0       */
-    default_intexc_handler,     /* irq 4 ,  ext_irq 1       */
-    default_intexc_handler,     /* irq 5 ,  ext_irq 2       */
-    default_intexc_handler,     /* irq 6 ,  ext_irq 3       */
-    default_intexc_handler,     /* irq 7 ,  ext_irq 4       */
-    default_intexc_handler,     /* irq 8 ,  ext_irq 5       */
-    default_intexc_handler,     /* irq 9 ,  ext_irq 6       */
-    default_intexc_handler,     /* irq 10,  ext_irq 7       */
-    default_intexc_handler,     /* irq 11,  ext_irq 8       */
-    default_intexc_handler,     /* irq 12,  ext_irq 9       */
-    default_intexc_handler,     /* irq 13,  ext_irq 10      */
-    default_intexc_handler,     /* irq 14,  ext_irq 11      */
-    default_intexc_handler,     /* irq 15,  ext_irq 12      */
-    default_intexc_handler,     /* irq 16,  ext_irq 13      */
-    default_intexc_handler,     /* irq 17,  ext_irq 14      */
-    default_intexc_handler,     /* irq 18,  ext_irq 15      */
-    default_intexc_handler,     /* irq 19,  ext_irq 16      */
-    default_intexc_handler,     /* irq 20,  ext_irq 17      */
-    default_intexc_handler,     /* irq 21,  ext_irq 18      */
-    default_intexc_handler,     /* irq 22,  ext_irq 19      */
-    default_intexc_handler,     /* irq 23,  ext_irq 20      */
-    default_intexc_handler,     /* irq 24,  ext_irq 21      */
-    default_intexc_handler,     /* irq 25,  ext_irq 22      */
-    default_intexc_handler,     /* irq 26,  ext_irq 23      */
-    default_intexc_handler,     /* irq 27,  ext_irq 24      */
-    default_intexc_handler,     /* irq 28,  ext_irq 25      */
-    default_intexc_handler,     /* irq 29,  ext_irq 26      */
-    default_intexc_handler,     /* irq 30,  ext_irq 27      */
-    default_intexc_handler      /* irq 31,  ext_irq 28      */
+    irqc_uart0_handler,         /* irq 2 ,  ext_irq 0       */
+    default_intexc_handler,     /* irq 3 ,  ext_irq 1       */
+    default_intexc_handler,     /* irq 4 ,  ext_irq 2       */
+    default_intexc_handler,     /* irq 5 ,  ext_irq 3       */
+    default_intexc_handler,     /* irq 6 ,  ext_irq 4       */
+    default_intexc_handler,     /* irq 7 ,  ext_irq 5       */
+    default_intexc_handler,     /* irq 8 ,  ext_irq 6       */
+    default_intexc_handler,     /* irq 9 ,  ext_irq 7       */
+    default_intexc_handler,     /* irq 10,  ext_irq 8       */
+    default_intexc_handler,     /* irq 11,  ext_irq 9       */
+    default_intexc_handler,     /* irq 12,  ext_irq 10      */
+    default_intexc_handler,     /* irq 13,  ext_irq 11      */
+    default_intexc_handler,     /* irq 14,  ext_irq 12      */
+    default_intexc_handler,     /* irq 15,  ext_irq 13      */
+    default_intexc_handler,     /* irq 16,  ext_irq 14      */
+    default_intexc_handler,     /* irq 17,  ext_irq 15      */
+    default_intexc_handler,     /* irq 18,  ext_irq 16      */
+    default_intexc_handler,     /* irq 19,  ext_irq 17      */
+    default_intexc_handler,     /* irq 20,  ext_irq 18      */
+    default_intexc_handler,     /* irq 21,  ext_irq 19      */
+    default_intexc_handler,     /* irq 22,  ext_irq 20      */
+    default_intexc_handler,     /* irq 23,  ext_irq 21      */
+    default_intexc_handler,     /* irq 24,  ext_irq 22      */
+    default_intexc_handler,     /* irq 25,  ext_irq 23      */
+    default_intexc_handler,     /* irq 26,  ext_irq 24      */
+    default_intexc_handler,     /* irq 27,  ext_irq 25      */
+    default_intexc_handler,     /* irq 28,  ext_irq 26      */
+    default_intexc_handler,     /* irq 29,  ext_irq 27      */
+    default_intexc_handler,     /* irq 30,  ext_irq 28      */
+    default_intexc_handler      /* irq 31,  ext_irq 29      */
 };
 
 /**
@@ -208,6 +213,7 @@ typedef void (*EXC_HANDLER)(unsigned long cause, unsigned long sp);
  */
 static void system_default_exception_handler(unsigned long mcause, unsigned long sp)
 {
+#ifndef DISABLE_EXCEPTION_DEBUG
     /* TODO: Uncomment this if you have implement printf function */
     printf("MCAUSE : 0x%lx\r\n", mcause);
     printf("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
@@ -217,9 +223,11 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
     // directly exit if in SIMULATION
     extern void simulation_exit(int status);
     simulation_exit(1);
-#else
-    while (1);
 #endif
+#endif
+    while (1) {
+        __WFI();
+    }
 }
 
 /**
@@ -246,6 +254,7 @@ static void Exception_Init(void)
  */
 void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 {
+#ifndef DISABLE_EXCEPTION_DEBUG
     EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
 
 #ifndef __riscv_32e
@@ -261,6 +270,7 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
            "cause: 0x%lx, epc: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
            exc_frame->t1, exc_frame->t2, exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, \
            exc_frame->a4, exc_frame->a5, exc_frame->cause, exc_frame->epc);
+#endif
 #endif
 }
 
@@ -327,6 +337,9 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
 /** Banner Print for Nuclei SDK */
 void SystemBannerPrint(void)
 {
+// TODO to reduce code size and less message output.
+// you can set NUCLEI_BANNER to 0 in nuclei_sdk_hal.h
+// but it will show no messsage when bringup
 #if defined(NUCLEI_BANNER) && (NUCLEI_BANNER == 1)
     printf("N100 Nuclei SDK Build Time: %s, %s\r\n", __DATE__, __TIME__);
 #ifdef DOWNLOAD_MODE_STRING
@@ -352,21 +365,16 @@ void Interrupt_Init(void)
  * This function set vector mode, trigger mode and polarity, interrupt level and priority,
  * assign handler for specific IRQn.
  * \param [in]  IRQn        NMI interrupt handler address
- * \param [in]  shv         \ref ECLIC_NON_VECTOR_INTERRUPT means non-vector mode, and \ref ECLIC_VECTOR_INTERRUPT is vector mode
- * \param [in]  trig_mode   see \ref ECLIC_TRIGGER_Type
- * \param [in]  lvl         interupt level
- * \param [in]  priority    interrupt priority
  * \param [in]  handler     interrupt handler, if NULL, handler will not be installed
  * \return       -1 means invalid input parameter. 0 means successful.
  * \remarks
- * - This function use to configure specific eclic interrupt and register its interrupt handler and enable its interrupt.
+ * - This function use to configure specific irqc interrupt and register its interrupt handler and enable its interrupt.
  * - If the vector table is placed in read-only section(FLASHXIP mode), handler could not be installed
  */
-int32_t IRQC_Register_IRQ(IRQn_Type IRQn, IRQC_TRIGGER_Type trig_mode, void* handler)
+int32_t IRQC_Register_IRQ(IRQn_Type IRQn, void* handler)
 {
     if (IRQn >= SOC_INT_MAX) {
     }
-    IRQC_SetTrigIRQ(IRQn, trig_mode);
     if (handler != NULL) {
         IRQC_SetVector(IRQn, (rv_csr_t)handler);
     }
@@ -393,14 +401,16 @@ static void Trap_Init(void)
  */
 void _premain_init(void)
 {
+    // TODO Code below used to do premain init, you can place pre main init code here
     // TODO implement get_cpu_freq function to get real cpu clock freq in HZ or directly give the real cpu HZ
-    SystemCoreClock = 16000000; //get_cpu_freq();
+    // Or directly give the correct freqency, no need to use this function
+    SystemCoreClock = get_cpu_freq();
     uart_init(SOC_DEBUG_UART, 115200);
     /* Display banner after UART initialized */
     SystemBannerPrint();
     /* Initialize exception default handlers */
     Exception_Init();
-    /* ECLIC initialization, mainly MTH and NLBIT */
+    /* Interrupt initialization, mainly MTH and NLBIT */
     Interrupt_Init();
     Trap_Init();
 }

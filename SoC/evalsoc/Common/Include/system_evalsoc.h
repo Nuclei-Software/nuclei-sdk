@@ -97,10 +97,9 @@ extern void Interrupt_Init(void);
 /**
  * \brief  Initialize a specific IRQ and register the handler
  * \details
- * This function set vector mode, trigger mode and polarity, interrupt level and priority,
- * assign handler for specific IRQn.
+ * This function set handler for specific IRQn and enable it.
  */
-extern int32_t IRQC_Register_IRQ(IRQn_Type IRQn, IRQC_TRIGGER_Type trig_mode, void* handler);
+extern int32_t IRQC_Register_IRQ(IRQn_Type IRQn, void* handler);
 
 
 #ifdef __cplusplus
