@@ -360,8 +360,7 @@ typedef union {
         rv_csr_t set:4;                         /*!< I-Cache sets per way */
         rv_csr_t way:3;                         /*!< I-Cache way */
         rv_csr_t lsize:3;                       /*!< I-Cache line size */
-        rv_csr_t cache_ecc:1;                   /*!< I-Cache ECC present */
-        rv_csr_t _reserved0:5;
+        rv_csr_t _reserved0:6;
         rv_csr_t lm_size:5;                     /*!< ILM size, need to be 2^n size */
         rv_csr_t lm_xonly:1;                    /*!< ILM Execute only permission */
         rv_csr_t lm_ecc:1;                      /*!< ILM ECC present */
@@ -378,8 +377,7 @@ typedef union {
         rv_csr_t set:4;                         /*!< D-Cache sets per way */
         rv_csr_t way:3;                         /*!< D-Cache way */
         rv_csr_t lsize:3;                       /*!< D-Cache line size */
-        rv_csr_t cache_ecc:1;                   /*!< D-Cache ECC present */
-        rv_csr_t _reserved0:5;
+        rv_csr_t _reserved0:6;
         rv_csr_t lm_size:5;                     /*!< DLM size, need to be 2^n size */
         rv_csr_t lm_xonly:1;                    /*!< DLM Execute only permission */
         rv_csr_t lm_ecc:1;                      /*!< DLM ECC present */
