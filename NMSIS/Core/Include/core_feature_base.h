@@ -234,13 +234,15 @@ typedef union {
         rv_csr_t bpu:1;                         /*!< bit:     3     dynamic prediction enable flag */
         rv_csr_t _reserved1:2;                  /*!< bit:     4..5  Reserved */
         rv_csr_t misalign:1;                    /*!< bit:     6     misaligned access support flag */
-        rv_csr_t _reserved2:2;                  /*!< bit:     7..8  Reserved */
+        rv_csr_t zcmt_zcmp:1;                   /*!< bit:     7     Zc Ext uses the cfdsp of D Ext’s encoding or not */
+        rv_csr_t core_buserr:1;                 /*!< bit:     8     core bus error exception or interrupt */
         rv_csr_t nmi_cause:1;                   /*!< bit:     9     mnvec control and nmi mcase exccode */
-#if defined(__RISCV_XLEN) && __RISCV_XLEN == 64
-        rv_csr_t _reserved3:54;                 /*!< bit:     10..63 Reserved */
-#else
-        rv_csr_t _reserved3:22;                 /*!< bit:     10..31 Reserved */
-#endif
+        rv_csr_t imreturn_en:1;                 /*!< bit:     10    IMRETURN mode of trace */
+        rv_csr_t sijump_en:1;                   /*!< bit:     11    SIJUMP mode of trace */
+        rv_csr_t ldspec_en:1;                   /*!< bit:     12    enable load speculative goes to mem interface */
+        rv_csr_t _reserved2:1;                  /*!< bit:     13    Reserved */
+        rv_csr_t dbg_sec:1;                     /*!< bit:     14    debug access mode */
+        rv_csr_t _reserved3:__RISCV_XLEN-15;    /*!< bit:     15..XLEN-1 Reserved */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MMISCCTRL_Type;
