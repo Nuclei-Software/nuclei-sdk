@@ -387,9 +387,8 @@ typedef union {
         rv_csr_t lsize:3;                       /*!< D-Cache line size */
         rv_csr_t _reserved0:6;
         rv_csr_t lm_size:5;                     /*!< DLM size, need to be 2^n size */
-        rv_csr_t lm_xonly:1;                    /*!< DLM Execute only permission */
         rv_csr_t lm_ecc:1;                      /*!< DLM ECC present */
-        rv_csr_t _reserved1:__RISCV_XLEN-23;
+        rv_csr_t _reserved1:__RISCV_XLEN-22;
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MDCFGINFO_Type;
