@@ -322,7 +322,8 @@ typedef union {
         rv_csr_t dlm_ecc_en:1;                  /*!< DLM ECC eanble */
         rv_csr_t dlm_ecc_excp_en:1;             /*!< DLM ECC exception enable */
         rv_csr_t dlm_rwecc:1;                   /*!< Control mecc_code write to dlm, simulate error injection */
-        rv_csr_t _reserved0:6;                  /*!< Reserved */
+        rv_csr_t dlm_ecc_chk_en:1;              /*!< DLM check ECC codes enable */
+        rv_csr_t _reserved0:5;                  /*!< Reserved */
         rv_csr_t dlm_bpa:__RISCV_XLEN-10;       /*!< DLM base address */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
