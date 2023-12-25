@@ -260,13 +260,17 @@ typedef union {
         rv_csr_t ic_ecc_excp_en:1;              /*!< I-Cache 2bit ECC error exception enable */
         rv_csr_t ic_rwtecc:1;                   /*!< Control I-Cache Tag Ram ECC code injection */
         rv_csr_t ic_rwdecc:1;                   /*!< Control I-Cache Data Ram ECC code injection */
-        rv_csr_t _reserved0:10;
+        rv_csr_t ic_pf_en:1;                    /*!< I-Cache prefetch enable */
+        rv_csr_t ic_cancel_en:1;                /*!< I-Cache change flow canceling enable control */
+        rv_csr_t ic_ecc_chk_en:1;               /*!< I-Cache check ECC codes enable */
+        rv_csr_t _reserved0:7;
         rv_csr_t dc_en:1;                       /*!< DCache enable */
         rv_csr_t dc_ecc_en:1;                   /*!< D-Cache ECC enable */
         rv_csr_t dc_ecc_excp_en:1;              /*!< D-Cache 2bit ECC error exception enable */
         rv_csr_t dc_rwtecc:1;                   /*!< Control D-Cache Tag Ram ECC code injection */
         rv_csr_t dc_rwdecc:1;                   /*!< Control D-Cache Data Ram ECC code injection */
-        rv_csr_t _reserved1:__RISCV_XLEN-21;
+        rv_csr_t dc_ecc_chk_en:1;               /*!< D-Cache check ECC codes enable */
+        rv_csr_t _reserved1:__RISCV_XLEN-22;
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MCACHECTL_Type;
