@@ -43,6 +43,10 @@ _start:
     .option norelax
     la gp, __global_pointer$
     la tp, __tls_base
+#if defined(__riscv_zcmt)
+    la t0, __jvt_base$
+    csrw CSR_JVT, t0
+#endif
     .option pop
 
     /* Set correct sp for current cpu */
