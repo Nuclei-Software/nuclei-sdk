@@ -4,7 +4,7 @@ variables:
   DOC_CENTER: /home/xl_ci/doc_center
   SHAREENVLOC: /home/share/devtools
   IMAGE: rego.corp.nucleisys.com/software/sdkbuild
-  IMAGE_TAG: "2023.10"
+  IMAGE_TAG: "2023.12"
   JOBCTRL: "RUN"
 
 workflow:
@@ -128,13 +128,15 @@ build_evalsoc:
   <<: *job_template_default
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
   parallel:
     matrix:
-      - HWCFG:
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
+      - DOWNLOAD: [ "ilm", "flashxip" ]
+        ARCH_EXT: [ "", "_zca_zcb_zcmp_zcmt" ]
+        STDCLIB: ["newlib_small", "libncrt_small"]
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/${STDCLIB}_${DOWNLOAD}${ARCH_EXT}
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "STDCLIB=$STDCLIB DOWNLOAD=$DOWNLOAD ARCH_EXT=${ARCH_EXT}"
 
       #run_newlib_nano_evalsoc:
       #  <<: *job_template_default
