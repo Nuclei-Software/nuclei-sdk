@@ -92,15 +92,14 @@ void print_misa(void)
 int main(void)
 {
     uint32_t rval, seed;
-    unsigned long hartid, clusterid;
+    unsigned long hartid;
     rv_csr_t misa;
 
     // get hart id of current cluster
     hartid = __get_hart_id();
-    clusterid = __get_cluster_id();
     misa = __RV_CSR_READ(CSR_MISA);
 
-    printf("Cluster %lu, Hart %lu, MISA: 0x%lx\r\n", clusterid, hartid, misa);
+    printf("Hart %lu, MISA: 0x%lx\r\n", hartid, misa);
     print_misa();
 
     // Generate random value with seed
