@@ -28,11 +28,17 @@ ENTRY( _start )
 MEMORY
 {
   flash (rxa!w) : ORIGIN = 0x20000000, LENGTH = 4M
+  ilm (rxa!w) : ORIGIN = 0x80000000, LENGTH = 64K
   ram (wxa!r) : ORIGIN = 0x90000000, LENGTH = 64K
 }
 
 REGION_ALIAS("ROM", flash)
-REGION_ALIAS("RAM", ram)
+
+/* N100 has no ilm/dlm, the ilm is just sram located in external sram */
+/* N100 evalsoc mtvt set to 0x80000100, mtvec set to 0x80000180 */
+REGION_ALIAS("RAM", ilm)
+
+/* Search TODO in this file */
 
 SECTIONS
 {
@@ -44,15 +50,7 @@ SECTIONS
 
   .init           :
   {
-    __start_of_init = .;
     *(.text.init)
-    /* MUST KEEP .mintvec and .text.trap */
-    /* mtvt readonly, configured by hardware */
-    . = __start_of_init + 0x100;
-    KEEP (*(.mintvec))
-    /* mtvec readonly, configured by hardware */
-    . = __start_of_init + 0x180;
-    KEEP (*(.text.trap))
     KEEP (*(SORT_NONE(.init)))
     . = ALIGN(4);
   } >ROM AT>ROM
@@ -138,6 +136,15 @@ SECTIONS
 
   .data            : ALIGN(8)
   {
+    __start_of_init = .;
+    /* TODO MUST KEEP .mintvec and .text.trap */
+    /* mtvt readonly, configured by hardware */
+    . = __start_of_init + 0x100;
+    KEEP (*(.mintvec))
+    /* mtvec readonly, configured by hardware */
+    . = __start_of_init + 0x180;
+    KEEP (*(.text.trap))
+    /* normal data */
     KEEP(*(.data.ctest*))
     *(.data .data.*)
     *(.gnu.linkonce.d.*)
