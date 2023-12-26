@@ -120,6 +120,7 @@
  *   @{
  */
 /* === Standard RISC-V CSR Registers === */
+#define CSR_JVT 0x17
 #define CSR_MTVT 0x307
 #define CSR_MSTATUS 0x300
 #define CSR_MISA 0x301
