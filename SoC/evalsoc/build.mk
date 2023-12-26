@@ -35,7 +35,6 @@ JTAGSN ?=
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
 
-OPENOCD_XLSPIKE_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_xlspike.cfg
 OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_evalsoc.cfg
 LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_evalsoc_$(DOWNLOAD).ld
 
@@ -46,11 +45,6 @@ endif
 # Allow non-existance of LINKER_SCRIPT, it might be generated
 ifeq ($(wildcard $(LINKER_SCRIPT)),)
 $(warning The link script file $(LINKER_SCRIPT) for $(SOC) doesn't exist, please check!)
-endif
-
-# Add extra cflags for SoC related
-ifeq ($(DOWNLOAD), flash)
-COMMON_FLAGS += -DVECTOR_TABLE_REMAPPED
 endif
 
 # if JTAGSN is not empty, pass it via openocd command
