@@ -1,0 +1,82 @@
+## Package Base Information
+name: bsp-nsdk_gd32vw553h_eval
+owner: nuclei
+description: GD32VW553H Evaluation Board Support Package
+type: bsp
+keywords:
+  - board
+  - risc-v
+  - nuclei
+  - gigadevice
+license: Apache-2.0
+homepage: https://www.gigadevice.com/zh-hans/products/microcontrollers/gd32-development-tools/gd32-evaluation-boards/
+
+packinfo:
+  vendor: GigaDevice
+  name: GD32VW553H-EVAL Board
+  doc:
+    website: https://www.gigadevice.com/zh-hans/products/microcontrollers/gd32-development-tools/gd32-evaluation-boards/
+    sch: https://www.gd32mcu.com/en/download/8?kw=GD32VW5
+    usermanual: https://www.gd32mcu.com/en/download/8?kw=GD32VW5
+    extra:
+      - uri: # file path or web link
+        description: # description
+
+## Package Dependency
+dependencies:
+  - name: ssp-nsdk_gd32vw55x
+    version:
+
+## Package Configurations
+configuration:
+  download_mode:
+    default_value: sram
+    type: choice
+    global: true
+    description: Download/Run Mode
+    choices:
+      - name: flashxip
+        description: FLASHXIP download mode, program will to be download into flash and run directly in flash
+      - name: sram
+        description: SRAM download mode, program will to be download into sram and run directly in sram
+
+## Source Code Management
+codemanage:
+  installdir: gd32vw553h_eval
+  copyfiles:
+    - path: ["Source/", "Include/", "openocd_gd32vw55x.cfg"]
+  incdirs:
+    - path: ["Include/"]
+
+## Set Configuration for other packages
+setconfig:
+
+## Debug Configuration for this board
+debugconfig:
+  - type: openocd
+    description: Nuclei OpenOCD
+    configs:
+      - key: config
+        value: "openocd_gd32vw55x.cfg"
+
+  - type: jlink
+    description: Segger Jlink
+    configs:
+       - key: device_name
+         value: GD32VW553HM # see https://www.segger.com/supported-devices/search/gd32vw
+       - key: riscv_arch
+         value: ${nuclei_core.arch} # arch to device name conversion happened in IDE, eg. rv32imac -> N305
+       - key: interface
+         value: jtag # jtag or cjtag
+       - key: speed
+         value: auto  # auto, adaptive, fixed value(KHz) such as 1000
+
+buildconfig:
+  - type: common
+    linkscript:
+      - script: "Source/GCC/gcc_gd32vw55x_${download_mode}.ld"
+    common_flags:
+      - flags:
+    common_defines:
+      - defines: DOWNLOAD_MODE=DOWNLOAD_MODE_$(upper(${download_mode}))
+      - defines: DOWNLOAD_MODE_STRING=\"$(upper(${download_mode}))\"

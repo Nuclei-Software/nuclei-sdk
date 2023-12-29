@@ -1,0 +1,245 @@
+## Package Base Information
+## This npk.yml only works with Nuclei Studio 2023.10 or later
+name: ssp-nsdk_gd32vw55x
+owner: nuclei
+description: GD32VW55X SoC Support Package
+type: ssp
+keywords:
+  - soc
+  - risc-v
+  - nuclei
+  - gigadevice
+license: Apache-2.0
+homepage: https://www.gigadevice.com/about/news-and-event/news/gigadevice-launches-gd32vw553-series
+
+packinfo:
+  core_vendor: Nuclei
+  vendor: GigaDevice
+  name: GD32VW55X
+  doc:
+    website: https://www.gigadevice.com/product/mcu/risc-v/gd32vw553hiq6 # Website
+    datasheet: https://www.gd32mcu.com/en/download?kw=GD32VW5 # SoC datasheet
+    usermanual: https://www.gd32mcu.com/en/download?kw=GD32VW5 # User Manual
+    extra:
+
+## Package Dependency
+dependencies:
+  - name: csp-nsdk_nmsis
+    version:
+
+## Package Configurations
+configuration:
+  sysclk:
+    default_value: hxtal_160mhz
+    global: true
+    type: choice
+    description: System Clock in Hz
+    choices:
+      - name: hxtal_48mhz
+        description: 48MHz HXTAL PLL
+        info:
+          - name: hz
+            value: 48000000
+          - name: src
+            value: hxtal
+      - name: hxtal_160mhz
+        description: 160MHz HXTAL PLL
+        info:
+          - name: hz
+            value: 160000000
+          - name: src
+            value: hxtal
+      - name: irc16m_16mhz
+        description: 16MHz IRC16M PLL
+        info:
+          - name: hz
+            value: 16000000
+          - name: src
+            value: irc16m
+      - name: irc16m_48mhz
+        description: 48MHz IRC16M PLL
+        info:
+          - name: hz
+            value: 48000000
+          - name: src
+            value: irc16m
+      - name: irc16m_160mhz
+        description: 160MHz IRC16M PLL
+        info:
+          - name: hz
+            value: 160000000
+          - name: src
+            value: irc16m
+  nuclei_core:
+    default_value: n300fd
+    type: choice
+    global: true
+    description: Nuclei RISC-V Core
+    choices:
+      - name: n300
+        arch: rv32imac
+        abi: ilp32
+        cmodel: medlow
+        tune: nuclei-300-series
+        description: N300 Core(ARCH=rv32imac, ABI=ilp32)
+      - name: n300f
+        arch: rv32imafc
+        abi: ilp32f
+        cmodel: medlow
+        tune: nuclei-300-series
+        description: N300F Core(ARCH=rv32imafc, ABI=ilp32f)
+      - name: n300fd
+        arch: rv32imafdc
+        abi: ilp32d
+        cmodel: medlow
+        tune: nuclei-300-series
+        description: N300FD Core(ARCH=rv32imafdc, ABI=ilp32d)
+  nuclei_archext:
+    default_value: "_zba_zbb_zbc_zbs_xxldspn1x"
+    type: text
+    # hints and tips are introduced in Nuclei Studio 2023.10
+    # used to show tool tips and input hints
+    tips: "GD32VW55x support RV32 IMAFDC base isa, and B(_zba_zbb_zbc_zbs) P (_xxldspn1x) extensions"
+    hints: "_zba_zbb_zbc_zbs_xxldsp"
+    global: true
+    description: Other Extensions(ARCH_EXT=)
+
+  semihost:
+    default_value: 0
+    type: checkbox
+    tips: "If semihosting is enabled, c library stub source files will not be copied"
+    description: Enable Semihosting
+
+  stdclib:
+    default_value: newlib_nano
+    type: choice
+    global: true
+    tips: "Select proper c library, code size usage newlib_full > nuclei_nano > libncrt, libncrt only works for rv32"
+    description: Standard C Library
+    choices:
+      - name: newlib_full
+        description: newlib with full feature
+      - name: newlib_fast
+        description: newlib nano with printf/scanf float
+      - name: newlib_small
+        description: newlib nano with printf float
+      - name: newlib_nano
+        description: newlib nano without printf/scanf float
+      - name: libncrt_fast
+        description: nuclei c runtime library, optimized for speed
+      - name: libncrt_balanced
+        description: nuclei c runtime library, balanced, full feature
+      - name: libncrt_small
+        description: nuclei c runtime library, optimized for size, full feature
+      - name: libncrt_nano
+        description: nuclei c runtime library, optimized for size, no float support
+      - name: libncrt_pico
+        description: nuclei c runtime library, optimized for size, no long/long long support
+      - name: nostd
+        description: no std c library will be used, and don't search the standard system directories for header files
+      - name: nospec
+        description: no std c library will be used, not pass any --specs options
+
+## Source Code Management
+codemanage:
+  installdir: gd32vw55x
+  copyfiles:
+    - path: ["Source/*.c", "Source/Drivers/*.c", "Source/GCC/", "Include/*.h", "gd32vw55x.svd"]
+    - path: ["Source/Stubs/newlib"]
+      condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 0 )
+    - path: ["Source/Stubs/libncrt"]
+      condition: $( startswith(${stdclib}, "libncrt") )
+  incdirs:
+    - path: ["Include"]
+
+## Set Configuration for other packages
+setconfig:
+  - config: nmsislibarch
+    value: ${nuclei_core.arch}${nuclei_archext}
+
+## Debug Configuration for this SoC
+debugconfig:
+  - type: openocd
+    description: Nuclei OpenOCD
+    svd: gd32vw55x.svd
+
+  - type: jlink
+    description: Segger Jlink
+    svd: gd32vw55x.svd
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: -g -fno-common -ffunction-sections -fdata-sections -msave-restore
+      - flags: -march=${nuclei_core.arch}${nuclei_archext} -mabi=${nuclei_core.abi}
+      - flags: -mcmodel=${nuclei_core.cmodel}
+      - flags: -nostdinc
+        condition: $( ${stdclib} == "nostd" )
+      - flags:
+        condition: $( ${stdclib} == "nospec" )
+      - flags: -isystem=/include/libncrt
+        condition: $( startswith(${stdclib}, "libncrt") )
+      # For newlib nano, use system include newlib-nano
+      - flags: -isystem=/include/newlib-nano
+        condition: $( startswith(${stdclib}, "newlib") && ${stdclib} != "newlib_full" )
+    ldflags:
+      - flags: -nostartfiles -nodefaultlibs
+      - flags: -lstdc++
+        condition: $( startswith(${stdclib}, "newlib") )
+      - flags: -lc -lgcc
+        condition: $( ${stdclib} == "newlib_full" )
+      - flags: -lc_nano -lgcc -u _printf_float -u _scanf_float
+        condition: $( ${stdclib} == "newlib_fast" )
+      - flags: -lc_nano -lgcc -u _printf_float
+        condition: $( ${stdclib} == "newlib_small" )
+      - flags: -l$(subst(${stdclib},lib,)) -lheapops_basic
+        condition: $( startswith(${stdclib}, "libncrt") )
+      - flags: -lfileops_semi -l$(subst(${stdclib},lib,))
+        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 1 )
+      - flags: -lfileops_uart -l$(subst(${stdclib},lib,))
+        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 0 )
+      - flags: -Wl,--gc-sections -Wl,--check-sections
+    cflags:
+    asmflags:
+      - flags: -x assembler-with-cpp
+    cxxflags:
+    common_defines:
+      - defines: SYSTEM_CLOCK=${sysclk.info.hz}
+      - defines: SYSCLK_USING_$(upper(${sysclk.info.src}))
+    prebuild_steps: # could be override by app/bsp type
+      command:
+      description:
+    postbuild_steps: # could be override by app/bsp type
+      command:
+      description:
+
+  - type: gcc
+    description: Nuclei GNU Toolchain
+    toolchain_name: RISC-V GCC/Newlib
+    cross_prefix: riscv64-unknown-elf- # optional
+    common_flags: # flags need to be combined together across all packages
+      - flags: -mtune=${nuclei_core.tune}
+        condition: $( ${nuclei_core.tune} != "" )
+    ldflags:
+      - flags: -Wl,--no-warn-rwx-segments
+      - flags: -lc_nano -lgcc
+        condition: $( ${stdclib} == "newlib_nano" )
+      - flags: -lsemihost
+        condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
+      - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek -u errno
+        condition: $( startswith(${stdclib}, "newlib") )
+
+  - type: clang
+    description: Nuclei LLVM Toolchain
+    toolchain_name: RISC-V Clang/Newlib
+    cross_prefix: riscv64-unknown-elf- # optional
+    common_flags: # flags need to be combined together across all packages
+    ldflags:
+      - flags: -fuse-ld=lld
+      - flags: -u __on_exit_args
+        condition: $( startswith(${stdclib}, "newlib") )
+      - flags: -lc_nano -lgcc -u _printf_float
+        condition: $( ${stdclib} == "newlib_nano" )
+      - flags: -lsemihost
+        condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
