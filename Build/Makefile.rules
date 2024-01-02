@@ -53,14 +53,14 @@ showtoolver:
 	-@$(QEMU) --version
 
 help:
-	@$(ECHO) "Nuclei N/NX-series RISC-V Embedded Processor Software Development Kit "
-	@$(ECHO) "== For detailed user guide, please check https://doc.nucleisys.com/nuclei_sdk/"
+	@$(ECHO) "Nuclei N100 RISC-V Embedded Processor Software Development Kit "
+	@$(ECHO) "== For detailed user guide, please check https://doc.nucleisys.com/n100_sdk/"
 	@$(ECHO) "== Make variables used in Nuclei SDK =="
 	@$(ECHO) "SOC:         Select SoC built in Nuclei SDK, will select evalsoc by default"
 	@$(ECHO) "BOARD:       Select SoC's Board built in Nuclei SDK, will select nuclei_fpga_eval by default"
-	@$(ECHO) "CORE:        Not required for all SoCs, currently only evalsoc require it, n307fd by default"
-	@$(ECHO) "ARCH_EXT:    Not required for all SoCs, currently only evalsoc require it, such as ARCH_EXT=_zba_zbb_zbc_zbs_xxldspn3x, means B and Nuclei DSP(p v0.5.3) with N1/N2/N3 extension, please use >= gcc 13"
-	@$(ECHO) "DOWNLOAD:    Not required for all SoCs, use ilm by default, optional flashxip/ilm/flash/ddr"
+	@$(ECHO) "CORE:        Not required for all SoCs, currently only evalsoc require it, n100 by default"
+	@$(ECHO) "ARCH_EXT:    Not required for all SoCs, currently only evalsoc require it, such as ARCH_EXT=_zca_zcb_zcmp_zcmt, means Zc extension, please use >= gcc 13"
+	@$(ECHO) "DOWNLOAD:    Not required for all SoCs, use ilm by default, optional flashxip/ilm"
 	@$(ECHO) "V:           V=1 verbose make, will print more information, by default V=0"
 	@$(ECHO) "== How to Use with Make =="
 	@$(ECHO) "1. Build Application:"

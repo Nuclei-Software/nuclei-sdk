@@ -4,15 +4,15 @@ PARALLEL ?=
 
 .PHONY: __help ctags cleanall buildall tags
 __help:
-	@echo "Help about Build/Run/Debug/Clean Nuclei SDK Application"
+	@echo "Help about Build/Run/Debug/Clean Nuclei N100 SDK Application"
 	@echo "make [PROGRAM=/path/to/app]  help                        Show Build System Help Message"
 	@echo "make [EXTRA_APP_ROOTDIRS=/path/to/extraapps] cleanall    Clean all the applications"
 	@echo "make [EXTRA_APP_ROOTDIRS=/path/to/extraapps] buildall    Rebuild all the applications"
 	@echo "Examples:"
 	@echo "make PROGRAM=application/baremetal/helloworld all"
-	@echo "make PROGRAM=application/baremetal/helloworld SOC=gd32vf103 BOARD=gd32vf103v_rvstar clean all"
+	@echo "make PROGRAM=application/baremetal/helloworld CORE=n100m clean all"
 	@echo "make -k cleanall"
-	@echo "make -k SOC=gd32vf103 BOARD=gd32vf103v_rvstar cleanall"
+	@echo "make -k CORE=n100m cleanall"
 	@echo "make -k EXTRA_APP_ROOTDIRS=soc_testcases cleanall"
 
 VALID_PROGRAM=$(wildcard $(PROGRAM))
