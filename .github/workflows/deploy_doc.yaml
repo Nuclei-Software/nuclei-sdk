@@ -51,11 +51,11 @@ jobs:
           FTPPWD: ${{ secrets.FTPPWD }}
           FTPSERVER: ${{ secrets.FTPSERVER }}
       run: |
-        bash .ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html nuclei_sdk
+        bash .ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html n100_sdk
     - name: Upload Documentation
       uses: actions/upload-artifact@v3
       with:
         # Artifact name
-        name: nuclei_sdk_doc
+        name: n100_sdk_doc
         # A file, directory or wildcard pattern that describes what to upload
         path: doc/build/html

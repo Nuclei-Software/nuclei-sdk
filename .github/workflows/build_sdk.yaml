@@ -36,7 +36,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
-        soc: [evalsoc, gd32vf103]
+        soc: [evalsoc]
 
     steps:
     - uses: actions/checkout@v3
@@ -98,22 +98,12 @@ jobs:
         echo "Setup build environment"
         source setup.sh
         export APPCFG=tools/scripts/nsdk_cli/configs/application.json
-        for hwcfg in "nuclei_fpga_eval_ci_qemu_small_gnu" "nuclei_fpga_eval_ci_qemu_small_llvm" ; do
+        for hwcfg in "nuclei_fpga_eval_ci" ; do
             export HWCFG=tools/scripts/nsdk_cli/configs/${hwcfg}.json
             export LOGDIR=logs/${hwcfg}
             echo "Build and run for ${hwcfg}"
-            python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run_target qemu --run
+            python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
         done
-
-    - name: Build SDK for GD32VF103 SoC
-      if: matrix.soc == 'gd32vf103'
-      run: |
-        echo "Setup build environment"
-        source setup.sh
-        export APPCFG=tools/scripts/nsdk_cli/configs/application.json
-        export HWCFG=tools/scripts/nsdk_cli/configs/gd32vf103v_rvstar.json
-        export LOGDIR=logs/gd32vf103v_rvstar
-        python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
 
     - name: Upload Build Log for ${{ matrix.soc }}
       uses: actions/upload-artifact@v3
