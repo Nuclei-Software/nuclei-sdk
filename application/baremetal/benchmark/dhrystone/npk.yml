@@ -1,5 +1,5 @@
 ## Package Base Information
-name: app-nsdk_dhrystone
+name: app-n100_sdk_dhrystone
 owner: nuclei
 version:
 description: Dhrystone Benchmark

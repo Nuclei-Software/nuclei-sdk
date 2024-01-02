@@ -1,7 +1,7 @@
 ## Package Base Information
-name: csp-nsdk_nmsis_n100
+name: csp-n100_sdk_nmsis
 owner: nuclei
-version: 1.2.0
+version: 1.0.0
 description: NMSIS For N100 in Nuclei SDK
 type: csp
 keywords:

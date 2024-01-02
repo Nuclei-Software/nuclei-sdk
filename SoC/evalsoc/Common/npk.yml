@@ -1,8 +1,8 @@
 ## Package Base Information
 ## This npk.yml only works with Nuclei Studio 2023.10 or later
-name: ssp-nsdk_evalsoc
+name: ssp-n100_sdk_evalsoc
 owner: nuclei
-description: Nuclei EvalSoC Support Package
+description: Nuclei N100 EvalSoC Support Package
 type: ssp
 keywords:
   - soc
@@ -14,7 +14,7 @@ homepage: https://nucleisys.com/developboard.php#ddr200t
 packinfo:
   core_vendor: Nuclei
   vendor: Nuclei
-  name: Nuclei FPGA Evaluation SoC
+  name: Nuclei N100 FPGA Evaluation SoC
   doc:
     website: https://nucleisys.com/developboard.php#ddr200t # Website
     datasheet: https://nucleisys.com/developboard.php#ddr200t # SoC datasheet
@@ -25,277 +25,64 @@ packinfo:
 
 ## Package Dependency
 dependencies:
-  - name: csp-nsdk_nmsis
+  - name: csp-n100_sdk_nmsis
     version:
 
 ## Package Configurations
 configuration:
   nuclei_core:
-    default_value: n307fd
+    default_value: n100
     type: choice
     global: true
     description: Nuclei RISC-V Core
     # tips introduced in Nuclei Studio 2023.10
     tips: "Select Nuclei Core to match basic RISC-V ARCH and ABI, used together with below Nuclei ARCH Extensions"
     choices:
-      - name: n200
+      - name: n100
+        arch: rv32ic
+        abi: ilp32
+        cmodel: medlow
+        tune: nuclei-200-series
+        description: N100 Core(ARCH=rv32ic, ABI=ilp32)
+      - name: n100m
         arch: rv32imc
         abi: ilp32
         cmodel: medlow
         tune: nuclei-200-series
-        description: N200 Core(ARCH=rv32imc, ABI=ilp32)
-      - name: n201
-        arch: rv32iac
+        description: N100M Core(ARCH=rv32imc, ABI=ilp32)
+      - name: n100zmmul
+        arch: rv32ic_zmmul
         abi: ilp32
         cmodel: medlow
         tune: nuclei-200-series
-        description: N201 Core(ARCH=rv32iac, ABI=ilp32)
-      - name: n201e
-        arch: rv32eac
+        description: N100ZMMUL Core(ARCH=rv32ic_zmmul, ABI=ilp32)
+      - name: n100e
+        arch: rv32ec
         abi: ilp32e
         cmodel: medlow
         tune: nuclei-200-series
-        description: N201E Core(ARCH=rv32eac, ABI=ilp32e)
-      - name: n203
-        arch: rv32imac
+        description: N100E Core(ARCH=rv32ec, ABI=ilp32e)
+      - name: n100m
+        arch: rv32imc
         abi: ilp32
         cmodel: medlow
         tune: nuclei-200-series
-        description: N203 Core(ARCH=rv32imac, ABI=ilp32)
-      - name: n203e
-        arch: rv32emac
+        description: N100EM Core(ARCH=rv32emc, ABI=ilp32e)
+      - name: n100ezmmul
+        arch: rv32ec_zmmul
         abi: ilp32e
         cmodel: medlow
         tune: nuclei-200-series
-        description: N203E Core(ARCH=rv32emac, ABI=ilp32e)
-      - name: n205
-        arch: rv32imac
-        abi: ilp32
-        cmodel: medlow
-        tune: nuclei-200-series
-        description: N205 Core(ARCH=rv32imac, ABI=ilp32)
-      - name: n205e
-        arch: rv32emac
-        abi: ilp32e
-        cmodel: medlow
-        tune: nuclei-200-series
-        description: N205E Core(ARCH=rv32emac, ABI=ilp32e)
-      - name: n300
-        arch: rv32imac
-        abi: ilp32
-        cmodel: medlow
-        tune: nuclei-300-series
-        description: N300 Core(ARCH=rv32imac, ABI=ilp32)
-      - name: n300f
-        arch: rv32imafc
-        abi: ilp32f
-        cmodel: medlow
-        tune: nuclei-300-series
-        description: N300F Core(ARCH=rv32imafc, ABI=ilp32f)
-      - name: n300fd
-        arch: rv32imafdc
-        abi: ilp32d
-        cmodel: medlow
-        tune: nuclei-300-series
-        description: N300FD Core(ARCH=rv32imafdc, ABI=ilp32d)
-      - name: n305
-        arch: rv32imac
-        abi: ilp32
-        cmodel: medlow
-        tune: nuclei-300-series
-        description: N305 Core(ARCH=rv32imac, ABI=ilp32)
-      - name: n307
-        arch: rv32imafc
-        abi: ilp32f
-        cmodel: medlow
-        tune: nuclei-300-series
-        description: N307 Core(ARCH=rv32imafc, ABI=ilp32f)
-      - name: n307fd
-        arch: rv32imafdc
-        abi: ilp32d
-        cmodel: medlow
-        tune: nuclei-300-series
-        description: N307FD Core(ARCH=rv32imafdc, ABI=ilp32d)
-      - name: n600
-        arch: rv32imac
-        abi: ilp32
-        cmodel: medlow
-        tune: nuclei-600-series
-        description: N600 Core(ARCH=rv32imac, ABI=ilp32)
-      - name: n600f
-        arch: rv32imafc
-        abi: ilp32f
-        cmodel: medlow
-        tune: nuclei-600-series
-        description: N600F Core(ARCH=rv32imafc, ABI=ilp32f)
-      - name: n600fd
-        arch: rv32imafdc
-        abi: ilp32d
-        cmodel: medlow
-        tune: nuclei-600-series
-        description: N600FD Core(ARCH=rv32imafdc, ABI=ilp32d)
-      - name: nx600
-        arch: rv64imac
-        abi: lp64
-        cmodel: medany
-        tune: nuclei-600-series
-        description: NX600 Core(ARCH=rv64imac, ABI=lp64)
-      - name: nx600f
-        arch: rv64imafc
-        abi: lp64f
-        cmodel: medany
-        tune: nuclei-600-series
-        description: NX600F Core(ARCH=rv64imafc, ABI=lp64f)
-      - name: nx600fd
-        arch: rv64imafdc
-        abi: lp64d
-        cmodel: medany
-        tune: nuclei-600-series
-        description: NX600FD Core(ARCH=rv64imafdc, ABI=lp64d)
-      - name: ux600
-        arch: rv64imac
-        abi: lp64
-        cmodel: medany
-        tune: nuclei-600-series
-        description: UX600 Core(ARCH=rv64imac, ABI=lp64)
-      - name: ux600f
-        arch: rv64imafc
-        abi: lp64f
-        cmodel: medany
-        tune: nuclei-600-series
-        description: UX600F Core(ARCH=rv64imafc, ABI=lp64f)
-      - name: ux600fd
-        arch: rv64imafdc
-        abi: lp64d
-        cmodel: medany
-        tune: nuclei-600-series
-        description: UX600FD Core(ARCH=rv64imafdc, ABI=lp64d)
-      - name: n900
-        arch: rv32imac
-        abi: ilp32
-        cmodel: medlow
-        tune: nuclei-900-series
-        description: N900 Core(ARCH=rv32imac, ABI=ilp32)
-      - name: n900f
-        arch: rv32imafc
-        abi: ilp32f
-        cmodel: medlow
-        tune: nuclei-900-series
-        description: N900F Core(ARCH=rv32imafc, ABI=ilp32f)
-      - name: n900fd
-        arch: rv32imafdc
-        abi: ilp32d
-        cmodel: medlow
-        tune: nuclei-900-series
-        description: N900FD Core(ARCH=rv32imafdc, ABI=ilp32d)
-      - name: nx900
-        arch: rv64imac
-        abi: lp64
-        cmodel: medany
-        tune: nuclei-900-series
-        description: NX900 Core(ARCH=rv64imac, ABI=lp64)
-      - name: nx900f
-        arch: rv64imafc
-        abi: lp64f
-        cmodel: medany
-        tune: nuclei-900-series
-        description: NX900F Core(ARCH=rv64imafc, ABI=lp64f)
-      - name: nx900fd
-        arch: rv64imafdc
-        abi: lp64d
-        cmodel: medany
-        tune: nuclei-900-series
-        description: NX900FD Core(ARCH=rv64imafdc, ABI=lp64d)
-      - name: u900
-        arch: rv32imac
-        abi: ilp32
-        cmodel: medlow
-        tune: nuclei-900-series
-        description: U900 Core(ARCH=rv32imac, ABI=ilp32)
-      - name: u900f
-        arch: rv32imafc
-        abi: ilp32f
-        cmodel: medlow
-        tune: nuclei-900-series
-        description: U900F Core(ARCH=rv32imafc, ABI=ilp32f)
-      - name: u900fd
-        arch: rv32imafdc
-        abi: ilp32d
-        cmodel: medlow
-        tune: nuclei-900-series
-        description: U900FD Core(ARCH=rv32imafdc, ABI=ilp32d)
-      - name: ux900
-        arch: rv64imac
-        abi: lp64
-        cmodel: medany
-        tune: nuclei-900-series
-        description: UX900 Core(ARCH=rv64imac, ABI=lp64)
-      - name: ux900f
-        arch: rv64imafc
-        abi: lp64f
-        cmodel: medany
-        tune: nuclei-900-series
-        description: UX900F Core(ARCH=rv64imafc, ABI=lp64f)
-      - name: ux900fd
-        arch: rv64imafdc
-        abi: lp64d
-        cmodel: medany
-        tune: nuclei-900-series
-        description: UX900FD Core(ARCH=rv64imafdc, ABI=lp64d)
+        description: N100EZMMUL Core(ARCH=rv32ec_zmmul, ABI=ilp32e)
   nuclei_archext:
     default_value: ""
     type: text
     # hints and tips are introduced in Nuclei Studio 2023.10
     # used to show tool tips and input hints
-    tips: "Possible other ISA extensions, seperated by underscores, like '_zba_zbb_zbc_zbs_xxldspn1x'"
-    hints: "_zba_zbb_zbc_zbs_xxldsp"
+    tips: "Possible other ISA extensions, seperated by underscores, like '_zca_zcb_zcmp_zcmt'"
+    hints: "_zca_zcb_zcmp_zcmt"
     global: true
-    description: Nuclei ARCH Extensions
-  nuclei_cache:
-    default_value: []
-    type: multicheckbox_v2
-    global: true
-    tips: "Click to select whether Nuclei I/D cache present and Cache CCM unit present"
-    description: Nuclei Cache Extensions
-    param:
-      name:
-        [ic, dc, ccm]
-      description:
-        [ICache, DCache, CCM]
-  nuclei_smp:
-    default_value: 0
-    type: spinner
-    global: true
-    tips: "SMP CPU Number, if above 1, you should set proper heap and stack size"
-    description: Nuclei SMP Count
-    param:
-      range: >-
-          [0, 16, 1]
-  boothartid:
-    default_value: 0
-    type: spinner
-    global: true
-    tips: "Select which hart chosen by hartid is the boot hart"
-    description: Boot HartID
-    param:
-      range: >-
-          [0, 15, 1]
-  heapsz:
-    value: ""
-    type: text
-    # hints and tips are introduced in Nuclei Studio 2023.10
-    # used to show tool tips and input hints
-    tips: "Heap size in bytes, eg. 4K or 4096, leave it blank for default linker script settings"
-    hints: "4K"
-    description: Heap Size
-  stacksz:
-    value: ""
-    type: text
-    # hints and tips are introduced in Nuclei Studio 2023.10
-    # used to show tool tips and input hints
-    tips: "Stack size in bytes for each cpu, eg. 4K or 4096, leave it blank for default linker script settings"
-    hints: "4K"
-    description: Stack Size Per CPU
+    description: ARCH Extensions(ARCH_EXT=)
   semihost:
     default_value: 0
     type: checkbox
@@ -366,10 +153,6 @@ debugconfig:
     description: Nuclei OpenOCD
     svd: evalsoc.svd
 
-  - type: qemu
-    description: Nuclei QEMU
-    svd: evalsoc.svd
-
   - type: jlink
     description: Segger Jlink
     svd: evalsoc.svd
@@ -407,40 +190,11 @@ buildconfig:
       - flags: -lfileops_uart
         condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 0 )
       - flags: -Wl,--gc-sections -Wl,--check-sections
-      - flags: -Wl,--defsym=__SMP_CPU_CNT=${nuclei_smp}
-        condition: $( ${nuclei_smp} > 1 )
-      - flags: -Wl,--defsym=__HEAP_SIZE=${heapsz}
-        condition: $( ${heapsz} != "" )
-      - flags: -Wl,--defsym=__STACK_SIZE=${stacksz}
-        condition: $( ${stacksz} != "" )
     cflags:
     asmflags:
       - flags: -x assembler-with-cpp
     cxxflags:
     common_defines:
-      - defines: SMP_CPU_CNT=${nuclei_smp}
-        condition: $( ${nuclei_smp} > 1 )
-      - defines: BOOT_HARTID=${boothartid}
-      - defines: RUNMODE_IC_EN=1
-        condition: $( contains(${nuclei_cache}, "ic"))
-      - defines: RUNMODE_IC_EN=0
-        condition: $( ! contains(${nuclei_cache}, "ic"))
-      - defines: RUNMODE_DC_EN=1
-        condition: $( contains(${nuclei_cache}, "dc"))
-      - defines: RUNMODE_DC_EN=0
-        condition: $( ! contains(${nuclei_cache}, "dc"))
-      - defines: RUNMODE_CCM_EN=1
-        condition: $( contains(${nuclei_cache}, "ccm"))
-      - defines: RUNMODE_CCM_EN=0
-        condition: $( ! contains(${nuclei_cache}, "ccm"))
-      - defines: RUNMODE_STRING=\"$(join(${nuclei_cache},''))\"
-        condition: $( join(${nuclei_cache},'') != "" )
-      - defines: RUNMODE_ILM_EN=1
-        condition: $( join(${nuclei_cache},'') != "" )
-      - defines: RUNMODE_DLM_EN=1
-        condition: $( join(${nuclei_cache},'') != "" )
-      - defines: RUNMODE_CONTROL
-        condition: $( join(${nuclei_cache},'') != "" )
     prebuild_steps: # could be override by app/bsp type
       command:
       description:

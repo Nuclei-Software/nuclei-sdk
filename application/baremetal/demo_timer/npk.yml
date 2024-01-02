@@ -1,5 +1,5 @@
 ## Package Base Information
-name: app-nsdk_demo_timer
+name: app-n100_sdk_demo_timer
 owner: nuclei
 version:
 description: Timer and Software Interrupt Demo

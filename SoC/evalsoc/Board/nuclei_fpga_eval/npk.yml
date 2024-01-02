@@ -1,18 +1,18 @@
 ## Package Base Information
-name: bsp-nsdk_nuclei_fpga_eval
+name: bsp-n100_sdk_nuclei_fpga_eval
 owner: nuclei
-description: Nuclei FPGA Evaluation Board Support Package
+description: Nuclei N100 FPGA Evaluation Board Support Package
 type: bsp
 keywords:
   - board
   - risc-v
   - nuclei
 license: Apache-2.0
-homepage: https://nucleisys.com/developboard.php#ddr200t
+homepage: https://nucleisys.com/developboard.php
 
 packinfo:
   vendor: Nuclei
-  name: Nuclei FPGA Evaluation Board
+  name: Nuclei N100 FPGA Evaluation Board
   doc:
     website: https://nucleisys.com/developboard.php#ddr200t # Website
     sch: https://nucleisys.com/upload/files/fpga/doc/Nuclei_DDR200T.pdf # Circuit diagram
@@ -29,7 +29,7 @@ packinfo:
 
 ## Package Dependency
 dependencies:
-  - name: ssp-nsdk_evalsoc
+  - name: ssp-n100_sdk_evalsoc
     version:
 
 ## Package Configurations
@@ -42,14 +42,8 @@ configuration:
     choices:
       - name: ilm
         description: ILM download mode, program will be download into ilm/ram and run directly in ilm/ram, program lost when poweroff
-      - name: flash
-        description: FLASH download mode, program will be download into flash, when running, program will be copied to ilm/ram and run in ilm/ram
       - name: flashxip
         description: FLASHXIP download mode, program will to be download into flash and run directly in Flash
-      - name: ddr
-        description: DDR download mode, program will be download into ddr and run directly in ddr, program lost when poweroff
-      - name: sram
-        description: SRAM download mode(sram mode use sram for 200/300, ddr for 600/900)
 
 ## Source Code Management
 codemanage:
@@ -69,41 +63,6 @@ debugconfig:
     configs:
       - key: config
         value: "openocd_evalsoc.cfg"
-      # TODO: need tool_extrapreopts support in npk
-      - key: tool_extrapreopts
-        value: -c "set SMP ${nuclei_smp}; set BOOT_HARTID ${boothartid};"
-        condition: $( ${nuclei_smp} > 1 )
-      - key: tool_extrapreopts
-        value: -c "set BOOT_HARTID ${boothartid};"
-        condition: $( ${nuclei_smp} <= 1 )
-      # Need 2022.08 release of Nuclei Studio
-      # set extra run/restart commands
-      - key: otherRunCommands
-        value: thread apply all set $pc=_start
-        condition: $( ${nuclei_smp} > 1 )
-
-  - type: qemu
-    description: Nuclei QEMU
-    configs:
-       - key: nuclei_core
-         value: ${nuclei_core}
-       - key: nuclei_archext
-         value: ${nuclei_archext}
-       - key: download_mode
-         value: ${download_mode}
-       - key: riscv_arch
-         value: ${nuclei_core.arch}
-       - key: riscv_abi
-         value: ${nuclei_core.abi}
-       - key: machine
-         value: nuclei_evalsoc
-       - key: smp
-         value: ${nuclei_smp}
-         condition: $( ${nuclei_smp} > 1 )
-       # TODO: need arithop support in npk
-       - key: smp
-         value: $( arithop(${boothartid} + 1) )
-         condition: $( ${nuclei_smp} <= 1 )
 
   - type: jlink
     description: Segger Jlink
@@ -130,5 +89,3 @@ buildconfig:
     common_defines:
       - defines: DOWNLOAD_MODE=DOWNLOAD_MODE_$(upper(${download_mode}))
       - defines: DOWNLOAD_MODE_STRING=\"$(upper(${download_mode}))\"
-      - defines: VECTOR_TABLE_REMAPPED
-        condition: $( ${download_mode} == "flash" )

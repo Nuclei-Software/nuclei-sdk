@@ -1,5 +1,5 @@
 ## Package Base Information
-name: app-nsdk_demo_irqc
+name: app-n100_sdk_demo_irqc
 owner: nuclei
 version:
 description: IRQC Interrupt Demo
