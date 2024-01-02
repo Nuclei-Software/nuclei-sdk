@@ -1,5 +1,5 @@
 ## Package Base Information
-name: app-nsdk_rtthread_demo
+name: app-n100_sdk_rtthread_demo
 owner: nuclei
 version:
 description: RTThread Task Demo
@@ -15,7 +15,7 @@ homepage:
 dependencies:
   - name: sdk-nuclei_sdk
     version:
-  - name: osp-nsdk_rtthread
+  - name: osp-n100_sdk_rtthread
     version:
 
 ## Package Configurations

@@ -1,5 +1,5 @@
 ## Package Base Information
-name: app-nsdk_freertos_demo
+name: app-n100_sdk_freertos_demo
 owner: nuclei
 version:
 description: FreeRTOS Task Demo
@@ -15,7 +15,7 @@ homepage:
 dependencies:
   - name: sdk-nuclei_sdk
     version:
-  - name: osp-nsdk_freertos
+  - name: osp-n100_sdk_freertos
     version:
 
 

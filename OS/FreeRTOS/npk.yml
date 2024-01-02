@@ -1,5 +1,5 @@
 ## Package Base Information
-name: osp-nsdk_freertos
+name: osp-n100_sdk_freertos
 owner: nuclei
 version: 10.3.1
 description: FreeRTOS
