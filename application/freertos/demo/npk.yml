@@ -13,7 +13,7 @@ homepage:
 
 ## Package Dependency
 dependencies:
-  - name: sdk-nuclei_sdk
+  - name: sdk-n100_sdk
     version:
   - name: osp-n100_sdk_freertos
     version:
