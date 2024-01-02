@@ -1,6 +1,6 @@
 ## Package Base Information
 ## This npk.yml only works with Nuclei Studio 2023.10 or later
-name: sdk-n100_nsdk
+name: sdk-n100_sdk
 owner: nuclei
 version: 0.1.0-dev
 description: Nuclei N100 Software Development Kit
