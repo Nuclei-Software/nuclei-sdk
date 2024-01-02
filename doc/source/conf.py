@@ -16,15 +16,15 @@ import sys
 
 # -- Project information -----------------------------------------------------
 
-project = 'Nuclei SDK'
-copyright = '2019-Present, Nuclei'
+project = 'N100 SDK'
+copyright = '2023-Present, Nuclei'
 author = 'Nuclei'
 
 # The short X.Y version
-version = '0.5.1-dev'
+version = '0.1.0-dev'
 
 # The full version, including alpha/beta/rc tags
-release = '0.5.1-dev'
+release = '0.1.0-dev'
 
 # -- General configuration ---------------------------------------------------
 
