@@ -220,18 +220,3 @@ buildconfig:
         condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
       - flags: -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek -u errno
         condition: $( startswith(${stdclib}, "newlib") )
-
-  - type: clang
-    description: Nuclei LLVM Toolchain
-    toolchain_name: RISC-V Clang/Newlib
-    cross_prefix: riscv64-unknown-elf- # optional
-    common_flags: # flags need to be combined together across all packages
-    ldflags:
-      - flags: -fuse-ld=lld
-      - flags: -u __on_exit_args
-        condition: $( startswith(${stdclib}, "newlib") )
-      # for clang, newlib_nano still need to define symbol _printf_float to make link pass
-      - flags: -lc_nano -lgcc -u _printf_float
-        condition: $( ${stdclib} == "newlib_nano" )
-      - flags: -lsemihost
-        condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
