@@ -26,8 +26,13 @@ mkdir -p $TOLOC
 
 echo "INFO: Benchmark $CASE run on $CORE with base extension $BASEEXT, generated elfs will be copy to $TOLOC, TIMEOUT $TIMEOUT"
 
+ZCF="_zcf"
+if [[ "$CORE" == *"x"* ]] ; then
+    ZCF=""
+fi
+
 echo "text data bss dec filename cminscnt xlczinscnt valonqemu valonrtl"
-for ext in "" _xxlczbitop _xxlcz_nobitop _xxlcz _zca_zcb_zcf_zcmp_zcmt _zca_zcb_zcf_zcmp_zcmt_xxlcz ; do
+for ext in "" _xxlczbitop _xxlcz_nobitop _xxlcz _zca_zcb${ZCF}_zcmp_zcmt _zca_zcb${ZCF}_zcmp_zcmt_xxlcz ; do
     archext=${BASEEXT}$ext
     runarchext=$archext
     toelf=${TOLOC}/${CASE}_${CORE}${archext}_${DATE}_sim.elf
