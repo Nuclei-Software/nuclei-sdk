@@ -426,7 +426,7 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     uint32_t i_ipc = (uint32_t)(f_ipc * 1000);
     pstr = dec2str(i_ipc);
 
-    ee_printf("IPC = Cycle/Instret = %u/%u = %u.%s\n", (unsigned int)total_time, (unsigned int)total_instret, (unsigned int)(i_ipc/1000), pstr);
+    ee_printf("IPC = Instret/Cycle = %u/%u = %u.%s\n", (unsigned int)total_instret, (unsigned int)total_time, (unsigned int)(i_ipc/1000), pstr);
 
     return MAIN_RETURN_VAL;
 }

@@ -321,7 +321,7 @@ int main(void)
     uint32_t i_ipc = (uint32_t)(f_ipc * 1000);
     pstr = dec2str(i_ipc);
 
-    printf("IPC = Cycle/Instret = %u/%u = %u.%s\n", (unsigned int)used_cycle, (unsigned int)used_instret, (unsigned int)(i_ipc/1000), pstr);
+    printf("IPC = Instret/Cycle = %u/%u = %u.%s\n", (unsigned int)used_instret, (unsigned int)used_cycle, (unsigned int)(i_ipc/1000), pstr);
 
     if (Check == 0) {
         printf("Wrong answer  \n");

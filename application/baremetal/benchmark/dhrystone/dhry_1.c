@@ -419,11 +419,11 @@ int main(void)
     printf("CSV, Dhrystone, %u, %u, %u.%s\n", \
         (unsigned int)Number_Of_Runs, (unsigned int)User_Cycle, (unsigned int)(dhry_dmips/1000), pstr);
 
-    float f_ipc = (((float)User_Cycle / User_Instret));
+    float f_ipc = (((float)User_Instret / User_Cycle));
     uint32_t i_ipc = (uint32_t)(f_ipc * 1000);
     pstr = dec2str(i_ipc);
 
-    printf("IPC = Cycle/Instret = %u/%u = %u.%s\n", (unsigned int)User_Cycle, (unsigned int)User_Instret, (unsigned int)(i_ipc/1000), pstr);
+    printf("IPC = Instret/Cycle = %u/%u = %u.%s\n", (unsigned int)User_Instret, (unsigned int)User_Cycle, (unsigned int)(i_ipc/1000), pstr);
 
     return 0;
 }
