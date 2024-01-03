@@ -203,7 +203,7 @@ debugconfig:
 buildconfig:
   - type: common
     common_flags: # flags need to be combined together across all packages
-      - flags: -g -fno-common -ffunction-sections -fdata-sections -msave-restore
+      - flags: -g -fno-common -ffunction-sections -fdata-sections
       - flags: -march=${nuclei_core.arch} -mabi=${nuclei_core.abi}
       - flags: -mcmodel=${nuclei_core.cmodel}
       - flags: -nostdinc
@@ -231,6 +231,10 @@ buildconfig:
         condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 1 )
       - flags: -lfileops_uart
         condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 0 )
+      # Workaround for libncrt possible linking error since ide dont support wrap search library
+      # Require Nuclei Studio Plugin released in 2024
+      - flags: -l$(subst(${stdclib},lib,))
+        condition: $( startswith(${stdclib}, "libncrt") )
       - flags: -Wl,--gc-sections -Wl,--check-sections
     cflags:
     asmflags:
