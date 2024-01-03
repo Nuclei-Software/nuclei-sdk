@@ -71,6 +71,9 @@ typedef ee_u32 secs_ret;
 void start_time(void);
 void stop_time(void);
 CORE_TICKS get_time(void);
+void start_instret(void);
+void stop_instret(void);
+CORE_TICKS get_instret(void);
 secs_ret time_in_secs(CORE_TICKS ticks);
 
 /* Misc useful functions */

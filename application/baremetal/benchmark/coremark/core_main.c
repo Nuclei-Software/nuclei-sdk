@@ -116,7 +116,7 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     ee_u16 i, j = 0, num_algorithms = 0;
     ee_s16 known_id = -1, total_errors = 0;
     ee_u16 seedcrc = 0;
-    CORE_TICKS total_time;
+    CORE_TICKS total_time, total_instret;
     core_results results[MULTITHREAD];
 #if (MEM_METHOD==MEM_STACK)
     ee_u8 stack_memblock[TOTAL_DATA_SIZE * MULTITHREAD];
@@ -248,6 +248,7 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     }
     /* perform actual benchmark */
     start_time();
+    start_instret();
 #if (MULTITHREAD>1)
     if (default_num_contexts > MULTITHREAD) {
         default_num_contexts = MULTITHREAD;
@@ -264,7 +265,9 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     iterate(&results[0]);
 #endif
     stop_time();
+    stop_instret();
     total_time = get_time();
+    total_instret = get_instret();
     /* get a function of the input to report */
     seedcrc = crc16(results[0].seed1, seedcrc);
     seedcrc = crc16(results[0].seed2, seedcrc);
@@ -418,6 +421,12 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     ee_printf("\nCSV, Benchmark, Iterations, Cycles, CoreMark/MHz\n");
     ee_printf("CSV, CoreMark, %u, %u, %u.%s\n", \
         (unsigned int)results[0].iterations, (unsigned int)total_time, (unsigned int)(cmk_dmips/1000), pstr);
+
+    float f_ipc = (((float)total_time / total_instret));
+    uint32_t i_ipc = (uint32_t)(f_ipc * 1000);
+    pstr = dec2str(i_ipc);
+
+    ee_printf("IPC = Cycle/Instret = %u/%u = %u.%s\n", (unsigned int)total_time, (unsigned int)total_instret, (unsigned int)(i_ipc/1000), pstr);
 
     return MAIN_RETURN_VAL;
 }

@@ -24,9 +24,11 @@ volatile ee_s32 seed4_volatile = ITERATIONS;
 volatile ee_s32 seed5_volatile = 0;
 
 static CORE_TICKS t0, t1;
+static CORE_TICKS i0, i1;
 
 void start_time(void)
 {
+    __RV_CSR_WRITE(CSR_MCYCLE, 0);
     t0 = __get_rv_cycle();
 }
 
@@ -38,6 +40,22 @@ void stop_time(void)
 CORE_TICKS get_time(void)
 {
     return t1 - t0;
+}
+
+void start_instret(void)
+{
+    __RV_CSR_WRITE(CSR_MINSTRET, 0);
+    i0 = __get_rv_instret();
+}
+
+void stop_instret(void)
+{
+    i1 = __get_rv_instret();
+}
+
+CORE_TICKS get_instret(void)
+{
+    return i1 - i0;
 }
 
 secs_ret time_in_secs(CORE_TICKS ticks)

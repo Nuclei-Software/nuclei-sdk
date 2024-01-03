@@ -57,6 +57,9 @@ extern long     time(void);
 
 extern long csr_cycle(void);
 extern long csr_instret(void);
+extern void reset_cycle(void);
+extern void reset_instret(void);
+
 extern Enumeration Func_1(Capital_Letter   Ch_1_Par_Val, Capital_Letter Ch_2_Par_Val);
 extern Boolean Func_2(Str_30 Str_1_Par_Ref, Str_30 Str_2_Par_Ref);
 extern Boolean Func_3(Enumeration Enum_Par_Val);
@@ -257,8 +260,14 @@ int main(void)
 #ifdef TIME
     Begin_Time = time();
 #endif
-    Begin_Instret =  csr_instret();
+
+    // Reset cycle and instret to zero
+    reset_cycle();
+    reset_instret();
+
+    // Start sample
     Begin_Cycle =  csr_cycle();
+    Begin_Instret =  csr_instret();
 
     for (Run_Index = 1; Run_Index <= Number_Of_Runs; ++Run_Index) {
 
@@ -409,6 +418,12 @@ int main(void)
     printf("\nCSV, Benchmark, Iterations, Cycles, DMIPS/MHz\n");
     printf("CSV, Dhrystone, %u, %u, %u.%s\n", \
         (unsigned int)Number_Of_Runs, (unsigned int)User_Cycle, (unsigned int)(dhry_dmips/1000), pstr);
+
+    float f_ipc = (((float)User_Cycle / User_Instret));
+    uint32_t i_ipc = (uint32_t)(f_ipc * 1000);
+    pstr = dec2str(i_ipc);
+
+    printf("IPC = Cycle/Instret = %u/%u = %u.%s\n", (unsigned int)User_Cycle, (unsigned int)User_Instret, (unsigned int)(i_ipc/1000), pstr);
 
     return 0;
 }

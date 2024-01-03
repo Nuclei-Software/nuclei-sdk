@@ -205,6 +205,9 @@ static char headings[9][22];
 static SPDP Check;
 static SPDP results[9];
 
+static uint64_t start_cycle, end_cycle, used_cycle;
+static uint64_t start_instret, end_instret, used_instret;
+
 /* Only support dec number < 1000 */
 static char *dec2str(uint32_t val)
 {
@@ -280,8 +283,20 @@ int main(void)
     printf("\nLoop content                  Result              MFLOPS "
            "     MOPS   Seconds\n\n");
 
+    // TODO change to use standard clear time API
+    // reset instret and cycle
+    __RV_CSR_WRITE(CSR_MCYCLE, 0);
+    __RV_CSR_WRITE(CSR_MINSTRET, 0);
+    start_cycle = __get_rv_cycle();
+    start_instret = __get_rv_instret();
+
     TimeUsed = 0;
     whetstones(xtra, x100, calibrate);
+
+    end_cycle = __get_rv_cycle();
+    end_instret = __get_rv_instret();
+    used_cycle = end_cycle - start_cycle;
+    used_instret = end_instret - start_instret;
 
     printf("\nMWIPS            ");
     if (TimeUsed > 0) {
@@ -301,6 +316,12 @@ int main(void)
     char *pstr = dec2str(whet_mwips);
     printf("\nCSV, Benchmark, MWIPS/MHz\n");
     printf("CSV, Whetstone, %u.%s\n", (unsigned int)(whet_mwips/1000), pstr);
+
+    float f_ipc = (((float)used_cycle / used_instret));
+    uint32_t i_ipc = (uint32_t)(f_ipc * 1000);
+    pstr = dec2str(i_ipc);
+
+    printf("IPC = Cycle/Instret = %u/%u = %u.%s\n", (unsigned int)used_cycle, (unsigned int)used_instret, (unsigned int)(i_ipc/1000), pstr);
 
     if (Check == 0) {
         printf("Wrong answer  \n");
