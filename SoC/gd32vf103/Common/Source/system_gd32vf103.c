@@ -1291,7 +1291,8 @@ int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_
 void _premain_init(void)
 {
     /* TODO: Add your own initialization code here, called before main */
-    SystemCoreClock = get_cpu_freq();
+    // No need to get SystemCoreClock now, it is initialized by PLL it get it via this function
+    //SystemCoreClock = get_cpu_freq();
     /* configure USART */
     gd_com_init(SOC_DEBUG_UART);
     /* Display banner after UART initialized */
