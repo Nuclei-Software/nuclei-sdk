@@ -74,6 +74,7 @@ extern void SystemInit(void);
  */
 extern void SystemCoreClockUpdate(void);
 
+#if defined(__Vendor_EXCEPTION) && (__Vendor_EXCEPTION == 0)
 /**
  * \brief Dump Exception Frame
  */
@@ -88,6 +89,7 @@ extern void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler);
  * \brief Get current exception handler for exception code EXCn
  */
 extern unsigned long Exception_Get_EXC(uint32_t EXCn);
+#endif
 
 /**
  * \brief Initialize eclic config
@@ -100,7 +102,6 @@ extern void Interrupt_Init(void);
  * This function set handler for specific IRQn and enable it.
  */
 extern int32_t IRQC_Register_IRQ(IRQn_Type IRQn, void* handler);
-
 
 #ifdef __cplusplus
 }

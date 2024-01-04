@@ -48,13 +48,13 @@
  *     -  A global variable that contains the system frequency, \ref SystemCoreClock.
  *     -  A global interrupt configuration initialization, \ref Interrupt_Init.
  *     -  A global exception and trap configuration initialization, \ref Trap_Init and \ref Exception_Init.
- *  -  Vendor customized interrupt, exception and nmi handling code, see \ref NMSIS_Core_IntExcNMI_Handling
+ *  -  Vendor customized interrupt, exception handling code, see \ref NMSIS_Core_IntExcNMI_Handling
  *
  * The file configures the device and, typically, initializes the oscillator (PLL) that is part
  * of the microcontroller device. This file might export other functions or variables that provide
  * a more flexible configuration of the microcontroller system.
  *
- * And this file also provided common interrupt, exception and NMI exception handling framework template,
+ * And this file also provided common interrupt, exception exception handling framework template,
  * Silicon vendor can customize these template code as they want.
  *
  * \note Please pay special attention to the static variable \c SystemCoreClock. This variable might be
@@ -127,7 +127,7 @@ void SystemInit(void)
 }
 
 /**
- * \defgroup  NMSIS_Core_IntExcNMI_Handling   Interrupt and Exception and NMI Handling
+ * \defgroup  NMSIS_Core_IntExcNMI_Handling   Interrupt and Exception Handling
  * \brief Functions for interrupt, exception and nmi handle available in system_<device>.c.
  * \details
  * Nuclei provide a template for interrupt, exception handling. Silicon Vendor could adapat according
@@ -139,17 +139,6 @@ void SystemInit(void)
 // TODO If you don't want any exception handler print any thing, uncomment below macro
 // Define this will reduce code size and less debug message when exception happened
 //#define DISABLE_EXCEPTION_DEBUG
-
-/** \brief Max exception handler number */
-#define MAX_SYSTEM_EXCEPTION_NUM        12
-/**
- * \brief      Store the exception handlers for each exception ID
- * \note
- * - This SystemExceptionHandlers are used to store all the handlers for all
- * the exception codes Nuclei N100 core provided.
- * - Exception code 0 - 11, totally 12 exceptions are mapped to SystemExceptionHandlers[0:11]
- */
-static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
 
 extern __WEAK void irqc_mtip_handler(void);
 extern __WEAK void irqc_msip_handler(void);
@@ -195,6 +184,22 @@ static const __fp vector_base[32] __USED __attribute__((section (".mintvec"))) =
     default_intexc_handler      /* irq 31,  ext_irq 29      */
 };
 
+/* TODO: Using default exception handling code provided by NMSIS Device Template.
+ * If you want to disable it and use your own one, you can implement Exception_Init and core_exception_handler function
+ */
+#if defined(__Vendor_EXCEPTION) && (__Vendor_EXCEPTION == 0)
+
+/** \brief Max exception handler number */
+#define MAX_SYSTEM_EXCEPTION_NUM        12
+/**
+ * \brief      Store the exception handlers for each exception ID
+ * \note
+ * - This SystemExceptionHandlers are used to store all the handlers for all
+ * the exception codes Nuclei N100 core provided.
+ * - Exception code 0 - 11, totally 12 exceptions are mapped to SystemExceptionHandlers[0:11]
+ */
+static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
+
 /**
  * \brief      Exception Handler Function Typedef
  * \note
@@ -206,7 +211,7 @@ typedef void (*EXC_HANDLER)(unsigned long cause, unsigned long sp);
 /**
  * \brief      System Default Exception Handler
  * \details
- * This function provides a default exception and NMI handler for all exception ids.
+ * This function provides a default exception handler for all exception ids.
  * By default, It will just print some information for debug, Vendor can customize it according to its requirements.
  * \param [in]  mcause    code indicating the reason that caused the trap in machine mode
  * \param [in]  sp        stack pointer
@@ -235,10 +240,9 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
  * \details
  * The core exception handler for each exception id will be initialized to \ref system_default_exception_handler.
  * \note
- * Called in \ref _init function, used to initialize default exception handlers for all exception IDs
- * SystemExceptionHandlers contains NMI, but SystemExceptionHandlers_S not, because NMI can't be delegated to S-mode.
+ * Called in \ref _premain_init function, used to initialize default exception handlers for all exception IDs
  */
-static void Exception_Init(void)
+void Exception_Init(void)
 {
     for (int i = 0; i < MAX_SYSTEM_EXCEPTION_NUM; i++) {
         SystemExceptionHandlers[i] = (unsigned long)system_default_exception_handler;
@@ -250,7 +254,7 @@ static void Exception_Init(void)
  * \details
  * This function provided feature to dump exception frame stored in stack.
  * \param [in]  sp    stackpoint
- * \param [in]  mode  privileged mode to decide whether to dump msubm CSR
+ * \param [in]  mode  privileged mode
  */
 void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 {
@@ -277,7 +281,7 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 /**
  * \brief       Register an exception handler for exception code EXCn
  * \details
- * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers[EXCn-1].
+ * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers[EXCn].
  * \param [in]  EXCn    See \ref EXCn_Type
  * \param [in]  exc_handler     The exception handler for this exception code EXCn
  */
@@ -291,7 +295,7 @@ void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
 /**
  * \brief       Get current exception handler for exception code EXCn
  * \details
- * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers[EXCn-1].
+ * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers[EXCn].
  * \param [in]  EXCn    See \ref EXCn_Type
  * \return  Current exception handler for exception code EXCn, if not found, return 0.
  */
@@ -303,9 +307,9 @@ unsigned long Exception_Get_EXC(uint32_t EXCn)
 }
 
 /**
- * \brief      Common NMI and Exception handler entry
+ * \brief      Common Exception handler entry
  * \details
- * This function provided a command entry for NMI and exception. Silicon Vendor could modify
+ * This function provided a command entry for exception. Silicon Vendor could modify
  * this template implementation according to requirement.
  * \param [in]  mcause    code indicating the reason that caused the trap in machine mode
  * \param [in]  sp        stack pointer
@@ -330,7 +334,21 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
     }
     return 0;
 }
+#else /* Use Vendor implemented exception handling code __Vendor_EXCEPTION == 1 */
 
+// TODO implement core_exception_handler and Exception_Init if __Vendor_EXCEPTION == 1
+__WEAK uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
+{
+    while (1) {
+        __WFI();
+    }
+}
+
+__WEAK void Exception_Init(void)
+{
+}
+
+#endif
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
 
@@ -364,7 +382,7 @@ void Interrupt_Init(void)
  * \details
  * This function set vector mode, trigger mode and polarity, interrupt level and priority,
  * assign handler for specific IRQn.
- * \param [in]  IRQn        NMI interrupt handler address
+ * \param [in]  IRQn        interrupt handler address
  * \param [in]  handler     interrupt handler, if NULL, handler will not be installed
  * \return       -1 means invalid input parameter. 0 means successful.
  * \remarks
@@ -383,9 +401,8 @@ int32_t IRQC_Register_IRQ(IRQn_Type IRQn, void* handler)
 }
 
 /**
- * \brief do the init for trap(interrupt and exception) entry for supervisor mode
+ * \brief do the init for trap
  * \details
- * This function provide initialization of CSR_STVT CSR_STVT2 and CSR_STVEC.
  */
 static void Trap_Init(void)
 {
