@@ -135,14 +135,9 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
 #if CORE_DEBUG
     results[0].iterations = 1;
 #endif
-    // Bob: change the interation times to make it faster
 #ifdef CFG_SIMULATION
-    // 200/300 4 iterations are enough for training
-#if defined(CPU_SERIES) && ((CPU_SERIES == 200) || (CPU_SERIES == 300))
+    // 4 iterations are enough for training
     results[0].iterations = 4;
-#else
-    results[0].iterations = 20;
-#endif
 #else
     results[0].iterations = ITERATIONS;
 #endif
