@@ -711,6 +711,23 @@ __STATIC_FORCEINLINE uint64_t __get_rv_cycle(void)
 }
 
 /**
+ * \brief   Set whole 64 bits value of mcycle counter
+ * \details This function will set the whole 64 bits of MCYCLE register
+ * \remarks It will work for both RV32 and RV64 to set full 64bits value of MCYCLE
+ */
+__STATIC_FORCEINLINE void __set_rv_cycle(uint64_t cycle)
+{
+#if __RISCV_XLEN == 32
+    __RV_CSR_WRITE(CSR_MCYCLE, 0); // prevent carry
+    __RV_CSR_WRITE(CSR_MCYCLEH, (uint32_t)(cycle >> 32));
+    __RV_CSR_WRITE(CSR_MCYCLE, (uint32_t)(cycle));
+#elif __RISCV_XLEN == 64
+    __RV_CSR_WRITE(CSR_MCYCLE, cycle);
+#else // TODO Need cover for XLEN=128 case in future
+#endif
+}
+
+/**
  * \brief   Read whole 64 bits value of machine instruction-retired counter
  * \details This function will read the whole 64 bits of MINSTRET register
  * \return  The whole 64 bits value of MINSTRET
@@ -734,6 +751,23 @@ __STATIC_FORCEINLINE uint64_t __get_rv_instret(void)
     return (uint64_t)__RV_CSR_READ(CSR_MINSTRET);
 #else // TODO Need cover for XLEN=128 case in future
     return (uint64_t)__RV_CSR_READ(CSR_MINSTRET);
+#endif
+}
+
+/**
+ * \brief   Set whole 64 bits value of machine instruction-retired counter
+ * \details This function will set the whole 64 bits of MINSTRET register
+ * \remarks It will work for both RV32 and RV64 to set full 64bits value of MINSTRET
+ */
+__STATIC_FORCEINLINE void __set_rv_instret(uint64_t instret)
+{
+#if __RISCV_XLEN == 32
+    __RV_CSR_WRITE(CSR_MINSTRET, 0); // prevent carry
+    __RV_CSR_WRITE(CSR_MINSTRETH, (uint32_t)(instret >> 32));
+    __RV_CSR_WRITE(CSR_MINSTRET, (uint32_t)(instret));
+#elif __RISCV_XLEN == 64
+    __RV_CSR_WRITE(CSR_MINSTRET, instret);
+#else // TODO Need cover for XLEN=128 case in future
 #endif
 }
 
