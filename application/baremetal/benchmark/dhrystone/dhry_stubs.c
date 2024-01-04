@@ -2,12 +2,12 @@
 
 void reset_cycle(void)
 {
-    __RV_CSR_WRITE(CSR_MCYCLE, 0);
+    __set_rv_cycle(0);
 }
 
 void reset_instret(void)
 {
-    __RV_CSR_WRITE(CSR_MINSTRET, 0);
+    __set_rv_instret(0);
 }
 
 long csr_cycle(void)

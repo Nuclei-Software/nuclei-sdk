@@ -28,7 +28,7 @@ static CORE_TICKS i0, i1;
 
 void start_time(void)
 {
-    __RV_CSR_WRITE(CSR_MCYCLE, 0);
+    __set_rv_cycle(0);
     t0 = __get_rv_cycle();
 }
 
@@ -44,7 +44,7 @@ CORE_TICKS get_time(void)
 
 void start_instret(void)
 {
-    __RV_CSR_WRITE(CSR_MINSTRET, 0);
+    __set_rv_instret(0);
     i0 = __get_rv_instret();
 }
 

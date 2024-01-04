@@ -283,10 +283,9 @@ int main(void)
     printf("\nLoop content                  Result              MFLOPS "
            "     MOPS   Seconds\n\n");
 
-    // TODO change to use standard clear time API
     // reset instret and cycle
-    __RV_CSR_WRITE(CSR_MCYCLE, 0);
-    __RV_CSR_WRITE(CSR_MINSTRET, 0);
+    __set_rv_cycle(0);
+    __set_rv_instret(0);
     start_cycle = __get_rv_cycle();
     start_instret = __get_rv_instret();
 
