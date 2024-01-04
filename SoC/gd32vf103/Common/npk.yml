@@ -136,27 +136,27 @@ configuration:
     description: Standard C Library(STDCLIB=)
     choices:
       - name: newlib_full
-        description: newlib_full: newlib with full feature
+        description: "newlib_full: newlib with full feature"
       - name: newlib_fast
-        description: newlib_fast: newlib nano with printf/scanf float
+        description: "newlib_fast: newlib nano with printf/scanf float"
       - name: newlib_small
-        description: newlib_small: newlib nano with printf float
+        description: "newlib_small: newlib nano with printf float"
       - name: newlib_nano
-        description: newlib_nano: newlib nano without printf/scanf float
+        description: "newlib_nano: newlib nano without printf/scanf float"
       - name: libncrt_fast
-        description: libncrt_fast: nuclei c runtime library, optimized for speed
+        description: "libncrt_fast: nuclei c runtime library, optimized for speed"
       - name: libncrt_balanced
-        description: libncrt_balanced: nuclei c runtime library, balanced, full feature
+        description: "libncrt_balanced: nuclei c runtime library, balanced, full feature"
       - name: libncrt_small
-        description: libncrt_small: nuclei c runtime library, optimized for size, full feature
+        description: "libncrt_small: nuclei c runtime library, optimized for size, full feature"
       - name: libncrt_nano
-        description: libncrt_nano: nuclei c runtime library, optimized for size, no float support
+        description: "libncrt_nano: nuclei c runtime library, optimized for size, no float support"
       - name: libncrt_pico
-        description: libncrt_pico: nuclei c runtime library, optimized for size, no long/long long support
+        description: "libncrt_pico: nuclei c runtime library, optimized for size, no long/long long support"
       - name: nostd
-        description: nostd: no std c library will be used, and don't search the standard system directories for header files
+        description: "nostd: no std c library will be used, and don't search the standard system directories for header files"
       - name: nospec
-        description: nospec: no std c library will be used, not pass any --specs options
+        description: "nospec: no std c library will be used, not pass any --specs options"
 
 ## Source Code Management
 codemanage:
