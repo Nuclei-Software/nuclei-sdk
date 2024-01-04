@@ -26,15 +26,8 @@
 #define configKERNEL_INTERRUPT_PRIORITY         0
 #endif
 
-#ifndef configMAX_SYSCALL_INTERRUPT_PRIORITY
-// See function prvCheckMaxSysCallPrio and prvCalcMaxSysCallMTH
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
-#endif
 
 #define SYSTICK_TICK_CONST          (configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ)
-
-/* Masks off all bits but the ECLIC MTH bits in the MTH register. */
-#define portMTH_MASK                ( 0xFFUL )
 
 /* Constants required to set up the initial stack. */
 #define portINITIAL_MSTATUS         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
@@ -59,7 +52,7 @@ void vPortSetupTimerInterrupt(void);
 /*
  * Exception handlers.
  */
-#define xPortSysTickHandler     eclic_mtip_handler
+#define xPortSysTickHandler     irqc_mtip_handler
 
 void xPortSysTickHandler(void);
 
@@ -248,65 +241,12 @@ static void prvTaskExitError(void)
     }
 }
 
-/*-----------------------------------------------------------*/
-
-static uint8_t prvCheckMaxSysCallPrio(uint8_t max_syscall_prio)
-{
-    uint8_t nlbits = __ECLIC_GetCfgNlbits();
-    uint8_t intctlbits = __ECLIC_INTCTLBITS;
-    uint8_t lvlbits, temp;
-
-    if (nlbits <= intctlbits) {
-        lvlbits = nlbits;
-    } else {
-        lvlbits = intctlbits;
-    }
-
-    temp = ((1 << lvlbits) - 1);
-    if (max_syscall_prio > temp) {
-        max_syscall_prio = temp;
-    }
-    return max_syscall_prio;
-}
-
-static uint8_t prvCalcMaxSysCallMTH(uint8_t max_syscall_prio)
-{
-    uint8_t nlbits = __ECLIC_GetCfgNlbits();
-    uint8_t intctlbits = __ECLIC_INTCTLBITS;
-    uint8_t lvlbits, lfabits;
-    uint8_t maxsyscallmth = 0;
-    uint8_t temp;
-
-    if (nlbits <= intctlbits) {
-        lvlbits = nlbits;
-    } else {
-        lvlbits = intctlbits;
-    }
-
-    lfabits = 8 - lvlbits;
-
-    temp = ((1 << lvlbits) - 1);
-    if (max_syscall_prio > temp) {
-        max_syscall_prio = temp;
-    }
-
-    maxsyscallmth = (max_syscall_prio << lfabits) | ((1 << lfabits) - 1);
-
-    return maxsyscallmth;
-}
 
 /*
  * See header file for description.
  */
 void OSStartHighRdy(void)
 {
-    /* configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0. */
-    configASSERT(configMAX_SYSCALL_INTERRUPT_PRIORITY);
-
-    /* Get the real MTH should be set to ECLIC MTH register */
-    uxMaxSysCallMTH = prvCalcMaxSysCallMTH(configMAX_SYSCALL_INTERRUPT_PRIORITY);
-    UCOSII_PORT_DEBUG("Max SysCall MTH is set to 0x%x\n", uxMaxSysCallMTH);
-
     __disable_irq();
     /* Start the timer that generates the tick ISR.  Interrupts are disabled
     here already. */
@@ -349,15 +289,6 @@ void vPortEnterCritical(void)
 {
     portDISABLE_INTERRUPTS();
     uxCriticalNesting++;
-
-    /* This is not the interrupt safe version of the enter critical function so
-    assert() if it is being called from an interrupt context.  Only API
-    functions that end in "FromISR" can be used in an interrupt.  Only assert if
-    the critical nesting count is 1 to protect against recursive calls if the
-    assert function also uses a critical section. */
-    if (uxCriticalNesting == 1) {
-        configASSERT((__ECLIC_GetMth() & portMTH_MASK) == uxMaxSysCallMTH);
-    }
 }
 /*-----------------------------------------------------------*/
 
@@ -413,7 +344,7 @@ void xPortTaskSwitch(void)
 *              overridden by the kernel port with same prototype
 *********************************************************************************************************
 */
-void xPortSysTickHandler(void)
+__INTERRUPT void xPortSysTickHandler(void)
 {
 #if OS_CRITICAL_METHOD == 3u                   /* Allocate storage for CPU status register             */
     OS_CPU_SR cpu_sr;
@@ -443,16 +374,10 @@ __attribute__((weak)) void vPortSetupTimerInterrupt(void)
     TickType_t ticks = SYSTICK_TICK_CONST;
 
     /* Make SWI and SysTick the lowest priority interrupts. */
-    /* Stop and clear the SysTimer. SysTimer as Non-Vector Interrupt */
+    /* Stop and clear the SysTimer. SysTimer as Vector Interrupt */
     SysTick_Config(ticks);
-    ECLIC_DisableIRQ(SysTimer_IRQn);
-    ECLIC_SetLevelIRQ(SysTimer_IRQn, configKERNEL_INTERRUPT_PRIORITY);
-    ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
-    ECLIC_EnableIRQ(SysTimer_IRQn);
+    IRQC_EnableIRQ(SysTimer_IRQn);
 
-    /* Set SWI interrupt level to lowest level/priority, SysTimerSW as Vector Interrupt */
-    ECLIC_SetShvIRQ(SysTimerSW_IRQn, ECLIC_VECTOR_INTERRUPT);
-    ECLIC_SetLevelIRQ(SysTimerSW_IRQn, configKERNEL_INTERRUPT_PRIORITY);
-    ECLIC_EnableIRQ(SysTimerSW_IRQn);
+    IRQC_EnableIRQ(SysTimerSW_IRQn);
 }
 /*-----------------------------------------------------------*/

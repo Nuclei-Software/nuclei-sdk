@@ -25,7 +25,6 @@
 .section    .text
 
 
-
 /*
  * void rt_hw_context_switch_to(rt_ubase_t to);
  * a0 --> to_thread
@@ -43,8 +42,6 @@ rt_hw_context_switch_to:
        before the scheduler is started is
        no longer required after the scheduler is started.
        Interrupt stack pointer is stored in CSR_MSCRATCH */
-    la t0, _sp
-    csrw CSR_MSCRATCH, t0
     LOAD sp, 0x0(a0)                /* Read sp from first TCB member(a0) */
 
     /* Pop PC from stack and set MEPC */
@@ -91,8 +88,8 @@ rt_hw_context_switch_to:
     mret
 
 .align 2
-.global eclic_msip_handler
-eclic_msip_handler:
+.global irqc_msip_handler
+irqc_msip_handler:
     addi sp, sp, -portCONTEXT_SIZE
     STORE x1,  1  * REGBYTES(sp)    /* RA */
     STORE x5,  2  * REGBYTES(sp)

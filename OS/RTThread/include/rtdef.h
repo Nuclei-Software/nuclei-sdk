@@ -88,7 +88,9 @@ typedef rt_base_t                       rt_off_t;       /**< Type for offset */
 #define RT_UINT8_MAX                    0xff            /**< Maxium number of UINT8 */
 #define RT_UINT16_MAX                   0xffff          /**< Maxium number of UINT16 */
 #define RT_UINT32_MAX                   0xffffffff      /**< Maxium number of UINT32 */
-#define RT_TICK_MAX                     RT_UINT32_MAX   /**< Maxium number of tick */
+
+// Changed for N100, 24bit timer
+#define RT_TICK_MAX                     0x00ffffff      /**< Maxium number of tick */
 
 #if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
 #define __CLANG_ARM

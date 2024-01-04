@@ -21,11 +21,6 @@
 #define configKERNEL_INTERRUPT_PRIORITY         0
 #endif
 
-#ifndef configMAX_SYSCALL_INTERRUPT_PRIORITY
-// See function prvCheckMaxSysCallPrio and prvCalcMaxSysCallMTH
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
-#endif
-
 #define portINITIAL_MSTATUS                         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
 
 volatile rt_ubase_t  rt_interrupt_from_thread = 0;
@@ -150,20 +145,15 @@ void xPortTaskSwitch(void)
 
 void vPortSetupTimerInterrupt(void)
 {
-    uint64_t ticks = SYSTICK_TICK_CONST;
+    uint32_t ticks = SYSTICK_TICK_CONST;
 
     /* Make SWI and SysTick the lowest priority interrupts. */
-    /* Stop and clear the SysTimer. SysTimer as Non-Vector Interrupt */
+    /* Stop and clear the SysTimer. SysTimer as Vector Interrupt */
     SysTick_Config(ticks);
-    ECLIC_DisableIRQ(SysTimer_IRQn);
-    ECLIC_SetLevelIRQ(SysTimer_IRQn, configKERNEL_INTERRUPT_PRIORITY);
-    ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
-    ECLIC_EnableIRQ(SysTimer_IRQn);
+    IRQC_EnableIRQ(SysTimer_IRQn);
 
-    /* Set SWI interrupt level to lowest level/priority, SysTimerSW as Vector Interrupt */
-    ECLIC_SetShvIRQ(SysTimerSW_IRQn, ECLIC_VECTOR_INTERRUPT);
-    ECLIC_SetLevelIRQ(SysTimerSW_IRQn, configKERNEL_INTERRUPT_PRIORITY);
-    ECLIC_EnableIRQ(SysTimerSW_IRQn);
+    /* Enable SwIRQ Vector Interrupt */
+    IRQC_EnableIRQ(SysTimerSW_IRQn);
 }
 
 
@@ -204,10 +194,10 @@ void rt_hw_board_init()
     __disable_irq();
 }
 
-#define SysTick_Handler     eclic_mtip_handler
+#define SysTick_Handler     irqc_mtip_handler
 
 /* This is the timer interrupt service routine. */
-void SysTick_Handler(void)
+__INTERRUPT void SysTick_Handler(void)
 {
     // Reload timer
     SysTick_Reload(SYSTICK_TICK_CONST);

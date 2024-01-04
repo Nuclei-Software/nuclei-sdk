@@ -51,7 +51,6 @@
 #endif
 
 #ifndef configMAX_SYSCALL_INTERRUPT_PRIORITY
-// See function prvCheckMaxSysCallPrio and prvCalcMaxSysCallMTH
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
 #endif
 
@@ -60,15 +59,12 @@
 
 #define SYSTICK_TICK_CONST          (configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ)
 
-/* Masks off all bits but the ECLIC MTH bits in the MTH register. */
-#define portMTH_MASK                ( 0xFFUL )
-
 /* Constants required to set up the initial stack. */
 #define portINITIAL_MSTATUS         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
 #define portINITIAL_EXC_RETURN      ( 0xfffffffd )
 
-/* The systick is a 64-bit counter. */
-#define portMAX_BIT_NUMBER          ( SysTimer_MTIMER_Msk )
+/* The systick is a 24-bit counter. */
+#define portMAX_BIT_NUMBER          ( SysTimer_MTIME_Msk )
 
 /* A fiddle factor to estimate the number of SysTick counts that would have
 occurred while the SysTick counter is stopped during tickless idle
@@ -106,29 +102,13 @@ extern void prvPortStartFirstTask(void) __attribute__((naked));
  */
 static void prvTaskExitError(void);
 
-#define xPortSysTickHandler     eclic_mtip_handler
+#define xPortSysTickHandler     irqc_mtip_handler
 
 /*-----------------------------------------------------------*/
 
 /* Each task maintains its own interrupt status in the critical nesting
 variable. */
 static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
-
-/*
- * Record the real MTH calculated by the configMAX_SYSCALL_INTERRUPT_PRIORITY
- * The configMAX_SYSCALL_INTERRUPT_PRIORITY is not the left-aligned level value,
- * See equations below:
- * Level Bits number: lvlbits = min(nlbits, CLICINTCTLBITS)
- * Left align Bits number: lfabits = 8-lvlbits
- * 0 < configMAX_SYSCALL_INTERRUPT_PRIORITY <= (2^lvlbits-1)
- * uxMaxSysCallMTH = (configMAX_SYSCALL_INTERRUPT_PRIORITY << lfabits) | ((2^lfabits)-1)
- * If nlbits = 3, CLICINTCTLBITS=3, then lvlbits = 3, lfabits = 5
- * Set configMAX_SYSCALL_INTERRUPT_PRIORITY to 6
- * Then uxMaxSysCallMTH = (6<<5) | (2^5 - 1) = 223
- *
- * See function prvCheckMaxSysCallPrio and prvCalcMaxSysCallMTH
- */
-uint8_t uxMaxSysCallMTH = 255;
 
 /*
  * The number of SysTick increments that make up one tick period.
@@ -159,7 +139,6 @@ static TickType_t ulStoppedTimerCompensation = 0;
  * a priority above configMAX_SYSCALL_INTERRUPT_PRIORITY.
  */
 #if( configASSERT_DEFINED == 1 )
-static uint8_t ucMaxSysCallPriority = 0;
 #endif /* configASSERT_DEFINED */
 
 /*-----------------------------------------------------------*/
@@ -276,71 +255,11 @@ static void prvTaskExitError(void)
 }
 /*-----------------------------------------------------------*/
 
-static uint8_t prvCheckMaxSysCallPrio(uint8_t max_syscall_prio)
-{
-    uint8_t nlbits = __ECLIC_GetCfgNlbits();
-    uint8_t intctlbits = __ECLIC_INTCTLBITS;
-    uint8_t lvlbits, temp;
-
-    if (nlbits <= intctlbits) {
-        lvlbits = nlbits;
-    } else {
-        lvlbits = intctlbits;
-    }
-
-    temp = ((1 << lvlbits) - 1);
-    if (max_syscall_prio > temp) {
-        max_syscall_prio = temp;
-    }
-    return max_syscall_prio;
-}
-
-static uint8_t prvCalcMaxSysCallMTH(uint8_t max_syscall_prio)
-{
-    uint8_t nlbits = __ECLIC_GetCfgNlbits();
-    uint8_t intctlbits = __ECLIC_INTCTLBITS;
-    uint8_t lvlbits, lfabits;
-    uint8_t maxsyscallmth = 0;
-    uint8_t temp;
-
-    if (nlbits <= intctlbits) {
-        lvlbits = nlbits;
-    } else {
-        lvlbits = intctlbits;
-    }
-
-    lfabits = 8 - lvlbits;
-
-    temp = ((1 << lvlbits) - 1);
-    if (max_syscall_prio > temp) {
-        max_syscall_prio = temp;
-    }
-
-    maxsyscallmth = (max_syscall_prio << lfabits) | ((1 << lfabits) - 1);
-
-    return maxsyscallmth;
-}
-
 /*
  * See header file for description.
  */
 BaseType_t xPortStartScheduler(void)
 {
-    /* configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0. */
-    configASSERT(configMAX_SYSCALL_INTERRUPT_PRIORITY);
-
-    /* Get the real MTH should be set to ECLIC MTH register */
-    uxMaxSysCallMTH = prvCalcMaxSysCallMTH(configMAX_SYSCALL_INTERRUPT_PRIORITY);
-    FREERTOS_PORT_DEBUG("Max SysCall MTH is set to 0x%x\n", uxMaxSysCallMTH);
-
-#if( configASSERT_DEFINED == 1 )
-    {
-        /* Use the same mask on the maximum system call priority. */
-        ucMaxSysCallPriority = prvCheckMaxSysCallPrio(configMAX_SYSCALL_INTERRUPT_PRIORITY);
-        FREERTOS_PORT_DEBUG("Max SysCall Priority is set to %d\n", ucMaxSysCallPriority);
-    }
-#endif /* conifgASSERT_DEFINED */
-
     __disable_irq();
     /* Start the timer that generates the tick ISR.  Interrupts are disabled
     here already. */
@@ -385,7 +304,6 @@ void vPortEnterCritical(void)
     the critical nesting count is 1 to protect against recursive calls if the
     assert function also uses a critical section. */
     if (uxCriticalNesting == 1) {
-        configASSERT((__ECLIC_GetMth() & portMTH_MASK) == uxMaxSysCallMTH);
     }
 }
 /*-----------------------------------------------------------*/
@@ -430,7 +348,7 @@ void xPortTaskSwitch(void)
 }
 /*-----------------------------------------------------------*/
 
-void xPortSysTickHandler(void)
+__INTERRUPT void xPortSysTickHandler(void)
 {
     /* The SysTick runs at the lowest interrupt priority, so when this interrupt
     executes all interrupts must be unmasked.  There is therefore no need to
@@ -508,7 +426,7 @@ __attribute__((weak)) void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTi
 
         /* Restart SysTick. */
         SysTimer_Start();
-        ECLIC_EnableIRQ(SysTimer_IRQn);
+        IRQC_EnableIRQ(SysTimer_IRQn);
         __RWMB();
 
         /* Sleep until something happens.  configPRE_SLEEP_PROCESSING() can
@@ -543,7 +461,7 @@ __attribute__((weak)) void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTi
            be, but using the tickless mode will inevitably result in some tiny
            drift of the time maintained by the kernel with respect to calendar
            time*/
-        ECLIC_DisableIRQ(SysTimer_IRQn);
+        IRQC_DisableIRQ(SysTimer_IRQn);
 
         /* Determine if SysTimer Interrupt is not yet happened,
         (in which case an interrupt other than the SysTick
@@ -582,7 +500,7 @@ __attribute__((weak)) void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTi
         vTaskStepTick(ulCompleteTickPeriods);
 
         /* Exit with interrupts enabled. */
-        ECLIC_EnableIRQ(SysTimer_IRQn);
+        IRQC_EnableIRQ(SysTimer_IRQn);
         __enable_irq();
     }
 }
@@ -609,17 +527,12 @@ __attribute__((weak)) void vPortSetupTimerInterrupt(void)
     TickType_t ticks = SYSTICK_TICK_CONST;
 
     /* Make SWI and SysTick the lowest priority interrupts. */
-    /* Stop and clear the SysTimer. SysTimer as Non-Vector Interrupt */
+    /* Stop and clear the SysTimer. SysTimer as Vector Interrupt */
     SysTick_Config(ticks);
-    ECLIC_DisableIRQ(SysTimer_IRQn);
-    ECLIC_SetLevelIRQ(SysTimer_IRQn, configKERNEL_INTERRUPT_PRIORITY);
-    ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
-    ECLIC_EnableIRQ(SysTimer_IRQn);
+    IRQC_EnableIRQ(SysTimer_IRQn);
 
-    /* Set SWI interrupt level to lowest level/priority, SysTimerSW as Vector Interrupt */
-    ECLIC_SetShvIRQ(SysTimerSW_IRQn, ECLIC_VECTOR_INTERRUPT);
-    ECLIC_SetLevelIRQ(SysTimerSW_IRQn, configKERNEL_INTERRUPT_PRIORITY);
-    ECLIC_EnableIRQ(SysTimerSW_IRQn);
+    /* Set as Vector Interrupt */
+    IRQC_EnableIRQ(SysTimerSW_IRQn);
 }
 /*-----------------------------------------------------------*/
 
@@ -629,44 +542,6 @@ __attribute__((weak)) void vPortSetupTimerInterrupt(void)
 
 void vPortValidateInterruptPriority(void)
 {
-    uint32_t ulCurrentInterrupt;
-    uint8_t ucCurrentPriority;
-
-    /* Obtain the number of the currently executing interrupt. */
-    CSR_MCAUSE_Type mcause = (CSR_MCAUSE_Type)__RV_CSR_READ(CSR_MCAUSE);
-    /* Make sure current trap type is interrupt */
-    configASSERT(mcause.b.interrupt == 1);
-    if (mcause.b.interrupt) {
-        ulCurrentInterrupt = mcause.b.exccode;
-        /* Is the interrupt number a user defined interrupt? */
-        if (ulCurrentInterrupt >= portFIRST_USER_INTERRUPT_NUMBER) {
-            /* Look up the interrupt's priority. */
-            ucCurrentPriority = __ECLIC_GetLevelIRQ(ulCurrentInterrupt);
-            /* The following assertion will fail if a service routine (ISR) for
-            an interrupt that has been assigned a priority above
-            ucMaxSysCallPriority calls an ISR safe FreeRTOS API
-            function.  ISR safe FreeRTOS API functions must *only* be called
-            from interrupts that have been assigned a priority at or below
-            ucMaxSysCallPriority.
-
-            Numerically low interrupt priority numbers represent logically high
-            interrupt priorities, therefore the priority of the interrupt must
-            be set to a value equal to or numerically *higher* than
-            ucMaxSysCallPriority.
-
-            Interrupts that use the FreeRTOS API must not be left at their
-            default priority of zero as that is the highest possible priority,
-            which is guaranteed to be above ucMaxSysCallPriority,
-            and therefore also guaranteed to be invalid.
-
-            FreeRTOS maintains separate thread and ISR API functions to ensure
-            interrupt entry is as fast and simple as possible.
-
-            The following links provide detailed information:
-            http://www.freertos.org/FAQHelp.html */
-            configASSERT(ucCurrentPriority <= ucMaxSysCallPriority);
-        }
-    }
 }
 
 #endif /* configASSERT_DEFINED */

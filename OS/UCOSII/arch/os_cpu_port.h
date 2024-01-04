@@ -32,8 +32,8 @@ typedef long BaseType_t;
 typedef unsigned long UBaseType_t;
 
 /* RISC-V TIMER is 64-bit long */
-typedef uint64_t TickType_t;
-#define portMAX_DELAY               ( TickType_t )0xFFFFFFFFFFFFFFFFULL
+typedef uint32_t TickType_t;
+#define portMAX_DELAY               ( TickType_t )0x00FFFFFF
 /*-----------------------------------------------------------*/
 
 /* Architecture specifics. */
@@ -55,8 +55,8 @@ typedef uint64_t TickType_t;
 extern void vPortEnterCritical(void);
 extern void vPortExitCritical(void);
 
-#define portDISABLE_INTERRUPTS()            vPortRaiseBASEPRI()
-#define portENABLE_INTERRUPTS()             vPortSetBASEPRI(0)
+#define portDISABLE_INTERRUPTS()            __disable_irq()
+#define portENABLE_INTERRUPTS()             __enable_irq()
 #define portENTER_CRITICAL()                vPortEnterCritical()
 #define portEXIT_CRITICAL()                 vPortExitCritical()
 
@@ -70,39 +70,6 @@ extern void vPortExitCritical(void);
 #ifndef portFORCE_INLINE
 #define portFORCE_INLINE                inline __attribute__(( always_inline))
 #endif
-
-/* This variable should not be set in any of the RTOS application
-  only used internal of RTOS Port code */
-extern uint8_t uxMaxSysCallMTH;
-
-/*-----------------------------------------------------------*/
-portFORCE_INLINE static void vPortRaiseBASEPRI(void)
-{
-    ECLIC_SetMth(uxMaxSysCallMTH);
-    __RWMB();
-}
-
-/*-----------------------------------------------------------*/
-portFORCE_INLINE static uint8_t ulPortRaiseBASEPRI(void)
-{
-    uint8_t ulOriginalBASEPRI;
-
-    ulOriginalBASEPRI = ECLIC_GetMth();
-    ECLIC_SetMth(uxMaxSysCallMTH);
-    __RWMB();
-
-    /* This return might not be reached but is necessary to prevent compiler
-    warnings. */
-    return ulOriginalBASEPRI;
-}
-/*-----------------------------------------------------------*/
-
-portFORCE_INLINE static void vPortSetBASEPRI(uint8_t ulNewMaskValue)
-{
-    ECLIC_SetMth(ulNewMaskValue);
-    __RWMB();
-}
-/*-----------------------------------------------------------*/
 
 #define portMEMORY_BARRIER()                __asm volatile( "" ::: "memory" )
 
