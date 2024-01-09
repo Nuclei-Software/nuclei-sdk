@@ -1,12 +1,12 @@
 # Format for adding a new core
 # NXXX_CORE_ARCH_ABI = ARCH ABI TUNE
 # ARCH ABI is a MUST, TUNE is optional
-N100E_CORE_ARCH_ABI = rv32ec ilp32e nuclei-200-series
-N100EM_CORE_ARCH_ABI = rv32emc ilp32e nuclei-200-series
-N100EZMMUL_CORE_ARCH_ABI = rv32ec_zmmul ilp32e nuclei-200-series
-N100_CORE_ARCH_ABI = rv32ic ilp32 nuclei-200-series
-N100M_CORE_ARCH_ABI = rv32imc ilp32 nuclei-200-series
-N100ZMMUL_CORE_ARCH_ABI = rv32ic_zmmul ilp32 nuclei-200-series
+N100E_CORE_ARCH_ABI = rv32ec ilp32e nuclei-100-series
+N100EM_CORE_ARCH_ABI = rv32emc ilp32e nuclei-100-series
+N100EZMMUL_CORE_ARCH_ABI = rv32ec_zmmul ilp32e nuclei-100-series
+N100_CORE_ARCH_ABI = rv32ic ilp32 nuclei-100-series
+N100M_CORE_ARCH_ABI = rv32imc ilp32 nuclei-100-series
+N100ZMMUL_CORE_ARCH_ABI = rv32ic_zmmul ilp32 nuclei-100-series
 
 # Don't forget to add a new core below
 # if you add a new NXXX_CORE_ARCH_ABI above
