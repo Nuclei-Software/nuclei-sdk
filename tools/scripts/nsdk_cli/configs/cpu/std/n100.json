@@ -1,0 +1,8 @@
+{
+    "build_config": {
+        "CPU_SERIES": "100"
+    },
+    "build_configs": {
+        "rv32imc": {"CORE":"n100m"}
+    }
+}
