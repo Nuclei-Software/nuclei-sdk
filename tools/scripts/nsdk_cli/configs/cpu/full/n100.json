@@ -1,0 +1,13 @@
+{
+    "build_config": {
+        "CPU_SERIES": "100"
+    },
+    "build_configs": {
+        "rv32ec": {"CORE":"n100e"},
+        "rv32emc": {"CORE":"n100em"},
+        "rv32ec_zmmul": {"CORE":"n100ezmmul", "ARCH_EXT":""},
+        "rv32ic": {"CORE":"n100"},
+        "rv32imc": {"CORE":"n100m"},
+        "rv32ic_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":""}
+    }
+}
