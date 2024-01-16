@@ -2,7 +2,7 @@
 name: osp-nsdk_freertos
 owner: nuclei
 version: 10.3.1
-description: FreeRTOS
+description: FreeRTOS Port Package for Nuclei SDK
 type: osp
 keywords:
   - rtos

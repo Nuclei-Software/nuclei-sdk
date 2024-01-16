@@ -2,7 +2,7 @@
 name: osp-nsdk_ucosii
 owner: nuclei
 version: 2.93.00
-description: UCOS/II
+description: UCOS/II Port Package for Nuclei SDK
 type: osp
 keywords:
   - rtos

@@ -2,7 +2,7 @@
 name: osp-nsdk_rtthread
 version: 3.1.3
 owner: nuclei
-description: RT-Thread Nano
+description: RT-Thread Nano Port Package for Nuclei SDK
 type: osp
 keywords:
   - rtos
