@@ -316,7 +316,7 @@ int main(void)
     printf("\nCSV, Benchmark, MWIPS/MHz\n");
     printf("CSV, Whetstone, %u.%s\n", (unsigned int)(whet_mwips/1000), pstr);
 
-    float f_ipc = (((float)used_cycle / used_instret));
+    float f_ipc = (((float)used_instret / used_cycle));
     uint32_t i_ipc = (uint32_t)(f_ipc * 1000);
     pstr = dec2str(i_ipc);
 

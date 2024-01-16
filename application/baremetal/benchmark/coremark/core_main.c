@@ -422,7 +422,7 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
     ee_printf("CSV, CoreMark, %u, %u, %u.%s\n", \
         (unsigned int)results[0].iterations, (unsigned int)total_time, (unsigned int)(cmk_dmips/1000), pstr);
 
-    float f_ipc = (((float)total_time / total_instret));
+    float f_ipc = (((float)total_instret / total_time));
     uint32_t i_ipc = (uint32_t)(f_ipc * 1000);
     pstr = dec2str(i_ipc);
 
