@@ -1,0 +1,37 @@
+## Package Base Information
+name: osp-nsdk_threadx
+owner: nuclei
+version: 6.4.0
+description: ThreadX Port Package for Nuclei SDK
+type: osp
+keywords:
+  - rtos
+  - risc-v
+license: MIT
+homepage: https://github.com/eclipse-threadx/threadx
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+
+## Package Configurations
+configuration:
+
+
+## Source Code Management
+codemanage:
+  installdir: ThreadX
+  copyfiles:
+    - path: ["common", "ports/nuclei/gcc"]
+    - path: ["ports/nuclei/port.c", "ports/nuclei/tx_port.h"]
+  incdirs:
+    - path: ["common/inc", "ports/nuclei"]
+  libdirs:
+  ldlibs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_defines:
+      - defines: RTOS_THREADX
