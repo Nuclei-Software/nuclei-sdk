@@ -149,6 +149,12 @@
                 "PASS": ["task3 is running... 3"]
             }
         },
+        "application/threadx/demo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["thread 6_7 is running, current is 7, thread 6 counter 9, thread 7 counter 8"]
+            }
+        },
         "test/core": {
             "build_config" : {},
             "checks": {
