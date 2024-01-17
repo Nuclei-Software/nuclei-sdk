@@ -1,0 +1,46 @@
+## Package Base Information
+name: app-nsdk_threadx_demo
+owner: nuclei
+version:
+description: ThreadX Task Demo
+type: app
+keywords:
+  - threadx
+  - task demo
+category: threadx application
+license: MIT
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+  - name: osp-nsdk_threadx
+    version:
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    value: -O2 -DTX_INCLUDE_USER_DEFINE_FILE
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
