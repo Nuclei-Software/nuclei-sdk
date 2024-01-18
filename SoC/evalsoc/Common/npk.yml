@@ -42,37 +42,37 @@ configuration:
         arch: rv32ic
         abi: ilp32
         cmodel: medlow
-        tune: nuclei-200-series
+        tune: nuclei-100-series
         description: N100 Core(ARCH=rv32ic, ABI=ilp32)
       - name: n100m
         arch: rv32imc
         abi: ilp32
         cmodel: medlow
-        tune: nuclei-200-series
+        tune: nuclei-100-series
         description: N100M Core(ARCH=rv32imc, ABI=ilp32)
       - name: n100zmmul
         arch: rv32ic_zmmul
         abi: ilp32
         cmodel: medlow
-        tune: nuclei-200-series
+        tune: nuclei-100-series
         description: N100ZMMUL Core(ARCH=rv32ic_zmmul, ABI=ilp32)
       - name: n100e
         arch: rv32ec
         abi: ilp32e
         cmodel: medlow
-        tune: nuclei-200-series
+        tune: nuclei-100-series
         description: N100E Core(ARCH=rv32ec, ABI=ilp32e)
       - name: n100m
         arch: rv32imc
         abi: ilp32
         cmodel: medlow
-        tune: nuclei-200-series
+        tune: nuclei-100-series
         description: N100EM Core(ARCH=rv32emc, ABI=ilp32e)
       - name: n100ezmmul
         arch: rv32ec_zmmul
         abi: ilp32e
         cmodel: medlow
-        tune: nuclei-200-series
+        tune: nuclei-100-series
         description: N100EZMMUL Core(ARCH=rv32ec_zmmul, ABI=ilp32e)
   nuclei_archext:
     default_value: ""
