@@ -41,7 +41,7 @@ codemanage:
 buildconfig:
   - type: gcc
     common_flags: # flags need to be combined together across all packages
-      - flags: -O3 -funroll-loops -fsingle-precision-constant
+      - flags: -Ofast -fsingle-precision-constant -mstrict-align -funroll-all-loops -falign-functions=8 -falign-jumps=8 -falign-loops=8
   - type: clang
     common_flags: # flags need to be combined together across all packages
-      - flags: -O3 -funroll-loops -flto
+      - flags: -Ofast -funroll-loops

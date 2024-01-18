@@ -1,1 +1,1 @@
-BENCH_FLAGS ?= -O3 -funroll-loops -flto
+BENCH_FLAGS ?= -Ofast -funroll-loops
