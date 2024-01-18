@@ -375,6 +375,12 @@ sdk_gen_benchmark:
       - gen
     expire_in: 2 day
 
+# Job used to check whether xlcz addibne instruction generated
+sdk_check_xlcz:
+  <<: *job_template_default
+  script:
+    - bash tools/scripts/misc/check_xlcz.sh
+
 sdk_sync_tools:
   stage: deploy
   interruptible: true
