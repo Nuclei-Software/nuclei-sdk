@@ -15,6 +15,9 @@ totaladdibnecnt=0
 echo "app,corecfg,xlczcnt,addibnecnt"
 for ext in _xxlcz _zca_zcb_zcf_zcmp_zcmt_xxlcz ; do
     for appdir in `find . -name Makefile | xargs dirname`; do
+        if [[ "$appdir" == *"demo_dsp"* ]] ; then
+            continue
+        fi
         for core in n300 n300f nx900 nx900f ; do
             archext=$ext
             if [[ "$core" == *"x"* ]] || [[ ! "$core" == *"f"* ]] ; then
@@ -24,8 +27,14 @@ for ext in _xxlcz _zca_zcb_zcf_zcmp_zcmt_xxlcz ; do
             make SILENT=1 clean > /dev/null
             dasmfile=$(make SILENT=1 CORE=$core ARCH_EXT=$archext -j dasm 2>&1 | grep dasm | cut -d ">" -f2)
             if [ "x$dasmfile" == "x" ] || [ ! -f $dasmfile ] ; then
-                echo "ERROR: Unable to build $appdir for CORE=$core ARCH_EXT=$archext"
-                exit 1
+                errmsg=$(make SILENT=1 CORE=$core ARCH_EXT=$archext -j dasm 2>&1 | grep 'ld: cannot find -lnmsis')
+                if [ "x$errmsg" == "x" ] ; then
+                    echo "ERROR: Unable to build $appdir for CORE=$core ARCH_EXT=$archext"
+                    make SILENT=1 CORE=$core ARCH_EXT=$archext | grep "Error:"
+                    exit 1
+                else
+                    continue
+                fi
             else
                 xlczinscnt=$(cat $dasmfile | grep -e "xl\." | wc -l)
                 addibnecnt=$(cat $dasmfile | grep -e "xl\.addibne" | wc -l)
