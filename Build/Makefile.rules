@@ -111,8 +111,8 @@ $(ALL_CXX_OBJS): %.o: % $(COMMON_PREREQS)
 	$(Q)$(CXX) $(CXXFLAGS) $(MKDEP_OPT) -c -o $@ $<
 
 dasm: $(TARGET_ELF)
-	-$(OBJDUMP) -S -d $< > $(TARGET).dump
-	-$(OBJDUMP) -d $< > $(TARGET).dasm
+	-$(OBJDUMP) -S -d -M no-aliases $< > $(TARGET).dump
+	-$(OBJDUMP) -d -M no-aliases $< > $(TARGET).dasm
 	-$(OBJCOPY) $< -O ihex $(TARGET).hex
 	-$(OBJCOPY) $< -O srec $(TARGET).srec
 	-$(OBJCOPY) $< -O verilog $(TARGET).verilog
