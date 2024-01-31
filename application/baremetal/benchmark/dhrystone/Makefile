@@ -20,7 +20,4 @@ INCDIRS = .
 
 STDCLIB ?= newlib_small
 
-# Clean generated *.i and *.s
-CLEAN_OBJS += *.i *.s
-
 include $(NUCLEI_SDK_ROOT)/Build/Makefile.base
