@@ -17,6 +17,10 @@
         "ARCH_EXT": ""
     },
     "build_configs": {
+        "n200-ilm": {"DOWNLOAD": "ilm", "CORE": "n200", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zicond"},
+        "n201-flash": {"DOWNLOAD": "flash", "CORE": "n201", "ARCH_EXT": "_zca_zcb_zcmp_zcmt"},
+        "n201e-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n201e", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zicond"},
+        "n203e-ilm": {"DOWNLOAD": "ilm", "CORE": "n203e", "ARCH_EXT": "_zca_zcb_zcmp_zcmt"},
         "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt"},
         "n305b-flash": {"DOWNLOAD": "flash", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs"},
         "n305bp-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x"},
