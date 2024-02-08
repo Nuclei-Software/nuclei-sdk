@@ -2,6 +2,8 @@
 #include "ctest.h"
 #include "nuclei_sdk_soc.h"
 
+#ifdef __riscv_atomic
+
 #define INIT_VALUE  0x12345678
 #define TEST_VALUE  0xDEADBEEF
 CTEST(atomic, cas_w)
@@ -194,3 +196,4 @@ CTEST(atomic, amomin_d)
 }
 #endif
 
+#endif
