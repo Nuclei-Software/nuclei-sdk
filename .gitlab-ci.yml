@@ -283,6 +283,7 @@ run_test_evalsoc:
       - HWCFG:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc.json
   script:
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
