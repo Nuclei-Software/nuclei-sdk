@@ -513,6 +513,8 @@ Currently we support the following SoCs.
      - Reference
    * - gd32vf103v_rvstar
      - :ref:`design_board_gd32vf103v_rvstar`
+   * - gd32vf103c_dlink
+     - :ref:`design_board_gd32vf103c_dlink`
    * - gd32vf103v_eval
      - :ref:`design_board_gd32vf103v_eval`
    * - gd32vf103c_longan_nano
