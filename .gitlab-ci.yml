@@ -140,9 +140,12 @@ build_gd32vf103:
         - tools/scripts/nsdk_cli/configs/gd32vf103c_longan_nano.json
         - tools/scripts/nsdk_cli/configs/gd32vf103c_dlink.json
         - tools/scripts/nsdk_cli/configs/gd32vf103c_t_display.json
+        TOOLCHAIN:
+        - "nuclei_gnu"
+        - "nuclei_llvm"
   script:
-    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$TOOLCHAIN/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --make_options "TOOLCHAIN=$TOOLCHAIN" --logdir $LOGDIR
 
 build_evalsoc:
   <<: *job_template_default
@@ -153,6 +156,7 @@ build_evalsoc:
     matrix:
       - HWCFG:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_llvm.json
   script:
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
