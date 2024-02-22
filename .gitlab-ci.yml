@@ -395,7 +395,7 @@ sdk_check_npk:
   stage: check
   script:
     - echo "Validate and check npk.yml in this folder"
-    - bash tools/scripts/nsdk_cli/check_npk.py -d .
+    - python3 tools/scripts/nsdk_cli/check_npk.py -d .
     - echo "npk.yml in this folder all PASS"
 
 sdk_sync_tools:
