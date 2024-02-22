@@ -24,12 +24,13 @@ default:
   image: $IMAGE:$IMAGE_TAG
 
 stages:
+  - check
   - build
   - deploy
 
 ## Job for build document
 build_doc:
-  stage: build
+  stage: check
   interruptible: true
   only:
     changes:
@@ -128,6 +129,7 @@ deploy_website:
 
 build_gd32vf103:
   <<: *job_template_default
+  stage: check
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
   parallel:
@@ -143,6 +145,7 @@ build_gd32vf103:
 
 build_evalsoc:
   <<: *job_template_default
+  stage: check
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
   parallel:
@@ -276,6 +279,7 @@ run_llvm_newlib_nano_evalsoc:
 # Test extra test suites
 run_test_evalsoc:
   <<: *job_template_default
+  stage: check
   timeout: 4h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/test.json
@@ -381,6 +385,7 @@ sdk_gen_benchmark:
 # Job used to check whether xlcz addibne instruction generated
 sdk_check_xlcz:
   <<: *job_template_default
+  stage: check
   script:
     - bash tools/scripts/misc/check_xlcz.sh
 
