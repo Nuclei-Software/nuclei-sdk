@@ -1,0 +1,43 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 60
+        }
+    },
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "gd32vf103",
+        "BOARD": "gd32vf103c_dlink",
+        "CORE": "n205",
+        "DOWNLOAD": "flashxip",
+        "ARCH_EXT": ""
+    },
+    "expected": {
+        "application/baremetal/demo_stack_check" : {
+            "run": false,
+            "build": false
+        },
+        "application/baremetal/demo_nice" : {
+            "run": false,
+            "build": true
+        },
+        "application/baremetal/demo_spmp" : {
+            "run": false,
+            "build": false
+        },
+        "application/baremetal/demo_smode_eclic": {
+            "run": false,
+            "build": true
+        },
+        "application/baremetal/demo_cidu": {
+            "run": false,
+            "build": false
+        },
+        "application/baremetal/demo_cache": {
+            "run": false,
+            "build": true
+        }
+    }
+}
