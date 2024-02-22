@@ -389,6 +389,15 @@ sdk_check_xlcz:
   script:
     - bash tools/scripts/misc/check_xlcz.sh
 
+# Job used to check all the npk.yml in this folder
+sdk_check_npk:
+  <<: *job_template_default
+  stage: check
+  script:
+    - echo "Validate and check npk.yml in this folder"
+    - bash tools/scripts/nsdk_cli/check_npk.py -d .
+    - echo "npk.yml in this folder all PASS"
+
 sdk_sync_tools:
   stage: deploy
   interruptible: true
