@@ -11,11 +11,10 @@ workflow:
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /draft|wip|stash/i
       when: never
-    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /master|develop/ && $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+    - if: $CI_COMMIT_BRANCH =~ /master_n100|develop_n100/ && $CI_OPEN_MERGE_REQUESTS
       when: never
-    - if: $CI_COMMIT_BRANCH =~ /master|develop/
-    - if: $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_TAG
+    - if: $CI_COMMIT_BRANCH =~ /master_n100|develop_n100/
+    - if: $CI_COMMIT_BRANCH == "master_n100" && $CI_COMMIT_TAG
 
 default:
   tags:
@@ -24,12 +23,13 @@ default:
   image: $IMAGE:$IMAGE_TAG
 
 stages:
+  - check
   - build
   - deploy
 
 ## Job for build document
 build_doc:
-  stage: build
+  stage: check
   interruptible: true
   only:
     changes:
@@ -37,7 +37,7 @@ build_doc:
       - .gitlab-ci.yml
   retry: 1
   artifacts:
-    name: "nuclei_sdk_doc-job${CI_JOB_ID}-${CI_COMMIT_SHA::8}"
+    name: "nuclei_n100_sdk_doc-job${CI_JOB_ID}-${CI_COMMIT_SHA::8}"
     paths:
       - doc/build
     expire_in: 2 day
@@ -61,7 +61,7 @@ deploy_doc:
   retry: 1
   only:
     refs:
-      - master
+      - master_n100
     changes:
       - doc/**/**/**/**/*
       - .gitlab-ci.yml
@@ -69,7 +69,7 @@ deploy_doc:
     - ssh $DOC_SERVER "rm -rf $DOC_CENTER/nuclei_sdk/*"
     - ssh $DOC_SERVER "mkdir -p $DOC_CENTER/nuclei_sdk/"
     - cd doc/build
-    - scp -r html $DOC_SERVER:$DOC_CENTER/nuclei_sdk
+    - scp -r html $DOC_SERVER:$DOC_CENTER/nuclei_n100_sdk
   dependencies:
     - build_doc
   tags:
@@ -83,11 +83,11 @@ deploy_website:
   retry: 1
   only:
     refs:
-      - master
+      - master_n100
     changes:
       - doc/**/**/**/**/*
   script:
-    - ./.ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html nuclei_sdk
+    - ./.ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html nuclei_n100_sdk
   dependencies:
     - build_doc
   tags:
@@ -128,6 +128,7 @@ deploy_website:
 
 build_evalsoc:
   <<: *job_template_default
+  stage: check
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
     HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
@@ -140,34 +141,3 @@ build_evalsoc:
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/${STDCLIB}_${DOWNLOAD}${ARCH_EXT}
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "STDCLIB=$STDCLIB DOWNLOAD=$DOWNLOAD ARCH_EXT=${ARCH_EXT}"
 
-      #run_newlib_nano_evalsoc:
-      #  <<: *job_template_default
-      #  timeout: 5h
-      #  variables:
-      #    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-      #    RUNTARGET: qemu
-      #  parallel:
-      #    matrix:
-      #      - HWCFG:
-      #        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
-      #  script:
-      #    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
-      #    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
-      #
-      #run_libncrt_evalsoc:
-      #  <<: *job_template_default
-      #  timeout: 4h
-      #  variables:
-      #    APPCFG: tools/scripts/nsdk_cli/configs/application.json
-      #    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_libncrt.json
-      #    RUNTARGET: qemu
-      #  parallel:
-      #    matrix:
-      #      - STDCLIB:
-      #        - libncrt_small
-      #        - libncrt_fast
-      #        - libncrt_balanced
-      #  script:
-      #    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
-      #    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "STDCLIB=$STDCLIB"
-      #
