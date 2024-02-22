@@ -1,0 +1,74 @@
+## Package Base Information
+name: bsp-nsdk_gd32vf103c_dlink
+owner: nuclei
+description: Nuclei GD32VF103 DLink Board Support Package
+type: bsp
+keywords:
+  - board
+  - risc-v
+  - nuclei
+license: Apache-2.0
+homepage: https://github.com/Nuclei-Software/nuclei-dlink
+
+packinfo:
+  vendor: Nuclei
+  name: Nuclei GD32VF103 DLink Debugger Board
+  doc:
+    website: https://github.com/Nuclei-Software/nuclei-dlink
+
+## Package Dependency
+dependencies:
+  - name: ssp-nsdk_gd32vf103
+    version:
+
+## Package Configurations
+configuration:
+  download_mode:
+    default_value: flashxip
+    type: choice
+    global: true
+    description: Download/Run Mode
+    choices:
+      - name: flashxip
+        description: FLASHXIP download mode, program will to be download into flash and run directly in Flash
+
+## Source Code Management
+codemanage:
+  installdir: gd32vf103c_dlink
+  copyfiles:
+    - path: ["Source/", "Include/", "openocd_gd32vf103.cfg"]
+  incdirs:
+    - path: ["Include/"]
+
+## Set Configuration for other packages
+setconfig:
+
+## Debug Configuration for this board
+debugconfig:
+  - type: openocd
+    description: Nuclei OpenOCD
+    configs:
+      - key: config
+        value: "openocd_gd32vf103.cfg"
+
+  - type: jlink
+    description: Segger Jlink
+    configs:
+       - key: device_name
+         value: GD32VF103CBT6 # if leave empty, it will try riscv_arch conversion, otherwise it will directly using this value
+       - key: riscv_arch
+         value: ${nuclei_core.arch} # arch to device name conversion happened in IDE, eg. rv32imac -> N305
+       - key: interface
+         value: jtag # jtag or cjtag
+       - key: speed
+         value: auto  # auto, adaptive, fixed value(KHz) such as 1000
+
+buildconfig:
+  - type: common
+    linkscript:
+      - script: "Source/GCC/gcc_gd32vf103_${download_mode}.ld"
+    common_flags:
+      - flags:
+    common_defines:
+      - defines: DOWNLOAD_MODE=DOWNLOAD_MODE_$(upper(${download_mode}))
+      - defines: DOWNLOAD_MODE_STRING=\"$(upper(${download_mode}))\"
