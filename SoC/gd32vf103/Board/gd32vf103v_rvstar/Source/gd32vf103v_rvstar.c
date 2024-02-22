@@ -1,10 +1,3 @@
-/*!
- *  \file    gd32vf103c_start.c
- *  \brief   firmware functions to manage leds, keys, COM ports
- *
- *  \version 2020-02-05, V1.0.0, rvstar board functions for GD32VF103
- */
-
 /*
     Copyright (c) 2019, GigaDevice Semiconductor Inc.
 

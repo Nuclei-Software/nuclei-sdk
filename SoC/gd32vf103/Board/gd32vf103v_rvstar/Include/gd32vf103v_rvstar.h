@@ -1,10 +1,3 @@
-/*!
-    \file    gd32vf103c_start.h
-    \brief   definitions for GD32VF103C_START's leds, keys and COM ports hardware resources
-
-    \version 2019-06-05, V1.0.0, demo for GD32VF103
-*/
-
 /*
     Copyright (c) 2019, GigaDevice Semiconductor Inc.
 
@@ -32,8 +25,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef GD32VF103C_RVSTART_H
-#define GD32VF103C_RVSTART_H
+#ifndef GD32VF103V_RVSTAR_H
+#define GD32VF103V_RVSTAR_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -127,5 +120,5 @@ void gd_com_init(uint32_t usart_periph);
 }
 #endif
 
-#endif /* GD32VF103V_RVSTART_H */
+#endif /* GD32VF103V_RVSTAR_H */
 
