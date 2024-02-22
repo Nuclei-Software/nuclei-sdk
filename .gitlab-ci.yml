@@ -149,3 +149,13 @@ sdk_check_npk:
     - echo "Validate and check npk.yml in this folder"
     - python3 tools/scripts/nsdk_cli/check_npk.py -d .
     - echo "npk.yml in this folder all PASS"
+
+# Job used to check all the json or yaml config files in this folder
+sdk_check_configfiles:
+  <<: *job_template_default
+  stage: check
+  script:
+    - echo "Validate and check config files in this folder"
+    - python3 tools/scripts/nsdk_cli/check_cfgfiles.py -d .
+    - echo "config files in this folder all PASS"
+
