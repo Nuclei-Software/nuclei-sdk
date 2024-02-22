@@ -35,7 +35,7 @@
 #endif
 .endm
 
-    .section .vtable
+    .section .text.vtable
 
     .weak  eclic_msip_handler
     .weak  eclic_mtip_handler
@@ -200,7 +200,7 @@ vector_base:
     DECLARE_INT_HANDLER     CAN1_EWMC_IRQHandler
     DECLARE_INT_HANDLER     USBFS_IRQHandler
 
-    .section .init
+    .section .text.init
 
     .globl _start
     .type _start, @function

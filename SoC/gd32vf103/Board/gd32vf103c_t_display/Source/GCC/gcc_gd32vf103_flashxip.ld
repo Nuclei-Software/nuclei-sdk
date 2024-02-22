@@ -67,8 +67,8 @@ SECTIONS
   .init           :
   {
     /* vector table locate at ROM */
-    *(.vtable)
-    KEEP (*(SORT_NONE(.init)))
+    *(.text.vtable)
+    KEEP (*(SORT_NONE(.text.init)))
     . = ALIGN(4);
   } >ROM AT>ROM
 
