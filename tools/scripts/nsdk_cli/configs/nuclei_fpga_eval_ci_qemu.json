@@ -28,7 +28,10 @@
         "application/baremetal/demo_extirq",
         "application/baremetal/demo_irqc",
         "application/baremetal/demo_timer",
-        "application/baremetal/lowpower"
+        "application/baremetal/lowpower",
+        "application/freertos",
+        "application/rtthread",
+        "application/ucosii"
     ],
     "appconfig": {
     },
