@@ -3,10 +3,7 @@
         "target" : "qemu",
         "hardware" : {
             "baudrate": 115200,
-            "timeout": 60
-        },
-        "xlspike" : {
-            "timeout": 120
+            "timeout": 240
         },
         "qemu" : {
             "timeout": 240
@@ -20,109 +17,21 @@
         "ARCH_EXT": ""
     },
     "build_configs": {
-        "n201-ilm": {"DOWNLOAD": "ilm", "CORE": "n201"},
-        "n201-flash": {"DOWNLOAD": "flash", "CORE": "n201"},
-        "n201-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n201"},
-        "n201e-ilm": {"DOWNLOAD": "ilm", "CORE": "n201e"},
-        "n201e-flash": {"DOWNLOAD": "flash", "CORE": "n201e"},
-        "n201e-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n201e"},
-        "n205-ilm": {"DOWNLOAD": "ilm", "CORE": "n205"},
-        "n205-flash": {"DOWNLOAD": "flash", "CORE": "n205"},
-        "n205-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n205"},
-        "n205e-ilm": {"DOWNLOAD": "ilm", "CORE": "n205e"},
-        "n205e-flash": {"DOWNLOAD": "flash", "CORE": "n205e"},
-        "n205e-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n205e"},
-        "n307-ilm": {"DOWNLOAD": "ilm", "CORE": "n307"},
-        "n307-flash": {"DOWNLOAD": "flash", "CORE": "n307"},
-        "n307-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n307"},
-        "n307fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd"},
-        "n307fd-flash": {"DOWNLOAD": "flash", "CORE": "n307fd"},
-        "n307fd-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n307fd"},
-        "nx900-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900"},
-        "nx900-flash": {"DOWNLOAD": "flash", "CORE": "nx900"},
-        "nx900-flashxip": {"DOWNLOAD": "flashxip", "CORE": "nx900"},
-        "nx900-ddr": {"DOWNLOAD": "ddr", "CORE": "nx900"},
-        "nx900f-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f"},
-        "nx900f-flash": {"DOWNLOAD": "flash", "CORE": "nx900f"},
-        "nx900f-flashxip": {"DOWNLOAD": "flashxip", "CORE": "nx900f"},
-        "nx900f-ddr": {"DOWNLOAD": "ddr", "CORE": "nx900f"},
-        "nx900fd-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd"},
-        "nx900fd-flash": {"DOWNLOAD": "flash", "CORE": "nx900fd"},
-        "nx900fd-flashxip": {"DOWNLOAD": "flashxip", "CORE": "nx900fd"},
-        "nx900fd-ddr": {"DOWNLOAD": "ddr", "CORE": "nx900fd"}
-
+        "n100e": {"CORE": "n100e"},
+        "n100em": {"CORE": "n100em"},
+        "n100ezmmul": {"CORE": "n100ezmmul"},
+        "n100": {"CORE": "n100"},
+        "n100m": {"CORE": "n100m"},
+        "n100zmmul": {"CORE": "n100zmmul"}
     },
+    "appdirs_ignore": [
+        "application/baremetal/demo_extirq",
+        "application/baremetal/demo_irqc",
+        "application/baremetal/demo_timer",
+        "application/baremetal/lowpower"
+    ],
     "appconfig": {
-        "application/baremetal/benchmark/dhrystone": {
-            "build_configs" : {
-                "n205-best": {"CORE": "n205", "DHRY_MODE": "best"},
-                "n305-best": {"CORE": "n305", "DHRY_MODE": "best"},
-                "n900f-best": {"CORE": "n900f", "DHRY_MODE": "best"},
-                "n900fd-best": {"CORE": "n900fd", "DHRY_MODE": "best"},
-                "nx900f-best": {"CORE": "nx900f", "DHRY_MODE": "best"},
-                "nx900fd-best": {"CORE": "nx900fd", "DHRY_MODE": "best"}
-            },
-            "checks": {
-                "PASS": ["1000000/(User_Cycle/Number_Of_Runs)", "Please increase number"]
-            }
-        },
-        "application/baremetal/benchmark/coremark": {
-            "build_configs" : {
-                "n205-optimized": {"CORE": "n205", "CPU_SERIES": "200"},
-                "n305-optimized": {"CORE": "n305", "CPU_SERIES": "300"},
-                "n900f-optimized": {"CORE": "n900f", "CPU_SERIES": "900"},
-                "n900fd-optimized": {"CORE": "n900fd", "CPU_SERIES": "900"},
-                "nx900f-optimized": {"CORE": "nx900f", "CPU_SERIES": "900"},
-                "nx900fd-optimized": {"CORE": "nx900fd", "CPU_SERIES": "900"}
-            }
-        },
-        "application/rtthread/msh": {
-            "build_config" : {},
-            "checks": {
-                "PASS": ["msh >", "Hello RT-Thread!"]
-            }
-        },
-        "application/baremetal/demo_dsp": {
-            "build_configs" : {
-                "n305p-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_xxldspn1x"},
-                "n307p-ilm": {"DOWNLOAD": "ilm", "CORE": "n307", "ARCH_EXT": "_xxldspn1x"},
-                "n307fdp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_xxldspn1x"},
-                "n307fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
-                "n900fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900fd", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs_xxldspn1x"},
-                "nx900p-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900", "ARCH_EXT": "_xxldsp"},
-                "nx900fp-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_xxldsp"},
-                "nx900fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f"},
-                "nx900fpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f_xxldsp"},
-                "nx900fdp-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "_xxldsp"},
-                "nx900fdv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v"},
-                "nx900fdpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_xxldsp"},
-                "nx900fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldsp"}
-            },
-            "checks": {
-                "PASS": ["all test are passed"],
-                "FAIL": ["test error apprears", "MEPC"]
-            }
-        }
-    },
-    "expected": {
-        "test/core": {"build": true, "run": true},
-        "application/baremetal/demo_spmp": {"build": true, "run": true},
-        "application/baremetal/demo_smode_eclic": {"build": true, "run": true},
-        "application/baremetal/demo_nice": {"build": true, "run": true},
-        "application/baremetal/demo_cidu": {"build": true, "run": false},
-        "application/baremetal/demo_cache": {"build": true, "run": false}
     },
     "expecteds": {
-        "application/baremetal/demo_dsp" : {
-            "n201-ilm": { "build": false, "run": false },
-            "n201-flash": { "build": false, "run": false },
-            "n201-flashxip": { "build": false, "run": false },
-            "n205e-ilm": { "build": false, "run": false },
-            "n205e-flash": { "build": false, "run": false },
-            "n205e-flashxip": { "build": false, "run": false },
-            "n201e-ilm": { "build": false, "run": false },
-            "n201e-flash": { "build": false, "run": false },
-            "n201e-flashxip": { "build": false, "run": false }
-        }
     }
 }
