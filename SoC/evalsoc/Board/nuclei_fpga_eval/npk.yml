@@ -76,6 +76,23 @@ debugconfig:
        - key: speed
          value: auto  # auto, adaptive, fixed value(KHz) such as 1000
 
+  # qemu support for n100 is not yet ready, just place it here
+  - type: qemu
+    description: Nuclei QEMU
+    configs:
+       - key: nuclei_core
+         value: ${nuclei_core}
+       - key: nuclei_archext
+         value: ${nuclei_archext}
+       - key: download_mode
+         value: ${download_mode}
+       - key: riscv_arch
+         value: ${nuclei_core.arch}
+       - key: riscv_abi
+         value: ${nuclei_core.abi}
+       - key: machine
+         value: nuclei_evalsoc
+
 ## Build Configuration
 buildconfig:
   - type: common

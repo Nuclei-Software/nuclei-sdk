@@ -157,6 +157,11 @@ debugconfig:
     description: Segger Jlink
     svd: evalsoc.svd
 
+  # qemu support for n100 is not yet ready, just place it here
+  - type: qemu
+    description: Nuclei QEMU
+    svd: evalsoc.svd
+
 ## Build Configuration
 buildconfig:
   - type: common
