@@ -159,3 +159,17 @@ sdk_check_configfiles:
     - python3 tools/scripts/nsdk_cli/check_cfgfiles.py -d .
     - echo "config files in this folder all PASS"
 
+run_evalsoc:
+  <<: *job_template_default
+  stage: build
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
+  parallel:
+    matrix:
+      - DOWNLOAD: [ "ilm", "flashxip" ]
+        ARCH_EXT: [ "", "_zca_zcb_zcmp_zcmt" ]
+        STDCLIB: ["newlib_small", "libncrt_small"]
+  script:
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/${STDCLIB}_${DOWNLOAD}${ARCH_EXT}
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "STDCLIB=$STDCLIB DOWNLOAD=$DOWNLOAD ARCH_EXT=${ARCH_EXT}" --run --run_target qemu
