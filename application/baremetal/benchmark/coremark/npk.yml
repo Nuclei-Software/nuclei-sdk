@@ -19,18 +19,12 @@ dependencies:
 ## Package Configurations
 configuration:
   cpu_series:
-    default_value: 300
+    default_value: 100
     type: choice
     description: Select Benchmark Options
     choices:
-      - name: 200
-        description: Options for Nuclei 200 Series
-      - name: 300
-        description: Options for Nuclei 300 Series
-      - name: 600
-        description: Options for Nuclei 600 Series
-      - name: 900
-        description: Options for Nuclei 900 Series
+      - name: 100
+        description: Options for Nuclei 100 Series
 
 ## Set Configuration for other packages
 setconfig:
@@ -63,36 +57,7 @@ buildconfig:
               --param max-average-unrolled-insns=200 --param max-grow-copy-bb-insns=20 --param max-jump-thread-duplication-stmts=25
               --param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
 
-        condition: $( ${cpu_series} == 200 )
-      - flags: >-
-              -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions -falign-functions=4
-              -falign-jumps=4 -falign-loops=4 -finline-limit=200 -fno-if-conversion -fno-if-conversion2 -fipa-pta
-              -fselective-scheduling -fno-tree-loop-distribute-patterns -funroll-loops -funroll-all-loops
-              -fno-delete-null-pointer-checks -fno-rename-registers -mbranch-cost=1 --param fsm-scale-path-stmts=5
-              --param max-average-unrolled-insns=200 --param max-grow-copy-bb-insns=20 --param max-jump-thread-duplication-stmts=25
-              --param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
-
-        condition: $( ${cpu_series} == 300 )
-      - flags: >-
-              -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions
-              -falign-functions=4 -falign-jumps=4 -falign-loops=4 -finline-limit=200  -fno-if-conversion
-              -fno-if-conversion2 -fipa-pta -fselective-scheduling -fno-tree-loop-distribute-patterns
-              -funroll-loops -funroll-all-loops -fno-delete-null-pointer-checks -fno-rename-registers
-              -mbranch-cost=1 --param fsm-scale-path-stmts=5 --param max-average-unrolled-insns=200
-              --param max-grow-copy-bb-insns=16 --param max-jump-thread-duplication-stmts=14
-              --param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
-
-        condition: $( ${cpu_series} == 600 )
-      - flags: >-
-              -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=500
-              -ftree-dominator-opts -fselective-scheduling -funroll-loops -finline-functions -falign-functions=8
-              -falign-jumps=8 -falign-loops=8 -fipa-pta -fno-code-hoisting -fno-common -fno-if-conversion
-              -fno-if-conversion2 -fno-tree-loop-distribute-patterns -fno-tree-vectorize -fno-tree-loop-ivcanon
-              -ftree-vrp -fgcse-las --param=max-loop-header-insns=4 --param loop-max-datarefs-for-datadeps=0
-              --param=unroll-jam-min-percent=0 --param=max-goto-duplication-insns=0
-              --param max-jump-thread-duplication-stmts=9 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
-
-        condition: $( ${cpu_series} == 900 )
+        condition: $( ${cpu_series} == 100 )
   - type: clang
     common_flags: # flags need to be combined together across all packages
       - flags: -O3 -flto
