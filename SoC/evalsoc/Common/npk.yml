@@ -166,7 +166,7 @@ debugconfig:
 buildconfig:
   - type: common
     common_flags: # flags need to be combined together across all packages
-      - flags: -g -fno-common -ffunction-sections -fdata-sections
+      - flags: -g -fno-common -mstrict-align -ffunction-sections -fdata-sections
       - flags: -march=${nuclei_arch} -mabi=${nuclei_core.abi}
       - flags: -mcmodel=${nuclei_core.cmodel}
       - flags: -nostdinc
