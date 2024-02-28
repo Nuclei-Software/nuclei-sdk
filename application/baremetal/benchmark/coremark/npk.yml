@@ -58,6 +58,3 @@ buildconfig:
               --param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
 
         condition: $( ${cpu_series} == 100 )
-  - type: clang
-    common_flags: # flags need to be combined together across all packages
-      - flags: -O3 -flto

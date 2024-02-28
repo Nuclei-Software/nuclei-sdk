@@ -63,17 +63,3 @@ buildconfig:
               -falign-functions=4 -falign-jumps=4 -falign-loops=8 -finline-functions
 
         condition: $( ${dhry_mode} == 'best' )
-  - type: clang
-    common_flags: # flags need to be combined together across all packages
-      - flags: >-
-              -Ofast -flto -fno-inline -fno-builtin-printf -funroll-loops -falign-functions=4 -falign-loops=4
-
-        condition: $( ${dhry_mode} == 'ground' )
-      - flags: >-
-              -Ofast -flto -finline -fno-builtin-printf -funroll-loops -falign-functions=4 -falign-loops=4 -finline-functions
-
-        condition: $( ${dhry_mode} == 'inline' )
-      - flags: >-
-              -O3 -flto -finline -fno-builtin-printf -funroll-loops -falign-functions=4 -falign-loops=4 -finline-functions
-
-        condition: $( ${dhry_mode} == 'best' )

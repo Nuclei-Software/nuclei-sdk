@@ -42,6 +42,3 @@ buildconfig:
   - type: gcc
     common_flags: # flags need to be combined together across all packages
       - flags: -O3 -funroll-loops -fsingle-precision-constant
-  - type: clang
-    common_flags: # flags need to be combined together across all packages
-      - flags: -O3 -funroll-loops -flto
