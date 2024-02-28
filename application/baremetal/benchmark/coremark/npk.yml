@@ -45,7 +45,7 @@ buildconfig:
   - type: common
     cdefines:
       - defines: FLAGS_STR=\""See compiler options passed in IDE"\"
-      - defines: ITERATIONS=800
+      - defines: ITERATIONS=15
       - defines: PERFORMANCE_RUN=1
   - type: gcc
     common_flags: # flags need to be combined together across all packages
