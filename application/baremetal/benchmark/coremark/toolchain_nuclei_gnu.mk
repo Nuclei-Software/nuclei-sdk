@@ -1,6 +1,12 @@
 $(info Using Nuclei $(CPU_SERIES) series optimization compiling flags!)
 
-ifeq ($(CPU_SERIES),900)
+ifeq ($(CPU_SERIES),1000)
+# Benchmark options for 1000
+BENCH_FLAGS ?= -Ofast -Wno-int-to-pointer-cast -mbranch-cost=1 -mstrict-align -funroll-all-loops \
+	-ftree-dominator-opts -fselective-scheduling -finline-functions -falign-functions=12 \
+	-falign-jumps=7 -finline-limit=800  -fno-common -fno-tree-vectorize -fno-tree-loop-ivcanon \
+	-fgcse-las --param=max-loop-header-insns=4 --param max-jump-thread-duplication-stmts=14
+else ifeq ($(CPU_SERIES),900)
 # Benchmark options for 900
 # Change max-jump-thread-duplication-stmts=19 to 9 perform well for n900
 BENCH_FLAGS ?= -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=500 \
