@@ -694,6 +694,7 @@ Currently it has these cores supported as described in table
    ux900     rv64imac   lp64     nuclei-900-series
    ux900f    rv64imafc  lp64f    nuclei-900-series
    ux900fd   rv64imafdc lp64d    nuclei-900-series
+   ux1000fd  rv64imafdc lp64d    nuclei-1000-series
    ========  ========== =======  =================
 
 When **CORE** is selected, the **ARCH**, **ABI** and **TUNE** (optional) are set,
