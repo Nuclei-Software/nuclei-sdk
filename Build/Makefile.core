@@ -48,4 +48,4 @@ SUPPORTED_CORES = n200 n201 n201e n203 n203e n205 \
 		u900 u900f u900fd \
 		nx900 nx900f nx900fd \
 		ux900 ux900f ux900fd \
-		ux1000 ux1000f ux1000fd
+		ux1000fd
