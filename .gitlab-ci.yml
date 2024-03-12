@@ -147,6 +147,22 @@ build_gd32vf103:
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$TOOLCHAIN/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --make_options "TOOLCHAIN=$TOOLCHAIN" --logdir $LOGDIR
 
+build_gd32vw55x:
+  <<: *job_template_default
+  stage: check
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+  parallel:
+    matrix:
+      - HWCFG:
+        - tools/scripts/nsdk_cli/configs/gd32vw55h_eval.json
+        TOOLCHAIN:
+        - "nuclei_gnu"
+        - "nuclei_llvm"
+  script:
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$TOOLCHAIN/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --make_options "TOOLCHAIN=$TOOLCHAIN" --logdir $LOGDIR
+
 build_evalsoc:
   <<: *job_template_default
   stage: check
