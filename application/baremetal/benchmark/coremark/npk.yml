@@ -31,6 +31,8 @@ configuration:
         description: Options for Nuclei 600 Series
       - name: 900
         description: Options for Nuclei 900 Series
+      - name: 1000
+        description: Options for Nuclei 1000 Series
 
 ## Set Configuration for other packages
 setconfig:
@@ -93,6 +95,13 @@ buildconfig:
               --param max-jump-thread-duplication-stmts=9 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
 
         condition: $( ${cpu_series} == 900 )
+      - flags: >-
+               -Ofast -Wno-int-to-pointer-cast -mbranch-cost=1 -mstrict-align -funroll-all-loops
+               -ftree-dominator-opts -fselective-scheduling -finline-functions -falign-functions=12
+               -falign-jumps=7 -finline-limit=800  -fno-common -fno-tree-vectorize -fno-tree-loop-ivcanon
+               -fgcse-las --param=max-loop-header-insns=4 --param max-jump-thread-duplication-stmts=14
+
+        condition: $( ${cpu_series} == 1000 )
   - type: clang
     common_flags: # flags need to be combined together across all packages
       - flags: -O3 -flto
