@@ -48,6 +48,11 @@ HARTID_OFS ?=
 # JTAGSN must be a jtag serial number
 # If not specified, it will not bind serial number
 JTAGSN ?=
+# SPLITMODE is used to create correct jtag chain
+# for NA300/NA900 with split mode enabled
+# 1: means enable 1 hart gdb connection, hartid is controlled by BOOT_HARTID
+# 2: means enable 2 hart gdb connection, will open two gdb ports
+SPLITMODE ?=
 
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
@@ -98,6 +103,10 @@ endif
 # if JTAGSN is not empty, pass it via openocd command
 ifneq ($(JTAGSN),)
 OPENOCD_CMD_ARGS += set JTAGSN $(JTAGSN);
+endif
+# if SPLITMODE is not empty, pass it via openocd command
+ifneq ($(SPLITMODE),)
+OPENOCD_CMD_ARGS += set SPLITMODE $(SPLITMODE);
 endif
 
 # If HARTID_OFS is not empty
