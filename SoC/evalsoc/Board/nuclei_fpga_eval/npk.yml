@@ -123,8 +123,6 @@ buildconfig:
     linkscript:
       - script: "Source/GCC/gcc_evalsoc_${download_mode}.ld"
         condition: $( "x${linker_script}" == "x" )
-      - script: ${linker_script}
-        condition: $( "x${linker_script}" != "x" )
     common_flags:
       - flags:
     common_defines:
