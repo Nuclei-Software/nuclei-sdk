@@ -151,6 +151,7 @@
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
 .weak exc_entry_s
+.type exc_entry_s, @function
 exc_entry_s:
     /* Save the caller saving registers (context) */
     SAVE_CONTEXT
@@ -196,6 +197,7 @@ exc_entry_s:
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
 .weak irq_entry_s
+.type irq_entry_s, @function
 /* This label will be set to STVT2 register */
 irq_entry_s:
     /* Save the caller saving registers (context) */

@@ -272,6 +272,7 @@ _start:
     bne a0, a1, __skip_init
 #endif
 
+.type __init_common, @function
 __init_common:
     /* ===== Startup Stage 3 ===== */
     /*
@@ -337,6 +338,7 @@ _start_premain:
      */
     call __libc_init_array
 
+.type __skip_init, @function
 __skip_init:
     /* Sync all harts at this function */
     call __sync_harts
@@ -384,6 +386,7 @@ __skip_init:
      * this function will be called by each cpu */
     call _postmain_fini
 
+.type __amp_wait, @function
 __amp_wait:
 1:
     wfi

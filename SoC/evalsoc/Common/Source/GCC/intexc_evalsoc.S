@@ -156,6 +156,7 @@
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
 .weak exc_entry
+.type exc_entry, @function
 exc_entry:
     /* Save the caller saving registers (context) */
     SAVE_CONTEXT
@@ -200,6 +201,7 @@ exc_entry:
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
 .weak irq_entry
+.type irq_entry, @function
 /* This label will be set to MTVT2 register */
 irq_entry:
     /* Save the caller saving registers (context) */
@@ -229,6 +231,7 @@ irq_entry:
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
 .weak default_intexc_handler
+.type default_intexc_handler, @function
 Undef_Handler:
 default_intexc_handler:
 1:
