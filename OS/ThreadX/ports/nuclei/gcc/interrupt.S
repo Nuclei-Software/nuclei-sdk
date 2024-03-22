@@ -131,6 +131,7 @@
 .section .text.trap
 /* In CLIC mode, the exeception entry must be 64bytes aligned */
 .align 6
+.type exc_entry, @function
 .global exc_entry
 exc_entry:
     /* Save the caller saving registers (context) */
@@ -174,6 +175,7 @@ exc_entry:
 /* In CLIC mode, the interrupt entry must be 4bytes aligned */
 .align 2
 .global irq_entry
+.type irq_entry, @function
 /* This label will be set to MTVT2 register */
 irq_entry:
     /* Save the caller saving registers (context) */
@@ -201,6 +203,7 @@ irq_entry:
 
 /* Default Handler for Exceptions / Interrupts */
 .global default_intexc_handler
+.type default_intexc_handler, @function
 Undef_Handler:
 default_intexc_handler:
 1:

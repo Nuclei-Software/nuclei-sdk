@@ -172,6 +172,7 @@
 /* In CLIC mode, the exeception entry must be 64bytes aligned */
 .align 6
 .global exc_entry
+.type exc_entry, @function
 exc_entry:
     /* Save the caller saving registers (context) */
     SAVE_CONTEXT
@@ -214,6 +215,7 @@ exc_entry:
 /* In CLIC mode, the interrupt entry must be 4bytes aligned */
 .align 2
 .global irq_entry
+.type irq_entry, @function
 /* This label will be set to MTVT2 register */
 irq_entry:
     /* Save the caller saving registers (context) */
@@ -241,6 +243,7 @@ irq_entry:
 
 /* Default Handler for Exceptions / Interrupts */
 .global default_intexc_handler
+.type default_intexc_handler, @function
 Undef_Handler:
 default_intexc_handler:
 1:
@@ -250,6 +253,7 @@ default_intexc_handler:
     in use in case the FPU was used before the scheduler was started - which
     would otherwise result in the unnecessary leaving of space in the stack
     for lazy saving of FPU registers. */
+.type prvPortStartFirstTask, @function
 .align 3
 prvPortStartFirstTask:
     /* Setup Interrupt Stack using
@@ -307,6 +311,7 @@ prvPortStartFirstTask:
 
 .align 2
 .global eclic_msip_handler
+.type eclic_msip_handler, @function
 eclic_msip_handler:
     addi sp, sp, -portCONTEXT_SIZE
     STORE x1,  1  * REGBYTES(sp)    /* RA */

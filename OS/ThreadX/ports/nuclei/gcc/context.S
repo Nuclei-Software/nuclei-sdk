@@ -24,6 +24,7 @@
     would otherwise result in the unnecessary leaving of space in the stack
     for lazy saving of FPU registers. */
 .align 3
+.type _tx_thread_schedule, @function
 _tx_thread_schedule:
     /* Setup Interrupt Stack using
        The stack that was used by main()
@@ -83,6 +84,7 @@ _tx_thread_schedule:
 
 .align 2
 .global eclic_msip_handler
+.type eclic_msip_handler, @function
 eclic_msip_handler:
     addi sp, sp, -portCONTEXT_SIZE
     STORE x1,  1  * REGBYTES(sp)    /* RA */

@@ -36,6 +36,7 @@
     in use in case the FPU was used before the scheduler was started - which
     would otherwise result in the unnecessary leaving of space in the stack
     for lazy saving of FPU registers. */
+.type rt_hw_context_switch_to, @function
 .align 3
 rt_hw_context_switch_to:
     /* Setup Interrupt Stack using
@@ -92,6 +93,7 @@ rt_hw_context_switch_to:
 
 .align 2
 .global eclic_msip_handler
+.type eclic_msip_handler, @function
 eclic_msip_handler:
     addi sp, sp, -portCONTEXT_SIZE
     STORE x1,  1  * REGBYTES(sp)    /* RA */
