@@ -137,6 +137,7 @@ vector_base:
 
     .option pop
 
+    .size vector_base, . - vector_base
 
     .section .text.init
     .globl _start
@@ -272,6 +273,8 @@ _start:
     bne a0, a1, __skip_init
 #endif
 
+    .size _start, . - _start
+
 .type __init_common, @function
 __init_common:
     /* ===== Startup Stage 3 ===== */
@@ -319,6 +322,8 @@ __init_common:
     bltu a0, a1, 1b
 2:
 
+    .size __init_common, . - __init_common
+
 .globl _start_premain
 .type _start_premain, @function
 _start_premain:
@@ -337,6 +342,8 @@ _start_premain:
      * to do previous call atexit function
      */
     call __libc_init_array
+
+    .size _start_premain, . - _start_premain
 
 .type __skip_init, @function
 __skip_init:
@@ -386,11 +393,15 @@ __skip_init:
      * this function will be called by each cpu */
     call _postmain_fini
 
+    .size __skip_init, . - __skip_init
+
 .type __amp_wait, @function
 __amp_wait:
 1:
     wfi
     j 1b
+
+    .size __amp_wait, . - __amp_wait
 
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
 /*
@@ -419,6 +430,8 @@ smp_main:
     LOAD ra, 0*REGBYTES(sp)
     addi sp, sp, 2*REGBYTES
     ret
+
+    .size smp_main, . - smp_main
 #endif
 
 /* Early boot exception entry before main */
@@ -428,3 +441,5 @@ smp_main:
 early_exc_entry:
     wfi
     j early_exc_entry
+
+    .size early_exc_entry, . - early_exc_entry

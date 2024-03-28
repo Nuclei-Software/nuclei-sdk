@@ -91,6 +91,8 @@ rt_hw_context_switch_to:
 
     mret
 
+    .size rt_hw_context_switch_to, . - rt_hw_context_switch_to
+
 .align 2
 .global eclic_msip_handler
 .type eclic_msip_handler, @function
@@ -188,3 +190,5 @@ eclic_msip_handler:
 
     addi sp, sp, portCONTEXT_SIZE
     mret
+
+    .size eclic_msip_handler, . - eclic_msip_handler

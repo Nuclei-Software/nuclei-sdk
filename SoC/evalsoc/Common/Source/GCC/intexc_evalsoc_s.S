@@ -180,6 +180,7 @@ exc_entry_s:
     /* Return to regular code */
     sret
 
+    .size exc_entry_s, . - exc_entry_s
 
 /**
  * \brief  Non-Vector supervisor mode Interrupt Entry
@@ -222,3 +223,5 @@ irq_entry_s:
 
     /* Return to regular code */
     sret
+
+    .size irq_entry_s, . - irq_entry_s

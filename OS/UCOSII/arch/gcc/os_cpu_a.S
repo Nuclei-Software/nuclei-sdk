@@ -179,6 +179,8 @@ exc_entry:
     /* Return to regular code */
     mret
 
+    .size exc_entry, . - exc_entry
+
 /**
  * \brief  Non-Vector Interrupt Entry
  * \details
@@ -218,12 +220,16 @@ irq_entry:
     /* Return to regular code */
     mret
 
+    .size irq_entry, . - irq_entry
+
 /* Default Handler for Exceptions / Interrupts */
 Undef_Handler:
 .type default_intexc_handler, @function
 default_intexc_handler:
 1:
     j 1b
+
+    .size default_intexc_handler, . - default_intexc_handler
 
 
 /* Start the first task.  This also clears the bit that indicates the FPU is
@@ -285,6 +291,8 @@ prvPortStartFirstTask:
     addi sp, sp, portCONTEXT_SIZE
 
     mret
+
+    .size prvPortStartFirstTask, . - prvPortStartFirstTask
 
 
 .section    .text
@@ -385,4 +393,6 @@ eclic_msip_handler:
 
     addi sp, sp, portCONTEXT_SIZE
     mret
+
+    .size eclic_msip_handler, . - eclic_msip_handler
 

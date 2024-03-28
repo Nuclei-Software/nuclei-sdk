@@ -185,6 +185,8 @@ exc_entry:
     /* Return to regular code */
     mret
 
+    .size exc_entry, . - exc_entry
+
 /**
  * \brief  Non-Vector Interrupt Entry
  * \details
@@ -227,6 +229,8 @@ irq_entry:
     /* Return to regular code */
     mret
 
+    .size irq_entry, . - irq_entry
+
 /* Default Handler for Exceptions / Interrupts */
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
@@ -236,3 +240,5 @@ Undef_Handler:
 default_intexc_handler:
 1:
     j 1b
+
+    .size default_intexc_handler, . - default_intexc_handler

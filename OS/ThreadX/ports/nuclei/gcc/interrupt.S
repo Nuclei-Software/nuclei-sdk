@@ -161,6 +161,8 @@ exc_entry:
     /* Return to regular code */
     mret
 
+    .size exc_entry, . - exc_entry
+
 /**
  * \brief  Non-Vector Interrupt Entry
  * \details
@@ -201,6 +203,8 @@ irq_entry:
     /* Return to regular code */
     mret
 
+    .size irq_entry, . - irq_entry
+
 /* Default Handler for Exceptions / Interrupts */
 .global default_intexc_handler
 .type default_intexc_handler, @function
@@ -208,4 +212,6 @@ Undef_Handler:
 default_intexc_handler:
 1:
     j 1b
+
+    .size default_intexc_handler, . - default_intexc_handler
 
