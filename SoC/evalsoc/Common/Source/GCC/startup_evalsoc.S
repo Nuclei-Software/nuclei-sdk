@@ -208,9 +208,11 @@ _start:
     /*
      * Enable Zc feature when compiled zcmp & zcmt
      */
-#if defined(__riscv_zcmp) || defined(__riscv_zcmt)
     li t0, MMISC_CTL_ZC
+#if defined(__riscv_zcmp) || defined(__riscv_zcmt)
     csrs CSR_MMISC_CTL, t0
+#else
+    csrc CSR_MMISC_CTL, t0
 #endif
 
     /*
