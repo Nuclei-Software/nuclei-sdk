@@ -16,20 +16,20 @@ endif
 ifneq ($(findstring newlib,$(STDCLIB)),)
 ### Handle cases when STDCLIB variable has newlib in it
 ifeq ($(STDCLIB),newlib_full)
-LDLIBS += -lc_size -lclang_rt.builtins
+LDLIBS += -lc -lclang_rt.builtins
 else ifeq ($(STDCLIB),newlib_fast)
-LDLIBS += -lc_nano -lclang_rt.builtins_size
+LDLIBS += -lc_nano -lclang_rt.builtins
 STDCLIB_LDFLAGS += -u _printf_float -u _scanf_float
 else ifeq ($(STDCLIB),newlib_small)
-LDLIBS += -lc_nano -lclang_rt.builtins_size
+LDLIBS += -lc_nano -lclang_rt.builtins
 STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
-LDLIBS += -lc_nano -lclang_rt.builtins_size
+LDLIBS += -lc_nano -lclang_rt.builtins
 # work around for relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references _printf_float when compile with rv64
 # so with this change below, newlib_nano = newlib_small now
 STDCLIB_LDFLAGS += -u _printf_float
 else
-LDLIBS += -lc_nano -lclang_rt.builtins_size
+LDLIBS += -lc_nano -lclang_rt.builtins
 STDCLIB_LDFLAGS += -u _printf_float
 endif
 ###
@@ -47,7 +47,7 @@ else ifeq ($(STDCLIB),nospec)
 COMMON_FLAGS +=
 ###
 else
-LDLIBS += -lc_nano -lclang_rt.builtins_size
+LDLIBS += -lc_nano -lclang_rt.builtins
 STDCLIB_LDFLAGS += -u _printf_float
 ###
 endif
@@ -89,7 +89,7 @@ COMMON_FLAGS += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
 ## Append mtune options when RISCV_TUNE is defined
 ## It might be defined in SoC/<SOC>/build.mk, and can be overwritten by make
 ifneq ($(RISCV_TUNE),)
-COMMON_FLAGS +=
+COMMON_FLAGS += -mtune=$(RISCV_TUNE)
 endif
 
 ifneq ($(findstring newlib,$(STDCLIB)),)
