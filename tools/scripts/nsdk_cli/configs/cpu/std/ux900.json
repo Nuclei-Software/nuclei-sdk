@@ -5,6 +5,7 @@
     "build_configs": {
         "rv64imac": {"CORE":"nx900"},
         "rv64imafc": {"CORE":"nx900f", "ARCH_EXT":""},
-        "rv64imafdc": {"CORE":"nx900fd", "ARCH_EXT":""}
+        "rv64imafdc": {"CORE":"nx900fd", "ARCH_EXT":""},
+        "rv64imafdcb": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"}
     }
 }

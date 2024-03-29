@@ -5,6 +5,7 @@
     "build_configs": {
         "rv32imac": {"CORE":"n900"},
         "rv32imafc": {"CORE":"n900f", "ARCH_EXT":""},
-        "rv32imafdc": {"CORE":"n900fd", "ARCH_EXT":""}
+        "rv32imafdc": {"CORE":"n900fd", "ARCH_EXT":""},
+        "rv32imafdcb": {"CORE":"n900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"}
     }
 }
