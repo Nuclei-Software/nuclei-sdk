@@ -147,7 +147,7 @@
  * ABI defined caller save register and some CSR registers
  * to be saved before enter interrupt handler and be restored before return.
  */
-.section .text.trap
+.section .mexctrap
 .align 6
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
@@ -180,6 +180,8 @@ exc_entry:
     /* Return to regular code */
     mret
 
+.section .text
+.align 6
 /* Default Handler for Exceptions / Interrupts */
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108

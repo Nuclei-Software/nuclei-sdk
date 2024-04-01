@@ -50,13 +50,13 @@ SECTIONS
   {
     __start_of_init = .;
     *(.text.init)
-    /* TODO MUST KEEP .mintvec and .text.trap */
+    /* TODO MUST KEEP .mintvec and .mexctrap */
     /* mtvt readonly, configured by hardware */
     . = __start_of_init + 0x100;
     KEEP (*(.mintvec))
     /* mtvec readonly, configured by hardware */
     . = __start_of_init + 0x180;
-    KEEP (*(.text.trap))
+    KEEP (*(.mexctrap))
     /* normal code section */
     KEEP (*(SORT_NONE(.init)))
     . = ALIGN(4);
