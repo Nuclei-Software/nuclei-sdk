@@ -129,6 +129,12 @@ ifneq ($(findstring zc,$(ARCH_EXT)),)
 COMMON_FLAGS += -fomit-frame-pointer -fno-shrink-wrap-separate
 endif
 
+# TODO Workaround: when v extension is enabled, disable memcpy generated using vector instruction
+# upstream just remove this -mmemcpy-strategy option, will remove it later
+ifneq ($(findstring v,$(ARCH_EXT)),)
+COMMON_FLAGS += -mmemcpy-strategy=scalar
+endif
+
 LDFLAGS += -nodefaultlibs
 # For binutils 2.40 in Nuclei GNU Toolchain, need add below option
 # to remove link warning
