@@ -216,36 +216,15 @@ _start:
 #endif
 
     /*
-     * Intialize ECLIC vector interrupt
-     * base address mtvt to vector_base
-     */
-    la t0, vector_base
-    csrw CSR_MTVT, t0
-
-    /*
-     * Set ECLIC non-vector entry to be controlled
-     * by mtvt2 CSR register.
-     * Intialize ECLIC non-vector interrupt
-     * base address mtvt2 to irq_entry.
-     */
-    la t0, irq_entry
-    csrw CSR_MTVT2, t0
-    csrs CSR_MTVT2, 0x1
-
-    /*
      * Set Exception Entry MTVEC to early_exc_entry
      * Due to settings above, Exception and NMI
      * will share common entry.
      * This early_exc_entry is only used during early
      * boot stage before main
+     * Set default interrupt mode to CLINT interrupt mode
      */
     la t0, early_exc_entry
     csrw CSR_MTVEC, t0
-
-    /* Set the interrupt processing mode to ECLIC mode */
-    li t0, 0x3f
-    csrc CSR_MTVEC, t0
-    csrs CSR_MTVEC, 0x3
 
     /* ===== Startup Stage 2 ===== */
 
@@ -356,26 +335,16 @@ __skip_init:
     /* _premain_init will be called by each cpu
      * please make sure the implementation of __premain_int
      * considered this
+     * it will update mtvec according to eclic present or not
+     * mtvec will set to exc_entry
      */
     call _premain_init
-
-    /*
-     * When all initialization steps done
-     * set exception entry to correct exception
-     * entry and jump to main.
-     * And set the interrupt processing mode to
-     * ECLIC mode
-     */
-    la t0, exc_entry
-    csrw CSR_MTVEC, t0
-    li t0, 0x3f
-    csrc CSR_MTVEC, t0
-    csrs CSR_MTVEC, 0x3
 
     /* BPU cold bringup need time, so enable BPU before enter to main */
     li t0, MMISC_CTL_BPU
     csrs CSR_MMISC_CTL, t0
 
+    // Interrupt is still disabled here
     /* ===== Call SMP Main Function  ===== */
     /* argc = argv = 0 */
     li a0, 0

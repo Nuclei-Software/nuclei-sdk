@@ -68,15 +68,14 @@
  *
  * @{
  */
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
 
-typedef void (*fnptr)(void);
+#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
 
 /* for the following variables, see intexc_evalsoc.S and intexc_evalsoc_s.S */
 /** default entry for s-mode non-vector irq entry */
-extern fnptr irq_entry_s;
+extern void irq_entry_s(void);
 /** default entry for s-mode exception entry */
-extern fnptr exc_entry_s;
+extern void exc_entry_s(void);
 /** default eclic interrupt or exception interrupt handler */
 extern void default_intexc_handler(void);
 
@@ -542,6 +541,9 @@ void SystemBannerPrint(void)
 #endif
 }
 
+extern unsigned long vector_base[];
+extern void irq_entry(void);
+extern void exc_entry(void);
 /**
  * \brief initialize eclic config
  * \details
@@ -551,16 +553,43 @@ void SystemBannerPrint(void)
  */
 void ECLIC_Init(void)
 {
-    /* Global Configuration about MTH and NLBits.
-     * TODO: Please adapt it according to your system requirement.
-     * This function is called in _init function */
-    ECLIC_SetMth(0);
-    ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
+    if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_CLIC) {
+        /* Set ECLIC vector interrupt base address to vector_base */
+        __RV_CSR_WRITE(CSR_MTVT, (unsigned long)vector_base);
+        /* Set ECLIC non-vector entry to irq_entry */
+        __RV_CSR_WRITE(CSR_MTVT2, (unsigned long)irq_entry | 0x1);
+        /* Set as CLIC interrupt mode */
+        __RV_CSR_WRITE(CSR_MTVEC, (unsigned long)exc_entry | 0x3);
+        /* Global Configuration about MTH and NLBits.
+         * TODO: Please adapt it according to your system requirement.
+         * This function is called in _init function */
+        ECLIC_SetMth(0);
+        ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-    /* Global Configuration about STH */
-    ECLIC_SetSth(0);
+        /*
+         * Intialize ECLIC supervisor mode vector interrupt
+         * base address stvt to vector_table_s
+         */
+        __RV_CSR_WRITE(CSR_STVT, (unsigned long)vector_table_s);
+        /*
+         * Set ECLIC supervisor mode non-vector entry to be controlled
+         * by stvt2 CSR register.
+         * Intialize supervisor mode ECLIC non-vector interrupt
+         * base address stvt2 to irq_entry_s.
+        */
+        __RV_CSR_WRITE(CSR_STVT2, (unsigned long)irq_entry_s);
+        __RV_CSR_SET(CSR_STVT2, 0x01);
+        /*
+         * Set supervisor exception entry stvec to exc_entry_s */
+        __RV_CSR_WRITE(CSR_STVEC, (unsigned long)exc_entry_s);
+        /* Global Configuration about STH */
+        ECLIC_SetSth(0);
 #endif
+    } else {
+        /* Set as CLINT interrupt mode */
+        __RV_CSR_WRITE(CSR_MTVEC, (unsigned long)exc_entry);
+    }
 }
 
 /**
@@ -736,30 +765,11 @@ void __sync_harts(void)
 }
 
 /**
- * \brief do the init for trap(interrupt and exception) entry for supervisor mode
+ * \brief do the init for trap
  * \details
- * This function provide initialization of CSR_STVT CSR_STVT2 and CSR_STVEC.
  */
 static void Trap_Init(void)
 {
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-    /*
-     * Intialize ECLIC supervisor mode vector interrupt
-     * base address stvt to vector_table_s
-     */
-    __RV_CSR_WRITE(CSR_STVT, (unsigned long)&vector_table_s);
-    /*
-     * Set ECLIC supervisor mode non-vector entry to be controlled
-     * by stvt2 CSR register.
-     * Intialize supervisor mode ECLIC non-vector interrupt
-     * base address stvt2 to irq_entry_s.
-    */
-    __RV_CSR_WRITE(CSR_STVT2, (unsigned long)&irq_entry_s);
-    __RV_CSR_SET(CSR_STVT2, 0x01);
-    /*
-     * Set supervisor exception entry stvec to exc_entry_s */
-    __RV_CSR_WRITE(CSR_STVEC, (unsigned long)&exc_entry_s);
-#endif
 }
 
 /**
@@ -851,6 +861,9 @@ void _premain_init(void)
             printf("CSR: MCACHE_CTL 0x%x\n", __RV_CSR_READ(CSR_MCACHE_CTL));
         }
 #endif
+    } else {
+        /* ECLIC initialization, mainly MTH and NLBIT */
+        ECLIC_Init();
     }
 }
 
