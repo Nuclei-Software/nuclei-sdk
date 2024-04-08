@@ -280,9 +280,7 @@ run_terapines_zc_evalsoc:
   parallel:
     matrix:
       - HWCFG:
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc_codesize.json
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc.json
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_xxlcz.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_terapines_xxlcz.json
   script:
     - source /home/share/devtools/env.sh
     - activate_swdev
