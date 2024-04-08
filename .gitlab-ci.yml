@@ -262,6 +262,32 @@ run_newlib_nano_zc_evalsoc:
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
 
+# Test zc feature
+run_terapines_zc_evalsoc:
+  inherit:
+    default: false
+  interruptible: true
+  tags:
+    - env::shell
+    - net::outside
+    - host::whss1
+  timeout: 5h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    RUNTARGET: qemu
+    TOOLCHAIN: terapines
+  parallel:
+    matrix:
+      - HWCFG:
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc_codesize.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_zc.json
+        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_xxlcz.json
+  script:
+    - source /home/share/devtools/env.sh
+    - activate_swdev
+    - export LOGDIR=logs/terapines/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET --make_options "TOOLCHAIN=$TOOLCHAIN"
+
 run_libncrt_zc_evalsoc:
   <<: *job_template_default
   timeout: 5h
