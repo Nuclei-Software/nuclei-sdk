@@ -1,0 +1,9 @@
+{
+    "build_config": {
+        "CPU_SERIES": "600"
+    },
+    "build_configs": {
+        "rv64imafcbp": {"CORE":"nx600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
+        "rv64imafdcbp": {"CORE":"nx600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"}
+    }
+}

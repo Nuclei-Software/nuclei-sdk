@@ -1,0 +1,13 @@
+{
+    "build_config": {
+        "CPU_SERIES": "300"
+    },
+    "build_configs": {
+        "rv32imacbp": {"CORE":"n300", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn3x"},
+        "rv32imafcbp": {"CORE":"n300f", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn3x"},
+        "rv32imafdcbp": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn3x"},
+        "rv32imabp_xxlcz": {"CORE":"n300", "ARCH_EXT":"_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz", "NMSIS_LIB_ARCH": "rv32imac_zba_zbb_zbc_zbs_xxldspn3x"},
+        "rv32imafbp_xxlcz": {"CORE":"n300f", "ARCH_EXT":"_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz", "NMSIS_LIB_ARCH": "rv32imafc_zba_zbb_zbc_zbs_xxldspn3x"},
+        "rv32imafdbp_xxlcz": {"CORE":"n300fd", "ARCH_EXT":"_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"}
+    }
+}
