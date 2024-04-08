@@ -27,5 +27,11 @@
         "nuclei_llvm_Os": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Os"},
         "nuclei_llvm_Os_flto": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Os -flto"},
         "nuclei_llvm_Ofast_flto": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Ofast -flto"}
+    },
+    "expecteds": {
+        "application/baremetal/demo_dsp" : {
+            "rv32imafdbp_xxlcz": { "build": false, "run": false },
+            "rv32imafdbpv_xxlcz": { "build": false, "run": false }
+        }
     }
 }
