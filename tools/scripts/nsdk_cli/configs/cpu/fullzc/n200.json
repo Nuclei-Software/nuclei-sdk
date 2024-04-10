@@ -4,6 +4,7 @@
     },
     "build_configs": {
         "rv32emc": {"CORE":"n203e"},
+        "rv32imac": {"CORE":"n203", "ARCH_EXT":""},
         "rv32imacb": {"CORE":"n203", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
         "rv32imab_zc": {"CORE":"n203", "ARCH_EXT":"_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs", "NMSIS_LIB_ARCH": "rv32imac_zba_zbb_zbc_zbs"}
     }
