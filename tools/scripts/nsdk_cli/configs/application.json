@@ -113,6 +113,13 @@
                 "FAIL": ["FAIL", "MEPC"]
             }
         },
+        "application/baremetal/demo_vnice": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["PASS"],
+                "FAIL": ["FAIL", "MEPC"]
+            }
+        },
         "application/baremetal/smphello": {
             "build_config" : {},
             "checks": {
@@ -168,6 +175,12 @@
                 "PASS": [", 0 failed"],
                 "FAIL": ["[FAIL]", "MEPC"]
             }
+        }
+    },
+    "expected": {
+        "application/baremetal/demo_vnice" : {
+            "run": false,
+            "build": true
         }
     }
 }
