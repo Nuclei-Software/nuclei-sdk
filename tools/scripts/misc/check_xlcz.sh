@@ -15,9 +15,13 @@ totaladdibnecnt=0
 echo "app,corecfg,xlczcnt,addibnecnt"
 for ext in _xxlcz _zca_zcb_zcf_zcmp_zcmt_xxlcz ; do
     for appdir in `find . -name Makefile | xargs dirname`; do
-        if [[ "$appdir" == *"demo_dsp"* ]] ; then
-            continue
-        fi
+        skipcases=("demo_dsp" "demo_vnice")
+        for case in "${skipcases[@]}"; do
+            if [[ "$appdir" == *"$case"* ]] ; then
+                # see https://blog.csdn.net/focus_lyh/article/details/112319193
+                continue 2
+            fi
+        done
         for core in n300 n300f nx900 nx900f ; do
             archext=$ext
             if [[ "$core" == *"x"* ]] || [[ ! "$core" == *"f"* ]] ; then
