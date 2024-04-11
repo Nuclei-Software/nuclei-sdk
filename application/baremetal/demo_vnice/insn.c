@@ -60,7 +60,7 @@ void vnice_case(uint32_t *addr_in1, uint32_t *addr_in2, uint32_t vnice_addr, uin
     pin2 = (unsigned char *)addr_in2;
     blkCnt = DATASIZE/4;
 
-    // Testing vnice custom load/store intruction to load or store data to vnice private memory at pvnice
+    // Testing vnice custom load/store intruction to load or store data to vnice private memory at vnice
     // no relation with above code
     for (; (l = __riscv_vsetvl_e32m8(blkCnt)) > 0; blkCnt -= l) {
         vout = __riscv_vle32_v_i32m8((int32_t *)pin1, l);
