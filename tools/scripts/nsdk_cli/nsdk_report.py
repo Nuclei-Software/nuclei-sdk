@@ -66,7 +66,9 @@ def get_expected(config, app, cfg_name):
             app_cfgexpected = dict()
     else:
         app_cfgexpected = dict()
-    app_expected = merge_two_config(app_expected, app_cfgexpected)
+    # if no app expected config found, return per-case app cfg
+    if len(app_expected) == 0:
+        app_expected = app_cfgexpected
     return app_expected
 
 
