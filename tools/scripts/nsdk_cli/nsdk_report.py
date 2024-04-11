@@ -66,9 +66,23 @@ def get_expected(config, app, cfg_name):
             app_cfgexpected = dict()
     else:
         app_cfgexpected = dict()
-    # if no app expected config found, return per-case app cfg
-    if len(app_expected) == 0:
+
+    if found_app_expected and found_app_expecteds and \
+            app == found_app_expected and app == found_app_expecteds:
+        app_expected = merge_two_config(app_expected, app_cfgexpected)
+    elif found_app_expected and app == found_app_expected and len(app_expected) > 0:
+        app_expected = app_expected
+    elif found_app_expecteds and app == found_app_expecteds and len(app_cfgexpected) > 0:
         app_expected = app_cfgexpected
+    else:
+        tmp_app_expected = merge_two_config(app_expected, app_cfgexpected)
+        if len(app_cfgexpected) and len(app_expected):
+            if len(found_app_expecteds) > len(found_app_expected):
+                tmp_app_expected = app_cfgexpected
+            elif len(found_app_expecteds) < len(found_app_expected):
+                tmp_app_expected = app_expected
+        app_expected = tmp_app_expected
+
     return app_expected
 
 
