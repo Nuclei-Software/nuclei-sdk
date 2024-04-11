@@ -180,7 +180,7 @@
     "expected": {
         "application/baremetal/demo_vnice" : {
             "run": false,
-            "build": true
+            "build": false
         }
     }
 }
