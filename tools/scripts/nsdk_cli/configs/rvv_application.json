@@ -1,0 +1,187 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 60
+        },
+        "qemu": {
+            "qemu32": "qemu-system-riscv32",
+            "qemu64": "qemu-system-riscv64",
+            "timeout": 60
+        }
+    },
+    "build_target": "clean all",
+    "build_config": {
+    },
+    "checks": {
+        "PASS": [],
+        "FAIL": ["MEPC"]
+    },
+    "appdirs": [
+        "application/baremetal/demo_dsp",
+        "application/baremetal/demo_vnice"
+    ],
+    "appdirs_ignore": [
+        "application/baremetal/smphello",
+        "application/baremetal/demo_cidu",
+        "application/baremetal/dsp_examples",
+        "application/baremetal/Internal"
+    ],
+    "appconfig": {
+        "application/baremetal/benchmark/dhrystone": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CSV, Dhrystone"]
+            }
+        },
+        "application/baremetal/benchmark/whetstone": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CSV, Whetstone"]
+            }
+        },
+        "application/baremetal/benchmark/coremark": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CSV, CoreMark"]
+            }
+        },
+        "application/baremetal/demo_timer": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["MTimer msip and mtip interrupt test finish and pass"]
+            }
+        },
+        "application/baremetal/helloworld": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["19: Hello World From Nuclei RISC-V Processor!"]
+            }
+        },
+        "application/baremetal/cpuinfo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["End of Nuclei CPU INFO"]
+            }
+        },
+        "application/baremetal/demo_eclic": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["software interrupt hit 5 times"]
+            }
+        },
+        "application/baremetal/demo_smode_eclic": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "[ERROR]__TEE_PRESENT must be defined as 1"]
+            }
+        },
+        "application/baremetal/demo_stack_check": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Stack check demo over"]
+            }
+        },
+        "application/baremetal/demo_spmp": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Won't run here if violates L U\\R\\W\\X permission check!", "[ERROR]__TEE_PRESENT must be defined as 1"]
+            }
+        },
+        "application/baremetal/demo_cache": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!"]
+            }
+        },
+        "application/baremetal/demo_cidu": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[ERROR]__CIDU_PRESENT must be defined as 1 in <Device>.h!", "Core 1 has received interrupt from core 0", "[WARN] SMP & CIDU not present"]
+            }
+        },
+        "application/baremetal/demo_pmp": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Won't run here if violates L R\\W\\X permission check!"]
+            }
+        },
+        "application/baremetal/demo_nice": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["PASS"],
+                "FAIL": ["FAIL", "MEPC"]
+            }
+        },
+        "application/baremetal/demo_vnice": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["PASS"],
+                "FAIL": ["FAIL", "MEPC"]
+            }
+        },
+        "application/baremetal/smphello": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["All harts boot successfully!"]
+            }
+        },
+        "application/baremetal/lowpower": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CSV, WFI Cost,"]
+            }
+        },
+        "application/baremetal/demo_dsp": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["all test are passed"],
+                "FAIL": ["test error apprears", "MEPC"]
+            }
+        },
+        "application/freertos/demo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["timers Callback 3"]
+            }
+        },
+        "application/rtthread/demo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Main thread count: 3"]
+            }
+        },
+        "application/rtthread/msh": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["msh >", "Hello RT-Thread!"]
+            }
+        },
+        "application/ucosii/demo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["task3 is running... 3"]
+            }
+        },
+        "application/threadx/demo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["thread 6_7 is running, current is 7, thread 6 counter 9, thread 7 counter 8"]
+            }
+        },
+        "test/core": {
+            "build_config" : {},
+            "checks": {
+                "PASS": [", 0 failed"],
+                "FAIL": ["[FAIL]", "MEPC"]
+            }
+        }
+    },
+    "expected": {
+        "application/baremetal/demo_vnice" : {
+            "run": false,
+            "build": true
+        }
+    }
+}

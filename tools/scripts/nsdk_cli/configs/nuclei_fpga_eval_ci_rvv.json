@@ -1,0 +1,41 @@
+{
+    "run_config": {
+        "target" : "qemu",
+        "xlspike" : {
+            "timeout": 240
+        },
+        "qemu" : {
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "evalsoc",
+        "BOARD": "nuclei_fpga_eval"
+    },
+    "build_configs": {
+        "n900fdv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900fd", "ARCH_EXT": "_zve32f"},
+        "n900fdbv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900fd", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs"},
+        "n900fdpv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900fd", "ARCH_EXT": "_zve32f_xxldspn1x"},
+        "n900fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900fd", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs_xxldspn1x"},
+        "n900fv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900f", "ARCH_EXT": "_zve32f"},
+        "n900fbv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900f", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs"},
+        "n900fpv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900f", "ARCH_EXT": "_zve32f_xxldspn1x"},
+        "n900fbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900f", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs_xxldspn1x"},
+        "nx900fdv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v"},
+        "nx900fdbv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs"},
+        "nx900fdpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_xxldsp"},
+        "nx900fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldsp"},
+        "nx900fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f"},
+        "nx900fbv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f_zba_zbb_zbc_zbs"},
+        "nx900fpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f_xxldsp"},
+        "nx900fbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f_zba_zbb_zbc_zbs_xxldsp"}
+    },
+    "expected": {
+        "application/baremetal/demo_vnice" : {
+            "run": false,
+            "build": true
+        }
+    }
+}
