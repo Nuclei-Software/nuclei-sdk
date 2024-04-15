@@ -979,7 +979,7 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
 demo_spmp
 ~~~~~~~~~
 
-This `demo_spmp_application`_ is used to demonstrate how to grant physical memory privileges
+This `demo_spmp application`_ is used to demonstrate how to grant physical memory privileges
 (read, write, execute) on each physical memory region by supervisor-mode control CSRs.
 
 .. note::
@@ -1199,12 +1199,94 @@ From disassembly code, SEPC refers to
     Attempting to write protected_data[0]
     Won't run here if violates L U\R\W\X permission check!
 
+.. _design_app_demo_profiling:
+
+demo_profiling
+~~~~~~~~~~~~~~
+
+This `demo_profiling application`_ is used to demonstrate how to use gprof or gcov
+in Nuclei Studio.
+
+This application itself is modified based on an opensource aes application, we add
+gprof and gcov collection code to ``main.c``, it will dump gprof and gcov data in
+console when main part code is executed.
+
+.. note::
+
+    * Introduced in Nuclei SDK 0.5.1, worked with Nuclei Studio >= 2024.02
+    * Using gprof or gcov introduces instrument code into the original program,
+      necessitating additional memory to store the collected data. This results in
+      a slight increase in the program's memory footprint compared to its uninstrumented counterpart.
+    * It cannot be directly used in command line mode, you should use it in Nuclei Studio.
+    * Please check ``README.md`` about gcov and gprof support in https://github.com/Nuclei-Software/nuclei-sdk/tree/master/Components/profiling
+
+Import or download Nuclei SDK 0.5.1 or later release NPK in Nuclei Studio, and then create a
+project called ``demo_profiling`` based on ``app-nsdk_demo_profiling`` using
+``Create Nuclei RISC-V C/C++ Project`` Wizard as below:
+
+.. figure:: /asserts/images/create_demo_profiling_example.png
+   :width: 80 %
+   :align: center
+   :alt: Create demo profiling example
+
+And when example is created, assume you want to profiling the ``application`` folder, since
+it is the core algorithm of this example, then you just need to do the following steps:
+
+- Right click on the ``application`` folder, and click ``Properities``, and add extra options
+  in ``C/C++ Build`` -> ``Settings`` -> ``GNU RISC-V Cross C Compiler`` -> ``Miscellaneous`` -> ``Other compiler flags``.
+  - If you want to do gprof, you need to add ``-pg`` option.
+  - If you want to do gcov, you need to add ``-coverage`` option.
+- Open ``main.c``, and find ``TODO`` item, and comment ``gprof_collect(2);`` or ``gcov_collect(2);`` based on
+  gprof or gcov you want to collect.
+- If you want to collect gprof data, you also need to modify ``nuclei_sdk/Components/profiling/gprof_stub.c``,
+  if you code already has a 1ms period timer interrupt, you should copy code in ``eclic_mtip_handler`` to do
+  executing sampling, otherwise you can uncomment ``#define SAMPLE_USING_SYSTIMER``
+
+Here I want to collect both gprof and gcov, so I modify it like below:
+
+.. figure:: /asserts/images/add_profiling_options_in_nuclei_studio.png
+   :width: 80 %
+   :align: center
+   :alt: Add profiling options in Nuclei Studio
+
+.. figure:: /asserts/images/modify_profiling_example_code.png
+   :width: 80 %
+   :align: center
+   :alt: Modify profiling example code
+
+And then compile this example code, and run it using hardware or qemu, qemu is just function model,
+so it didn't provide correct timing information.
+
+When program runs, it will dump gprof and gcov data in console, and you can copy all the output as
+a file called ``prof.log``, and use ``gprof_parse.py`` to parse the data, and generate a
+gcov and gprof binary files.
+
+.. figure:: /asserts/images/parse_profiling_log.png
+   :width: 80 %
+   :align: center
+   :alt: Parse profiling log and generate gcda and gmon.out files
+
+Then you can double click ``gmon.out`` and ``aes.gcda`` to check the gprof and gcov view in Nuclei Studio
+like below:
+
+.. figure:: /asserts/images/gprof_gcov_view_in_nuclei_studio.png
+   :width: 80 %
+   :align: center
+   :alt: Gprof and gcov view in Nuclei Studio
+
+About GProf view, please click https://help.eclipse.org/latest/topic/org.eclipse.linuxtools.gprof.docs/Linux_Tools_Project/GProf/User_Guide/GProf-View.html
+to learn more.
+
+About Gcov view, please click https://help.eclipse.org/latest/topic/org.eclipse.linuxtools.gcov.docs/Linux_Tools_Project/GCov/User_Guide/Gcov-main-view.html
+to learn more.
+
+
 .. _design_app_demo_pmp:
 
 demo_pmp
 ~~~~~~~~
 
-This `demo_pmp_application`_ is used to demonstrate how to grant physical memory privileges
+This `demo_pmp application`_ is used to demonstrate how to grant physical memory privileges
 (read, write, execute) on each physical memory region by machine mode control CSRs.
 
 .. note::
@@ -1342,11 +1424,11 @@ From disassembly code, MEPC refers to
 demo_cidu
 ~~~~~~~~~
 
-This `demo_cidu_application`_ is used to demonstrate External Interrupt Distribution
+This `demo_cidu application`_ is used to demonstrate External Interrupt Distribution
 (external interrupt broadcast/first come first claim), Inter Core interrupt and Semaphore
 of Cluster Interrupt Distribution Unit (CIDU).
 
-This demo requests the SMP cores share the same RAM and ROM, for example, in current 
+This demo requests the SMP cores share the same RAM and ROM, for example, in current
 evalsoc/demosoc system, ilm/dlm are private resource for cpu, only the DDR memory are shared resource
 for all the cpu.
 
@@ -1358,7 +1440,7 @@ for all the cpu.
     * Need to enable CIDU in <Device.h> if CIDU present in cluster.
     * Multicore SoC is needed.
 
-* ``UART0`` receive is used as external interrupt, registered as ``eclic_uart0_int_handler``, which is the best choice 
+* ``UART0`` receive is used as external interrupt, registered as ``eclic_uart0_int_handler``, which is the best choice
   for evalsoc/demosoc and is easy to trigger by writing the serial terminal
 * ``UART0`` receive interrupt can be broadcast to all the cores or some, and also first coming first claim
   mode will ensure only the first responding core handle the interrupt service routine(ISR)
@@ -1445,7 +1527,7 @@ both core 0 and core 2.
     Core 3 enters uart0_receive_handler
     Core 3 wants to process rx input
 
-From output, though setting interrupt broadcasted to all(all the core enters the ISR), while only one core (the first one) 
+From output, though setting interrupt broadcasted to all(all the core enters the ISR), while only one core (the first one)
 can claim the the interrupt(first come first claim) then process the uart0 input, others quit when find interrupt has been claimed.
 
 
@@ -1513,7 +1595,7 @@ demo_cache
     * It doesn't work with gd32vf103 processor.
     * It need Nuclei CPU configured with CCM feature
 
-This `demo_cache_application`_ is used to demonstrate how to understand cache mechanism.
+This `demo_cache application`_ is used to demonstrate how to understand cache mechanism.
 
 This demo requests DCache, ICache and CCM(Cache Control and Maintenance), and needs to run in ddr memory,
 because cache will bypass when run in ilm, data in dlm(private resource for cpu).
@@ -1523,7 +1605,7 @@ because cache will bypass when run in ilm, data in dlm(private resource for cpu)
 
 * An arrary( ``ROW_SIZE`` * ``COL_SIZE`` ) called ``array_test`` is created to access its first element ``array_test[0][0]``
 * Firstly, enable and invalidate all DCache, update ``array_test`` by writing a consant, the cache miss happens and will update ``array_test``'s
-  mapping value in DCache, read out ``array_test[0][0]``; then disable the Dcache, init array_test in the ddr memory to different constant, 
+  mapping value in DCache, read out ``array_test[0][0]``; then disable the Dcache, init array_test in the ddr memory to different constant,
   read out ``array_test[0][0]``; after that, enable the DCache flushes DCache to ddr memory, read out ``array_test[0][0]``, and compare these ``array_test[0][0]`` value
 * Again disable the Dcache, init array_test in the ddr memory, read out ``array_test[0][0]``; then enable the DCache, read out ``array_test[0][0]``,
   and compare with the one before
@@ -1630,7 +1712,7 @@ again**, ``array_test`` now (all 0x34) differs with cached array_test (all 0xab)
 From output, ``HPM`` is enabled, cache miss is counted and ``array_test`` size is 10 * 64 bytes.
 **At first, DCache is invalid**, the first time ``array_test`` update by row has 10 miss(HPM4 shows 13,
 because HPM itself brings in 3 miss); **Keep DCache valid**, update array_test by row again, cache miss
-decreases to 2(``HPM`` itself brings in), which means ``array_test`` has already cached; 
+decreases to 2(``HPM`` itself brings in), which means ``array_test`` has already cached;
 **Then invalidate all the Dcache**, array_test update by col seems has the same cache miss as update by row.
 
 
@@ -1685,7 +1767,7 @@ demo_stack_check
     * It doesn't work with gd32vf103 processor.
     * It need Nuclei CPU configured with stack check feature
 
-This `demo_stack_check_application`_ is used to demonstrate how to check stack overflow and underflow and track the ``sp``.
+This `demo_stack_check application`_ is used to demonstrate how to check stack overflow and underflow and track the ``sp``.
 
 For now, this demo needs to run on **only 300 Series v4.2.0 or later**, which supports this ``Stack Check`` function.
 
@@ -2067,9 +2149,10 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
 .. _rt-thread demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo
 .. _rt-thread msh application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/msh
 .. _demo_smode_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_eclic
-.. _demo_spmp_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_spmp
-.. _demo_pmp_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pmp
-.. _demo_cidu_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cidu
-.. _demo_cache_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cache
-.. _demo_stack_check_application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_stack_check
+.. _demo_spmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_spmp
+.. _demo_pmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pmp
+.. _demo_profiling application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_profiling
+.. _demo_cidu application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cidu
+.. _demo_cache application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cache
+.. _demo_stack_check application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_stack_check
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html
