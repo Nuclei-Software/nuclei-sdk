@@ -1,0 +1,31 @@
+## Package Base Information
+name: mwp-nsdk_profiling
+owner: nuclei
+description: Profiling Library for gprof and gcov
+type: mwp
+keywords:
+  - library
+  - gcov
+  - gprof
+  - profiling
+license: opensource
+homepage: https://gcc.gnu.org/onlinedocs/gcc/gcov/introduction-to-gcov.html
+
+packinfo:
+  name: Profiling Library and stub functions for gprof and gcov
+  doc:
+    website: https://gcc.gnu.org/onlinedocs/gcc/gcov/introduction-to-gcov.html
+    extra:
+      - uri: https://gcc.gnu.org/onlinedocs/gcc/Gcov.html
+        description: gcov introduction
+      - uri: https://sourceware.org/binutils/docs/gprof/index.html
+        description: gprof introduction
+
+## Source Code Management
+codemanage:
+  installdir: profiling
+  copyfiles:
+    - path: ["./"]
+  incdirs:
+    - path: ["./"]
+
