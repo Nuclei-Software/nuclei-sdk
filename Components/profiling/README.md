@@ -46,6 +46,12 @@ technology.
 - `parse.py`: a python script use to parse gcov and gprof dump log file, and generate gcov or gprof binary files.
   To run this script, need python3 installed in your host pc.
 
+- `dump_gcov.gdb`: gdb script to dump coverage data when you execute `gcov_collect(0);` in your application code.
+
+- `dump_gprof.gdb`: gdb script to dump profiling data when you execute `gprof_collect(0);` in your application code.
+
+You can execute above gdb script in Debug Console like this `source /path/to/dump_gcov.gdb`.
+
 ## How to use
 
 Add this `profiling` folder into your project, and do steps below:
