@@ -25,7 +25,7 @@ packinfo:
 codemanage:
   installdir: profiling
   copyfiles:
-    - path: ["./"]
+    - path: ["*.c", "*.h", "README.md", "*.py"]
   incdirs:
     - path: ["./"]
 
