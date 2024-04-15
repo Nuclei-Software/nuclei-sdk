@@ -1,10 +1,10 @@
 #include "nuclei_sdk_soc.h"
 #include "gprof_api.h"
 
-// uncomment below if you are using RTOS
+// TODO uncomment below if you are using RTOS
 //#define USING_RTOS
 
-// uncomment below if you want to use systimer interrupt as period sample interrupt
+// TODO uncomment below if you want to use systimer interrupt as period sample interrupt
 // or you can add gprof_sample(pc) in your own period timer interrupt function
 //#define SAMPLE_USING_SYSTIMER
 

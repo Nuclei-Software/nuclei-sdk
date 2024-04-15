@@ -1,7 +1,28 @@
 # Profiling For RISC-V
 
-Profiling technology such as gprof and gcov is useful to help improve find bottom-neck of source
-code and not covered code.
+Profiling and coverage analysis tools like gprof and gcov play a vital role in identifying performance bottlenecks
+and untested regions within source code, ultimately leading to improved software efficiency and quality. 
+
+Gprof (GNU Profiler) instruments the compiled binary, adding code to track the entry and exit of each function and record timestamps.
+This enables it to measure the exact execution time of each function, distinguishing between self-time (time spent within the function itself) and inclusive time (time spent in the function and its callees).
+Additionally, Gprof constructs a call graph based on function call frequencies, visualizing the hierarchical structure of function interactions.
+
+Gprof is primarily used for performance analysis and optimization. By providing detailed timing data and a call graph, it helps developers:
+
+- Locate performance bottlenecks: Identifying functions that consume excessive time or have inefficient implementations.
+- Understand program flow: Revealing the relationships between functions and their call frequencies within the program.
+- Guide optimization efforts: Offering precise timing information to target specific functions or call patterns for improvement.
+Gcov (GNU Coverage Analyzer)
+
+Gcov instruments the compiled code to monitor which lines and branches are executed during testing. It records the number of times each line is executed and tracks the coverage of conditional branches, ensuring comprehensive coverage assessment.
+
+Gcov serves as a code coverage analysis tool, primarily used for evaluating test suite thoroughness and enhancing software quality. It helps developers:
+
+- Measure test coverage: Quantifying the percentage of code exercised during testing, including line and branch coverage.
+- Identify untested or under-tested code: Generating annotated source code files that highlight covered and uncovered lines and branches, enabling targeted improvement of the test suite.
+- Promote comprehensive testing: Encouraging thorough testing practices and the development of a robust test suite by pinpointing areas needing additional coverage.
+
+For more details, refer to the following links:
 
 - gprof: https://sourceware.org/binutils/docs/gprof/index.html
 - gcov: https://gcc.gnu.org/onlinedocs/gcc/gcov/introduction-to-gcov.html
@@ -22,7 +43,8 @@ technology.
    - and you should also set correct `PROGRAM_LOWPC` and `PROGRAM_HIGHPC`
    defined in `gprof_api.h`
 
-- `parse.py`: a script use to parse gcov and gprof dump log file, and generate gcov or gprof binary files.
+- `parse.py`: a python script use to parse gcov and gprof dump log file, and generate gcov or gprof binary files.
+  To run this script, need python3 installed in your host pc.
 
 ## How to use
 
