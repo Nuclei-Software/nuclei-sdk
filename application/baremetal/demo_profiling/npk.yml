@@ -1,0 +1,50 @@
+## Package Base Information
+name: app-nsdk_demo_profiling
+owner: nuclei
+version:
+description: Profiling demo to show how to use gprof and gcov
+type: app
+keywords:
+  - baremetal
+  - get started
+  - profiling
+  - gcov
+  - gprof
+category: baremetal application
+license:
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+  - name: mwp-nsdk_profiling
+    version:
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    value: -O0
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+  - config: download_mode
+    value: sram
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
