@@ -774,6 +774,7 @@ void _premain_init(void)
 {
     // TODO to make it possible for configurable boot hartid
     unsigned long hartid = __get_hart_id();
+    unsigned long mcfginfo = __RV_CSR_READ(CSR_MCFG_INFO);
 
     // BOOT_HARTID is defined <Device.h>
     if (hartid == BOOT_HARTID) { // only done in boot hart
@@ -786,13 +787,13 @@ void _premain_init(void)
 #ifdef RUNMODE_CONTROL
 #if defined(RUNMODE_ILM_EN) && RUNMODE_ILM_EN == 0
     // Only disable ilm when it is present
-    if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_ILM) {
+    if (mcfginfo & MCFG_INFO_ILM) {
         __RV_CSR_CLEAR(CSR_MILM_CTL, MILM_CTL_ILM_EN);
     }
 #endif
 #if defined(RUNMODE_DLM_EN) && RUNMODE_DLM_EN == 0
     // Only disable dlm when it is present
-    if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_DLM) {
+    if (mcfginfo & MCFG_INFO_DLM) {
         __RV_CSR_CLEAR(CSR_MDLM_CTL, MDLM_CTL_DLM_EN);
     }
 #endif
@@ -834,9 +835,15 @@ void _premain_init(void)
         printf("Current RUNMODE=%s, ilm:%d, dlm %d, icache %d, dcache %d, ccm %d\n", \
             RUNMODE_STRING, RUNMODE_ILM_EN, RUNMODE_DLM_EN, \
             RUNMODE_IC_EN, RUNMODE_DC_EN, RUNMODE_CCM_EN);
-        printf("CSR: MILM_CTL 0x%x, MDLM_CTL 0x%x, MCACHE_CTL 0x%x\n", \
-            __RV_CSR_READ(CSR_MILM_CTL), __RV_CSR_READ(CSR_MDLM_CTL), \
-            __RV_CSR_READ(CSR_MCACHE_CTL));
+        // ILM and DLM need to be present
+        if (mcfginfo & 0x180 == 0x180) {
+            printf("CSR: MILM_CTL 0x%x, MDLM_CTL 0x%x\n", \
+                __RV_CSR_READ(CSR_MILM_CTL), __RV_CSR_READ(CSR_MDLM_CTL));
+        }
+        // I/D cache need to be present
+        if (mcfginfo & 0x600) {
+            printf("CSR: MCACHE_CTL 0x%x\n", __RV_CSR_READ(CSR_MCACHE_CTL));
+        }
 #endif
     }
 }
