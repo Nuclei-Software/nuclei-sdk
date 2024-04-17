@@ -52,10 +52,13 @@
         <path>$WS_DIR$\rtos\rtthread_msh.ewp</path>
     </project>
     <project>
-        <path>$WS_DIR$\baremetal\smphello.ewp</path>
+        <path>$WS_DIR$\rtos\threadx_demo.ewp</path>
     </project>
     <project>
         <path>$WS_DIR$\rtos\ucosii_demo.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\baremetal\smphello.ewp</path>
     </project>
     <project>
         <path>$WS_DIR$\baremetal\whetstone.ewp</path>
