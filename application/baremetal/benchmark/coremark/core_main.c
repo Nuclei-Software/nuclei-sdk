@@ -403,6 +403,11 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
 
     float coremark_dmips = ((uint64_t)results[0].iterations * 1000000) / (float)total_time;
 
+    if ((total_time >> 32) & 0xFFFFFFFF) {
+        printf("WARNING: Total ticks higher 32bit has value, please take care, higher 32bit 0x%x, lower 32bit 0x%x\n", \
+                (unsigned int)(total_time >> 32), (unsigned int)total_time);
+    }
+
 #if HAS_FLOAT
     ee_printf("\n");
     ee_printf("\n");
