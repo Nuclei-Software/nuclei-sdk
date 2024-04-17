@@ -174,22 +174,28 @@ extern void early_exc_entry(void);
 extern void IAR_DATA_INIT(void);
 extern void __sync_harts(void);
 extern int main(void);
+extern void exit(int arg);
 
 // TODO: for smp you can override this smp_main as your multicore main function entry
 __weak int smp_main(void)
 {
     unsigned long hartid = __get_hart_id();
+    int ret = 0;
 
     if (hartid == BOOT_HARTID) {
 #ifdef RTOS_RTTHREAD
-    /* Directly jump to rtthread startup process, no longer return */
+        /* Directly jump to rtthread startup process, no longer return */
         extern int rtthread_startup(void);
-        ret = rtthread_startup();
+        rtthread_startup();
 #else
-        return main();
+        ret = main();
+        exit(ret);
+        while(1);
 #endif
     } else {
-        __WFI();
+        while(1) {
+            __WFI();
+        }
     }
     return 0;
 }
