@@ -172,10 +172,34 @@ extern void early_exc_entry(void);
 #endif
 
 extern void IAR_DATA_INIT(void);
+extern void __sync_harts(void);
+extern int main(void);
+
+// TODO: for smp you can override this smp_main as your multicore main function entry
+__weak int smp_main(void)
+{
+    unsigned long hartid = __get_hart_id();
+
+    if (hartid == BOOT_HARTID) {
+#ifdef RTOS_RTTHREAD
+    /* Directly jump to rtthread startup process, no longer return */
+        extern int rtthread_startup(void);
+        ret = rtthread_startup();
+#else
+        return main();
+#endif
+    } else {
+        __WFI();
+    }
+    return 0;
+}
 
 // TODO: Currently only single core is supported
 int __low_level_init(void)
 {
+    unsigned long hartid = __get_hart_id();
+    long ret = 0;
+
     __disable_interrupt();
 
     /* Set the the NMI base to share with mtvec by setting CSR_MMISC_CTL */
@@ -219,8 +243,13 @@ int __low_level_init(void)
     /* Enable mcycle and minstret counter */
     __RV_CSR_CLEAR(CSR_MCOUNTINHIBIT, 0x5);
 
-    /* Call IAR Internal data initial function */
-    IAR_DATA_INIT();
+    /* Call IAR Internal data initial function for only boot hart */
+    if (hartid == BOOT_HARTID) {
+        IAR_DATA_INIT();
+    }
+
+    /* Sync multiple harts */
+    __sync_harts();
 
     /*
      * You can place it before calling IAR_DATA_INIT
@@ -239,11 +268,7 @@ int __low_level_init(void)
     prepare_ram_vector();
 #endif
 
-#ifdef RTOS_RTTHREAD
-    /* Directly jump to rtthread startup process, no longer return */
-    extern int rtthread_startup(void);
-    rtthread_startup();
-#endif
+    ret = smp_main();
 
     /* No need to call it again, since it is initialized */
     return 0;
