@@ -114,8 +114,10 @@ dasm: $(TARGET_ELF)
 	-$(OBJDUMP) -S -d -M no-aliases $< > $(TARGET).dump
 	-$(OBJDUMP) -d -M no-aliases $< > $(TARGET).dasm
 	-$(OBJCOPY) $< -O ihex $(TARGET).hex
+ifeq ($(TOOLCHAIN),nuclei_gnu)
 	-$(OBJCOPY) $< -O srec $(TARGET).srec
 	-$(OBJCOPY) $< -O verilog $(TARGET).verilog
+endif
 
 bin: $(TARGET_ELF)
 	$(OBJCOPY) $< -O binary $(TARGET).bin
