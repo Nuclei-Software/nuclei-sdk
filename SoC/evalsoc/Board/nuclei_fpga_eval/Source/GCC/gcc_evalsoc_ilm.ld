@@ -126,6 +126,13 @@ SECTIONS
     *(.rdata)
     *(.rodata .rodata.*)
     *(.gnu.linkonce.r.*)
+    /* Fix undefined symbol: __eh_frame_start/__eh_frame_hdr_start/__eh_frame_end/__eh_frame_hdr_end */
+    PROVIDE_HIDDEN (__eh_frame_hdr_start = .);
+    *(.eh_frame_hdr)
+    PROVIDE_HIDDEN (__eh_frame_hdr_end = .);
+    PROVIDE_HIDDEN (__eh_frame_start = .);
+    *(.eh_frame)
+    PROVIDE_HIDDEN (__eh_frame_end = .);
     /* below sections are used for rt-thread */
     . = ALIGN(8);
     __rt_init_start = .;

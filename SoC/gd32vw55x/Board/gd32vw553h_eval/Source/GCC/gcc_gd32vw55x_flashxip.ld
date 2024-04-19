@@ -169,6 +169,13 @@ SECTIONS
     PROVIDE( __global_pointer$ = . + 0x800 );
     *(.sdata .sdata.* .sdata*)
     *(.gnu.linkonce.s.*)
+    /* Fix undefined symbol: __eh_frame_start/__eh_frame_hdr_start/__eh_frame_end/__eh_frame_hdr_end */
+    PROVIDE_HIDDEN (__eh_frame_hdr_start = .);
+    *(.eh_frame_hdr)
+    PROVIDE_HIDDEN (__eh_frame_hdr_end = .);
+    PROVIDE_HIDDEN (__eh_frame_start = .);
+    *(.eh_frame)
+    PROVIDE_HIDDEN (__eh_frame_end = .);
     . = ALIGN(8);
   } >RAM AT>ROM
 
