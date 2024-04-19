@@ -799,6 +799,12 @@ void _premain_init(void)
 #endif
 #endif
 
+#if defined(RUNMODE_LDSPEC_EN) && (RUNMODE_LDSPEC_EN == 1)
+    __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_LDSPEC_ENABLE);
+#else
+    __RV_CSR_CLEAR(CSR_MMISC_CTL, MMISC_CTL_LDSPEC_ENABLE);
+#endif
+
     /* __ICACHE_PRESENT and __DCACHE_PRESENT are defined in demosoc.h */
     // For our internal cpu testing, they want to set demosoc __ICACHE_PRESENT/__DCACHE_PRESENT to be 1
     // __CCM_PRESENT is still default to 0 in demosoc.h, since it is used in core_feature_eclic.h to register interrupt, if set to 1, it might cause exception
