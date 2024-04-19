@@ -65,7 +65,7 @@ endif
 endif
 
 ## Link with standard c++ library
-LDLIBS += -lc++
+LDLIBS += -lc++ -lunwind
 
 ## Heap and stack size settings
 ## It will define symbols only used in linker script
