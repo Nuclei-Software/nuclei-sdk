@@ -1,0 +1,11 @@
+{
+    "matrix": {
+        "newlib_small": {"STDCLIB": "newlib_small"}
+    },
+    "expected": {
+        "application/baremetal/demo_nice": {"build": true, "run": false},
+        "application/baremetal/demo_cidu": {"build": true, "run": false},
+        "application/baremetal/demo_cache": {"build": true, "run": false},
+        "test/core": {"build": false, "run": false}
+    }
+}
