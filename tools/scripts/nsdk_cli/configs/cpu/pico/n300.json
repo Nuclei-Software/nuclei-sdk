@@ -3,6 +3,7 @@
         "CPU_SERIES": "300"
     },
     "build_configs": {
-        "rv32imafdcb": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"}
+        "rv32imafdcb": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imafdcb_zicond": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond", "NMSIS_LIB_ARCH": "rv32imafdc_zba_zbb_zbc_zbs"}
     }
 }

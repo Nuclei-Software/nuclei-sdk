@@ -6,6 +6,7 @@
         "rv64imac": {"CORE":"nx900"},
         "rv64imafc": {"CORE":"nx900f", "ARCH_EXT":""},
         "rv64imafdc": {"CORE":"nx900fd", "ARCH_EXT":""},
-        "rv64imafdcb": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"}
+        "rv64imafdcb": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv64imafdcb_zicond": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond", "NMSIS_LIB_ARCH": "rv64imafdc_zba_zbb_zbc_zbs"}
     }
 }

@@ -6,6 +6,7 @@
         "rv32imac": {"CORE":"n300"},
         "rv32imafc": {"CORE":"n300f", "ARCH_EXT":""},
         "rv32imafdc": {"CORE":"n300fd", "ARCH_EXT":""},
-        "rv32imafdcb": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"}
+        "rv32imafdcb": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imafdcb_zicond": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond", "NMSIS_LIB_ARCH": "rv32imafdc_zba_zbb_zbc_zbs"}
     }
 }
