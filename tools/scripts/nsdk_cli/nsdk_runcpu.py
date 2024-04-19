@@ -148,7 +148,8 @@ def gen_runner_configs(casedir, caseconfig, genloc):
     if "core" not in caseconfig:
         print("No core is specified, please check!")
         return False
-    core = caseconfig["core"]
+    # for ux1000_3w like, _3w should be stripped
+    core = caseconfig["core"].split('_')[0]
     ocdcfg = caseconfig.get("ocdcfg", "SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg")
     defbldcfg = dict()
     try:
