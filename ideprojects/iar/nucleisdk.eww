@@ -10,6 +10,9 @@
         <path>$WS_DIR$\baremetal\demo_cache.ewp</path>
     </project>
     <project>
+        <path>$WS_DIR$\baremetal\demo_cidu.ewp</path>
+    </project>
+    <project>
         <path>$WS_DIR$\baremetal\demo_dsp.ewp</path>
     </project>
     <project>
