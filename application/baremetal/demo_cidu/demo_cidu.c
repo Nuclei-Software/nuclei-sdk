@@ -108,10 +108,10 @@ int other_harts_main(unsigned long hartid)
 {
     /* Register uart0 interrupt receive message handler */
     ECLIC_Register_IRQ(UART0_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
-                        ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, eclic_uart0_int_handler);
+                        ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, (void*)eclic_uart0_int_handler);
     /* Register inter core interrupt handler */
     ECLIC_Register_IRQ(InterCore_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
-                        ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, eclic_inter_core_int_handler);
+                        ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, (void*)eclic_inter_core_int_handler);
 
     // Enable interrupts in general.
     __enable_irq();
@@ -139,10 +139,10 @@ int main(void)
 
         /* Register uart0 interrupt receive message handler */
         ECLIC_Register_IRQ(UART0_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
-                            ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, eclic_uart0_int_handler);
+                            ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, (void*)eclic_uart0_int_handler);
         /* Register inter core interrupt handler */
         ECLIC_Register_IRQ(InterCore_IRQn, ECLIC_NON_VECTOR_INTERRUPT,
-                            ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, eclic_inter_core_int_handler);
+                            ECLIC_LEVEL_TRIGGER, INTLEVEL, INTPRIORITY, (void*)eclic_inter_core_int_handler);
 
         // Enable interrupts in general.
         __enable_irq();
