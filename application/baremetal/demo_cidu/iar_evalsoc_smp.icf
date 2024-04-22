@@ -1,0 +1,46 @@
+//////////////////////////////////////////////////////////////////////
+// RISC-V ilink configuration file
+// for the Nuclei Evaluation SoC DDR Linker File
+//
+
+define exported symbol _link_file_version_2 = 1;
+define exported symbol _max_vector = 4096;
+
+define memory mem with size = 4G;
+
+define region ROM_region32 = mem:[from 0xA0000000 to 0xA1FFFFFF];
+define region RAM_region32 = mem:[from 0xA2000000 to 0xA3FFFFFF];
+
+initialize by copy { rw };
+do not initialize  { section *.noinit };
+keep symbol __iar_cstart_init_gp; // defined in cstartup.s
+
+define block CSTACK with alignment = 16, size = CSTACK_SIZE { };
+define block CSTACK1 with alignment = 16, size = CSTACK_SIZE { };
+define block HEAP   with alignment = 16, size = HEAP_SIZE   { };
+
+define block MINTERRUPTS with maximum size =  64k { ro section .mtext };
+define block MVECTOR with alignment = 64, maximum size = _max_vector*4 { ro section .mintvec };
+define block SVECTOR with alignment = 64, maximum size = _max_vector*4 { ro section .sintvec };
+define block RTT_INIT_FUNC with fixed order { ro section .rti_fn*, ro section FSymTab, ro section VSymTab };
+
+define block RW_DATA with static base GPREL { rw data };
+keep { ro section .alias.hwreset };
+keep { section FSymTab };
+keep { section VSymTab };
+keep { section .rti_fn* };
+
+"CSTARTUP32" : place at start of ROM_region32 { ro section .alias.hwreset,
+                                                ro section .cstartup };
+
+"ROM32":place in ROM_region32        { ro,
+                                       block RTT_INIT_FUNC,
+                                       block MINTERRUPTS,
+                                       block MVECTOR,
+                                       block SVECTOR };
+
+"RAM32":place in RAM_region32        { block RW_DATA,
+                                       block HEAP,
+                                       block CSTACK,
+                                       block CSTACK1
+                                       };
