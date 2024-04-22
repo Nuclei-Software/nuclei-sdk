@@ -369,7 +369,9 @@ codemanage:
     - path: ["Source/Stubs/newlib"]
       condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 0 )
     - path: ["Source/Stubs/libncrt"]
-      condition: $( startswith(${stdclib}, "libncrt") )
+      condition: $( startswith(${stdclib}, "libncrt") && ${buildconfig.type} != "zcc" )
+    - path: ["Source/Stubs/newlib"]
+      condition: $( startswith(${stdclib}, "libncrt") && ${buildconfig.type} == "zcc" )
   incdirs:
     - path: ["Include/"]
 
@@ -424,31 +426,11 @@ buildconfig:
         condition: $( ${stdclib} == "nostd" )
       - flags:
         condition: $( ${stdclib} == "nospec" )
-      - flags: -isystem =/include/libncrt
-        condition: $( startswith(${stdclib}, "libncrt") )
       # For newlib nano, use system include newlib-nano
       - flags: -isystem =/include/newlib-nano
         condition: $( startswith(${stdclib}, "newlib") && ${stdclib} != "newlib_full" )
     ldflags:
       - flags: -nostartfiles -nodefaultlibs
-      - flags: -lstdc++
-        condition: $( startswith(${stdclib}, "newlib") )
-      - flags: -lc -lgcc
-        condition: $( ${stdclib} == "newlib_full" )
-      - flags: -lc_nano -lgcc -u _printf_float -u _scanf_float
-        condition: $( ${stdclib} == "newlib_fast" )
-      - flags: -lc_nano -lgcc -u _printf_float
-        condition: $( ${stdclib} == "newlib_small" )
-      - flags: -l$(subst(${stdclib},lib,)) -lheapops_basic
-        condition: $( startswith(${stdclib}, "libncrt") )
-      - flags: -lfileops_semi
-        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 1 )
-      - flags: -lfileops_uart
-        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 0 )
-      # Workaround for libncrt possible linking error since ide dont support wrap search library
-      # Require Nuclei Studio Plugin released in 2024
-      - flags: -l$(subst(${stdclib},lib,))
-        condition: $( startswith(${stdclib}, "libncrt") )
       - flags: -Wl,--gc-sections -Wl,--check-sections
       - flags: -Wl,--defsym=__SMP_CPU_CNT=${nuclei_smp}
         condition: $( ${nuclei_smp} > 1 )
@@ -487,7 +469,27 @@ buildconfig:
       # pass extra flags when zc extension enabled
       - flags: -fomit-frame-pointer -fno-shrink-wrap-separate
         condition: $( contains(${nuclei_archext}, "zc"))
+      - flags: -isystem =/include/libncrt
+        condition: $( startswith(${stdclib}, "libncrt") )
     ldflags:
+      - flags: -lstdc++
+        condition: $( startswith(${stdclib}, "newlib") )
+      - flags: -lc -lgcc
+        condition: $( ${stdclib} == "newlib_full" )
+      - flags: -lc_nano -lgcc -u _printf_float -u _scanf_float
+        condition: $( ${stdclib} == "newlib_fast" )
+      - flags: -lc_nano -lgcc -u _printf_float
+        condition: $( ${stdclib} == "newlib_small" )
+      - flags: -l$(subst(${stdclib},lib,)) -lheapops_basic
+        condition: $( startswith(${stdclib}, "libncrt") )
+      - flags: -lfileops_semi
+        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 1 )
+      - flags: -lfileops_uart
+        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 0 )
+      # Workaround for libncrt possible linking error since ide dont support wrap search library
+      # Require Nuclei Studio Plugin released in 2024
+      - flags: -l$(subst(${stdclib},lib,))
+        condition: $( startswith(${stdclib}, "libncrt") )
       - flags: -Wl,--no-warn-rwx-segments
       - flags: -lc_nano -lgcc
         condition: $( ${stdclib} == "newlib_nano" )
@@ -501,7 +503,27 @@ buildconfig:
     toolchain_name: RISC-V Clang/Newlib
     cross_prefix: riscv64-unknown-elf- # optional
     common_flags: # flags need to be combined together across all packages
+      - flags: -isystem =/include/libncrt
+        condition: $( startswith(${stdclib}, "libncrt") )
     ldflags:
+      - flags: -lstdc++
+        condition: $( startswith(${stdclib}, "newlib") )
+      - flags: -lc -lgcc
+        condition: $( ${stdclib} == "newlib_full" )
+      - flags: -lc_nano -lgcc -u _printf_float -u _scanf_float
+        condition: $( ${stdclib} == "newlib_fast" )
+      - flags: -lc_nano -lgcc -u _printf_float
+        condition: $( ${stdclib} == "newlib_small" )
+      - flags: -l$(subst(${stdclib},lib,)) -lheapops_basic
+        condition: $( startswith(${stdclib}, "libncrt") )
+      - flags: -lfileops_semi
+        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 1 )
+      - flags: -lfileops_uart
+        condition: $( startswith(${stdclib}, "libncrt") && ${semihost} == 0 )
+      # Workaround for libncrt possible linking error since ide dont support wrap search library
+      # Require Nuclei Studio Plugin released in 2024
+      - flags: -l$(subst(${stdclib},lib,))
+        condition: $( startswith(${stdclib}, "libncrt") )
       - flags: -fuse-ld=lld
       - flags: -u __on_exit_args
         condition: $( startswith(${stdclib}, "newlib") )
@@ -510,3 +532,29 @@ buildconfig:
         condition: $( ${stdclib} == "newlib_nano" )
       - flags: -lsemihost
         condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
+
+  - type: zcc
+    description: Terapines ZCC Toolchain
+    toolchain_name: Terapines ZCC
+    common_flags: # flags need to be combined together across all packages
+      - flags: -mtune=${nuclei_core.tune}
+        condition: $( ${nuclei_core.tune} != "" )
+    ldflags:
+      - flags: -lc++ -lunwind
+        condition: $( startswith(${stdclib}, "newlib") )
+      - flags: -lc -lclang_rt.builtins
+        condition: $( ${stdclib} == "newlib_full" )
+      - flags: -lc_nano -lclang_rt.builtins -u _printf_float -u _scanf_float
+        condition: $( ${stdclib} == "newlib_fast" )
+      - flags: -lc_nano -lclang_rt.builtins -u _printf_float
+        condition: $( ${stdclib} == "newlib_small" )
+      - flags: -lc_nano -lclang_rt.builtins -u _printf_float
+        condition: $( startswith(${stdclib}, "libncrt") )
+      - flags: -fuse-ld=lld
+      - flags: -u __on_exit_args
+        condition: $( startswith(${stdclib}, "newlib") )
+      # for clang, newlib_nano still need to define symbol _printf_float to make link pass
+      - flags: -lc_nano -lclang_rt.builtins -u _printf_float
+        condition: $( ${stdclib} == "newlib_nano" )
+      - flags: -lsemihost
+        condition: $( ${semihost} == 1 )

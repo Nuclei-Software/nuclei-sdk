@@ -53,12 +53,18 @@ debugconfig:
     configs:
       - key: config
         value: "openocd_gd32vf103.cfg"
+      - key: DEBUG_NAME
+        value: "${eclipse_home}toolchain/gcc/bin/riscv64-unknown-elf-gdb"
+        condition: $( ${buildconfig.type} == "zcc" )
 
   - type: jlink
     description: Segger Jlink
     configs:
        - key: device_name
          value: GD32VF103VBT6 # if leave empty, it will try riscv_arch conversion, otherwise it will directly using this value
+       - key: DEBUG_NAME
+         value: "${eclipse_home}toolchain/gcc/bin/riscv64-unknown-elf-gdb"
+         condition: $( ${buildconfig.type} == "zcc" )
        - key: riscv_arch
          value: ${nuclei_core.arch} # arch to device name conversion happened in IDE, eg. rv32imac -> N305
        - key: interface

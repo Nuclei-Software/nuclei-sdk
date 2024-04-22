@@ -45,3 +45,6 @@ buildconfig:
   - type: clang
     common_flags: # flags need to be combined together across all packages
       - flags: -Ofast -funroll-loops
+  - type: zcc
+    common_flags: # flags need to be combined together across all packages
+      - flags: -Ofast -funroll-loops -flto
