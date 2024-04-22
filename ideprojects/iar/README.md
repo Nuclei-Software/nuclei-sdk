@@ -25,14 +25,18 @@ These projects demostrated the following features:
   code use a lot of heap or stack, the application may crash, you need to increase stack or heap size on demand.
 
 > [!NOTE]
-> SMP is now supported in IAR workbench since Nuclei SDK 0.5.1, please refer to `smphello` project.
+> SMP is now supported in IAR workbench since Nuclei SDK 0.5.1, please refer to `smphello` or `demo_cidu` project.
 > `smphello` IAR IDE project by default should run on UX900FD x 4 SMP CORE, and program run on DDR memory.
+> `demo_cidu` IAR IDE project by default should run on UX900FD x 2 SMP CORE, and CIDU feature, and program run on DDR memory.
 
 - SMP application is now supported in IAR project see `smphello`, to support SMP, you should use different startup asm code
   and different linker file provided in this repo, see `SoC/evalsoc/Common/Source/IAR/startup.S`, and for the linker file,
   you can refer to `application/baremetal/smphello/iar_evalsoc_smp.icf` which is base on the `iar_evalsoc_ddr.icf` mainly
   setup different `CSTACKx` for different core, and you should also define a macro called `SMP_CPU_CNT` to define how many
   cores you want to support, such as `SMP_CPU_CNT=4`.
+- `demo_cidu` example is also added as a smp application, which require CIDU feature enabled, and a seperated linker file
+  `application/baremetal/demo_cidu/iar_evalsoc_smp.icf` is used which setup CSTACK for two cpu, and also set extra macros
+  `SMP_CPU_CNT=2` and `__CIDU_PRESENT=1`.
 
 You can directly try with this iar workspace by click this `nucleisdk.eww` after you have installed [IAR Workbench](https://www.iar.com/riscv).
 ![IAR Projects for Nuclei](asserts/nsdk_iar_projects.png)
