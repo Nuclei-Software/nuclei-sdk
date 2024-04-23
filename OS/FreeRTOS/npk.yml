@@ -1,7 +1,7 @@
 ## Package Base Information
 name: osp-nsdk_freertos
 owner: nuclei
-version: 11.0.1
+version: 11.1.0
 description: FreeRTOS Port Package for Nuclei SDK
 type: osp
 keywords:
