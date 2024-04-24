@@ -54,7 +54,7 @@ typedef void(*__fp)(void);
 // TODO: change the data_alignment = 512 to match mtvt alignment requirement according to your eclic max interrupt number
 // TODO: place your interrupt handler into this vector table, important if your vector table is in flash
 #pragma data_alignment = 512
-static const __fp vector_base[SOC_INT_MAX] __attribute__((section (".mintvec"))) = {
+const __fp vector_base[SOC_INT_MAX] __attribute__((section (".mintvec"))) = {
     default_intexc_handler,
     default_intexc_handler,
     default_intexc_handler,
@@ -204,7 +204,6 @@ __weak int smp_main(void)
 int __low_level_init(void)
 {
     unsigned long hartid = __get_hart_id();
-    long ret = 0;
 
     __disable_interrupt();
 
@@ -215,23 +214,6 @@ int __low_level_init(void)
    /* Enable Zc feature when compiled zcmp & zcmt */
     __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_ZC);
 #endif
-
-    /* Intialize ECLIC vector interrupt base address mtvt to vector_base */
-    __RV_CSR_WRITE(CSR_MTVT, (unsigned long)(&vector_base));
-    /*
-     * Set ECLIC non-vector entry to be controlled by mtvt2 CSR register.
-     * Intialize ECLIC non-vector interrupt base address mtvt2 to irq_entry.
-     */
-    __RV_CSR_WRITE(CSR_MTVT2, 0x1|(unsigned long)(&irq_entry));
-
-    /* Set Exception Entry MTVEC to early_exc_entry
-     * Due to settings above, Exception and NMI
-     * will share common entry.
-     * This early_exc_entry is only used during early
-     * boot stage before main */
-    __RV_CSR_WRITE(CSR_MTVEC, ((unsigned long)&exc_entry));
-    __RV_CSR_CLEAR(CSR_MTVEC, 0x3f);
-    __RV_CSR_SET(CSR_MTVEC, 0x3);
 
     /* Enable FPU and Vector Unit if f/d/v exist in march */
 #if defined(__riscv_flen) && __riscv_flen > 0
@@ -274,7 +256,7 @@ int __low_level_init(void)
     prepare_ram_vector();
 #endif
 
-    ret = smp_main();
+    smp_main();
 
     /* No need to call it again, since it is initialized */
     return 0;
