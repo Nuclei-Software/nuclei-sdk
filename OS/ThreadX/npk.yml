@@ -1,7 +1,7 @@
 ## Package Base Information
 name: osp-nsdk_threadx
 owner: nuclei
-version: 6.4.0
+version: 6.4.1
 description: ThreadX Port Package for Nuclei SDK
 type: osp
 keywords:
