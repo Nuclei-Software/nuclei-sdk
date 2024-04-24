@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2018, RT-Thread Development Team
+ * Copyright (c) 2006-2021, RT-Thread Development Team
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -173,15 +173,21 @@ static int finsh_getchar(void)
     char ch = 0;
 
     RT_ASSERT(shell != RT_NULL);
-    while (rt_device_read(shell->device, -1, &ch, 1) != 1)
-        rt_sem_take(&shell->rx_sem, RT_WAITING_FOREVER);
 
-    return (int)ch;
+    if(shell->device)
+    {
+        while (rt_device_read(shell->device, -1, &ch, 1) != 1)
+            rt_sem_take(&shell->rx_sem, RT_WAITING_FOREVER);
+
+        return (int)ch;
+    }
+    else
 #endif
-#else
-    extern char rt_hw_console_getchar(void);
-    return rt_hw_console_getchar();
 #endif
+    {
+        extern char rt_hw_console_getchar(void);
+        return rt_hw_console_getchar();
+    }
 }
 
 #if !defined(RT_USING_POSIX) && defined(RT_USING_DEVICE)
@@ -772,7 +778,7 @@ void finsh_system_var_init(const void *begin, const void *end)
     _sysvar_table_end = (struct finsh_sysvar *) end;
 }
 
-#if defined(__ICCARM__) || defined(__ICCRX__) || defined(__ICCRISCV__)  /* for IAR compiler */
+#if defined(__ICCARM__) || defined(__ICCRX__) || defined(__ICCRISCV__) /* for IAR compiler */
 #ifdef FINSH_USING_SYMTAB
 #pragma section="FSymTab"
 #pragma section="VSymTab"
