@@ -182,7 +182,7 @@ void main_thread_entry(void *parameter)
     /* invoke system main function */
 #if defined(__CC_ARM) || defined(__CLANG_ARM)
     $Super$$main(); /* for ARMCC. */
-#elif defined(__ICCARM__) || defined(__GNUC__)
+#elif defined(__ICCARM__) || defined(__GNUC__) || defined(__ICCRISCV__)
     main();
 #endif
 }
