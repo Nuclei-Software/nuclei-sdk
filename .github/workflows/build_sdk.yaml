@@ -74,7 +74,7 @@ jobs:
           fi
           tar -xjf $toolzip
           echo "Prepare Nuclei QEMU......"
-          toolzip=nuclei-qemu-2024.02.21-linux-x64.tar.gz
+          toolzip=nuclei-qemu-2024.04.24-linux-x64.tar.gz
           if [ ! -e $toolzip ] ; then
             echo "Download Nuclei qemu now!"
             wget --progress=dot:giga --no-check-certificate https://www.nucleisys.com/upload/files/toochain/qemu/$toolzip
