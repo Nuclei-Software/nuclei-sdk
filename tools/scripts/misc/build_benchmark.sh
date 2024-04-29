@@ -100,6 +100,7 @@ function collect_buildinfo {
     echo "Nuclei SDK Version: on $(git rev-parse --abbrev-ref HEAD) branch, $(git describe --always --abbrev=10 --dirty --tags 2>&1)" >> $benchbuild
     echo -n "GCC Version: " >> $benchbuild
     riscv-nuclei-elf-gcc -v >> $benchbuild 2>&1
+    riscv64-unknown-elf-gcc -v >> $benchbuild 2>&1
 }
 
 gen_elf_loc=${LOGDIR}
