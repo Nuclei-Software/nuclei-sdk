@@ -78,6 +78,7 @@ function do_test_on_gcc {
 
     setup_gcc $GCC_VER
     riscv-nuclei-elf-gcc -v > $buildtxt 2>&1
+    riscv64-unknown-elf-gcc -v >> $buildtxt 2>&1
 
     do_test $app | tee $runlog
 
