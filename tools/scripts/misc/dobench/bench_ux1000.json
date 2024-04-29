@@ -1,0 +1,12 @@
+{
+    "build_config": {
+        "SOC": "evalsoc",
+        "DOWNLOAD": "ilm",
+        "CPU_SERIES": "1000"
+    },
+    "build_configs": {
+        "rv64imafdc": {"CORE":"ux1000fd", "ARCH_EXT":""},
+        "rv64imafdcb": {"CORE":"ux1000fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv64imafdcb_zicond": {"CORE":"ux1000fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond"}
+    }
+}
