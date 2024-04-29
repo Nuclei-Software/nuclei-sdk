@@ -143,6 +143,7 @@ build_evalsoc:
 
 sdk_gen_benchmark:
   <<: *job_template_default
+  stage: check
   script:
     - export LOGROOT=gen
     - export RUNTARGET=
