@@ -7,14 +7,17 @@
     "build_configs": {
         "rv64imac": {"CORE":"nx600"},
         "rv64imacb": {"CORE":"nx600", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
-        "rv64imacbp": {"CORE":"nx600", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv64imacbp": {"CORE":"nx600", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
+        "rv64imacbp_zicond": {"CORE":"nx600", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldsp"},
         "rv64imafc": {"CORE":"nx600f", "ARCH_EXT":""},
         "rv64imafcb": {"CORE":"nx600f", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
         "rv64imafcp": {"CORE":"nx600f", "ARCH_EXT":"_xxldspn1x"},
-        "rv64imafcbp": {"CORE":"nx600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv64imafcbp": {"CORE":"nx600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
+        "rv64imafcbp_zicond": {"CORE":"nx600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldsp"},
         "rv64imafdc": {"CORE":"nx600fd", "ARCH_EXT":""},
         "rv64imafdcb": {"CORE":"nx600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
         "rv64imafdcp": {"CORE":"nx600fd", "ARCH_EXT":"_xxldspn1x"},
-        "rv64imafdcbp": {"CORE":"nx600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"}
+        "rv64imafdcbp_zicond": {"CORE":"nx600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldsp"},
+        "rv64imafdcbp": {"CORE":"nx600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"}
     }
 }
