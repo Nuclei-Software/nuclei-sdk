@@ -54,7 +54,7 @@ function runbench_for_allcores {
     pushd $NSDK_ROOT
     echo "Run benchmark on different CORE"
     local runlogdir=$logdir/barebench
-    for core in n200 n300 n600 n900 nx600 nx900
+    for core in n100
     do
         echo "Build for CORE: $core"
         local appcfg=${DOBENCH_CONFLOC}/app.json
@@ -72,7 +72,7 @@ function rundhry_for_allcores {
     pushd $NSDK_ROOT
     echo "Run for dhrystone different modes"
     local runlogdir=$logdir/dhrystone
-    for core in n200 n300 n600 n900 nx600 nx900
+    for core in n100
     do
         for dhrymode in ground inline best
         do

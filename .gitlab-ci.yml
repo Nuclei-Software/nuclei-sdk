@@ -4,7 +4,7 @@ variables:
   DOC_CENTER: /home/xl_ci/doc_center
   SHAREENVLOC: /home/share/devtools
   IMAGE: rego.corp.nucleisys.com/software/sdkbuild
-  IMAGE_TAG: "2024.02.18"
+  IMAGE_TAG: "2024.04.23"
   JOBCTRL: "RUN"
 
 workflow:
@@ -140,6 +140,21 @@ build_evalsoc:
   script:
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/${STDCLIB}_${DOWNLOAD}${ARCH_EXT}
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "STDCLIB=$STDCLIB DOWNLOAD=$DOWNLOAD ARCH_EXT=${ARCH_EXT}"
+
+sdk_gen_benchmark:
+  <<: *job_template_default
+  script:
+    - export LOGROOT=gen
+    - export RUNTARGET=
+    - export SDK_COPY_OBJECTS="elf,map,dump"
+    - bash tools/scripts/misc/dobench/dobench.sh $LOGROOT
+    - bash tools/scripts/misc/build_benchmark.sh
+  artifacts:
+    when: always
+    name: "n100_sdk_benchmark-job${CI_JOB_ID}-${CI_COMMIT_SHA::8}"
+    paths:
+      - gen
+    expire_in: 2 day
 
 # Job used to check all the npk.yml in this folder
 sdk_check_npk:
