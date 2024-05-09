@@ -786,11 +786,6 @@ void _premain_init(void)
     unsigned long hartid = __get_hart_id();
     unsigned long mcfginfo = __RV_CSR_READ(CSR_MCFG_INFO);
 
-    // BOOT_HARTID is defined <Device.h>
-    if (hartid == BOOT_HARTID) { // only done in boot hart
-        // IREGION INFO MUST BE SET BEFORE ANY PREMAIN INIT STEPS
-        _get_iregion_info((IRegion_Info_Type *)(&SystemIRegionInfo));
-    }
     /* TODO: Add your own initialization code here, called before main */
     // This code located in RUNMODE_CONTROL ifdef endif block just for internal usage
     // No need to use in your code
@@ -834,6 +829,15 @@ void _premain_init(void)
     /* Do fence and fence.i to make sure previous ilm/dlm/icache/dcache control done */
     __RWMB();
     __FENCE_I();
+
+    // BOOT_HARTID is defined <Device.h> and also controlled by BOOT_HARTID in conf/evalsoc/build.mk
+    if (hartid == BOOT_HARTID) { // only done in boot hart
+        // IREGION INFO MUST BE AFTER L1/L2 Cache enabled and SMP enabled if SMP present
+        _get_iregion_info((IRegion_Info_Type *)(&SystemIRegionInfo));
+    } else {
+        // wait for eclic base addr is set by boot hart via _get_iregion_info
+        while (SystemIRegionInfo.eclic_base == 0);
+    }
 
     if (hartid == BOOT_HARTID) { // only required for boot hartid
         // TODO implement get_cpu_freq function to get real cpu clock freq in HZ or directly give the real cpu HZ
