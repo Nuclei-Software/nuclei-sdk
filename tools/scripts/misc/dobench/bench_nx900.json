@@ -6,7 +6,9 @@
     },
     "build_configs": {
         "rv64imac": {"CORE":"nx900"},
+        "rv64imac_zicond": {"CORE":"nx900", "ARCH_EXT":"_zicond"},
         "rv64imacb": {"CORE":"nx900", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv64imacb_zicond": {"CORE":"nx900", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond"},
         "rv64imacbp": {"CORE":"nx900", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
         "rv64imacbp_zicond": {"CORE":"nx900", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldsp"},
         "rv64imafc": {"CORE":"nx900f", "ARCH_EXT":""},
