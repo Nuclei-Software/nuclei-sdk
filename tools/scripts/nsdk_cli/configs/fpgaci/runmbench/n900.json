@@ -1,6 +1,7 @@
 {
     "matrix": {
         "lm": {"RUNMODE": "lm"},
-        "cache": {"RUNMODE": "cache", "DOWNLOAD": "ddr"}
+        "cache": {"RUNMODE": "cache", "DOWNLOAD": "sram"}
     }
 }
+
