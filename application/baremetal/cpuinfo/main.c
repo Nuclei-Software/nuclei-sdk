@@ -6,19 +6,29 @@
 #define GB                  (MB * 1024)
 #define EXTENSION_NUM       (26)
 #define POWER_FOR_TWO(n)    (1UL << (n))
+#define LINESZ(n)           ((n) > 0 ? POWER_FOR_TWO((n)-1) : 0)
 
-void show_safety_mechanism(rv_csr_t safetyMode)
+void show_safety_mechanism(unsigned long safetyMode)
 {
     switch (safetyMode) {
         case 0b00: printf(" No-Safety-Mechanism"); break;
         case 0b01: printf(" Lockstep"); break;
-        case 0b10: printf(" Lockstep+Split"); break;
+        case 0b10: printf(" Lockstep+SplitMode"); break;
         case 0b11: printf(" ASIL-B"); break;
         default: return;
     }
 }
 
-void print_size(rv_csr_t bytes)
+void show_vpu_degree(unsigned long degree)
+{
+    switch (degree) {
+        case 0b00: printf(" DLEN=VLEN/2"); break;
+        case 0b01: printf(" DLEN=VLEN"); break;
+        default: return;
+    }
+}
+
+void print_size(unsigned long bytes)
 {
     if (bytes / GB) {
         printf(" %ld GB", bytes / GB);
@@ -31,7 +41,7 @@ void print_size(rv_csr_t bytes)
     }
 }
 
-void show_cache_info(rv_csr_t set, rv_csr_t way, rv_csr_t lsize)
+void show_cache_info(unsigned long set, unsigned long way, unsigned long lsize)
 {
     print_size(set * way * lsize);
     printf("(set=%ld,", set);
@@ -44,6 +54,7 @@ void nuclei_cpuinfo(void)
     CSR_MCFGINFO_Type mcfg;
     CSR_MICFGINFO_Type micfg;
     CSR_MDCFGINFO_Type mdcfg;
+    CSR_MTLBCFGINFO_Type mtlbcfg;
     rv_csr_t iregion_base = 0;
     rv_csr_t csr_marchid = 0;
     rv_csr_t csr_mimpid = 0;
@@ -51,7 +62,6 @@ void nuclei_cpuinfo(void)
     rv_csr_t csr_mirgb = 0;
     rv_csr_t csr_mfiocfg = 0;
     rv_csr_t csr_mppicfg = 0;
-    rv_csr_t csr_mtlbcfg = 0;
 
     printf("\r\n-----Nuclei RISC-V CPU Configuration Information-----\r\n");
 
@@ -72,16 +82,31 @@ void nuclei_cpuinfo(void)
     for (int i = 0; i < EXTENSION_NUM; i++) {
         if (csr_misa & BIT(i)) {
             if ('X' == ('A' + i)) {
-                printf(" Zc Xxlcz");
+                printf(" NICE");
             } else {
                 printf(" %c", 'A' + i);
             }
         }
     }
+    mcfg = (CSR_MCFGINFO_Type)__RV_CSR_READ(CSR_MCFG_INFO);
+    if (mcfg.b.dsp_n1) {
+        printf(" Xxldspn1x");
+    }
+    if (mcfg.b.dsp_n2) {
+        printf(" Xxldspn2x");
+    }
+    if (mcfg.b.dsp_n3) {
+        printf(" Xxldspn3x");
+    }
+    if (mcfg.b.zc_xlcz) {
+        printf(" Zc Xxlcz");
+    }
+    if (mcfg.b.sec_mode) {
+        printf(" Smwg");
+    }
     printf("\r\n");
 
     /* Support */
-    mcfg = (CSR_MCFGINFO_Type)__RV_CSR_READ(CSR_MCFG_INFO);
     printf("            MCFG:");
     if (mcfg.b.tee) {
         printf(" TEE");
@@ -120,27 +145,31 @@ void nuclei_cpuinfo(void)
         printf(" SMP");
     }
     if (mcfg.b.dsp_n1) {
-        printf(" DSP-N1");
+        printf(" DSP_N1");
     }
     if (mcfg.b.dsp_n2) {
-        printf(" DSP-N2");
+        printf(" DSP_N2");
     }
     if (mcfg.b.dsp_n3) {
-        printf(" DSP-N3");
+        printf(" DSP_N3");
     }
     if (mcfg.b.zc_xlcz) {
-        printf(" Zc Xxlcz");
+        printf(" ZC_XLCZ_EXT");
     }
     if (mcfg.b.iregion) {
         printf(" IREGION");
     }
     if (mcfg.b.sec_mode) {
-        printf(" Smwg");
+        printf(" SEC_MODE");
     }
     if (mcfg.b.etrace) {
         printf(" ETRACE");
     }
+    if (mcfg.b.vnice) {
+        printf(" VNICE");
+    }
     show_safety_mechanism(mcfg.b.safety_mecha);
+    show_vpu_degree(mcfg.b.vpu_degree);
     printf("\r\n");
 
     /* ILM */
@@ -182,13 +211,23 @@ void nuclei_cpuinfo(void)
         show_cache_info(POWER_FOR_TWO(mdcfg.b.set + 3), mdcfg.b.way + 1, POWER_FOR_TWO(mdcfg.b.lsize + 2));
     }
 
+    /* TLB only present with MMU, when PLIC present MMU will present */
+    if (mcfg.b.plic) {
+        mtlbcfg = (CSR_MTLBCFGINFO_Type)__RV_CSR_READ(CSR_MTLBCFG_INFO);
+        printf("             TLB:");
+        printf(" MainTLB(set=%lu way=%lu entry=%lu ecc=%lu) ITLB(entry=%lu) DTLB(entry=%lu)\r\n", \
+                POWER_FOR_TWO(mtlbcfg.b.set + 3), mtlbcfg.b.way + 1, LINESZ(mtlbcfg.b.lsize), \
+                mtlbcfg.b.ecc, LINESZ(mtlbcfg.b.i_size), LINESZ(mtlbcfg.b.d_size));
+    }
+
+
     /* IREGION */
     if (mcfg.b.iregion) {
         rv_csr_t csr_mirgb = __RV_CSR_READ(CSR_MIRGB_INFO);
         printf("         IREGION:");
         iregion_base = csr_mirgb & (~0x3FF);
         printf(" %#lx", iregion_base);
-        print_size(POWER_FOR_TWO(__RV_EXTRACT_FIELD(csr_mirgb, 0xF << 1) - 1) * KB);
+        print_size(POWER_FOR_TWO(__RV_EXTRACT_FIELD(csr_mirgb, 0x1F << 1) - 1) * KB);
         printf("\r\n");
         printf("                  Unit        Size        Address\r\n");
         printf("                  INFO        64KB        %#lx\r\n", iregion_base + IREGION_IINFO_OFS);
@@ -234,6 +273,7 @@ void nuclei_cpuinfo(void)
             show_cache_info(POWER_FOR_TWO(__RV_EXTRACT_FIELD(smp_cfg, 0xF)), __RV_EXTRACT_FIELD(smp_cfg, 0x7 << 4) + 1,
                             POWER_FOR_TWO(__RV_EXTRACT_FIELD(smp_cfg, 0x7 << 7) + 2));
         }
+
         /* INFO */
         printf("     INFO-Detail:\r\n");
         rv_csr_t mpasize = *(rv_csr_t*)(iregion_base);
@@ -255,23 +295,6 @@ void nuclei_cpuinfo(void)
             printf("                  cppi    : %#lx", (mcppi_cfg_hi << 32) | (mcppi_cfg_lo & (~0x3FF)));
 #endif
             print_size(POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 1) - 1) * KB);
-            printf("\r\n");
-        }
-    }
-
-    /* TLB */
-    if (mcfg.b.plic) {
-        csr_mtlbcfg = __RV_CSR_READ(CSR_MTLBCFG_INFO);
-        if (csr_mtlbcfg != -1) {
-            printf("            DTLB: %lu entry\r\n", __RV_EXTRACT_FIELD(csr_mtlbcfg, 0x7 << 19));
-            printf("            ITLB: %lu entry\r\n", __RV_EXTRACT_FIELD(csr_mtlbcfg, 0x7 << 16));
-            printf("            MTLB:");
-            printf(" %lu entry", POWER_FOR_TWO(__RV_EXTRACT_FIELD(csr_mtlbcfg, 0xF) + 3) *
-                                    (__RV_EXTRACT_FIELD(csr_mtlbcfg, 0x7 << 4) + 1) *
-                                    (__RV_EXTRACT_FIELD(csr_mtlbcfg, 0x7 << 7) - 1));
-            if (csr_mtlbcfg & BIT(10)) {
-                printf(" has_ecc");
-            }
             printf("\r\n");
         }
     }
