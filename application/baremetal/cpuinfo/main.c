@@ -41,12 +41,13 @@ void print_size(unsigned long bytes)
     }
 }
 
-void show_cache_info(unsigned long set, unsigned long way, unsigned long lsize)
+void show_cache_info(unsigned long set, unsigned long way, unsigned long lsize, unsigned long ecc)
 {
     print_size(set * way * lsize);
     printf("(set=%ld,", set);
     printf("way=%ld,", way);
-    printf("lsize=%ld)\r\n", lsize);
+    printf("lsize=%ld,", lsize);
+    printf("ecc=%ld)\r\n", !!ecc);
 }
 
 void nuclei_cpuinfo(void)
@@ -201,14 +202,14 @@ void nuclei_cpuinfo(void)
     if (mcfg.b.icache) {
         micfg = (CSR_MICFGINFO_Type)__RV_CSR_READ(CSR_MICFG_INFO);
         printf("          ICACHE:");
-        show_cache_info(POWER_FOR_TWO(micfg.b.set + 3), micfg.b.way + 1, POWER_FOR_TWO(micfg.b.lsize + 2));
+        show_cache_info(POWER_FOR_TWO(micfg.b.set + 3), micfg.b.way + 1, POWER_FOR_TWO(micfg.b.lsize + 2), mcfg.b.ecc);
     }
 
     /* DCACHE */
     if (mcfg.b.dcache) {
         mdcfg = (CSR_MDCFGINFO_Type)__RV_CSR_READ(CSR_MDCFG_INFO);
         printf("          DCACHE:");
-        show_cache_info(POWER_FOR_TWO(mdcfg.b.set + 3), mdcfg.b.way + 1, POWER_FOR_TWO(mdcfg.b.lsize + 2));
+        show_cache_info(POWER_FOR_TWO(mdcfg.b.set + 3), mdcfg.b.way + 1, POWER_FOR_TWO(mdcfg.b.lsize + 2), mcfg.b.ecc);
     }
 
     /* TLB only present with MMU, when PLIC present MMU will present */
@@ -257,7 +258,7 @@ void nuclei_cpuinfo(void)
         }
         /* ECLIC */
         if (mcfg.b.clic) {
-            printf("         ECLIC:");
+            printf("           ECLIC:");
             printf(" VERSION=0x%x", (unsigned int)ECLIC_GetInfoVer());
             printf(" NUM_INTERRUPT=%u", (unsigned int)ECLIC_GetInfoNum());
             printf(" CLICINTCTLBITS=%u", (unsigned int)ECLIC_GetInfoCtlbits());
@@ -268,33 +269,33 @@ void nuclei_cpuinfo(void)
 
         /* L2CACHE */
         if (smp_cfg & BIT(1)) {
-            rv_csr_t cc_cfg = *(rv_csr_t*)(iregion_base + 0x40008);
+            uint32_t cc_cfg = *(uint32_t *)(iregion_base + 0x40008);
             printf("         L2CACHE:");
-            show_cache_info(POWER_FOR_TWO(__RV_EXTRACT_FIELD(smp_cfg, 0xF)), __RV_EXTRACT_FIELD(smp_cfg, 0x7 << 4) + 1,
-                            POWER_FOR_TWO(__RV_EXTRACT_FIELD(smp_cfg, 0x7 << 7) + 2));
+            show_cache_info(POWER_FOR_TWO(__RV_EXTRACT_FIELD(cc_cfg, 0xF)), __RV_EXTRACT_FIELD(cc_cfg, 0xf << 4) + 1,
+                            POWER_FOR_TWO(__RV_EXTRACT_FIELD(cc_cfg, 0x7 << 8) + 2), cc_cfg & BIT(11));
         }
 
         /* INFO */
         printf("     INFO-Detail:\r\n");
-        rv_csr_t mpasize = *(rv_csr_t*)(iregion_base);
-        printf("                  mpasize : %lu\r\n", mpasize);
-        rv_csr_t cmo_info = *(rv_csr_t*)(iregion_base + 4);
+        uint32_t mpasize = *(uint32_t *)(iregion_base);
+        printf("                  mpasize : %u\r\n", mpasize);
+        uint32_t cmo_info = *(uint32_t*)(iregion_base + 4);
         if (cmo_info & BIT(1)) {
-            printf("                  cbozero : %luByte\r\n", (unsigned long)POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 6) + 2));
-            printf("                  cmo     : %luByte\r\n", (unsigned long)POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 2) + 2));
+            printf("                  cbozero : %uByte\r\n", (unsigned int)POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 6) + 2));
+            printf("                  cmo     : %uByte\r\n", (unsigned int)POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 2) + 2));
             if (cmo_info & BIT(2)) {
                 printf("                  has_prefecth\r\n");
             }
         }
-        rv_csr_t mcppi_cfg_lo = *(rv_csr_t*)(iregion_base + 0x80);
-        rv_csr_t mcppi_cfg_hi = *(rv_csr_t*)(iregion_base + 0x84);
+        uint32_t mcppi_cfg_lo = *(uint32_t *)(iregion_base + 0x80);
+        uint32_t mcppi_cfg_hi = *(uint32_t *)(iregion_base + 0x84);
         if (mcppi_cfg_lo & 0x1) {
 #if __RISCV_XLEN == 32
             printf("                  cppi    : %#lx", mcppi_cfg_lo & (~0x3FF));
 #else
-            printf("                  cppi    : %#lx", (mcppi_cfg_hi << 32) | (mcppi_cfg_lo & (~0x3FF)));
+            printf("                  cppi    : %#lx", ((uint64_t)mcppi_cfg_hi << 32) | (mcppi_cfg_lo & (~0x3FF)));
 #endif
-            print_size(POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 1) - 1) * KB);
+            print_size(POWER_FOR_TWO(__RV_EXTRACT_FIELD(mcppi_cfg_lo, 0x1F << 1) - 1) * KB);
             printf("\r\n");
         }
     }
@@ -304,7 +305,7 @@ void nuclei_cpuinfo(void)
         csr_mfiocfg = __RV_CSR_READ(CSR_MFIOCFG_INFO);
         printf("             FIO:");
         printf(" %#lx", csr_mfiocfg & (~0x3FF));
-        print_size(POWER_FOR_TWO(__RV_EXTRACT_FIELD(csr_mfiocfg, 0xF << 1) - 1) * KB);
+        print_size(POWER_FOR_TWO(__RV_EXTRACT_FIELD(csr_mfiocfg, 0x1F << 1) - 1) * KB);
         printf("\r\n");
     }
 
@@ -313,7 +314,7 @@ void nuclei_cpuinfo(void)
         csr_mppicfg = __RV_CSR_READ(CSR_MPPICFG_INFO);
         printf("             PPI:");
         printf(" %#lx", csr_mppicfg & (~0x3FF));
-        print_size(POWER_FOR_TWO(__RV_EXTRACT_FIELD(csr_mppicfg, 0xF << 1) - 1) * KB);
+        print_size(POWER_FOR_TWO(__RV_EXTRACT_FIELD(csr_mppicfg, 0x1F << 1) - 1) * KB);
         printf("\r\n");
     }
 
