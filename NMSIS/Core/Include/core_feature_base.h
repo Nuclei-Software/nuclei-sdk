@@ -345,17 +345,18 @@ typedef union {
         rv_csr_t dlm:1;                         /*!< DLM present */
         rv_csr_t icache:1;                      /*!< ICache present */
         rv_csr_t dcache:1;                      /*!< DCache present */
-        rv_csr_t smp:1;                         /*!< SMP present*/
-        rv_csr_t dsp_n1:1;                      /*!< DSP N1 present*/
-        rv_csr_t dsp_n2:1;                      /*!< DSP N2 present*/
-        rv_csr_t dsp_n3:1;                      /*!< DSP N3 present*/
-        rv_csr_t zc_xlcz:1;                     /*!< Zc and xlcz extension present*/
-        rv_csr_t iregion:1;                     /*!< IREGION present*/
-        rv_csr_t _reserved0:2;
-        rv_csr_t sec_mode:1;                    /*!< Smwg extension present*/
-        rv_csr_t etrace:1;                      /*!< Etrace present*/
-        rv_csr_t safety_mecha:2;                /*!< Indicate Core’s safety mechanism*/
-        rv_csr_t _reserved1:__RISCV_XLEN-23;
+        rv_csr_t smp:1;                         /*!< SMP present */
+        rv_csr_t dsp_n1:1;                      /*!< DSP N1 present */
+        rv_csr_t dsp_n2:1;                      /*!< DSP N2 present */
+        rv_csr_t dsp_n3:1;                      /*!< DSP N3 present */
+        rv_csr_t zc_xlcz:1;                     /*!< Zc and xlcz extension present */
+        rv_csr_t iregion:1;                     /*!< IREGION present */
+        rv_csr_t vpu_degree:2;                  /*!< Indicate the VPU degree of parallel */
+        rv_csr_t sec_mode:1;                    /*!< Smwg extension present */
+        rv_csr_t etrace:1;                      /*!< Etrace present */
+        rv_csr_t safety_mecha:2;                /*!< Indicate Core's safety mechanism */
+        rv_csr_t vnice:1;                       /*!< VNICE present */
+        rv_csr_t _reserved1:__RISCV_XLEN-24;
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MCFGINFO_Type;
@@ -394,13 +395,30 @@ typedef union {
 } CSR_MDCFGINFO_Type;
 
 /**
+ * \brief  Union type to access MTLBCFG_INFO CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t set:4;                         /*!< Main TLB sets per way */
+        rv_csr_t way:3;                         /*!< Main TLB ways */
+        rv_csr_t lsize:3;                       /*!< Main TLB line size */
+        rv_csr_t ecc:1;                         /*!< Main TLB supports ECC or not */
+        rv_csr_t _reserved0:5;                  /*!< Reserved 0 */
+        rv_csr_t i_size:3;                      /*!< ITLB size */
+        rv_csr_t d_size:3;                      /*!< DTLB size */
+        rv_csr_t _reserved1:__RISCV_XLEN-22;    /*!< Reserved 0 */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MTLBCFGINFO_Type;
+
+/**
  * \brief  Union type to access MPPICFG_INFO CSR register.
  */
 typedef union {
     struct {
-        rv_csr_t _reserved0:1;                  /*!< Reserved */
+        rv_csr_t _reserved0:1;                  /*!< Reserved 1 */
         rv_csr_t ppi_size:5;                    /*!< PPI size, need to be 2^n size */
-        rv_csr_t _reserved1:4;                  /*!< Reserved */
+        rv_csr_t _reserved1:4;                  /*!< Reserved 0 */
         rv_csr_t ppi_bpa:__RISCV_XLEN-10;       /*!< PPI base address */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
@@ -436,11 +454,11 @@ typedef union {
 typedef union {
     struct {
         rv_csr_t code:9;                        /*!< Used to inject ECC check code */
-        rv_csr_t _reserved0:7;                  /*!< Reserved */
-        rv_csr_t ramid:5;                       /*!< Indicate 2bit ECC error, software can clear these bits */
-        rv_csr_t _reserved1:3;                  /*!< Reserved */
-        rv_csr_t sramid:5;                      /*!< Indicate 1bit ECC error, software can clear these bits */
-        rv_csr_t _reserved2:__RISCV_XLEN-29;    /*!< Reserved */
+        rv_csr_t _reserved0:7;                  /*!< Reserved 0 */
+        rv_csr_t ramid:5;                       /*!< The ID of RAM that has 2bit ECC error, software can clear these bits */
+        rv_csr_t _reserved1:3;                  /*!< Reserved 0 */
+        rv_csr_t sramid:5;                      /*!< The ID of RAM that has 1bit ECC error, software can clear these bits */
+        rv_csr_t _reserved2:__RISCV_XLEN-29;    /*!< Reserved 0 */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MECCCODE_Type;
