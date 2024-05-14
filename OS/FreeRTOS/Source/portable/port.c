@@ -168,7 +168,53 @@ static uint8_t ucMaxSysCallPriority = 0;
 #endif /* configASSERT_DEFINED */
 
 #if ( configNUMBER_OF_CORES > 1 )
+
 spin_lock_t hw_sync_locks[portRTOS_SPINLOCK_COUNT] = {0, 0};
+
+/* Note this is a single method with uxAcquire parameter since we have
+* static vars, the method is always called with a compile time constant for
+* uxAcquire, and the compiler should do the right thing! */
+void vPortRecursiveLock(unsigned long ulLockNum, spin_lock_t *pxSpinLock, BaseType_t uxAcquire)
+{
+    static uint8_t ucOwnedByCore[portMAX_CORE_COUNT];
+    static uint8_t ucRecursionCountByLock[portRTOS_SPINLOCK_COUNT];
+
+    configASSERT(ulLockNum < portRTOS_SPINLOCK_COUNT);
+    unsigned long ulCoreNum = __get_hart_index();
+    unsigned long ulLockBit = 1u << ulLockNum;
+    configASSERT(ulLockBit < 256u);
+
+    if (uxAcquire) {
+        if ((!*pxSpinLock == 0)) {
+            if (ucOwnedByCore[ulCoreNum] & ulLockBit) {
+                configASSERT(ucRecursionCountByLock[ulLockNum] != 255u);
+                ucRecursionCountByLock[ulLockNum]++;
+                return;
+            }
+
+            while ((!*pxSpinLock == 0)) {
+            }
+        }
+
+        do {
+            if (__AMOSWAP_W(pxSpinLock, 1) == 0) {
+                break;
+            }
+        } while (1);
+
+        configASSERT(ucRecursionCountByLock[ulLockNum] == 0);
+        ucRecursionCountByLock[ulLockNum] = 1;
+        ucOwnedByCore[ulCoreNum] |= ulLockBit;
+    } else {
+        configASSERT((ucOwnedByCore[ulCoreNum] & ulLockBit) != 0);
+        configASSERT(ucRecursionCountByLock[ulLockNum] != 0);
+
+        if (!--ucRecursionCountByLock[ulLockNum]) {
+            ucOwnedByCore[ulCoreNum] &= ~ulLockBit;
+            *pxSpinLock = 0;
+        }
+    }
+}
 #endif
 
 static unsigned long ulSchedulerReady = 0;
