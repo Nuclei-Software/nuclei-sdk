@@ -59,6 +59,18 @@ __STATIC_FORCEINLINE vint8m8_t __custom_vnice_cmpx_mult_v_i8m8 (vint8m8_t op1, v
     return result;
 }
 
+/** custom nice instruction vnice compx mask multi */
+__STATIC_FORCEINLINE vint8m8_t __custom_vnice_cmpx_mult_mask_v_i8m8 (vint8m8_t op1, vint8m8_t op2)
+{
+    vint8m8_t result;
+    asm volatile(".insn r 0xb, 3, 0x7f, %0, %1, %2"
+                : "=vr"(result)
+                : "vr"(op1)
+                , "vr"(op2)
+                );
+    return result;
+}
+
 void normal_case(uint32_t *addr_in1, uint32_t *addr_in2, uint32_t *addr_out);
 void vnice_case(uint32_t *addr_in1, uint32_t *addr_in2, uint32_t vnice_addr, uint32_t *addr_out);
 int compare_result(uint32_t *normal_out, uint32_t *vnice_out);

@@ -29,7 +29,7 @@ int main(void)
 
     printf("1. Set array_normal_in1 array_normal_in1 array_vnice_in1 array_vnice_in2\r\n");
     for (int i = 0; i < DATASIZE; i++) {
-        initdata = (i%16) + (i%16) << 8 + (i%16) << 16 + (i%16) << 24;
+        initdata = (i%16) + ((i%16) << 8) + ((i%16) << 16) + ((i%16) << 24);
         array_normal_in1[i] = initdata;
         array_normal_in2[i] = initdata;
         array_vnice_in1[i] = initdata;
