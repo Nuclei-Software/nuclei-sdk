@@ -39,8 +39,16 @@
 .section    .text.entry
 .align 8
 
+#ifndef configNUMBER_OF_CORES
+#define configNUMBER_OF_CORES   1
+#endif
+
 .extern xPortTaskSwitch
+#if ( configNUMBER_OF_CORES == 1 )
 .extern pxCurrentTCB
+#else
+.extern pxCurrentTCBs
+#endif
 .global prvPortStartFirstTask
 
 /**
@@ -267,10 +275,37 @@ prvPortStartFirstTask:
        before the scheduler is started is
        no longer required after the scheduler is started.
        Interrupt stack pointer is stored in CSR_MSCRATCH */
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
+    /* get correct sp for each cpu
+     * each stack size is __STACK_SIZE
+     * defined in linker script */
+    lui t1, %hi(__STACK_SIZE)
+    addi t1, t1, %lo(__STACK_SIZE)
     la t0, _sp
+    csrr a0, CSR_MHARTID
+    andi a0, a0, 0xFF
+    li a1, 0
+1:
+    beq a0, a1, 2f
+    sub t0, t0, t1
+    addi a1, a1, 1
+    j 1b
+2:
+#else
+    la t0, _sp // TODO need to consider SMP case
+#endif
     csrw CSR_MSCRATCH, t0
-    LOAD sp, pxCurrentTCB           /* Load pxCurrentTCB. */
-    LOAD sp, 0x0(sp)                /* Read sp from first TCB member */
+
+#if ( configNUMBER_OF_CORES == 1 )
+    LOAD t0, pxCurrentTCB           /* Load pxCurrentTCB. */
+#else
+    la t0, pxCurrentTCBs            /* Load pxCurrentTCBs[core] */
+    csrr t1, CSR_MHARTID
+    slli t1, t1, LOG_REGBYTES
+    add t0, t0, t1
+    LOAD t0, 0(t0)
+#endif
+    LOAD sp, 0x0(t0)                /* Read sp from first TCB member */
 
     /* Pop PC from stack and set MEPC */
     LOAD t0,  0  * REGBYTES(sp)
@@ -359,7 +394,15 @@ eclic_msip_handler:
     /* Push additional registers */
 
     /* Store sp to task stack */
-    LOAD t0, pxCurrentTCB
+#if ( configNUMBER_OF_CORES == 1 )
+    LOAD t0, pxCurrentTCB           /* Load pxCurrentTCB. */
+#else
+    la t0, pxCurrentTCBs            /* Load pxCurrentTCBs[core] */
+    csrr t1, CSR_MHARTID
+    slli t1, t1, LOG_REGBYTES
+    add t0, t0, t1
+    LOAD t0, 0(t0)
+#endif
     STORE sp, 0(t0)
 
     csrr t0, CSR_MEPC
@@ -367,7 +410,15 @@ eclic_msip_handler:
     jal xPortTaskSwitch
 
     /* Switch task context */
+#if ( configNUMBER_OF_CORES == 1 )
     LOAD t0, pxCurrentTCB           /* Load pxCurrentTCB. */
+#else
+    la t0, pxCurrentTCBs            /* Load pxCurrentTCBs[core] */
+    csrr t1, CSR_MHARTID
+    slli t1, t1, LOG_REGBYTES
+    add t0, t0, t1
+    LOAD t0, 0(t0)
+#endif
     LOAD sp, 0x0(t0)                /* Read sp from first TCB member */
 
     /* Pop PC from stack and set MEPC */

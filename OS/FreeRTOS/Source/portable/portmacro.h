@@ -89,16 +89,20 @@ typedef uint64_t TickType_t;
 #define portYIELD_FROM_ISR( x )                     portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
-/* Critical section management. */
-extern void vPortEnterCritical(void);
-extern void vPortExitCritical(void);
 
 #define portSET_INTERRUPT_MASK_FROM_ISR()       ulPortRaiseBASEPRI()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)    vPortSetBASEPRI(x)
 #define portDISABLE_INTERRUPTS()                vPortRaiseBASEPRI()
 #define portENABLE_INTERRUPTS()                 vPortSetBASEPRI(0)
+
+#if ( configNUMBER_OF_CORES == 1 )
+/* Critical section management. */
+extern void vPortEnterCritical(void);
+extern void vPortExitCritical(void);
+
 #define portENTER_CRITICAL()                    vPortEnterCritical()
 #define portEXIT_CRITICAL()                     vPortExitCritical()
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -167,6 +171,121 @@ portFORCE_INLINE static void vPortSetBASEPRI(uint8_t ulNewMaskValue)
 /*-----------------------------------------------------------*/
 
 #define portMEMORY_BARRIER()        __asm volatile( "" ::: "memory" )
+
+#if ( configNUMBER_OF_CORES == 1 )
+    extern UBaseType_t uxCriticalNesting;
+    #define portGET_CRITICAL_NESTING_COUNT()          ( uxCriticalNesting )
+    #define portSET_CRITICAL_NESTING_COUNT( x )       ( uxCriticalNesting = ( x ) )
+    #define portINCREMENT_CRITICAL_NESTING_COUNT()    ( uxCriticalNesting++ )
+    #define portDECREMENT_CRITICAL_NESTING_COUNT()    ( uxCriticalNesting-- )
+
+#else
+    /* Return the core ID on which the code is running. */
+    #define portGET_CORE_ID()                __get_hart_index()
+
+    /* Set the interrupt mask. */
+    #define portSET_INTERRUPT_MASK()         ulPortRaiseBASEPRI()
+
+    /* Clear the interrupt mask. */
+    #define portCLEAR_INTERRUPT_MASK( x )    vPortSetBASEPRI(x)
+
+    /* Request the core ID x to yield. */
+    #define portYIELD_CORE( x )              \
+    {                                                                               \
+        /* Set a software interrupt(SWI) to core x  to request a context switch. */ \
+        SysTimer_SetHartSWIRQ(x);                                                   \
+        /* Barriers are normally not required but do ensure the code is completely  \
+        within the specified behaviour for the architecture. */                     \
+        __RWMB();                                                                   \
+    }
+
+    #define portRTOS_SPINLOCK_COUNT    2
+    /* Multi-core */
+    #define portMAX_CORE_COUNT         16
+
+    typedef volatile uint32_t spin_lock_t;
+    extern spin_lock_t hw_sync_locks[portRTOS_SPINLOCK_COUNT];
+
+    /* Note this is a single method with uxAcquire parameter since we have
+    * static vars, the method is always called with a compile time constant for
+    * uxAcquire, and the compiler should do the right thing! */
+    static inline void vPortRecursiveLock(unsigned long ulLockNum,
+                                          spin_lock_t *pxSpinLock,
+                                          BaseType_t uxAcquire)
+    {
+        static uint8_t ucOwnedByCore[portMAX_CORE_COUNT];
+        static uint8_t ucRecursionCountByLock[portRTOS_SPINLOCK_COUNT];
+
+        configASSERT(ulLockNum < portRTOS_SPINLOCK_COUNT);
+        unsigned long ulCoreNum = __get_hart_index();
+        unsigned long ulLockBit = 1u << ulLockNum;
+        configASSERT(ulLockBit < 256u);
+
+        if (uxAcquire) {
+            if ((!*pxSpinLock == 0)) {
+                if (ucOwnedByCore[ulCoreNum] & ulLockBit) {
+                    configASSERT(ucRecursionCountByLock[ulLockNum] != 255u);
+                    ucRecursionCountByLock[ulLockNum]++;
+                    return;
+                }
+
+                while ((!*pxSpinLock == 0)) {
+                }
+            }
+
+            do {
+                if (__AMOSWAP_W(pxSpinLock, 1) == 0) {
+                    break;
+                }
+            } while (1);
+
+            configASSERT(ucRecursionCountByLock[ulLockNum] == 0);
+            ucRecursionCountByLock[ulLockNum] = 1;
+            ucOwnedByCore[ulCoreNum] |= ulLockBit;
+        } else {
+            configASSERT((ucOwnedByCore[ulCoreNum] & ulLockBit) != 0);
+            configASSERT(ucRecursionCountByLock[ulLockNum] != 0);
+
+            if (!--ucRecursionCountByLock[ulLockNum]) {
+                ucOwnedByCore[ulCoreNum] &= ~ulLockBit;
+                *pxSpinLock = 0;
+            }
+        }
+    }
+
+    /* Acquire the TASK lock. TASK lock is a recursive lock.
+     * It should be able to be locked by the same core multiple times. */
+    #define portGET_TASK_LOCK()         vPortRecursiveLock( 1, &hw_sync_locks[1], pdTRUE )
+
+    /* Release the TASK lock. If a TASK lock is locked by the same core multiple times,
+     * it should be released as many times as it is locked. */
+    #define portRELEASE_TASK_LOCK()     vPortRecursiveLock( 1, &hw_sync_locks[1], pdFALSE )
+
+    /* Acquire the ISR lock. ISR lock is a recursive lock.
+     * It should be able to be locked by the same core multiple times. */
+   #define portGET_ISR_LOCK()           vPortRecursiveLock( 0, &hw_sync_locks[0], pdTRUE )
+
+    /* Release the ISR lock. If a ISR lock is locked by the same core multiple times, \
+     * it should be released as many times as it is locked. */
+    #define portRELEASE_ISR_LOCK()      vPortRecursiveLock( 0, &hw_sync_locks[0], pdFALSE )
+
+    extern void vTaskEnterCritical( void );
+    extern void vTaskExitCritical( void );
+    extern UBaseType_t vTaskEnterCriticalFromISR( void );
+    extern void vTaskExitCriticalFromISR( UBaseType_t uxSavedInterruptStatus );
+    #define portENTER_CRITICAL()               vTaskEnterCritical()
+    #define portEXIT_CRITICAL()                vTaskExitCritical()
+    #define portENTER_CRITICAL_FROM_ISR()      vTaskEnterCriticalFromISR()
+    #define portEXIT_CRITICAL_FROM_ISR( x )    vTaskExitCriticalFromISR( x )
+
+    /* Critical nesting count management. */
+    extern UBaseType_t uxCriticalNestings[ configNUMBER_OF_CORES ];
+    #define portGET_CRITICAL_NESTING_COUNT()          ( uxCriticalNestings[ portGET_CORE_ID() ] )
+    #define portSET_CRITICAL_NESTING_COUNT( x )       ( uxCriticalNestings[ portGET_CORE_ID() ] = ( x ) )
+    #define portINCREMENT_CRITICAL_NESTING_COUNT()    ( uxCriticalNestings[ portGET_CORE_ID() ]++ )
+    #define portDECREMENT_CRITICAL_NESTING_COUNT()    ( uxCriticalNestings[ portGET_CORE_ID() ]-- )
+
+#endif /* if ( configNUMBER_OF_CORES > 1 ) */
 
 #ifdef __cplusplus
 }

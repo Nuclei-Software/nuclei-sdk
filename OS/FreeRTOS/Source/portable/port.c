@@ -34,7 +34,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-//#define ENABLE_KERNEL_DEBUG
+// #define ENABLE_KERNEL_DEBUG
 
 #ifdef ENABLE_KERNEL_DEBUG
 #define FREERTOS_PORT_DEBUG(...)                printf(__VA_ARGS__)
@@ -112,7 +112,12 @@ static void prvTaskExitError(void);
 
 /* Each task maintains its own interrupt status in the critical nesting
 variable. */
-static UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
+#if ( configNUMBER_OF_CORES == 1 )
+UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
+#else /* #if ( configNUMBER_OF_CORES == 1 ) */
+UBaseType_t uxCriticalNestings[ configNUMBER_OF_CORES ] = { 0 };
+#endif /* #if ( configNUMBER_OF_CORES == 1 ) */
+
 
 /*
  * Record the real MTH calculated by the configMAX_SYSCALL_INTERRUPT_PRIORITY
@@ -162,6 +167,11 @@ static TickType_t ulStoppedTimerCompensation = 0;
 static uint8_t ucMaxSysCallPriority = 0;
 #endif /* configASSERT_DEFINED */
 
+#if ( configNUMBER_OF_CORES > 1 )
+spin_lock_t hw_sync_locks[portRTOS_SPINLOCK_COUNT] = {0, 0};
+#endif
+
+static unsigned long ulSchedulerReady = 0;
 /*-----------------------------------------------------------*/
 
 /*
@@ -260,7 +270,7 @@ static void prvTaskExitError(void)
 
     Artificially force an assert() to be triggered if configASSERT() is
     defined, then stop here so application writers can catch the error. */
-    configASSERT(uxCriticalNesting == ~0UL);
+    configASSERT(portGET_CRITICAL_NESTING_COUNT() == ~0UL);
     portDISABLE_INTERRUPTS();
     while (ulDummy == 0) {
         /* This file calls prvTaskExitError() after the scheduler has been
@@ -342,12 +352,23 @@ BaseType_t xPortStartScheduler(void)
 #endif /* conifgASSERT_DEFINED */
 
     __disable_irq();
+
+    if (__get_hart_index() == BOOT_HARTID) {
+        ulSchedulerReady = 1;
+    } else {
+        // other cores wait for scheduler ready signal
+        while (ulSchedulerReady == 0);
+    }
+
     /* Start the timer that generates the tick ISR.  Interrupts are disabled
     here already. */
     vPortSetupTimerInterrupt();
 
     /* Initialise the critical nesting count ready for the first task. */
-    uxCriticalNesting = 0;
+    portSET_CRITICAL_NESTING_COUNT(0);
+
+    /* Initialise base priority to zero. */
+    vPortSetBASEPRI(0);
 
     /* Start the first task. */
     prvPortStartFirstTask();
@@ -358,7 +379,11 @@ BaseType_t xPortStartScheduler(void)
     functionality by defining configTASK_RETURN_ADDRESS.  Call
     vTaskSwitchContext() so link time optimisation does not remove the
     symbol. */
+#if ( configNUMBER_OF_CORES > 1 )
+    vTaskSwitchContext( portGET_CORE_ID() );
+#else
     vTaskSwitchContext();
+#endif
     prvTaskExitError();
 
     /* Should not get here! */
@@ -370,21 +395,21 @@ void vPortEndScheduler(void)
 {
     /* Not implemented in ports where there is nothing to return to.
     Artificially force an assert. */
-    configASSERT(uxCriticalNesting == 1000UL);
+    configASSERT(portGET_CRITICAL_NESTING_COUNT() == 1000UL);
 }
 /*-----------------------------------------------------------*/
 
 void vPortEnterCritical(void)
 {
     portDISABLE_INTERRUPTS();
-    uxCriticalNesting++;
+    portINCREMENT_CRITICAL_NESTING_COUNT();
 
     /* This is not the interrupt safe version of the enter critical function so
     assert() if it is being called from an interrupt context.  Only API
     functions that end in "FromISR" can be used in an interrupt.  Only assert if
     the critical nesting count is 1 to protect against recursive calls if the
     assert function also uses a critical section. */
-    if (uxCriticalNesting == 1) {
+    if (portGET_CRITICAL_NESTING_COUNT() == 1) {
         configASSERT((__ECLIC_GetMth() & portMTH_MASK) == uxMaxSysCallMTH);
     }
 }
@@ -392,9 +417,9 @@ void vPortEnterCritical(void)
 
 void vPortExitCritical(void)
 {
-    configASSERT(uxCriticalNesting);
-    uxCriticalNesting--;
-    if (uxCriticalNesting == 0) {
+    configASSERT(portGET_CRITICAL_NESTING_COUNT());
+    portDECREMENT_CRITICAL_NESTING_COUNT();
+    if (portGET_CRITICAL_NESTING_COUNT() == 0) {
         portENABLE_INTERRUPTS();
     }
 }
@@ -425,7 +450,11 @@ void xPortTaskSwitch(void)
     portDISABLE_INTERRUPTS();
     /* Clear Software IRQ, A MUST */
     SysTimer_ClearSWIRQ();
+#if ( configNUMBER_OF_CORES > 1 )
+    vTaskSwitchContext( portGET_CORE_ID() );
+#else
     vTaskSwitchContext();
+#endif
     portENABLE_INTERRUPTS();
 }
 /*-----------------------------------------------------------*/
@@ -436,6 +465,7 @@ void xPortSysTickHandler(void)
     executes all interrupts must be unmasked.  There is therefore no need to
     save and then restore the interrupt mask value as its value is already
     known. */
+#if ( configNUMBER_OF_CORES == 1 )
     portDISABLE_INTERRUPTS();
     {
         SysTick_Reload(SYSTICK_TICK_CONST);
@@ -447,6 +477,23 @@ void xPortSysTickHandler(void)
         }
     }
     portENABLE_INTERRUPTS();
+#else
+    UBaseType_t ulPreviousMask;
+    /* Tasks or ISRs running on other cores may still in critical section in
+     * multiple cores environment. Incrementing tick needs to performed in
+     * critical section. */
+    ulPreviousMask = taskENTER_CRITICAL_FROM_ISR();
+    {
+        SysTick_Reload(SYSTICK_TICK_CONST);
+        /* Increment the RTOS tick. */
+        if (xTaskIncrementTick() != pdFALSE) {
+            /* A context switch is required.  Context switching is performed in
+            the SWI interrupt.  Pend the SWI interrupt. */
+            portYIELD();
+        }
+    }
+    taskEXIT_CRITICAL_FROM_ISR( ulPreviousMask );
+#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -610,11 +657,13 @@ __attribute__((weak)) void vPortSetupTimerInterrupt(void)
 
     /* Make SWI and SysTick the lowest priority interrupts. */
     /* Stop and clear the SysTimer. SysTimer as Non-Vector Interrupt */
-    SysTick_Config(ticks);
-    ECLIC_DisableIRQ(SysTimer_IRQn);
-    ECLIC_SetLevelIRQ(SysTimer_IRQn, configKERNEL_INTERRUPT_PRIORITY);
-    ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
-    ECLIC_EnableIRQ(SysTimer_IRQn);
+    if (__get_hart_index() == BOOT_HARTID) {
+        SysTick_Config(ticks);
+        ECLIC_DisableIRQ(SysTimer_IRQn);
+        ECLIC_SetLevelIRQ(SysTimer_IRQn, configKERNEL_INTERRUPT_PRIORITY);
+        ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
+        ECLIC_EnableIRQ(SysTimer_IRQn);
+    }
 
     /* Set SWI interrupt level to lowest level/priority, SysTimerSW as Vector Interrupt */
     ECLIC_SetShvIRQ(SysTimerSW_IRQn, ECLIC_VECTOR_INTERRUPT);
