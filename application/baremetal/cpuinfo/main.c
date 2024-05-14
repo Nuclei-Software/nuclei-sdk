@@ -216,7 +216,7 @@ void nuclei_cpuinfo(void)
     if (mcfg.b.plic) {
         mtlbcfg = (CSR_MTLBCFGINFO_Type)__RV_CSR_READ(CSR_MTLBCFG_INFO);
         printf("             TLB:");
-        printf(" MainTLB(set=%lu way=%lu entry=%lu ecc=%lu) ITLB(entry=%lu) DTLB(entry=%lu)\r\n", \
+        printf(" MainTLB(set=%lu,way=%lu,entry=%lu,ecc=%lu) ITLB(entry=%lu) DTLB(entry=%lu)\r\n", \
                 POWER_FOR_TWO(mtlbcfg.b.set + 3), mtlbcfg.b.way + 1, LINESZ(mtlbcfg.b.lsize), \
                 mtlbcfg.b.ecc, LINESZ(mtlbcfg.b.i_size), LINESZ(mtlbcfg.b.d_size));
     }
