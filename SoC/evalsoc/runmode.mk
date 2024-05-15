@@ -67,9 +67,9 @@ CCM_EN ?=
 ifneq ($(CCM_EN),)
 COMMON_FLAGS += -DRUNMODE_CCM_EN=$(CCM_EN)
 endif
+endif
 
 LDSPEC_EN ?=
 ifneq ($(LDSPEC_EN),)
 COMMON_FLAGS += -DRUNMODE_LDSPEC_EN=$(LDSPEC_EN)
-endif
 endif
