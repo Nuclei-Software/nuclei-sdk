@@ -36,3 +36,5 @@ buildconfig:
   - type: common
     common_defines:
       - defines: RTOS_FREERTOS
+      - defines: configNUMBER_OF_CORES=${nuclei_smp}
+        condition: $( ${nuclei_smp} > 1 )
