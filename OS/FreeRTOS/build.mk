@@ -7,3 +7,8 @@ ASM_SRCDIRS += $(NUCLEI_SDK_RTOS)/Source/portable/GCC
 
 INCDIRS += $(NUCLEI_SDK_RTOS)/Source/include \
 		$(NUCLEI_SDK_RTOS)/Source/portable
+
+# Enable SMP FreeRTOS support when SMP is defined
+ifneq ($(SMP),)
+COMMON_FLAGS += -DconfigNUMBER_OF_CORES=$(SMP)
+endif
