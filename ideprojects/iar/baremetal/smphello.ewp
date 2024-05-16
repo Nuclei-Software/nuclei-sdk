@@ -16,7 +16,7 @@
                 <debug>1</debug>
                 <option>
                     <name>GDeviceSelect</name>
-                    <state>UX900	Nuclei UX900</state>
+                    <state>NX900	Nuclei NX900</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -125,7 +125,7 @@
                 </option>
                 <option>
                     <name>GDeviceSelectSlave</name>
-                    <state>N300	Nuclei N300</state>
+                    <state>UX900	Nuclei UX900</state>
                 </option>
                 <option>
                     <name>GGeneralAutoVectorSetup</name>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>GDeviceCoreIBASRadioSlave</name>
-                    <state>1</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>GDeviceMultSlave</name>
@@ -554,7 +554,7 @@
                 </option>
                 <option>
                     <name>AsmDefines</name>
-                    <state></state>
+                    <state>SMP_CPU_CNT=4</state>
                 </option>
                 <option>
                     <name>PreInclude</name>
@@ -654,7 +654,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>1</hasPrio>
+                <hasPrio>248</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
@@ -723,7 +723,7 @@
                 </option>
                 <option>
                     <name>IlinkConfigDefines</name>
-                    <state></state>
+                    <state>SMP_CPU_CNT=4</state>
                 </option>
                 <option>
                     <name>IlinkMapFile</name>

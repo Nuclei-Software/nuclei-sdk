@@ -16,7 +16,7 @@
                 <debug>1</debug>
                 <option>
                     <name>GDeviceSelect</name>
-                    <state>UX900	Nuclei UX900</state>
+                    <state>NX900	Nuclei NX900</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -555,7 +555,7 @@
                 </option>
                 <option>
                     <name>AsmDefines</name>
-                    <state></state>
+                    <state>SMP_CPU_CNT=2</state>
                 </option>
                 <option>
                     <name>PreInclude</name>
@@ -655,7 +655,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>128</hasPrio>
+                <hasPrio>248</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
@@ -724,7 +724,7 @@
                 </option>
                 <option>
                     <name>IlinkConfigDefines</name>
-                    <state></state>
+                    <state>SMP_CPU_CNT=2</state>
                 </option>
                 <option>
                     <name>IlinkMapFile</name>
