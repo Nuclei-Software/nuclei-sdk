@@ -9,16 +9,6 @@
 #include "iarMacros.m"
 #include "iarCfi.m"
 
-SetMCSP macro
-        li12    a1, \1
-        bne     a0, a1, ?not_hart_\1
-        la      a0, SFE(CSTACK\1)
-        // CSTACK END ADDR should not be zero, if zero it means CSTACKx is not setup in linker script
-        beqz    a0, ?sp_not_ready
-        andi    sp, a0, -16
-        j       ?sp_setup_done
-?not_hart_\1:
-        endm
 
         MODULE  ?cstartup
 
@@ -26,21 +16,7 @@ SetMCSP macro
         PUBLIC   __iar_program_start_metal
 
         SECTION CSTACK:DATA:NOROOT(4)
-        SECTION CSTACK1:DATA:NOROOT(4)
-        SECTION CSTACK2:DATA:NOROOT(4)
-        SECTION CSTACK3:DATA:NOROOT(4)
-        SECTION CSTACK4:DATA:NOROOT(4)
-        SECTION CSTACK5:DATA:NOROOT(4)
-        SECTION CSTACK6:DATA:NOROOT(4)
-        SECTION CSTACK7:DATA:NOROOT(4)
-        SECTION CSTACK8:DATA:NOROOT(4)
-        SECTION CSTACK9:DATA:NOROOT(4)
-        SECTION CSTACK10:DATA:NOROOT(4)
-        SECTION CSTACK11:DATA:NOROOT(4)
-        SECTION CSTACK12:DATA:NOROOT(4)
-        SECTION CSTACK13:DATA:NOROOT(4)
-        SECTION CSTACK14:DATA:NOROOT(4)
-        SECTION CSTACK15:DATA:NOROOT(4)
+
 
         // --------------------------------------------------
 
@@ -94,28 +70,27 @@ __iar_cstart_init_gp:
 ?cstart_init_sp:
         cfi ?RET Undefined
 
-        // One stack for each hart
-        csrr    a0, mhartid
-        bne     a0, zero, ?not_hart_0
-        la      a0, SFE(CSTACK)
-        andi    sp, a0, -16
-        j       ?sp_setup_done
-?not_hart_0:
-        SetMCSP 1
-        SetMCSP 2
-        SetMCSP 3
-        SetMCSP 4
-        SetMCSP 5
-        SetMCSP 6
-        SetMCSP 7
-        // TODO if you want more smp cpu supported, please add similiar code as above
-        // currently we only put 8 core smp supported
-
-        // if sp for one cpu stack section is not setup in icf, this core should spin here
-        // the stack section for cpu x should be CSTACKx
-?sp_not_ready:
-        j       ?sp_not_ready
-?sp_setup_done:
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
+        /* Set correct sp for each cpu
+        * each stack size is __STACK_SIZE
+        * defined in linker script */
+        EXTERN  __STACK_SIZE
+        lui t0, %hi(__STACK_SIZE)
+        addi t0, t0, %lo(__STACK_SIZE)
+        la sp, SFE(CSTACK)
+        csrr a0, mhartid
+        andi a0, a0, 0xFF
+        li a1, 0
+_per_cpu_init_sp_cont:
+        beq a0, a1, _per_cpu_init_sp_fin
+        sub sp, sp, t0
+        addi a1, a1, 1
+        j _per_cpu_init_sp_cont
+_per_cpu_init_sp_fin:
+#else
+        /* Set correct sp for current cpu */
+        la sp, SFE(CSTACK)
+#endif
 
         CfiEnd  2
 

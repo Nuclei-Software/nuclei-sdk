@@ -5,6 +5,8 @@
 
 define exported symbol _link_file_version_2 = 1;
 define exported symbol _max_vector = 4096;
+define exported symbol __STACK_SIZE = CSTACK_SIZE;
+define exported symbol __HEAP_SIZE = HEAP_SIZE;
 
 define memory mem with size = 4G;
 
@@ -15,8 +17,7 @@ initialize by copy { rw };
 do not initialize  { section *.noinit };
 keep symbol __iar_cstart_init_gp; // defined in cstartup.s
 
-define block CSTACK with alignment = 16, size = CSTACK_SIZE { };
-define block CSTACK1 with alignment = 16, size = CSTACK_SIZE { };
+define block CSTACK with alignment = 16, size = CSTACK_SIZE * SMP_CPU_CNT { };
 define block HEAP   with alignment = 16, size = HEAP_SIZE   { };
 
 define block MINTERRUPTS with maximum size =  64k { ro section .mtext };
@@ -42,5 +43,4 @@ keep { section .rti_fn* };
 "RAM32":place in RAM_region32        { block RW_DATA,
                                        block HEAP,
                                        block CSTACK,
-                                       block CSTACK1
                                        };
