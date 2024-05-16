@@ -39,7 +39,10 @@
 .section    .text.entry
 .align 8
 
-#ifndef configNUMBER_OF_CORES
+// If you want to use SMP freertos
+// configNUMBER_OF_CORES must be defined to the number of cores in your system.
+// If you define configNUMBER_OF_CORES using -D option, you must make sure that
+// asm option must contains this macro defined
 #define configNUMBER_OF_CORES   1
 #endif
 
