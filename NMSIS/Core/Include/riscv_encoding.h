@@ -941,6 +941,9 @@
 #define CSR_MDEVM               0x7F4
 #define CSR_MNOCB               0x7F5
 #define CSR_MNOCM               0x7F6
+#define CSR_MMACRO_DEV_EN       0xBC8
+#define CSR_MMACRO_NOC_EN       0xBC9
+#define CSR_MMACRO_CA_EN        0xBCA
 #define CSR_MATTRI0_BASE        0x7F3
 #define CSR_MATTRI0_MASK        0x7F4
 #define CSR_MATTRI1_BASE        0x7F5
@@ -951,6 +954,28 @@
 #define CSR_MATTRI3_MASK        0x7FC
 #define CSR_MATTRI4_BASE        0x7FD
 #define CSR_MATTRI4_MASK        0x7FE
+#define CSR_MATTRI5_BASE        0xBE0
+#define CSR_MATTRI5_MASK        0xBE1
+#define CSR_MATTRI6_BASE        0xBE2
+#define CSR_MATTRI6_MASK        0xBE3
+#define CSR_MATTRI7_BASE        0xBE4
+#define CSR_MATTRI7_MASK        0xBE5
+#define CSR_SATTRI0_BASE        0x5F0
+#define CSR_SATTRI0_MASK        0x5F1
+#define CSR_SATTRI1_BASE        0x5F2
+#define CSR_SATTRI1_MASK        0x5F3
+#define CSR_SATTRI2_BASE        0x5F4
+#define CSR_SATTRI2_MASK        0x5F5
+#define CSR_SATTRI3_BASE        0x5F6
+#define CSR_SATTRI3_MASK        0x5F7
+#define CSR_SATTRI4_BASE        0x5F8
+#define CSR_SATTRI4_MASK        0x5F9
+#define CSR_SATTRI5_BASE        0x5FA
+#define CSR_SATTRI5_MASK        0x5FB
+#define CSR_SATTRI6_BASE        0x5FC
+#define CSR_SATTRI6_MASK        0x5FD
+#define CSR_SATTRI7_BASE        0x5FE
+#define CSR_SATTRI7_MASK        0x5FF
 
 /* === IREGION === */
 #define CSR_MSMPCFG_INFO        0x7F7
@@ -970,7 +995,12 @@
 #define CSR_MTLBCFG_INFO        0xFC3
 
 /* === ECC === */
+#define CSR_MECC_CTL            0xBC0
 #define CSR_MECC_STATUS         0xBC4
+
+/* === STL === */
+#define CSR_SAFETY_CRC_CTL      0x813
+#define CSR_SAFETY_STL_STATUS   0x814
 
 /* === Stack protect === */
 #define CSR_MSTACK_CTRL         0x7C6
