@@ -32,11 +32,11 @@ These projects demostrated the following features:
 - SMP application is now supported in IAR project see `smphello`, to support SMP, you should use different startup asm code
   and different linker file provided in this repo, see `SoC/evalsoc/Common/Source/IAR/startup.S`, and for the linker file,
   you can refer to `application/baremetal/smphello/iar_evalsoc_smp.icf` which is base on the `iar_evalsoc_ddr.icf` mainly
-  setup different `CSTACKx` for different core, and you should also define a macro called `SMP_CPU_CNT` to define how many
-  cores you want to support, such as `SMP_CPU_CNT=4`.
+  require linker define `SMP_CPU_CNT` to control how many cpu cores are used, and prepare correct `CSTACK` for these smp cpu,
+  and you should also define a macro in `asm/c/cpp/linker` options called `SMP_CPU_CNT` to define how many cores you want to support, such as `SMP_CPU_CNT=4`.
 - `demo_cidu` example is also added as a smp application, which require CIDU feature enabled, and a seperated linker file
   `application/baremetal/demo_cidu/iar_evalsoc_smp.icf` is used which setup CSTACK for two cpu, and also set extra macros
-  `SMP_CPU_CNT=2` and `__CIDU_PRESENT=1`.
+  `SMP_CPU_CNT=2` and `__CIDU_PRESENT=1`, linker config define must be defined `SMP_CPU_CNT=2`.
 
 You can directly try with this iar workspace by click this `nucleisdk.eww` after you have installed [IAR Workbench](https://www.iar.com/riscv).
 ![IAR Projects for Nuclei](asserts/nsdk_iar_projects.png)
