@@ -43,6 +43,7 @@
 // configNUMBER_OF_CORES must be defined to the number of cores in your system.
 // If you define configNUMBER_OF_CORES using -D option, you must make sure that
 // asm option must contains this macro defined
+#ifndef configNUMBER_OF_CORES
 #define configNUMBER_OF_CORES   1
 #endif
 
