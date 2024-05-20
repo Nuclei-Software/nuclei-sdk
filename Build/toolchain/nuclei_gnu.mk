@@ -132,7 +132,8 @@ endif
 # TODO Workaround: when v extension is enabled, disable memcpy generated using vector instruction
 # upstream just remove this -mmemcpy-strategy option, will remove it later
 ifneq ($(findstring v,$(ARCH_EXT)),)
-COMMON_FLAGS += -mmemcpy-strategy=scalar
+#COMMON_FLAGS += -mmemcpy-strategy=scalar
+#COMMON_FLAGS += -mstringop-strategy=scalar
 endif
 
 LDFLAGS += -nodefaultlibs
