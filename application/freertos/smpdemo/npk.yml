@@ -1,0 +1,58 @@
+## Package Base Information
+name: app-nsdk_freertos_smpdemo
+owner: nuclei
+version:
+description: FreeRTOS SMP Task Demo
+type: app
+keywords:
+  - freertos
+  - task demo
+category: freertos application
+license:
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+  - name: osp-nsdk_freertos
+    version:
+
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    value:
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+  - config: nuclei_smp
+    value: 2
+  - config: nuclei_core
+    value: nx900
+  - config: heapsz
+    value: 2K
+  - config: stacksz
+    value: 2K
+  - config: download_mode
+    value: sram
+  - config: nuclei_cache
+    value: ["ic", "dc", "ccm"]
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
