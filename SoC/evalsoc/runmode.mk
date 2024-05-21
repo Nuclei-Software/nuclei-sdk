@@ -73,3 +73,13 @@ LDSPEC_EN ?=
 ifneq ($(LDSPEC_EN),)
 COMMON_FLAGS += -DRUNMODE_LDSPEC_EN=$(LDSPEC_EN)
 endif
+
+L2_EN ?=
+ifneq ($(L2_EN),)
+COMMON_FLAGS += -DRUNMODE_L2_EN=$(L2_EN)
+endif
+
+BPU_EN ?=
+ifneq ($(BPU_EN),)
+COMMON_FLAGS += -DRUNMODE_BPU_EN=$(BPU_EN)
+endif

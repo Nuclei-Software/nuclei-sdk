@@ -839,6 +839,31 @@ void _premain_init(void)
         while (SystemIRegionInfo.eclic_base == 0);
     }
 
+#if defined(RUNMODE_L2_EN)
+    if ((mcfginfo & (0x1 << 11)) && SMP_CTRLREG(SystemIRegionInfo.smp_base, 0x4) & 0x1 ) { // L2 Cache present
+#if RUNMODE_L2_EN == 1
+        // Enable L2, disable cluster local memory
+        SMP_CTRLREG(SystemIRegionInfo.smp_base, 0x10) = 0x1;
+        SMP_CTRLREG(SystemIRegionInfo.smp_base, 0xd8) = 0x0;
+        __SMP_RWMB();
+#else
+        // Disable L2, enable cluster local memory
+        SMP_CTRLREG(SystemIRegionInfo.smp_base, 0x10) = 0x0;
+        // use as clm or cache, when l2 disable, the affect to ddr is the same, l2 is really disabled
+        SMP_CTRLREG(SystemIRegionInfo.smp_base, 0xd8) = 0;//0xFFFFFFFF;
+        __SMP_RWMB();
+#endif
+    }
+#endif
+
+#if defined(RUNMODE_BPU_EN)
+#if RUNMODE_BPU_EN == 1
+    __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_BPU);
+#else
+    __RV_CSR_CLEAR(CSR_MMISC_CTL, MMISC_CTL_BPU);
+#endif
+#endif
+
     if (hartid == BOOT_HARTID) { // only required for boot hartid
         // TODO implement get_cpu_freq function to get real cpu clock freq in HZ or directly give the real cpu HZ
         SystemCoreClock = get_cpu_freq();
@@ -864,6 +889,7 @@ void _premain_init(void)
         if (mcfginfo & 0x600) {
             printf("CSR: MCACHE_CTL 0x%x\n", __RV_CSR_READ(CSR_MCACHE_CTL));
         }
+        printf("CSR: MMISC_CTL 0x%x\n", __RV_CSR_READ(CSR_MMISC_CTL));
 #endif
     } else {
         /* ECLIC initialization, mainly MTH and NLBIT */
