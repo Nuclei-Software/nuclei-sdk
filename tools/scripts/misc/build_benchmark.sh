@@ -45,7 +45,7 @@ function do_bench {
 
 function do_all_benches {
     local genloc=${1:-$gen_elf_loc}
-    for core_series in n100e-100 n100em-100 n100eczmmul-100 n100-100 n100m-100 n100zmmul-100
+    for core_series in n100e-100 n100em-100 n100ezmmul-100 n100-100 n100m-100 n100zmmul-100
     do
         for stdclib in newlib_small libncrt_small
         do
