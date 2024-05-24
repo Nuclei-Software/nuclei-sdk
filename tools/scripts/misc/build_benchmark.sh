@@ -89,8 +89,12 @@ function dobench_for_runmode {
         if [ "x$RUNMODE" == "x" ] ; then
             runmode=default
         fi
+        # for runmode=cache, need to run on sram area
+        if [ "x$RUNMODE" == "xcache" ] ; then
+            export DOWNLOAD=sram
+        fi
         do_all_benches $genloc/$runmode
-        unset RUNMODE
+        unset RUNMODE DOWNLOAD
     done
 }
 
