@@ -116,9 +116,13 @@ function run_for_one {
     if [ "x$RUNMODE" == "xcache" ] ; then
         export DOWNLOAD=sram
     fi
+    runmode=$RUNMODE
+    if [ "x$RUNMODE" == "x" ] ; then
+        runmode=default
+    fi
     local logdir=${1:-$LOGDIR}
-    runbench_for_allcores $logdir/$RUNMODE
-    rundhry_for_allcores $logdir/$RUNMODE
+    runbench_for_allcores $logdir/$runmode
+    rundhry_for_allcores $logdir/$runmode
     unset RUNMODE DOWNLOAD
 }
 
