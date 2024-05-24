@@ -441,12 +441,15 @@ run_on_ncycm:
     - find $LOGROOT -name "result.csv" | xargs cat
 
 sdk_gen_benchmark:
+  timeout: 4h
   <<: *job_template_default
   script:
     - export LOGROOT=gen
     - export RUNTARGET=
     - export SDK_COPY_OBJECTS="elf,map,dump"
-    - RUNMODE=all bash tools/scripts/misc/dobench/dobench.sh $LOGROOT
+    - RUNMODE= bash tools/scripts/misc/dobench/dobench.sh $LOGROOT
+    - RUNMODE=lm bash tools/scripts/misc/dobench/dobench.sh $LOGROOT
+    - RUNMODE=cache bash tools/scripts/misc/dobench/dobench.sh $LOGROOT
     - bash tools/scripts/misc/build_benchmark.sh
   artifacts:
     when: always
