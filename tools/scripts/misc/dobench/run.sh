@@ -99,19 +99,27 @@ function run_for_allmodes {
         if [ "x$RUNMODE" == "x" ] ; then
             runmode=default
         fi
+        # for runmode=cache, need to run on sram area
+        if [ "x$RUNMODE" == "xcache" ] ; then
+            export DOWNLOAD=sram
+        fi
         runbench_for_allcores $logdir/$runmode
         rundhry_for_allcores $logdir/$runmode
-        unset RUNMODE
+        unset RUNMODE DOWNLOAD
     done
 }
 
 function run_for_one {
     echo "Generate only for run mode=$RUNMODE"
     export RUNMODE=$RUNMODE
+    # for runmode=cache, need to run on sram area
+    if [ "x$RUNMODE" == "xcache" ] ; then
+        export DOWNLOAD=sram
+    fi
     local logdir=${1:-$LOGDIR}
     runbench_for_allcores $logdir/$RUNMODE
     rundhry_for_allcores $logdir/$RUNMODE
-
+    unset RUNMODE DOWNLOAD
 }
 
 function prebench {
