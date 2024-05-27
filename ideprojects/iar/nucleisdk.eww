@@ -43,6 +43,9 @@
         <path>$WS_DIR$\rtos\freertos_demo.ewp</path>
     </project>
     <project>
+        <path>$WS_DIR$\rtos\freertos_smpdemo.ewp</path>
+    </project>
+    <project>
         <path>$WS_DIR$\baremetal\helloworld.ewp</path>
     </project>
     <project>
