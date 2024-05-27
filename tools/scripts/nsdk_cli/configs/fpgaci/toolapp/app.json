@@ -28,6 +28,7 @@
         "application/baremetal/demo_vnice",
         "application/baremetal/demo_cidu",
         "application/baremetal/dsp_examples",
+        "application/freertos/smpdemo",
         "application/baremetal/Internal"
     ],
     "appconfig": {

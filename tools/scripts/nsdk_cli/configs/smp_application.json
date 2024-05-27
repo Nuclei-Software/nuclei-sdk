@@ -22,7 +22,8 @@
     },
     "appdirs": [
         "application/baremetal/demo_cidu",
-        "application/baremetal/smphello"
+        "application/baremetal/smphello",
+        "application/freertos/smpdemo"
     ],
     "appdirs_ignore": [
     ],
@@ -31,6 +32,12 @@
             "build_config" : {},
             "checks": {
                 "PASS": ["[ERROR]__CIDU_PRESENT must be defined as 1 in <Device>.h!", "Core 1 has received interrupt from core 0", "[WARN] SMP & CIDU not present"]
+            }
+        },
+        "application/freertos/smpdemo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["timers Callback 3 on hart"]
             }
         },
         "application/baremetal/smphello": {

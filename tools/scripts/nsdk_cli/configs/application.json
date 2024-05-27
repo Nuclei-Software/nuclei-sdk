@@ -27,6 +27,7 @@
         "application/baremetal/demo_vnice",
         "application/baremetal/demo_cidu",
         "application/baremetal/dsp_examples",
+        "application/freertos/smpdemo",
         "application/baremetal/Internal"
     ],
     "appconfig": {
@@ -145,6 +146,12 @@
             "build_config" : {},
             "checks": {
                 "PASS": ["timers Callback 3"]
+            }
+        },
+        "application/freertos/smpdemo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["timers Callback 3 on hart"]
             }
         },
         "application/rtthread/demo": {
