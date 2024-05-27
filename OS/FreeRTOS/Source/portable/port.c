@@ -399,12 +399,14 @@ BaseType_t xPortStartScheduler(void)
 
     __disable_irq();
 
+#if ( configNUMBER_OF_CORES > 1 )
     if (__get_hart_index() == BOOT_HARTID) {
         ulSchedulerReady = 1;
     } else {
         // other cores wait for scheduler ready signal
         while (ulSchedulerReady == 0);
     }
+#endif
 
     /* Start the timer that generates the tick ISR.  Interrupts are disabled
     here already. */
@@ -703,7 +705,11 @@ __attribute__((weak)) void vPortSetupTimerInterrupt(void)
 
     /* Make SWI and SysTick the lowest priority interrupts. */
     /* Stop and clear the SysTimer. SysTimer as Non-Vector Interrupt */
+#if ( configNUMBER_OF_CORES > 1 )
     if (__get_hart_index() == BOOT_HARTID) {
+#else
+    if (1) {
+#endif
         SysTick_Config(ticks);
         ECLIC_DisableIRQ(SysTimer_IRQn);
         ECLIC_SetLevelIRQ(SysTimer_IRQn, configKERNEL_INTERRUPT_PRIORITY);
