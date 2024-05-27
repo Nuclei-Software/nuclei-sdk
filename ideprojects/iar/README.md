@@ -28,6 +28,7 @@ These projects demostrated the following features:
 > SMP is now supported in IAR workbench since Nuclei SDK 0.5.1, please refer to `smphello` or `demo_cidu` project.
 > `smphello` IAR IDE project by default should run on UX900FD x 4 SMP CORE, and program run on DDR memory.
 > `demo_cidu` IAR IDE project by default should run on UX900FD x 2 SMP CORE, and CIDU feature, and program run on DDR memory.
+> `freertos_smpdemo` IAR IDE project by default should run on NX900FD x 2 SMP CORE, with ECLIC present, and run on DDR memory to demostrate FreeRTOS with SMP feature, you can configure how smp cores used in this demo, by modify the project properties **configNUMBER_OF_CORES** and **SMP_CPU_CNT** in `C/C++ Compiler and Assembler -> Preprocessor -> Defined symbols(one per line)` and **SMP_CPU_CNT** in `Linker -> Config -> Configuration file symbol definitions:(one per line)`.
 
 - SMP application is now supported in IAR project see `smphello`, to support SMP, you should use different startup asm code
   and different linker file provided in this repo, see `SoC/evalsoc/Common/Source/IAR/startup.S`, and for the linker file,
