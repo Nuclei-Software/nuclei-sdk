@@ -121,8 +121,8 @@ function run_for_one {
         runmode=default
     fi
     local logdir=${1:-$LOGDIR}
-    runbench_for_allcores $logdir/$runmode
-    rundhry_for_allcores $logdir/$runmode
+    runbench_for_allcores $logdir
+    rundhry_for_allcores $logdir
     unset RUNMODE DOWNLOAD
 }
 
