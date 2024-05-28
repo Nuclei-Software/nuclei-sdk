@@ -9,3 +9,4 @@ SoC
    demosoc.rst
    evalsoc.rst
    gd32vf103.rst
+   gd32vw55x.rst

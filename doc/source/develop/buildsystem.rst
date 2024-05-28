@@ -475,6 +475,8 @@ Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
      - Reference
    * - gd32vf103
      - :ref:`design_soc_gd32vf103`
+   * - gd32vw55x
+     - :ref:`design_soc_gd32vw55x`
    * - evalsoc
      - :ref:`design_soc_evalsoc`
 
@@ -498,6 +500,7 @@ You can easily find the supported Boards in the **<NUCLEI_SDK_ROOT>/<SOC>/Board/
 
 * :ref:`table_dev_buildsystem_2`
 * :ref:`table_dev_buildsystem_3`
+* :ref:`table_dev_buildsystem_3_1`
 
 
 Currently we support the following SoCs.
@@ -521,6 +524,8 @@ Currently we support the following SoCs.
      - :ref:`design_board_sipeed_longan_nano`
    * - gd32vf103c_t_display
      - :ref:`design_board_sipeed_longan_nano`
+   * - gd32vw553h_eval
+     - :ref:`design_board_gd32vw553h_eval`
 
 .. _table_dev_buildsystem_3:
 
@@ -533,6 +538,18 @@ Currently we support the following SoCs.
      - Reference
    * - nuclei_fpga_eval
      - :ref:`design_board_nuclei_fpga_eval`
+
+.. _table_dev_buildsystem_3_1:
+
+.. list-table:: Supported Boards when SOC=g32vw55x
+   :widths: 20, 60
+   :header-rows: 1
+   :align: center
+
+   * - **BOARD**
+     - Reference
+   * - gd32vw553h_eval
+     - :ref:`design_board_gd32vw553h_eval`
 
 .. note::
 
@@ -650,6 +667,9 @@ CORE
 **CORE** variable is used to declare the Nuclei processor core
 of the application.
 
+**NOTICE**: Nuclei 100 series such as N100 is not supported by normal Nuclei SDK, you need
+to switch to ``develop_n100`` branch to try it out.
+
 Currently it has these cores supported as described in table
 :ref:`table_dev_buildsystem_6`.
 
@@ -703,7 +723,7 @@ depended on the implementation of SoC build.mk.
 
 Take ``SOC=evalsoc`` as example.
 
-- If **CORE=n205 ARCH_EXT=**, then ``ARCH=rv32imac, ABI=ilp32 TUNE=nuclei-200-series``. 
+- If **CORE=n205 ARCH_EXT=**, then ``ARCH=rv32imac, ABI=ilp32 TUNE=nuclei-200-series``.
   riscv arch related compile and link options will be passed, for this case, it will be
   ``-march=rv32imac -mabi=ilp32 -mtune=nuclei-200-series``.
 
@@ -730,9 +750,21 @@ RISC-V Processor, except the ``iemafdc``.
 
    About the incompatiable march option change, please see https://github.com/riscv-non-isa/riscv-toolchain-conventions/pull/26, which is already present in latest gcc and clang release.
 
-When using gcc 13 or clang 17 toolchain in 2023.10 toolchain release, you need to use it like this in 0.5.0 sdk release or later version.
+   About latest and full version of RISC-V Ratified ISA Spec, please click latest released spec here https://github.com/riscv/riscv-isa-manual/releases/,
+   check the ``unpriv-isa-asciidoc.pdf`` and ``priv-isa-asciidoc.pdf``.
 
-Here are several examples when using ARCH_EXT for Nuclei RISC-V Processors:
+   About Nuclei RISC-V toolchain user guide, please check https://doc.nucleisys.com/nuclei_tools/toolchain/index.html
+
+When using gcc 13 or clang 17 toolchain in 2023.10 or later toolchain release, you need to use it like this in 0.5.0 sdk release or later version.
+
+Here are several examples when using **ARCH_EXT** for Nuclei RISC-V Processors:
+
+.. note::
+
+   This **ARCH_EXT=** is only used in Nuclei SDK makefile based build system, not used in Nuclei Studio IDE,
+   in Nuclei Studio IDE, you need to set the **Other extensions** in ``Nuclei Settings`` or
+   ``Project Properities -> Settings -> C/C++ Build -> Tool Settings -> Target Processor -> Other Extensions``,
+   eg. If you pass **ARCH_EXT=_zba_zbb_zbc_zbs** using make, then you should set ``_zba_zbb_zbc_zbs`` in **Other extensions**.
 
 * If you want to use just `B 1.0 extension`_, you can pass **ARCH_EXT=_zba_zbb_zbc_zbs**
 * If you want to use just Nuclei implemented `P 0.5.4 extension`_ and N1/N2/N3 customized extension
@@ -790,7 +822,7 @@ Here is a list of valid arch extensions:
 * **ARCH_EXT=pv**: RISC-V packed simd and vector extension.
 * **ARCH_EXT=bpv**: RISC-V bitmanipulation, packed simd and vector extension.
 
-It is suggested to use this ARCH_EXT with other arch options like this, can be found in
+It is suggested to use this **ARCH_EXT** with other arch options like this, can be found in
 ``SoC/evalsoc/build.mk``:
 
 .. code-block:: makefile
@@ -810,7 +842,8 @@ CPU_SERIES
 .. note::
 
     * This variable is used to control different compiler options for different Nuclei CPU series such
-      as 200/300/600/900.
+      as 200/300/600/900/1000.
+    * If you are looking for Nuclei 100 series support, please refer to ``develop_n100`` branch of Nuclei SDK repository.
 
 This variable will be auto set if your CORE variable match the following rules:
 
@@ -818,6 +851,7 @@ This variable will be auto set if your CORE variable match the following rules:
 * **300**: CORE start with *30*, the CPU_SERIES will be 300.
 * **600**: CORE start with *60*, the CPU_SERIES will be 600.
 * **900**: CORE start with *90*, the CPU_SERIES will be 900.
+* **1000**: CORE start with *100*, the CPU_SERIES will be 1000.
 * **0**: CORE start with others, the CPU_SERIES will be 0.
 
 It can also be defined in Makefile itself directly or passed via make command.
@@ -1047,18 +1081,23 @@ You can easily find the supported RTOSes in the **<NUCLEI_SDK_ROOT>/OS** directo
   See examples in ``application/baremetal``.
 * If **RTOS** is set the the following values, RTOS service will be enabled with this application.
 
-  - ``FreeRTOS``: FreeRTOS service will be enabled, extra macro ``RTOS_FREERTOS`` will be defined,
+  - ``FreeRTOS``: :ref:`design_rtos_freertos` service will be enabled, extra macro ``RTOS_FREERTOS`` will be defined,
     you can include FreeRTOS header files now, and use FreeRTOS API, for ``FreeRTOS`` application,
     you need to have an ``FreeRTOSConfig.h`` header file prepared in you application.
     See examples in ``application/freertos``.
-  - ``UCOSII``: UCOSII service will be enabled, extra macro ``RTOS_UCOSII`` will be defined,
+  - ``UCOSII``: :ref:`design_rtos_ucosii` service will be enabled, extra macro ``RTOS_UCOSII`` will be defined,
     you can include UCOSII header files now, and use UCOSII API, for ``UCOSII`` application,
     you need to have ``app_cfg.h``, ``os_cfg.h`` and ``app_hooks.c`` files prepared in you application.
     See examples in ``application/ucosii``.
-  - ``RTThread``: RT-Thread service will be enabled, extra macro ``RTOS_RTTHREAD`` will be defined,
-    you can include RT-Thread header files now, and use RT-Thread API, for ``UCOSII`` application,
+  - ``RTThread``: :ref:`design_rtos_rtthread` service will be enabled, extra macro ``RTOS_RTTHREAD`` will be defined,
+    you can include RT-Thread header files now, and use RT-Thread API, for ``RTThread`` application,
     you need to have an ``rtconfig.h`` header file prepared in you application.
     See examples in ``application/rtthread``.
+  - ``ThreadX``: :ref:`design_rtos_threadx` service will be enabled, extra macro ``RTOS_THREADX`` will be defined,
+    you can include ThreadX header files now, and use ThreadX API, for ``ThreadX`` application,
+    you need to have an ``tx_user.h`` header file prepared in you application.
+    See examples in ``application/threadx``.
+
 
 .. _develop_buildsystem_var_middleware:
 
@@ -1072,6 +1111,12 @@ You can easily find the available middleware components in the **<NUCLEI_SDK_ROO
 * If **MIDDLEWARE** is not defined, not leave empty, no middlware package will be selected.
 * If **MIDDLEWARE** is defined with more than 1 string, such as ``fatfs tjpgd``, then these two
   middlewares will be selected.
+
+Currently we provide the following middlewares:
+
+* **profiling**: This middleware is not expected to use in Makefile based build system, you need to use it in
+  Nuclei Studio, it is used to provide code coverage via gcov and profiling via gprof, for details, please refer
+  to the ``README.md`` in this folder.
 
 .. _develop_buildsystem_var_nmsis_lib:
 

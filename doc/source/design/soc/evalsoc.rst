@@ -53,9 +53,13 @@ If you want to use this **Nuclei evalsoc SoC** in Nuclei SDK, you need to set th
 :ref:`develop_buildsystem_var_soc` Makefile variable to ``evalsoc``.
 
 Extra make variables supported only in this SoC:
-  * **RUNMODE**: it is used internally by Nuclei CPU team, used to control ILM/DLM/ICache/DCache enable or disable
+  * **RUNMODE**: it is used internally by Nuclei, used to control ILM/DLM/ICache/DCache enable or disable
     via make variable, please check ``SoC/evalsoc/runmode.mk`` for details. It is not functional by default,
-    unless you set a non-empty variable to this RUNMODE variable.
+    unless you set a non-empty variable to this ``RUNMODE`` variable, it can be used with different **ILM_EN/DLM_EN/IC_EN/DC_EN/CCM_EN**.
+  * **L2_EN**: it is used internally by Nuclei, used to control L2 cache enable or disable.
+  * **LDSPEC_EN**: it is used internally by Nuclei, used to control load speculative enable or disable.
+  * **BPU_EN**: it is used internally by Nuclei, used to control branch prediction unit enable or disable.
+
 
 .. code-block:: shell
 
@@ -63,6 +67,7 @@ Extra make variables supported only in this SoC:
     # the following command will build application
     # using default evalsoc SoC based board
     # defined in Build System and application Makefile
+    make SOC=evalsoc clean
     make SOC=evalsoc all
 
 

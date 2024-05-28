@@ -8,6 +8,81 @@ V0.5.1-dev
 
 This is release version ``0.5.1-dev`` of Nuclei SDK, which is still in development.
 
+.. note::
+
+   - This version introduced ThreadX and FreeRTOS-SMP support for Nuclei RISC-V Processors.
+   - This version introduced a ``profiling`` middleware and an example to show code coverage and profiling technology
+     using gcov and gprof in Nuclei Studio.
+   - This version introduced support for N100, but in a seperated Nuclei SDK branch called ``develop_n100``
+   - This version introduced support for gd32vw55x chip and Nuclei DLink Board.
+   - Better Terapines ZCC toolchain integrated in Nuclei SDK and Nuclei Studio, try ZStudio Lite version here https://www.terapines.com/products/
+   - Better IAR Workbench support in Nuclei SDK, with Baremetal SMP and FreeRTOS SMP supported.
+
+* Application
+
+  - Add ThreadX RTOS example to show how to use ThreadX in SDK.
+  - Add Nuclei 1000 series benchmark flags for benchmark examples.
+  - Add ``demo_vnice`` example to show how to use Nuclei Vector NICE feature.
+  - Add ``demo_profiling`` example to how to use gprof and gcov in Nuclei Studio.
+  - Add ``smphello``, ``demo_cidu`` baremetal SMP examples in IAR workbench.
+  - Add FreeRTOS ``smpdemo`` example to show how to use SMP version of FreeRTOS.
+  - Optimize and fix ``cpuinfo`` example for better cpu feature dection.
+  - Optimize benchmark gcc13 flags to provide better performance.
+  - Fix wrong ipc calculating for benchmark examples.
+  - Reset mcycle and minstret when read cycle or instret in benchmark examples.
+  - Fix dhrystone strcmp_xlcz.S removed by make clean in windows.
+  - Update benchmark flags for benchmark examples when compiled with Terapines ZCC Toolchain.
+  - Fix ``lowpower`` example no need to use ``newlib_full`` library.
+
+* NMSIS
+
+  - Update many CSR structure defined in ``core_feature_base.h`` such as ``CSR_MCFGINFO_Type``, ``CSR_MDLMCTL_Type`` and ``CSR_MCACHECTL_Type`` etc.
+  - Add ``__set_rv_cycle`` and ``__set_rv_instret`` API to set cycle and instret csr registers.
+  - Add ``CSR_MTLBCFGINFO_Type`` CSR structure in ``core_feature_base.h``.
+  - Add and update Nuclei customized CSRs in ``riscv_encoding.h``.
+
+* SoC
+
+  - Remove ``-msave-restore`` in npk.yml to fix dhrystone benchmark value is low in Nuclei Studio issue.
+  - No need to get system clock using ``get_cpu_freq`` for gd32vf103.
+  - Update standard c library and arch ext prompt for soc npk.yml for better hints.
+  - Add ``gd32vf103c_dlink`` board support for Nuclei DLink development.
+  - Fix non-ABS relocation R_RISCV_JAL against symbol '_start' fail for nuclei_llvm toolchain
+  - Add Nuclei ``ux1000fd`` support in both NPK and Makefile based Build System.
+  - Add support for **gd32vw55x** SoC which is Gigadevice new Nuclei RISC-V N300 Processor based WiFi MCU.
+  - Add **SPLITMODE** support for **evalsoc** when evaluate NA class Core.
+  - Allow custom linker script if npk variable ``linker_script`` is not empty.
+  - Explicit declare asm function in gcc asm code if that part of code is a function, which is required by ``gprof`` plugin in Nuclei Studio.
+  - Clear zc bit for non zc elf in mmsic_ctl csr for cases when cpu is not reset but zc bit is set before.
+  - Only print CSR value when CSR is present during ``__premain_init`` for **evalsoc**.
+  - Fix undefined symbol when link cpp for clang ``__eh_frame_start/__eh_frame_hdr_start/__eh_frame_end/__eh_frame_hdr_end``
+  - Add **LDSPEC_EN**, **L2_EN** and **BPU_EN** for evalsoc in Makefile based build system to control
+    load speculative, L2 cache and BPU enable or disable, which is only internally used.
+  - Move eclic and interrupt and exception initialization from startup asm code into premain c code for evalsoc.
+  - Optimize cpu startup when ECLIC not present it will not be initialized, which is helpful for CPU without ECLIC unit.
+  - Fix ``SystemIRegionInfo`` variable set logic for SMP bootup case, it must be set after L1/L2 cache and SMP enable in evalsoc.
+  - Introduce an IAR startup asm code called ``IAR/startup.S`` for evalsoc to support SMP boot, and for SMP stack setup,
+    different IAR linker script is required, see the iar linker script provided in ``smphello`` or ``freertos/smpdemo``.
+
+* Build System
+
+  - Now disassemble elf will show no alias instructions
+  - Add ``ux1000fd`` into support CORE list
+  - Update and optimize toolchain support for Terapines ZCC Toolchain, which can provide better performance
+  - ``-mmemcpy-strategy=scalar`` option is replaced by ``-mstringop-strategy=scalar`` in official gcc 14, see
+    https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=4ae5a7336ac8e1ba57ee1e885b5b76ed86cdbfd5
+
+* RTOS
+
+  - Bump FreeRTOS Kernel to V11.1.0
+  - Bump RTThread Nano to V3.1.5
+  - Introduce FreeRTOS SMP support for Nuclei RISC-V CPU
+  - Introduce Eclipse ThreadX v6.4.1 Support for Nuclei RISC-V CPU
+
+* Misc
+
+  - Add ``Zc/Zicond`` and ``1000`` series support in SDK CLI script used internally
+  - Optimize gitlab ci jobs to speedup job execution time and better merge request pipeline check
 
 
 V0.5.0
@@ -114,7 +189,6 @@ This is release version ``0.5.0`` of Nuclei SDK, please use it with `Nuclei Stud
 
   - Change gitlab ci to use `Nuclei Toolchain 2023.10`_
   - Add IAR workbench workspace and projects for evalsoc, so user can quickly evaluate IAR support in IAR workbench
-
 
 V0.4.1
 ------

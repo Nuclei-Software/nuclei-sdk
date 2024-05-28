@@ -50,8 +50,8 @@ As :ref:`figure_overview_1` shown, The Nuclei SDK provides the following feature
 * **NMSIS-NN** and **NMSIS-DSP** library can be also used in Nuclei SDK, and the prebuilt libraries are
   included in **NMSIS/Library** folder of Nuclei SDK.
 * Mainly support two Nuclei Processor based SoCs, :ref:`design_soc_evalsoc` and :ref:`design_soc_gd32vf103`
-* Provided realtime operation system service via :ref:`design_rtos_freertos`, :ref:`design_rtos_ucosii` and
-  :ref:`design_rtos_rtthread`
+* Provided realtime operation system service via :ref:`design_rtos_freertos`, :ref:`design_rtos_ucosii`,
+  :ref:`design_rtos_rtthread` and :ref:`design_rtos_threadx`.
 * Provided bare-metal service for embedded system software beginners and resource-limited use-cases.
 * Currently Nuclei SDK doesn't define any common device APIs to access GPIO/I2C/SPI/UART devices, which still
   relies on the device/peripheral APIs from firmware libraries provided by various silicon vendors, such as current
@@ -60,9 +60,9 @@ As :ref:`figure_overview_1` shown, The Nuclei SDK provides the following feature
 
   - **General applications for all Nuclei Processors**: In the Nuclei SDK software code, the applications provided
     are all general applications which can run on all Nuclei Processors, with basic UART service to provide ``printf`` function.
-  - **Nuclei Demo SoC applications**: These applications are not included in the Nuclei SDK software code, and it is
-    *maintained separately*, which will use resource from Nuclei Demo SoC and its evaluation boards to develop applications, which will
-    not be compatible with different boards.
+  - **Nuclei Eval SoC applications**: These applications are not included in the Nuclei SDK software code, and it is
+    *maintained separately*, see application :ref:`design_app_overview`, which will use resource from Nuclei Eval SoC
+    and its evaluation boards to develop applications, which will not be compatible with different boards.
   - **GD32VF103 SoC applications**: These applications are not included in the Nuclei SDK software code, and it is
     *maintained separately*, which will use resource from GD32VF103 SoC and its evaluation boards to develop applications, which will
     not be compatible with different boards.

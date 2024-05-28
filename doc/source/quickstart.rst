@@ -10,6 +10,9 @@ Use Nuclei SDK in Nuclei Studio
 
 .. caution::
 
+   If you are looking for Nuclei 100 series such as N100 support, you need to switch to
+   ``develop_n100`` branch of this repository to try it out.
+
    For Nuclei SDK 0.5.0 version and later ones, please use `Nuclei Studio 2023.10`_ or
    Nuclei RISC-V Toolchain/OpenOCD/QEMU 2023.10.
 
@@ -19,6 +22,10 @@ Use Nuclei SDK in Nuclei Studio
 From `Nuclei Toolchain 2023.10`_, both gnu and llvm toolchain are provided, and toolchain
 prefix changed from ``riscv-nuclei-elf-`` to ``riscv64-unknown-elf-``, and 0.5.0 SDK release
 will only support this ``2023.10`` or later toolchain.
+
+If you want to learn about how to use Nuclei Tools, see https://doc.nucleisys.com/nuclei_tools.
+If you want to report issues when using Nuclei Tools or Nuclei Studio, please open issue in
+https://github.com/Nuclei-Software/nuclei-studio.
 
 From **2020.08** release version of Nuclei Studio IDE, the nuclei-sdk **released**
 version will be deeply integrated with Nuclei Studio, and you can directly create
@@ -703,7 +710,7 @@ For more advanced usage, please follow the items as below:
          SDK release version, click `Segger embedded studio projects for Nuclei SDK`_ to learn about it
 
       3. You can take a try using IAR workbench, we provided prebuilt projects directly in Nuclei SDK,
-         just check the ``ideprojects/iar`` folder to learn about it.
+         just check the `ideprojects/iar/README.md`_ to learn about it.
 
       4. You can also take a try with the Cross-platform PlatformIO IDE, we provided our Nuclei platform
          and Nuclei SDK release version in PlatformIO, click `Platform Nuclei in PlatformIO`_ to learn
@@ -721,4 +728,5 @@ For more advanced usage, please follow the items as below:
 .. _Nuclei_Studio_User_Guide.pdf: https://www.nucleisys.com/upload/files/doc/nucleistudio/Nuclei_Studio_User_Guide.pdf
 .. _Light on onboard LED of RVSTAR board using PlatformIO(Chinese): https://www.rvmcu.com/community-topic-id-310.html
 .. _Nuclei Toolchain 2023.10: https://github.com/riscv-mcu/riscv-gnu-toolchain/releases/tag/nuclei-2023.10
+.. _ideprojects/iar/README.md: https://github.com/Nuclei-Software/nuclei-sdk/blob/master/ideprojects/iar/README.md
 .. _Nuclei Studio 2023.10: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2023.10

@@ -12,3 +12,4 @@ Board
    gd32vf103c_longan_nano.rst
    gd32vf103c_dlink.rst
    gd32vf103c_t_display.rst
+   gd32vw553h_eval.rst

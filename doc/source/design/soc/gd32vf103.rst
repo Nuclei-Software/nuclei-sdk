@@ -80,6 +80,7 @@ Extra make variables supported only in this SoC:
     # the following command will build application
     # using default gd32vf103 SoC based board
     # defined in Build System and application Makefile
+    make SOC=gd32vf103 clean
     make SOC=gd32vf103 all
 
 .. note::

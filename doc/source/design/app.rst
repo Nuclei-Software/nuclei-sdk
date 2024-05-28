@@ -23,6 +23,20 @@ The provided applications can be divided into three categories:
 
 * RTThread applications: Located in ``application/rtthread``
 
+* ThreadX applications: Located in ``application/threadx``
+
+**If you want to find more examples, please visit the following links**:
+
+* Nuclei Board Labs: https://github.com/Nuclei-Software/nuclei-board-labs
+* Nuclei Tensorflow Lite Micro AI Demo: https://github.com/Nuclei-Software/npk-tflm
+* Nuclei Tinymaix TinyAI Demo: https://github.com/Nuclei-Software/npk-tinymaix
+* NMSIS DSP Examples: https://doc.nucleisys.com/nmsis/dsp/get_started.html#how-to-run
+* NMSIS NN Examples: https://doc.nucleisys.com/nmsis/nn/get_started.html#how-to-run
+* NMSIS Crypto(MbedTLS) Examples: https://github.com/Nuclei-Software/mbedtls/blob/nuclei/v3.3.0/accelerator/README.md
+
+And we can also provide more examples to test cpu features, please contact with our
+AE for help.
+
 If you want to develop your own application in Nuclei SDK, please click
 :ref:`develop_appdev` to learn more about it.
 
@@ -94,6 +108,59 @@ will check this RISC-V CSR **MISA** register value.
     18: Hello World From Nuclei RISC-V Processor!
     19: Hello World From Nuclei RISC-V Processor!
 
+.. _design_app_cpuinfo:
+
+cpuinfo
+~~~~~~~
+
+This `cpuinfo application`_ is used to print the Nuclei RISC-V CPU information
+to help you to know what CPU features are present in this processor.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the helloworld directory
+    cd application/baremetal/cpuinfo
+    # Assume to run on UX900 SMPx8 CPU
+    # Clean the application first
+    make SOC=evalsoc DOWNLOAD=sram clean
+    # Build and upload the application
+    make SOC=evalsoc DOWNLOAD=sram upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: May 28 2024, 13:36:12
+    Download Mode: SRAM
+    CPU Frequency 50322800 Hz
+    CPU HartID: 0
+
+    -----Nuclei RISC-V CPU Configuration Information-----
+            MARCHID: 0x900
+            MIMPID: 0x30900
+                ISA: RV64 A B C D F I M S U Zc Xxlcz
+                MCFG: ECLIC PLIC ICACHE DCACHE SMP ZC_XLCZ_EXT IREGION No-Safety-Mechanism DLEN=VLEN/2
+            ICACHE: 64 KB(set=512,way=2,lsize=64,ecc=0)
+            DCACHE: 64 KB(set=512,way=2,lsize=64,ecc=0)
+                TLB: MainTLB(set=256,way=4,entry=1,ecc=0) ITLB(entry=16) DTLB(entry=16)
+            IREGION: 0x18000000 128 MB
+                    Unit        Size        Address
+                    INFO        64KB        0x18000000
+                    DEBUG       64KB        0x18010000
+                    ECLIC       64KB        0x18020000
+                    TIMER       64KB        0x18030000
+                    SMP         64KB        0x18040000
+                    CIDU        64KB        0x18050000
+                    PLIC        64MB        0x1c000000
+            SMP_CFG: CC_PRESENT=1 SMP_CORE_NUM=7 IOCP_NUM=0 PMON_NUM=4
+            ECLIC: VERSION=0x0 NUM_INTERRUPT=71 CLICINTCTLBITS=3 MTH=0 NLBITS=3
+            L2CACHE: 2 MB(set=2048,way=16,lsize=64,ecc=0)
+        INFO-Detail:
+                    mpasize : 32
+    -----End of Nuclei CPU INFO-----
 
 .. _design_app_demo_timer:
 
@@ -531,11 +598,15 @@ For more about **NICE** feature, please click `Nuclei User Extended Introduction
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Nov 26 2020, 11:14:51
+    Nuclei SDK Build Time: May 28 2024, 13:32:18
     Download Mode: ILM
-    CPU Frequency 15999631 Hz
+    CPU Frequency 49999631 Hz
+    CPU HartID: 0
 
     Nuclei Nice Acceleration Demonstration
+    Warning: This demo required CPU to implement Nuclei provided NICE Demo instructions.
+            Otherwise this example will trap to cpu core exception!
+
     1. Print input matrix array
     the element of array is :
             10      30      90
@@ -545,22 +616,70 @@ For more about **NICE** feature, please click `Nuclei User Extended Introduction
     1. Do reference matrix column sum and row sum
     2. Do nice matrix column sum and row sum
     3. Compare reference and nice result
-      1) Reference result:
+    4) Reference result:
     the sum of each row is :
                     130     140     240
     the sum of each col is :
                     60      160     290
-      1) Nice result:
+    1) Nice result:
     the sum of each row is :
                     130     140     240
     the sum of each col is :
                     60      160     290
-      1) Compare reference vs nice: PASS
-    1. Performance summary
-             normal:
-                  instret: 511, cycle: 790
-             nice  :
-                  instret: 125, cycle: 227
+    1) Compare reference vs nice: PASS
+    2. Performance summary
+            normal:
+                instret: 502, cycle: 502
+            nice  :
+                instret: 177, cycle: 177
+
+
+.. _design_app_demo_vnice:
+
+demo_vnice
+~~~~~~~~~~
+
+.. note::
+
+    * It only works with Nuclei EvalSoC with Vector NICE demo instructions enabled.
+    * Need vector nice feature enabled, and Nuclei NICE hardware demo integrated such as evalsoc
+
+This `demo_vnice application`_ is used to demonstrate how to Nuclei Vector NICE feature.
+
+**NICE** is short for Nuclei Instruction Co-unit Extension, which is used to
+support extensive customization and specialization.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei UX900 + Vector Nice RISC-V processor as example, hardware NICE demo integrated
+    # cd to the demo_dsp directory
+    cd application/baremetal/demo_vnice
+    # Clean the application first
+    make SOC=evalsoc clean
+    # Build and upload the application
+    make SOC=evalsoc upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: May 28 2024, 13:31:08
+    Download Mode: ILM
+    CPU Frequency 1000000716 Hz
+    CPU HartID: 0
+    1. Set array_normal_in1 array_normal_in1 array_vnice_in1 array_vnice_in2
+    2. Do reference vector complex mul, store, load
+    3. Do vector nice complex mul, store, load
+    4. Compare reference and vnice result
+    PASS
+    5. Performance summary
+            normal:
+                instret: 22546, cycle: 22546
+            vnice  :
+                instret: 1010, cycle: 1010
 
 
 .. _design_app_coremark:
@@ -1918,6 +2037,70 @@ In Nuclei SDK, we provided code and Makefile for this ``freertos demo`` applicat
     timers Callback 10
     timers Callback 11
 
+.. _design_app_freertos_smpdemo:
+
+smpdemo
+~~~~~~~
+
+This `freertos smpdemo application`_ is to show basic freertos smp task functions.
+
+* x freertos tasks(different priorities) are created if your cpu has x cores according to the ``SMP=x`` settings
+* A software timer is created
+* Need to run using **DOWNLOAD=sram** mode
+
+In Nuclei SDK, we provided code and Makefile for this ``freertos smpdemo`` application.
+
+* **RTOS = FreeRTOS** is added in its Makefile to include FreeRTOS service
+* The **configTICK_RATE_HZ** in ``FreeRTOSConfig.h`` is set to 100, you can change it
+  to other number according to your requirement.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the freertos demo directory
+    cd application/freertos/smpdemo
+    # This need to run on NX900 SMPx2 CPU
+    # Clean the application first
+    make clean
+    # Build and upload the application
+    make upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: May 28 2024, 13:17:41
+    Download Mode: SRAM
+    CPU Frequency 50322800 Hz
+    CPU HartID: 0
+    Startup FreeRTOS SMP on hartid 0
+    Enter to task 1
+    task 1 prio 1 is running 0 on hart 0.....
+    Enter to task 0
+    task 0 prio 0 is running 0 on hart 0.....
+    task 1 prio 1 is running 1 on hart 1.....
+    task 0 prio 0 is running 1 on hart 0.....
+    task 1 prio 1 is running 2 on hart 1.....
+    task 0 prio 0 is running 2 on hart 0.....
+    task 1 prio 1 is running 3 on hart 1.....
+    task 0 prio 0 is running 3 on hart 0.....
+    task 1 prio 1 is running 4 on hart 1.....
+    task 0 prio 0 is running 4 on hart 0.....
+    task 1 prio 1 is running 5 on hart 0.....
+    timers Callback 0 on hart 1
+    task 0 prio 0 is running 5 on hart 1.....
+    task 1 prio 1 is running 6 on hart 1.....
+    task 0 prio 0 is running 6 on hart 0.....
+    task 1 prio 1 is running 7 on hart 1.....
+    task 0 prio 0 is running 7 on hart 0.....
+    task 1 prio 1 is running 8 on hart 1.....
+    task 0 prio 0 is running 8 on hart 0.....
+    task 1 prio 1 is running 9 on hart 1.....
+    task 0 prio 0 is running 9 on hart 0.....
+    task 1 prio 1 is running 10 on hart 0.....
+    timers Callback 1 on hart 1
 
 UCOSII applications
 -------------------
@@ -2133,21 +2316,73 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
     Hello Nuclei SDK!
     msh >
 
+ThreadX applications
+--------------------
+
+.. _design_app_threadx_demo:
+
+demo
+~~~~
+
+This `threadx demo application`_ is show basic ThreadX thread functions.
+
+This threadx demo is modified based on https://github.com/eclipse-threadx/threadx/blob/v6.4.1_rel/samples/demo_threadx.c
+
+In Nuclei SDK, we provided code and Makefile for this ``threadx demo`` application.
+
+* **RTOS = ThreadX** is added in its Makefile to include ThreadX service
+* The **TX_INCLUDE_USER_DEFINE_FILE** macro is defined in Makefile, so you can include customized user configuration
+  file ``tx_user.h``
+
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the threadx demo directory
+    cd application/threadx/demo
+    # Clean the application first
+    make SOC=evalsoc clean
+    # Build and upload the application
+    make SOC=evalsoc upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: May 28 2024, 13:26:41
+    Download Mode: ILM
+    CPU Frequency 50322800 Hz
+    CPU HartID: 0
+    thread 6_7 is running, current is 6, thread 6 counter 1, thread 7 counter 1
+    thread 6_7 is running, current is 7, thread 6 counter 2, thread 7 counter 1
+    thread 6_7 is running, current is 6, thread 6 counter 2, thread 7 counter 2
+    thread 6_7 is running, current is 7, thread 6 counter 3, thread 7 counter 2
+    thread 6_7 is running, current is 6, thread 6 counter 3, thread 7 counter 3
+    thread 6_7 is running, current is 7, thread 6 counter 4, thread 7 counter 3
+    thread 6_7 is running, current is 6, thread 6 counter 4, thread 7 counter 4
+    thread 6_7 is running, current is 7, thread 6 counter 5, thread 7 counter 4
+
 
 .. _helloworld application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/helloworld
+.. _cpuinfo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/cpuinfo
 .. _demo_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_timer
 .. _demo_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic
 .. _demo_dsp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_dsp
 .. _smphello application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/smphello
 .. _lowpower application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/lowpower
 .. _demo_nice application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_nice
+.. _demo_vnice application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_vnice
 .. _coremark benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/coremark
 .. _dhrystone benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/dhrystone
 .. _whetstone benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/whetstone
 .. _freertos demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/freertos/demo
+.. _freertos smpdemo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/freertos/smpdemo
 .. _ucosii demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/ucosii/demo
 .. _rt-thread demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo
 .. _rt-thread msh application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/msh
+.. _threadx demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/threadx/demo
 .. _demo_smode_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_eclic
 .. _demo_spmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_spmp
 .. _demo_pmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pmp

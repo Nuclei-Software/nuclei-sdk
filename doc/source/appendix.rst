@@ -27,6 +27,8 @@ Appendix
 
 * **RISC-V ISA Specfications(Ratified)**: https://riscv.org/technical/specifications
 
+* **RISC-V ISA Specification(Latest)**: https://github.com/riscv/riscv-isa-manual/releases
+
 * **RISC-V Architecture Profiles**: https://github.com/riscv/riscv-profiles
 
 * **RISC-V Bitmanip(B) Extension Spec**: https://github.com/riscv/riscv-bitmanip
