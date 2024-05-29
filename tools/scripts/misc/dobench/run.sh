@@ -91,6 +91,8 @@ function rundhry_for_allcores {
 
 function run_for_allmodes {
     local logdir=${1:-$LOGDIR}
+    local gldownload=$DOWNLOAD
+
     echo "Generate for all run modes"
     for runmode in "" lm icdlm dcilm cache bus clm
     do
@@ -99,9 +101,14 @@ function run_for_allmodes {
         if [ "x$RUNMODE" == "x" ] ; then
             runmode=default
         fi
+        if [ "x$gldownload" != "x" ] ; then
+            export DOWNLOAD=$gldownload
+            echo "Using global DOWNLOAD=$DOWNLOAD"
+        fi
         # for runmode=cache, need to run on sram area
         if [ "x$RUNMODE" == "xcache" ] ; then
             export DOWNLOAD=sram
+            echo "Override DOWNLOAD=$DOWNLOAD for cache run mode"
         fi
         runbench_for_allcores $logdir/$runmode
         rundhry_for_allcores $logdir/$runmode
@@ -112,9 +119,16 @@ function run_for_allmodes {
 function run_for_one {
     echo "Generate only for run mode=$RUNMODE"
     export RUNMODE=$RUNMODE
+    local gldownload=$DOWNLOAD
+
     # for runmode=cache, need to run on sram area
+    if [ "x$gldownload" != "x" ] ; then
+        export DOWNLOAD=$gldownload
+        echo "Using global DOWNLOAD=$DOWNLOAD"
+    fi
     if [ "x$RUNMODE" == "xcache" ] ; then
         export DOWNLOAD=sram
+        echo "Override DOWNLOAD=$DOWNLOAD for cache run mode"
     fi
     runmode=$RUNMODE
     if [ "x$RUNMODE" == "x" ] ; then
