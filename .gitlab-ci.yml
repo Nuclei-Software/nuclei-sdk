@@ -450,6 +450,7 @@ sdk_gen_benchmark:
     - RUNMODE= bash tools/scripts/misc/dobench/dobench.sh $LOGROOT/default
     - RUNMODE=lm bash tools/scripts/misc/dobench/dobench.sh $LOGROOT/lm
     - RUNMODE=cache bash tools/scripts/misc/dobench/dobench.sh $LOGROOT/cache
+    - RUNMODE= DOWNLOAD=flash bash tools/scripts/misc/dobench/dobench.sh $LOGROOT/flash
     - bash tools/scripts/misc/build_benchmark.sh
   artifacts:
     when: always
