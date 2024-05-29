@@ -71,7 +71,7 @@ for details, please check ``OS/FreeRTOS/build.mk``.
 .. note::
 
     * You can check the ``application\freertos\`` for freertos application reference
-    * From Nuclei SDK 0.5.1, we introduced FreeRTOS SMP support, both Nuclei RV32 and RV64 processors are supported.
+    * From Nuclei SDK 0.6.0, we introduced FreeRTOS SMP support, both Nuclei RV32 and RV64 processors are supported.
     * Current version of FreeRTOS used in Nuclei SDK is ``V11.1.0``
     * If you want to change the OS ticks per seconds, you can change the ``configTICK_RATE_HZ``
       defined in ``FreeRTOSConfig.h``

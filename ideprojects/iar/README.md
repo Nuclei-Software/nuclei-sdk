@@ -25,7 +25,7 @@ These projects demostrated the following features:
   code use a lot of heap or stack, the application may crash, you need to increase stack or heap size on demand.
 
 > [!NOTE]
-> SMP is now supported in IAR workbench since Nuclei SDK 0.5.1, please refer to `smphello` or `demo_cidu` project.
+> SMP is now supported in IAR workbench since Nuclei SDK 0.6.0, please refer to `smphello` or `demo_cidu` project.
 > `smphello` IAR IDE project by default should run on UX900FD x 4 SMP CORE, and program run on DDR memory.
 > `demo_cidu` IAR IDE project by default should run on UX900FD x 2 SMP CORE, and CIDU feature, and program run on DDR memory.
 > `freertos_smpdemo` IAR IDE project by default should run on NX900FD x 2 SMP CORE, with ECLIC present, and run on DDR memory to demostrate FreeRTOS with SMP feature, you can configure how smp cores used in this demo, by modify the project properties **configNUMBER_OF_CORES** and **SMP_CPU_CNT** in `C/C++ Compiler and Assembler -> Preprocessor -> Defined symbols(one per line)` and **SMP_CPU_CNT** in `Linker -> Config -> Configuration file symbol definitions:(one per line)`.

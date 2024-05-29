@@ -3,13 +3,14 @@
 Changelog
 =========
 
-V0.5.1-dev
+V0.6.0-dev
 ----------
 
-This is release version ``0.5.1-dev`` of Nuclei SDK, which is still in development.
+This is release version ``0.6.0-dev`` of Nuclei SDK, which is still in development.
 
 .. note::
 
+   - There are many changes in this release, so we decide to name it as 0.6.0, not 0.5.1
    - This version introduced ThreadX and FreeRTOS-SMP support for Nuclei RISC-V Processors.
    - This version introduced a ``profiling`` middleware and an example to show code coverage and profiling technology
      using gcov and gprof in Nuclei Studio.

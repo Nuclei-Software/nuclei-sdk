@@ -56,9 +56,9 @@ Extra make variables supported only in this SoC:
   * **RUNMODE**: it is used internally by Nuclei, used to control ILM/DLM/ICache/DCache enable or disable
     via make variable, please check ``SoC/evalsoc/runmode.mk`` for details. It is not functional by default,
     unless you set a non-empty variable to this ``RUNMODE`` variable, it can be used with different **ILM_EN/DLM_EN/IC_EN/DC_EN/CCM_EN**.
-  * **L2_EN**: it is used internally by Nuclei, used to control L2 cache enable or disable.
-  * **LDSPEC_EN**: it is used internally by Nuclei, used to control load speculative enable or disable.
-  * **BPU_EN**: it is used internally by Nuclei, used to control branch prediction unit enable or disable.
+  * **L2_EN**: it is used internally by Nuclei, used to control L2 cache enable or disable, introduced in 0.6.0 release.
+  * **LDSPEC_EN**: it is used internally by Nuclei, used to control load speculative enable or disable, introduced in 0.6.0 release.
+  * **BPU_EN**: it is used internally by Nuclei, used to control branch prediction unit enable or disable, introduced in 0.6.0 release.
 
 
 .. code-block:: shell
