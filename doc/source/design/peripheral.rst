@@ -30,7 +30,6 @@ of each SoC, and ``nuclei_sdk_hal.h`` of each board.
 
 **For SoC firmware library APIs:**
 
-* You can find the **GD32VF103 SoC firmware library APIs** in ``SoC/gd32vf103/Common/Include``
 * You can find the **Nuclei Eval SoC firmware library APIs** in ``SoC/evalsoc/Common/Include``
 
 If you just want to use SoC firmware library API, you just need to include ``nuclei_sdk_soc.h``,
@@ -44,11 +43,7 @@ then you can use the all the APIs in that SoC include directory.
 
 **For Board related APIs:**
 
-* You can find the **GD32VF103 EVAL Board related APIs** in ``SoC/gd32vf103/Board/gd32vf103v_eval/Include``
-* You can find the **GD32VF103 RV-STAR Board related APIs** in ``SoC/gd32vf103/Board/gd32vf103v_rvstar/Include``
-* You can find the **Sipeed Longan Nano Board related APIs** in ``SoC/gd32vf103/Board/gd32vf103c_longan_nano/Include``
 * You can find the **Nuclei FPGA Evaluation Board related APIs** in ``SoC/evalsoc/Board/nuclei_fpga_eval/Include``
-* You can find the **TTGO T-Display-GD32 related APIs** in ``SoC/gd32vf103/Board/gd32vf103c_t_display/Include``
 
 If you just want to use all the APIs of Board and SoC, you just need to include ``nuclei_sdk_hal.h``,
 then you can use the all the APIs in that Board and SoC include directory.

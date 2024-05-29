@@ -52,16 +52,12 @@ Here is the directory structure for this Nuclei SDK.
     │   ├── Makefile
     │   └── requirements.txt
     ├── NMSIS
-    │   ├── Core
-    │   ├── DSP
-    │   ├── NN
-    │   └── Library
+    │   └── Core
     ├── OS
     │   ├── FreeRTOS
     │   ├── UCOSII
     │   └── RTThread
     ├── SoC
-    │   ├── gd32vf103
     │   └── evalsoc
     ├── test
     │   ├── core
