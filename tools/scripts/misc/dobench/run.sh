@@ -117,8 +117,8 @@ function run_for_one {
         export DOWNLOAD=sram
     fi
     local logdir=${1:-$LOGDIR}
-    runbench_for_allcores $logdir/$RUNMODE
-    rundhry_for_allcores $logdir/$RUNMODE
+    runbench_for_allcores $logdir
+    rundhry_for_allcores $logdir
     unset RUNMODE DOWNLOAD
 }
 
