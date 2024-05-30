@@ -147,10 +147,12 @@
  * ABI defined caller save register and some CSR registers
  * to be saved before enter interrupt handler and be restored before return.
  */
-.section .mexctrap
+# Fix has non-ABS relocation R_RISCV_CALL_PLT against symbol for clang
+.section .mexctrap, "ax"
 .align 6
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
+.type exc_entry, @function
 .weak exc_entry
 exc_entry:
     /* Save the caller saving registers (context) */
@@ -179,6 +181,7 @@ exc_entry:
 
     /* Return to regular code */
     mret
+    .size exc_entry, . - exc_entry
 
 .section .text
 .align 6
@@ -186,7 +189,9 @@ exc_entry:
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
 .weak default_intexc_handler
+.type default_intexc_handler, @function
 Undef_Handler:
 default_intexc_handler:
 1:
     j 1b
+    .size default_intexc_handler, . - default_intexc_handler

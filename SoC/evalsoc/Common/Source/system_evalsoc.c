@@ -304,6 +304,7 @@ unsigned long Exception_Get_EXC(uint32_t EXCn)
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         return SystemExceptionHandlers[EXCn];
     }
+    return 0;
 }
 
 /**

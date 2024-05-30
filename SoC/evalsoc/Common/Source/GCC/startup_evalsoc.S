@@ -113,6 +113,8 @@ __init_common:
     bltu a0, a1, 1b
 2:
 
+    .size _start, . - _start
+
 .globl _start_premain
 .type _start_premain, @function
 _start_premain:
@@ -156,3 +158,5 @@ _start_premain:
 1:
     wfi
     j 1b
+
+    .size _start_premain, . - _start_premain

@@ -74,6 +74,8 @@ extern void SystemInit(void);
  */
 extern void SystemCoreClockUpdate(void);
 
+extern uint32_t core_exception_handler(unsigned long mcause, unsigned long sp);
+
 #if defined(__Vendor_EXCEPTION) && (__Vendor_EXCEPTION == 0)
 /**
  * \brief Dump Exception Frame
