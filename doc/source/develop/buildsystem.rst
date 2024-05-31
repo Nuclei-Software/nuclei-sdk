@@ -3,7 +3,7 @@
 Build System based on Makefile
 ==============================
 
-Nuclei SDK's build system is based on Makefile, user can build,
+Nuclei N100 SDK's build system is based on Makefile, user can build,
 run ordebug application in Windows and Linux.
 
 .. _develop_buildsystem_structure:
@@ -11,7 +11,7 @@ run ordebug application in Windows and Linux.
 Makefile Structure
 ------------------
 
-Nuclei SDK's Makefiles mainly placed in **<NUCLEI_SDK_ROOT>/Build** directory and
+Nuclei N100 SDK's Makefiles mainly placed in **<NUCLEI_SDK_ROOT>/Build** directory and
 an extra *Makefile* located in **<NUCLEI_SDK_ROOT>/Makefile**.
 
 This extra **<NUCLEI_SDK_ROOT>/Makefile** introduce a new Make variable called
@@ -45,9 +45,9 @@ The file or directory is used explained as below:
 Makefile.base
 ~~~~~~~~~~~~~
 
-This **Makefile.base** file is used as Nuclei SDK build system entry file,
+This **Makefile.base** file is used as Nuclei N100 SDK build system entry file,
 application's Makefile need to include this file to use all the features of
-Nuclei SDK build system.
+Nuclei N100 SDK build system.
 
 It will expose Make variables or options such as **BOARD** or **SOC** passed
 by ``make`` command, click :ref:`develop_buildsystem_exposed_make_vars`
@@ -167,8 +167,6 @@ It will define the following items:
   - For :ref:`design_soc_evalsoc`, we can support all the modes defined in
     :ref:`develop_buildsystem_var_download`, and **CORE** list defined in
     :ref:`develop_buildsystem_makefile_core`
-  - For :ref:`design_soc_gd32vf103`, The **CORE** is fixed to N205, since
-    it is a real SoC chip, and only **FlashXIP** download mode is supported
 
 * Linker script used according to the **DOWNLOAD** mode settings
 * OpenOCD debug configuration file used for the SoC and Board
@@ -283,15 +281,15 @@ compiling of the CORE list supported.
 If you want to add a new **CORE**, you need to add a new line before **SUPPORTED_CORES**,
 and append the new **CORE** to **SUPPORTED_CORES**.
 
-For example, if you want to add a new **CORE** called **n308**, and the **n308**'s
-**ARCH** and **ABI** are ``rv32imafdc`` and ``ilp32d``, then you can add a new line
-like this ``N308_CORE_ARCH_ABI = rv32imafdc ilp32d``, and append **n308** to **SUPPORTED_CORES**
-like this ``SUPPORTED_CORES = n201 n201e n203 n203e n205 n205e n305 n307 n307fd n308 nx600``
+For example, if you want to add a new **CORE** called **n101**, and the **n101**'s
+**ARCH** and **ABI** are ``rv32imac`` and ``ilp32``, then you can add a new line
+like this ``N101_CORE_ARCH_ABI = rv32imac ilp32``, and append **n101** to **SUPPORTED_CORES**
+like this ``SUPPORTED_CORES = n100e n100em n100ezmmul n100 n100m n100zmmul n101``
 
 .. note::
 
-   * The appended new **CORE** need to lower-case, e.g. *n308*
-   * The new defined variable **N308_CORE_ARCH_ABI** need to be all upper-case.
+   * The appended new **CORE** need to lower-case, e.g. *n101*
+   * The new defined variable **N101_CORE_ARCH_ABI** need to be all upper-case.
 
 
 .. _develop_buildsystem_makefile_global:
@@ -305,27 +303,26 @@ user can create own **Makefile.global** in **<NUCLEI_SDK_ROOT>/Build** directory
 In this file, user can define custom **SOC**, **BOARD**, **DOWNLOAD** options to
 overwrite the default configuration.
 
-For example, if you will use only the :ref:`design_board_gd32vf103v_rvstar`, you can
+For example, if you will use only the :ref:`design_board_nuclei_fpga_eval`, you can
 create the **<NUCLEI_SDK_ROOT>/Build/Makefile.global** as below:
 
 .. code-block:: Makefile
 
-    SOC ?= gd32vf103
-    BOARD ?= gd32vf103v_rvstar
+    SOC ?= evalsoc
+    BOARD ?= nuclei_fpga_eval
     DOWNLOAD ?= flashxip
 
 .. note::
 
     * If you add above file, then you can build, run, debug application without passing
       **SOC**, **BOARD** and **DOWNLOAD** variables using make command for
-      :ref:`design_board_gd32vf103v_rvstar` board, e.g.
+      :ref:`design_board_nuclei_fpga_eval` board, e.g.
 
-      - Build and run application for :ref:`design_board_gd32vf103v_rvstar`: ``make run``
-      - Debug application for :ref:`design_board_gd32vf103v_rvstar`: ``make debug``
+      - Build and run application for :ref:`design_board_nuclei_fpga_eval`: ``make run``
+      - Debug application for :ref:`design_board_nuclei_fpga_eval`: ``make debug``
 
-    * The :ref:`design_board_gd32vf103v_rvstar` only support ``FlashXIP`` download mode.
     * If you create the **Makefile.global** like above sample code, you will also be able
-      to use Nuclei SDK build system as usually, it will only change the default **SOC**,
+      to use Nuclei N100 SDK build system as usually, it will only change the default **SOC**,
       **BOARD** and **DOWNLOAD**, but you can still override the default variable using
       make command, such as ``make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm``
 
@@ -342,13 +339,13 @@ User can create ``Makefile.local`` file in any of the application folder, placed
 the application Makefile, for example, you can create ``Makefile.local`` in ``application/baremetal/helloworld``
 to override default make configuration for this **helloworld** application.
 
-If you want to change the default board for **helloworld** to use :ref:`design_board_gd32vf103v_rvstar`,
+If you want to change the default board for **helloworld** to use :ref:`design_board_nuclei_fpga_eval`,
 you can create ``application/baremetal/helloworld/Makefile.local`` as below:
 
 .. code-block:: Makefile
 
-    SOC ?= gd32vf103
-    BOARD ?= gd32vf103v_rvstar
+    SOC ?= evalsoc
+    BOARD ?= nuclei_fpga_eval
     DOWNLOAD ?= flashxip
 
 .. note::
@@ -367,7 +364,7 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
 
 .. _table_dev_buildsystem_4:
 
-.. list-table:: Make targets supported by Nuclei SDK Build System
+.. list-table:: Make targets supported by Nuclei N100 SDK Build System
    :widths: 20 80
    :header-rows: 1
    :align: center
@@ -375,7 +372,7 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
    * - target
      - description
    * - help
-     - display help message of Nuclei SDK build system
+     - display help message of Nuclei N100 SDK build system
    * - info
      - display selected configuration information
    * - showflags
@@ -424,7 +421,7 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
 Makefile variables passed by make command
 -----------------------------------------
 
-In Nuclei SDK build system, we exposed the following Makefile variables
+In Nuclei N100 SDK build system, we exposed the following Makefile variables
 which can be passed via make command.
 
 * :ref:`develop_buildsystem_var_soc`
@@ -473,18 +470,16 @@ Currently we support the following SoCs, see :ref:`table_dev_buildsystem_1`.
 
    * - **SOC**
      - Reference
-   * - gd32vf103
-     - :ref:`design_soc_gd32vf103`
    * - evalsoc
      - :ref:`design_soc_evalsoc`
 
 .. note::
 
    If you are our SoC subsystem customer, in the SDK delivered to you, you can find your soc name
-   in this **<NUCLEI_SDK_ROOT>/SoC** directory, take ``gd32vf103`` SoC as example, when ``SOC=gd32vf103``,
-   the SoC source code in **<NUCLEI_SDK_ROOT>/SoC/gd32vf103/Common** will be used.
+   in this **<NUCLEI_SDK_ROOT>/SoC** directory, take ``ns`` SoC as example, when ``SOC=ns``,
+   the SoC source code in **<NUCLEI_SDK_ROOT>/SoC/ns/Common** will be used.
 
-   This documentation just document the open source version of Nuclei SDK's supported SOC and Board.
+   This documentation just document the open source version of Nuclei N100 SDK's supported SOC and Board.
 
 .. _develop_buildsystem_var_board:
 
@@ -496,29 +491,10 @@ BOARD
 The **BOARD** variable should match the supported boards of chosen **SOC**.
 You can easily find the supported Boards in the **<NUCLEI_SDK_ROOT>/<SOC>/Board/** directory.
 
-* :ref:`table_dev_buildsystem_2`
 * :ref:`table_dev_buildsystem_3`
 
 
 Currently we support the following SoCs.
-
-.. _table_dev_buildsystem_2:
-
-.. list-table:: Supported Boards when SOC=gd32vf103
-   :widths: 20, 60
-   :header-rows: 1
-   :align: center
-
-   * - **BOARD**
-     - Reference
-   * - gd32vf103v_rvstar
-     - :ref:`design_board_gd32vf103v_rvstar`
-   * - gd32vf103v_eval
-     - :ref:`design_board_gd32vf103v_eval`
-   * - gd32vf103c_longan_nano
-     - :ref:`design_board_sipeed_longan_nano`
-   * - gd32vf103c_t_display
-     - :ref:`design_board_sipeed_longan_nano`
 
 .. _table_dev_buildsystem_3:
 
@@ -537,8 +513,8 @@ Currently we support the following SoCs.
     * If you only specify **SOC** variable in make command, it will use default **BOARD**
       and **CORE** option defined in **<NUCLEI_SDK_ROOT>/SoC/<SOC>/build.mk**
     * If you are our SoC subsystem customer, in the SDK delivered to you, you can check
-      the board supported list in **<NUCLEI_SDK_ROOT>/<SOC>/Board/**, take ``SOC=gd32vf103 BOARD=gd32vf103v_rvstar``
-      as example, the board source code located **<NUCLEI_SDK_ROOT>/gd32vf103/Board/gd32vf103v_rvstar** will be used.
+      the board supported list in **<NUCLEI_SDK_ROOT>/<SOC>/Board/**, take ``SOC=ns BOARD=fpga_eval``
+      as example, the board source code located **<NUCLEI_SDK_ROOT>/ns/Board/fpga_eval** will be used.
 
 .. _develop_buildsystem_var_variant:
 
@@ -557,25 +533,21 @@ This variable only affect the selected board or soc, and it is target dependent.
 TOOLCHAIN
 ~~~~~~~~~
 
-.. note::
-
-    This variable is added in 0.5.0 release.
 
 This variable is used to select different toolchain to compile application.
-Currently we support 3 toolchain in Nuclei SDK.
+Currently we support 3 toolchain in Nuclei N100 SDK.
 
 * **nuclei_gnu**: default, it will choose nuclei gnu toolchain, distributed with Nuclei Toolchain.
-* **nuclei_llvm**: still in experiment, nuclei customized extensions not yet supported, distributed with Nuclei Toolchain.
+* **nuclei_llvm**: not yet supported for N100, still in experiment, nuclei customized extensions not yet supported, distributed with Nuclei Toolchain.
 * **terapines**: still in experiment, it depends on the toolchain vendor about the supported extensions, if you want to take a try with it, just visit https://www.terapines.com/ and request an terapines toolchain evaluation.
 
 For **nuclei_gnu/nuclei_llvm** toolchain both newlib and libncrt library are supported,
 but nuclei_llvm toolchain multilib selection mechanism is not as good as gnu toolchain,
 you need to take care of the arch isa string order, please see ``riscv64-unknown-unknown-elf-clang -v`` output for supported multilib and its isa string order.
 
-And IAR compiler support is also done in Nuclei SDK, you can take a try with it
+And IAR compiler support is also done in Nuclei N100 SDK(not yet ready for N100), you can take a try with it
 via ``ideprojects/iar`` folder provided prebuilt ide projects.
 
-If you want to use old Nuclei GNU Toolchain <= 2022.12 in Nuclei SDK 0.5.0, you need to pass extra ``COMPILE_PREFIX=riscv-nuclei-elf-`` when build any application, such as ``make CORE=n307fd COMPILE_PREFIX=riscv-nuclei-elf-  STDCLIB=libncrt_small clean all``, but this is not recommended, and will be deprecated in future any time.
 
 .. _develop_buildsystem_var_download:
 
@@ -598,47 +570,20 @@ currently it has these modes supported as described in table
    * - ilm
      - | Program will be download into ilm/ram and
        | run directly in ilm/ram, program will lost when poweroff
-   * - flash
-     - | Program will be download into flash, when running,
-       | program will be copied to ilm/ram and run in ilm/ram
    * - flashxip
      - Program will to be download into flash and run directly in flash
-   * - ddr
-     - | Program will to be download into ddr and
-       | run directly in ddr, program will lost when poweroff
-   * - sram
-     - | Program will to be download into sram and
-       | run directly in sram, program will lost when poweroff
 
 .. note::
 
     * This variable now target dependent, and its meaning depending on how this
       variable is implemented in SoC's build.mk
-    * :ref:`design_soc_gd32vf103` only support **DOWNLOAD=flashxip**
     * **flashxip** mode in :ref:`design_soc_evalsoc` is very slow due to
       the CORE frequency is very slow, and flash execution speed is slow
-    * **ddr** mode is introduced in release ``0.2.5`` of Nuclei SDK
     * macro ``DOWNLOAD_MODE`` and ``DOWNLOAD_MODE_STRING`` will be defined in Makefile,
       eg. when ``DOWNLOAD=flash``, macro will be defined as ``-DDOWNLOAD_MODE=DOWNLOAD_MODE_FLASH``,
       and ``-DDOWNLOAD_MODE_STRING=\"flash\"``, the ``flash`` will be in upper case,
       currently ``DOWNLOAD_MODE_STRING`` macro is used in ``system_<Device>.c`` when
       banner is print.
-    * This download mode is also used to clarify whether in the link script,
-      your eclic vector table is placed in ``.vtable_ilm`` or ``.vtable`` section, eg.
-      for evalsoc, when ``DOWNLOAD=flash``, vector table is placed in ``.vtable_ilm`` section,
-      and an extra macro called ``VECTOR_TABLE_REMAPPED`` will be passed in Makefile.
-      When ``VECTOR_TABLE_REMAPPED`` is defined, it means vector table's LMA and VMA are
-      different, it is remapped.
-    * From release ``0.3.2``, this ``DOWNLOAD_MODE`` should not be used, and macros
-      ``DOWNLOAD_MODE_ILM``, ``DOWNLOAD_MODE_FLASH``, ``DOWNLOAD_MODE_FLASHXIP`` and
-      ``DOWNLOAD_MODE_DDR`` previously defined in ``riscv_encoding.h`` now are moved to
-      ``<Device.h>`` such as ``evalsoc.h``, and should be deprecated in future.
-      Now we are directly using ``DOWNLOAD_MODE_STRING`` to pass the download mode string,
-      no longer need to define it in source code as before.
-    * From release ``0.3.2``, you can define **DOWNLOAD** not just the download mode list above,
-      you can use other download mode names specified by your customized SoC.
-    * For SRAM download mode, for 200/300, it don't has DDR, so sram is a external ram outside of cpu,
-      for 600/900, it has DDR, so sram is the ddr ram
 
 .. _develop_buildsystem_var_core:
 
@@ -657,42 +602,15 @@ Currently it has these cores supported as described in table
    :widths: 20 20 20
    :align: center
 
-   ========  ========== =======  =================
-   **CORE**  **ARCH**   **ABI**       **TUNE**
-   n201      rv32iac    ilp32    nuclei-200-series
-   n201e     rv32eac    ilp32e   nuclei-200-series
-   n203      rv32imac   ilp32    nuclei-200-series
-   n203e     rv32emac   ilp32e   nuclei-200-series
-   n205      rv32imac   ilp32    nuclei-200-series
-   n205e     rv32emac   ilp32e   nuclei-200-series
-   n300      rv32imac   ilp32    nuclei-300-series
-   n300f     rv32imafc  ilp32f   nuclei-300-series
-   n300fd    rv32imafdc ilp32d   nuclei-300-series
-   n305      rv32imac   ilp32    nuclei-300-series
-   n307      rv32imafc  ilp32f   nuclei-300-series
-   n307fd    rv32imafdc ilp32d   nuclei-300-series
-   n600      rv32imac   ilp32    nuclei-600-series
-   n600f     rv32imafc  ilp32f   nuclei-600-series
-   n600fd    rv32imafdc ilp32d   nuclei-600-series
-   nx600     rv64imac   lp64     nuclei-600-series
-   nx600f    rv64imafc  lp64f    nuclei-600-series
-   nx600fd   rv64imafdc lp64d    nuclei-600-series
-   ux600     rv64imac   lp64     nuclei-600-series
-   ux600f    rv64imafc  lp64f    nuclei-600-series
-   ux600fd   rv64imafdc lp64d    nuclei-600-series
-   n900      rv32imac   ilp32    nuclei-900-series
-   n900f     rv32imafc  ilp32f   nuclei-900-series
-   n900fd    rv32imafdc ilp32d   nuclei-900-series
-   u900      rv32imac   ilp32    nuclei-900-series
-   u900f     rv32imafc  ilp32f   nuclei-900-series
-   u900fd    rv32imafdc ilp32d   nuclei-900-series
-   nx900     rv64imac   lp64     nuclei-900-series
-   nx900f    rv64imafc  lp64f    nuclei-900-series
-   nx900fd   rv64imafdc lp64d    nuclei-900-series
-   ux900     rv64imac   lp64     nuclei-900-series
-   ux900f    rv64imafc  lp64f    nuclei-900-series
-   ux900fd   rv64imafdc lp64d    nuclei-900-series
-   ========  ========== =======  =================
+   ==========  ==============   =======  =================
+   **CORE**    **ARCH**         **ABI**       **TUNE**
+   n100e        rv32ec          ilp32e   nuclei-100-series
+   n100em       rv32emc         ilp32e   nuclei-100-series
+   n100ezmmul   rv32ec_zmmul    ilp32e   nuclei-100-series
+   n100         rv32ic          ilp32    nuclei-100-series
+   n100m        rv32imc         ilp32    nuclei-100-series
+   n100zmmul    rv32ic_zmmul    ilp32    nuclei-100-series
+   ==========  ==============   =======  =================
 
 When **CORE** is selected, the **ARCH**, **ABI** and **TUNE** (optional) are set,
 and it might affect the compiler options in combination with :ref:`develop_buildsystem_var_archext`
@@ -700,17 +618,15 @@ depended on the implementation of SoC build.mk.
 
 Take ``SOC=evalsoc`` as example.
 
-- If **CORE=n205 ARCH_EXT=**, then ``ARCH=rv32imac, ABI=ilp32 TUNE=nuclei-200-series``. 
+- If **CORE=n100zmmul ARCH_EXT=_zca_zcb_zcmp_zcmt**, then ``ARCH=rv32i_zmmul_zca_zcb_zcmp_zcmt, ABI=ilp32 TUNE=nuclei-100-series``. 
   riscv arch related compile and link options will be passed, for this case, it will be
-  ``-march=rv32imac -mabi=ilp32 -mtune=nuclei-200-series``.
+  ``-march=rv32i_zmmul_zca_zcb_zcmp_zcmt -mabi=ilp32 -mtune=nuclei-100-series``.
 
-- If **CORE=n205 ARCH_EXT=_zba_zbb_zbc_zbs**, it will be ``-march=rv32imac_zba_zbb_zbc_zbs -mabi=ilp32 -mtune=nuclei-200-series``.
+- If **CORE=n100e ARCH_EXT=_zicond**, it will be ``-march=rv32ec_zicond -mabi=ilp32e -mtune=nuclei-100-series``.
 
 For riscv code model settings, the ``RISCV_CMODEL`` variable will be set to medlow
 for RV32 targets, otherwise it will be medany.
 
-The some SoCs, the CORE is fixed, so the ARCH and ABI will be fixed, such as
-``gd32vf103`` SoC, in build system, the CORE is fixed to n205, and ARCH=rv32imac, ABI=ilp32.
 
 .. _develop_buildsystem_var_archext:
 
@@ -757,12 +673,9 @@ Here are several examples when using ARCH_EXT for Nuclei RISC-V Processors:
 * If you want to use `Zc 1.0 extension`_
 
   - You can use it together with C extension, which means it should be concat with isa string like ``rv32imafd_zca_zcb_zcf_zcmp_zcmt``
-  - In Nuclei SDK, the isa string processing is done in build system
-  - If you want to use with n300/n900, you can pass **ARCH_EXT=_zca_zcb_zcmp_zcmt**
-  - If you want to use with n300f/n900f, you can pass **ARCH_EXT=_zca_zcb_zcf_zcmp_zcmt**
-  - If you want to use with n300fd/n900fd, you can pass **ARCH_EXT=_zca_zcb_zcf_zcmp_zcmt**
-  - If you want to use with n300fd/n900fd without zcmp/zcmt, you can pass **ARCH_EXT=_zca_zcb_zcf_zcd**
-  - If you want to use with extra Nuclei Code Size Reduction extension called Xxlcz, you can add extra ``_xxlcz`` in **ARCH_EXT**, eg. for n300, you can pass **ARCH_EXT=_zca_zcb_zcmp_zcmt_xxlcz**
+  - In Nuclei N100 SDK, the isa string processing is done in build system
+  - If you want to use with n100/n100e, you can pass **ARCH_EXT=_zca_zcb_zcmp_zcmt**
+  - If you want to use with extra Nuclei Code Size Reduction extension called Xxlcz, you can add extra ``_xxlcz`` in **ARCH_EXT**, eg. for n100, you can pass **ARCH_EXT=_zca_zcb_zcmp_zcmt_xxlcz**
 
 * When using customized extensions such as Xxldsp/Xxldspn1x/Xxldspn2x/Xxldspn3x/Xxlcz, the isa string must be placed after all ``_z`` started isa strings, here is an legal string such as ``rv32imafd_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_zk_zks_xxlcz_xxldspn3x`` for rv32 with imafd + Zc + B + K + Xxldspn3x + Xxlcz
 
@@ -804,18 +717,9 @@ It is suggested to use this ARCH_EXT with other arch options like this, can be f
 CPU_SERIES
 ~~~~~~~~~~
 
-.. note::
-
-    * This variable is used to control different compiler options for different Nuclei CPU series such
-      as 200/300/600/900.
-
 This variable will be auto set if your CORE variable match the following rules:
 
-* **200**: CORE start with *20*, the CPU_SERIES will be 200.
-* **300**: CORE start with *30*, the CPU_SERIES will be 300.
-* **600**: CORE start with *60*, the CPU_SERIES will be 600.
-* **900**: CORE start with *90*, the CPU_SERIES will be 900.
-* **0**: CORE start with others, the CPU_SERIES will be 0.
+* **100**: CORE start with *10*, the CPU_SERIES will be 100.
 
 It can also be defined in Makefile itself directly or passed via make command.
 
@@ -847,14 +751,14 @@ And for qemu 2023.10 verison, you can also use semihosting feature, simple usage
 
 When using semihosting feature with openocd, debug message will print via openocd console.
 
-You need to use it like this(assume you are run on evalsoc, CORE=n300):
+You need to use it like this(assume you are run on evalsoc, CORE=n100):
 
 In terminal 1, open openocd and monitor the output:
 
 .. code-block:: shell
 
     cd application/baremetal/helloworld
-    make SOC=evalsoc CORE=n300 run_openocd
+    make SOC=evalsoc CORE=n100 run_openocd
     # when terminal 2 has download program and start to run, you will be able to see output here
 
 In terminal 2, gdb connect to the openocd exposed gdb port and load program, and run
@@ -863,8 +767,8 @@ In terminal 2, gdb connect to the openocd exposed gdb port and load program, and
 
     # in normal shell terminal
     cd application/baremetal/helloworld
-    make SOC=evalsoc CORE=n300 SEMIHOST=1 clean
-    make SOC=evalsoc CORE=n300 SEMIHOST=1 run_gdb
+    make SOC=evalsoc CORE=n100 SEMIHOST=1 clean
+    make SOC=evalsoc CORE=n100 SEMIHOST=1 run_gdb
 
     # now in gdb command terminal, run the following command
     monitor reset halt
@@ -887,14 +791,11 @@ simulation environment.
 
    * Currently the benchmark applications in **application/baremetal/benchmark** used this optimization
 
+
 .. _develop_buildsystem_var_gdb_port:
 
 GDB_PORT
 ~~~~~~~~
-
-.. note::
-
-    * This new variable **GDB_PORT** is added in Nuclei SDK since version ``0.2.4``
 
 This variable is not used usually, by default the **GDB_PORT** variable is ``3333``.
 
@@ -906,18 +807,14 @@ run_gdb and specify a different port other than ``3333``.
 
 You can do it like this, take ``nuclei_fpga_eval`` board for example, such as port ``3344``:
 
-* Open openocd server: ``make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_openocd``
+* Open openocd server: ``make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n100 GDB_PORT=3344 run_openocd``
 
-* connect gdb with openocd server: ``make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_gdb``
+* connect gdb with openocd server: ``make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n100 GDB_PORT=3344 run_gdb``
 
 .. _develop_buildsystem_var_jtagsn:
 
 JTAGSN
 ~~~~~~
-
-.. note::
-
-   * This new variable **JTAGSN** is added in ``0.4.0`` release
 
 This variable is used specify jtag adapter serial number in openocd configuration, need to be supported in
 openocd configuration file and makefile, currently **evalsoc** is supported.
@@ -933,9 +830,9 @@ For windows, you need to pass extra ``A``, eg. ``JTAGSN=FT6S9RD6A``
     # cd to helloworld
     cd application/baremetal/helloworld
     # clean program
-    make SOC=evalsoc CORE=ux900 JTAGSN=FT6S9RD6 clean
+    make SOC=evalsoc JTAGSN=FT6S9RD6 clean
     # upload program
-    make SOC=evalsoc CORE=ux900 JTAGSN=FT6S9RD6 upload
+    make SOC=evalsoc JTAGSN=FT6S9RD6 upload
 
 .. _develop_buildsystem_var_banner:
 
@@ -951,7 +848,7 @@ The banner message looks like this:
 
 .. code-block:: c
 
-    Nuclei SDK Build Time: Jul 23 2021, 10:22:50
+    Nuclei N100 SDK Build Time: Jul 23 2021, 10:22:50
     Download Mode: ILM
     CPU Frequency 15999959 Hz
 
@@ -1028,8 +925,8 @@ NUCLEI_SDK_ROOT
 
 This is a necessary variable which must be defined in application Makefile.
 
-It is used to set the path of Nuclei SDK Root, usually it should be set as
-relative path, but you can also set absolute path to point to Nuclei SDK.
+It is used to set the path of Nuclei N100 SDK Root, usually it should be set as
+relative path, but you can also set absolute path to point to Nuclei N100 SDK.
 
 .. _develop_buildsystem_var_rtos:
 
@@ -1114,7 +1011,7 @@ Newlib is a simple ANSI C library, math library, available for both RV32 and RV6
 Nuclei C runtime library is a highly optimized c library designed for deeply embedded user cases,
 can provided smaller code size and highly optimized floating point support compared to Newlib.
 
-From 0.5.0 release, to support both gcc and clang compiler, we decided not to use ``--specs=`` option to
+To support both gcc and clang compiler, we decided not to use ``--specs=`` option to
 select system library, instead of that, we start to use ``--nodefaultlibs`` options, and link the required
 system libraries by the ``STDCLIB`` variable choice, so need to link desired libraries such as:
 
@@ -1189,10 +1086,6 @@ system libraries by the ``STDCLIB`` variable choice, so need to link desired lib
 NCRTHEAP
 ~~~~~~~~
 
-.. note::
-
-    * This variable is added in 0.5.0 release to support libncrt v3.0.0.
-
 This variable is only valid when using libncrt c library >= v3.0.0, and you can choose different
 heapops when using libncrt c library to do heap related operations such as malloc or free.
 
@@ -1207,10 +1100,6 @@ choose different heap type, but now you can choose according to your requirement
 
 NCRTIO
 ~~~~~~
-
-.. note::
-
-    * This variable is added in 0.5.0 release to support libncrt v3.0.0.
 
 This variable is only valid when using libncrt c library >= v3.0.0, and you can choose different
 fileops when using libncrt c library to do basic input/output operations.
@@ -1243,10 +1132,6 @@ be used, and only boot hartid specified by **BOOT_HARTID** will enter to main, o
 BOOT_HARTID
 ~~~~~~~~~~~
 
-.. note::
-
-   * This new variable **BOOT_HARTID** is added in ``0.4.0`` release
-
 This variable is used to control the boot hartid in a multiple core system.
 If **SMP** variable is specified, it means this application is expected to be a smp application,
 otherwise it means this application is expected to be a amp application.
@@ -1266,23 +1151,19 @@ Here is some basic usage for SMP and BOOT_HARTID on UX900 x4, run on external dd
 .. code-block:: shell
 
     # cd to helloworld
-    cd <Nuclei SDK>/application/baremetal/helloworld
+    cd <Nuclei N100 SDK>/application/baremetal/helloworld
     # clean program
-    make SOC=evalsoc CORE=ux900 clean
+    make SOC=evalsoc clean
     # AMP: choose hart 1 as boot hartid, other harts spin
-    make SOC=evalsoc CORE=ux900 BOOT_HARTID=1 DOWNLOAD=ddr clean upload
-    cd <Nuclei SDK>/application/baremetal/smphello
+    make SOC=evalsoc BOOT_HARTID=1 DOWNLOAD=ddr clean upload
+    cd <Nuclei N100 SDK>/application/baremetal/smphello
     # SMP: choose hart 2 as boot hartid
-    make SOC=evalsoc CORE=ux900 BOOT_HARTID=2 SMP=4 DOWNLOAD=ddr clean upload
+    make SOC=evalsoc BOOT_HARTID=2 SMP=4 DOWNLOAD=ddr clean upload
 
 .. _develop_buildsystem_var_hartid_ofs:
 
 HARTID_OFS
 ~~~~~~~~~~
-
-.. note::
-
-   * This new variable is added in ``0.5.0`` release
 
 This variable is used to set hartid offset relative to real hart index in a complex AMP SoC system.
 
@@ -1338,8 +1219,8 @@ It might override RISCV_ARCH defined in SoC build.mk, according to your build.mk
 
 Take ``SOC=evalsoc`` for example.
 
-* **CORE=n305 RISCV_ARCH=rv32imafdc_zk_zks RISCV_ABI=ilp32d ARCH_EXT=_zba_zbb_zbc_zbs**, then final compiler options will be
-  ``-march=rv32imafdc_zk_zks -mabi=ilp32d -mtune=nuclei-300-series``. The **ARCH_EXT** is ignored.
+* **CORE=n100 RISCV_ARCH=rv32imc_zicond RISCV_ABI=ilp32 ARCH_EXT=_zba_zbb_zbc_zbs**, then final compiler options will be
+  ``-march=rv32imc_zicond -mabi=ilp32 -mtune=nuclei-100-series``. The **ARCH_EXT** is ignored.
 
 .. _develop_buildsystem_var_riscv_abi:
 
@@ -1413,27 +1294,6 @@ APP_LDFLAGS
 
 This variable is similiar to **APP_COMMON_FLAGS** but used to pass extra app linker flags.
 
-.. _develop_buildsystem_var_pfloat:
-
-PFLOAT
-~~~~~~
-
-.. note::
-
-    * **Removed** in 0.5.0 release, no longer support it.
-    * **Deprecated** variable, please use :ref:`develop_buildsystem_var_stdclib` now
-    * ``NEWLIB=nano PFLOAT=1`` can be replaced by ``STDCLIB=newlib_small`` now
-
-.. _develop_buildsystem_var_newlib:
-
-NEWLIB
-~~~~~~
-
-.. note::
-
-    * **Removed** in 0.5.0 release, no longer support it.
-    * **Deprecated** variable, please use :ref:`develop_buildsystem_var_stdclib` now
-
 .. _develop_buildsystem_var_nogc:
 
 NOGC
@@ -1449,7 +1309,7 @@ When GC is enabled, these options will be added:
 
 If you want to enable this GC feature, you can set **NOGC=0** (default), GC feature will
 remove sections for you, but sometimes it might remove sections that are useful,
-e.g. For Nuclei SDK test cases, we use ctest framework, and we need to set **NOGC=1**
+e.g. For Nuclei N100 SDK test cases, we use ctest framework, and we need to set **NOGC=1**
 to disable GC feature.
 
 When ``NOGC=0``(default), extra compile options ``-ffunction-sections -fdata-sections``,
@@ -1477,7 +1337,7 @@ Build Related Makefile variables used only in Application Makefile
 If you want to specify additional compiler flags, please follow this guidance
 to modify your application Makefile.
 
-Nuclei SDK build system defined the following variables to control the
+Nuclei N100 SDK build system defined the following variables to control the
 build options or flags.
 
 * :ref:`develop_buildsystem_var_incdirs`

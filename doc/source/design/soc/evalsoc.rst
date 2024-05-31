@@ -40,7 +40,7 @@ If you want to learn more about this evaluation SoC, please get the
 Supported Boards
 ----------------
 
-In Nuclei SDK, we support the following boards based on **Nuclei evalsoc** SoC, see:
+In Nuclei N100 SDK, we support the following boards based on **Nuclei evalsoc** SoC, see:
 
 * :ref:`design_board_nuclei_fpga_eval`, default Board when this SoC selected.
 
@@ -49,7 +49,7 @@ In Nuclei SDK, we support the following boards based on **Nuclei evalsoc** SoC, 
 Usage
 -----
 
-If you want to use this **Nuclei evalsoc SoC** in Nuclei SDK, you need to set the
+If you want to use this **Nuclei evalsoc SoC** in Nuclei N100 SDK, you need to set the
 :ref:`develop_buildsystem_var_soc` Makefile variable to ``evalsoc``.
 
 Extra make variables supported only in this SoC:

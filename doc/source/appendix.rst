@@ -15,7 +15,7 @@ Appendix
 
 * **Nuclei QEMU Repo**: https://github.com/riscv-mcu/qemu
 
-* **Nuclei SDK**: https://github.com/Nuclei-Software/nuclei-sdk
+* **Nuclei N100 SDK**: https://github.com/Nuclei-Software/nuclei-sdk/tree/develop_n100
 
 * **NMSIS**: https://github.com/Nuclei-Software/NMSIS
 

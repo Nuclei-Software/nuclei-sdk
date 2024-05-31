@@ -8,9 +8,9 @@ Application Development
 Overview
 --------
 
-Here will describe how to develop an Nuclei SDK application.
+Here will describe how to develop an Nuclei N100 SDK application.
 
-To develop a Nuclei SDK application from scratch, you can do the following steps:
+To develop a Nuclei N100 SDK application from scratch, you can do the following steps:
 
 1. Create a directory to place your application code.
 2. Create **Makefile** in the new created directory, the minimal **Makefile** should look like this
@@ -121,8 +121,6 @@ If you want to optimize code size even more, you use this link time optimization
 
     COMMON_FLAGS := -Os -flto
 
-see :ref:`design_app_demo_eclic` for example usage of optimize for code size.
-
 For more details about gcc optimization, please refer to `Options That Control Optimization in GCC`_.
 
 .. _develop_appdev_linkscript:
@@ -140,10 +138,10 @@ The default linker script used for different boards can be found in :ref:`design
 Set Default Make Options
 ------------------------
 
-Set Default Global Make Options For Nuclei SDK
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Set Default Global Make Options For Nuclei N100 SDK
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to change the global Make options for the Nuclei SDK,
+If you want to change the global Make options for the Nuclei N100 SDK,
 you can add the :ref:`develop_buildsystem_makefile_global`.
 
 

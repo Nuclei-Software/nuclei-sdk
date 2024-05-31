@@ -3,13 +3,13 @@
 Code Style
 ==========
 
-In Nuclei SDK, we use `EditorConfig`_ to maintain our development
+In Nuclei N100 SDK, we use `EditorConfig`_ to maintain our development
 coding styles and `astyle`_ tool to format our source code.
 
 - Our `editorconfig file`_ is maintained in the root directory of
-  Nuclei SDK, called ``.editorconfig``.
+  Nuclei N100 SDK, called ``.editorconfig``.
 - Our astyle option file is maintained in the root directory of
-  Nuclei SDK, called ``.astylerc``.
+  Nuclei N100 SDK, called ``.astylerc``.
 
 For example, if you want to format your applicaton code(*.c/*.h)
 located in ``application/baremetal/demo_timer``, you can run the

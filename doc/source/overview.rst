@@ -10,61 +10,53 @@ Introduction
 
 .. note::
 
-    Since 0.5.0 release of Nuclei SDK, we need to use Nuclei Studio >= 2023.10 or Nuclei Toolchain
-    >=2023.10 to build and run it, see release changelog.
+    This is Nuclei N100 SDK which is modified based on **Nuclei SDK 0.5.0** to support Nuclei 100 series CPU.
 
-The **Nuclei Software Development Kit (SDK)** is an open-source software platform to
-speed up the software development of SoCs based on Nuclei Processor Cores.
+    If you are looking for Nuclei SDK for Nuclei 200/300/600/900/1000 CPU, please refer to https://doc.nucleisys.com/nuclei_sdk
 
-This Nuclei SDK is built based on the |NMSIS|, user can access all the APIs provided
-by |NMSIS| and also the APIs that provided by Nuclei SDK which mainly for on-board
-peripherals access such as GPIO, UART, SPI and I2C, etc.
+The **Nuclei N100 Software Development Kit (SDK)** is an open-source software platform to
+speed up the software development of SoCs based on Nuclei Processor 100 series Cores.
 
-Nuclei SDK provides a good start base for embedded developers which will help them simplify
+This Nuclei N100 SDK is built based on the modified |NMSIS| for N100 and also the APIs that provided by Nuclei N100 SDK which mainly for on-board
+peripherals access such as UART etc.
+
+Nuclei N100 SDK provides a good start base for embedded developers which will help them simplify
 software development and improve time-to-market through well-designed software framework.
 
 .. note::
 
-    To get a pdf version of this documentation, please click `Nuclei SDK Document`_
+    To get a pdf version of this documentation, please click `Nuclei N100 SDK Document`_
 
 .. _overview_design_arch:
 
 Design and Architecture
 -----------------------
 
-The Nuclei SDK general design and architecture are shown in the block diagram as below.
+The Nuclei N100 SDK general design and architecture are shown in the block diagram as below.
 
 .. _figure_overview_1:
 
 .. figure:: /asserts/images/nuclei_sdk_diagram.png
    :width: 80 %
    :align: center
-   :alt: Nuclei SDK Design and Architecture Diagram
+   :alt: Nuclei N100 SDK Design and Architecture Diagram
 
-   Nuclei SDK Design and Architecture Diagram
+   Nuclei N100 SDK Design and Architecture Diagram
 
-As :ref:`figure_overview_1` shown, The Nuclei SDK provides the following features:
+As :ref:`figure_overview_1` shown, The Nuclei N100 SDK provides the following features:
 
 * Nuclei Core API service is built on top of |NMSIS|, so silicon vendors of Nuclei processors can easily
-  port their SoCs to Nuclei SDK, and quickly evaluate software on their SoC.
-* **NMSIS-NN** and **NMSIS-DSP** library can be also used in Nuclei SDK, and the prebuilt libraries are
-  included in **NMSIS/Library** folder of Nuclei SDK.
-* Mainly support two Nuclei Processor based SoCs, :ref:`design_soc_evalsoc` and :ref:`design_soc_gd32vf103`
+  port their SoCs to Nuclei N100 SDK, and quickly evaluate software on their SoC.
+* Mainly support :ref:`design_soc_evalsoc`
 * Provided realtime operation system service via :ref:`design_rtos_freertos`, :ref:`design_rtos_ucosii` and
   :ref:`design_rtos_rtthread`
 * Provided bare-metal service for embedded system software beginners and resource-limited use-cases.
-* Currently Nuclei SDK doesn't define any common device APIs to access GPIO/I2C/SPI/UART devices, which still
-  relies on the device/peripheral APIs from firmware libraries provided by various silicon vendors, such as current
-  supported :ref:`design_soc_gd32vf103`.
 * Applications are logically separated into three parts:
 
-  - **General applications for all Nuclei Processors**: In the Nuclei SDK software code, the applications provided
+  - **General applications for Nuclei 100 series Processors**: In the Nuclei N100 SDK software code, the applications provided
     are all general applications which can run on all Nuclei Processors, with basic UART service to provide ``printf`` function.
-  - **Nuclei Demo SoC applications**: These applications are not included in the Nuclei SDK software code, and it is
+  - **Nuclei Eval SoC applications**: These applications are not included in the Nuclei N100 SDK software code, and it is
     *maintained separately*, which will use resource from Nuclei Demo SoC and its evaluation boards to develop applications, which will
-    not be compatible with different boards.
-  - **GD32VF103 SoC applications**: These applications are not included in the Nuclei SDK software code, and it is
-    *maintained separately*, which will use resource from GD32VF103 SoC and its evaluation boards to develop applications, which will
     not be compatible with different boards.
 
 .. _overview_getstarted:
@@ -72,14 +64,14 @@ As :ref:`figure_overview_1` shown, The Nuclei SDK provides the following feature
 Get Started
 -----------
 
-Please refer to :ref:`quickstart` to get started to take a try with Nuclei SDK.
+Please refer to :ref:`quickstart` to get started to take a try with Nuclei N100 SDK.
 
 .. _overview_contribute:
 
 Contributing
 ------------
 
-Contributing to Nuclei SDK is welcomed, if you have any issue or pull request
+Contributing to Nuclei N100 SDK is welcomed, if you have any issue or pull request
 want to open, you can take a look at :ref:`contribute` section.
 
 .. _overview_copyright:
@@ -122,6 +114,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 License
 -------
 
-Nuclei SDK is an opensource project licensed by :ref:`Apache License 2.0 <license>`.
+Nuclei N100 SDK is an opensource project licensed by :ref:`Apache License 2.0 <license>`.
 
-.. _Nuclei SDK Document: https://doc.nucleisys.com/nuclei_sdk/nucleisdk.pdf
+.. _Nuclei N100 SDK Document: https://doc.nucleisys.com/nuclei_n100_sdk/nuclei_n100sdk.pdf

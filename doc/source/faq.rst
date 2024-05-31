@@ -79,7 +79,7 @@ just change it to ``CORE=n305``.
 How to select correct FDTI debugger?
 ------------------------------------
 
-From Nuclei SDK release 0.2.9, the openocd configuration file doesn't
+From Nuclei N100 SDK release 0.2.9, the openocd configuration file doesn't
 contain `ftdi_device_desc`_ line by default, so if there are more than
 one FTDI debuggers which has the same VID/PID(0x0403/0x6010) as Nuclei
 Debugger Kit use, then you might need to add extra ``ftdi device_desc``
@@ -119,19 +119,6 @@ Please check the following items:
 5. If still not working, you might need to check whether the FPGA bitstream is correct or not?
 
 
-Why ECLIC handler can't be installed using ECLIC_SetVector?
------------------------------------------------------------
-
-If you are running in ``FlashXIP`` download mode, it is expected,
-since the vector table is placed in Flash area which can't be changed
-during running time.
-
-You can only use this ``ECLIC_SetVector`` API when your vector table
-is placed in RAM which can be changed during running time, so if you want to
-write portable application, we recommended you to use exactly the eclic handler
-names defined in **startup_<device>.S**.
-
-
 Access to github.com is slow, any workaround?
 ---------------------------------------------
 
@@ -142,9 +129,9 @@ This mirror will sync changes from github to gitee every 6 hours, that is 4 time
 
 You just need to replace the github to gitee when you clone any repo in **Nuclei-Software** or **riscv-mcu**.
 
-For example, if you want to clone **nuclei-sdk** using command
-``git clone https://github.com/Nuclei-Software/nuclei-sdk``, then
-you can achieve it by command ``git clone https://gitee.com/Nuclei-Software/nuclei-sdk``
+For example, if you want to clone **nuclei-n100-sdk** using command
+``git clone -b develop_n100 https://github.com/Nuclei-Software/nuclei-sdk``, then
+you can achieve it by command ``git clone -b develop_n100 https://gitee.com/Nuclei-Software/nuclei-sdk``
 
 \`.text' will not fit in region \`ilm' or \`.bss' will not fit in region \`ram'
 -------------------------------------------------------------------------------
@@ -186,7 +173,7 @@ For example, if you want to change linker script for evalsoc on nuclei_fpga_eval
 cc1: error: unknown cpu 'nuclei-300-series' for '-mtune'
 ---------------------------------------------------------
 
-This `mtune` option is introduced in Nuclei SDK 0.3.5, used to select optimized gcc pipeline model
+This `mtune` option is introduced in Nuclei N100 SDK 0.3.5, used to select optimized gcc pipeline model
 for Nuclei RISC-V Core series such as 200/300/600/900 series, and this feature required Nuclei GNU
 Toolchain 2022.01, please upgrade to this version or later ones.
 
@@ -214,9 +201,9 @@ no need to link this math library.
 undefined reference to fclose/sprintf similar API provided in system libraries
 ------------------------------------------------------------------------------
 
-From 0.5.0 release, we no longer use ``--specs=`` option to select library we want to use, and we also passed
+We no longer use ``--specs=`` option to select library we want to use, and we also passed
 ``-nodefaultlibs`` options to not use standard system libraries, this changes are made to support both gcc and clang
-toolchain, so in Nuclei SDK build system, we control the needed system libraries to be linked as required by ``STDCLIB`` make variable, for details, please check ``Build/toolchain/*.mk`` makefiles, and also we use linker's group
+toolchain, so in Nuclei N100 SDK build system, we control the needed system libraries to be linked as required by ``STDCLIB`` make variable, for details, please check ``Build/toolchain/*.mk`` makefiles, and also we use linker's group
 libraries feature ``--start-group archives --end-group`` to repeatly search undefined reference in the group libraries,
 but this feature is not enabled in Eclipse CDT based IDE like Nuclei Studio, which undefined reference is searched in the order of library specified on the command line, so you may meet issue like undefined fclose reference even you linked newlib nano c library ``-lc_nano`` if the library order is not good, so to fix this issue, you may need to place
 the library in a good order and need to repeatly link it, such as ``-lgcc -lc_nano -lm -lsemihost -lgcov -lgcc -lc_nano``, and also we have opened an issue to track it, see https://github.com/eclipse-embed-cdt/eclipse-plugins/issues/592

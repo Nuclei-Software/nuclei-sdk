@@ -3,27 +3,27 @@
 Overview
 ========
 
-Nuclei SDK is developed based on **NMSIS**, all the SoCs supported in it
+Nuclei N100 SDK is developed based on **NMSIS**, all the SoCs supported in it
 are following the `NMSIS-Core Device Templates Guidance`_.
 
-So this Nuclei SDK can be treated as a software guide for how to use NMSIS.
+So this Nuclei N100 SDK can be treated as a software guide for how to use NMSIS.
 
-The build system we use in Nuclei SDK is ``Makefile``, it support both Windows
-and Linux, and when we develop Nuclei SDK build system, we keep it simple, so
-it make developer can easily port this Nuclei SDK software code to other IDEs.
+The build system we use in Nuclei N100 SDK is ``Makefile``, it support both Windows
+and Linux, and when we develop Nuclei N100 SDK build system, we keep it simple, so
+it make developer can easily port this Nuclei N100 SDK software code to other IDEs.
 
-Click :ref:`overview` to learn more about the Nuclei SDK project overview.
+Click :ref:`overview` to learn more about the Nuclei N100 SDK project overview.
 
-For example, we have ported Nuclei SDK to use Segger embedded Studio, IAR Workbench and PlatformIO.
+For example, we have ported Nuclei N100 SDK to use Segger embedded Studio, IAR Workbench and PlatformIO.
 
 Directory Structure
 -------------------
 
-To learn deeper about Nuclei SDK project, the directory structure is a good start point.
+To learn deeper about Nuclei N100 SDK project, the directory structure is a good start point.
 
-Below, we will describe our design about the Nuclei SDK directory structure:
+Below, we will describe our design about the Nuclei N100 SDK directory structure:
 
-Here is the directory structure for this Nuclei SDK.
+Here is the directory structure for this Nuclei N100 SDK.
 
 .. code-block::
 
@@ -76,7 +76,7 @@ Here is the directory structure for this Nuclei SDK.
 
 * **application**
 
-  This directory contains all the application softwares for this Nuclei SDK.
+  This directory contains all the application softwares for this Nuclei N100 SDK.
 
   The application code can be divided into mainly 4 parts, which are:
 
@@ -87,7 +87,7 @@ Here is the directory structure for this Nuclei SDK.
 
 * **SoC**
 
-  This directory contains all the supported SoCs for this Nuclei SDK, the directory name for SoC and its boards should always in lower case.
+  This directory contains all the supported SoCs for this Nuclei N100 SDK, the directory name for SoC and its boards should always in lower case.
 
   Here we mainly support Nuclei processor cores running in Nuclei FPGA evaluation board, the support package placed in *SoC/evalsoc/*.
 
@@ -97,11 +97,11 @@ Here is the directory structure for this Nuclei SDK.
 
 * **Build**
 
-  This directory contains the key part of the build system based on Makefile for Nuclei SDK.
+  This directory contains the key part of the build system based on Makefile for Nuclei N100 SDK.
 
 * **NMSIS**
 
-  This directory contains the NMSIS header files, which is widely used in this Nuclei SDK,
+  This directory contains the NMSIS header files, which is widely used in this Nuclei N100 SDK,
   you can check the *NMSIS_VERSION* file to know the current *NMSIS* version used in **Nuclei-SDK**.
 
   We will also sync the changes in `NMSIS project`_ when it provided a new release.
@@ -112,15 +112,15 @@ Here is the directory structure for this Nuclei SDK.
 
 * **LICENSE**
 
-  Nuclei SDK license file.
+  Nuclei N100 SDK license file.
 
 * **NMSIS_VERSION**
 
-  NMSIS Version file. It will show current NMSIS version used in Nuclei SDK.
+  NMSIS Version file. It will show current NMSIS version used in Nuclei N100 SDK.
 
 * **package.json**
 
-  PlatformIO package json file for Nuclei SDK, used in `Nuclei Plaform for PlatformIO`_.
+  PlatformIO package json file for Nuclei N100 SDK, used in `Nuclei Plaform for PlatformIO`_.
 
 * **SConscript**
 
@@ -132,7 +132,7 @@ Here is the directory structure for this Nuclei SDK.
 
 * **setup.sh**
 
-  Nuclei SDK environment setup script for **Linux**. You need to create your own `setup_config.sh`.
+  Nuclei N100 SDK environment setup script for **Linux**. You need to create your own `setup_config.sh`.
 
   .. code-block:: shell
 
@@ -161,7 +161,7 @@ Here is the directory structure for this Nuclei SDK.
 
 * **setup.bat**
 
-  Nuclei SDK environment setup bat script for **Windows**. You need to create your own `setup_config.bat`.
+  Nuclei N100 SDK environment setup bat script for **Windows**. You need to create your own `setup_config.bat`.
 
   .. code-block:: bat
 
@@ -195,14 +195,14 @@ Here is the directory structure for this Nuclei SDK.
 Project Components
 ------------------
 
-This Nuclei SDK project components is list as below:
+This Nuclei N100 SDK project components is list as below:
 
-* :ref:`design_nuclei`: How Nuclei Processor Core is used in Nuclei SDK
-* :ref:`design_soc`: How Nuclei processor code based SoC device is supported in Nuclei SDK
-* :ref:`design_board`: How Nuclei based SoC's Board is supported in Nuclei SDK
-* :ref:`design_peripheral`: How to use the peripheral driver in Nuclei SDK
-* :ref:`design_rtos`: What RTOSes are supported in Nuclei SDK
-* :ref:`design_app`: How to use pre-built applications in Nuclei SDK
+* :ref:`design_nuclei`: How Nuclei Processor Core is used in Nuclei N100 SDK
+* :ref:`design_soc`: How Nuclei processor code based SoC device is supported in Nuclei N100 SDK
+* :ref:`design_board`: How Nuclei based SoC's Board is supported in Nuclei N100 SDK
+* :ref:`design_peripheral`: How to use the peripheral driver in Nuclei N100 SDK
+* :ref:`design_rtos`: What RTOSes are supported in Nuclei N100 SDK
+* :ref:`design_app`: How to use pre-built applications in Nuclei N100 SDK
 
 
 .. _NMSIS-Core Device Templates Guidance: https://doc.nucleisys.com/nmsis/core/core_templates.html

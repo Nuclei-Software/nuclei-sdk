@@ -1,4 +1,4 @@
-.. Nuclei SDK documentation master file.
+.. Nuclei N100 SDK documentation master file.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 

@@ -16,7 +16,7 @@ import sys
 
 # -- Project information -----------------------------------------------------
 
-project = 'N100 SDK'
+project = 'Nuclei N100 SDK'
 copyright = '2023-Present, Nuclei'
 author = 'Nuclei'
 
@@ -79,25 +79,26 @@ latex_logo = 'asserts/images/nsdk_logo_small.png'
 latex_show_pagerefs = True
 latex_toplevel_sectioning = 'chapter'
 latex_show_urls = 'footnote'
+latex_documents = [('index', 'nuclei-n100sdk.tex', project, author, 'manual')]
 
 rst_prolog = """
 .. |nuclei_contact| replace:: email support@nucleisys.com
 .. |NMSIS| replace:: `NMSIS`_
 .. _NMSIS: https://github.com/Nuclei-Software/NMSIS
-.. |nuclei_sdk| replace:: `Nuclei SDK`_
-.. _Nuclei SDK: https://github.com/Nuclei-Software/nuclei-sdk
+.. |nuclei_sdk| replace:: `Nuclei N100 SDK`_
+.. _Nuclei N100 SDK: https://github.com/Nuclei-Software/nuclei-sdk/tree/develop_n100
 .. |nuclei_download_center| replace:: `Nuclei Download Center`_
 .. _Nuclei Download Center: https://nucleisys.com/download.php
 .. |github| replace:: `Github`_
 .. _Github: https://github.com
 .. |gitee| replace:: `Gitee`_
 .. _Gitee: https://gitee.com
-.. |github_nuclei_sdk| replace:: `Nuclei SDK in Github`_
-.. _Nuclei SDK in Github: https://github.com/Nuclei-Software/nuclei-sdk
-.. |gitee_nuclei_sdk| replace:: `Nuclei SDK in Gitee`_
-.. _Nuclei SDK in Gitee: https://gitee.com/Nuclei-Software/nuclei-sdk
-.. |github_nuclei_sdk_release| replace:: `Nuclei SDK Release in Github`_
-.. _Nuclei SDK Release in Github: https://github.com/Nuclei-Software/nuclei-sdk/releases
+.. |github_nuclei_sdk| replace:: `Nuclei N100 SDK in Github`_
+.. _Nuclei N100 SDK in Github: https://github.com/Nuclei-Software/nuclei-sdk/tree/develop_n100
+.. |gitee_nuclei_sdk| replace:: `Nuclei N100 SDK in Gitee`_
+.. _Nuclei N100 SDK in Gitee: https://gitee.com/Nuclei-Software/nuclei-sdk/tree/develop_n100
+.. |github_nuclei_sdk_release| replace:: `Nuclei N100 SDK Release in Github`_
+.. _Nuclei N100 SDK Release in Github: https://github.com/Nuclei-Software/nuclei-sdk/releases
 .. |teraterm| replace:: `TeraTerm in Windows`_
 .. _TeraTerm in Windows: http://ttssh2.osdn.jp/
 .. |minicom| replace:: `Minicom in Linux`_

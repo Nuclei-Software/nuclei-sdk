@@ -3,9 +3,9 @@
 Contributing
 ============
 
-Contributing to Nuclei SDK project is always welcome.
+Contributing to Nuclei N100 SDK project is always welcome.
 
-You can always do a lot of things to help Nuclei SDK project
+You can always do a lot of things to help Nuclei N100 SDK project
 improve and grow stronger.
 
 * :ref:`contribute_portsoc`
@@ -14,23 +14,23 @@ improve and grow stronger.
 
 .. _contribute_portsoc:
 
-Port your Nuclei SoC into Nuclei SDK
-------------------------------------
+Port your Nuclei SoC into Nuclei N100 SDK
+-----------------------------------------
 
-If you want to port you Nuclei Processor Core based Board to Nuclei SDK,
+If you want to port you Nuclei Processor Core based Board to Nuclei N100 SDK,
 you need to follow these steps:
 
 And the best example is our evalsoc support, although it may contains many unused features you may
 not want to use, but it is our evaluation SoC and will supply to provide best support for Nuclei RISC-V
 CPU features, if you are already using it, please keep in update of the evalsoc support changes in each
-release, you can track it by diff each release changes, and please also remember Nuclei SDK release may
+release, you can track it by diff each release changes, and please also remember Nuclei N100 SDK release may
 also bump with NMSIS release.
 
-Assume your SoC name is ``ncstar``, based on Nuclei core **n307**, and **RISCV_ARCH**
-is ``rv32imafc``, **RISCV_ABI** is ``ilp32f``, and you made a new board called ``ncstar_eval``,
+Assume your SoC name is ``ncstar``, based on Nuclei core **n100**, and **RISCV_ARCH**
+is ``rv32imc``, **RISCV_ABI** is ``ilp32``, and you made a new board called ``ncstar_eval``,
 and this SoC only support **FlashXIP** download mode.
 
-Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercase.
+Make sure the SoC name and Board name used in this Nuclei N100 SDK is all in lowercase.
 
 1. Create a folder named ``ncstar`` under **SoC** directory.
 
@@ -111,7 +111,7 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
            This file is used in application as entry header file to access board and SoC resources.
 
 
-2. Create Makefile related to ``ncstar`` in :ref:`Nuclei SDK build system <develop_buildsystem>`
+2. Create Makefile related to ``ncstar`` in :ref:`Nuclei N100 SDK build system <develop_buildsystem>`
 
    * Create **SoC/ncstar/build.mk**, the file content should be like this:
 
@@ -123,7 +123,7 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
 
         # override DOWNLOAD and CORE variable for NCSTAR SoC
         # even though it was set with a command argument
-        override CORE := n307
+        override CORE := n100
         override DOWNLOAD := flashxip
 
         NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
@@ -133,8 +133,8 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
         LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_ncstar_flashxip.ld
         OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_ncstar.cfg
 
-        RISCV_ARCH ?= rv32imafc
-        RISCV_ABI ?= ilp32f
+        RISCV_ARCH ?= rv32imc
+        RISCV_ABI ?= ilp32
 
         ##### Put your Source code Management configurations below #####
 
@@ -161,19 +161,6 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
         C_SRCDIRS += $(VALID_NUCLEI_SDK_SOC_BOARD)/Source
         endif
 
-   * If you need to place vector table in flash device, and copy it to ilm when startup, such as
-     using ``DOWNLOAD=flash`` mode, then you need to define extra ``VECTOR_TABLE_REMAPPED`` macro
-     in this ``build.mk``, just take ``SoC/evalsoc/build.mk`` as reference.
-
-     .. code-block:: Makefile
-
-        ## omit some code above
-        # Add extra cflags for SoC related
-        ifeq ($(DOWNLOAD), flash)
-        COMMON_FLAGS += -DVECTOR_TABLE_REMAPPED
-        endif
-        ## omit some code below
-        RISCV_ARCH ?= rv32imafc
 
 3. If you have setup the source code and build system correctly, then you can test
    your SoC using the common applications, e.g.
@@ -195,14 +182,12 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
 .. note::
 
    * You can always refer to previously supported SoCs for reference,
-     such as the ``evalsoc`` and ``gd32vf103`` SoC, we suggest you follow
+     such as the ``evalsoc`` SoC, we suggest you follow
      the ``evalsoc`` implementation, since it is well maintained to support
      latest nuclei riscv cpu feature.
    * The ``evalsoc`` SoC is a FPGA based evaluation platform, it have
      ``ilm`` and ``dlm``, so it support many
      :ref:`download modes <develop_buildsystem_var_download>`
-   * The ``gd32vf103`` SoC is a real silicon chip, it only have RAM and onchip
-     flash, it only support FlashXIP mode.
    * The **nuclei_sdk_soc.h** must be created in SoC include directory, it must
      include the device header file <device>.h and SoC firmware library header files.
    * The **nuclei_sdk_hal.h** must be created in Board include directory, it must
@@ -214,7 +199,7 @@ Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercas
 Submit your issue
 -----------------
 
-If you find any issue related to Nuclei SDK project,
+If you find any issue related to Nuclei N100 SDK project,
 you can open an issue in https://github.com/Nuclei-Software/nuclei-sdk/issues
 
 
@@ -223,7 +208,7 @@ you can open an issue in https://github.com/Nuclei-Software/nuclei-sdk/issues
 Submit your pull request
 ------------------------
 
-If you want to contribute your code to Nuclei SDK project,
+If you want to contribute your code to Nuclei N100 SDK project,
 you can open an pull request in https://github.com/Nuclei-Software/nuclei-sdk/pulls
 
 Regarding to code style, please refer to :ref:`develop_codestyle`.

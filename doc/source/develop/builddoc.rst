@@ -1,9 +1,9 @@
 .. _develop_builddoc:
 
-Build Nuclei SDK Documentation
-==============================
+Build Nuclei N100 SDK Documentation
+===================================
 
-In Nuclei SDK, we use Sphinx and restructured text as documentation tool.
+In Nuclei N100 SDK, we use Sphinx and restructured text as documentation tool.
 
 Here we only provide steps to build sphinx documentation in Linux environment.
 

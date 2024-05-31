@@ -8,13 +8,13 @@ Peripheral
 Overview
 --------
 
-Regarding the peripheral support(such as UART, GPIO, SPI, I2C and etc.) in Nuclei SDK,
+Regarding the peripheral support(such as UART, GPIO, SPI, I2C and etc.) in Nuclei N100 SDK,
 we didn't define a device or peripheral layer for different SoCs, so the peripheral drivers
 are directly tighted with each SoC, and if developer want to use the drivers, they can directly
 use the driver API defined in each SoC.
 
 Considering this peripheral driver difference in each SoC, if you want to write portable code in
-Nuclei SDK, you can use include the ``nuclei_sdk_soc.h``, then you can write application which
+Nuclei N100 SDK, you can use include the ``nuclei_sdk_soc.h``, then you can write application which
 only use the resources of Nuclei Core.
 
 If you want to use all the board resources, you can include the ``nuclei_sdk_hal.h``, then you can
@@ -34,11 +34,6 @@ of each SoC, and ``nuclei_sdk_hal.h`` of each board.
 
 If you just want to use SoC firmware library API, you just need to include ``nuclei_sdk_soc.h``,
 then you can use the all the APIs in that SoC include directory.
-
-.. note::
-
-    For GD32VF103 SoC, if you want to use the USB driver API, then you need to add ``USB_DRIVER = both``
-    in your application to enable both host and device driver.
 
 
 **For Board related APIs:**

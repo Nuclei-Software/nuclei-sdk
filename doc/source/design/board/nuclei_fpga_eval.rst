@@ -90,18 +90,14 @@ How to use
 
 For **Nuclei FPGA Evaluation board**:
 
-* ``evalsoc`` can run on this fpga board, please choose the correct SoC, ``demosoc`` support is removed in 0.5.0 release.
+* ``evalsoc`` can run on this fpga board, please choose the correct SoC.
 
 * **DOWNLOAD** support all the modes list in :ref:`develop_buildsystem_var_download`
 
   - You can find default used linker scripts for different download modes in ``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/``.
 
     - ``gcc_evalsoc_ilm.ld``: Linker script file for ``DOWNLOAD=ilm``
-    - ``gcc_evalsoc_flash.ld``: Linker script file for ``DOWNLOAD=flash``
     - ``gcc_evalsoc_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip``
-    - ``gcc_evalsoc_sram.ld``: Linker script file for ``DOWNLOAD=sram``
-    - ``gcc_evalsoc_ddr.ld``: Linker script file for ``DOWNLOAD=ddr``. **Caution**:
-      This download mode can be only used when DDR is connect to Nuclei RISC-V Core
 
   - If you want to specify your own modified linker script, you can follow steps described in :ref:`develop_appdev_linkscript`
   - If you want to change the base address or size of ILM, DLM, RAM, ROM or Flash of linker script file,
@@ -111,7 +107,7 @@ For **Nuclei FPGA Evaluation board**:
 
 * Its openocd configuration file can be found in ``SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg``
 
-To run this application in Nuclei FPGA Evaluation board in Nuclei SDK,
+To run this application in Nuclei FPGA Evaluation board in Nuclei N100 SDK,
 you just need to use this **SOC** and **BOARD** variables.
 
 .. code-block:: shell
@@ -142,7 +138,7 @@ If you want to try other toolchain, such as nuclei llvm or terapines zcc, you ca
      program in different modes.
    * The FreeRTOS and UCOSII demos maybe not working in ``flashxip``
      download mode in Nuclei FPGA board due to program running in Flash is really too slow.
-     If you want to try these demos, please use ``ilm`` or ``flash`` download mode.
+     If you want to try these demos, please use ``ilm`` download mode.
 
 .. _Nuclei FPGA Evaluation Kit Board Documents: https://nucleisys.com/developboard.php
 .. _Memory Section: https://sourceware.org/binutils/docs/ld/MEMORY.html
