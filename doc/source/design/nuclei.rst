@@ -30,8 +30,8 @@ Nuclei provides the following `RISC-V IP Products`_ for AIoT:
 
 .. note::
 
-   * **N100 series** is supported by modified **NMSIS** and **Nuclei N100 SDK**
-   * 200/300/600/900/1000 series are supported by **Nuclei SDK**
+   * **N100 series** is supported by **modified NMSIS** and **Nuclei N100 SDK**
+   * **200/300/600/900/1000 series** are supported by **NMSIS** and **Nuclei SDK**
 
 .. _design_nuclei_nmsis:
 
