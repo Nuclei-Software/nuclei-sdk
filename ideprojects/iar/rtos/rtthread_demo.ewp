@@ -16,7 +16,7 @@
                 <debug>1</debug>
                 <option>
                     <name>GDeviceSelect</name>
-                    <state>N300	Nuclei N300</state>
+                    <state>N200	Nuclei N200</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -141,7 +141,7 @@
                 </option>
                 <option>
                     <name>GDeviceAtomicSlave</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GDeviceCompactSlave</name>
@@ -150,11 +150,11 @@
                 <option>
                     <name>GDeviceFloatSelectSlave</name>
                     <version>1</version>
-                    <state>2</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GCoreDevice</name>
-                    <state>RV32IMAFDC</state>
+                    <state>RV32IMC</state>
                 </option>
                 <option>
                     <name>RadioStdOutErr</name>
@@ -2115,34 +2115,10 @@
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_base.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_bitmanip.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_cache.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_cidu.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_dsp.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_eclic.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_fpu.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_pmp.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_spmp.h</name>
+                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_irqc.h</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_timer.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_vector.h</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\nmsis_bench.h</name>

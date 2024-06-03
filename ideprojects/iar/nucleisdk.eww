@@ -4,46 +4,28 @@
         <path>$WS_DIR$\baremetal\coremark.ewp</path>
     </project>
     <project>
-        <path>$WS_DIR$\baremetal\cpuinfo.ewp</path>
+        <path>$WS_DIR$\baremetal\dhrystone.ewp</path>
     </project>
     <project>
-        <path>$WS_DIR$\baremetal\demo_cache.ewp</path>
-    </project>
-    <project>
-        <path>$WS_DIR$\baremetal\demo_dsp.ewp</path>
-    </project>
-    <project>
-        <path>$WS_DIR$\baremetal\demo_eclic.ewp</path>
-    </project>
-    <project>
-        <path>$WS_DIR$\baremetal\demo_nice.ewp</path>
-    </project>
-    <project>
-        <path>$WS_DIR$\baremetal\demo_pmp.ewp</path>
-    </project>
-    <project>
-        <path>$WS_DIR$\baremetal\demo_smode_eclic.ewp</path>
-    </project>
-    <project>
-        <path>$WS_DIR$\baremetal\demo_spmp.ewp</path>
-    </project>
-    <project>
-        <path>$WS_DIR$\baremetal\demo_stack_check.ewp</path>
+        <path>$WS_DIR$\baremetal\whetstone.ewp</path>
     </project>
     <project>
         <path>$WS_DIR$\baremetal\demo_timer.ewp</path>
     </project>
     <project>
-        <path>$WS_DIR$\baremetal\dhrystone.ewp</path>
-    </project>
-    <project>
-        <path>$WS_DIR$\rtos\freertos_demo.ewp</path>
+        <path>$WS_DIR$\baremetal\demo_irqc.ewp</path>
     </project>
     <project>
         <path>$WS_DIR$\baremetal\helloworld.ewp</path>
     </project>
     <project>
         <path>$WS_DIR$\baremetal\lowpower.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\baremetal\demo_extirq.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\rtos\freertos_demo.ewp</path>
     </project>
     <project>
         <path>$WS_DIR$\rtos\rtthread_demo.ewp</path>
@@ -53,9 +35,6 @@
     </project>
     <project>
         <path>$WS_DIR$\rtos\ucosii_demo.ewp</path>
-    </project>
-    <project>
-        <path>$WS_DIR$\baremetal\whetstone.ewp</path>
     </project>
     <batchBuild />
 </workspace>

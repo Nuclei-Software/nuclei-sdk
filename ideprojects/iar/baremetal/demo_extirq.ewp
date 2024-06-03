@@ -16,7 +16,7 @@
                 <debug>1</debug>
                 <option>
                     <name>GDeviceSelect</name>
-                    <state>N300	Nuclei N300</state>
+                    <state>N200	Nuclei N200</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -141,7 +141,7 @@
                 </option>
                 <option>
                     <name>GDeviceAtomicSlave</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GDeviceCompactSlave</name>
@@ -150,11 +150,11 @@
                 <option>
                     <name>GDeviceFloatSelectSlave</name>
                     <version>1</version>
-                    <state>2</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GCoreDevice</name>
-                    <state>RV32IMAFDC</state>
+                    <state>RV32IMC</state>
                 </option>
                 <option>
                     <name>RadioStdOutErr</name>
@@ -365,7 +365,7 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
-                    <state>__TEE_PRESENT=1</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -436,7 +436,7 @@
                     <state>$PROJ_DIR$\..\..\..\NMSIS\Core\Include</state>
                     <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Include</state>
                     <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Include</state>
-                    <state>$PROJ_DIR$\..\..\..\application\baremetal\demo_spmp</state>
+                    <state>$PROJ_DIR$\..\..\..\application\baremetal\demo_extirq</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -636,7 +636,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>demo_spmp.srec</state>
+                    <state>demo_extirq.srec</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -691,7 +691,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>demo_spmp.out</state>
+                    <state>demo_extirq.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -755,7 +755,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\..\..\..\application\baremetal\demo_spmp\iar_evalsoc_ilm.icf</state>
+                    <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_ilm.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -2093,10 +2093,7 @@
     <group>
         <name>application</name>
         <file>
-            <name>$PROJ_DIR$\..\..\..\application\baremetal\demo_spmp\demo_spmp.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\application\baremetal\demo_spmp\iar_evalsoc_ilm.icf</name>
+            <name>$PROJ_DIR$\..\..\..\application\baremetal\demo_extirq\main.c</name>
         </file>
     </group>
     <group>
@@ -2114,34 +2111,10 @@
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_base.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_bitmanip.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_cache.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_cidu.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_dsp.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_eclic.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_fpu.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_pmp.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_spmp.h</name>
+                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_irqc.h</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_timer.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_vector.h</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\nmsis_bench.h</name>
@@ -2189,6 +2162,9 @@
                         <name>Source</name>
                         <group>
                             <name>IAR</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_ilm.icf</name>
+                            </file>
                         </group>
                     </group>
                 </group>
@@ -2222,9 +2198,6 @@
                         <name>IAR</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Source\IAR\intexc_evalsoc.S</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Source\IAR\intexc_evalsoc_s.S</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Source\IAR\startup_evalsoc.c</name>
