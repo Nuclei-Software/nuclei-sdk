@@ -54,7 +54,6 @@ void vPortSetupTimerInterrupt(void);
  */
 #define xPortSysTickHandler     irqc_mtip_handler
 
-void xPortSysTickHandler(void);
 
 /*
  * Start first task is a separate function so it can be tested in isolation.

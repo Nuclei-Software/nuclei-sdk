@@ -125,7 +125,7 @@
                 </option>
                 <option>
                     <name>GDeviceSelectSlave</name>
-                    <state>N300	Nuclei N300</state>
+                    <state>N200	Nuclei N200</state>
                 </option>
                 <option>
                     <name>GGeneralAutoVectorSetup</name>
@@ -258,11 +258,11 @@
                 </option>
                 <option>
                     <name>GDeviceCryptoNistSlave</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GDeviceCryptoShangMiSlave</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GGeneralMisalignedDataAccess</name>
@@ -755,7 +755,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_ilm.icf</state>
+                    <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_flashxip.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>

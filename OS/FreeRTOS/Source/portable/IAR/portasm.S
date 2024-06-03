@@ -37,7 +37,7 @@
 #define portCONTEXT_SIZE    ( portRegNum * REGBYTES )
 
 
-    PUBLIC prvPortStartFirstTask, eclic_msip_handler
+    PUBLIC prvPortStartFirstTask, irqc_msip_handler
     EXTERN xPortTaskSwitch
     EXTERN pxCurrentTCB
     EXTERN CSTACK$$Limit
@@ -55,8 +55,6 @@ prvPortStartFirstTask:
        before the scheduler is started is
        no longer required after the scheduler is started.
        Interrupt stack pointer is stored in CSR_MSCRATCH */
-    la t0, CSTACK$$Limit
-    csrw CSR_MSCRATCH, t0
     LOAD sp, pxCurrentTCB           /* Load pxCurrentTCB. */
     LOAD sp, 0x0(sp)                /* Read sp from first TCB member */
 
@@ -197,9 +195,5 @@ irqc_msip_handler:
 
     addi sp, sp, portCONTEXT_SIZE
     mret
-
-default_intexc_handler:
-Undef_Handler:
-    j Undef_Handler
 
     END

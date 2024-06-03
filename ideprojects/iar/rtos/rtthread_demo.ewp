@@ -258,11 +258,11 @@
                 </option>
                 <option>
                     <name>GDeviceCryptoNistSlave</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GDeviceCryptoShangMiSlave</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GGeneralMisalignedDataAccess</name>
@@ -2212,9 +2212,6 @@
                                 <name>iar</name>
                                 <file>
                                     <name>$PROJ_DIR$\..\..\..\OS\RTThread\libcpu\risc-v\nuclei\iar\context_iar.S</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\..\..\OS\RTThread\libcpu\risc-v\nuclei\iar\interrupt_iar.S</name>
                                 </file>
                             </group>
                             <file>

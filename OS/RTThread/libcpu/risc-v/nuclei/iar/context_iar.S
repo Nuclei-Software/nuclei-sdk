@@ -5,7 +5,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2023/09/15     Huaqi        First Nuclei RISC-V porting implementation For IAR CC
+ * 2024/06/03     Huaqi        First Nuclei N100 RISC-V porting implementation For IAR CC
  */
 
 #include "riscv_encoding.h"
@@ -22,7 +22,7 @@
     EXTERN rt_interrupt_to_thread
     EXTERN CSTACK$$Limit
     EXTERN xPortTaskSwitch
-    PUBLIC rt_hw_context_switch_to, eclic_msip_handler
+    PUBLIC rt_hw_context_switch_to, irqc_msip_handler
 
     SECTION `.text`:CODE:NOROOT(2)
     CODE
@@ -43,8 +43,6 @@ rt_hw_context_switch_to:
        before the scheduler is started is
        no longer required after the scheduler is started.
        Interrupt stack pointer is stored in CSR_MSCRATCH */
-    la t0, CSTACK$$Limit
-    csrw CSR_MSCRATCH, t0
     LOAD sp, 0x0(a0)                /* Read sp from first TCB member(a0) */
 
     /* Pop PC from stack and set MEPC */
@@ -91,7 +89,7 @@ rt_hw_context_switch_to:
     mret
 
     ALIGN 2
-eclic_msip_handler:
+irqc_msip_handler:
     addi sp, sp, -portCONTEXT_SIZE
     STORE x1,  1  * REGBYTES(sp)    /* RA */
     STORE x5,  2  * REGBYTES(sp)

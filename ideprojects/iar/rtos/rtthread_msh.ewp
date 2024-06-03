@@ -2241,9 +2241,6 @@
                                 <file>
                                     <name>$PROJ_DIR$\..\..\..\OS\RTThread\libcpu\risc-v\nuclei\iar\context_iar.S</name>
                                 </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\..\..\OS\RTThread\libcpu\risc-v\nuclei\iar\interrupt_iar.S</name>
-                                </file>
                             </group>
                             <file>
                                 <name>$PROJ_DIR$\..\..\..\OS\RTThread\libcpu\risc-v\nuclei\cpuport.c</name>
