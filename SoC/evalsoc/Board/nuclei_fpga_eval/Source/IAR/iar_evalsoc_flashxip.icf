@@ -20,11 +20,6 @@ keep symbol __iar_cstart_init_gp; // defined in cstartup.s
 define block CSTACK with alignment = 16, size = CSTACK_SIZE { };
 define block HEAP   with alignment = 16, size = HEAP_SIZE   { };
 
-define block MINTERRUPTS with maximum size =  1024k { ro section .mtext };
-define block MVECTOR with alignment = 64, maximum size = _max_vector*4 { section .mintvec };
-define block MVECTOR_RW with alignment = 64, maximum size = _max_vector*4 { section .mintvec_rw };
-define block SVECTOR with alignment = 64, maximum size = _max_vector*4 { section .sintvec };
-define block SVECTOR_RW with alignment = 64, maximum size = _max_vector*4 { section .sintvec_rw };
 define block RTT_INIT_FUNC with fixed order { ro section .rti_fn*, ro section FSymTab, ro section VSymTab };
 
 define block RW_DATA with static base GPREL { rw data };
@@ -36,14 +31,12 @@ keep { section .rti_fn* };
 "CSTARTUP32" : place at start of ROM_region32 { ro section .alias.hwreset,
                                                 ro section .cstartup };
 
+"VECTORTBL" : place at address mem:0x80000100 { ro section .mintvec };
+"EXCPENTRY" : place at address mem:0x80000180 { ro section .mexctrap };
+
 "ROM32":place in ROM_region32        { ro,
                                        block RTT_INIT_FUNC,
-                                       block MINTERRUPTS,
-                                       block MVECTOR,
-                                       block SVECTOR };
-
-"ILM32":place in ILM_region32        { block MVECTOR_RW,
-                                       block SVECTOR_RW };
+                                    };
 
 "RAM32":place in RAM_region32        { block RW_DATA,
                                        block HEAP,

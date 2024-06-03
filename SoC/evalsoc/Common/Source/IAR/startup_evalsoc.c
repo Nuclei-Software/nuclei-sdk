@@ -33,6 +33,19 @@ extern void _premain_init(void);
 #define IAR_DATA_INIT _GLUE(__iar_data_init, _DLIB_ELF_INIT_INTERFACE_VERSION)
 #endif
 
+__WEAK void irqc_mtip_handler(void)
+{
+
+}
+__WEAK void irqc_msip_handler(void)
+{
+
+}
+__WEAK void irqc_uart0_handler(void)
+{
+
+}
+
 extern void IAR_DATA_INIT(void);
 
 // TODO: Currently only single core is supported

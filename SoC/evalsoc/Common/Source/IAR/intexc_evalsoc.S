@@ -18,9 +18,9 @@
 /******************************************************************************
  * \file     intexc_evalsoc.S
  * \brief    NMSIS Interrupt and Exception Handling Template File
- *  for Nuclei Eval SoC which support Nuclei N/NX class cores
- * \version  V1.0.0
- * \date     15 Sept 2023
+ *  for Nuclei Eval SoC which support Nuclei N100
+ * \version  V1.00
+ * \date     20 Dec 2023
  *
  ******************************************************************************/
 
@@ -106,7 +106,7 @@ RESTORE_CSR_CONTEXT MACRO
     EXTERN core_exception_handler
 
     /* TODO Need to place to a special section in iar */
-    SECTION `.text`:CODE:NOROOT(2)
+    SECTION `.mexctrap`:CODE:NOROOT(2)
     CODE
 
     ALIGN 6
