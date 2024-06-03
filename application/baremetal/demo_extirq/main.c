@@ -24,7 +24,7 @@ __INTERRUPT void irqc_uart0_handler(void)
 
 int main(void)
 {
-    IRQC_Register_IRQ(UART0_IRQn, irqc_uart0_handler);
+    IRQC_Register_IRQ(UART0_IRQn, (void *)irqc_uart0_handler);
 
     // Enable interrupts in general.
     __enable_irq();

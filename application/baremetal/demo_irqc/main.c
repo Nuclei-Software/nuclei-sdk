@@ -59,10 +59,10 @@ int main(void)
     setup_timer();
 
     // initialize software interrupt as vector interrupt
-    returnCode = IRQC_Register_IRQ(SysTimerSW_IRQn, irqc_msip_handler);
+    returnCode = IRQC_Register_IRQ(SysTimerSW_IRQn, (void *)irqc_msip_handler);
 
     // inital timer interrupt as vector interrupt
-    returnCode = IRQC_Register_IRQ(SysTimer_IRQn, irqc_mtip_handler);
+    returnCode = IRQC_Register_IRQ(SysTimer_IRQn, (void *)irqc_mtip_handler);
 
     // Enable interrupts in general.
     __enable_irq();
