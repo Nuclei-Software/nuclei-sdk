@@ -18,6 +18,8 @@
 #ifndef __NMSIS_VERSION_H
 #define __NMSIS_VERSION_H
 
+// This is modified NMSIS for Nuclei 100 Series CPU
+
 /**
  * \defgroup NMSIS_Core_VersionControl    Version Control
  * \ingroup  NMSIS_Core
@@ -64,7 +66,7 @@
  * query a NMSIS release update including new features.
  *
  **/
-#define __NMSIS_VERSION_MINOR            (2U)
+#define __NMSIS_VERSION_MINOR            (0U)
 
 /**
  * \brief   Represent the NMSIS patch version

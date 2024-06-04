@@ -73,9 +73,6 @@
  * \details The macro \ref _VAL2FLD uses the #define's _Pos and _Msk of the related bit
  * field to shift bit-field values for assigning to a register.
  *
- * **Example**:
- * \code
- * ECLIC->CFG = _VAL2FLD(CLIC_CLICCFG_NLBIT, 3);
  * \endcode
  * \param[in] field  Name of the register bit field.
  * \param[in] value  Value of the bit field. This parameter is interpreted as an uint32_t type.
@@ -88,9 +85,6 @@
  * \details The macro \ref _FLD2VAL uses the #define's _Pos and _Msk of the related bit
  * field to extract the value of a bit field from a register.
  *
- * **Example**:
- * \code
- * nlbits = _FLD2VAL(CLIC_CLICCFG_NLBIT, ECLIC->CFG);
  * \endcode
  * \param[in] field  Name of the register bit field.
  * \param[in] value  Value of register. This parameter is interpreted as an uint32_t type.

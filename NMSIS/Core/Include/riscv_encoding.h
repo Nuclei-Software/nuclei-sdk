@@ -128,7 +128,7 @@
 #define CSR_MTVEC 0x305
 #define CSR_MCOUNTEREN 0x306
 #define CSR_MCOUNTINHIBIT 0x320
-#define CSR_MSCRATCH 0x340
+#define CSR_MSCRATCH 0x340 // Not present in N100
 #define CSR_MEPC 0x341
 #define CSR_MCAUSE 0x342
 #define CSR_MTVAL 0x343

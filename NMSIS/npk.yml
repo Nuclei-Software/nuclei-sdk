@@ -2,7 +2,7 @@
 name: csp-n100_sdk_nmsis
 owner: nuclei
 version: 1.0.0
-description: NMSIS For N100 in Nuclei SDK
+description: NMSIS Modified For Nuclei N100 SDK
 type: csp
 keywords:
   - nmsis

@@ -83,7 +83,7 @@
 #include "core_compatiable.h"
 
 #ifndef __NMSIS_GENERIC
-/* Include core eclic feature header file */
+/* Include core irqc feature header file */
 #include "core_feature_irqc.h"
 /* Include core systimer feature header file */
 #include "core_feature_timer.h"
