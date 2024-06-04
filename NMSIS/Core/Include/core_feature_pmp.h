@@ -271,7 +271,7 @@ __STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_config *pmp_c
     unsigned int cfg_shift, cfg_csr_idx, addr_csr_idx = 0;
     unsigned long cfgmask, addrmask = 0;
     unsigned long pmpcfg, pmpaddr = 0;
-    uint8_t protection, csr_cfg_num = 0;
+    unsigned long protection, csr_cfg_num = 0;
     /* check parameters */
     if (entry_idx >= __PMP_ENTRY_NUM || pmp_cfg->order > __RISCV_XLEN || pmp_cfg->order < PMP_SHIFT) return;
 
@@ -294,7 +294,7 @@ __STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_config *pmp_c
     addr_csr_idx = entry_idx;
 
     /* encode PMP config */
-    protection = pmp_cfg->protection;
+    protection = (unsigned long)pmp_cfg->protection;
     protection |= (PMP_SHIFT == pmp_cfg->order) ? PMP_A_NA4 : PMP_A_NAPOT;
     cfgmask = ~(0xFFUL << cfg_shift);
     pmpcfg = (__get_PMPCFGx(cfg_csr_idx) & cfgmask);

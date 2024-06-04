@@ -272,7 +272,7 @@ __STATIC_INLINE void __set_sPMPENTRYx(uint32_t entry_idx, const spmp_config *spm
     unsigned int cfg_shift, cfg_csr_idx, addr_csr_idx = 0;
     unsigned long cfgmask, addrmask = 0;
     unsigned long spmpcfg, spmpaddr = 0;
-    uint8_t protection, csr_cfg_num = 0;
+    unsigned long protection, csr_cfg_num = 0;
     /* check parameters */
     if (entry_idx >= __SPMP_ENTRY_NUM || spmp_cfg->order > __RISCV_XLEN || spmp_cfg->order < SPMP_SHIFT) return;
 
@@ -295,7 +295,7 @@ __STATIC_INLINE void __set_sPMPENTRYx(uint32_t entry_idx, const spmp_config *spm
     addr_csr_idx = entry_idx;
 
     /* encode sPMP config */
-    protection = spmp_cfg->protection;
+    protection = (unsigned long)spmp_cfg->protection;
     protection |= (SPMP_SHIFT == spmp_cfg->order) ? SPMP_A_NA4 : SPMP_A_NAPOT;
     cfgmask = ~(0xFFUL << cfg_shift);
     spmpcfg = (__get_sPMPCFGx(cfg_csr_idx) & cfgmask);
