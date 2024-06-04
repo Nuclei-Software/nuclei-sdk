@@ -8,4 +8,50 @@ V0.1.0-dev
 
 This is release version ``0.1.0-dev`` of N100 SDK, which is still in development.
 
-N100 SDK is modified based on Nuclei SDK 0.5.0 release.
+.. note::
+
+    - Nuclei N100 SDK is modified based on Nuclei SDK 0.5.0 release, and will not merge back to Nuclei SDK in the future.
+    - This SDK is not compatible with Nuclei SDK for 200/300/600/900/1000 series.
+
+* Application
+
+    - Added baremetal/freertos/ucosii/rtthread examples.
+    - Baremetal examples contains helloworld, demo_irqc, demo_timer, demo_extirq, lowpower cases to show cpu interrupt and timer usage.
+    - Baremetal examples also contains benchmark examples such as coremark, dhrystone, whetstone which can demostrate the performance of Nuclei CPU.
+    - RTOS examples contains different samples to show how to use FreeRTOS, UCOSII and RT-Thread on Nuclei N100.
+
+* Build System
+
+    - Support Nuclei 100 series RISC-V CPU Cores.
+    - Support Nuclei RISC-V GCC toolchain, IAR Compiler and Terapines ZCC toolchain.
+
+* NMSIS
+
+    - NMSIS in N100 SDK is not compatible with standard NMSIS, this is modified to match Nuclei 100 series CPU.
+    - Most of the APIs in this modified NMSIS are similar to standard NMSIS, but some APIs have been changed or added.
+    - Please refer to the header files in ``NMSIS/Core/Include`` directory for more details.
+
+* SoC
+
+    - Only Nuclei Evaluation SoC For 100 series is supported by this SDK.
+    - If you want to port to your own SoC, you modify based on this ``evalsoc`` implementation.
+    - Only ``ilm`` and ``flashxip`` download modes are supported in this SDK, and the linker script is quite different to normal Nuclei SDK,
+      please take care, especially the vector table and exception entry address are RTL configurable which means when your RTL configuration
+      is different to our ``evalsoc``, you need to modify the linker script not just the memory map, but also the ``.mintvec`` and ``.mexctrap`` location.
+    - IAR support is also added in this SDK, and linker and startup/exception code are different from GCC, please take care when you port to your own SoC.
+
+* RTOS
+
+    - FreeRTOS/UCOSII/RT-Thread port for 100 series CPU are added in this SDK.
+    - IAR compiler port and gcc/clang port are also supported by these RTOSes.
+
+
+* IDE support
+
+    - Nuclei Studio 2024.02 will support this Nuclei N100 SDK via NPK solution just like Nuclei SDK.
+    - IAR Workbench support is also done in this SDK, please take a try with it in ``ideprojects/iar`` folder.
+
+* Documentation
+
+    - The documentation is modified based on Nuclei SDK.
+    - We have go through the whole documentation and modified it to match Nuclei N100 SDK, maybe some of them are not perfect, please feel free to correct me if you find any mistakes.
