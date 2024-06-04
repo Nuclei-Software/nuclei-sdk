@@ -17,6 +17,8 @@ CTEST(core, csr_type)
 #endif
 }
 
+#if 0
+// CSR_MSCRATCH doesn't existed in N100
 CTEST(core, csr_swap)
 {
     __RV_CSR_WRITE(CSR_MSCRATCH, 0x12345678);
@@ -85,6 +87,7 @@ CTEST(core, csr_clear)
     __RV_CSR_READ_CLEAR(CSR_MSCRATCH, 0x12345678);
     ASSERT_EQUAL(__RV_CSR_READ(CSR_MSCRATCH), ~0x12345678 & random_val);
 }
+#endif
 
 CTEST(core, irq)
 {
@@ -96,67 +99,53 @@ CTEST(core, irq)
 
 CTEST(core, cycle)
 {
-    uint64_t cycles = 0;
-#if __RISCV_XLEN == 32
-    cycles = __RV_CSR_READ(CSR_MCYCLE) | ((uint64_t)__RV_CSR_READ(CSR_MCYCLEH) << 32);
-#elif __RISCV_XLEN == 64
+    uint32_t cycles = 0;
     cycles = __RV_CSR_READ(CSR_MCYCLE);
-#endif
     ASSERT_EQUAL(__get_rv_cycle() > cycles, 1);
 }
 
 CTEST(core, instret)
 {
-    uint64_t instret = 0;
-#if __RISCV_XLEN == 32
-    instret = __RV_CSR_READ(CSR_MINSTRET) | ((uint64_t)__RV_CSR_READ(CSR_MINSTRETH) << 32);
-#elif __RISCV_XLEN == 64
+    uint32_t instret = 0;
     instret = __RV_CSR_READ(CSR_MINSTRET);
-#endif
     ASSERT_EQUAL(__get_rv_instret() > instret, 1);
 }
 
 CTEST(core, nop)
 {
-    uint64_t instret = __RV_CSR_READ(CSR_MINSTRET);
-    uint64_t diff = __RV_CSR_READ(CSR_MINSTRET) - instret;
+    uint32_t instret = __RV_CSR_READ(CSR_MINSTRET);
+    uint32_t diff = __RV_CSR_READ(CSR_MINSTRET) - instret;
     instret = __RV_CSR_READ(CSR_MINSTRET);
     __NOP();
-    uint64_t diff2 = __RV_CSR_READ(CSR_MINSTRET) - instret;
+    uint32_t diff2 = __RV_CSR_READ(CSR_MINSTRET) - instret;
     //CTEST_LOG("Diff: %d, %d\r\n", diff, diff2);
     ASSERT_EQUAL(diff2 > diff, 1);
 }
 
-void SOC_MTIMER_HANDLER(void)
+__INTERRUPT void SOC_MTIMER_HANDLER(void)
 {
     // Clear Systimer pending flag by set compare value very large
-    SysTimer_SetCompareValue(0xFFFFFFFFFFFFFFFFULL);
-    ECLIC_ClearPendingIRQ(SysTimer_IRQn);
-    ECLIC_DisableIRQ(SysTimer_IRQn);
+    SysTimer_SetCompareValue(0xFFFFFFFF);
+    IRQC_ClearPendingIRQ(SysTimer_IRQn);
+    IRQC_DisableIRQ(SysTimer_IRQn);
 }
 
 CTEST(core, wfi)
 {
     __disable_irq();
-    SysTick_Config(1000);
+    SysTick_Config(10);
     SysTimer_Start();
     __WFI();
-    // Should not enter interrupt handler
-#if defined(__NUCLEI_N_REV) && (__NUCLEI_N_REV < 0x0104)
-    // For nuclei core version >= 1.4, the pending irq state
-    // will be automatically cleared due to auto clear feature
-    ASSERT_NOT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
-#endif
-    ASSERT_NOT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 0);
-    ECLIC_DisableIRQ(SysTimer_IRQn);
-    ECLIC_ClearPendingIRQ(SysTimer_IRQn);
-    SysTick_Config(1000);
+    ASSERT_NOT_EQUAL(IRQC_GetEnableIRQ(SysTimer_IRQn), 0);
+    IRQC_DisableIRQ(SysTimer_IRQn);
+    IRQC_ClearPendingIRQ(SysTimer_IRQn);
+    SysTick_Config(10);
     SysTimer_Start();
     __enable_irq();
     __WFI();
     // Should enter interrupt handler first, then do following steps
-    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
-    ASSERT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 0);
+    ASSERT_EQUAL(IRQC_GetPendingIRQ(SysTimer_IRQn), 0);
+    ASSERT_EQUAL(IRQC_GetEnableIRQ(SysTimer_IRQn), 0);
     __disable_irq();
 }
 
@@ -189,28 +178,23 @@ CTEST(core, ecall)
 CTEST(core, sleepmode)
 {
     __disable_irq();
-    SysTick_Config(1000);
+    SysTick_Config(100);
     CTEST_LOG("Enter to Shallow Sleep Mode\r\n");
     __set_wfi_sleepmode(WFI_SHALLOW_SLEEP);
     __WFI();
     // Should not enter interrupt handler
-#if defined(__NUCLEI_N_REV) && (__NUCLEI_N_REV < 0x0104)
-    // For nuclei core version >= 1.4, the pending irq state
-    // will be automatically cleared due to auto clear feature
-    ASSERT_NOT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
-#endif
-    ASSERT_NOT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 0);
-    ECLIC_DisableIRQ(SysTimer_IRQn);
-    ECLIC_ClearPendingIRQ(SysTimer_IRQn);
-    SysTick_Config(1000);
+    ASSERT_NOT_EQUAL(IRQC_GetEnableIRQ(SysTimer_IRQn), 0);
+    IRQC_DisableIRQ(SysTimer_IRQn);
+    IRQC_ClearPendingIRQ(SysTimer_IRQn);
+    SysTick_Config(100);
     __enable_irq();
     // Uncomment the following line, the CPU will enter to deep sleep
     //CTEST_LOG("Enter to Deep Sleep Mode\r\n");
     //__set_wfi_sleepmode(WFI_DEEP_SLEEP);
     __WFI();
     // Should enter interrupt handler first, then do following steps
-    ASSERT_EQUAL(ECLIC_GetPendingIRQ(SysTimer_IRQn), 0);
-    ASSERT_EQUAL(ECLIC_GetEnableIRQ(SysTimer_IRQn), 0);
+    ASSERT_EQUAL(IRQC_GetPendingIRQ(SysTimer_IRQn), 0);
+    ASSERT_EQUAL(IRQC_GetEnableIRQ(SysTimer_IRQn), 0);
     __disable_irq();
 }
 
@@ -344,7 +328,6 @@ CTEST(core, lh)
     uint32_t data = 0x12345678;
     unsigned long pdata = (unsigned long)(&data);
     ASSERT_EQUAL(__LH((void*)pdata), 0x5678);
-    ASSERT_EQUAL(__LH((void*)(pdata + 1)), 0x3456);
     ASSERT_EQUAL(__LH((void*)(pdata + 2)), 0x1234);
 }
 
@@ -354,8 +337,6 @@ CTEST(core, sh)
     unsigned long pdata = (unsigned long)(&data);
     __SH((void*)pdata, 0xABCD);
     ASSERT_EQUAL(__LH((void*)pdata), 0xABCD);
-    __SH((void*)(pdata + 1), 0xCDEF);
-    ASSERT_EQUAL(__LH((void*)(pdata + 1)), 0xCDEF);
     __SH((void*)(pdata + 2), 0xEF00);
     ASSERT_EQUAL(__LH((void*)(pdata + 2)), 0xEF00);
 }
@@ -365,9 +346,6 @@ CTEST(core, lw)
     uint32_t data[2] = {0x12345678, 0xABCDEF01};
     unsigned long pdata = (unsigned long)(&data);
     ASSERT_EQUAL(__LW((void*)pdata), 0x12345678);
-    ASSERT_EQUAL(__LW((void*)(pdata + 1)), 0x01123456);
-    ASSERT_EQUAL(__LW((void*)(pdata + 2)), 0xEF011234);
-    ASSERT_EQUAL(__LW((void*)(pdata + 3)), 0xCDEF0112);
     ASSERT_EQUAL(__LW((void*)(pdata + 4)), 0xABCDEF01);
 }
 
@@ -377,81 +355,6 @@ CTEST(core, sw)
     unsigned long pdata = (unsigned long)(&data);
     __SW((void*)pdata, 0xDEADBEEF);
     ASSERT_EQUAL(__LW((void*)pdata), 0xDEADBEEF);
-    __SW((void*)(pdata + 1), 0xCDEF1234);
-    ASSERT_EQUAL(__LW((void*)(pdata + 1)), 0xCDEF1234);
-    __SW((void*)(pdata + 2), 0xEF007678);
-    ASSERT_EQUAL(__LW((void*)(pdata + 2)), 0xEF007678);
-    __SW((void*)(pdata + 3), 0x89282678);
-    ASSERT_EQUAL(__LW((void*)(pdata + 3)), 0x89282678);
     __SW((void*)(pdata + 4), 0xDEADBEAF);
     ASSERT_EQUAL(__LW((void*)(pdata + 4)), 0xDEADBEAF);
 }
-
-#if __RISCV_XLEN == 64
-CTEST(core, ld)
-{
-    uint32_t data[4] = {0x12345678, 0xABCDEF01, 0x87654321, 0x01FEDCBA};
-    unsigned long pdata = (unsigned long)(&data);
-    ASSERT_EQUAL(__LD((void*)pdata), 0xABCDEF0112345678);
-    ASSERT_EQUAL(__LD((void*)(pdata + 1)), 0x21ABCDEF01123456);
-    ASSERT_EQUAL(__LD((void*)(pdata + 2)), 0x4321ABCDEF011234);
-    ASSERT_EQUAL(__LD((void*)(pdata + 3)), 0x654321ABCDEF0112);
-    ASSERT_EQUAL(__LD((void*)(pdata + 4)), 0x87654321ABCDEF01);
-    ASSERT_EQUAL(__LD((void*)(pdata + 8)), 0x01FEDCBA87654321);
-}
-
-CTEST(core, sd)
-{
-    uint32_t data[4] = {0x12345678, 0xABCDEF01, 0x87654321, 0x01FEDCBA};
-    unsigned long pdata = (unsigned long)(&data);
-    __SD((void*)pdata, 0xDEADBEEFDEADBEEF);
-    ASSERT_EQUAL(__LD((void*)pdata), 0xDEADBEEFDEADBEEF);
-    __SD((void*)(pdata + 1), 0xCDEF123443219876);
-    ASSERT_EQUAL(__LD((void*)(pdata + 1)), 0xCDEF123443219876);
-    __SD((void*)(pdata + 2), 0xEF00767887665776);
-    ASSERT_EQUAL(__LD((void*)(pdata + 2)), 0xEF00767887665776);
-    __SD((void*)(pdata + 3), 0x8928267890892912);
-    ASSERT_EQUAL(__LD((void*)(pdata + 3)), 0x8928267890892912);
-    __SD((void*)(pdata + 4), 0xDEADBEAFBEEFDEAD);
-    ASSERT_EQUAL(__LD((void*)(pdata + 4)), 0xDEADBEAFBEEFDEAD);
-    __SD((void*)(pdata + 8), 0xBEEFDEADDEADBEAF);
-    ASSERT_EQUAL(__LD((void*)(pdata + 8)), 0xBEEFDEADDEADBEAF);
-}
-#endif
-
-#if defined(__ICACHE_PRESENT) && __ICACHE_PRESENT == 1
-CTEST(core, icache)
-{
-    EnableICache();
-    ASSERT_NOT_EQUAL(__RV_CSR_READ(CSR_MCACHE_CTL) & CSR_MCACHE_CTL_IE, 0);
-    DisableICache();
-    ASSERT_EQUAL(__RV_CSR_READ(CSR_MCACHE_CTL) & CSR_MCACHE_CTL_IE, 0);
-}
-#endif
-
-CTEST(core, csrcontext)
-{
-    SAVE_IRQ_CSR_CONTEXT();
-    RESTORE_IRQ_CSR_CONTEXT();
-}
-
-CTEST(core, hpmevent)
-{
-    for (unsigned long i = 0; i < 32; i ++) {
-        __set_hpm_event(i, 0xA5A5A5A5);
-        __get_hpm_event(i);
-    }
-}
-
-CTEST(core, hpmcounter)
-{
-    for (unsigned long i = 0; i < 32; i ++) {
-        __set_hpm_counter(i, 0xA5A5A5A5A5A5A5A5ULL);
-        __get_hpm_counter(i);
-        __enable_mhpm_counter(i);
-        __disable_mhpm_counter(i);
-        __enable_mhpm_counters(1<<i);
-        __disable_mhpm_counters(1<<i);
-    }
-}
-

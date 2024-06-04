@@ -23,7 +23,7 @@ void ctest_delay(uint32_t ms)
 int main(int argc, const char* argv[])
 {
     int result = ctest_main(argc, argv);
-    //const char *argv_passed[] = {NULL, "eclic"};
+    //const char *argv_passed[] = {NULL, "csr"};
     //int result = ctest_main(2, argv_passed);
 
     return result;
