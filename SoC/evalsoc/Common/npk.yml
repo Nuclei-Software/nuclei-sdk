@@ -134,6 +134,24 @@ configuration:
         cmodel: medlow
         tune: nuclei-600-series
         description: N600FD Core(ARCH=rv32imafdc, ABI=ilp32d)
+      - name: u600
+        arch: rv32imac
+        abi: ilp32
+        cmodel: medlow
+        tune: nuclei-600-series
+        description: U600 Core(ARCH=rv32imac, ABI=ilp32)
+      - name: u600f
+        arch: rv32imafc
+        abi: ilp32f
+        cmodel: medlow
+        tune: nuclei-600-series
+        description: U600F Core(ARCH=rv32imafc, ABI=ilp32f)
+      - name: u600fd
+        arch: rv32imafdc
+        abi: ilp32d
+        cmodel: medlow
+        tune: nuclei-600-series
+        description: U600FD Core(ARCH=rv32imafdc, ABI=ilp32d)
       - name: nx600
         arch: rv64imac
         abi: lp64
