@@ -37,11 +37,6 @@
     for lazy saving of FPU registers. */
 .align 3
 rt_hw_context_switch_to:
-    /* Setup Interrupt Stack using
-       The stack that was used by main()
-       before the scheduler is started is
-       no longer required after the scheduler is started.
-       Interrupt stack pointer is stored in CSR_MSCRATCH */
     LOAD sp, 0x0(a0)                /* Read sp from first TCB member(a0) */
 
     /* Pop PC from stack and set MEPC */

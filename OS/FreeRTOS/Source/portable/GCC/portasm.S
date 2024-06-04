@@ -49,11 +49,6 @@
     for lazy saving of FPU registers. */
 .align 3
 prvPortStartFirstTask:
-    /* Setup Interrupt Stack using
-       The stack that was used by main()
-       before the scheduler is started is
-       no longer required after the scheduler is started.
-       Interrupt stack pointer is stored in CSR_MSCRATCH */
     LOAD sp, pxCurrentTCB           /* Load pxCurrentTCB. */
     LOAD sp, 0x0(sp)                /* Read sp from first TCB member */
 
