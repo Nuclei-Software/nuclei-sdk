@@ -1,4 +1,6 @@
 # RT-Thread building script for component
+# Nuclei 100 series not yet supported by RT-Thread build system
+# please take a try with the RT-Thread Nano integrated in Nuclei N100 SDK
 
 Import('rtconfig')
 Import('RTT_ROOT')
@@ -9,13 +11,12 @@ import rtconfig
 from building import *
 
 BUILTIN_ALL_DOWNLOADED_MODES = {
-    "gd32vf103": ("flashxip"),
     "evalsoc": ("ilm", "flash", "flashxip", "ddr", "sram")
 }
 
 DEFAULT_DOWNLOAD_MODES = ("ilm", "flashxip", "ddr", "sram", "sramxip")
 
-default_arch_abi = ("rv32imac", "ilp32")
+default_arch_abi = ("rv32imc", "ilp32")
 cwd = GetCurrentDir()
 FRAMEWORK_DIR = cwd
 
@@ -47,16 +48,6 @@ build_mabi = getattr(rtconfig, "NUCLEI_SDK_RISCV_ABI", "").lower().strip()
 build_mcmodel = getattr(rtconfig, "NUCLEI_SDK_RISCV_MCMODEL", "medany").lower().strip()
 build_ldscript = getattr(rtconfig, "NUCLEI_SDK_LDSCRIPT", "").lower().strip()
 
-# Backward compatibility with previous Nuclei SDK releases
-if build_soc == "hbird":
-    print("Warning! Since Nuclei SDK 0.3.1, SoC hbird is renamed to demosoc, please change NUCLEI_SDK_SOC to demosoc!")
-    build_soc = "demosoc"
-    if build_board == "hbird_eval":
-        print("Warning! Since Nuclei SDK 0.3.1, Board hbird_eval is renamed to nuclei_fpga_eval, please change NUCLEI_SDK_BOARD to nuclei_fpga_eval!")
-        build_board = "nuclei_fpga_eval"
-if build_soc == "demosoc":
-    print("Warning! Since Nuclei SDK 0.5.0, SoC demosoc is removed, please change NUCLEI_SDK_SOC to evalsoc!")
-    build_soc = "evalsoc"
 
 if not build_march and not build_mabi and build_core in core_arch_abis:
     build_march, build_mabi = core_arch_abis[build_core]
@@ -113,47 +104,26 @@ build_download_mode_upper = build_download_mode.upper()
 
 src = Glob(SoC_Common + '/Source/*.c')
 src += Glob(SoC_Common + '/Source/Drivers/*.c')
-if build_soc == "gd32vf103":
-    src += Glob(SoC_Common + '/Source/Drivers/Usb/*.c')
+
 src += Glob(SoC_Common + '/Source/Stubs/newlib/*.c')
 src += Glob(SoC_Common + '/Source/GCC/*.S')
 
 src += Glob(SoC_Board + '/Source/*.c')
 
 CPPPATH = [ cwd + '/NMSIS/Core/Include',
-            cwd + '/NMSIS/DSP/Include',
-            cwd + '/NMSIS/DSP/PrivateInclude',
-            cwd + '/NMSIS/NN/Include',
             cwd + '/' + SoC_Common + '/Include',
             cwd + '/' + SoC_Common + '/Source/Stubs/newlib',
             cwd + '/' + SoC_Board + '/Include']
-
-LIBPATH = [ cwd + '/NMSIS/Library/DSP/GCC',
-            cwd + '/NMSIS/Library/NN/GCC' ]
-
-if build_soc == "gd32vf103":
-    CPPPATH.append(cwd + '/' + SoC_Common + '/Include/Usb')
 
 CPPDEFINES = [ '-DDOWNLOAD_MODE={}'.format(DOWNLOAD_MODE),
                '-DDOWNLOAD_MODE_STRING=\"{}\"'.format(build_download_mode_upper),
                '-DRTOS_RTTHREAD', '-DNUCLEI_BANNER=0' ]
 
-# Flash download mode vector table need to remapped
-if build_download_mode_upper == "FLASH":
-    CPPDEFINES.extend(['-DVECTOR_TABLE_REMAPPED'])
-
 extra_flags = build_core_options
 extra_lflags = "{} -T {}".format(build_core_options, build_ldscript)
 
-# rtconfig.CFLAGS = "{} {}".format(build_core_options, rtconfig.CFLAGS)
-# rtconfig.AFLAGS = "{} {}".format(build_core_options, rtconfig.AFLAGS)
-# rtconfig.LFLAGS = "{} {} -T {}".format(build_core_options, rtconfig.LFLAGS, build_ldscript)
 
-# print(rtconfig.CFLAGS)
-# print(rtconfig.AFLAGS)
-# print(rtconfig.LFLAGS)
-
-group = DefineGroup('nuclei_sdk', src, depend = [''], \
+group = DefineGroup('nuclei_n100_sdk', src, depend = [''], \
     CCFLAGS=extra_flags, ASFLAGS=extra_flags, LINKFLAGS=extra_lflags, \
     CPPPATH = CPPPATH, CPPDEFINES=CPPDEFINES, LIBPATH=LIBPATH)
 
