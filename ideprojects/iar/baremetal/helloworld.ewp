@@ -755,7 +755,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_flashxip.icf</state>
+                    <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_ilm.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>

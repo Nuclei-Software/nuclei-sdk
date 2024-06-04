@@ -8,10 +8,10 @@ UPLOAD=${UPLOAD:-1}
 
 # TODO: Change this ROOTs according to your environment settings
 IAR_WORKBENCH_ROOT="/c/Program Files/IAR Systems/Embedded Workbench 9.2"
-NUCLEI_TOOLCHAIN_ROOT="/d/Software/NucleiStudio/toolchain"
+NUCLEI_TOOLCHAIN_ROOT="/c/Software/NucleiStudio/toolchain"
 
 # TODO: you need to modify the default remote to your real machine gdb remote such as localhost:3333
-GDBREMOTE=${GDBREMOTE:-whss3.corp.nucleisys.com:20005}
+GDBREMOTE=${GDBREMOTE:-whss3.corp.nucleisys.com:20400}
 
 # Export riscv gdb and iarbuild into system PATH, please modify it according to your environment settings
 export PATH="${NUCLEI_TOOLCHAIN_ROOT}/gcc/bin/":$PATH
