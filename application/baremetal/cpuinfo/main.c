@@ -268,7 +268,7 @@ void nuclei_cpuinfo(void)
         }
 
         /* L2CACHE */
-        if (smp_cfg & BIT(1)) {
+        if (smp_cfg & BIT(0)) {
             uint32_t cc_cfg = *(uint32_t *)(iregion_base + 0x40008);
             printf("         L2CACHE:");
             show_cache_info(POWER_FOR_TWO(__RV_EXTRACT_FIELD(cc_cfg, 0xF)), __RV_EXTRACT_FIELD(cc_cfg, 0xf << 4) + 1,
