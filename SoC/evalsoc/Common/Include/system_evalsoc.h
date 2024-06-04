@@ -94,7 +94,7 @@ extern unsigned long Exception_Get_EXC(uint32_t EXCn);
 #endif
 
 /**
- * \brief Initialize eclic config
+ * \brief Initialize interrupt config
  */
 extern void Interrupt_Init(void);
 

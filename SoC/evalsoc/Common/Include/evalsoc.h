@@ -182,8 +182,8 @@ typedef enum EXCn {
 // Interrupt Numbers
 
 // Interrupt Handler Definitions
-#define SOC_MTIMER_HANDLER          eclic_mtip_handler
-#define SOC_SOFTINT_HANDLER         eclic_msip_handler
+#define SOC_MTIMER_HANDLER          irqc_mtip_handler
+#define SOC_SOFTINT_HANDLER         irqc_msip_handler
 
 /**
   * @brief UART

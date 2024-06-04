@@ -1,11 +1,9 @@
 //////////////////////////////////////////////////////////////////////
 // RISC-V ilink configuration file
 // for the Nuclei Evaluation SoC ILM Linker File
-//
-// FlashXIP link file still not supported.
+// This is for N100 series
 
 define exported symbol _link_file_version_2 = 1;
-define exported symbol _max_vector = 4096;
 
 define memory mem with size = 4G;
 

@@ -31,7 +31,7 @@ dependencies:
 ## Package Configurations
 configuration:
   nuclei_core:
-    default_value: n100
+    default_value: n100m
     type: choice
     global: true
     description: Nuclei RISC-V Core

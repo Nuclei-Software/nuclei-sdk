@@ -29,7 +29,7 @@
 ##### Put your SoC build configurations below #####
 
 override BOARD := nuclei_fpga_eval
-CORE ?= n100
+CORE ?= n100m
 JTAGSN ?=
 
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
@@ -51,7 +51,6 @@ endif
 ifneq ($(JTAGSN),)
 OPENOCD_CMD_ARGS += set JTAGSN $(JTAGSN);
 endif
-
 
 # Set RISCV_ARCH and RISCV_ABI
 CORE_UPPER := $(call uc, $(CORE))

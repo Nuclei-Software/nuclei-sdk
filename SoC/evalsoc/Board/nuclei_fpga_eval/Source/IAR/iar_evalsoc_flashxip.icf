@@ -1,20 +1,23 @@
 //////////////////////////////////////////////////////////////////////
 // RISC-V ilink configuration file
 // for the Nuclei Evaluation SoC FlashXIP Linker File
-//
+// This is for N100 series
 
 define exported symbol _link_file_version_2 = 1;
 
 define memory mem with size = 4G;
-define exported symbol _max_vector = 4096;
 
 define region ROM_region32 = mem:[from 0x20000000 to 0x203FFFFF];
 define region ILM_region32 = mem:[from 0x80000000 to 0x8000FFFF];
 define region RAM_region32 = mem:[from 0x90000000 to 0x9000FFFF];
 
 initialize by copy { rw };
-initialize manually { section .mintvec_rw, section .sintvec_rw };
-do not initialize  { section *.noinit, section .mintvec_rw, section .sintvec_rw };
+
+// Copy vector table and exception handling code from flash to ilm
+initialize by copy { section .mintvec, section .mexctrap };
+
+do not initialize  { section *.noinit };
+
 keep symbol __iar_cstart_init_gp; // defined in cstartup.s
 
 define block CSTACK with alignment = 16, size = CSTACK_SIZE { };
@@ -31,12 +34,17 @@ keep { section .rti_fn* };
 "CSTARTUP32" : place at start of ROM_region32 { ro section .alias.hwreset,
                                                 ro section .cstartup };
 
-"VECTORTBL" : place at address mem:0x80000100 { ro section .mintvec };
-"EXCPENTRY" : place at address mem:0x80000180 { ro section .mexctrap };
+// Place vector table at fixed address which is RTL configured
+"VECTORTBL" : place at address mem:0x80000100 { section .mintvec };
+// Place exception entry and its code at fixed address which is RTL configured
+"EXCPENTRY" : place at address mem:0x80000180 { section .mexctrap };
+
 
 "ROM32":place in ROM_region32        { ro,
                                        block RTT_INIT_FUNC,
-                                    };
+                                       section .mintvec_init,
+                                       section .mexctrap_init
+                                      };
 
 "RAM32":place in RAM_region32        { block RW_DATA,
                                        block HEAP,
