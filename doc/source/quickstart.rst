@@ -539,9 +539,6 @@ For more advanced usage, please follow the items as below:
 
 .. _GDB User Manual: https://www.gnu.org/software/gdb/documentation/
 .. _Nuclei Tools: https://nucleisys.com/download.php
-.. _Segger embedded studio projects for Nuclei N100 SDK: https://github.com/riscv-mcu/ses_nuclei_sdk_projects
-.. _Platform Nuclei in PlatformIO: https://platformio.org/platforms/nuclei
 .. _Nuclei_Studio_User_Guide.pdf: https://www.nucleisys.com/upload/files/doc/nucleistudio/Nuclei_Studio_User_Guide.pdf
-.. _Light on onboard LED of RVSTAR board using PlatformIO(Chinese): https://www.rvmcu.com/community-topic-id-310.html
 .. _Nuclei Toolchain 2023.10: https://github.com/riscv-mcu/riscv-gnu-toolchain/releases/tag/nuclei-2023.10
 .. _Nuclei Studio 2023.10: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2023.10

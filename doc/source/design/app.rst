@@ -69,11 +69,13 @@ will check this RISC-V CSR **MISA** register value.
 
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Feb 21 2020, 12:24:22
-    Download Mode: FLASHXIP
-    CPU Frequency 109323529 Hz
-    MISA: 0x40901105
-    MISA: RV32IMACUX
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:19:03
+    Download Mode: ILM
+    CPU Frequency 16001597 Hz
+    CPU HartID: 0
+    Hart 0, MISA: 0x40001104
+    MISA: RV32IMC
+    Got rand integer 455647 using seed 1933213352.
     0: Hello World From Nuclei RISC-V Processor!
     1: Hello World From Nuclei RISC-V Processor!
     2: Hello World From Nuclei RISC-V Processor!
@@ -104,9 +106,8 @@ demo_timer
 This `demo_timer application`_ is used to demonstrate how to use
 the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
 
-* Both interrupts are registered as non-vector interrupt.
-* First the timer interrupt will run for 10 times
-* Then the software timer interrupt will start to run for 10 times
+* First the timer interrupt will run for 5 times
+* Then the software timer interrupt will start to run for 5 times
 
 **How to run this application:**
 
@@ -124,30 +125,21 @@ the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
 
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Feb 21 2020, 12:52:37
-    Download Mode: FLASHXIP
-    CPU Frequency 108794117 Hz
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:20:01
+    Download Mode: ILM
+    CPU Frequency 16000942 Hz
+    CPU HartID: 0
     init timer and start
     MTimer IRQ handler 1
     MTimer IRQ handler 2
     MTimer IRQ handler 3
     MTimer IRQ handler 4
     MTimer IRQ handler 5
-    MTimer IRQ handler 6
-    MTimer IRQ handler 7
-    MTimer IRQ handler 8
-    MTimer IRQ handler 9
-    MTimer IRQ handler 10
     MTimer SW IRQ handler 1
     MTimer SW IRQ handler 2
     MTimer SW IRQ handler 3
     MTimer SW IRQ handler 4
     MTimer SW IRQ handler 5
-    MTimer SW IRQ handler 6
-    MTimer SW IRQ handler 7
-    MTimer SW IRQ handler 8
-    MTimer SW IRQ handler 9
-    MTimer SW IRQ handler 10
     MTimer msip and mtip interrupt test finish and pass
 
 .. _design_app_demo_irqc:
@@ -159,25 +151,6 @@ This `demo_irqc application`_ is used to demonstrate how to use
 the irqc API and Interrupt.
 
 * The timer interrupt and timer software interrupt are used
-* The timer interrupt is registered as non-vector interrupt
-* The timer software interrupt is registered as vector interrupt,
-  and we enable its preemptive feature by using ``SAVE_IRQ_CSR_CONTEXT``
-  and ``RESTORE_IRQ_CSR_CONTEXT`` in timer software interrupt handler
-* The timer interrupt is triggered periodically
-* The timer software interrupt is triggered in timer interrupt handler using
-  ``SysTimer_SetSWIRQ`` function
-* In the application code, there is a macro called ``SWIRQ_INTLEVEL_HIGHER`` to
-  control the timer software interrupt working feature:
-
-  - If **SWIRQ_INTLEVEL_HIGHER=1**, the timer software interrupt level is higher than
-    timer interrupt level, so when timer software interrupt is triggered, then timer
-    software interrupt will be processed immediately, and timer interrupt will be preempted
-    by timer software interrupt.
-
-  - If **SWIRQ_INTLEVEL_HIGHER=0**, the timer software interrupt level is lower than
-    timer interrupt level, so when timer software interrupt is triggered, then timer
-    software interrupt will be processed after timer interrupt, and timer interrupt will
-    not be preempted by timer software interrupt.
 
 **How to run this application:**
 
@@ -186,58 +159,17 @@ the irqc API and Interrupt.
     # Assume that you can set up the Tools and Nuclei N100 SDK environment
     # cd to the demo_irqc directory
     cd application/baremetal/demo_irqc
-    # Change macro SWIRQ_INTLEVEL_HIGHER value in demo_irqc.c
-    # to see different working mode of this demo
     # Clean the application first
     make SOC=evalsoc clean
     # Build and upload the application
     make SOC=evalsoc upload
 
-**Expected output(SWIRQ_INTLEVEL_HIGHER=1) as below:**
-
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Feb 21 2020, 16:35:58
-    Download Mode: FLASHXIP
-    CPU Frequency 108794117 Hz
-    Initialize timer and start timer interrupt periodically
-    -------------------
-    [IN TIMER INTERRUPT]timer interrupt hit 0 times
-    [IN TIMER INTERRUPT]trigger software interrupt
-    [IN TIMER INTERRUPT]software interrupt will run during timer interrupt
-    [IN SOFTWARE INTERRUPT]software interrupt hit 0 times
-    [IN SOFTWARE INTERRUPT]software interrupt end
-    [IN TIMER INTERRUPT]timer interrupt end
-    -------------------
-    [IN TIMER INTERRUPT]timer interrupt hit 1 times
-    [IN TIMER INTERRUPT]trigger software interrupt
-    [IN TIMER INTERRUPT]software interrupt will run during timer interrupt
-    [IN SOFTWARE INTERRUPT]software interrupt hit 1 times
-    [IN SOFTWARE INTERRUPT]software interrupt end
-    [IN TIMER INTERRUPT]timer interrupt end
-    -------------------
-    [IN TIMER INTERRUPT]timer interrupt hit 2 times
-    [IN TIMER INTERRUPT]trigger software interrupt
-    [IN TIMER INTERRUPT]software interrupt will run during timer interrupt
-    [IN SOFTWARE INTERRUPT]software interrupt hit 2 times
-    [IN SOFTWARE INTERRUPT]software interrupt end
-    [IN TIMER INTERRUPT]timer interrupt end
-    -------------------
-    [IN TIMER INTERRUPT]timer interrupt hit 3 times
-    [IN TIMER INTERRUPT]trigger software interrupt
-    [IN TIMER INTERRUPT]software interrupt will run during timer interrupt
-    [IN SOFTWARE INTERRUPT]software interrupt hit 3 times
-    [IN SOFTWARE INTERRUPT]software interrupt end
-    [IN TIMER INTERRUPT]timer interrupt end
-
-
-**Expected output(SWIRQ_INTLEVEL_HIGHER=0) as below:**
-
-.. code-block:: console
-
-    Nuclei N100 SDK Build Time: Feb 21 2020, 16:35:58
-    Download Mode: FLASHXIP
-    CPU Frequency 108794117 Hz
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:21:42
+    Download Mode: ILM
+    CPU Frequency 16000942 Hz
+    CPU HartID: 0
     Initialize timer and start timer interrupt periodically
     -------------------
     [IN TIMER INTERRUPT]timer interrupt hit 0 times
@@ -261,47 +193,38 @@ the irqc API and Interrupt.
     [IN SOFTWARE INTERRUPT]software interrupt hit 2 times
     [IN SOFTWARE INTERRUPT]software interrupt end
     -------------------
-    [IN TIMER INTERRUPT]timer interrupt hit 3 times
-    [IN TIMER INTERRUPT]trigger software interrupt
-    [IN TIMER INTERRUPT]software interrupt will run when timer interrupt finished
-    [IN TIMER INTERRUPT]timer interrupt end
-    [IN SOFTWARE INTERRUPT]software interrupt hit 3 times
-    [IN SOFTWARE INTERRUPT]software interrupt end
+
 
 .. _design_app_demo_extirq:
 
 demo_extirq
 ~~~~~~~~~~~
 
-This `demo_extirq application`_ is used to demonstrate how to use low-power feature of RISC-V
-processor.
-
-Timer interrupt is setup before enter to wfi mode, and global interrupt will be disabled,
-so interrupt handler will not be entered, and will directly resume to next pc of wfi.
+This `demo_extirq application`_ is used to demonstrate how to use external interrupt with irqc controller.
 
 **How to run this application:**
 
 .. code-block:: shell
 
     # Assume that you can set up the Tools and Nuclei N100 SDK environment
-    # Assume your processor has enabled low-power feature
-    # cd to the low-power directory
-    cd application/baremetal/lowpower
+    cd application/baremetal/demo_extirq
     # Clean the application first
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
+    make SOC=evalsoc clean
     # Build and upload the application
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
+    make SOC=evalsoc upload
 
 **Expected output as below:**
 
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Jun  9 2022, 11:23:14
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:22:37
     Download Mode: ILM
-    CPU Frequency 15996354 Hz
-    CSV, WFI Start/End, 178264/178289
-    CSV, WFI Cost, 25
-
+    CPU Frequency 16000942 Hz
+    CPU HartID: 0
+    You can press any key now to trigger uart receive interrupt
+    Enter uart0 interrupt, you just typed: 1
+    Enter uart0 interrupt, you just typed: 2
+    Enter uart0 interrupt, you just typed: 3
 
 .. _design_app_lowpower:
 
@@ -323,20 +246,20 @@ so interrupt handler will not be entered, and will directly resume to next pc of
     # cd to the low-power directory
     cd application/baremetal/lowpower
     # Clean the application first
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
+    make SOC=evalsoc clean
     # Build and upload the application
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
+    make SOC=evalsoc upload
 
 **Expected output as below:**
 
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Jun  9 2022, 11:23:14
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:24:42
     Download Mode: ILM
-    CPU Frequency 15996354 Hz
-    CSV, WFI Start/End, 178264/178289
-    CSV, WFI Cost, 25
-
+    CPU Frequency 16001597 Hz
+    CPU HartID: 0
+    CSV, WFI Start/End, 205728/205743
+    CSV, WFI Cost, 15
 
 .. _design_app_coremark:
 
@@ -380,35 +303,40 @@ to get different score number.
 
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Mar 30 2020, 18:08:53
-    Download Mode: FLASHXIP
-    CPU Frequency 107190000 Hz
-    Start to run coremark for 5000 iterations
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:37:47
+    Download Mode: ILM
+    CPU Frequency 16000286 Hz
+    CPU HartID: 0
+    Start to run coremark for 15 iterations
     2K performance run parameters for coremark.
     CoreMark Size    : 666
-    Total ticks      : 1622809457
-    Total time (secs): 15.139593
-    Iterations/Sec   : 330.259868
-    Iterations       : 5000
-    Compiler version : GCC9.2.0
-    Compiler flags   : -O2 -flto -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4
+    Total ticks      : 5052270
+    Total time (secs): 0.315755
+    Iterations/Sec   : 47.505194
+    ERROR! Must execute for at least 10 secs for a valid result!
+    Iterations       : 15
+    Compiler version : GCC13.1.1 20230713
+    Compiler flags   : -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 -finline1
     Memory location  : STACK
     seedcrc          : 0xe9f5
     [0]crclist       : 0xe714
     [0]crcmatrix     : 0x1fd7
     [0]crcstate      : 0x8e3a
-    [0]crcfinal      : 0xbd59
-    Correct operation validated. See readme.txt for run and reporting rules.
-    CoreMark 1.0 : 330.259868 / GCC9.2.0 -O2 -flto -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 / STACK
+    [0]crcfinal      : 0x2d47
+    Errors detected
 
 
     Print Personal Added Addtional Info to Easy Visual Analysis
 
-        (Iterations is: 5000
-        (total_ticks is: 1622809457
+        (Iterations is: 15
+        (total_ticks is: 5052270
     (*) Assume the core running at 1 MHz
-        So the CoreMark/MHz can be caculated by:
-        (Iterations*1000000/total_ticks) = 3.081076 CoreMark/MHz
+        So the CoreMark/MHz can be calculated by:
+        (Iterations*1000000/total_ticks) = 2.968962 CoreMark/MHz
+
+
+    CSV, Benchmark, Iterations, Cycles, CoreMark/MHz
+    CSV, CoreMark, 15, 5052270, 2.968
 
 .. _design_app_dhrystone:
 
@@ -449,16 +377,17 @@ to get different score number.
 
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Feb 21 2020, 14:23:55
-    Download Mode: FLASHXIP
-    CPU Frequency 108801980 Hz
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:38:59
+    Download Mode: ILM
+    CPU Frequency 16000942 Hz
+    CPU HartID: 0
 
     Dhrystone Benchmark, Version 2.1 (Language: C)
 
     Program compiled without 'register' attribute
 
     Please give the number of runs through the benchmark:
-    Execution starts, 500000 runs through Dhrystone
+    Execution starts, 2000 runs through Dhrystone
     Execution ends
 
     Final values of the variables used in the benchmark:
@@ -473,29 +402,29 @@ to get different score number.
             should be:   B
     Arr_1_Glob[8]:       7
             should be:   7
-    Arr_2_Glob[8][7]:    500010
+    Arr_2_Glob[8][7]:    2010
             should be:   Number_Of_Runs + 10
     Ptr_Glob->
-      Ptr_Comp:          536883352
+    Ptr_Comp:          -1879032512
             should be:   (implementation-dependent)
-      Discr:             0
+    Discr:             0
             should be:   0
-      Enum_Comp:         2
+    Enum_Comp:         2
             should be:   2
-      Int_Comp:          17
+    Int_Comp:          17
             should be:   17
-      Str_Comp:          DHRYSTONE PROGRAM, SOME STRING
+    Str_Comp:          DHRYSTONE PROGRAM, SOME STRING
             should be:   DHRYSTONE PROGRAM, SOME STRING
     Next_Ptr_Glob->
-      Ptr_Comp:          536883352
+    Ptr_Comp:          -1879032512
             should be:   (implementation-dependent), same as above
-      Discr:             0
+    Discr:             0
             should be:   0
-      Enum_Comp:         1
+    Enum_Comp:         1
             should be:   1
-      Int_Comp:          18
+    Int_Comp:          18
             should be:   18
-      Str_Comp:          DHRYSTONE PROGRAM, SOME STRING
+    Str_Comp:          DHRYSTONE PROGRAM, SOME STRING
             should be:   DHRYSTONE PROGRAM, SOME STRING
     Int_1_Loc:           5
             should be:   5
@@ -510,10 +439,18 @@ to get different score number.
     Str_2_Loc:           DHRYSTONE PROGRAM, 2'ND STRING
             should be:   DHRYSTONE PROGRAM, 2'ND STRING
 
-     (*) User_Cycle for total run through Dhrystone with loops 500000:
-    223500116
-           So the DMIPS/MHz can be caculated by:
-           1000000/(User_Cycle/Number_Of_Runs)/1757 = 1.273270 DMIPS/MHz
+    Measured time too small to obtain meaningful results
+    Please increase number of runs
+
+    (*) User_Cycle for total run through Dhrystone with loops 2000:
+    1042022
+        So the DMIPS/MHz can be calculated by:
+        1000000/(User_Cycle/Number_Of_Runs)/1757 = 1.092399 DMIPS/MHz
+
+
+    CSV, Benchmark, Iterations, Cycles, DMIPS/MHz
+    CSV, Dhrystone, 2000, 1042022, 1.092
+
 
 .. _design_app_whetstone:
 
@@ -533,8 +470,7 @@ You can also optimize the ``COMMON_FLAGS`` defined in whetstone application Make
 to get different score number.
 
 * **STDCLIB ?= newlib_small** is added in its Makefile to enable float value print
-* Extra **LDFLAGS := -lm** is added in its Makefile to include the math library
-
+* Extra **LDLIBS := -lm** is added in its Makefile to include the math library
 
 **How to run this application:**
 
@@ -552,36 +488,39 @@ to get different score number.
 
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Feb 21 2020, 14:50:15
-    Download Mode: FLASHXIP
-    CPU Frequency 109069306 Hz
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:41:32
+    Download Mode: ILM
+    CPU Frequency 16000942 Hz
+    CPU HartID: 0
 
     ##########################################
     Single Precision C Whetstone Benchmark Opt 3 32 Bit
     Calibrate
-           1.96 Seconds          1   Passes (x 100)
-           9.81 Seconds          5   Passes (x 100)
+        14.54 Seconds          1   Passes (x 100)
 
-    Use 5  passes (x 100)
+    Use 1  passes (x 100)
 
-              Single Precision C/C++ Whetstone Benchmark
 
+            Single Precision C/C++ Whetstone Benchmark
     Loop content                  Result              MFLOPS      MOPS   Seconds
 
-    N1 floating point -1.12475013732910156         1.053              0.091
-    N2 floating point -1.12274742126464844         1.053              0.638
-    N3 if then else    1.00000000000000000               108527.617    0.000
-    N4 fixed point    12.00000000000000000                   5.630    0.280
-    N5 sin,cos etc.    0.49909299612045288                   0.109    3.829
-    N6 floating point  0.99999982118606567         1.082              2.493
-    N7 assignments     3.00000000000000000                 419.794    0.002
-    N8 exp,sqrt etc.   0.75110614299774170                   0.075    2.492
+    N1 floating point -1.12475013732910156         0.148              0.130
+    N2 floating point -1.12274742126464844         0.149              0.901
+    N3 if then else    1.00000000000000000                 226.099    0.000
+    N4 fixed point    12.00000000000000000                   0.764    0.412
+    N5 sin,cos etc.    0.49909299612045288                   0.015    5.601
+    N6 floating point  0.99999982118606567         0.142              3.804
+    N7 assignments     3.00000000000000000                  71.241    0.003
+    N8 exp,sqrt etc.   0.75110614299774170                   0.010    3.693
 
-    MWIPS                                              5.089              9.825
+    MWIPS                                              0.688             14.544
 
 
-    MWIPS/MHz                                          0.046              9.825
+    MWIPS/MHz                                          0.043             14.544
 
+
+    CSV, Benchmark, MWIPS/MHz
+    CSV, Whetstone, 0.042
 
 
 FreeRTOS applications
@@ -619,36 +558,29 @@ In Nuclei N100 SDK, we provided code and Makefile for this ``freertos demo`` app
 
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Feb 21 2020, 14:56:00
-    Download Mode: FLASHXIP
-    CPU Frequency 109058823 Hz
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:44:39
+    Download Mode: ILM
+    CPU Frequency 16000942 Hz
+    CPU HartID: 0
     Before StartScheduler
     Enter to task_1
     task1 is running 0.....
     Enter to task_2
     task2 is running 0.....
-    timers Callback 0
-    timers Callback 1
     task1 is running 1.....
     task2 is running 1.....
-    timers Callback 2
-    timers Callback 3
     task1 is running 2.....
     task2 is running 2.....
-    timers Callback 4
-    timers Callback 5
     task1 is running 3.....
     task2 is running 3.....
-    timers Callback 6
-    timers Callback 7
     task1 is running 4.....
     task2 is running 4.....
-    timers Callback 8
-    timers Callback 9
+    timers Callback 0
     task1 is running 5.....
     task2 is running 5.....
-    timers Callback 10
-    timers Callback 11
+    task1 is running 6.....
+    task2 is running 6.....
+    task1 is running 7.....
 
 
 UCOSII applications
@@ -670,12 +602,6 @@ In Nuclei N100 SDK, we provided code and Makefile for this ``ucosii demo`` appli
 * The **OS_TICKS_PER_SEC** in ``os_cfg.h`` is by default set to 50, you can change it
   to other number according to your requirement.
 
-.. note:
-
-   * For Nuclei N100 SDK release > v0.2.2, the UCOSII source code is replaced using the
-     version from https://github.com/SiliconLabs/uC-OS2/, and application development
-     for UCOSII is also changed, the ``app_cfg.h``, ``os_cfg.h`` and ``app_hooks.c`` files
-     are required in application source code.
 
 **How to run this application:**
 
@@ -693,9 +619,10 @@ In Nuclei N100 SDK, we provided code and Makefile for this ``ucosii demo`` appli
 
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Feb 21 2020, 15:00:35
-    Download Mode: FLASHXIP
-    CPU Frequency 108524271 Hz
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:45:42
+    Download Mode: ILM
+    CPU Frequency 16000286 Hz
+    CPU HartID: 0
     Start ucosii...
     create start task success
     start all task...
@@ -704,32 +631,16 @@ In Nuclei N100 SDK, we provided code and Makefile for this ``ucosii demo`` appli
     task1 is running... 1
     task3 is running... 2
     task2 is running... 2
+    task1 is running... 2
     task3 is running... 3
     task2 is running... 3
-    task1 is running... 2
     task3 is running... 4
     task2 is running... 4
+    task1 is running... 3
     task3 is running... 5
     task2 is running... 5
-    task1 is running... 3
     task3 is running... 6
     task2 is running... 6
-    task3 is running... 7
-    task2 is running... 7
-    task1 is running... 4
-    task3 is running... 8
-    task2 is running... 8
-    task3 is running... 9
-    task2 is running... 9
-    task1 is running... 5
-    task3 is running... 10
-    task2 is running... 10
-    task3 is running... 11
-    task2 is running... 11
-    task1 is running... 6
-    task3 is running... 12
-    task2 is running... 12
-
 
 RT-Thread applications
 ----------------------
@@ -767,13 +678,14 @@ In Nuclei N100 SDK, we provided code and Makefile for this ``rtthread demo`` app
 
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Apr 14 2020, 10:14:30
-    Download Mode: FLASHXIP
-    CPU Frequency 108270000 Hz
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:47:24
+    Download Mode: ILM
+    CPU Frequency 15999303 Hz
+    CPU HartID: 0
 
     \ | /
     - RT -     Thread Operating System
-    / | \     3.1.3 build Apr 14 2020
+    / | \     3.1.3 build Jun  4 2024
     2006 - 2019 Copyright by rt-thread team
     Main thread count: 0
     thread 0 count: 0
@@ -791,15 +703,6 @@ In Nuclei N100 SDK, we provided code and Makefile for this ``rtthread demo`` app
     thread 1 count: 2
     thread 2 count: 2
     thread 3 count: 2
-    thread 4 count: 2
-    thread 0 count: 3
-    thread 1 count: 3
-    thread 2 count: 3
-    thread 3 count: 3
-    thread 4 count: 3
-    Main thread count: 2
-    thread 0 count: 4
-    thread 1 count: 4
 
 .. _design_app_rtthread_msh:
 
@@ -816,8 +719,6 @@ In Nuclei N100 SDK, we provided code and Makefile for this ``rtthread msh`` appl
 * **RTTHREAD_MSH := 1** is added in its Makefile to include RT-Thread msh component
 * The **RT_TICK_PER_SECOND** in ``rtconfig.h`` is by default set to `100`, you can change it
   to other number according to your requirement.
-* To run this application in :ref:`design_soc_evalsoc`, the SoC clock frequency must be above 16MHz,
-  if run in 8MHz, uart read is not correct due to bit error in uart rx process.
 
 **How to run this application:**
 
@@ -835,13 +736,14 @@ In Nuclei N100 SDK, we provided code and Makefile for this ``rtthread msh`` appl
 
 .. code-block:: console
 
-    Nuclei N100 SDK Build Time: Dec 23 2020, 16:39:21
-    Download Mode: FLASHXIP
-    CPU Frequency 108810000 Hz
+    N100 Nuclei SDK Build Time: Jun  4 2024, 14:48:20
+    Download Mode: ILM
+    CPU Frequency 16000286 Hz
+    CPU HartID: 0
 
     \ | /
     - RT -     Thread Operating System
-    / | \     3.1.3 build Dec 23 2020
+    / | \     3.1.3 build Jun  4 2024
     2006 - 2019 Copyright by rt-thread team
     Hello RT-Thread!
     msh >help
@@ -858,11 +760,11 @@ In Nuclei N100 SDK, we provided code and Makefile for this ``rtthread msh`` appl
     msh >ps
     thread   pri  status      sp     stack size max used left tick  error
     -------- ---  ------- ---------- ----------  ------  ---------- ---
-    tshell     6  ready   0x00000178 0x00001000    09%   0x00000008 000
-    tidle      7  ready   0x00000078 0x0000018c    30%   0x00000020 000
-    main       2  suspend 0x000000b8 0x00000200    35%   0x00000013 000
+    tshell     6  ready   0x000000d8 0x00001000    10%   0x00000005 000
+    tidle      7  ready   0x00000078 0x00000200    23%   0x00000020 000
+    main       2  suspend 0x000000b8 0x00000400    17%   0x00000013 000
     msh >nsdk
-    Hello Nuclei N100 SDK!
+    Hello Nuclei SDK!
     msh >
 
 

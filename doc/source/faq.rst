@@ -170,12 +170,6 @@ For example, if you want to change linker script for evalsoc on nuclei_fpga_eval
     +  ram (wxa!r) : ORIGIN = 0x90000000, LENGTH = 256K
      }
 
-cc1: error: unknown cpu 'nuclei-300-series' for '-mtune'
----------------------------------------------------------
-
-This `mtune` option is introduced in Nuclei N100 SDK 0.3.5, used to select optimized gcc pipeline model
-for Nuclei RISC-V Core series such as 200/300/600/900 series, and this feature required Nuclei GNU
-Toolchain 2022.01, please upgrade to this version or later ones.
 
 undefined reference to __errno when using libncrt library
 ---------------------------------------------------------

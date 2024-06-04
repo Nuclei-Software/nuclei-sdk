@@ -17,7 +17,8 @@ Nuclei provides the following `RISC-V IP Products`_ for AIoT:
 
 * **N100 series:** Designed for mixed digital and analog, IoT or
   other extremely low-power and small area scenarios, which
-  is the perfect replacement of traditional 8051 cores.
+  is the perfect replacement of traditional 8051 cores, it has a seperated
+  databook, please contact with our AE to get it.
 
 * **N200 series:** Designed for ultra-low power consumption and
   embedded scenarios, perfectly replaces the arm Cortex-M series cores.
