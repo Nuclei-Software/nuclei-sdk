@@ -1,0 +1,31 @@
+{
+    "build_config": {
+        "CPU_SERIES": "600"
+    },
+    "build_configs": {
+        "rv32imac": {"CORE":"u600"},
+        "rv32imacb": {"CORE":"u600", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imacbp": {"CORE":"u600", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafc": {"CORE":"u600f", "ARCH_EXT":""},
+        "rv32imafcb": {"CORE":"u600f", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imafcp": {"CORE":"u600f", "ARCH_EXT":"_xxldspn1x"},
+        "rv32imafcbp": {"CORE":"u600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafdc": {"CORE":"u600fd", "ARCH_EXT":""},
+        "rv32imafdcb": {"CORE":"u600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imafdcp": {"CORE":"u600fd", "ARCH_EXT":"_xxldspn1x"},
+        "rv32imafdcbp": {"CORE":"u600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafdcbp_zicond": {"CORE":"u600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldspn1x"},
+        "rv32ima_zc": {"CORE":"u600", "ARCH_EXT":"_zca_zcb_zcmp_zcmt"},
+        "rv32imab_zc": {"CORE":"u600", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt"},
+        "rv32imabp_zc": {"CORE":"u600", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt_xxldspn1x"},
+        "rv32imaf_zc": {"CORE":"u600f", "ARCH_EXT":"_zca_zcb_zcf_zcmp_zcmt"},
+        "rv32imafb_zc": {"CORE":"u600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt"},
+        "rv32imafp_zc": {"CORE":"u600f", "ARCH_EXT":"_zca_zcb_zcf_zcmp_zcmt_xxldspn1x"},
+        "rv32imafbp_zc": {"CORE":"u600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt_xxldspn1x"},
+        "rv32imafd_zc": {"CORE":"u600fd", "ARCH_EXT":"_zca_zcb_zcf_zcmp_zcmt"},
+        "rv32imafdb_zc": {"CORE":"u600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt"},
+        "rv32imafdp_zc": {"CORE":"u600fd", "ARCH_EXT":"_zca_zcb_zcf_zcmp_zcmt_xxldspn1x"},
+        "rv32imafdbp_zc": {"CORE":"u600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt_xxldspn1x"},
+        "rv32imafdbp_zc_zicond": {"CORE":"u600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt_zicond_xxldspn1x"}
+    }
+}

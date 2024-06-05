@@ -14,6 +14,7 @@
         "rv32imafdcb": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
         "rv32imafdcp": {"CORE":"n300fd", "ARCH_EXT":"_xxldspn1x"},
         "rv32imafdcbp": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafdcbp_zicond": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldspn1x"},
         "rv32ima_zc": {"CORE":"n300", "ARCH_EXT":"_zca_zcb_zcmp_zcmt"},
         "rv32imab_zc": {"CORE":"n300", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt"},
         "rv32imabp_zc": {"CORE":"n300", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt_xxldspn1x"},
@@ -24,6 +25,7 @@
         "rv32imafd_zc": {"CORE":"n300fd", "ARCH_EXT":"_zca_zcb_zcf_zcmp_zcmt"},
         "rv32imafdb_zc": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt"},
         "rv32imafdp_zc": {"CORE":"n300fd", "ARCH_EXT":"_zca_zcb_zcf_zcmp_zcmt_xxldspn1x"},
-        "rv32imafdbp_zc": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt_xxldspn1x"}
+        "rv32imafdbp_zc": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt_xxldspn1x"},
+        "rv32imafdbp_zc_zicond": {"CORE":"n300fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt_zicond_xxldspn1x"}
     }
 }

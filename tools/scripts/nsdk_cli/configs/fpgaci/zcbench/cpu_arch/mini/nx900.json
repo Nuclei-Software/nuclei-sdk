@@ -1,0 +1,13 @@
+{
+    "build_config": {
+        "CPU_SERIES": "900"
+    },
+    "build_configs": {
+        "rv64imafdcbp_zicond": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldsp"},
+        "rv64imafdcbpv_zicond": { "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_zicond_xxldsp"},
+        "rv64imafbp_zc_zicond": {"CORE":"nx900f", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt_zicond_xxldsp"},
+        "rv64imafdbp_zc_zicond": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcd_zicond_xxldsp"},
+        "rv64imafbpv_zc_zicond": { "CORE": "nx900f", "ARCH_EXT": "_zve64f_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt_zicond_xxldsp"},
+        "rv64imafdbpv_zc_zicond": { "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_zca_zcb_zcd_zicond_xxldsp"}
+    }
+}

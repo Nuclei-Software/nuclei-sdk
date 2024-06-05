@@ -6,8 +6,10 @@
         "rv32emc": {"CORE":"n203e"},
         "rv32imac": {"CORE":"n203"},
         "rv32imacb": {"CORE":"n203", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imacb_zicond": {"CORE":"n203", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond", "NMSIS_LIB_ARCH": "rv32imac_zba_zbb_zbc_zbs"},
         "rv32em_zc": {"CORE":"n203e", "ARCH_EXT":"_zca_zcb_zcmp_zcmt"},
         "rv32ima_zc": {"CORE":"n203", "ARCH_EXT":"_zca_zcb_zcmp_zcmt"},
-        "rv32imab_zc": {"CORE":"n203", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt"}
+        "rv32imab_zc": {"CORE":"n203", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt"},
+        "rv32imab_zc_zicond": {"CORE":"n203", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt_zicond", "NMSIS_LIB_ARCH": "rv32imac_zba_zbb_zbc_zbs"}
     }
 }

@@ -1,0 +1,18 @@
+{
+    "build_config": {
+        "CPU_SERIES": "600"
+    },
+    "build_configs": {
+        "rv32imac": {"CORE":"u600"},
+        "rv32imacb": {"CORE":"u600", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imacbp": {"CORE":"u600", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafc": {"CORE":"u600f", "ARCH_EXT":""},
+        "rv32imafcb": {"CORE":"u600f", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imafcp": {"CORE":"u600f", "ARCH_EXT":"_xxldspn1x"},
+        "rv32imafcbp": {"CORE":"u600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafdc": {"CORE":"u600fd", "ARCH_EXT":""},
+        "rv32imafdcb": {"CORE":"u600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imafdcp": {"CORE":"u600fd", "ARCH_EXT":"_xxldspn1x"},
+        "rv32imafdcbp": {"CORE":"u600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"}
+    }
+}

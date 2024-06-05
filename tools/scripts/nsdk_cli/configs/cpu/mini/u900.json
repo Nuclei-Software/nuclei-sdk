@@ -1,0 +1,12 @@
+{
+    "build_config": {
+        "CPU_SERIES": "900"
+    },
+    "build_configs": {
+        "rv32imacb": {"CORE":"u900", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imacbp": {"CORE":"u900", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafdcb": {"CORE":"u900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imafdcbp": {"CORE":"u900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafdcbp_zicond": {"CORE":"u900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldspn1x", "NMSIS_LIB_ARCH": "rv32imafdc_zba_zbb_zbc_zbs_xxldspn1x"}
+    }
+}

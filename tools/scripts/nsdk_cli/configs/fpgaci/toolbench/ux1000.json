@@ -1,0 +1,31 @@
+{
+    "matrix": {
+        "terapines": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small"},
+        "nuclei_gnu": {"TOOLCHAIN":"nuclei_gnu", "STDCLIB":"newlib_small"},
+        "nuclei_llvm": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small"},
+        "terapines_O0": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O0"},
+        "terapines_O1": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O1"},
+        "terapines_O2": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O2"},
+        "terapines_O3": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O3"},
+        "terapines_Ofast": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Ofast"},
+        "terapines_Os": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Os"},
+        "terapines_Os_flto": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Os -flto"},
+        "terapines_Ofast_flto": {"TOOLCHAIN":"terapines", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Ofast -flto"},
+        "nuclei_gnu_O0": {"TOOLCHAIN":"nuclei_gnu", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O0"},
+        "nuclei_gnu_O1": {"TOOLCHAIN":"nuclei_gnu", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O1"},
+        "nuclei_gnu_O2": {"TOOLCHAIN":"nuclei_gnu", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O2"},
+        "nuclei_gnu_O3": {"TOOLCHAIN":"nuclei_gnu", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O3"},
+        "nuclei_gnu_Ofast": {"TOOLCHAIN":"nuclei_gnu", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Ofast"},
+        "nuclei_gnu_Os": {"TOOLCHAIN":"nuclei_gnu", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Os"},
+        "nuclei_gnu_Os_flto": {"TOOLCHAIN":"nuclei_gnu", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Os -flto"},
+        "nuclei_gnu_Ofast_flto": {"TOOLCHAIN":"nuclei_gnu", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Ofast -flto"},
+        "nuclei_llvm_O0": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O0"},
+        "nuclei_llvm_O1": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O1"},
+        "nuclei_llvm_O2": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O2"},
+        "nuclei_llvm_O3": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-O3"},
+        "nuclei_llvm_Ofast": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Ofast"},
+        "nuclei_llvm_Os": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Os"},
+        "nuclei_llvm_Os_flto": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Os -flto"},
+        "nuclei_llvm_Ofast_flto": {"TOOLCHAIN":"nuclei_llvm", "STDCLIB":"newlib_small", "BENCH_FLAGS": "-Ofast -flto"}
+    }
+}

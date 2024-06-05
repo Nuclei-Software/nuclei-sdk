@@ -1,0 +1,10 @@
+{
+    "matrix": {
+        "ground-lm": {"DHRY_MODE": "ground", "RUNMODE": "lm"},
+        "inline-lm": {"DHRY_MODE": "inline", "RUNMODE": "lm"},
+        "best-lm": {"DHRY_MODE": "best", "RUNMODE": "lm"},
+        "ground-cache": {"DHRY_MODE": "ground", "RUNMODE": "cache", "DOWNLOAD": "sram"},
+        "inline-cache": {"DHRY_MODE": "inline", "RUNMODE": "cache", "DOWNLOAD": "sram"},
+        "best-cache": {"DHRY_MODE": "best", "RUNMODE": "cache", "DOWNLOAD": "sram"}
+    }
+}
