@@ -52,7 +52,11 @@ ifneq ($(JTAGSN),)
 OPENOCD_CMD_ARGS += set JTAGSN $(JTAGSN);
 endif
 
-# If using generated cpu configs
+# If using generated cpu configs done by nuclei_gen
+# Notice: cpu nuclei_gen tool will do the following things:
+# 1. generate autogen_nuclei_cpu.h in where evalsoc.h located
+# 2. generate Makefile.global in <SDK>/Build/ folder
+# 3. sed and replace flash/ilm/dlm/sram/ddr base and size in gcc_evalsoc_*.ld
 ifeq ($(CPU_CONFIG_K),1)
 COMMON_FLAGS += -DHAS_AUTOGEN_CPUCFG
 endif
