@@ -109,6 +109,11 @@ ifneq ($(SPLITMODE),)
 OPENOCD_CMD_ARGS += set SPLITMODE $(SPLITMODE);
 endif
 
+# If using generated cpu configs
+ifeq ($(CPU_CONFIG_K),1)
+COMMON_FLAGS += -DHAS_AUTOGEN_CPUCFG
+endif
+
 # If HARTID_OFS is not empty
 ifneq ($(HARTID_OFS),)
 COMMON_FLAGS += -D__HARTID_OFFSET=$(HARTID_OFS)
