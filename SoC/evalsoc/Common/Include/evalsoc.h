@@ -32,6 +32,11 @@
 extern "C" {
 #endif
 
+// If you have auto generated cpu configuration files
+#ifdef HAS_AUTOGEN_CPUCFG
+#include "autogen_nuclei_cpu.h"
+#endif
+
 /** @addtogroup Nuclei
   * @{
   */
@@ -301,12 +306,30 @@ typedef struct {
 /** @addtogroup Device_Peripheral_peripheralAddr
   * @{
   */
-/* Peripheral and SRAM base address */
-#define QSPI_FLASH_BASE         (0x20000000UL)      /*!< (FLASH     ) Base Address */
-#define ONCHIP_ROM_BASE         (0x00001000UL)      /*!< (ROM       ) Base Address */
-#define ONCHIP_ILM_BASE         (0x80000000UL)      /*!< (ILM       ) Base Address */
-#define ONCHIP_DLM_BASE         (0x90000000UL)      /*!< (DLM       ) Base Address */
-#define EVALSOC_PERIPH_BASE     (0x10000000UL)      /*!< (Peripheral) Base Address */
+/* ILM/DLM/FLASHXIP and Peripheral base address */
+#ifndef EVALSOC_FLASH_XIP_BASE
+#define QSPI_FLASH_BASE         (0x20000000UL)                /*!< (FLASH     ) Base Address */
+#else
+#define QSPI_FLASH_BASE         (EVALSOC_FLASH_XIP_BASE)      /*!< (FLASH     ) Base Address */
+#endif
+
+#ifndef CFG_ILM_BASE_ADDR
+#define ONCHIP_ILM_BASE         (0x80000000UL)                /*!< (ILM       ) Base Address */
+#else
+#define ONCHIP_ILM_BASE         (CFG_ILM_BASE_ADDR)           /*!< (ILM       ) Base Address */
+#endif
+
+#ifndef CFG_DLM_BASE_ADDR
+#define ONCHIP_DLM_BASE         (0x90000000UL)                /*!< (DLM       ) Base Address */
+#else
+#define ONCHIP_DLM_BASE         (CFG_DLM_BASE_ADDR)           /*!< (DLM       ) Base Address */
+#endif
+
+#ifndef EVALSOC_PERIPS_BASE
+#define EVALSOC_PERIPH_BASE     (0x10000000UL)                /*!< (Peripheral) Base Address */
+#else
+#define EVALSOC_PERIPH_BASE     (EVALSOC_PERIPS_BASE)         /*!< (Peripheral) Base Address */
+#endif
 
 /* Peripheral memory map */
 #define UART0_BASE              (EVALSOC_PERIPH_BASE + 0x13000)          /*!< (UART0) Base Address */
