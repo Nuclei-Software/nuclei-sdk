@@ -251,7 +251,7 @@ void nuclei_cpuinfo(void)
         if (mcfg.b.smp) {
             printf("         SMP_CFG:");
             printf(" CC_PRESENT=%ld", __RV_EXTRACT_FIELD(smp_cfg, 0x1));
-            printf(" SMP_CORE_NUM=%ld", __RV_EXTRACT_FIELD(smp_cfg, 0x1F << 1));
+            printf(" SMP_CORE_NUM=%ld", __RV_EXTRACT_FIELD(smp_cfg, 0x3F << 1));
             printf(" IOCP_NUM=%ld", __RV_EXTRACT_FIELD(smp_cfg, 0x3F << 7));
             printf(" PMON_NUM=%ld", __RV_EXTRACT_FIELD(smp_cfg, 0x3F << 13));
             printf("\r\n");
