@@ -8,8 +8,8 @@ define exported symbol _max_vector = 4096;
 
 define memory mem with size = 4G;
 
-define region ROM_region32 = mem:[from 0xA0000000 to 0xA1FFFFFF];
-define region RAM_region32 = mem:[from 0xA2000000 to 0xA3FFFFFF];
+define region ROM_region32 = mem:[from 0xA0000000 size 0x02000000];
+define region RAM_region32 = mem:[from 0xA2000000 size 0x02000000];
 
 initialize by copy { rw };
 do not initialize  { section *.noinit };
