@@ -130,3 +130,6 @@ buildconfig:
       - defines: DOWNLOAD_MODE_STRING=\"$(upper(${download_mode}))\"
       - defines: VECTOR_TABLE_REMAPPED
         condition: $( ${download_mode} == "flash" )
+    ldflags:
+      # require Nuclei Studio 2023.10
+      - flags: -L $(npack_installdir(bsp-nsdk_nuclei_fpga_eval))/Source/GCC

@@ -25,12 +25,14 @@ OUTPUT_ARCH( "riscv" )
 
 ENTRY( _start )
 
+INCLUDE evalsoc.memory
+
 MEMORY
 {
   /* Emulate ROM using DDR */
-  rom (rxa!w) : ORIGIN = 0xA0000000, LENGTH = 32M
+  rom (rxa!w) : ORIGIN = DDR_MEMORY_BASE,                           LENGTH = DDR_MEMORY_SIZE / 2
   /* Emulate RAM using DDR */
-  ram (wxa!r) : ORIGIN = 0xA2000000, LENGTH = 32M
+  ram (wxa!r) : ORIGIN = DDR_MEMORY_BASE + DDR_MEMORY_SIZE / 2,     LENGTH = DDR_MEMORY_SIZE / 2
 }
 
 REGION_ALIAS("ROM", rom)

@@ -25,11 +25,13 @@ OUTPUT_ARCH( "riscv" )
 
 ENTRY( _start )
 
+INCLUDE evalsoc.memory
+
 MEMORY
 {
-  flash (rxa!w) : ORIGIN = 0x20000000, LENGTH = 4M
-  ilm (rxa!w) : ORIGIN = 0x80000000, LENGTH = 64K
-  ram (wxa!r) : ORIGIN = 0x90000000, LENGTH = 64K
+  flash (rxa!w) : ORIGIN = FLASH_MEMORY_BASE,   LENGTH = FLASH_MEMORY_SIZE
+  ilm (rxa!w) : ORIGIN = ILM_MEMORY_BASE,       LENGTH = ILM_MEMORY_SIZE
+  ram (wxa!r) : ORIGIN = DLM_MEMORY_BASE,       LENGTH = DLM_MEMORY_SIZE
 }
 
 REGION_ALIAS("ROM", flash)

@@ -66,7 +66,11 @@ OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_evalsoc.cfg
 ifneq ($(SMP),)
 OPENOCD_CMD_ARGS += set SMP $(SMP);
 endif
+
+# Search linker script include directory
+LDFLAGS += -L $(NUCLEI_SDK_SOC_BOARD)/Source/GCC
 LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_evalsoc_$(DOWNLOAD).ld
+MAKEFILE_PREREQS += $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/evalsoc.memory
 
 # File existence check for OPENOCD_CFG and LINKER_SCRIPT
 ifeq ($(wildcard $(OPENOCD_CFG)),)
@@ -166,6 +170,10 @@ RISCV_TUNE ?= $(word 3, $(CORE_ARCH_ABI))
 
 # Handle QEMU Emulation
 QEMU_MACHINE ?= nuclei_evalsoc,download=$(DOWNLOAD)
+# You can pass customized soc configuration here
+ifneq ($(QEMU_SOCCFG),)
+QEMU_MACHINE := $(QEMU_MACHINE),soc-cfg=$(NUCLEI_SDK_SOC)/$(QEMU_SOCCFG)
+endif
 QEMU_ARCHEXT ?= ${ARCH_EXT}
 QEMU_CPU ?= nuclei-$(CORE),ext=$(QEMU_ARCHEXT)
 ifneq ($(SEMIHOST),)
