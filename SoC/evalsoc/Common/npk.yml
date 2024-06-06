@@ -284,7 +284,7 @@ configuration:
     default_value: []
     type: multicheckbox_v2
     global: true
-    tips: "Click to select whether Nuclei I/D cache present and Cache CCM unit present"
+    tips: "Click to enable I/D Cache and CCM to override default settings defined in cpufeature.h"
     description: Nuclei Cache Extensions
     param:
       name:
@@ -460,24 +460,10 @@ buildconfig:
       - defines: BOOT_HARTID=${boothartid}
       - defines: RUNMODE_IC_EN=1
         condition: $( contains(${nuclei_cache}, "ic"))
-      - defines: RUNMODE_IC_EN=0
-        condition: $( ! contains(${nuclei_cache}, "ic"))
       - defines: RUNMODE_DC_EN=1
         condition: $( contains(${nuclei_cache}, "dc"))
-      - defines: RUNMODE_DC_EN=0
-        condition: $( ! contains(${nuclei_cache}, "dc"))
       - defines: RUNMODE_CCM_EN=1
         condition: $( contains(${nuclei_cache}, "ccm"))
-      - defines: RUNMODE_CCM_EN=0
-        condition: $( ! contains(${nuclei_cache}, "ccm"))
-      - defines: RUNMODE_STRING=\"$(join(${nuclei_cache},''))\"
-        condition: $( join(${nuclei_cache},'') != "" )
-      - defines: RUNMODE_ILM_EN=1
-        condition: $( join(${nuclei_cache},'') != "" )
-      - defines: RUNMODE_DLM_EN=1
-        condition: $( join(${nuclei_cache},'') != "" )
-      - defines: RUNMODE_CONTROL
-        condition: $( join(${nuclei_cache},'') != "" )
     prebuild_steps: # could be override by app/bsp type
       command:
       description:
