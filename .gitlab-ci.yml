@@ -213,6 +213,7 @@ run_evalsoc_zcc:
   script:
     - rm -rf logs
     - source /home/share/devtools/env.sh
+    - activate_swdev
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/${STDCLIB}_${DOWNLOAD}${ARCH_EXT}
     - export TOOLCHAIN=terapines
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "STDCLIB=$STDCLIB DOWNLOAD=$DOWNLOAD ARCH_EXT=${ARCH_EXT}" --run --run_target qemu
