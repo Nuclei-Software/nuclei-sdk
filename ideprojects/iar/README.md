@@ -1,5 +1,7 @@
 # IAR Embedded Workbench IDE Projects For Nuclei Processors
 
+## Introduction
+
 In this folder, we provided a prebuilt IAR workspace with baremetal and rtos projects.
 
 > You can refer to these demo projects to build your own iar projects, please use **IAR Embedded Workbench for RISC-V 3.30** released at **October 23, 2023**.
@@ -39,6 +41,8 @@ These projects demostrated the following features:
   `application/baremetal/demo_cidu/iar_evalsoc_smp.icf` is used which setup CSTACK for two cpu, and also set extra macros
   `SMP_CPU_CNT=2` and `__CIDU_PRESENT=1`, linker config define must be defined `SMP_CPU_CNT=2`.
 
+## Quick Start
+
 You can directly try with this iar workspace by click this `nucleisdk.eww` after you have installed [IAR Workbench](https://www.iar.com/riscv).
 ![IAR Projects for Nuclei](asserts/nsdk_iar_projects.png)
 
@@ -58,3 +62,13 @@ If you want to see UART output, you need to connect FPGA UART TX/RX to your usb 
 You can also try with C-SPY emulated IO by define `DEBUG_IAR_BREAKPOINT` in `SoC/evalsoc/Common/Source/Stubs/iardlib/stubs.c` to get print output.
 
 For more details about how to use IAR workbench, please refer to its user guides.
+
+## FAQ
+
+* **demo_dsp** link failed with `unsupported section type 0x70000003 found in riscv_conv_fast_opt_q15.c.o(libnmsis_dsp_rv32imafdc.a)`
+
+Since the prebuilt library is built with gcc, so it may not work with IAR compiler. You can try to follow guide in https://github.com/Nuclei-Software/NMSIS/tree/master/NMSIS/ideprojects/iar to rebuild this ``libnmsis_dsp_xxxx.a`` library, and link to the version built with IAR compiler.
+
+* Some applications are using a different linker script than the one in `SoC/evalsoc/Board/nuclei_fpga_eval/Source/IAR` folder due to its project limitation, please take care.
+
+* Some smp applications are using customized ``startup.S`` not the IAR compiler provided one, please take care.
