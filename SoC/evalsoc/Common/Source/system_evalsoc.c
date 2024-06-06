@@ -79,10 +79,23 @@ extern void exc_entry_s(void);
 /** default eclic interrupt or exception interrupt handler */
 extern void default_intexc_handler(void);
 
+#ifndef __ICCRISCV__
 /** eclic s-mode software interrupt handler in eclic mode */
 extern void eclic_ssip_handler(void) __WEAK;
 /** eclic s-mode time interrupt handler in eclic mode */
 extern void eclic_stip_handler(void) __WEAK;
+#else
+/** eclic s-mode software interrupt handler in eclic mode */
+__WEAK __SUPERVISOR_INTERRUPT void eclic_ssip_handler(void)
+{
+
+}
+/** eclic s-mode time interrupt handler in eclic mode */
+__WEAK __SUPERVISOR_INTERRUPT __WEAK void eclic_stip_handler(void)
+{
+
+}
+#endif
 
 /* default s-mode exception handler, which user can modify it at your need */
 static void system_default_exception_handler_s(unsigned long scause, unsigned long sp);
