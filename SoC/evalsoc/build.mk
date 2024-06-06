@@ -29,7 +29,9 @@
 ##### Put your SoC build configurations below #####
 
 override BOARD := nuclei_fpga_eval
-CORE ?= n307fd
+
+include $(NUCLEI_SDK_SOC)/cpufeature.mk
+
 # SMP must be a number, and above 1, means smp cpu count in a cluster
 # it will define c macro SMP_CPU_CNT to be SMP value
 # and define a ld symbol __SMP_CPU_CNT to be used by linker script
@@ -110,9 +112,9 @@ OPENOCD_CMD_ARGS += set SPLITMODE $(SPLITMODE);
 endif
 
 # If using generated cpu configs done by nuclei_gen
-# Notice: cpu nuclei_gen tool will do the following things:
-# 1. generate autogen_nuclei_cpu.h in where evalsoc.h located
-# 2. generate Makefile.global in <SDK>/Build/ folder
+# NOTE: cpu nuclei_gen tool will do the following things:
+# 1. generate cpufeature.h in where evalsoc.h located
+# 2. generate cpufeature.mk where this build.mk located
 # 3. sed and replace flash/ilm/dlm/sram/ddr base and size in gcc_evalsoc_*.ld
 ifeq ($(CPU_CONFIG_K),1)
 COMMON_FLAGS += -DHAS_AUTOGEN_CPUCFG

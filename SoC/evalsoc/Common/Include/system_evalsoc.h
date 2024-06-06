@@ -27,6 +27,8 @@
 #ifndef __SYSTEM_EVALSOC_H__   /* ToDo: replace '<Device>' with your device name */
 #define __SYSTEM_EVALSOC_H__
 
+// NOTE: Should never directly include this header, you should include evalsoc.h
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -90,10 +92,11 @@ extern void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler);
 extern unsigned long Exception_Get_EXC(uint32_t EXCn);
 
 /**
- * \brief Initialize eclic config
+ * \brief Initialize Interrupt
  */
-extern void ECLIC_Init(void);
+extern void Interrupt_Init(void);
 
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
 /**
  * \brief  Initialize a specific IRQ and register the handler
  * \details
@@ -101,6 +104,7 @@ extern void ECLIC_Init(void);
  * assign handler for specific IRQn.
  */
 extern int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler);
+#endif
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
 /**
@@ -113,6 +117,7 @@ extern void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler);
  */
 extern unsigned long Exception_Get_EXC_S(uint32_t EXCn);
 
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
 /**
  * \brief  Initialize a specific IRQ and register the handler of supervisor mode
  * \details
@@ -120,6 +125,7 @@ extern unsigned long Exception_Get_EXC_S(uint32_t EXCn);
  * assign handler for specific IRQn.
  */
 extern int32_t ECLIC_Register_IRQ_S(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler);
+#endif
 
 #endif
 

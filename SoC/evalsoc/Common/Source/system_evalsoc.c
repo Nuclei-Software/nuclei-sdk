@@ -27,6 +27,9 @@
 #include <stdio.h>
 #include "nuclei_sdk_hal.h"
 
+// TODO: This implementation contains many extra code controlled by macros
+// which may be not suitable for your SoC, you can directly remove the code
+
 /*----------------------------------------------------------------------------
   Define clocks
  *----------------------------------------------------------------------------*/
@@ -317,12 +320,12 @@ typedef void (*EXC_HANDLER)(unsigned long cause, unsigned long sp);
  */
 static void system_default_exception_handler(unsigned long mcause, unsigned long sp)
 {
-    /* TODO: Uncomment this if you have implement printf function */
-    printf("MCAUSE : 0x%lx\r\n", mcause);
-    printf("MDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_MDCAUSE));
-    printf("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
-    printf("MTVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
-    printf("HARTID : %u\r\n", (unsigned int)__get_hart_id());
+    /* TODO: Uncomment this if you have implement NSDK_DEBUG function */
+    NSDK_DEBUG("MCAUSE : 0x%lx\r\n", mcause);
+    NSDK_DEBUG("MDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_MDCAUSE));
+    NSDK_DEBUG("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
+    NSDK_DEBUG("MTVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
+    NSDK_DEBUG("HARTID : %u\r\n", (unsigned int)__get_hart_id());
     Exception_DumpFrame(sp, PRV_M);
 #if defined(SIMULATION_MODE)
     // directly exit if in SIMULATION
@@ -364,14 +367,14 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
     EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
 
 #ifndef __riscv_32e
-    printf("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx, t3: 0x%lx, t4: 0x%lx, t5: 0x%lx, t6: 0x%lx\n" \
+    NSDK_DEBUG("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx, t3: 0x%lx, t4: 0x%lx, t5: 0x%lx, t6: 0x%lx\n" \
            "a0: 0x%lx, a1: 0x%lx, a2: 0x%lx, a3: 0x%lx, a4: 0x%lx, a5: 0x%lx, a6: 0x%lx, a7: 0x%lx\n" \
            "cause: 0x%lx, epc: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
            exc_frame->t1, exc_frame->t2, exc_frame->t3, exc_frame->t4, exc_frame->t5, exc_frame->t6, \
            exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, exc_frame->a4, exc_frame->a5, \
            exc_frame->a6, exc_frame->a7, exc_frame->cause, exc_frame->epc);
 #else
-    printf("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx\n" \
+    NSDK_DEBUG("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx\n" \
            "a0: 0x%lx, a1: 0x%lx, a2: 0x%lx, a3: 0x%lx, a4: 0x%lx, a5: 0x%lx\n" \
            "cause: 0x%lx, epc: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
            exc_frame->t1, exc_frame->t2, exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, \
@@ -380,7 +383,7 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 
     if (PRV_M == mode) {
         /* msubm is exclusive to machine mode */
-        printf("msubm: 0x%lx\n", exc_frame->msubm);
+        NSDK_DEBUG("msubm: 0x%lx\n", exc_frame->msubm);
     }
 }
 
@@ -462,11 +465,11 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
  */
 static void system_default_exception_handler_s(unsigned long scause, unsigned long sp)
 {
-    /* TODO: Uncomment this if you have implement printf function */
-    printf("SCAUSE : 0x%lx\r\n", scause);
-    printf("SDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_SDCAUSE));
-    printf("SEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_SEPC));
-    printf("STVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_STVAL));
+    /* TODO: Uncomment this if you have implement NSDK_DEBUG function */
+    NSDK_DEBUG("SCAUSE : 0x%lx\r\n", scause);
+    NSDK_DEBUG("SDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_SDCAUSE));
+    NSDK_DEBUG("SEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_SEPC));
+    NSDK_DEBUG("STVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_STVAL));
     Exception_DumpFrame(sp, PRV_S);
 #if defined(SIMULATION_MODE)
     // directly exit if in SIMULATION
@@ -545,26 +548,33 @@ uint32_t core_exception_handler_s(unsigned long scause, unsigned long sp)
 void SystemBannerPrint(void)
 {
 #if defined(NUCLEI_BANNER) && (NUCLEI_BANNER == 1)
-    printf("Nuclei SDK Build Time: %s, %s\r\n", __DATE__, __TIME__);
+    NSDK_DEBUG("Nuclei SDK Build Time: %s, %s\r\n", __DATE__, __TIME__);
 #ifdef DOWNLOAD_MODE_STRING
-    printf("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
+    NSDK_DEBUG("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
 #endif
-    printf("CPU Frequency %u Hz\r\n", (unsigned int)SystemCoreClock);
-    printf("CPU HartID: %u\r\n", (unsigned int)__get_hart_id());
+    NSDK_DEBUG("CPU Frequency %u Hz\r\n", (unsigned int)SystemCoreClock);
+    NSDK_DEBUG("CPU HartID: %u\r\n", (unsigned int)__get_hart_id());
 #endif
 }
 
 extern unsigned long vector_base[];
 extern void irq_entry(void);
 extern void exc_entry(void);
-/**
- * \brief initialize eclic config
- * \details
- * ECLIC needs be initialized after boot up,
- * Vendor could also change the initialization
- * configuration.
- */
+
+// Now this is done in Interrupt_Init
 void ECLIC_Init(void)
+{
+
+}
+
+/**
+ * \brief initialize interrupt controller
+ * \details
+ * If ECLIC present, init it.
+ * \remarks
+ * This function previously was ECLIC_Init
+ */
+void Interrupt_Init(void)
 {
     if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_CLIC) {
         /* Set ECLIC vector interrupt base address to vector_base */
@@ -576,8 +586,10 @@ void ECLIC_Init(void)
         /* Global Configuration about MTH and NLBits.
          * TODO: Please adapt it according to your system requirement.
          * This function is called in _init function */
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
         ECLIC_SetMth(0);
         ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
+#endif
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
         /*
@@ -596,8 +608,10 @@ void ECLIC_Init(void)
         /*
          * Set supervisor exception entry stvec to exc_entry_s */
         __RV_CSR_WRITE(CSR_STVEC, (unsigned long)exc_entry_s);
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
         /* Global Configuration about STH */
         ECLIC_SetSth(0);
+#endif
 #endif
     } else {
         /* Set as CLINT interrupt mode */
@@ -605,6 +619,7 @@ void ECLIC_Init(void)
     }
 }
 
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
 /**
  * \brief  Initialize a specific IRQ and register the handler
  * \details
@@ -644,8 +659,9 @@ int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_
     ECLIC_EnableIRQ(IRQn);
     return 0;
 }
+#endif
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if (defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)) && (defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1))
 /**
  * \brief  Initialize a specific IRQ and register the handler for supervisor mode
  * \details
@@ -687,37 +703,13 @@ int32_t ECLIC_Register_IRQ_S(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type tri
 }
 #endif
 
-#define FALLBACK_DEFAULT_ECLIC_BASE             0x0C000000UL
-#define FALLBACK_DEFAULT_SYSTIMER_BASE          0x02000000UL
+// NOTE: FALLBACK_DEFAULT_ECLIC_BASE/FALLBACK_DEFAULT_SYSTIMER_BASE macros are removed
+// No longer support for cpu without iregion feature
 
-/** Nuclei RISC-V CPU IRegion Information Variable used to store probed info */
-volatile IRegion_Info_Type SystemIRegionInfo;
-/**
- * \brief Get Nuclei Internal Region Information
- * \details
- * This function is used to get nuclei cpu internal region
- * information, such as iregion base, eclic base, smp base,
- * timer base and idu base, and fallback to old evalsoc
- * timer and eclic base if no iregion feature found
- */
-static void _get_iregion_info(IRegion_Info_Type *iregion)
-{
-    unsigned long mcfg_info;
-    if (iregion == NULL) {
-        return;
-    }
-    mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
-    if (mcfg_info & MCFG_INFO_IREGION_EXIST) { // IRegion Info present
-        iregion->iregion_base = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
-        iregion->eclic_base = iregion->iregion_base + IREGION_ECLIC_OFS;
-        iregion->systimer_base = iregion->iregion_base + IREGION_TIMER_OFS;
-        iregion->smp_base = iregion->iregion_base + IREGION_SMP_OFS;
-        iregion->idu_base = iregion->iregion_base + IREGION_IDU_OFS;
-    } else {
-        iregion->eclic_base = FALLBACK_DEFAULT_ECLIC_BASE;
-        iregion->systimer_base = FALLBACK_DEFAULT_SYSTIMER_BASE;
-    }
-}
+#ifndef CFG_IREGION_BASE_ADDR
+/** Nuclei RISC-V CPU IRegion Base Address Probed, you should avoid to use it in your application code, please use __IREGION_BASEADDR if you want */
+unsigned long CpuIRegionBase = 0xFFFFFFFF;
+#endif
 
 #define CLINT_MSIP(base, hartid)    (*(volatile uint32_t *)((uintptr_t)((base) + ((hartid) * 4))))
 #define SMP_CTRLREG(base, ofs)      (*(volatile uint32_t *)((uintptr_t)((base) + (ofs))))
@@ -737,26 +729,32 @@ void __sync_harts(void) __attribute__((section(".text.init")));
 void __sync_harts(void)
 {
 // Only do synchronize when SMP_CPU_CNT is defined and number > 0
+// TODO: If you don't need to support SMP, you can directly remove code in it
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     unsigned long hartid = __get_hart_id();
     unsigned long tmr_hartid = __get_hart_index();
     unsigned long clint_base, irgb_base, smp_base;
     unsigned long mcfg_info;
 
+    // NOTE: we should avoid to use global variable such as CpuIRegionBase before smp cpu are configured
     mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
+    // Assume IREGION feature present
     if (mcfg_info & MCFG_INFO_IREGION_EXIST) { // IRegion Info present
         // clint base = system timer base + 0x1000
         irgb_base = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
         clint_base = irgb_base + IREGION_TIMER_OFS + 0x1000;
         smp_base = irgb_base + IREGION_SMP_OFS;
     } else {
-        clint_base = FALLBACK_DEFAULT_SYSTIMER_BASE + 0x1000;
-        smp_base = (__RV_CSR_READ(CSR_MSMPCFG_INFO) >> 4) << 4;
+        // Should not enter to here if iregion feature present
+        while(1);
     }
-    // Enable SMP and L2, disable cluster local memory
+    // Enable SMP
     SMP_CTRLREG(smp_base, 0xc) = 0xFFFFFFFF;
-    SMP_CTRLREG(smp_base, 0x10) = 0x1;
-    SMP_CTRLREG(smp_base, 0xd8) = 0x0;
+    // Enaable L2, disable cluster local memory
+    if (SMP_CTRLREG(smp_base, 0x4) & 0x1) {
+        SMP_CTRLREG(smp_base, 0x10) = 0x1;
+        SMP_CTRLREG(smp_base, 0xd8) = 0x0;
+    }
     __SMP_RWMB();
 
     // pre-condition: interrupt must be disabled, this is done before calling this function
@@ -800,32 +798,42 @@ void _premain_init(void)
     unsigned long mcfginfo = __RV_CSR_READ(CSR_MCFG_INFO);
 
     /* TODO: Add your own initialization code here, called before main */
-    // This code located in RUNMODE_CONTROL ifdef endif block just for internal usage
+    // TODO This code controlled by macros RUNMODE_* are only used internally by Nuclei
+    // You can remove it if you don't want it
     // No need to use in your code
-#ifdef RUNMODE_CONTROL
-#if defined(RUNMODE_ILM_EN) && RUNMODE_ILM_EN == 0
+#if defined(RUNMODE_ILM_EN)
     // Only disable ilm when it is present
     if (mcfginfo & MCFG_INFO_ILM) {
+#if RUNMODE_ILM_EN == 0
         __RV_CSR_CLEAR(CSR_MILM_CTL, MILM_CTL_ILM_EN);
-    }
+#else
+        __RV_CSR_SET(CSR_MILM_CTL, MILM_CTL_ILM_EN);
 #endif
-#if defined(RUNMODE_DLM_EN) && RUNMODE_DLM_EN == 0
-    // Only disable dlm when it is present
-    if (mcfginfo & MCFG_INFO_DLM) {
-        __RV_CSR_CLEAR(CSR_MDLM_CTL, MDLM_CTL_DLM_EN);
     }
-#endif
 #endif
 
-#if defined(RUNMODE_LDSPEC_EN) && (RUNMODE_LDSPEC_EN == 1)
+#if defined(RUNMODE_DLM_EN)
+    // Only disable dlm when it is present
+    if (mcfginfo & MCFG_INFO_DLM) {
+#if RUNMODE_DLM_EN == 0
+        __RV_CSR_CLEAR(CSR_MDLM_CTL, MDLM_CTL_DLM_EN);
+#else
+        __RV_CSR_SET(CSR_MDLM_CTL, MDLM_CTL_DLM_EN);
+#endif
+    }
+#endif
+
+#if defined(RUNMODE_LDSPEC_EN)
+#if RUNMODE_LDSPEC_EN == 1
     __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_LDSPEC_ENABLE);
 #else
     __RV_CSR_CLEAR(CSR_MMISC_CTL, MMISC_CTL_LDSPEC_ENABLE);
 #endif
+#endif
 
-    /* __ICACHE_PRESENT and __DCACHE_PRESENT are defined in demosoc.h */
-    // For our internal cpu testing, they want to set demosoc __ICACHE_PRESENT/__DCACHE_PRESENT to be 1
-    // __CCM_PRESENT is still default to 0 in demosoc.h, since it is used in core_feature_eclic.h to register interrupt, if set to 1, it might cause exception
+    /* __ICACHE_PRESENT and __DCACHE_PRESENT are defined in evalsoc.h */
+    // For our internal cpu testing, they want to set evalsoc __ICACHE_PRESENT/__DCACHE_PRESENT to be 1
+    // __CCM_PRESENT is still default to 0 in evalsoc.h, since it is used in core_feature_eclic.h to register interrupt, if set to 1, it might cause exception
     // but in the cpu, icache or dcache might not exist due to cpu configuration, so here
     // we need to check whether icache/dcache really exist, if yes, then turn on it
 #if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1)
@@ -844,13 +852,15 @@ void _premain_init(void)
     __FENCE_I();
 
     // BOOT_HARTID is defined <Device.h> and also controlled by BOOT_HARTID in conf/evalsoc/build.mk
+#ifndef CFG_IREGION_BASE_ADDR       // Need to probe the cpu iregion base address
     if (hartid == BOOT_HARTID) { // only done in boot hart
         // IREGION INFO MUST BE AFTER L1/L2 Cache enabled and SMP enabled if SMP present
-        _get_iregion_info((IRegion_Info_Type *)(&SystemIRegionInfo));
+        CpuIRegionBase = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
     } else {
-        // wait for eclic base addr is set by boot hart via _get_iregion_info
-        while (SystemIRegionInfo.eclic_base == 0);
+        // wait for correct iregion base addr is set by boot hart
+        while (CpuIRegionBase == 0xFFFFFFFF);
     }
+#endif
 
 #if defined(RUNMODE_L2_EN)
     if ((mcfginfo & (0x1 << 11)) && SMP_CTRLREG(__SMPCC_BASEADDR, 0x4) & 0x1 ) { // L2 Cache present
@@ -879,34 +889,35 @@ void _premain_init(void)
 
     if (hartid == BOOT_HARTID) { // only required for boot hartid
         // TODO implement get_cpu_freq function to get real cpu clock freq in HZ or directly give the real cpu HZ
+        // TODO you can directly give the correct cpu frequency here, if you know it without call get_cpu_freq function
         SystemCoreClock = get_cpu_freq();
         uart_init(SOC_DEBUG_UART, 115200);
         /* Display banner after UART initialized */
         SystemBannerPrint();
         /* Initialize exception default handlers */
         Exception_Init();
-        /* ECLIC initialization, mainly MTH and NLBIT */
-        ECLIC_Init();
+        /* Interrupt initialization */
+        Interrupt_Init();
         Trap_Init();
         // TODO: internal usage for Nuclei
 #ifdef RUNMODE_CONTROL
-        printf("Current RUNMODE=%s, ilm:%d, dlm %d, icache %d, dcache %d, ccm %d\n", \
+        NSDK_DEBUG("Current RUNMODE=%s, ilm:%d, dlm %d, icache %d, dcache %d, ccm %d\n", \
             RUNMODE_STRING, RUNMODE_ILM_EN, RUNMODE_DLM_EN, \
             RUNMODE_IC_EN, RUNMODE_DC_EN, RUNMODE_CCM_EN);
         // ILM and DLM need to be present
         if (mcfginfo & 0x180 == 0x180) {
-            printf("CSR: MILM_CTL 0x%x, MDLM_CTL 0x%x\n", \
+            NSDK_DEBUG("CSR: MILM_CTL 0x%x, MDLM_CTL 0x%x\n", \
                 __RV_CSR_READ(CSR_MILM_CTL), __RV_CSR_READ(CSR_MDLM_CTL));
         }
         // I/D cache need to be present
         if (mcfginfo & 0x600) {
-            printf("CSR: MCACHE_CTL 0x%x\n", __RV_CSR_READ(CSR_MCACHE_CTL));
+            NSDK_DEBUG("CSR: MCACHE_CTL 0x%x\n", __RV_CSR_READ(CSR_MCACHE_CTL));
         }
-        printf("CSR: MMISC_CTL 0x%x\n", __RV_CSR_READ(CSR_MMISC_CTL));
+        NSDK_DEBUG("CSR: MMISC_CTL 0x%x\n", __RV_CSR_READ(CSR_MMISC_CTL));
 #endif
     } else {
-        /* ECLIC initialization, mainly MTH and NLBIT */
-        ECLIC_Init();
+        /* Interrupt initialization */
+        Interrupt_Init();
     }
 }
 

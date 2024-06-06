@@ -56,17 +56,33 @@ CCM_EN ?= 0
 endif
 $(info Do run mode control, RUNMODE=$(RUNMODE), IC_EN=$(IC_EN), DC_EN=$(DC_EN), ILM_EN=$(ILM_EN), DLM_EN=$(DLM_EN), CCM_EN=$(CCM_EN))
 COMMON_FLAGS += -DRUNMODE_STRING=\"$(RUNMODE)\" -DRUNMODE_CONTROL
-COMMON_FLAGS += -DRUNMODE_ILM_EN=$(ILM_EN)
-COMMON_FLAGS += -DRUNMODE_DLM_EN=$(DLM_EN)
-COMMON_FLAGS += -DRUNMODE_IC_EN=$(IC_EN)
-COMMON_FLAGS += -DRUNMODE_DC_EN=$(DC_EN)
-COMMON_FLAGS += -DRUNMODE_CCM_EN=$(CCM_EN)
 else # RUNMODE is not defined
 # please don't define RUNMODE_CONTROL
 CCM_EN ?=
+ILM_EN ?=
+DLM_EN ?=
+IC_EN ?=
+DC_EN ?=
+endif
+
+ifneq ($(ILM_EN),)
+COMMON_FLAGS += -DRUNMODE_ILM_EN=$(ILM_EN)
+endif
+
+ifneq ($(DLM_EN),)
+COMMON_FLAGS += -DRUNMODE_DLM_EN=$(DLM_EN)
+endif
+
+ifneq ($(IC_EN),)
+COMMON_FLAGS += -DRUNMODE_IC_EN=$(IC_EN)
+endif
+
+ifneq ($(DC_EN),)
+COMMON_FLAGS += -DRUNMODE_DC_EN=$(DC_EN)
+endif
+
 ifneq ($(CCM_EN),)
 COMMON_FLAGS += -DRUNMODE_CCM_EN=$(CCM_EN)
-endif
 endif
 
 LDSPEC_EN ?=
