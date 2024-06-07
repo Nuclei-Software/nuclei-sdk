@@ -119,12 +119,19 @@
  * This macro store MCAUSE, MEPC, MSUBM to stack.
  */
 .macro SAVE_CSR_CONTEXT
+#if defined(INTMODE) && (INTMODE == INTMODE_PLIC)
+    csrr x5, CSR_MCAUSE
+    STORE x5, 11*REGBYTES(sp)
+    csrr x5, CSR_MEPC
+    STORE x5, 12*REGBYTES(sp)
+#else
     /* Store CSR mcause to stack using pushmcause */
     csrrwi  x0, CSR_PUSHMCAUSE, 11
     /* Store CSR mepc to stack using pushmepc */
     csrrwi  x0, CSR_PUSHMEPC, 12
     /* Store CSR msub to stack using pushmsub */
     csrrwi  x0, CSR_PUSHMSUBM, 13
+#endif
 .endm
 
 /**
@@ -133,8 +140,10 @@
  * This macro restore MSUBM, MEPC, MCAUSE from stack.
  */
 .macro RESTORE_CSR_CONTEXT
+#if defined(INTMODE) && (INTMODE != INTMODE_PLIC)
     LOAD x5,  13*REGBYTES(sp)
     csrw CSR_MSUBM, x5
+#endif
     LOAD x5,  12*REGBYTES(sp)
     csrw CSR_MEPC, x5
     LOAD x5,  11*REGBYTES(sp)
