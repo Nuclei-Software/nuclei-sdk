@@ -245,7 +245,7 @@ typedef enum EXCn {
 #ifndef CFG_IREGION_BASE_ADDR
 // it is defined in system_evalsoc.c, you should not use this variable
 // you should use macro __IREGION_BASEADDR defined in evalsoc.h
-extern unsigned long CpuIRegionBase;
+extern volatile unsigned long CpuIRegionBase;
 #define CPU_IREGION_BASE            CpuIRegionBase
 #else
 #define CPU_IREGION_BASE            CFG_IREGION_BASE_ADDR
