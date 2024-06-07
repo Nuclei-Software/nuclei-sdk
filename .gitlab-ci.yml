@@ -244,6 +244,7 @@ run_newlib_full_evalsoc:
     # change ilm/dlm size from 64K to 128K for evalsoc to be able to build with newlib full library
     - sed -i "s/64K/128K/g" SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
     - sed -i "s/64K/128K/g" SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_flash.ld
+    - sed -i 's/\([ID]LM_MEMORY_SIZE\).*/\1 = 0x40000;/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/evalsoc.memory
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
 
 # Test zc feature
