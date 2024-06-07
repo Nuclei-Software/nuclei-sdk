@@ -366,7 +366,7 @@
                 <option>
                     <name>CCDefines</name>
                     <state>SMP_CPU_CNT=2</state>
-                    <state>__CIDU_PRESENT=1</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>

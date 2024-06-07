@@ -365,7 +365,7 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
-                    <state>__TEE_PRESENT=1</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
