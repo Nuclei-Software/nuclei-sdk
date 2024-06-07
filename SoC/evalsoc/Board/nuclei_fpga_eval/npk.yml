@@ -131,5 +131,6 @@ buildconfig:
       - defines: VECTOR_TABLE_REMAPPED
         condition: $( ${download_mode} == "flash" )
     ldflags:
-      # require Nuclei Studio 2023.10
-      - flags: -L $(npack_installdir(bsp-nsdk_nuclei_fpga_eval))/Source/GCC
+      # require Nuclei Studio 2024.02
+      # package owner and package name must be passed
+      - flags: -L"${workspace_loc:/${ProjName}/$(npack_installdir(nuclei:bsp-nsdk_nuclei_fpga_eval))/Source/GCC}"
