@@ -30,9 +30,9 @@ INCLUDE evalsoc.memory
 MEMORY
 {
   /* Emulate ROM using DDR */
-  rom (rxa!w) : ORIGIN = DDR_MEMORY_BASE,                           LENGTH = DDR_MEMORY_SIZE / 2
+  rom (rxa!w) : ORIGIN = DDR_MEMORY_BASE,                           LENGTH = DDR_MEMORY_ROM_SIZE
   /* Emulate RAM using DDR */
-  ram (wxa!r) : ORIGIN = DDR_MEMORY_BASE + DDR_MEMORY_SIZE / 2,     LENGTH = DDR_MEMORY_SIZE / 2
+  ram (wxa!r) : ORIGIN = DDR_MEMORY_BASE + DDR_MEMORY_ROM_SIZE,     LENGTH = DDR_MEMORY_SIZE - DDR_MEMORY_ROM_SIZE
 }
 
 REGION_ALIAS("ROM", rom)

@@ -32,8 +32,8 @@ MEMORY
   /* For evalsoc using 200/300 core, it has a 256K sram started from 0xA0000000 */
   /* For evalsoc using 600/900 core, it has a DDR ram started from 0xA0000000 */
   /* The sram ld script file use just 256K to make it works on all types of core */
-  rom (rxa!w) : ORIGIN = SRAM_MEMORY_BASE,                          LENGTH = SRAM_MEMORY_SIZE / 2
-  ram (wxa!r) : ORIGIN = SRAM_MEMORY_BASE + SRAM_MEMORY_SIZE / 2,   LENGTH = SRAM_MEMORY_SIZE / 2
+  rom (rxa!w) : ORIGIN = SRAM_MEMORY_BASE,                           LENGTH = SRAM_MEMORY_ROM_SIZE
+  ram (wxa!r) : ORIGIN = SRAM_MEMORY_BASE + SRAM_MEMORY_ROM_SIZE,    LENGTH = SRAM_MEMORY_SIZE - SRAM_MEMORY_ROM_SIZE
 }
 
 REGION_ALIAS("ROM", rom)
