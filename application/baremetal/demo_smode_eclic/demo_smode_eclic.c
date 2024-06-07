@@ -6,6 +6,12 @@
 /* __TEE_PRESENT should be defined in <Device>.h */
 #warning "__TEE_PRESENT is not defined or equal to 1, please check!"
 #endif
+
+#if !defined(__SPMP_PRESENT) || (__SPMP_PRESENT != 1)
+/* __SPMP_PRESENT should be defined in <Device>.h */
+#warning "__SPMP_PRESENT is not defined or equal to 1, please check!"
+#endif
+
 // If define SWIRQ_INTLEVEL_HIGHER equals 1 the software interrupt will have a higher interrupt level.
 // the software interrupt will run during timer interrupt.
 // If define SWIRQ_INTLEVEL_HIGHER equals 0 the software interrupt will have a lower interrupt level.
@@ -140,6 +146,7 @@ static void supervisor_mode_entry_point(void)
 
 int main(int argc, char** argv)
 {
+#if defined(__SPMP_PRESENT) && (__SPMP_PRESENT == 1)
     // set pmp, S mode can access all address range
     pmp_config pmp_cfg = {
         /* M mode grants S and U mode with full permission of the whole address range */
@@ -151,8 +158,9 @@ int main(int argc, char** argv)
     };
 
     __set_PMPENTRYx(0, &pmp_cfg);
-
     print_sp_judge_privilege_mode();
+#endif
+
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
     // before drop to S Mode, specifies in which privilege mode the interrupt should be taken
     ECLIC_SetModeIRQ(SysTimerSW_IRQn, PRV_S);
@@ -163,7 +171,7 @@ int main(int argc, char** argv)
     __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
     while (1);
 #else
-    printf("[ERROR]__TEE_PRESENT must be defined as 1 in <Device>.h!\r\n");
+    printf("[ERROR]__TEE_PRESENT/__SPMP_PRESENT must be defined as 1 in <Device>.h!\r\n");
 #endif
     return 0;
 }

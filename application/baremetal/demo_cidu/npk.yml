@@ -54,4 +54,4 @@ buildconfig:
     common_flags: # flags need to be combined together across all packages
       - flags: ${app_commonflags}
     common_defines:
-      - defines: __CIDU_PRESENT=1
+      - defines:

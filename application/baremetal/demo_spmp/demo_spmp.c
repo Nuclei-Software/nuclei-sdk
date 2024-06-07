@@ -10,7 +10,7 @@
 
 #if !defined(__SPMP_PRESENT) || (__SPMP_PRESENT != 1)
 /* __SPMP_PRESENT should be defined in <Device>.h */
-#error "__SPMP_PRESENT is not defined or equal to 1, please check!"
+#warning "__SPMP_PRESENT is not defined or equal to 1, please check!"
 #endif
 
 /* different trigger condition */
@@ -96,6 +96,7 @@ static void supervisor_mode_entry_point(void)
 
 int main(void)
 {
+#if defined(__SPMP_PRESENT) && (__SPMP_PRESENT == 1)
     /* The sPMP values are checked after the physical address to be accessed pass PMP checks */
     pmp_config pmp_cfg = {
         /* M mode grants S and U mode with full permission of the whole address range */
@@ -134,6 +135,7 @@ int main(void)
     __get_PMPENTRYx(0, &pmp_cfg);
     printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%lx, order_out: %lu\r\n", \
         0, pmp_cfg.protection, pmp_cfg.base_addr, pmp_cfg.order);
+#endif
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
     /* Corresponding exceptions occurs in S/U-mode will be delegated to S-mode */
@@ -204,9 +206,8 @@ int main(void)
     __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
     while(1);
 #else
-    printf("[ERROR]__TEE_PRESENT must be defined as 1 in <Device>.h!\r\n");
+    printf("[ERROR]__TEE_PRESENT and __SPMP_PRESENT must be defined as 1 in <Device>.h!\r\n");
 #endif/* defined(__TEE_PRESENT) && (__TEE_PRESENT == 1) */
 
     return 0;
 }
-
