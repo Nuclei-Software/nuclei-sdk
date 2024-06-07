@@ -16,15 +16,6 @@ extern "C" {
 
 // #define CFG_IREGION_BASE_ADDR    YOUR_CPU_IREGION_BASE_ADDR
 
-#ifndef CFG_IREGION_BASE_ADDR
-// it is defined in system_evalsoc.c, you should not use this variable
-// you should use macro __IREGION_BASEADDR defined in evalsoc.h
-extern unsigned long CpuIRegionBase;
-#define CPU_IREGION_BASE            CpuIRegionBase
-#else
-#define CPU_IREGION_BASE            CFG_IREGION_BASE_ADDR
-#endif
-
 #define CFG_CPU_SERIES              0xFFFFFF
 #define CFG_CPU_VER                 0xFFFFFF
 
@@ -37,6 +28,10 @@ extern unsigned long CpuIRegionBase;
 #define CFG_HAS_SMP
 #define CFG_HAS_PMP
 #define CFG_PMP_ENTRY_NUM           8
+
+//#define CFG_HAS_IDU
+//#define CFG_HAS_TEE
+
 #define CFG_HAS_ICACHE
 #define CFG_HAS_DCACHE
 

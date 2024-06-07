@@ -708,7 +708,7 @@ int32_t ECLIC_Register_IRQ_S(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type tri
 
 #ifndef CFG_IREGION_BASE_ADDR
 /** Nuclei RISC-V CPU IRegion Base Address Probed, you should avoid to use it in your application code, please use __IREGION_BASEADDR if you want */
-unsigned long CpuIRegionBase = 0xFFFFFFFF;
+volatile unsigned long CpuIRegionBase = 0xFFFFFFFF;
 #endif
 
 #define CLINT_MSIP(base, hartid)    (*(volatile uint32_t *)((uintptr_t)((base) + ((hartid) * 4))))

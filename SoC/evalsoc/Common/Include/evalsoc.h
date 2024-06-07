@@ -194,9 +194,6 @@ typedef enum EXCn {
 // NOTE: macros __NUCLEI_CORE_REV/__NUCLEI_N_REV/__NUCLEI_NX_REV are removed now
 
 
-/* ToDo: set the defines according your Device */
-/* ToDo: define the correct core revision */
-
 // NOTE: __FPU_PRESENT/__BITMANIP_PRESENT/__DSP_PRESENT/__VECTOR_PRESENT can be probed by compiler's -march= option
 // See https://gcc.gnu.org/onlinedocs/gcc/RISC-V-Options.html
 
@@ -232,18 +229,31 @@ typedef enum EXCn {
 // You can also probe the cpu information using the general application/baremetal/cpuinfo case
 // You can find the offset macros(IREGION_*_OFS) in riscv_encoding.h via search IREGION Offsets
 
-// NORMAL CPU Configuration
+// NORMAL CPU Configuration: From Nuclei SDK 0.6.0, we recommend you to update the CPU configuration macros defined in cpufeature.h
+// Please don't modify the macros below directly
 
 // NOTE: We use macros defined in cpufeature.h
+// WARNING: Please dont modify macros directly below, you can change in cpufeature.h
 
 // CPU Series and Version Configuration
+// To set CPU REV and SERIES, just define CFG_CPU_VER/CFG_CPU_SERIES macros in cpufeature.h
 #define __NUCLEI_CPU_REV            CFG_CPU_VER           /*!< Nuclei CPU Core Revision, version X.Y.Z, this is for the CPU Core Version, you get from Nuclei, eg. N300 v3.10.1, it should be 0x030A01 */
 #define __NUCLEI_CPU_SERIES         CFG_CPU_SERIES        /*!< Nuclei CPU Series, such as 200/300/600/900, eg. 900 will be 0x0900 */
 
 // CPU IREGION Base Address
+// To set IREGION base, just define macro CFG_IREGION_BASE_ADDR in cpufeature.h
+#ifndef CFG_IREGION_BASE_ADDR
+// it is defined in system_evalsoc.c, you should not use this variable
+// you should use macro __IREGION_BASEADDR defined in evalsoc.h
+extern unsigned long CpuIRegionBase;
+#define CPU_IREGION_BASE            CpuIRegionBase
+#else
+#define CPU_IREGION_BASE            CFG_IREGION_BASE_ADDR
+#endif
 #define __IREGION_BASEADDR          (CPU_IREGION_BASE)
 
 // ECLIC Configuration
+// To enable ECLIC, just define macro CFG_HAS_CLIC/CFG_CLICINTCTLBITS/__ECLIC_INTNUM in cpufeature.h
 #ifdef CFG_HAS_CLIC
 #define __ECLIC_PRESENT             1
 #ifdef CFG_CLICINTCTLBITS
@@ -256,6 +266,7 @@ typedef enum EXCn {
 #define __ECLIC_BASEADDR            (__IREGION_BASEADDR + IREGION_ECLIC_OFS)
 
 // CPU System Timer Configuration
+// To enable CPU System Timer, just define macro CFG_TMR_PRIVATE in cpufeature.h
 #ifdef CFG_TMR_PRIVATE
 #define __SYSTIMER_PRESENT          1
 #else
@@ -265,15 +276,17 @@ typedef enum EXCn {
 #define __CLINT_TIMER_BASEADDR      (__SYSTIMER_BASEADDR + 0x1000)
 
 // CIDU Configuration
+// To enable CIDU, just define macro CFG_HAS_IDU in cpufeature.h
 #ifdef CFG_HAS_IDU
 #define __CIDU_PRESENT              1
 #else
-#define __CIDU_PRESENT              1
+#define __CIDU_PRESENT              0
 #endif
 
 #define __CIDU_BASEADDR             (__IREGION_BASEADDR + IREGION_IDU_OFS)
 
 // SMP & CC Configuration
+// To enable SMP & CC, just define macro CFG_HAS_SMP in cpufeature.h
 #ifdef CFG_HAS_SMP
 #define __SMPCC_PRESENT             1
 #else
@@ -283,28 +296,30 @@ typedef enum EXCn {
 #define __SMPCC_BASEADDR            (__IREGION_BASEADDR + IREGION_SMP_OFS)
 
 // PMP Configuration
+// To enable PMP, just define macro CFG_HAS_PMP/__PMP_ENTRY_NUM in cpufeature.h
 #ifdef CFG_HAS_PMP
 #define __PMP_PRESENT               1
 #define __PMP_ENTRY_NUM             CFG_PMP_ENTRY_NUM
 #else
-#define __PMP_PRESENT               1
-#define __PMP_ENTRY_NUM             16
+#define __PMP_PRESENT               0
+#define __PMP_ENTRY_NUM             0
 #endif
 
 // TEE/sPMP Configuration
+// To enable TEE, just define macro CFG_HAS_TEE in cpufeature.h
+// TEE required PMP, please also make sure CFG_HAS_PMP defined
 #ifdef CFG_HAS_TEE
 #define __TEE_PRESENT               1
 #define __SPMP_PRESENT              1
 #define __SPMP_ENTRY_NUM            CFG_PMP_ENTRY_NUM
 #else
-#ifndef __TEE_PRESENT
 #define __TEE_PRESENT               0
-#endif
-#define __SPMP_PRESENT              1
-#define __SPMP_ENTRY_NUM            16
+#define __SPMP_PRESENT              0
+#define __SPMP_ENTRY_NUM            0
 #endif
 
 // ICache Configuration
+// To enable ICACHE, just define macro CFG_HAS_ICACHE in cpufeature.h
 #ifdef CFG_HAS_ICACHE
 #define __ICACHE_PRESENT            1
 #else
@@ -312,6 +327,7 @@ typedef enum EXCn {
 #endif
 
 // DCache Configuration
+// To enable DCACHE, just define macro CFG_HAS_DCACHE in cpufeature.h
 #ifdef CFG_HAS_DCACHE
 #define __DCACHE_PRESENT            1
 #else
@@ -319,6 +335,7 @@ typedef enum EXCn {
 #endif
 
 // CCM Configuration
+// To enable CCM, just define macro CFG_HAS_IOCC in cpufeature.h
 #ifdef CFG_HAS_IOCC
 #define __CCM_PRESENT               1
 #else
@@ -326,6 +343,7 @@ typedef enum EXCn {
 #endif
 
 // NICE Configuration
+// To enable NICE, just define macro CFG_HAS_NICE in cpufeature.h
 #ifdef CFG_HAS_NICE
 #define __NICE_PRESENT              1
 #else
