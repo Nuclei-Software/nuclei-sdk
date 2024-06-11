@@ -206,7 +206,7 @@ int main(void)
     __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
     while(1);
 #else
-    printf("[ERROR]__TEE_PRESENT and __SPMP_PRESENT must be defined as 1 in <Device>.h!\r\n");
+    printf("[ERROR]__TEE_PRESENT & __SPMP_PRESENT must be defined as 1 in <Device>.h!\r\n");
 #endif/* defined(__TEE_PRESENT) && (__TEE_PRESENT == 1) */
 
     return 0;
