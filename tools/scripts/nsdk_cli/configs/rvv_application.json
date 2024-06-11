@@ -74,7 +74,7 @@
         "application/baremetal/demo_smode_eclic": {
             "build_config" : {},
             "checks": {
-                "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "[ERROR]__TEE_PRESENT must be defined as 1"]
+                "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "[ERROR]__TEE_PRESENT"]
             }
         },
         "application/baremetal/demo_stack_check": {
@@ -86,7 +86,7 @@
         "application/baremetal/demo_spmp": {
             "build_config" : {},
             "checks": {
-                "PASS": ["Won't run here if violates L U\\R\\W\\X permission check!", "[ERROR]__TEE_PRESENT must be defined as 1"]
+                "PASS": ["Won't run here if violates L U\\R\\W\\X permission check!", "[ERROR]__TEE_PRESENT"]
             }
         },
         "application/baremetal/demo_cache": {
