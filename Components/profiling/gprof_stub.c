@@ -1,18 +1,21 @@
 #include "nuclei_sdk_soc.h"
 #include "gprof_api.h"
 
-// TODO uncomment below if you are using RTOS
+// TODO uncomment below if you are using RTOS, and you need to implement check the TODO in this file
 //#define USING_RTOS
 
-// TODO uncomment below if you want to use systimer interrupt as period sample interrupt
+// TODO comment below if you dont want to use systimer interrupt as period sample interrupt
+// or this systimer interrupt is already used by other tasks such as RTOS or some other program
 // or you can add gprof_sample(pc) in your own period timer interrupt function
-//#define SAMPLE_USING_SYSTIMER
+#define SAMPLE_USING_SYSTIMER
 
 extern void gprof_sample(unsigned long pc);
 
 #ifdef USING_RTOS
 // TODO: If you are using RTOS, please take care that the system timer interrupt is already used by tick interrupt
 //       so you need to call gprof_sample() function by yourself
+
+#error "You must implement a period timer interrupt run in PROF_HZ and call gprof_sample when USING_RTOS"
 
 #else
 

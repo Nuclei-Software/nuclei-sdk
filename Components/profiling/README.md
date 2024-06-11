@@ -37,11 +37,10 @@ technology.
    to the source files you want to collect coverage information.
 - `gprof.c`, `gprof_api.h` & `gprof_stub.c`: Collect profiling data after program executed
    - You should add extra `-pg` compiler option to the source files you want to collect profiling information.
-   - `gprof_stub.c` contains some stub functions required to setup a period interrupt to do program sampling required by gprof,
-   you need to customize it by yourself. For details, please check the `gprof_stub.c` file by yourself.
+   - **Modify** `gprof_stub.c` contains some stub functions required to setup a period interrupt to do program sampling required by gprof,
+     you **must customize it by yourself**. For details, please read the `gprof_stub.c` file **carefully** by yourself.
    - The sampling period is controlled by `PROF_HZ`(1000 means 1ms, 10000 means 100us) defined in `gprof_api.h`
-   - and you should also set correct `PROGRAM_LOWPC` and `PROGRAM_HIGHPC`
-   defined in `gprof_api.h`
+   - and you should also set correct `PROGRAM_LOWPC` and `PROGRAM_HIGHPC` defined in `gprof_api.h`
 
 - `parse.py`: a python script use to parse gcov and gprof dump log file, and generate gcov or gprof binary files.
   To run this script, need python3 installed in your host pc.
