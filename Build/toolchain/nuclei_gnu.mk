@@ -130,10 +130,11 @@ COMMON_FLAGS += -fomit-frame-pointer -fno-shrink-wrap-separate
 endif
 
 # TODO Workaround: when v extension is enabled, disable memcpy generated using vector instruction
-# upstream just remove this -mmemcpy-strategy option, will remove it later
+# upstream just rename this -mmemcpy-strategy option to -mstringop-strategy option now
+# see https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=4ae5a7336ac8e1ba57ee1e885b5b76ed86cdbfd5
 ifneq ($(findstring v,$(ARCH_EXT)),)
 #COMMON_FLAGS += -mmemcpy-strategy=scalar
-#COMMON_FLAGS += -mstringop-strategy=scalar
+COMMON_FLAGS += -mstringop-strategy=scalar
 endif
 
 LDFLAGS += -nodefaultlibs
