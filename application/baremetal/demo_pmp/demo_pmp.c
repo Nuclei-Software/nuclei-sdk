@@ -12,7 +12,7 @@
 /* Just choose one from above defines to test PMP */
 #define TRIGGER_PMP_VIOLATION_MODE     RUN_WITH_NO_PMP_CHECK
 
-volatile uint8_t protected_data[0x2000] __attribute__((aligned(0x2000))) =    \
+volatile uint8_t protected_data[0x2000] __attribute__((aligned(0x2000))) = \
 {0xaa, 0x1, 0x02, 0x03, 0x04, 0x05, 0x06, 0xaa};
 
 #ifndef __ICCRISCV__
@@ -53,7 +53,13 @@ static void pmp_violation_fault_handler(unsigned long mcause, unsigned long sp)
             break;
         default: break;
     }
+#ifdef CFG_SIMULATION
+    // directly exit if in SIMULATION
+    extern void simulation_exit(int status);
+    simulation_exit(0);
+#else
     while(1);
+#endif
 }
 
 typedef void(*__funcpt)(void);
@@ -139,7 +145,6 @@ int main(void)
     printf("Attempting to fetch instruction from protected address\n");
     fncptr();
 
-    while(1);
     return 0;
 }
 

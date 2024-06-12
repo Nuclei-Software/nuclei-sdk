@@ -4,6 +4,12 @@
 #include "aes.h"
 #include "nuclei_sdk_soc.h"
 
+#ifdef CFG_SIMULATION
+#define RUN_LOOPS   1
+#else
+#define RUN_LOOPS   1000
+#endif
+
 int main(void)
 {
 
@@ -22,7 +28,7 @@ int main(void)
 
 	uint8_t *w; // expanded key
 
-	for (i = 0; i < 1000; i++) {
+	for (i = 0; i < RUN_LOOPS; i++) {
 		for (j = 0; j < 16; j++) {
 			in[j] = __RV_CSR_READ(CSR_MCYCLE) & 0xff;
 		}

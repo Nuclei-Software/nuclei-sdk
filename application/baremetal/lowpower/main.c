@@ -3,6 +3,16 @@
 
 #include "nuclei_sdk_soc.h"
 
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
+#else
+#error "This example require CPU ECLIC feature"
+#endif
+
+#if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
+#else
+#error "This example require CPU System Timer feature"
+#endif
+
 #if defined(SIMULATION_MODE) && (SIMULATION_MODE == SIMULATION_MODE_XLSPIKE)
 #define RECORD_START()          UART0->RXFIFO = 1
 #define RECORD_END()            UART0->RXFIFO = 2

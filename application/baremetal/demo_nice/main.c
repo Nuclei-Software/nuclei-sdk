@@ -2,9 +2,14 @@
 #include "insn.h"
 #include "nuclei_sdk_soc.h"
 
+#ifndef CFG_HAS_NICE
+#error "This example require CPU NICE Demo feature"
+#endif
+
 int main(void)
 {
     int ret = 0;
+
     unsigned int array[ROW_LEN][COL_LEN] = {
         {10, 30, 90},
         {20, 40, 80},

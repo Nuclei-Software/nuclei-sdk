@@ -1,6 +1,17 @@
 // See LICENSE for license details.
 #include <stdio.h>
 #include "nuclei_sdk_soc.h"
+
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
+#else
+#error "This example require CPU ECLIC feature"
+#endif
+
+#if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
+#else
+#error "This example require CPU System Timer feature"
+#endif
+
 /* Define the interrupt handler name same as vector table in case download mode is flashxip. */
 #define mtimer_irq_handler     eclic_mtip_handler
 #define mtimer_sw_irq_handler  eclic_msip_handler
@@ -9,7 +20,11 @@ static volatile uint32_t int0_cnt = 0;    /* mtip timer interrupt test counter *
 static volatile uint32_t int1_cnt = 0;    /* msip timer interrupt test counter */
 volatile unsigned int msip_trig_flag = 1; /* sw trigger mtimer sw interrupt flag */
 
+#ifdef CFG_SIMULATION
+#define LOOP_COUNT      2
+#else
 #define LOOP_COUNT      5
+#endif
 
 void mtimer_irq_handler(void)
 {
@@ -47,7 +62,7 @@ int main(void)
 
     setup_timer(); /* initialize timer */
 
-    while (int0_cnt < 5);
+    while (int0_cnt < LOOP_COUNT);
     ECLIC_DisableIRQ(SysTimer_IRQn); /* Disable MTIP iterrupt */
 
     returnCode = ECLIC_Register_IRQ(
@@ -61,7 +76,7 @@ int main(void)
             SysTimer_SetSWIRQ(); /* trigger timer sw interrupt */
             delay_1ms(10);
         }
-    } while (int1_cnt < 5); /* check test end condition */
+    } while (int1_cnt < LOOP_COUNT); /* check test end condition */
 
     printf("MTimer msip and mtip interrupt test finish and pass\r\n");
 

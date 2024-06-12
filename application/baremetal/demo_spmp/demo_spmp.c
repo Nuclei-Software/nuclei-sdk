@@ -59,7 +59,13 @@ static void spmp_violation_fault_handler(unsigned long scause, unsigned long sp)
             break;
         default: break;
     }
+#ifdef CFG_SIMULATION
+    // directly exit if in SIMULATION
+    extern void simulation_exit(int status);
+    simulation_exit(0);
+#else
     while(1);
+#endif
 }
 
 static void __PMP_PROTECT protected_execute(void)
@@ -91,7 +97,6 @@ static void supervisor_mode_entry_point(void)
     protected_data[0] = 0xFF;
 #endif
     printf("Won't run here if violates L U\\R\\W\\X permission check!\r\n");
-    while(1);
 }
 
 int main(void)

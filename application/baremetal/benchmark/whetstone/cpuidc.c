@@ -9,7 +9,11 @@ volatile SPDP  secs;
 
 SPDP time()
 {
+#if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
     return (SPDP) SysTimer_GetLoadValue() / SOC_TIMER_FREQ;
+#else
+#error "This example require CPU System Timer feature"
+#endif
 }
 
 void getSecs()

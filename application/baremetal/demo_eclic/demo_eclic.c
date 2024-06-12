@@ -2,6 +2,16 @@
 #include <stdio.h>
 #include "nuclei_sdk_soc.h"
 
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
+#else
+#error "This example require CPU ECLIC feature"
+#endif
+
+#if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
+#else
+#error "This example require CPU System Timer feature"
+#endif
+
 // If define SWIRQ_INTLEVEL_HIGHER equals 1 the software interrupt will have a higher interrupt level.
 // the software interrupt will run during timer interrupt.
 // If define SWIRQ_INTLEVEL_HIGHER equals 0 the software interrupt will have a lower interrupt level.
@@ -65,7 +75,12 @@ __INTERRUPT void eclic_msip_handler(void)
     RESTORE_IRQ_CSR_CONTEXT();
 }
 
+#ifdef CFG_SIMULATION
+#define RUN_LOOPS   2
+#else
 #define RUN_LOOPS   20
+#endif
+
 int main(int argc, char** argv)
 {
     uint8_t timer_intlevel, swirq_intlevel;

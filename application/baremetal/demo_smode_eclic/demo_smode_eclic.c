@@ -103,7 +103,12 @@ __SUPERVISOR_INTERRUPT void eclic_ssip_handler(void)
     RESTORE_IRQ_CSR_CONTEXT_S();
 }
 
+#ifdef CFG_SIMULATION
+#define RUN_LOOPS   2
+#else
 #define RUN_LOOPS   20
+#endif
+
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
 static void supervisor_mode_entry_point(void)
 {
@@ -140,7 +145,6 @@ static void supervisor_mode_entry_point(void)
     while (int_check_cnt < RUN_LOOPS);
     __disable_irq_s();
     printf("ECLIC S-Mode Demo finished sucessfully in %d loops\n", RUN_LOOPS);
-    while(1);
 }
 #endif
 
@@ -169,7 +173,6 @@ int main(int argc, char** argv)
     printf("Drop to S-Mode now\n\r");
     /* Drop to S mode */
     __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
-    while (1);
 #else
     printf("[ERROR]__TEE_PRESENT & __SPMP_PRESENT must be defined as 1 in <Device>.h!\r\n");
 #endif

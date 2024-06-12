@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include "insn.h"
 
+#ifndef CFG_HAS_VNICE
+#error "This example require CPU Vector NICE Demo feature"
+#endif
+
 void normal_case(uint32_t *addr_in1, uint32_t *addr_in2, uint32_t *addr_out)
 {
     unsigned char *pin1 = (unsigned char *)addr_in1;

@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include "nuclei_sdk_soc.h"
 
+#ifndef CFG_HAS_STACK_CHECK
+#error "This example require CPU Stack Check feature"
+#endif
+
 // Reserve 0x200 bytes for exception stack push/pop
 #ifndef __ICCRISCV__
 extern char __StackTop[];

@@ -22,6 +22,10 @@ long csr_instret(void)
 
 long time(void)
 {
+#if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
     return SysTimer_GetLoadValue() / SOC_TIMER_FREQ;
+#else
+#error "This example require CPU System Timer feature"
+#endif
 }
 
