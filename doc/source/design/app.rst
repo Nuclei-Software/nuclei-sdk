@@ -396,11 +396,6 @@ This `demo_dsp application`_ is used to demonstrate how to NMSIS-DSP API.
 
 .. note::
 
-    * From version 0.2.4, this demo is upgraded to a more complex version which
-      shows the usage of ``riscv_conv_xx`` functions, and ``DSP_ENABLE`` is changed
-      from ``OFF`` to ``ON`` by default.
-    * The GD32VF103 SoC doesn't has DSP enabled, so this SoC can only use NMSIS-DSP
-      library with DSP disabled, so please pass extra ``DSP_ENABLE=OFF`` when run make.
     * For other Nuclei Processor Core based SoC, please check whether it has DSP
       feature enabled to decide which kind of **NMSIS-DSP** library to use.
     * Even our NMSIS-DSP library with DSP disabled are also optimized, so it can

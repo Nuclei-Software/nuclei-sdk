@@ -1482,27 +1482,6 @@ APP_LDFLAGS
 
 This variable is similiar to **APP_COMMON_FLAGS** but used to pass extra app linker flags.
 
-.. _develop_buildsystem_var_pfloat:
-
-PFLOAT
-~~~~~~
-
-.. note::
-
-    * **Removed** in 0.5.0 release, no longer support it.
-    * **Deprecated** variable, please use :ref:`develop_buildsystem_var_stdclib` now
-    * ``NEWLIB=nano PFLOAT=1`` can be replaced by ``STDCLIB=newlib_small`` now
-
-.. _develop_buildsystem_var_newlib:
-
-NEWLIB
-~~~~~~
-
-.. note::
-
-    * **Removed** in 0.5.0 release, no longer support it.
-    * **Deprecated** variable, please use :ref:`develop_buildsystem_var_stdclib` now
-
 .. _develop_buildsystem_var_nogc:
 
 NOGC

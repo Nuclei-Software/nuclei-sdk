@@ -72,7 +72,7 @@ This is release version ``0.6.0-dev`` of Nuclei SDK, which is still in developme
   - Now disassemble elf will show no alias instructions
   - Add ``u600*/u900*/ux1000fd`` into support CORE list
   - Update and optimize toolchain support for Terapines ZCC Toolchain, which can provide better performance
-  - ``-mmemcpy-strategy=scalar`` option is replaced by ``-mstringop-strategy=scalar`` in official gcc 14, see
+  - In ``Build/toolchain/nuclei_gnu.mk``, ``-mmemcpy-strategy=scalar`` option is replaced by ``-mstringop-strategy=scalar`` in official gcc 14, see
     https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=4ae5a7336ac8e1ba57ee1e885b5b76ed86cdbfd5
 
 * RTOS
