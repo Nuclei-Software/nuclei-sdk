@@ -31,6 +31,7 @@ of each SoC, and ``nuclei_sdk_hal.h`` of each board.
 **For SoC firmware library APIs:**
 
 * You can find the **GD32VF103 SoC firmware library APIs** in ``SoC/gd32vf103/Common/Include``
+* You can find the **GD32VW55x SoC firmware library APIs** in ``SoC/gd32vw55x/Common/Include``
 * You can find the **Nuclei Eval SoC firmware library APIs** in ``SoC/evalsoc/Common/Include``
 
 If you just want to use SoC firmware library API, you just need to include ``nuclei_sdk_soc.h``,

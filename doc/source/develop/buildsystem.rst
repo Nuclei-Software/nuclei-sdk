@@ -696,6 +696,9 @@ Currently it has these cores supported as described in table
    n600      rv32imac   ilp32    nuclei-600-series
    n600f     rv32imafc  ilp32f   nuclei-600-series
    n600fd    rv32imafdc ilp32d   nuclei-600-series
+   u600      rv32imac   ilp32    nuclei-600-series
+   u600f     rv32imafc  ilp32f   nuclei-600-series
+   u600fd    rv32imafdc ilp32d   nuclei-600-series
    nx600     rv64imac   lp64     nuclei-600-series
    nx600f    rv64imafc  lp64f    nuclei-600-series
    nx600fd   rv64imafdc lp64d    nuclei-600-series
@@ -720,6 +723,24 @@ Currently it has these cores supported as described in table
 When **CORE** is selected, the **ARCH**, **ABI** and **TUNE** (optional) are set,
 and it might affect the compiler options in combination with :ref:`develop_buildsystem_var_archext`
 depended on the implementation of SoC build.mk.
+
+.. note::
+
+    * In Nuclei SDK, this **CORE** variable is just a **shorthand** to find a suitable **ARCH**,
+      **ABI** and **TUNE** for target SoC to pass to the compiler as described in above table.
+      So for example, **CORE=n307fd** equals **CORE=n300fd**, **CORE=n900fd** equals **CORE=n900fd**
+    * Nuclei CPU product name such as N310, NA300, NA900, NI900, N308 is just a name, since
+      the CPU itself is configurable, so the final **ARCH** and **ABI** is different according
+      to your configuration, you should find a proper base **CORE** name according to your CPU RTL
+      configuration, and if you have extra ISA not fit in this **CORE** name, you can pass it via
+      :ref:`develop_buildsystem_var_archext`, for example, if your CPU product is NA300, and **CPU_ISA**
+      after RTL configuration is ``rv32imafd_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_zfhmin_zicond_xxldspn3x``,
+      then you can set **CORE=n300fd**, **ARCH_EXT** can be set to empty **ARCH_EXT=**, or **ARCH_EXT=_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_zfhmin_zicond_xxldspn3x**, or
+      shorter **ARCH_EXT=_zca_zcb_zcf_zcmp_zcmt_zicond_xxldsp**, but a invalid **ARCH_EXT** could cause
+      a library not match issue due to toolchain can only distributed with limited multilib which can be checked
+      via ``riscv64-unknown-elf-gcc -print-multi-lib``, so please take care.
+    * For other CPU features such as TEE, ECLIC, TIMER, CACHE, CCM, SMP and etc, you should modify the
+      section **Processor and Core Peripheral Section** in your ``<Device.h>``, such as ``SoC/evalsoc/Common/Include/evalsoc.h``.
 
 Take ``SOC=evalsoc`` as example.
 

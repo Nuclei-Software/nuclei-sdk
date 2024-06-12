@@ -13,6 +13,9 @@ Use Nuclei SDK in Nuclei Studio
    If you are looking for Nuclei 100 series such as N100 support, you need to switch to
    ``develop_n100`` branch of this repository to try it out.
 
+   If you are evaluating Nuclei CPU, in future released **nuclei_gen**, you will be able
+   to use the generated Nuclei SDK, please see :ref:`design_soc_evalsoc_usage`.
+
    For Nuclei SDK 0.5.0 version and later ones, please use `Nuclei Studio 2023.10`_ or
    Nuclei RISC-V Toolchain/OpenOCD/QEMU 2023.10.
 

@@ -40,7 +40,7 @@ If you want to learn more about this evaluation SoC, please get the
 Supported Boards
 ----------------
 
-In Nuclei SDK, we support the following boards based on **Nuclei evalsoc** SoC, see:
+In Nuclei SDK, we support the following boards based on **Nuclei Evaluation SoC**, see:
 
 * :ref:`design_board_nuclei_fpga_eval`, default Board when this SoC selected.
 
@@ -49,10 +49,32 @@ In Nuclei SDK, we support the following boards based on **Nuclei evalsoc** SoC, 
 Usage
 -----
 
-If you want to use this **Nuclei evalsoc SoC** in Nuclei SDK, you need to set the
+.. note::
+
+    In latest CPU RTL generation flow, it will also generate an Nuclei SDK to match CPU
+    and EvalSoC RTL configuration, please use the generated Nuclei SDK to evaluate your
+    CPU and EvalSoC feature.
+
+    The generated Nuclei SDK by **nuclei_gen** will do the following tasks:
+
+    - Generate ``SoC/evalsoc/cpufeature.mk``: which will define **CORE**, **ARCH_EXT**, **QEMU_SOCCFG** or **SIMULATION** default value.
+    - Generate ``SoC/evalsoc/Common/Include/cpufeature.h``: which will define current cpu feature macros.
+    - Generate ``SoC/evalsoc/evalsoc.json``: which will define current qemu soc configuration according to the evalsoc and cpu configuration.
+    - Generate ``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/evalsoc.memory``: which will define the ilm/dlm/flash/ddr/sram base address and size.
+    - Modify ``SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg``: Mainly change ``workmem_base/workmem_size/flashxip_base/xipnuspi_base`` to adapt the evalsoc configuration.
+
+    If you want to use the generated Nuclei SDK by **nuclei_gen** In Nuclei Studio IDE, you need to zip it first,
+    and then **import** it using ``RV-Tools -> NPK Package Management`` in Nuclei Studio IDE's menu, and when
+    creating a IDE project using ``New Nuclei RISC-V C/C++ Project``, please select the correct sdk and version which
+    you can check it in the ``<SDK>/npk.yml`` file, and in the project example configuration wizard window, you should
+    click the **SDK gen by nuclei_gen**, and configure the **Nuclei RISC-V Core** and **ARCH Extensions**, **Nuclei Cache Extensions**
+    according to your configured CPU ISA, and CPU feature defined in generated ``cpufeature.h``.
+    Currently you still need to modify IAR linker script by yourself, it is not automatically modified.
+
+If you want to use this **Nuclei Evaluation SoC** in Nuclei SDK, you need to set the
 :ref:`develop_buildsystem_var_soc` Makefile variable to ``evalsoc``.
 
-Extra make variables supported only in this SoC:
+Extra make variables supported only in this SoC and used internally only by Nuclei, not designed for widely used:
   * **RUNMODE**: it is used internally by Nuclei, used to control ILM/DLM/ICache/DCache enable or disable
     via make variable, please check ``SoC/evalsoc/runmode.mk`` for details. It is not functional by default,
     unless you set a non-empty variable to this ``RUNMODE`` variable, it can be used with different **ILM_EN/DLM_EN/IC_EN/DC_EN/CCM_EN**.
@@ -60,13 +82,13 @@ Extra make variables supported only in this SoC:
   * **LDSPEC_EN**: it is used internally by Nuclei, used to control load speculative enable or disable, introduced in 0.6.0 release.
   * **BPU_EN**: it is used internally by Nuclei, used to control branch prediction unit enable or disable, introduced in 0.6.0 release.
 
-
 .. code-block:: shell
 
     # Choose SoC to be evalsoc
     # the following command will build application
     # using default evalsoc SoC based board
     # defined in Build System and application Makefile
+    make SOC=evalsoc info # you can check current working SDK configuration information
     make SOC=evalsoc clean
     make SOC=evalsoc all
 

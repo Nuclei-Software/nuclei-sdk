@@ -392,8 +392,6 @@ This `demo_dsp application`_ is used to demonstrate how to NMSIS-DSP API.
 
 * Mainly show how we can use DSP library and header files.
 * It mainly demo the ``riscv_conv_xx`` functions and its reference functions
-* If your Nuclei Processor Core has DSP feature enabled, you can pass extra
-  ``DSP_ENABLE=ON`` in your make command to use NMSIS-DSP library with DSP enabled.
 * By default, the application will use NMSIS-DSP library with DSP enabled.
 
 .. note::
@@ -504,32 +502,8 @@ to do spinlock in this example.
 .. note::
 
     * It doesn't work with gd32vf103 processor.
-    * Need to enable I/D Cache in <Device.h> if I/D Cache present in CPU.
+    * **MUST** Need to enable I/D Cache in <Device.h> if I/D Cache present in CPU.
     * It need at least a 2-Core SMP CPU
-
-Need to change ``__ICACHE_PRESENT``, ``__DCACHE_PRESENT`` and ``__CCM_PRESENT`` to 1 in
-``SoC/evalsoc/Common/Include/evalsoc.h`` before run this application, from 0.4.0 release,
-for evalsoc/demosoc, ``__ICACHE_PRESENT`` and ``__DCACHE_PRESENT`` are default set to 1.
-
-.. code-block:: diff
-
-    diff --git a/SoC/evalsoc/Common/Include/evalsoc.h b/SoC/evalsoc/Common/Include/evalsoc.h
-    index 256cc614..fc9934ae 100644
-    --- a/SoC/evalsoc/Common/Include/evalsoc.h
-    +++ b/SoC/evalsoc/Common/Include/evalsoc.h
-    @@ -243,9 +243,9 @@ extern volatile IRegion_Info_Type SystemIRegionInfo;
-     #define __PMP_ENTRY_NUM           16                    /*!< Set to 8 or 16, the number of PMP entries */
-
-     #ifndef RUNMODE_CONTROL
-     -#define __ICACHE_PRESENT          0                     /*!< Set to 1 if I-Cache is present */
-     -#define __DCACHE_PRESENT          0                     /*!< Set to 1 if D-Cache is present */
-     -#define __CCM_PRESENT             0                     /*!< Set to 1 if Cache Control and Mantainence Unit is present */
-     +#define __ICACHE_PRESENT          1                     /*!< Set to 1 if I-Cache is present */
-     +#define __DCACHE_PRESENT          1                     /*!< Set to 1 if D-Cache is present */
-     +#define __CCM_PRESENT             1                     /*!< Set to 1 if Cache Control and Mantainence Unit is present */
-     #else // RUNMODE_CONTROL is defined in SoC/evalsoc/runmode.mk, for internal usage not intend for widely usage
-     #define __ICACHE_PRESENT          RUNMODE_IC_EN         /*!< Set to 1 if I-Cache is present */
-     #define __DCACHE_PRESENT          RUNMODE_DC_EN         /*!< Set to 1 if D-Cache is present */
 
 **How to run this application:**
 

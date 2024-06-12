@@ -44,6 +44,7 @@ This is release version ``0.6.0-dev`` of Nuclei SDK, which is still in developme
 
 * SoC
 
+  - Redesign ``evalsoc`` reference SoC support software for better evalsoc and nuclei cpu support, see :ref:`design_soc_evalsoc_usage`
   - Remove ``-msave-restore`` in npk.yml to fix dhrystone benchmark value is low in Nuclei Studio issue.
   - No need to get system clock using ``get_cpu_freq`` for gd32vf103.
   - Update standard c library and arch ext prompt for soc npk.yml for better hints.
@@ -61,14 +62,15 @@ This is release version ``0.6.0-dev`` of Nuclei SDK, which is still in developme
     load speculative, L2 cache and BPU enable or disable, which is only internally used.
   - Move eclic and interrupt and exception initialization from startup asm code into premain c code for evalsoc.
   - Optimize cpu startup when ECLIC not present it will not be initialized, which is helpful for CPU without ECLIC unit.
-  - Fix ``SystemIRegionInfo`` variable set logic for SMP bootup case, it must be set after L1/L2 cache and SMP enable in evalsoc.
+  - evalsoc ``SystemIRegionInfo`` variable is removed now, if you want to access to the base address of cpu internal device, you can use ``*_BASEADDR``,
+    such as ``__CIDU_BASEADDR``.
   - Introduce an IAR startup asm code called ``IAR/startup.S`` for evalsoc to support SMP boot, and for SMP stack setup,
     different IAR linker script is required, see the iar linker script provided in ``smphello`` or ``freertos/smpdemo``.
 
 * Build System
 
   - Now disassemble elf will show no alias instructions
-  - Add ``ux1000fd`` into support CORE list
+  - Add ``u600*/u900*/ux1000fd`` into support CORE list
   - Update and optimize toolchain support for Terapines ZCC Toolchain, which can provide better performance
   - ``-mmemcpy-strategy=scalar`` option is replaced by ``-mstringop-strategy=scalar`` in official gcc 14, see
     https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=4ae5a7336ac8e1ba57ee1e885b5b76ed86cdbfd5
