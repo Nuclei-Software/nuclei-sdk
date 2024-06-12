@@ -36,10 +36,10 @@ SILENT ?=
 RTOS ?=
 ## Available choices:
 ##### Using newlib
-### newlib_full: Normal newlib library with full newlib feature, to replace NEWLIB!=nano
+### newlib_full: Normal newlib library with full newlib feature
 ### newlib_fast: Newlib-nano library with printf and scanf float feature
-### newlib_small: Newlib-nano library with printf float feature, to replace NEWLIB=nano PFLOAT=1
-### newlib_nano: Newlib-nano library without float printf/scanf feature, to replace NEWLIB=nano PFLOAT=0
+### newlib_small: Newlib-nano library with printf float feature
+### newlib_nano: Newlib-nano library without float printf/scanf feature
 ##### Using Nuclei C Runtime library
 ### libncrt_fast: Nuclei C Runtime library, favor speed at the expense of size
 ### libncrt_balanced: balanced, full feature
