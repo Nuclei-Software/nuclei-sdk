@@ -243,7 +243,8 @@ typedef enum EXCn {
 // CPU IREGION Base Address
 // To set IREGION base, just define macro CFG_IREGION_BASE_ADDR in cpufeature.h
 #ifndef CFG_IREGION_BASE_ADDR
-// it is defined in system_evalsoc.c, you should not use this variable
+// it is defined in system_evalsoc.c, you should not use this variable CpuIRegionBase
+// SystemIRegionInfo variable in previous release is removed, you should avoid to use it
 // you should use macro __IREGION_BASEADDR defined in evalsoc.h
 extern volatile unsigned long CpuIRegionBase;
 #define CPU_IREGION_BASE            CpuIRegionBase
