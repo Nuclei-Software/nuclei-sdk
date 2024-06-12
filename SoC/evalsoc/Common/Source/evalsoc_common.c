@@ -16,6 +16,7 @@ __STATIC_FORCEINLINE uint64_t get_timer_freq(void)
 #endif
 uint32_t measure_cpu_freq(uint32_t n)
 {
+#if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
     uint32_t start_mcycle, delta_mcycle;
     uint32_t start_mtime, delta_mtime;
     uint64_t mtime_freq = get_timer_freq();
@@ -34,6 +35,11 @@ uint32_t measure_cpu_freq(uint32_t n)
 
     return (delta_mcycle / delta_mtime) * mtime_freq
            + ((delta_mcycle % delta_mtime) * mtime_freq) / delta_mtime;
+#else
+    // When system timer not exist, just return 1000000Hz
+    #warning "measure_cpu_freq function require system timer present, if you are using this, it will not work"
+    return 1000000;
+#endif
 }
 #if defined ( __GNUC__ )
 #pragma GCC pop_options
@@ -68,11 +74,15 @@ void delay_1ms(uint32_t count)
     uint64_t start_mtime, delta_mtime;
     uint64_t delay_ticks = (SOC_TIMER_FREQ * (uint64_t)count) / 1000;
 
+#if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
     start_mtime = SysTimer_GetLoadValue();
 
     do {
         delta_mtime = SysTimer_GetLoadValue() - start_mtime;
     } while (delta_mtime < delay_ticks);
+#else
+    #warning "delay_1ms function require system timer present, if you are using this, it will not work"
+#endif
 }
 
 void simulation_exit(int status)

@@ -31,6 +31,9 @@ extern "C" {
 
 //#define CFG_HAS_IDU
 //#define CFG_HAS_TEE
+#define CFG_HAS_STACK_CHECK
+#define CFG_HAS_NICE
+#define CFG_HAS_VNICE
 
 #define CFG_HAS_ICACHE
 #define CFG_HAS_DCACHE

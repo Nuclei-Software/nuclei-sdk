@@ -268,12 +268,16 @@ extern volatile unsigned long CpuIRegionBase;
 
 // CPU System Timer Configuration
 // To enable CPU System Timer, just define macro CFG_TMR_PRIVATE in cpufeature.h
-#ifdef CFG_TMR_PRIVATE
+#if defined(CFG_TMR_PRIVATE) || defined(CFG_TMR_BASE_ADDR)
 #define __SYSTIMER_PRESENT          1
 #else
 #define __SYSTIMER_PRESENT          0
 #endif
+#ifdef CFG_TMR_BASE_ADDR    // Maybe using timer out of cpu for evalsoc
+#define __SYSTIMER_BASEADDR         (CFG_TMR_BASE_ADDR)
+#else
 #define __SYSTIMER_BASEADDR         (__IREGION_BASEADDR + IREGION_TIMER_OFS)
+#endif
 #define __CLINT_TIMER_BASEADDR      (__SYSTIMER_BASEADDR + 0x1000)
 
 // CIDU Configuration
@@ -349,6 +353,14 @@ extern volatile unsigned long CpuIRegionBase;
 #define __NICE_PRESENT              1
 #else
 #define __NICE_PRESENT              0
+#endif
+
+// VNICE Configuration
+// To enable Vector NICE, just define macro CFG_HAS_VNICE in cpufeature.h
+#ifdef CFG_HAS_VNICE
+#define __VNICE_PRESENT             1
+#else
+#define __VNICE_PRESENT             0
 #endif
 
 #ifndef __INC_INTRINSIC_API
