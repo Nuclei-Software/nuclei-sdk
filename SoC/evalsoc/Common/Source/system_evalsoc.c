@@ -612,6 +612,9 @@ void Interrupt_Init(void)
         /* Global Configuration about STH */
         ECLIC_SetSth(0);
 #endif
+#if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
+        EnableSUCCM();
+#endif
 #endif
     } else {
         /* Set as CLINT interrupt mode */
