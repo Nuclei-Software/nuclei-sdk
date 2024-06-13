@@ -145,6 +145,11 @@ static void supervisor_mode_entry_point(void)
     while (int_check_cnt < RUN_LOOPS);
     __disable_irq_s();
     printf("ECLIC S-Mode Demo finished sucessfully in %d loops\n", RUN_LOOPS);
+#ifdef CFG_SIMULATION
+    // directly exit if in nuclei internally simulation
+    SIMULATION_EXIT(0);
+#endif
+    while(1);
 }
 #endif
 

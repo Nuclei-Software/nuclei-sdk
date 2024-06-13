@@ -62,9 +62,8 @@ static void spmp_violation_fault_handler(unsigned long scause, unsigned long sp)
 #ifdef CFG_SIMULATION
     // directly exit if in nuclei internally simulation
     SIMULATION_EXIT(0);
-#else
-    while(1);
 #endif
+    while(1);
 }
 
 static void __PMP_PROTECT protected_execute(void)
@@ -96,6 +95,11 @@ static void supervisor_mode_entry_point(void)
     protected_data[0] = 0xFF;
 #endif
     printf("Won't run here if violates L U\\R\\W\\X permission check!\r\n");
+#ifdef CFG_SIMULATION
+    // directly exit if in nuclei internally simulation
+    SIMULATION_EXIT(0);
+#endif
+    while(1);
 }
 
 int main(void)
