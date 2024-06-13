@@ -626,6 +626,9 @@ typedef struct {
 
 // Misc
 
+// Only used by Nuclei Internally, please dont use it
+#define SIMULATION_EXIT(ret)    { UART0->RXFIFO = (ret); UART0->TXFIFO = 4; }
+
 extern uint32_t get_cpu_freq(void);
 extern void delay_1ms(uint32_t count);
 

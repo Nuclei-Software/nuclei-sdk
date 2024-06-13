@@ -95,8 +95,7 @@ void simulation_exit(int status)
     }
     uart_write(UART0, '\n');
     // pass exit status via rxfifo register
-    UART0->RXFIFO = status;
-    uart_write(UART0, 4);
+    SIMULATION_EXIT(status);
 #if defined(SIMULATION_MODE)
 #if SIMULATION_MODE == SIMULATION_MODE_QEMU
     #define QEMU_VIRT_TEST_BASE 0x100000
