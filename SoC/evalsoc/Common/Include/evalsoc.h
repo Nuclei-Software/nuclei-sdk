@@ -317,9 +317,13 @@ extern volatile unsigned long CpuIRegionBase;
 #define __TEE_PRESENT               1
 #define __SPMP_PRESENT              1
 #define __SPMP_ENTRY_NUM            CFG_PMP_ENTRY_NUM
+#ifdef CFG_HAS_SMPU
+#define __SMPU_PRESENT              1
+#endif
 #else
 #define __TEE_PRESENT               0
 #define __SPMP_PRESENT              0
+#define __SMPU_PRESENT              0
 #define __SPMP_ENTRY_NUM            0
 #endif
 
@@ -627,7 +631,9 @@ typedef struct {
 // Misc
 
 // Only used by Nuclei Internally, please dont use it
-#define SIMULATION_EXIT(ret)    { __WMB(); UART0->RXFIFO = (ret); UART0->TXFIFO = 4; }
+#define SIMULATION_EXIT(ret)    { __WMB(); UART0->RXFIFO = (ret); \
+                                    while (uart->TXFIFO & UART_TXFIFO_FULL);
+                                    UART0->TXFIFO = 4; }
 
 extern uint32_t get_cpu_freq(void);
 extern void delay_1ms(uint32_t count);
