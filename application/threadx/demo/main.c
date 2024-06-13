@@ -399,5 +399,12 @@ UINT    status;
         /* Check status.  */
         if (status != TX_SUCCESS)
             break;
+
+#ifdef CFG_SIMULATION
+        if (thread_7_counter > 2) {
+            // directly exit if in nuclei internally simulation
+            SIMULATION_EXIT(0);
+        }
+#endif
     }
 }

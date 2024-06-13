@@ -50,6 +50,12 @@ void task3(void* args)
         cnt++;
         printf("task3 is running... %d\r\n", cnt);
         OSTimeDlyHMSM(0, 0, 0, 250);
+#ifdef CFG_SIMULATION
+        if (cnt > 2) {
+            // directly exit if in nuclei internally simulation
+            SIMULATION_EXIT(0);
+        }
+#endif
     }
 }
 

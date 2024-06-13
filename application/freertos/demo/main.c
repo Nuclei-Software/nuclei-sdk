@@ -169,6 +169,12 @@ static void vExampleTimerCallback(TimerHandle_t xTimer)
     execute periodically. */
     static int cnt = 0;
     printf("timers Callback %d\r\n", cnt++);
+#ifdef CFG_SIMULATION
+    if (cnt > 2) {
+        // directly exit if in nuclei internally simulation
+        SIMULATION_EXIT(0);
+    }
+#endif
 }
 
 void vApplicationTickHook(void)

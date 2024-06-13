@@ -54,9 +54,8 @@ static void pmp_violation_fault_handler(unsigned long mcause, unsigned long sp)
         default: break;
     }
 #ifdef CFG_SIMULATION
-    // directly exit if in SIMULATION
-    extern void simulation_exit(int status);
-    simulation_exit(0);
+    // directly exit if in nuclei internally simulation
+    SIMULATION_EXIT(0);
 #else
     while(1);
 #endif

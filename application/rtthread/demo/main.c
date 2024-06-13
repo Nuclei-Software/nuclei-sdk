@@ -60,5 +60,11 @@ int main(void)
     while (1) {
         rt_kprintf("Main thread count: %d\n", count++);
         rt_thread_mdelay(500);
+#ifdef CFG_SIMULATION
+        if (count > 2) {
+            // directly exit if in nuclei internally simulation
+            SIMULATION_EXIT(0);
+        }
+#endif
     }
 }
