@@ -207,7 +207,7 @@ run_evalsoc_zcc:
     HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
   parallel:
     matrix:
-      - DOWNLOAD: [ "ilm", "flashxip" ]
+      - DOWNLOAD: [ "sram", "flashxip" ]
         ARCH_EXT: [ "", "_zca_zcb_zcmp_zcmt" ]
         STDCLIB: ["newlib_small"]
   script:
