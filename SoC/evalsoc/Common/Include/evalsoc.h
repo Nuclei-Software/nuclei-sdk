@@ -631,8 +631,8 @@ typedef struct {
 // Misc
 
 // Only used by Nuclei Internally, please dont use it
-#define SIMULATION_EXIT(ret)    { __WMB(); UART0->RXFIFO = (ret); \
-                                    while (uart->TXFIFO & UART_TXFIFO_FULL);
+#define SIMULATION_EXIT(ret)    { __WMB(); UART0->RXFIFO = (ret);       \
+                                    while (UART0->TXFIFO & (1<<31));    \
                                     UART0->TXFIFO = 4; }
 
 extern uint32_t get_cpu_freq(void);
