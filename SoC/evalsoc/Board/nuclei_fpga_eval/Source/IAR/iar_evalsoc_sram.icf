@@ -1,14 +1,14 @@
 //////////////////////////////////////////////////////////////////////
 // RISC-V ilink configuration file
-// for the Nuclei Evaluation SoC ILM Linker File
+// for the Nuclei Evaluation SoC SRAM Linker File
 // This is for N100 series
 
 define exported symbol _link_file_version_2 = 1;
 
 define memory mem with size = 4G;
 
-define region ROM_region32 = mem:[from 0x80000000 to 0x8000FFFF];
-define region RAM_region32 = mem:[from 0x90000000 to 0x9000FFFF];
+define region ROM_region32 = mem:[from 0xA0000000 size 0x20000];
+define region RAM_region32 = mem:[from 0xA0020000 size 0x20000];
 
 initialize by copy { rw };
 do not initialize  { section *.noinit };

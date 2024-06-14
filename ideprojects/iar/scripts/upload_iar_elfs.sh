@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# You can test different download mode such as ilm,flashxip,sram
-DOWNLOAD=${1:-ilm}
+# You can test different download mode such as sram,flashxip
+DOWNLOAD=${1:-sram}
 # TODO: Change CORE is not yet supported
-CORE=n300
+CORE=n100
 UPLOAD=${UPLOAD:-1}
 
 # TODO: Change this ROOTs according to your environment settings

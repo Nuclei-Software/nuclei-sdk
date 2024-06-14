@@ -654,7 +654,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>88</hasPrio>
+                <hasPrio>1</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>
@@ -755,7 +755,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_ilm.icf</state>
+                    <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_sram.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -2184,7 +2184,7 @@
                         <group>
                             <name>IAR</name>
                             <file>
-                                <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_ilm.icf</name>
+                                <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_sram.icf</name>
                             </file>
                         </group>
                     </group>

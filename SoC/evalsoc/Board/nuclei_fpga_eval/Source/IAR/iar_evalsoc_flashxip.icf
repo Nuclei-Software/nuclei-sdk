@@ -7,9 +7,9 @@ define exported symbol _link_file_version_2 = 1;
 
 define memory mem with size = 4G;
 
-define region ROM_region32 = mem:[from 0x20000000 to 0x203FFFFF];
-define region ILM_region32 = mem:[from 0x80000000 to 0x8000FFFF];
-define region RAM_region32 = mem:[from 0x90000000 to 0x9000FFFF];
+define region ROM_region32 = mem:[from 0x20000000 size 0x800000];
+define region ILM_region32 = mem:[from 0x80000000 size 0x10000];
+define region RAM_region32 = mem:[from 0xA0000000 size 0x20000];
 
 initialize by copy { rw };
 
@@ -38,7 +38,6 @@ keep { section .rti_fn* };
 "VECTORTBL" : place at address mem:0x80000100 { section .mintvec };
 // Place exception entry and its code at fixed address which is RTL configured
 "EXCPENTRY" : place at address mem:0x80000180 { section .mexctrap };
-
 
 "ROM32":place in ROM_region32        { ro,
                                        block RTT_INIT_FUNC,
