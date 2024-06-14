@@ -324,7 +324,7 @@ create the **<NUCLEI_SDK_ROOT>/Build/Makefile.global** as below:
     * If you create the **Makefile.global** like above sample code, you will also be able
       to use Nuclei N100 SDK build system as usually, it will only change the default **SOC**,
       **BOARD** and **DOWNLOAD**, but you can still override the default variable using
-      make command, such as ``make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm``
+      make command, such as ``make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=sram``
 
 .. _develop_buildsystem_makefile_local:
 
@@ -567,9 +567,9 @@ currently it has these modes supported as described in table
 
    * - **DOWNLOAD**
      - Description
-   * - ilm
-     - | Program will be download into ilm/ram and
-       | run directly in ilm/ram, program will lost when poweroff
+   * - sram
+     - | Program will be download into sram and
+       | run directly in sram, program will lost when poweroff
    * - flashxip
      - Program will to be download into flash and run directly in flash
 
@@ -618,7 +618,7 @@ depended on the implementation of SoC build.mk.
 
 Take ``SOC=evalsoc`` as example.
 
-- If **CORE=n100zmmul ARCH_EXT=_zca_zcb_zcmp_zcmt**, then ``ARCH=rv32i_zmmul_zca_zcb_zcmp_zcmt, ABI=ilp32 TUNE=nuclei-100-series``. 
+- If **CORE=n100zmmul ARCH_EXT=_zca_zcb_zcmp_zcmt**, then ``ARCH=rv32i_zmmul_zca_zcb_zcmp_zcmt, ABI=ilp32 TUNE=nuclei-100-series``.
   riscv arch related compile and link options will be passed, for this case, it will be
   ``-march=rv32i_zmmul_zca_zcb_zcmp_zcmt -mabi=ilp32 -mtune=nuclei-100-series``.
 
@@ -849,7 +849,7 @@ The banner message looks like this:
 .. code-block:: c
 
     Nuclei N100 SDK Build Time: Jul 23 2021, 10:22:50
-    Download Mode: ILM
+    Download Mode: SRAM
     CPU Frequency 15999959 Hz
 
 
@@ -1189,7 +1189,7 @@ ld options ``-Wl,--defsym=__STACK_SIZE=$(STACKSZ)`` to overwrite the default val
 
 For SMP version, stack size space need to reserve **STACKSZ** x SMP Core Count size.
 
-You can refer to ``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld`` for smp version.
+You can refer to ``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_sram.ld`` for smp version.
 
 .. _develop_buildsystem_var_heapsz:
 

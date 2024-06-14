@@ -49,13 +49,29 @@ In Nuclei N100 SDK, we support the following boards based on **Nuclei evalsoc** 
 Usage
 -----
 
+.. note::
+
+    In latest N100 CPU RTL generation flow, it will also generate an Nuclei N100 SDK to match CPU
+    and EvalSoC RTL configuration, please use the generated Nuclei N100 SDK to evaluate your
+    CPU and EvalSoC feature.
+
+    The generated Nuclei SDK by **nuclei_gen** will do the following tasks:
+
+    - Generate ``SoC/evalsoc/cpufeature.mk``: which will define **CORE**, **ARCH_EXT**, **QEMU_SOCCFG** or **SIMULATION** default value.
+    - Generate ``SoC/evalsoc/Common/Include/cpufeature.h``: which will define current cpu feature macros.
+    - Generate ``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/evalsoc.memory``: which will define the sram/flash base address and size and mtvt and mtvec address.
+    - Modify ``SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg``: Mainly change ``workmem_base/workmem_size/flashxip_base/xipnuspi_base`` to adapt the evalsoc configuration.
+
+    If you want to use the generated Nuclei SDK by **nuclei_gen** In Nuclei Studio IDE, you need to zip it first,
+    and then **import** it using ``RV-Tools -> NPK Package Management`` in Nuclei Studio IDE's menu, and when
+    creating a IDE project using ``New Nuclei RISC-V C/C++ Project``, please select the correct sdk and version which
+    you can check it in the ``<SDK>/npk.yml`` file, and in the project example configuration wizard window, you should
+    click the **SDK gen by nuclei_gen**, and configure the **Nuclei RISC-V Core** and **ARCH Extensions**, **Nuclei Cache Extensions**
+    according to your configured CPU ISA, and CPU feature defined in generated ``cpufeature.h``.
+    Currently you still need to modify IAR linker script by yourself, it is not automatically modified.
+
 If you want to use this **Nuclei evalsoc SoC** in Nuclei N100 SDK, you need to set the
 :ref:`develop_buildsystem_var_soc` Makefile variable to ``evalsoc``.
-
-Extra make variables supported only in this SoC:
-  * **RUNMODE**: it is used internally by Nuclei CPU team, used to control ILM/DLM/ICache/DCache enable or disable
-    via make variable, please check ``SoC/evalsoc/runmode.mk`` for details. It is not functional by default,
-    unless you set a non-empty variable to this RUNMODE variable.
 
 .. code-block:: shell
 

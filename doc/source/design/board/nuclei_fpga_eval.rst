@@ -96,12 +96,13 @@ For **Nuclei FPGA Evaluation board**:
 
   - You can find default used linker scripts for different download modes in ``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/``.
 
-    - ``gcc_evalsoc_ilm.ld``: Linker script file for ``DOWNLOAD=ilm``
+    - ``evalsoc.memory``: Memory information for evalsoc
+    - ``gcc_evalsoc_sram.ld``: Linker script file for ``DOWNLOAD=sram``
     - ``gcc_evalsoc_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip``
 
   - If you want to specify your own modified linker script, you can follow steps described in :ref:`develop_appdev_linkscript`
-  - If you want to change the base address or size of ILM, DLM, RAM, ROM or Flash of linker script file,
-    you can adapt the `Memory Section`_ in the linker script file it according to your SoC memory information.
+  - If you want to change the base address or size of SRAM, FlashXIP of linker script file,
+    you can adapt the ``evalsoc.memory`` file.
 
 * **CORE** support all the cores list in :ref:`develop_buildsystem_var_core`
 
@@ -113,32 +114,31 @@ you just need to use this **SOC** and **BOARD** variables.
 .. code-block:: shell
 
     ### For evalsoc
-    # Clean the application with DOWNLOAD=ilm CORE=n100
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n100 clean
-    # Build the application with DOWNLOAD=ilm CORE=n100
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n100 all
-    # Upload the application using openocd and gdb with DOWNLOAD=ilm CORE=n100
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n100 upload
-    # Debug the application using openocd and gdb with DOWNLOAD=ilm CORE=n100
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n100 debug
+    # Clean the application with DOWNLOAD=sram CORE=n100
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=sram CORE=n100 clean
+    # Build the application with DOWNLOAD=sram CORE=n100
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=sram CORE=n100 all
+    # Upload the application using openocd and gdb with DOWNLOAD=sram CORE=n100
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=sram CORE=n100 upload
+    # Debug the application using openocd and gdb with DOWNLOAD=sram CORE=n100
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=sram CORE=n100 debug
     ### For evalsoc
-    # Clean the application with DOWNLOAD=ilm CORE=n100
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n100 clean
-    # Upload the application using openocd and gdb with DOWNLOAD=ilm CORE=n100
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n100 upload
+    # Clean the application with DOWNLOAD=sram CORE=n100
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=sram CORE=n100 clean
+    # Upload the application using openocd and gdb with DOWNLOAD=sram CORE=n100
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=sram CORE=n100 upload
 
 If you want to try other toolchain, such as nuclei llvm or terapines zcc, you can pass an extra :ref:`develop_buildsystem_var_toolchain` make variable.
 
 .. note::
 
-   * ``demosoc`` support is removed, please use ``evalsoc`` now.
    * You can change the value passed to **CORE** according to
      the Nuclei Demo SoC Evaluation Core the Nuclei FPGA SoC you have.
    * You can also change the value passed to **DOWNLOAD** to run
      program in different modes.
    * The FreeRTOS and UCOSII demos maybe not working in ``flashxip``
      download mode in Nuclei FPGA board due to program running in Flash is really too slow.
-     If you want to try these demos, please use ``ilm`` download mode.
+     If you want to try these demos, please use ``sram`` download mode.
 
 .. _Nuclei FPGA Evaluation Kit Board Documents: https://nucleisys.com/developboard.php
 .. _Memory Section: https://sourceware.org/binutils/docs/ld/MEMORY.html

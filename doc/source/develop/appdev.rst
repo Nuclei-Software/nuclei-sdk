@@ -20,7 +20,7 @@ To develop a Nuclei N100 SDK application from scratch, you can do the following 
 
        TARGET = your_target_name
 
-       NUCLEI_SDK_ROOT = path/to/your_nuclei_sdk_root
+       NUCLEI_SDK_ROOT = path/to/your_nuclei_n100_sdk_root
 
        SRCDIRS = .
 
