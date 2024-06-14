@@ -191,8 +191,8 @@ typedef enum EXCn {
 #define __TIMER_PRESENT             0
 #endif
 
-#define __Vendor_SysTickConfig    0                     /*!< Set to 1 if different SysTick Config is used */
-#define __Vendor_EXCEPTION        0                     /*!< Set to 1 if vendor exception hander is present */
+#define __Vendor_SysTickConfig      0                     /*!< Set to 1 if different SysTick Config is used */
+#define __Vendor_EXCEPTION          0                     /*!< Set to 1 if vendor exception hander is present */
 
 /** @} */ /* End of group Configuration_of_NMSIS */
 
@@ -204,7 +204,11 @@ typedef enum EXCn {
 
 /* ========================================  Start of section using anonymous unions  ======================================== */
 
+#ifdef EVALSOC_RTC_FREQ
+#define RTC_FREQ                    EVALSOC_RTC_FREQ
+#else
 #define RTC_FREQ                    32768
+#endif
 // The TIMER frequency is just the RTC frequency
 #define SOC_TIMER_FREQ              RTC_FREQ
 /* =========================================================================================================================== */
