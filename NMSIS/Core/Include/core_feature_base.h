@@ -370,43 +370,61 @@ __STATIC_FORCEINLINE void __disable_irq(void)
  * \brief   Read whole 32 bits value of mcycle counter
  * \details This function will read the whole 32 bits of MCYCLE register for N100
  * \return  The whole 32 bits value of MCYCLE
- * \remarks mcycle in N100 is only 24 bits long, so upper bits are all zeros
+ * \remarks
+ * - mcycle in N100 is only 24 bits long, so upper bits are all zeros
+ * - when performance monitor unit not present, this function just return 0
  */
 __STATIC_FORCEINLINE uint32_t __get_rv_cycle(void)
 {
+#if defined(__PMON_PRESENT) && (__PMON_PRESENT == 1)
     volatile uint32_t full;
 
     full = __RV_CSR_READ(CSR_MCYCLE);
     return full;
+#else
+    return 0;
+#endif
 }
 
 /**
  * \brief   Read whole 32 bits value of machine instruction-retired counter
  * \details This function will read the whole 32 bits of MINSTRET register
  * \return  The whole 32 bits value of MINSTRET
- * \remarks minstret in N100 is only 24 bits long, so upper bits are all zeros
+ * \remarks
+ * - minstret in N100 is only 24 bits long, so upper bits are all zeros
+ * - when performance monitor unit not present, this function just return 0
  */
 __STATIC_FORCEINLINE uint32_t __get_rv_instret(void)
 {
+#if defined(__PMON_PRESENT) && (__PMON_PRESENT == 1)
     volatile uint32_t full;
 
     full = __RV_CSR_READ(CSR_MINSTRET);
     return full;
+#else
+    return 0;
+#endif
 }
 
 /**
  * \brief   Read whole 32 bits value of real-time clock
  * \details This function will read the whole 32 bits of MTIME register
  * \return  The whole 32 bits value of MTIME CSR
- * \remarks time in N100 is only 24 bits long, so upper bits are all zeros
+ * \remarks
+ * - time in N100 is only 24 bits long, so upper bits are all zeros
+ * - when timer unit not present, this function just return 0
  * \attention this is using N100 MTIME CSR
  */
 __STATIC_FORCEINLINE uint32_t __get_rv_time(void)
 {
+#if defined(__TIMER_PRESENT) && (__TIMER_PRESENT == 1)
     volatile uint32_t full;
 
     full = __RV_CSR_READ(CSR_MTIME);
     return full;
+#else
+    return 0;
+#endif
 }
 
 /**
