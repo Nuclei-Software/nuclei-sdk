@@ -2,16 +2,6 @@
 
 /* *_MEMROY_SIZE must be numerical only such as 0x10000 or 65536 */
 
-/* ILM Memory Information */
-ILM_MEMORY_PRESENT = 1;
-ILM_MEMORY_BASE = 0x80000000;
-ILM_MEMORY_SIZE = 0x10000;
-
-/* DLM Memory Information */
-DLM_MEMORY_PRESENT = 1;
-DLM_MEMORY_BASE = 0x90000000;
-DLM_MEMORY_SIZE = 0x10000;
-
 /* SpiFlash Memory Information */
 FLASH_MEMORY_PRESENT = 1;
 FLASH_MEMORY_BASE = 0x20000000;
