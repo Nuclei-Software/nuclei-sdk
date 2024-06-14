@@ -140,6 +140,7 @@ void SystemInit(void)
 // Define this will reduce code size and less debug message when exception happened
 //#define DISABLE_EXCEPTION_DEBUG
 
+#if defined(__IRQC_PRESENT) && (__IRQC_PRESENT == 1)
 extern __WEAK void irqc_mtip_handler(void);
 extern __WEAK void irqc_msip_handler(void);
 extern __WEAK void irqc_uart0_handler(void);
@@ -183,6 +184,9 @@ static const __fp vector_base[32] __USED __attribute__((section (".mintvec"))) =
     default_intexc_handler,     /* irq 30,  ext_irq 28      */
     default_intexc_handler      /* irq 31,  ext_irq 29      */
 };
+#endif
+
+#if defined(__EXCP_PRESENT) && (__EXCP_PRESENT == 1)
 
 /* TODO: Using default exception handling code provided by NMSIS Device Template.
  * If you want to disable it and use your own one, you can implement Exception_Init and core_exception_handler function
@@ -351,6 +355,8 @@ __WEAK void Exception_Init(void)
 
 #endif
 
+#endif
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
 
 /** Banner Print for Nuclei SDK */
@@ -378,6 +384,7 @@ void Interrupt_Init(void)
 {
 }
 
+#if defined(__IRQC_PRESENT) && (__IRQC_PRESENT == 1)
 /**
  * \brief  Initialize a specific IRQ and register the handler
  * \details
@@ -400,6 +407,7 @@ int32_t IRQC_Register_IRQ(IRQn_Type IRQn, void* handler)
     IRQC_EnableIRQ(IRQn);
     return 0;
 }
+#endif
 
 /**
  * \brief do the init for trap
@@ -427,9 +435,13 @@ void _premain_init(void)
     /* Display banner after UART initialized */
     SystemBannerPrint();
     /* Initialize exception default handlers */
+#if defined(__EXCP_PRESENT) && (__EXCP_PRESENT == 1)
     Exception_Init();
+#endif
     /* Interrupt initialization, mainly MTH and NLBIT */
+#if defined(__IRQC_PRESENT) && (__IRQC_PRESENT == 1)
     Interrupt_Init();
+#endif
     Trap_Init();
 }
 

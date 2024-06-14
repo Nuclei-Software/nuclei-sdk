@@ -16,8 +16,8 @@
  * limitations under the License.
  */
 /******************************************************************************
- * @file     gcc_evalsoc_ilm.ld
- * @brief    GNU Linker Script for Nuclei N/NX based device in ilm Download Mode
+ * @file     gcc_evalsoc_sram.ld
+ * @brief    GNU Linker Script for Nuclei N/NX based device in sram Download Mode
  * @version  V1.0.0
  * @date     17. Dec 2019
  ******************************************************************************/
@@ -25,38 +25,44 @@ OUTPUT_ARCH( "riscv" )
 
 ENTRY( _start )
 
+INCLUDE evalsoc.memory
+
 MEMORY
 {
-  ilm (rxa!w) : ORIGIN = 0x80000000, LENGTH = 64K
-  ram (wxa!r) : ORIGIN = 0x90000000, LENGTH = 64K
+  rom (rxa!w) : ORIGIN = SRAM_MEMORY_BASE,                           LENGTH = SRAM_MEMORY_ROM_SIZE
+  ram (wxa!r) : ORIGIN = SRAM_MEMORY_BASE + SRAM_MEMORY_ROM_SIZE,    LENGTH = SRAM_MEMORY_SIZE - SRAM_MEMORY_ROM_SIZE
 }
 
 /* Search TODO in this file */
-/* N100 has no ilm/dlm, the ilm is just sram located in external sram */
-/* N100 evalsoc mtvt set to 0x80000100, mtvec set to 0x80000180 */
-REGION_ALIAS("ROM", ilm)
+REGION_ALIAS("ROM", rom)
 REGION_ALIAS("RAM", ram)
 REGION_ALIAS("DATA_LMA", ram)
 
 SECTIONS
 {
-  /* To provide symbol __STACK_SIZE, __HEAP_SIZE and __SMP_CPU_CNT */
+  /* To provide symbol __STACK_SIZE, __HEAP_SIZE */
   PROVIDE(__STACK_SIZE = 2K);
   PROVIDE(__HEAP_SIZE = 2K);
   PROVIDE(__SMP_CPU_CNT = 1);
   __TOT_STACK_SIZE = __STACK_SIZE * __SMP_CPU_CNT;
 
+  /* standalone section for exception handler */
+  .exception MTVEC_BASE : AT(MTVEC_BASE)
+  {
+    KEEP (*(.mexctrap))
+  }
+
+  /* standalone section for isr vector handler */
+  .isr_vector MTVT_BASE : AT(MTVT_BASE)
+  {
+    KEEP (*(.mintvec))
+  }
+
+  . = SRAM_MEMORY_BASE;
   .init           :
   {
-    __start_of_init = .;
     *(.text.init)
-    /* TODO MUST KEEP .mintvec and .mexctrap */
-    /* mtvt readonly, configured by hardware */
-    . = __start_of_init + 0x100;
-    KEEP (*(.mintvec))
-    /* mtvec readonly, configured by hardware */
-    . = __start_of_init + 0x180;
-    KEEP (*(.mexctrap))
+
     /* normal code section */
     KEEP (*(SORT_NONE(.init)))
     . = ALIGN(4);
@@ -108,9 +114,6 @@ SECTIONS
     KEEP (*(.dtors))
   } >ROM AT>ROM
 
-  PROVIDE( _ilm_lma = LOADADDR(.text) );
-  PROVIDE( _ilm = ADDR(.text) );
-  PROVIDE( _eilm = . );
   PROVIDE( _text_lma = LOADADDR(.text) );
   PROVIDE( _text = ADDR(.text) );
   PROVIDE (_etext = .);

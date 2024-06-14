@@ -26,6 +26,10 @@
 
 #include "riscv_encoding.h"
 
+/* Required cpufeature.h to provide CFG_HAS_EXCP if N100 has exception */
+#include "cpufeature.h"
+
+#if defined(CFG_HAS_EXCP)
 /**
  * \brief  Global interrupt disabled
  * \details
@@ -183,6 +187,9 @@ exc_entry:
     mret
     .size exc_entry, . - exc_entry
 
+#endif
+
+#if defined(CFG_HAS_IRQC)
 .section .text
 .align 6
 /* Default Handler for Exceptions / Interrupts */
@@ -195,3 +202,5 @@ default_intexc_handler:
 1:
     j 1b
     .size default_intexc_handler, . - default_intexc_handler
+
+#endif

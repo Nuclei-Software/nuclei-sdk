@@ -25,20 +25,16 @@ OUTPUT_ARCH( "riscv" )
 
 ENTRY( _start )
 
+INCLUDE evalsoc.memory
+
 MEMORY
 {
-  flash (rxa!w) : ORIGIN = 0x20000000, LENGTH = 4M
-  ilm (rxa!w) : ORIGIN = 0x80000000, LENGTH = 64K
-  ram (wxa!r) : ORIGIN = 0x90000000, LENGTH = 64K
+  flash (rxa!w) : ORIGIN = FLASH_MEMORY_BASE,   LENGTH = FLASH_MEMORY_SIZE
+  ram   (wxa!r) : ORIGIN = SRAM_MEMORY_BASE,    LENGTH = SRAM_MEMORY_SIZE
 }
 
 REGION_ALIAS("ROM", flash)
-
-/* N100 has no ilm/dlm, the ilm is just sram located in external sram */
-/* N100 evalsoc mtvt set to 0x80000100, mtvec set to 0x80000180 */
-REGION_ALIAS("RAM", ilm)
-
-/* Search TODO in this file */
+REGION_ALIAS("RAM", ram)
 
 SECTIONS
 {
@@ -48,6 +44,19 @@ SECTIONS
   PROVIDE(__SMP_CPU_CNT = 1);
   __TOT_STACK_SIZE = __STACK_SIZE * __SMP_CPU_CNT;
 
+  /* standalone section for exception handler */
+  .exception MTVEC_BASE : AT(MTVEC_BASE)
+  {
+    KEEP (*(.mexctrap))
+  }
+
+  /* standalone section for isr vector handler */
+  .isr_vector MTVT_BASE : AT(MTVT_BASE)
+  {
+    KEEP (*(.mintvec))
+  }
+
+  . = SRAM_MEMORY_BASE;
   .init           :
   {
     *(.text.init)
@@ -125,9 +134,6 @@ SECTIONS
     KEEP (*(.dtors))
   } >ROM AT>ROM
 
-  PROVIDE( _ilm_lma = LOADADDR(.text) );
-  PROVIDE( _ilm = ADDR(.text) );
-  PROVIDE( _eilm = . );
   PROVIDE( _text_lma = LOADADDR(.text) );
   PROVIDE( _text = ADDR(.text) );
   PROVIDE (_etext = .);
@@ -137,13 +143,6 @@ SECTIONS
   .data            : ALIGN(8)
   {
     __start_of_init = .;
-    /* TODO MUST KEEP .mintvec and .mexctrap */
-    /* mtvt readonly, configured by hardware */
-    . = __start_of_init + 0x100;
-    KEEP (*(.mintvec))
-    /* mtvec readonly, configured by hardware */
-    . = __start_of_init + 0x180;
-    KEEP (*(.mexctrap))
     /* normal data */
     KEEP(*(.data.ctest*))
     *(.data .data.*)

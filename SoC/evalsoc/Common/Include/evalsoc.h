@@ -32,10 +32,8 @@
 extern "C" {
 #endif
 
-// If you have auto generated cpu configuration files
-#ifdef HAS_AUTOGEN_CPUCFG
-#include "autogen_nuclei_cpu.h"
-#endif
+// NOTE: this cpufeature.h header file is introduced in Nuclei N100 SDK 0.1.0
+#include "cpufeature.h"
 
 /** @addtogroup Nuclei
   * @{
@@ -110,7 +108,11 @@ typedef enum IRQn {
     SOC_INT29_IRQn           = 29,                /*!< Device Interrupt */
     SOC_INT30_IRQn           = 30,                /*!< Device Interrupt */
     SOC_INT31_IRQn           = 31,                /*!< Device Interrupt */
+#ifdef CFG_IRQ_NUM
+    SOC_INT_MAX              = 2 + CFG_IRQ_NUM,   /*!< Two fixed cpu interrupt and max 30 external interrupt */
+#else
     SOC_INT_MAX,
+#endif
 } IRQn_Type;
 
 // TODO need to adapt for n100 soc
@@ -148,13 +150,46 @@ typedef enum EXCn {
 /* =========================================================================================================================== */
 /* ================                           Processor and Core Peripheral Section                           ================ */
 /* =========================================================================================================================== */
+// NOTE: We use macros defined in cpufeature.h
+// WARNING: Please dont modify macros directly below, you can change in cpufeature.h
 
-/* ToDo: set the defines according your Device */
-/* ToDo: define the correct core revision */
-#define __NUCLEI_CPU_REV          0x010000              /*!< Nuclei CPU Core Revision, version X.Y.Z, this is for the CPU Core Version, you get from Nuclei, eg. N300 v3.10.1, it should be 0x030A01 */
-#define __NUCLEI_CPU_SERIES       0x0100                /*!< Nuclei CPU Series, such as 100, eg. 100 will be 0x0100 */
-#define __IRQC_PRESENT            1                     /*!< Set to 1 if IRQC is present */
-#define __TIMER_PRESENT           1                     /*!< Set to 1 if Timer is present */
+// CPU Series and Version Configuration
+// To set CPU REV and SERIES, just define CFG_CPU_VER/CFG_CPU_SERIES macros in cpufeature.h
+#define __NUCLEI_CPU_REV            CFG_CPU_VER           /*!< Nuclei CPU Core Revision, version X.Y.Z */
+#define __NUCLEI_CPU_SERIES         CFG_CPU_SERIES        /*!< Nuclei CPU Series */
+
+// IRQC Configuration
+// To enable IRQC, just define macro CFG_HAS_IRQC/CFG_IRQ_NUM in cpufeature.h
+#ifdef CFG_HAS_IRQC
+#define __IRQC_PRESENT              1
+#define __IRQC_INTNUM               (CFG_IRQ_NUM + 2)
+#else
+#define __IRQC_PRESENT              0
+#endif
+
+// Exception Configuration
+// To enable Exception, just define macro CFG_HAS_EXCP in cpufeature.h
+#ifdef CFG_HAS_EXCP
+#define __EXCP_PRESENT              1
+#else
+#define __EXCP_PRESENT              0
+#endif
+
+// Performance Monitor Configuration
+// To enable PMON, just define macro CFG_HAS_PMONITOR in cpufeature.h
+#ifdef CFG_HAS_PMONITOR
+#define __PMON_PRESENT              1
+#else
+#define __PMON_PRESENT              0
+#endif
+
+// TIMER Configuration
+// To enable TIMER, just define macro CFG_TMR_PRIVATE in cpufeature.h
+#ifdef CFG_TMR_PRIVATE
+#define __TIMER_PRESENT             1
+#else
+#define __TIMER_PRESENT             0
+#endif
 
 #define __Vendor_SysTickConfig    0                     /*!< Set to 1 if different SysTick Config is used */
 #define __Vendor_EXCEPTION        0                     /*!< Set to 1 if vendor exception hander is present */

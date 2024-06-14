@@ -29,14 +29,18 @@
 ##### Put your SoC build configurations below #####
 
 override BOARD := nuclei_fpga_eval
-CORE ?= n100m
+include $(NUCLEI_SDK_SOC)/cpufeature.mk
+
 JTAGSN ?=
 
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
 
 OPENOCD_CFG ?= $(NUCLEI_SDK_SOC_BOARD)/openocd_evalsoc.cfg
+
+LDFLAGS += -L $(NUCLEI_SDK_SOC_BOARD)/Source/GCC
 LINKER_SCRIPT ?= $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/gcc_evalsoc_$(DOWNLOAD).ld
+MAKEFILE_PREREQS += $(NUCLEI_SDK_SOC_BOARD)/Source/GCC/evalsoc.memory
 
 # File existence check for OPENOCD_CFG and LINKER_SCRIPT
 ifeq ($(wildcard $(OPENOCD_CFG)),)
@@ -53,10 +57,6 @@ OPENOCD_CMD_ARGS += set JTAGSN $(JTAGSN);
 endif
 
 # If using generated cpu configs done by nuclei_gen
-# Notice: cpu nuclei_gen tool will do the following things:
-# 1. generate autogen_nuclei_cpu.h in where evalsoc.h located
-# 2. generate Makefile.global in <SDK>/Build/ folder
-# 3. sed and replace flash/ilm/dlm/sram/ddr base and size in gcc_evalsoc_*.ld
 ifeq ($(CPU_CONFIG_K),1)
 COMMON_FLAGS += -DHAS_AUTOGEN_CPUCFG
 endif

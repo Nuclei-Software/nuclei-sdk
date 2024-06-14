@@ -35,15 +35,15 @@ dependencies:
 ## Package Configurations
 configuration:
   download_mode:
-    default_value: ilm
+    default_value: sram
     type: choice
     global: true
     description: Download/Run Mode
     choices:
-      - name: ilm
-        description: ILM download mode, program will be download into ilm/ram and run directly in ilm/ram, program lost when poweroff
+      - name: sram
+        description: SRAM download mode, program will be download into sram and run directly in sram, program lost when poweroff
       - name: flashxip
-        description: FLASHXIP download mode, program will to be download into flash and run directly in Flash
+        description: FLASHXIP download mode, program will to be download into flash and run directly in flash
 
 ## Source Code Management
 codemanage:
@@ -106,3 +106,7 @@ buildconfig:
     common_defines:
       - defines: DOWNLOAD_MODE=DOWNLOAD_MODE_$(upper(${download_mode}))
       - defines: DOWNLOAD_MODE_STRING=\"$(upper(${download_mode}))\"
+    ldflags:
+      # require Nuclei Studio 2024.02
+      # package owner and package name must be passed
+      - flags: -L"${workspace_loc:/${ProjName}/$(npack_installdir(nuclei:bsp-n100_sdk_nuclei_fpga_eval))/Source/GCC}"
