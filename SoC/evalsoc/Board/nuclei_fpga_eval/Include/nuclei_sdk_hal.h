@@ -10,6 +10,12 @@ extern "C" {
 
 #define SOC_DEBUG_UART      UART0
 
+#ifndef DISABLE_NSDK_DEBUG
+#define NSDK_DEBUG(fmt, ...)    printf(fmt, ##__VA_ARGS__)
+#else
+#define NSDK_DEBUG(fmt, ...)
+#endif
+
 #ifndef NUCLEI_BANNER
 #define NUCLEI_BANNER       1
 #endif

@@ -223,10 +223,10 @@ typedef void (*EXC_HANDLER)(unsigned long cause, unsigned long sp);
 static void system_default_exception_handler(unsigned long mcause, unsigned long sp)
 {
 #ifndef DISABLE_EXCEPTION_DEBUG
-    /* TODO: Uncomment this if you have implement printf function */
-    printf("MCAUSE : 0x%lx\r\n", mcause);
-    printf("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
-    printf("HARTID : %u\r\n", (unsigned int)__get_hart_id());
+    /* TODO: Uncomment this if you have implement NSDK_DEBUG function */
+    NSDK_DEBUG("MCAUSE : 0x%lx\r\n", mcause);
+    NSDK_DEBUG("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
+    NSDK_DEBUG("HARTID : %u\r\n", (unsigned int)__get_hart_id());
     Exception_DumpFrame(sp, PRV_M);
 #if defined(SIMULATION_MODE)
     // directly exit if in SIMULATION
@@ -266,14 +266,14 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
     EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
 
 #ifndef __riscv_32e
-    printf("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx, t3: 0x%lx, t4: 0x%lx, t5: 0x%lx, t6: 0x%lx\n" \
+    NSDK_DEBUG("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx, t3: 0x%lx, t4: 0x%lx, t5: 0x%lx, t6: 0x%lx\n" \
            "a0: 0x%lx, a1: 0x%lx, a2: 0x%lx, a3: 0x%lx, a4: 0x%lx, a5: 0x%lx, a6: 0x%lx, a7: 0x%lx\n" \
            "cause: 0x%lx, epc: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
            exc_frame->t1, exc_frame->t2, exc_frame->t3, exc_frame->t4, exc_frame->t5, exc_frame->t6, \
            exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, exc_frame->a4, exc_frame->a5, \
            exc_frame->a6, exc_frame->a7, exc_frame->cause, exc_frame->epc);
 #else
-    printf("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx\n" \
+    NSDK_DEBUG("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx\n" \
            "a0: 0x%lx, a1: 0x%lx, a2: 0x%lx, a3: 0x%lx, a4: 0x%lx, a5: 0x%lx\n" \
            "cause: 0x%lx, epc: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
            exc_frame->t1, exc_frame->t2, exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, \
@@ -366,12 +366,12 @@ void SystemBannerPrint(void)
 // you can set NUCLEI_BANNER to 0 in nuclei_sdk_hal.h
 // but it will show no messsage when bringup
 #if defined(NUCLEI_BANNER) && (NUCLEI_BANNER == 1)
-    printf("N100 Nuclei SDK Build Time: %s, %s\r\n", __DATE__, __TIME__);
+    NSDK_DEBUG("N100 Nuclei SDK Build Time: %s, %s\r\n", __DATE__, __TIME__);
 #ifdef DOWNLOAD_MODE_STRING
-    printf("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
+    NSDK_DEBUG("Download Mode: %s\r\n", DOWNLOAD_MODE_STRING);
 #endif
-    printf("CPU Frequency %u Hz\r\n", (unsigned int)SystemCoreClock);
-    printf("CPU HartID: %u\r\n", (unsigned int)__get_hart_id());
+    NSDK_DEBUG("CPU Frequency %u Hz\r\n", (unsigned int)SystemCoreClock);
+    NSDK_DEBUG("CPU HartID: %u\r\n", (unsigned int)__get_hart_id());
 #endif
 }
 
