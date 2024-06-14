@@ -34,6 +34,11 @@ void setup_timer()
     uint32_t then = now + SOC_TIMER_FREQ / 10;
     SysTimer_SetCompareValue(then);
 }
+#ifdef CFG_SIMULATION
+#define RUN_LOOPS   2
+#else
+#define RUN_LOOPS   5
+#endif
 
 int main(void)
 {
@@ -48,7 +53,7 @@ int main(void)
 
     __enable_irq(); /* enable global interrupt */
 
-    while (int0_cnt < 5);
+    while (int0_cnt < RUN_LOOPS);
     IRQC_DisableIRQ(SysTimer_IRQn); /* Disable MTIP iterrupt */
 
     // TODO you can register new handler only when your vector table is RW
@@ -60,7 +65,7 @@ int main(void)
             SysTimer_SetSWIRQ(); /* trigger timer sw interrupt */
             delay_1ms(10);
         }
-    } while (int1_cnt < 5); /* check test end condition */
+    } while (int1_cnt < RUN_LOOPS); /* check test end condition */
 
     printf("MTimer msip and mtip interrupt test finish and pass\r\n");
 

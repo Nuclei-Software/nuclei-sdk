@@ -50,7 +50,12 @@ __INTERRUPT void irqc_msip_handler(void)
     int_check_cnt ++;
 }
 
+#ifdef CFG_SIMULATION
+#define RUN_LOOPS   2
+#else
 #define RUN_LOOPS   20
+#endif
+
 int main(void)
 {
     int32_t returnCode;
