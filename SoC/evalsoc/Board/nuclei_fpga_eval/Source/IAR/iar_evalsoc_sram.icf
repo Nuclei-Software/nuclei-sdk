@@ -5,6 +5,9 @@
 
 define exported symbol _link_file_version_2 = 1;
 
+define symbol MTVT_BASE  = 0x80000100;
+define symbol MTVEC_BASE = 0x80000180;
+
 define memory mem with size = 4G;
 
 define region ROM_region32 = mem:[from 0xA0000000 size 0x20000];
@@ -28,8 +31,8 @@ keep { section .rti_fn* };
 "CSTARTUP32" : place at start of ROM_region32 { ro section .alias.hwreset,
                                                 ro section .cstartup };
 
-"VECTORTBL" : place at address mem:0x80000100 { ro section .mintvec };
-"EXCPENTRY" : place at address mem:0x80000180 { ro section .mexctrap };
+"VECTORTBL" : place at address mem:MTVT_BASE  { ro section .mintvec };
+"EXCPENTRY" : place at address mem:MTVEC_BASE { ro section .mexctrap };
 
 "ROM32":place in ROM_region32        { ro,
                                        block RTT_INIT_FUNC,
