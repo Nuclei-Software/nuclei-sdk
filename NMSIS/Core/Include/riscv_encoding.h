@@ -411,6 +411,18 @@
 #define SPMP_SHIFT           PMP_SHIFT
 #define SPMP_COUNT           16
 
+/* === SMPU CFG Bits === */
+#define SMPU_R               SPMP_R
+#define SMPU_W               SPMP_W
+#define SMPU_X               SPMP_X
+#define SMPU_A               SPMP_A
+#define SMPU_A_TOR           SPMP_A_TOR
+#define SMPU_A_NA4           SPMP_A_NA4
+#define SMPU_A_NAPOT         SPMP_A_NAPOT
+#define SMPU_S               0x80
+
+#define SMPU_SHIFT           PMP_SHIFT
+
 // page table entry (PTE) fields
 #define PTE_V     0x001 // Valid
 #define PTE_R     0x002 // Read
@@ -872,29 +884,29 @@
 #define CSR_SPMPADDR14          0x1BE
 #define CSR_SPMPADDR15          0x1BF
 
-#define CSR_SPMUCFG0            0x1A0
-#define CSR_SPMUCFG1            0x1A1
-#define CSR_SPMUCFG2            0x1A2
-#define CSR_SPMUCFG3            0x1A3
-#define CSR_SPMUADDR0           0x1B0
-#define CSR_SPMUADDR1           0x1B1
-#define CSR_SPMUADDR2           0x1B2
-#define CSR_SPMUADDR3           0x1B3
-#define CSR_SPMUADDR4           0x1B4
-#define CSR_SPMUADDR5           0x1B5
-#define CSR_SPMUADDR6           0x1B6
-#define CSR_SPMUADDR7           0x1B7
-#define CSR_SPMUADDR8           0x1B8
-#define CSR_SPMUADDR9           0x1B9
-#define CSR_SPMUADDR10          0x1BA
-#define CSR_SPMUADDR11          0x1BB
-#define CSR_SPMUADDR12          0x1BC
-#define CSR_SPMUADDR13          0x1BD
-#define CSR_SPMUADDR14          0x1BE
-#define CSR_SPMUADDR15          0x1BF
+#define CSR_SMPUCFG0            0x1A0
+#define CSR_SMPUCFG1            0x1A1
+#define CSR_SMPUCFG2            0x1A2
+#define CSR_SMPUCFG3            0x1A3
+#define CSR_SMPUADDR0           0x1B0
+#define CSR_SMPUADDR1           0x1B1
+#define CSR_SMPUADDR2           0x1B2
+#define CSR_SMPUADDR3           0x1B3
+#define CSR_SMPUADDR4           0x1B4
+#define CSR_SMPUADDR5           0x1B5
+#define CSR_SMPUADDR6           0x1B6
+#define CSR_SMPUADDR7           0x1B7
+#define CSR_SMPUADDR8           0x1B8
+#define CSR_SMPUADDR9           0x1B9
+#define CSR_SMPUADDR10          0x1BA
+#define CSR_SMPUADDR11          0x1BB
+#define CSR_SMPUADDR12          0x1BC
+#define CSR_SMPUADDR13          0x1BD
+#define CSR_SMPUADDR14          0x1BE
+#define CSR_SMPUADDR15          0x1BF
 
-#define CSR_SPMUSWITCH0         0x170
-#define CSR_SPMUSWITCH1         0x171
+#define CSR_SMPUSWITCH0         0x170
+#define CSR_SMPUSWITCH1         0x171
 
 /* === CLIC CSR Registers === */
 #define CSR_MTVT                0x307

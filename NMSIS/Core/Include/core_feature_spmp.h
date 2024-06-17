@@ -19,14 +19,17 @@
 #define __CORE_FEATURE_SPMP_H__
 /*!
  * @file     core_feature_spmp.h
- * @brief    sPMP feature API header file for Nuclei N/NX Core
+ * @brief    sPMP(has upgraded to S-mode Memory Protection Unit, renamed as SMPU) feature API header file for Nuclei N/NX Core
  */
 /*
  * sPMP Feature Configuration Macro:
- * 1. __SPMP_PRESENT:  Define whether supervisor Physical Memory Protection(sPMP) is present or not
+ * 1. __SPMP_PRESENT: Define whether sPMP is present or not
+ *    __SMPU_PRESENT: Define whether SMPU is present or not
  *   * 0: Not present
  *   * 1: Present
- * 2. __SPMP_ENTRY_NUM:  Define the number of sPMP entries, only 8 or 16 is configurable.
+ * 2. __SPMP_ENTRY_NUM: Define the number of sPMP entries, only 8 or 16 is configurable
+ *    __SMPU_ENTRY_NUM: Define the number of SMPU entries, only 8 or 16 is configurable
+ *    __SMPU_ENTRY_NUM is the same as __SPMP_ENTRY_NUM
  */
 #ifdef __cplusplus
 extern "C" {
@@ -36,6 +39,7 @@ extern "C" {
 #include "core_compatiable.h"
 
 #if defined(__SPMP_PRESENT) && (__SPMP_PRESENT == 1)
+
 /* ===== sPMP Operations ===== */
 /**
  * \defgroup NMSIS_Core_SPMP_Functions sPMP Functions
@@ -52,14 +56,15 @@ extern "C" {
  *   @{
  */
 #ifndef __SPMP_ENTRY_NUM
-/* numbers of sPMP entries(__SPMP_ENTRY_NUM) should be defined in <Device.h> */
+/* Number of __SPMP_ENTRY_NUM entries should be defined in <Device.h> */
 #error "__SPMP_ENTRY_NUM is not defined, please check!"
 #endif
 
 typedef struct SPMP_CONFIG {
     /**
-     * set locking bit, addressing mode, user mode, read, write, and instruction execution permissions,
-     * see \ref SPMP_L, \ref SPMP_U, \ref SPMP_R, \ref SPMP_W, \ref SPMP_X, .etc in <riscv_encoding.h>
+     * Set permissions using macros \ref SMPU_S/\ref SMPU_R/\ref SMPU_W/\ref SMPU_X of SMPU;
+     * \ref SPMP_L/\ref SPMP_U/\ref SPMP_R/\ref SPMP_W/\ref SPMP_X of sPMP,
+     * see details in riscv spec of SMPU/sPMP
      */
     unsigned int protection;
     /**
@@ -319,7 +324,7 @@ __STATIC_INLINE void __set_sPMPENTRYx(uint32_t entry_idx, const spmp_config *spm
 
 /**
  * \brief   Get sPMP entry by entry idx
- * \details Write the given value to the PMPxCFG Register and PMPADDRx.
+ * \details Write the given value to the sPMPxCFG Register and sPMPADDRx.
  * \param [in]     entry_idx     sPMP entry index(0-15)
  * \param [out]    spmp_cfg   structure of L, U, X, W, R, A field of sPMP configuration register, memory region base
  *                 address and size of memory region as power of 2
@@ -375,6 +380,65 @@ __STATIC_INLINE int __get_sPMPENTRYx(unsigned int entry_idx, spmp_config *spmp_c
 
     return 0;
 }
+
+#if defined(__SMPU_PRESENT) && (__SMPU_PRESENT == 1)
+/**
+ * sPMP has upgraded to S-mode Memory Protection Unit, renamed as SMPU, but still share the apis with sPMP's
+ */
+typedef spmp_config         smpu_config;
+#define __get_SMPUCFGx      __get_sPMPCFGx
+#define __set_SMPUCFGx      __set_sPMPCFGx
+#define __get_SMPUxCFG      __get_sPMPxCFG
+#define __set_SMPUxCFG      __set_sPMPxCFG
+#define __get_SMPUADDRx     __get_sPMPADDRx
+#define __set_SMPUADDRx     __set_sPMPADDRx
+#define __set_SMPUENTRYx    __set_sPMPENTRYx
+#define __get_SMPUENTRYx    __get_sPMPENTRYx
+
+/**
+ * \brief   Set SMPU each entry's on/off status
+ * \details Write the given value to the SMPUSWITCHx Register.
+ * \param [in]     val     activate each entry(max to 64) or not
+ * \remark
+ * - Each bit of this register holds on/off status of the corresponding SMPU entry respectively.
+ * - An SMPU entry is activated only when both corresponding bits in smpuswitch and
+ *   A field of smpuicfg are set. (i.e., smpuswitch[i] & smpu[i]cfg.A).
+ */
+__STATIC_INLINE void __set_SMPUSWITCHx(uint64_t val)
+{
+#if __RISCV_XLEN == 32
+    __RV_CSR_WRITE(CSR_SMPUSWITCH0, (uint32_t)val);
+    __RV_CSR_WRITE(CSR_SMPUSWITCH1, (uint32_t)(val >> 32));
+#elif __RISCV_XLEN == 64
+    __RV_CSR_WRITE(CSR_SMPUSWITCH0, val);
+#else
+    // TODO Add RV128 Handling
+#endif
+}
+
+/**
+ * \brief   Get SMPU each entry's on/off status
+ * \details Get the value of the SMPUSWITCHx Register.
+ * \remark
+ * - Each bit of this register holds on/off status of the corresponding SMPU entry respectively.
+ * - An SMPU entry is activated only when both corresponding bits in smpuswitch and
+ *   A field of smpuicfg are set. (i.e., smpuswitch[i] & smpu[i]cfg.A).
+ */
+__STATIC_INLINE uint64_t __get_SMPUSWITCHx(void)
+{
+#if __RISCV_XLEN == 32
+    uint32_t lo, hi = 0;
+    lo = __RV_CSR_READ(CSR_SMPUSWITCH0);
+    hi = __RV_CSR_READ(CSR_SMPUSWITCH1);
+    return (uint64_t)((((uint64_t)hi) << 32) | lo);
+#elif __RISCV_XLEN == 64
+    return (uint64_t)__RV_CSR_READ(CSR_SMPUSWITCH0);
+#else
+    // TODO Add RV128 Handling
+#endif
+}
+
+#endif
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_SPMP_Functions */
 #endif /* defined(__SPMP_PRESENT) && (__SPMP_PRESENT == 1) */
