@@ -28,10 +28,12 @@ extern "C" {
 #define CFG_ILM_BASE_ADDR           (0x80000000UL)
 #define CFG_DLM_BASE_ADDR           (0x90000000UL)
 
+#define CFG_MTVEC_BASE_ADDR         (0x80000180)
+#define CFG_MTVT_BASE_ADDR          (0x80000100)
 
 // EVALSOC Features
 #define EVALSOC_FLASH_XIP_BASE      (0x20000000UL)
-#define EVALSOC_CFG_SYSMEM_BASE     (0xA0000000UL)
+#define EVALSOC_SYSMEM_BASE         (0xA0000000UL)
 #define EVALSOC_PERIPS_BASE         (0x10000000UL)
 
 #ifdef __cplusplus

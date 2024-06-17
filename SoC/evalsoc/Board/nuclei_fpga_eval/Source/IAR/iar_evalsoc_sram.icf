@@ -5,11 +5,15 @@
 
 define exported symbol _link_file_version_2 = 1;
 
+/* MTVT_BASE = CFG_MTVT_BASE_ADDR in cpufeature.h */
 define symbol MTVT_BASE  = 0x80000100;
+/* MTVT_BASE = CFG_MTVEC_BASE_ADDR in cpufeature.h */
 define symbol MTVEC_BASE = 0x80000180;
 
 define memory mem with size = 4G;
 
+/* Set memory region information according to your device */
+/* For this case, ROM and RAM are both using SRAM region */
 define region ROM_region32 = mem:[from 0xA0000000 size 0x20000];
 define region RAM_region32 = mem:[from 0xA0020000 size 0x20000];
 
