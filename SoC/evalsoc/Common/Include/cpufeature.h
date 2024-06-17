@@ -46,7 +46,7 @@ extern "C" {
 
 // EVALSOC Features
 #define EVALSOC_FLASH_XIP_BASE      (0x20000000UL)
-#define EVALSOC_CFG_SYSMEM_BASE     (0xA0000000UL)
+#define EVALSOC_SYSMEM_BASE         (0xA0000000UL)
 #define EVALSOC_PERIPS_BASE         (0x10000000UL)
 
 #ifdef __cplusplus
