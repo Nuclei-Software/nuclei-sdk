@@ -319,6 +319,7 @@ extern volatile unsigned long CpuIRegionBase;
 #define __SPMP_ENTRY_NUM            CFG_PMP_ENTRY_NUM
 #ifdef CFG_HAS_SMPU
 #define __SMPU_PRESENT              1
+#define __SMPU_ENTRY_NUM            __SPMP_ENTRY_NUM
 #endif
 #else
 #define __TEE_PRESENT               0
