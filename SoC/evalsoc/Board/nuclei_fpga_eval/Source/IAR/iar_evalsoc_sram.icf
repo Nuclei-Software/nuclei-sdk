@@ -35,8 +35,8 @@ keep { section .rti_fn* };
 "CSTARTUP32" : place at start of ROM_region32 { ro section .alias.hwreset,
                                                 ro section .cstartup };
 
-"VECTORTBL" : place at address mem:MTVT_BASE  { ro section .mintvec };
-"EXCPENTRY" : place at address mem:MTVEC_BASE { ro section .mexctrap };
+"isr_vector" : place at address mem:MTVT_BASE  { ro section .mintvec };
+"exception" : place at address mem:MTVEC_BASE { ro section .mexctrap };
 
 "ROM32":place in ROM_region32        { ro,
                                        block RTT_INIT_FUNC,

@@ -364,6 +364,12 @@ typedef struct {
 #define ONCHIP_DLM_BASE         (CFG_DLM_BASE_ADDR)           /*!< (DLM       ) Base Address */
 #endif
 
+#ifndef EVALSOC_SYSMEM_BASE
+#define ONCHIP_SRAM_BASE         (0xA0000000UL)                /*!< (SRAM       ) Base Address */
+#else
+#define ONCHIP_SRAM_BASE         (EVALSOC_SYSMEM_BASE)          /*!< (SRAM       ) Base Address */
+#endif
+
 #ifndef EVALSOC_PERIPS_BASE
 #define EVALSOC_PERIPH_BASE     (0x10000000UL)                /*!< (Peripheral) Base Address */
 #else

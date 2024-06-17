@@ -41,9 +41,9 @@ keep { section .rti_fn* };
                                                 ro section .cstartup };
 
 // Place vector table at fixed address which is RTL configured
-"VECTORTBL" : place at address mem:MTVT_BASE  { section .mintvec };
+"isr_vector" : place at address mem:MTVT_BASE  { section .mintvec };
 // Place exception entry and its code at fixed address which is RTL configured
-"EXCPENTRY" : place at address mem:MTVEC_BASE { section .mexctrap };
+"exception" : place at address mem:MTVEC_BASE { section .mexctrap };
 
 "ROM32":place in ROM_region32        { ro,
                                        block RTT_INIT_FUNC,

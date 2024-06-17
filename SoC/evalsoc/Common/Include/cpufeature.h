@@ -20,7 +20,10 @@ extern "C" {
 // External Interrupt Number
 #define CFG_IRQ_NUM                 30
 
+// EXCP is the exception module, if not defined, it means not present
+// If not present, you need to remove .exception section in linker script
 #define CFG_HAS_EXCP
+// PMONITOR is the mcycle and minsret counter, if not defined, it means not present
 #define CFG_HAS_PMONITOR
 
 // CCM default still set to 0, you can uncomment it when it really exist
