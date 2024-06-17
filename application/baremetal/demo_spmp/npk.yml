@@ -1,12 +1,13 @@
 ## Package Base Information
-name: app-nsdk_spmp
+name: app-nsdk_demo_spmp
 owner: nuclei
 version:
 description: S-Mode Physical Memory Protection(sPMP) Demo
 type: app
 keywords:
   - baremetal
-  - s-mode pmp and exception
+  - tee
+  - spmp
 category: baremetal application
 license:
 homepage:

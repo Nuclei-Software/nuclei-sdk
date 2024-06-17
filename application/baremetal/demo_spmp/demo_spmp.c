@@ -78,7 +78,7 @@ static void supervisor_mode_entry_point(void)
     /* In case compiler use inline optimization of protected_execute */
     __funcpt fncptr = ((__funcpt)protected_execute);
 
-    printf("Attempting to fetch instruction from protected address\r\n");
+    printf("Attempting to fetch instruction from protected address 0x%p\r\n", fncptr);
     /*
      * If TRIGGER_SPMP_INSTRUCTION_EXCEPTION, it will trigger instruction page fault,
      * see scause sdcause mepc for verification
@@ -86,12 +86,12 @@ static void supervisor_mode_entry_point(void)
     fncptr();
 
 #if (STORE_USERMODE_MEMORY_EXCEPTION != TRIGGER_SPMP_VIOLATION_MODE)
-    printf("Attempting to read protected_data[0]\r\n");
+    printf("Attempting to read protected_data[0] at %p\r\n", &protected_data[0]);
     printf("protected_data[0]: 0x%0X succeed\r\n", protected_data[0]);
 #endif
 
 #if (LOAD_USERMODE_MEMORY_EXCEPTION != TRIGGER_SPMP_VIOLATION_MODE)
-    printf("Attempting to write protected_data[0]\r\n");
+    printf("Attempting to write protected_data[0] at %p\r\n", &protected_data[0]);
     protected_data[0] = 0xFF;
 #endif
     printf("Won't run here if violates L U\\R\\W\\X permission check!\r\n");
