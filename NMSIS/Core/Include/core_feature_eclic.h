@@ -120,14 +120,14 @@ typedef struct {
 #define CLIC_CLICCFG_NLBIT_Pos                 1U                                       /*!< CLIC CLICCFG: NLBIT Position */
 #define CLIC_CLICCFG_NLBIT_Msk                 (0xFUL << CLIC_CLICCFG_NLBIT_Pos)        /*!< CLIC CLICCFG: NLBIT Mask */
 
-#define CLIC_CLICINFO_CTLBIT_Pos               21U                                      /*!< CLIC INTINFO: __ECLIC_GetInfoCtlbits() Position */
-#define CLIC_CLICINFO_CTLBIT_Msk               (0xFUL << CLIC_CLICINFO_CTLBIT_Pos)      /*!< CLIC INTINFO: __ECLIC_GetInfoCtlbits() Mask */
+#define CLIC_CLICINFO_CTLBIT_Pos               21U                                      /*!< CLIC INTINFO: CLICINTCTLBITS Position */
+#define CLIC_CLICINFO_CTLBIT_Msk               (0xFUL << CLIC_CLICINFO_CTLBIT_Pos)      /*!< CLIC INTINFO: CLICINTCTLBITS Mask */
 
 #define CLIC_CLICINFO_VER_Pos                  13U                                      /*!< CLIC CLICINFO: VERSION Position */
-#define CLIC_CLICINFO_VER_Msk                  (0xFFUL << CLIC_CLICCFG_NLBIT_Pos)       /*!< CLIC CLICINFO: VERSION Mask */
+#define CLIC_CLICINFO_VER_Msk                  (0xFFUL << CLIC_CLICINFO_VER_Pos)        /*!< CLIC CLICINFO: VERSION Mask */
 
 #define CLIC_CLICINFO_NUM_Pos                  0U                                       /*!< CLIC CLICINFO: NUM Position */
-#define CLIC_CLICINFO_NUM_Msk                  (0xFFFUL << CLIC_CLICINFO_NUM_Pos)       /*!< CLIC CLICINFO: NUM Mask */
+#define CLIC_CLICINFO_NUM_Msk                  (0x1FFFUL << CLIC_CLICINFO_NUM_Pos)      /*!< CLIC CLICINFO: NUM Mask */
 
 #define CLIC_INTIP_IP_Pos                      0U                                       /*!< CLIC INTIP: IP Position */
 #define CLIC_INTIP_IP_Msk                      (0x1UL << CLIC_INTIP_IP_Pos)             /*!< CLIC INTIP: IP Mask */
