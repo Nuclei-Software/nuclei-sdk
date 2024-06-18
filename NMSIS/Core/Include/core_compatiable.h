@@ -181,6 +181,26 @@ __STATIC_FORCEINLINE uint32_t __ROR(uint32_t op1, uint32_t op2)
 }
 
 /**
+ * \brief   Rotate Right in uint32x2 value (64 bit)
+ * \details Rotate Right (immediate) provides the value of
+ * the contents of a register rotated by a variable number of bits.
+ * \param [in]    op1  Value to rotate([63:32] and [31:0] rotate separately)
+ * \param [in]    op2  Number of Bits to rotate
+ * \return        Rotated value([63:32] | [31:0])
+ */
+__STATIC_FORCEINLINE uint64_t __ROR64(uint64_t op1, uint32_t op2)
+{
+    op2 = op2 & 0x1F;
+    if (op2 == 0U) {
+      return op1;
+    }
+    uint32_t tmp1 = (uint32_t)op1;
+    uint32_t tmp2 = (uint32_t)(op1 >> 32);
+    return (uint64_t)((tmp1 >> op2) | (tmp1 << (32U - op2)))
+           | ((uint64_t)((tmp2 >> op2) | (tmp2 << (32U - op2))) << 32);
+}
+
+/**
  * \brief   Reverse bit order of value
  * \details Reverses the bit order of the given value.
  * \param [in]    value  Value to reverse

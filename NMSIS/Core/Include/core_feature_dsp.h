@@ -18858,16 +18858,16 @@ __STATIC_FORCEINLINE unsigned long long __RV_DSMMUL(unsigned long long a, unsign
 }
 /* ===== Inline Function End for DSMMUL ===== */
 
-/* ===== Inline Function Start for DSMMULU ===== */
+/* ===== Inline Function Start for DSMMUL.u ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
- * \brief  DSMMULU (64-bit MSW 32x32 Unsigned Multiply)
+ * \brief  DSMMUL.u (64-bit MSW 32x32 Unsigned Multiply)
  * \details
  * **Type**: SIMD
  *
  * **Syntax**:\n
  * ~~~
- * DSMMUL.U Rd, Rs1, Rs2
+ * DSMMUL.u Rd, Rs1, Rs2
  * # Rd, Rs1, Rs2 are all even/odd pair of registers
  * ~~~
  *
@@ -18901,7 +18901,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DSMMUL_U(unsigned long long a, unsi
     __ASM volatile("dsmmul.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
-/* ===== Inline Function End for DSMMULU ===== */
+/* ===== Inline Function End for DSMMUL.u ===== */
 
 /* ===== Inline Function Start for DKWMMUL ===== */
 /**
@@ -18950,16 +18950,16 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKWMMUL(unsigned long long a, unsig
 }
 /* ===== Inline Function End for DKWMMUL ===== */
 
-/* ===== Inline Function Start for DKWMMULU ===== */
+/* ===== Inline Function Start for DKWMMUL.u ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
- * \brief   DKWMMULU (64-bit MSW 32x32 Unsigned Multiply & Double)
+ * \brief   DKWMMUL.u (64-bit MSW 32x32 Unsigned Multiply & Double)
  * \details
  * **Type**: SIMD
  *
  * **Syntax**:\n
  * ~~~
- * DKWMMUL.U Rd, Rs1, Rs2
+ * DKWMMUL.u Rd, Rs1, Rs2
  * # Rd, Rs1, Rs2 are all even/odd pair of registers
  * ~~~
  *
@@ -18995,7 +18995,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKWMMUL_U(unsigned long long a, uns
     __ASM volatile("dkwmmul.u %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
-/* ===== Inline Function End for DKWMMULU ===== */
+/* ===== Inline Function End for DKWMMUL.u ===== */
 
 /* ===== Inline Function Start for DKABS32 ===== */
 /**
@@ -19864,7 +19864,7 @@ __STATIC_FORCEINLINE long long __RV_DSMBB32(unsigned long long a, unsigned long 
  * **Purpose**:\n
  * Multiply the signed 32-bit element of a register with the signed 32-bit element of another register, then right shift 14-
  * bit,finally write the 64-bit result to a third register.
- * * DSMBB32.SRL14: bottom*bottom s>> 14
+ * * DSMBB32.sra14: bottom*bottom s>> 14
  *
  * **Description**:\n
  * This instruction multiplies the bottom 32-bit element of Rs1 with the bottom 32-bit element of Rs2. The 64-bit multiplication result is written to Rd after right shift 14-bit.
@@ -19904,7 +19904,7 @@ __STATIC_FORCEINLINE long long __RV_DSMBB32_SRA14(unsigned long long a, unsigned
  * **Purpose**:\n
  * Multiply the signed 32-bit element of a register with the signed 32-bit element of another register, then right shift 32-
  * bit,finally write the 64-bit result to a third register.
- * * DSMBB32.SRL32: bottom*bottom s >> 32
+ * * DSMBB32.sra32: bottom*bottom s >> 32
  *
  * **Description**:\n
  * This instruction multiplies the bottom 32-bit element of Rs1 with the bottom 32-bit element of Rs2.
@@ -19984,7 +19984,7 @@ __STATIC_FORCEINLINE long long __RV_DSMBT32(unsigned long long a, unsigned long 
  * **Purpose**:\n
  * Multiply the signed 32-bit element of a register with the signed 32-bit element of another register, then right shift 14-
  * bit,finally write the 64-bit result to a third register.
- * * DSMBT32.SRL14: bottom*bottom s>> 14
+ * * DSMBT32.sra14: bottom*bottom s>> 14
  *
  * **Description**:\n
  * This instruction multiplies the bottom 32-bit element of Rs1 with the top 32-bit element of Rs2. The 64-bit multiplication
@@ -20024,7 +20024,7 @@ __STATIC_FORCEINLINE long long __RV_DSMBT32_SRA14(unsigned long long a, unsigned
  * **Purpose**:\n
  * Multiply the signed 32-bit element of a register with the signed 32-bit element of another register, then right shift 32-
  * bit,finally write the 64-bit result to a third register.
- * * DSMBT32.SRL32: bottom*bottom s>> 32
+ * * DSMBT32.sra32: bottom*bottom s>> 32
  *
  * **Description**:\n
  * This instruction multiplies the bottom 32-bit element of Rs1 with the top 32-bit element of Rs2. The 64-bit multiplication
@@ -20104,7 +20104,7 @@ __STATIC_FORCEINLINE long long __RV_DSMTT32(unsigned long long a, unsigned long 
  * **Purpose**:\n
  * Multiply the signed 32-bit element of a register with the signed 32-bit element of another register,then right shift 14-bit,
  * finally write the 64-bit result to a third register.
- * * DSMTT32.SRL14: top*top s>> 14
+ * * DSMTT32.sra14: top*top s>> 14
  *
  * **Description**:\n
  * This instruction multiplies the top 32-bit element of Rs1 with the top 32-bit element of Rs2. The 64-bit multiplication
@@ -20144,7 +20144,7 @@ __STATIC_FORCEINLINE long long __RV_DSMTT32_SRA14(unsigned long long a, unsigned
  * **Purpose**:\n
  * Multiply the signed 32-bit element of a register with the signed 32-bit element of another register,then right shift 32-bit,
  * finally write the 64-bit result to a third register.
- * * DSMTT32.SRL14: top*top s>> 32
+ * * DSMTT32.sra32: top*top s>> 32
  *
  * **Description**:\n
  * This instruction multiplies the top 32-bit element of Rs1 with the top 32-bit element of Rs2. The 64-bit multiplication
@@ -20471,7 +20471,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DPKTT16(unsigned long long a, unsig
 /* ===== Inline Function Start for DSRA16 ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
- * \brief    DSRA16 (32-bit Signed Saturating Cross Addition & Subtraction)
+ * \brief    DSRA16 (SIMD 16-bit Shift Right Arithmetic)
  * \details
  * **Type**: SIMD
  *
@@ -20757,7 +20757,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DRCRSA16(unsigned long long a, unsi
 /* ===== Inline Function Start for DRCRSA32 ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
- * \brief    DRCRSA32 (32-bit Signed Halving CrossSubtraction & Addition)
+ * \brief    DRCRSA32 (32-bit Signed Halving Cross Subtraction & Addition)
  * \details
  * **Type**: SIMD
  *
@@ -21578,6 +21578,412 @@ __STATIC_FORCEINLINE unsigned long long __RV_DRSUB32(unsigned long long a, unsig
 }
 /* ===== Inline Function End for DRSUB32 ===== */
 
+/* ===== Inline Function Start for DPACK32 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief    DPACK32 (SIMD Pack Two 32-bit Data To 64-bit)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DPACK32 Rd, Rs1, Rs2
+ * # Rd is even/odd pair of register
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Pack two 32-bit datas which from two registers into a 64-bit data.
+ *
+ * **Description**:\n
+ * This instruction moves 32-bit Rs1 to Rd.W[1] and moves 32-bit Rs2 to Rd.W[0].
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd = CONCAT(Rs1.W , Rs2.W);
+ * ~~~
+ *
+ * \param [in]  a signed long type of value stored in a
+ * \param [in]  b signed long type of value stored in b
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DPACK32(signed long a, signed long b)
+{
+    unsigned long long result;
+    __ASM volatile("dpack32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    return result;
+}
+/* ===== Inline Function End for DPACK32 ===== */
+
+/* ===== Inline Function Start for DSUNPKD810 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief    DSUNPKD810 (Signed Unpacking Bytes 1 & 0)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSUNPKD810 Rd, Rs1
+ * # Rd, Rs1 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Unpack byte 1 and byte 0 of 32-bit chunks in a register into two 16-bit signed halfwords of 32-bit chunks in a register.
+ *
+ * **Description**:\n
+ * For the `DSUNPKD810` instruction, it unpacks byte 1 and byte 0 of 32-bit chunks in Rs1 into two 16-bit signed halfwords
+ * and writes the results to the top part and the bottom part of 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[m].H[1] = SE16(Rs1.W[m].B[1])
+ * Rd.W[m].H[0] = SE16(Rs1.W[m].B[0])
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSUNPKD810(unsigned long long a)
+{
+    unsigned long long result;
+    __ASM volatile("dsunpkd810 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for DSUNPKD810 ===== */
+
+/* ===== Inline Function Start for DSUNPKD820 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief    DSUNPKD820 (Signed Unpacking Bytes 2 & 0)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSUNPKD820 Rd, Rs1
+ * # Rd, Rs1 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Unpack byte 2 and byte 0 of 32-bit chunks in a register into two 16-bit signed halfwords of 32-bit chunks in a register.
+ *
+ * **Description**:\n
+ * For the `DSUNPKD820` instruction, it unpacks byte 2 and byte 0 of 32-bit chunks in Rs1 into two 16-bit signed halfwords
+ * and writes the results to the top part and the bottom part of 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[m].H[1] = SE16(Rs1.W[m].B[2])
+ * Rd.W[m].H[0] = SE16(Rs1.W[m].B[0])
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSUNPKD820(unsigned long long a)
+{
+    unsigned long long result;
+    __ASM volatile("dsunpkd820 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for DSUNPKD820 ===== */
+
+/* ===== Inline Function Start for DSUNPKD830 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief    DSUNPKD830 (Signed Unpacking Bytes 3 & 0)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSUNPKD830 Rd, Rs1
+ * # Rd, Rs1 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Unpack byte 3 and byte 0 of 32-bit chunks in a register into two 16-bit signed halfwords of 32-bit chunks in a register.
+ *
+ * **Description**:\n
+ * For the `DSUNPKD830` instruction, it unpacks byte 3 and byte 0 of 32-bit chunks in Rs1 into two 16-bit signed halfwords
+ * and writes the results to the top part and the bottom part of 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[m].H[1] = SE16(Rs1.W[m].B[3])
+ * Rd.W[m].H[0] = SE16(Rs1.W[m].B[0])
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSUNPKD830(unsigned long long a)
+{
+    unsigned long long result;
+    __ASM volatile("dsunpkd830 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for DSUNPKD830 ===== */
+
+/* ===== Inline Function Start for DSUNPKD831 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief    DSUNPKD831 (Signed Unpacking Bytes 3 & 1)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSUNPKD831 Rd, Rs1
+ * # Rd, Rs1 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Unpack byte 3 and byte 1 of 32-bit chunks in a register into two 16-bit signed halfwords of 32-bit chunks in a register.
+ *
+ * **Description**:\n
+ * For the `DSUNPKD831` instruction, it unpacks byte 3 and byte 1 of 32-bit chunks in Rs1 into two 16-bit signed halfwords
+ * and writes the results to the top part and the bottom part of 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[m].H[1] = SE16(Rs1.W[m].B[3])
+ * Rd.W[m].H[0] = SE16(Rs1.W[m].B[1])
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSUNPKD831(unsigned long long a)
+{
+    unsigned long long result;
+    __ASM volatile("dsunpkd831 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for DSUNPKD831 ===== */
+
+/* ===== Inline Function Start for DSUNPKD832 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief    DSUNPKD832 (Signed Unpacking Bytes 3 & 2)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DSUNPKD832 Rd, Rs1
+ * # Rd, Rs1 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Unpack byte 3 and byte 2 of 32-bit chunks in a register into two 16-bit signed halfwords of 32-bit chunks in a register.
+ *
+ * **Description**:\n
+ * For the `DSUNPKD832` instruction, it unpacks byte 3 and byte 2 of 32-bit chunks in Rs1 into two 16-bit signed halfwords
+ * and writes the results to the top part and the bottom part of 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[m].H[1] = SE16(Rs1.W[m].B[3])
+ * Rd.W[m].H[0] = SE16(Rs1.W[m].B[2])
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DSUNPKD832(unsigned long long a)
+{
+    unsigned long long result;
+    __ASM volatile("dsunpkd832 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for DSUNPKD832 ===== */
+
+/* ===== Inline Function Start for DZUNPKD810 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief    DZUNPKD810 (UnSigned Unpacking Bytes 1 & 0)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DZUNPKD810 Rd, Rs1
+ * # Rd, Rs1 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Unpack byte 1 and byte 0 of 32-bit chunks in a register into two 16-bit unsigned halfwords of 32-bit chunks in a register.
+ *
+ * **Description**:\n
+ * For the `DZUNPKD810` instruction, it unpacks byte 1 and byte 0 of 32-bit chunks in Rs1 into two 16-bit unsigned halfwords
+ * and writes the results to the top part and the bottom part of 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[m].H[1] = SE16(Rs1.W[m].B[1])
+ * Rd.W[m].H[0] = SE16(Rs1.W[m].B[0])
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DZUNPKD810(unsigned long long a)
+{
+    unsigned long long result;
+    __ASM volatile("dzunpkd810 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for DZUNPKD810 ===== */
+
+/* ===== Inline Function Start for DZUNPKD820 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief    DZUNPKD820 (UnSigned Unpacking Bytes 2 & 0)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DZUNPKD820 Rd, Rs1
+ * # Rd, Rs1 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Unpack byte 2 and byte 0 of 32-bit chunks in a register into two 16-bit unsigned halfwords of 32-bit chunks in a register.
+ *
+ * **Description**:\n
+ * For the `DZUNPKD820` instruction, it unpacks byte 2 and byte 0 of 32-bit chunks in Rs1 into two 16-bit unsigned halfwords
+ * and writes the results to the top part and the bottom part of 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[m].H[1] = SE16(Rs1.W[m].B[2])
+ * Rd.W[m].H[0] = SE16(Rs1.W[m].B[0])
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DZUNPKD820(unsigned long long a)
+{
+    unsigned long long result;
+    __ASM volatile("dzunpkd820 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for DZUNPKD820 ===== */
+
+/* ===== Inline Function Start for DZUNPKD830 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief    DZUNPKD830 (UnSigned Unpacking Bytes 3 & 0)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DZUNPKD830 Rd, Rs1
+ * # Rd, Rs1 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Unpack byte 3 and byte 0 of 32-bit chunks in a register into two 16-bit unsigned halfwords of 32-bit chunks in a register.
+ *
+ * **Description**:\n
+ * For the `DZUNPKD830` instruction, it unpacks byte 3 and byte 0 of 32-bit chunks in Rs1 into two 16-bit unsigned halfwords
+ * and writes the results to the top part and the bottom part of 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[m].H[1] = SE16(Rs1.W[m].B[3])
+ * Rd.W[m].H[0] = SE16(Rs1.W[m].B[0])
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DZUNPKD830(unsigned long long a)
+{
+    unsigned long long result;
+    __ASM volatile("dzunpkd830 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for DZUNPKD830 ===== */
+
+/* ===== Inline Function Start for DZUNPKD831 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief    DZUNPKD831 (UnSigned Unpacking Bytes 3 & 1)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DZUNPKD831 Rd, Rs1
+ * # Rd, Rs1 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Unpack byte 3 and byte 1 of 32-bit chunks in a register into two 16-bit unsigned halfwords of 32-bit chunks in a register.
+ *
+ * **Description**:\n
+ * For the `DZUNPKD831` instruction, it unpacks byte 3 and byte 1 of 32-bit chunks in Rs1 into two 16-bit unsigned halfwords
+ * and writes the results to the top part and the bottom part of 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[m].H[1] = SE16(Rs1.W[m].B[3])
+ * Rd.W[m].H[0] = SE16(Rs1.W[m].B[1])
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DZUNPKD831(unsigned long long a)
+{
+    unsigned long long result;
+    __ASM volatile("dzunpkd831 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for DZUNPKD831 ===== */
+
+/* ===== Inline Function Start for DZUNPKD832 ===== */
+/**
+ * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
+ * \brief    DZUNPKD832 (UnSigned Unpacking Bytes 3 & 2)
+ * \details
+ * **Type**: SIMD
+ *
+ * **Syntax**:\n
+ * ~~~
+ * DZUNPKD832 Rd, Rs1
+ * # Rd, Rs1 are all even/odd pair of registers
+ * ~~~
+ *
+ * **Purpose**:\n
+ * Unpack byte 3 and byte 2 of 32-bit chunks in a register into two 16-bit unsigned halfwords of 32-bit chunks in a register.
+ *
+ * **Description**:\n
+ * For the `DZUNPKD832` instruction, it unpacks byte 3 and byte 2 of 32-bit chunks in Rs1 into two 16-bit unsigned halfwords
+ * and writes the results to the top part and the bottom part of 32-bit chunks in Rd.
+ *
+ * **Operations**:\n
+ * ~~~
+ * Rd.W[m].H[1] = SE16(Rs1.W[m].B[3])
+ * Rd.W[m].H[0] = SE16(Rs1.W[m].B[2])
+ * ~~~
+ *
+ * \param [in]  a unsigned long long type of value stored in a
+ * \return value stored in unsigned long long type
+ */
+__STATIC_FORCEINLINE unsigned long long __RV_DZUNPKD832(unsigned long long a)
+{
+    unsigned long long result;
+    __ASM volatile("dzunpkd832 %0, %1" : "=r"(result) : "r"(a));
+    return result;
+}
+/* ===== Inline Function End for DZUNPKD832 ===== */
+
 /* ===== Inline Function Start for DKMMAC ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
@@ -21625,16 +22031,16 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKMMAC(unsigned long long t, unsign
 }
 /* ===== Inline Function End for DKMMAC ===== */
 
-/* ===== Inline Function Start for DKMMACU ===== */
+/* ===== Inline Function Start for DKMMAC.u ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
- * \brief   DKMMACU (64-bit MSW 32x32 Unsigned Multiply and Saturating Add)
+ * \brief   DKMMAC.u (64-bit MSW 32x32 Unsigned Multiply and Saturating Add)
  * \details
  * **Type**: SIMD
  *
  * **Syntax**:\n
  * ~~~
- * DKMMACU Rd, Rs1, Rs2
+ * DKMMAC.u Rd, Rs1, Rs2
  * # Rd, Rs1, Rs2 are all even/odd pair of registers
  * ~~~
  *
@@ -21670,7 +22076,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKMMAC_U(unsigned long long t, unsi
     __ASM volatile("dkmmac.u %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
     return t;
 }
-/* ===== Inline Function End for DKMMACU ===== */
+/* ===== Inline Function End for DKMMAC.u ===== */
 
 /* ===== Inline Function Start for DKMMSB ===== */
 /**
@@ -21719,16 +22125,16 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKMMSB(unsigned long long t, unsign
 }
 /* ===== Inline Function End for DKMMSB ===== */
 
-/* ===== Inline Function Start for DKMMSBU ===== */
+/* ===== Inline Function Start for DKMMSB.u ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
- * \brief   DKMMSBU (64-bit MSW 32x32 Unsigned Multiply and Saturating Sub)
+ * \brief   DKMMSB.u (64-bit MSW 32x32 Unsigned Multiply and Saturating Sub)
  * \details
  * **Type**: SIMD
  *
  * **Syntax**:\n
  * ~~~
- * DKMMSBU Rd, Rs1, Rs2
+ * DKMMSB.u Rd, Rs1, Rs2
  * # Rd, Rs1, Rs2 are all even/odd pair of registers
  * ~~~
  *
@@ -21764,7 +22170,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKMMSB_U(unsigned long long t, unsi
     __ASM volatile("dkmmsb.u %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
     return t;
 }
-/* ===== Inline Function End for DKMMSBU ===== */
+/* ===== Inline Function End for DKMMSB.u ===== */
 
 /* ===== Inline Function Start for DKMADA ===== */
 /**
@@ -22140,16 +22546,16 @@ __STATIC_FORCEINLINE unsigned long long __RV_DSMAQA(unsigned long long t, unsign
 }
 /* ===== Inline Function End for DSMAQA ===== */
 
-/* ===== Inline Function Start for DSMAQASU ===== */
+/* ===== Inline Function Start for DSMAQA.SU ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
- * \brief DSMAQASU (Four Signed 8 x Unsigned 8 with 32-bit Signed Add)
+ * \brief DSMAQA.SU (Four Signed 8 x Unsigned 8 with 32-bit Signed Add)
  * \details
  * **Type**: DSP
  *
  * **Syntax**:\n
  * ~~~
- * DSMAQASU Rd, Rs1, Rs2
+ * DSMAQA.SU Rd, Rs1, Rs2
  * ~~~
  *
  * **Purpose**:\n
@@ -22184,10 +22590,10 @@ __STATIC_FORCEINLINE unsigned long long __RV_DSMAQA(unsigned long long t, unsign
  */
 __STATIC_FORCEINLINE unsigned long long __RV_DSMAQA_SU(unsigned long long t, unsigned long long a, unsigned long long b)
 {
-    __ASM volatile("dsmaqasu %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    __ASM volatile("dsmaqa.su %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
     return t;
 }
-/* ===== Inline Function End for DSMAQASU ===== */
+/* ===== Inline Function End for DSMAQA.SU ===== */
 
 /* ===== Inline Function Start for DUMAQA ===== */
 /**
@@ -23127,16 +23533,16 @@ __STATIC_FORCEINLINE long long __RV_DDSMAQA(long long t, unsigned long long a, u
 }
 /* ===== Inline Function End for DDSMAQA ===== */
 
-/* ===== Inline Function Start for DDSMAQASU ===== */
+/* ===== Inline Function Start for DDSMAQA.SU ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
- * \brief  DDSMAQASU (Eight Signed 8 x Unsigned 8 with 64-bit Add)
+ * \brief  DDSMAQA.SU (Eight Signed 8 x Unsigned 8 with 64-bit Add)
  * \details
  * **Type**: DSP
  *
  * **Syntax**:\n
  * ~~~
- * DDSMAQASU Rd, Rs1, Rs2
+ * DDSMAQA.SU Rd, Rs1, Rs2
  * ~~~
  *
  * **Purpose**:\n
@@ -23171,12 +23577,12 @@ __STATIC_FORCEINLINE long long __RV_DDSMAQA(long long t, unsigned long long a, u
  * \param [in]  b unsigned long long type of value stored in b
  * \return value stored in long long type
  */
-__STATIC_FORCEINLINE long long __RV_DDSMAQASU(long long t, unsigned long long a, unsigned long long b)
+__STATIC_FORCEINLINE long long __RV_DDSMAQA_SU(long long t, unsigned long long a, unsigned long long b)
 {
-    __ASM volatile("ddsmaqasu %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
+    __ASM volatile("ddsmaqa.su %0, %1, %2" : "+r"(t) : "r"(a), "r"(b));
     return t;
 }
-/* ===== Inline Function End for DDSMAQASU ===== */
+/* ===== Inline Function End for DDSMAQA.SU ===== */
 
 /* ===== Inline Function Start for DDUMAQA ===== */
 /**
@@ -24477,6 +24883,44 @@ __STATIC_FORCEINLINE long __SMMLA(long op1, long op2, long acc)
                                    (ARG3 == 16) ? __RV_PKTT16(ARG1, ARG2) :              \
                                    (((((uint32_t)(ARG1))          ) & 0xFFFF0000UL) |    \
                                    ((((uint32_t)(ARG2)) >> (ARG3)) & 0x0000FFFFUL)))
+
+#if __RISCV_XLEN == 64
+/** \brief Halfword packing instruction. Combines bits[15:0] of val1 with bits[31:16] of val2 levitated with the val3，
+    and also combines the [47:32] of val1 with bits[63:48] of val2 with the val3, finally pack the two new 32-bits to 64-bit. */
+#define __PKHBT64(ARG1, ARG2, ARG3)  ((ARG3 == 0) ? __RV_PKTB16(ARG2, ARG1) :             \
+                                   (ARG3 == 16) ? __RV_PKBB16(ARG2, ARG1) :              \
+                                   ((int64_t)((((uint32_t)((uint64_t)ARG1 >> 32)) & 0x0000FFFFUL) |           \
+                                   ((((uint32_t)((uint64_t)ARG2 >> 32)) << (ARG3)) & 0xFFFF0000UL)) << 32) |  \
+                                   ((int64_t)(((((uint32_t)(ARG1))) & 0x0000FFFFUL) |                         \
+                                   ((((uint32_t)(ARG2)) << (ARG3)) & 0xFFFF0000UL)) & 0xFFFFFFFFUL))
+
+/** \brief Halfword packing instruction. Combines bits[31:16] of val1 with bits[15:0] of val2 right-shifted with the val3，
+    and also combines bits [63:48] of val1 with bits [47:32] of val2 with the val3, finally pack the two new 32bits to 64bits. */
+#define __PKHTB64(ARG1, ARG2, ARG3)  ((ARG3 == 0) ? __RV_PKTB16(ARG1, ARG2) :              \
+                                   (ARG3 == 16) ? __RV_PKTT16(ARG1, ARG2) :              \
+                                   ((uint64_t)(((uint32_t)((uint64_t)ARG1 >> 32) & 0xFFFF0000UL) |            \
+                                   ((((uint32_t)((uint64_t)ARG2 >> 32)) >> (ARG3)) & 0x0000FFFFUL)) << 32) |  \
+                                   ((uint64_t)(((uint32_t)(ARG1) & 0xFFFF0000UL) |                            \
+                                   ((((uint32_t)(ARG2)) >> (ARG3)) & 0x0000FFFFUL)) & 0xFFFFFFFFUL))
+#else
+/** \brief Halfword packing instruction. Combines bits[15:0] of val1 with bits[31:16] of val2 levitated with the val3，
+    and also combines the [47:32] of val1 with bits[63:48] of val2 with the val3, finally pack the two new 32-bits to 64-bit. */
+#define __PKHBT64(ARG1, ARG2, ARG3)  ((ARG3 == 0) ? __RV_DPKTB16(ARG2, ARG1) :             \
+                                   (ARG3 == 16) ? __RV_DPKBB16(ARG2, ARG1) :              \
+                                   ((int64_t)((((uint32_t)((uint64_t)ARG1 >> 32)) & 0x0000FFFFUL) |           \
+                                   ((((uint32_t)((uint64_t)ARG2 >> 32)) << (ARG3)) & 0xFFFF0000UL)) << 32) |  \
+                                   ((int64_t)(((((uint32_t)(ARG1))) & 0x0000FFFFUL) |                         \
+                                   ((((uint32_t)(ARG2)) << (ARG3)) & 0xFFFF0000UL)) & 0xFFFFFFFFUL))
+
+/** \brief Halfword packing instruction. Combines bits[31:16] of val1 with bits[15:0] of val2 right-shifted with the val3，
+    and also combines bits [63:48] of val1 with bits [47:32] of val2 with the val3, finally pack the two new 32bits to 64bits. */
+#define __PKHTB64(ARG1, ARG2, ARG3)  ((ARG3 == 0) ? __RV_DPKTB16(ARG1, ARG2) :              \
+                                   (ARG3 == 16) ? __RV_DPKTT16(ARG1, ARG2) :              \
+                                   ((uint64_t)(((uint32_t)((uint64_t)ARG1 >> 32) & 0xFFFF0000UL) |            \
+                                   ((((uint32_t)((uint64_t)ARG2 >> 32)) >> (ARG3)) & 0x0000FFFFUL)) << 32) |  \
+                                   ((uint64_t)(((uint32_t)(ARG1) & 0xFFFF0000UL) |                            \
+                                   ((((uint32_t)(ARG2)) >> (ARG3)) & 0x0000FFFFUL)) & 0xFFFFFFFFUL))
+#endif /* __RISCV_XLEN == 64 */
 
 /** first rotate then extract. This is more suitable for arm compiler for it can rotate and extract in one command*/
 #define __SXTB16_RORn(ARG1, ARG2)   __RV_SUNPKD820(__ROR(ARG1, ARG2))

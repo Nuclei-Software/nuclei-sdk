@@ -23,8 +23,8 @@
  * Description:  Public header file to contain the NMSIS-NN structs for the
  *               TensorFlowLite micro compliant functions
  *
- * $Date:        8 March 2023
- * $Revision:    V.2.5.0
+ * $Date:        27 October 2023
+ * $Revision:    V.2.6.0
  *
  * Target Processor: RISC-V Cores
  * -------------------------------------------------------------------- */
@@ -107,19 +107,30 @@ typedef struct
 /** NMSIS-NN object for the convolution layer parameters */
 typedef struct
 {
-    int32_t input_offset;  /**< Zero value for the input tensor */
-    int32_t output_offset; /**< Zero value for the output tensor */
+    int32_t input_offset;  /**< The negative of the zero value for the input tensor */
+    int32_t output_offset; /**< The negative of the zero value for the output tensor */
     nmsis_nn_tile stride;
     nmsis_nn_tile padding;
     nmsis_nn_tile dilation;
     nmsis_nn_activation activation;
 } nmsis_nn_conv_params;
 
-/** NMSIS-NN object for Depthwise convolution layer parameters */
+/** NMSIS-NN object for the transpose convolution layer parameters */
 typedef struct
 {
-    int32_t input_offset;  /**< Zero value for the input tensor */
-    int32_t output_offset; /**< Zero value for the output tensor */
+    int32_t input_offset;  /**< The negative of the zero value for the input tensor */
+    int32_t output_offset; /**< The negative of the zero value for the output tensor */
+    nmsis_nn_tile stride;
+    nmsis_nn_tile padding;
+    nmsis_nn_tile padding_offsets;
+    nmsis_nn_tile dilation;
+    nmsis_nn_activation activation;
+} nmsis_nn_transpose_conv_params;
+/** NMSIS-NN object for the depthwise convolution layer parameters */
+typedef struct
+{
+    int32_t input_offset;  /**< The negative of the zero value for the input tensor */
+    int32_t output_offset; /**< The negative of the zero value for the output tensor */
     int32_t ch_mult;       /**< Channel Multiplier. ch_mult * in_ch = out_ch */
     nmsis_nn_tile stride;
     nmsis_nn_tile padding;
@@ -137,9 +148,9 @@ typedef struct
 /** NMSIS-NN object for Fully Connected layer parameters */
 typedef struct
 {
-    int32_t input_offset;  /**< Zero value for the input tensor */
-    int32_t filter_offset; /**< Zero value for the filter tensor. Not used */
-    int32_t output_offset; /**< Zero value for the output tensor */
+    int32_t input_offset;  /**< The negative of the zero value for the input tensor */
+    int32_t filter_offset; /**< The negative of the zero value for the filter tensor. Not used */
+    int32_t output_offset; /**< The negative of the zero value for the output tensor */
     nmsis_nn_activation activation;
 } nmsis_nn_fc_params;
 
@@ -147,8 +158,8 @@ typedef struct
 typedef struct
 {
     int32_t rank;
-    int32_t input_offset;  /**< Zero value for the input tensor */
-    int32_t output_offset; /**< Zero value for the output tensor */
+    int32_t input_offset;  /**< The negative of the zero value for the input tensor */
+    int32_t output_offset; /**< The negative of the zero value for the output tensor */
     nmsis_nn_activation input_activation;
     nmsis_nn_activation output_activation;
 } nmsis_nn_svdf_params;

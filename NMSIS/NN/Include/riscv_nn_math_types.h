@@ -22,8 +22,8 @@
  * Title:        riscv_nn_math_types.h
  * Description:  Compiler include and basic types
  *
- * $Date:        4 January 2023
- * $Revision:    V.1.3.2
+ * $Date:        15 August 2023
+ * $Revision:    V.1.3.3
  *
  * Target :  RISC-V Cores
  * -------------------------------------------------------------------- */
