@@ -280,10 +280,10 @@ void nuclei_cpuinfo(void)
         uint32_t mpasize = *(uint32_t *)(iregion_base);
         printf("                  mpasize : %u\r\n", mpasize);
         uint32_t cmo_info = *(uint32_t*)(iregion_base + 4);
-        if (cmo_info & BIT(1)) {
+        if (cmo_info & BIT(0)) {
             printf("                  cbozero : %uByte\r\n", (unsigned int)POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 6) + 2));
             printf("                  cmo     : %uByte\r\n", (unsigned int)POWER_FOR_TWO(__RV_EXTRACT_FIELD(cmo_info, 0xF << 2) + 2));
-            if (cmo_info & BIT(2)) {
+            if (cmo_info & BIT(1)) {
                 printf("                  has_prefecth\r\n");
             }
         }
