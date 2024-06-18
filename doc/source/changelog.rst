@@ -40,7 +40,12 @@ This is release version ``0.6.0-dev`` of Nuclei SDK, which is still in developme
   - Update many CSR structure defined in ``core_feature_base.h`` such as ``CSR_MCFGINFO_Type``, ``CSR_MDLMCTL_Type`` and ``CSR_MCACHECTL_Type`` etc.
   - Add ``__set_rv_cycle`` and ``__set_rv_instret`` API to set cycle and instret csr registers.
   - Add ``CSR_MTLBCFGINFO_Type`` CSR structure in ``core_feature_base.h``.
+  - Fix protection type error in PMP/sPMP API.
+  - Fix wrong CLIC_CLICINFO_VER_Msk and CLIC_CLICINFO_NUM_Msk macro value in ``core_feature_eclic.h``
+  - Add ``__ROR64`` in ``core_compatiable.h``.
+  - Add and update DSP intrinsic APIs in ``core_feature_dsp.h``.
   - Add and update Nuclei customized CSRs in ``riscv_encoding.h``.
+  - Sync NMSIS DSP/NN library 1.2.1
 
 * SoC
 
