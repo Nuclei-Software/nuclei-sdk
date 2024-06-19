@@ -84,6 +84,12 @@
                 "PASS": ["Won't run here if violates L U\\R\\W\\X permission check!", "[ERROR]__TEE_PRESENT"]
             }
         },
+        "application/baremetal/demo_smpu": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Won't run here if violates rules check!", "[ERROR]__TEE_PRESENT"]
+            }
+        },
         "application/baremetal/demo_cache": {
             "build_config" : {},
             "checks": {

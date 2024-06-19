@@ -33,6 +33,10 @@
             "run": false,
             "build": false
         },
+        "application/baremetal/demo_smpu" : {
+            "run": false,
+            "build": false
+        },
         "application/baremetal/demo_smode_eclic": {
             "run": true,
             "build": true
