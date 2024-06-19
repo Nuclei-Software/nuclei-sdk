@@ -67,7 +67,9 @@ Add this `profiling` folder into your project, and do steps below:
 - `interface` can be `0`, `1`, `2`
 
   - `0`: collect gprof or gcov data in buffer, you can use gdb script to dump gcov or gprof binary files when you are debug the program.
-  - `1`: require semihosting or file open/close is supported! It will directly write the gprof or gcov data into files.
+  - `1`: require semihosting or file open/close to be supported! It will directly write the gprof or gcov data into files,
+    when creating project, you must click ``Enable semihosting``, and in IDE, if group library in linker options not enabled,
+    you need to add ``c_nano`` if you are using c nano library after ``semihost`` in ``Linker -> Libraries`` setting page.
   - `2`: dump gcov or gprof data directly in console, and you can copy all the log and save it in a file, such as `prof.log`, and then
     you can use the `parse.py` script to analyze the log file and dump it as binary into your project folder, such as `python3 /path/to/parse.py prof.log`
 
