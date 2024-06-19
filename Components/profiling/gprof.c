@@ -492,7 +492,7 @@ long gprof_collect(unsigned long interface)
             if (interface == 0) {
                 memcpy(bufptr, (void*) &rawarc, sizeof rawarc);
                 bufptr += sizeof rawarc;
-            } else if (interface == 0) {
+            } else if (interface == 1) {
                 write(fd, (const char*)&rawarc, sizeof rawarc);
             } else {
                 hexdumpbuf((char *)(&rawarc), (unsigned long)(sizeof rawarc));
