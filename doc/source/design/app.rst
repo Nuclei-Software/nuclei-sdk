@@ -498,7 +498,7 @@ to do spinlock in this example.
 
     * It doesn't work with gd32vf103 processor.
     * **MUST** Need to enable I/D Cache in <Device.h> if I/D Cache present in CPU.
-    * It need at least a 2-Core SMP CPU
+    * It needs at least a 2-Core SMP CPU
 
 **How to run this application:**
 
@@ -916,7 +916,7 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
 .. note::
 
     * It doesn't work with gd32vf103 processor.
-    * It need Nuclei CPU configured with TEE feature and S-Mode ECLIC
+    * It needs Nuclei CPU configured with TEE feature and S-Mode ECLIC
     * In this application's Makefile, we provided comments in Makefile about optimization
       for code size, please refer to chapter :ref:`design_app_demo_eclic` for details.
     * Need to enable TEE in <Device.h> if TEE present in CPU.
@@ -1073,7 +1073,7 @@ This `demo_spmp application`_ is used to demonstrate how to grant physical memor
 .. note::
 
     * It doesn't work with gd32vf103 processor.
-    * It need Nuclei CPU configured with TEE, PMP, sPMP feature
+    * It needs Nuclei CPU configured with TEE, PMP, sPMP feature
     * Need to enable PMP in <Device.h> if PMP present in CPU.
     * Need to enable TEE in <Device.h> if TEE present in CPU.
     * Need to enable SPMP in <Device.h> if SPMP present in CPU.
@@ -1084,8 +1084,8 @@ This `demo_spmp application`_ is used to demonstrate how to grant physical memor
 * There're three config structures, ``pmp_config`` inits that M-mode grants full permission
   of the whole address range on S and U mode; ``spmp_config_x`` sets protected executable
   address range as 2^12 bytes; ``spmp_config_rw`` sets protected readable/writable address
-  range as 2^12 bytes, and you can change the ``protection``, ``order``, ``base_addr``
-  according to your memory assignments
+  range as 2^12 bytes, and you can change the ``protection``, ``order``, ``base_addr`` according
+  to your memory assignments
 * Exception delegation from default M mode to S mode is also provided in this demo, when
   it violates sPMP check.When exception occurs, the print info including ``scause``, ``sepc``
   can be observed by serial console, which explains the exception cause of SPMP permission
@@ -1287,6 +1287,208 @@ From disassembly code, SEPC refers to
     Attempting to write protected_data[0]
     Won't run here if violates L U\R\W\X permission check!
 
+.. _design_app_demo_smpu:
+
+demo_smpu
+~~~~~~~~~
+
+SMPU is upgraded from sPMP to enable S-mode OS to limit the physical addresses accessible by
+U-mode software on a hart. This `demo_smpu application`_ is used to demonstrate how to grant
+physical memory privileges(read, write, execute) on each physical memory region by supervisor-mode control CSRs.
+
+.. note::
+
+    * It doesn't work with gd32vf103 processor.
+    * It needs Nuclei CPU configured with TEE, PMP, SMPU feature
+    * Need to enable PMP in <Device.h> if PMP present in CPU.
+    * Need to enable TEE in <Device.h> if TEE present in CPU.
+    * Need to enable SMPU in <Device.h> if smpu present in CPU.
+
+* The `demo_smpu application`_ has many common design with `demo_spmp application`_, and you should first
+  pay attention to Encoding of Permissions and Context Switching Optimization when changed to smpu
+* Unlike sPMP, ``__set_SMPUSWITCHx`` should be called to activate the entries
+* ``smpu_violation_fault_handler`` is registered, which is to execute when smpu violation
+  exception occurs
+* The SMPU is checked before the PMA checks and PMP checks
+* There're three config structures, ``pmp_config`` inits that M-mode grants full permission
+  of the whole address range on S and U mode; ``smpu_config_x`` sets protected executable
+  address range as 2^12 bytes; ``smpu_config_rw`` sets protected data range as 2^12 bytes,
+  and you can change the ``protection``, ``order``, ``base_addr`` according to your memory assignments
+* SMPU has three kinds of rules: U-mode-only, S-mode-only, and Shared-Region rules. The S bit marks a rule
+  as S-mode-only when set and U-mode-only when unset
+* ``protection`` of smpu_config_x and smpu_config_rw should be assigned according to ``2.4. Encoding of Permissions``
+  of Ssmpu spec
+* Exception delegation from default M mode to S mode is also provided in this demo, when
+  it violates smpu check. When exception occurs, the print info including ``scause``, ``sepc``
+  can be observed by serial console, which explains the exception cause of smpu permission
+  violation, and shows which asm instruction triggers the violation
+* In the application code, there is a macro called ``TRIGGER_SMPU_VIOLATION_MODE`` to control the
+  smpu working feature:
+
+  - If **TRIGGER_SMPU_VIOLATION_MODE=INSTRUCTION_SMPU_EXCEPTION**, the unallowed memory is to
+    execute, which triggers ``Instruction SMPU fault``, whose scause.EXCCODE = 12
+
+  - If **TRIGGER_SMPU_VIOLATION_MODE=LOAD_SMPU_EXCEPTION**, the unallowed memory is to read,
+    which triggers ``Load SMPU fault``, whose scause.EXCODE = 13
+
+  - If **TRIGGER_SMPU_VIOLATION_MODE=STORE_SMPU_EXCEPTION**, the unallowed memory is to write,
+    which triggers ``Store/AMO SMPU fault``, whose scause.EXCODE = 15
+
+  - If **TRIGGER_SMPU_VIOLATION_MODE=EXECUTE_SHARED_DATA_REGION_EXCEPTION**, the shared R/W data region
+    is to execute, which triggers ``Instruction SMPU fault``
+
+  - If **TRIGGER_SMPU_VIOLATION_MODE=WRITE_READONLY_SHARED_DATA_EXCEPTION**, the shared Read-only data region
+    is to write, which triggers ``Store/AMO SMPU fault``
+
+  - If **TRIGGER_SMPU_VIOLATION_MODE=SHARE_CODE_DATA_REGION**, the shared code region is to execute, and the shared
+    R/W data region is to read and write, both of which is allowed
+
+  - If **TRIGGER_SMPU_VIOLATION_MODE=RUN_WITH_ENTRY_INACTIVE**, the code region and data reigon is set to inaccessible,
+    but disable corresponpding entries, so the rules doesn't take effect and execution and read/write succeed
+
+**How to run this application:**
+
+.. code-block::shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_smpu directory
+    cd application/baremetal/demo_smpu
+    # MUST: Your CPU configuration must has TEE configured
+    # Change macro __TEE_PRESENT and __SMPU_PRESENT to 1 in <Device.h>
+    # here assume CORE=n300 is equipped with TEE
+    #define __TEE_PRESENT             1
+    #define __SMPU_PRESENT             1
+    # Change macro TRIGGER_SMPU_VIOLATION_MODE value in demo_smpu.c
+    # to see different working mode of this demo
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
+
+
+**Expected output(TRIGGER_SMPU_VIOLATION_MODE=INSTRUCTION_SMPU_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jun 18 2024, 18:36:40
+    Download Mode: ILM
+    CPU Frequency 16058613 Hz
+    CPU HartID: 0
+    ------smpu demo with trigger condition 0------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get smpu entry: index 0, prot_out: 0x9b, addr_out: 0x80004000, order_out: 12
+    Get smpu entry: index 1, prot_out: 0x9b, addr_out: 0x90000000, order_out: 12
+    Attempting to fetch instruction from protected address 0x0x80004000
+    Instruction SMPU fault occurs, cause: 0x1000000c, epc: 0x80004000
+
+**Expected output(TRIGGER_SMPU_VIOLATION_MODE=LOAD_SMPU_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jun 18 2024, 18:39:13
+    Download Mode: ILM
+    CPU Frequency 16068116 Hz
+    CPU HartID: 0
+    ------smpu demo with trigger condition 1------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get smpu entry: index 0, prot_out: 0x9c, addr_out: 0x80004000, order_out: 12
+    Get smpu entry: index 1, prot_out: 0x9c, addr_out: 0x90000000, order_out: 12
+    Attempting to fetch instruction from protected address 0x0x80004000
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0] at 0x90000000
+    Load SMPU fault occurs, cause: 0x1000000d, epc: 0x8000608c
+
+**Expected output(TRIGGER_SMPU_VIOLATION_MODE=STORE_SMPU_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jun 18 2024, 18:40:00
+    Download Mode: ILM
+    CPU Frequency 16057630 Hz
+    CPU HartID: 0
+    ------smpu demo with trigger condition 2------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get smpu entry: index 0, prot_out: 0x9c, addr_out: 0x80004000, order_out: 12
+    Get smpu entry: index 1, prot_out: 0x99, addr_out: 0x90000000, order_out: 12
+    Attempting to fetch instruction from protected address 0x0x80004000
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0] at 0x90000000
+    protected_data[0]: 0xAA succeed
+    Attempting to write protected_data[0] at 0x90000000
+    Store/AMO SMPU fault occurs, cause: 0x1000000f, epc: 0x800060b2
+
+**Expected output(TRIGGER_SMPU_VIOLATION_MODE=EXECUTE_SHARED_DATA_REGION_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jun 18 2024, 18:40:39
+    Download Mode: ILM
+    CPU Frequency 16057630 Hz
+    CPU HartID: 0
+    ------smpu demo with trigger condition 3------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get smpu entry: index 0, prot_out: 0x1e, addr_out: 0x80004000, order_out: 12
+    Get smpu entry: index 1, prot_out: 0x1e, addr_out: 0x90000000, order_out: 12
+    Attempting to fetch instruction from protected address 0x0x80004000
+    Instruction SMPU fault occurs, cause: 0x1000000c, epc: 0x80004000
+
+**Expected output(TRIGGER_SMPU_VIOLATION_MODE=WRITE_READONLY_SHARED_DATA_EXCEPTION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jun 18 2024, 18:41:17
+    Download Mode: ILM
+    CPU Frequency 16057630 Hz
+    CPU HartID: 0
+    ------smpu demo with trigger condition 4------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get smpu entry: index 0, prot_out: 0x9a, addr_out: 0x80004000, order_out: 12
+    Get smpu entry: index 1, prot_out: 0x9f, addr_out: 0x90000000, order_out: 12
+    Attempting to fetch instruction from protected address 0x0x80004000
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0] at 0x90000000
+    protected_data[0]: 0xAA succeed
+    Attempting to write protected_data[0] at 0x90000000
+    Store/AMO SMPU fault occurs, cause: 0x1000000f, epc: 0x800060b2
+
+**Expected output(TRIGGER_SMPU_VIOLATION_MODE=SHARE_CODE_DATA_REGION) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jun 18 2024, 18:41:46
+    Download Mode: ILM
+    CPU Frequency 16068116 Hz
+    CPU HartID: 0
+    ------smpu demo with trigger condition 5------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get smpu entry: index 0, prot_out: 0x9a, addr_out: 0x80004000, order_out: 12
+    Get smpu entry: index 1, prot_out: 0x1e, addr_out: 0x90000000, order_out: 12
+    Attempting to fetch instruction from protected address 0x0x80004000
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0] at 0x90000000
+    protected_data[0]: 0xAA succeed
+    Attempting to write protected_data[0] at 0x90000000
+    Won't run here if violates rules check!
+
+**(Default)Expected output(TRIGGER_SMPU_VIOLATION_MODE=RUN_WITH_ENTRY_INACTIVE) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jun 18 2024, 18:42:19
+    Download Mode: ILM
+    CPU Frequency 16057630 Hz
+    CPU HartID: 0
+    ------smpu demo with trigger condition 6------
+    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x0, order_out: 32
+    Get smpu entry: index 0, prot_out: 0x18, addr_out: 0x80004000, order_out: 12
+    Get smpu entry: index 1, prot_out: 0x18, addr_out: 0x90000000, order_out: 12
+    Attempting to fetch instruction from protected address 0x0x80004000
+    ----protected_execute succeed!----
+    Attempting to read protected_data[0] at 0x90000000
+    protected_data[0]: 0xAA succeed
+    Attempting to write protected_data[0] at 0x90000000
+    Won't run here if violates rules check!
+
 .. _design_app_demo_profiling:
 
 demo_profiling
@@ -1380,7 +1582,7 @@ This `demo_pmp application`_ is used to demonstrate how to grant physical memory
 .. note::
 
     * It doesn't work with gd32vf103 processor.
-    * It need Nuclei CPU configured with PMP feature
+    * It needs Nuclei CPU configured with PMP feature
     * Need to enable PMP in <Device.h> if PMP present in CPU.
 
 * ``pmp_violation_fault_handler`` is registered, which is to execute when pmp violation
@@ -1523,8 +1725,8 @@ for all the cpu.
 .. note::
 
     * It doesn't work with gd32vf103 processor.
-    * It need Nuclei SMP CPU configured with CIDU feature
-    * It need Nuclei EvalSoC's uart and its interrupt, if you want to port it, you need to port uart driver of your SoC
+    * It needs Nuclei SMP CPU configured with CIDU feature
+    * It needs Nuclei EvalSoC's uart and its interrupt, if you want to port it, you need to port uart driver of your SoC
     * Need to enable CIDU in <Device.h> if CIDU present in cluster.
     * Multicore SoC is needed.
 
@@ -1681,7 +1883,7 @@ demo_cache
 .. note::
 
     * It doesn't work with gd32vf103 processor.
-    * It need Nuclei CPU configured with CCM feature
+    * It needs Nuclei CPU configured with CCM feature
 
 This `demo_cache application`_ is used to demonstrate how to understand cache mechanism.
 
@@ -1853,7 +2055,7 @@ demo_stack_check
 .. note::
 
     * It doesn't work with gd32vf103 processor.
-    * It need Nuclei CPU configured with stack check feature
+    * It needs Nuclei CPU configured with stack check feature
 
 This `demo_stack_check application`_ is used to demonstrate how to check stack overflow and underflow and track the ``sp``.
 
@@ -2354,6 +2556,7 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx demo`` applicati
 .. _threadx demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/threadx/demo
 .. _demo_smode_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_eclic
 .. _demo_spmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_spmp
+.. _demo_smpu application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smpu
 .. _demo_pmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pmp
 .. _demo_profiling application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_profiling
 .. _demo_cidu application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cidu
