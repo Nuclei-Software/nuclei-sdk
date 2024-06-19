@@ -7,9 +7,9 @@
 #warning "__TEE_PRESENT is not defined or equal to 1, please check!"
 #endif
 
-#if !defined(__SPMP_PRESENT) || (__SPMP_PRESENT != 1)
-/* __SPMP_PRESENT should be defined in <Device>.h */
-#warning "__SPMP_PRESENT is not defined or equal to 1, please check!"
+#if !defined(__PMP_PRESENT) || (__PMP_PRESENT != 1)
+/* __PMP_PRESENT should be defined in <Device>.h */
+#warning "__PMP_PRESENT is not defined or equal to 1, please check!"
 #endif
 
 // If define SWIRQ_INTLEVEL_HIGHER equals 1 the software interrupt will have a higher interrupt level.
@@ -155,7 +155,7 @@ static void supervisor_mode_entry_point(void)
 
 int main(int argc, char** argv)
 {
-#if defined(__SPMP_PRESENT) && (__SPMP_PRESENT == 1)
+#if defined(__PMP_PRESENT) && (__PMP_PRESENT == 1)
     // set pmp, S mode can access all address range
     pmp_config pmp_cfg = {
         /* M mode grants S and U mode with full permission of the whole address range */
@@ -179,7 +179,7 @@ int main(int argc, char** argv)
     /* Drop to S mode */
     __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
 #else
-    printf("[ERROR]__TEE_PRESENT & __SPMP_PRESENT must be defined as 1 in <Device>.h!\r\n");
+    printf("[ERROR]__TEE_PRESENT & __PMP_PRESENT must be defined as 1 in <Device>.h!\r\n");
 #endif
     return 0;
 }
