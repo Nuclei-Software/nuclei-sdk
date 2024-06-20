@@ -80,6 +80,7 @@ int main(void)
 	}
 
 	// TODO this is used for collect gprof and gcov data
+    // See Components/profiling/README.md about how to set the IDE project properities
 	extern long gprof_collect(unsigned long interface);
 	extern long gcov_collect(unsigned long interface);
 	gprof_collect(2);
