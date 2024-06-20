@@ -67,9 +67,10 @@ Usage
     and then **import** it using ``RV-Tools -> NPK Package Management`` in Nuclei Studio IDE's menu, and when
     creating a IDE project using ``New Nuclei RISC-V C/C++ Project``, please select the correct sdk and version which
     you can check it in the ``<SDK>/npk.yml`` file, and in the project example configuration wizard window, you should
-    click the **SDK gen by nuclei_gen**, and configure the **Nuclei RISC-V Core** and **ARCH Extensions**, **Nuclei Cache Extensions**
+    configure the **Nuclei RISC-V Core** and **ARCH Extensions**, **Nuclei Cache Extensions**
     according to your configured CPU ISA, and CPU feature defined in generated ``cpufeature.h``.
-    Currently you still need to modify IAR linker script by yourself, it is not automatically modified.
+
+    **WARNING**: Currently you still need to modify IAR linker script(``*.icf``) by yourself, it is not automatically modified.
 
 If you want to use this **Nuclei Evaluation SoC** in Nuclei SDK, you need to set the
 :ref:`develop_buildsystem_var_soc` Makefile variable to ``evalsoc``.
