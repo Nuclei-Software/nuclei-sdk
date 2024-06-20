@@ -18,13 +18,13 @@ BENCH_FLAGS ?= -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline
 	--param max-jump-thread-duplication-stmts=9 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
 else ifeq ($(CPU_SERIES),600)
 # Benchmark options for 600
-BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions \
-	-falign-functions=4 -falign-jumps=4 -falign-loops=4 -finline-limit=200  -fno-if-conversion \
-	-fno-if-conversion2 -fipa-pta -fselective-scheduling -fno-tree-loop-distribute-patterns \
-	-funroll-loops -funroll-all-loops -fno-delete-null-pointer-checks -fno-rename-registers \
-	-mbranch-cost=1 --param fsm-scale-path-stmts=5 --param max-average-unrolled-insns=200 \
-	--param max-grow-copy-bb-insns=16 --param max-jump-thread-duplication-stmts=14 \
-	--param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
+BENCH_FLAGS ?= -Ofast -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=500 \
+	-ftree-dominator-opts -fselective-scheduling -funroll-loops -finline-functions -falign-functions=8 \
+	-falign-jumps=8 -falign-loops=8 -fipa-pta -fno-code-hoisting -fno-common -fno-if-conversion \
+	-fno-if-conversion2 -fno-tree-loop-distribute-patterns -fno-tree-vectorize -fno-tree-loop-ivcanon \
+	-ftree-vrp -fgcse-las --param=max-loop-header-insns=2 --param loop-max-datarefs-for-datadeps=0 \
+	--param=unroll-jam-min-percent=0 --param=max-goto-duplication-insns=0 \
+	--param max-jump-thread-duplication-stmts=9 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
 else ifeq ($(CPU_SERIES),300)
 # Benchmark options for 300
 BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-tree-vectorize -fno-common -finline-functions -falign-functions=4 \
