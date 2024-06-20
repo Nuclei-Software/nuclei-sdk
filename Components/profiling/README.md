@@ -1,4 +1,4 @@
-# Profiling For RISC-V
+# Profiling and Coverage For Nuclei RISC-V CPU In Nuclei Studio IDE
 
 Profiling and coverage analysis tools like gprof and gcov play a vital role in identifying performance bottlenecks
 and untested regions within source code, ultimately leading to improved software efficiency and quality. 

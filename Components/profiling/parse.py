@@ -85,7 +85,9 @@ def generate_binary_from_log(logfile):
 
     return True
 
-
+# Call in Nuclei Studio IDE Terminal in a Project Directory like this
+# NOTE: prof.log is the console log print in qemu console or uart console like Dump xxx start ... Dump xxx finish
+# python nuclei_sdk/Components/profiling/parse.py prof.log
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         logfile = sys.argv[1]
