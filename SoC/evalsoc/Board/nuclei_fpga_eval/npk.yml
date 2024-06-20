@@ -104,6 +104,9 @@ debugconfig:
        - key: smp
          value: $( arithop(${boothartid} + 1) )
          condition: $( ${nuclei_smp} <= 1 )
+       - key: enableSemihosting
+         value: true
+         condition: $( ${semihost} == 1 )
 
   - type: jlink
     description: Segger Jlink

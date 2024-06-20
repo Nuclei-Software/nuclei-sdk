@@ -30,6 +30,13 @@
 
 override BOARD := nuclei_fpga_eval
 
+# If using generated cpu configs done by nuclei_gen
+# NOTE: cpu nuclei_gen tool will do the following things:
+# 1. generate cpufeature.h in where evalsoc.h located
+# 2. generate cpufeature.mk where this build.mk located
+# 3. sed and replace flash/ilm/dlm/sram/ddr base and size in evalsoc.memory
+# 4. sed and replace openocd_evalsoc.cfg to provide correct workmem_base/workmem_size/flashxip_base/xipnuspi_base
+# 5. If you want to use prebuilt IAR projects, you need to modify IAR linker script *.icf by yourself, not yet tested(FIXME)
 include $(NUCLEI_SDK_SOC)/cpufeature.mk
 
 # SMP must be a number, and above 1, means smp cpu count in a cluster
@@ -115,14 +122,6 @@ ifneq ($(SPLITMODE),)
 OPENOCD_CMD_ARGS += set SPLITMODE $(SPLITMODE);
 endif
 
-# If using generated cpu configs done by nuclei_gen
-# NOTE: cpu nuclei_gen tool will do the following things:
-# 1. generate cpufeature.h in where evalsoc.h located
-# 2. generate cpufeature.mk where this build.mk located
-# 3. sed and replace flash/ilm/dlm/sram/ddr base and size in gcc_evalsoc_*.ld
-ifeq ($(CPU_CONFIG_K),1)
-COMMON_FLAGS += -DHAS_AUTOGEN_CPUCFG
-endif
 
 # If HARTID_OFS is not empty
 ifneq ($(HARTID_OFS),)
