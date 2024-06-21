@@ -1,0 +1,18 @@
+{
+    "matrix": {
+        "newlib_small": {"STDCLIB": "newlib_small"},
+        "libncrt_small": {"STDCLIB": "libncrt_small"},
+        "libncrt_balanced": {"STDCLIB": "libncrt_balanced"},
+        "libncrt_fast": {"STDCLIB": "libncrt_fast"}
+    },
+    "expected": {
+    },
+    "expecteds": {
+        "application/baremetal/demo_dsp" : {
+            "rv32emc-newlib_small": { "build": false, "run": false },
+            "rv32emc-libncrt_small": { "build": false, "run": false },
+            "rv32emc-libncrt_balanced": { "build": false, "run": false },
+            "rv32emc-libncrt_fast": { "build": false, "run": false }
+        }
+    }
+}
