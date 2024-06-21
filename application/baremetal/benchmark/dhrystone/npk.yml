@@ -49,8 +49,8 @@ buildconfig:
   - type: gcc
     common_flags: # flags need to be combined together across all packages
       - flags: >-
-              -O3 -flto -fno-inline -fno-builtin-printf -funroll-loops
-              -falign-functions=4 -falign-jumps=4 -falign-loops=8
+              -O3 -flto -fno-inline -fno-builtin-printf
+              -falign-functions=4 -falign-jumps=4 -falign-loops=4
 
         condition: $( ${dhry_mode} == 'ground' )
       - flags: >-

@@ -26,14 +26,7 @@
 extern  int     Int_Glob;
 extern  char    Ch_1_Glob;
 
-// TODO: clang not yet provide any xxlcz instruction support
-#if defined(__riscv_xxlcz) && !defined(__clang__)
-extern int strcmp_xlcz(const char* str1, const char* str2);
-#define STRCMP(str1, str2) strcmp_xlcz(str1, str2)
-#else
 #define STRCMP(str1, str2) strcmp(str1, str2)
-#endif
-
 
 Boolean Func_3(Enumeration Enum_Par_Val)
 /***************************/
