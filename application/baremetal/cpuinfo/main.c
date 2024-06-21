@@ -64,6 +64,17 @@ void nuclei_cpuinfo(void)
     rv_csr_t csr_mfiocfg = 0;
     rv_csr_t csr_mppicfg = 0;
 
+
+#ifdef CFG_CPU_NAME
+    printf("CPU NAME: %s\n", CFG_CPU_NAME);
+#endif
+#ifdef CFG_CPU_VERSION
+    printf("CPU VERSION: %s\n", CFG_CPU_VERSION);
+#endif
+#ifdef CPU_ISA
+    printf("CPU ISA: %s\n", CPU_ISA);
+#endif
+
     printf("\r\n-----Nuclei RISC-V CPU Configuration Information-----\r\n");
 
     /* ID and version */
