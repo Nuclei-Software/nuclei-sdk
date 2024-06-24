@@ -383,6 +383,21 @@ setconfig:
     condition: $( ! contains(${nuclei_archext}, "zc"))
   - config: nmsislibarch
     value: ${nuclei_arch}
+  - config: cpu_series
+    value: 200
+    condition: $( contains(${nuclei_core}, "20"))
+  - config: cpu_series
+    value: 300
+    condition: $( contains(${nuclei_core}, "30"))
+  - config: cpu_series
+    value: 600
+    condition: $( contains(${nuclei_core}, "60"))
+  - config: cpu_series
+    value: 900
+    condition: $( contains(${nuclei_core}, "90"))
+  - config: cpu_series
+    value: 1000
+    condition: $( contains(${nuclei_core}, "100"))
 
 ## Debug Configuration for this SoC
 debugconfig:
