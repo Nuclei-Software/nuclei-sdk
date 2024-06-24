@@ -384,16 +384,7 @@ int main(void)
     User_Instret = End_Instret - Begin_Instret;
     User_Cycle = End_Cycle - Begin_Cycle;
 
-#ifdef CFG_SIMULATION
-    if (0)
-#else
-    if (User_Time < Too_Small_Time)
-#endif
-    {
-        printf("Measured time too small to obtain meaningful results\n");
-        printf("Please increase number of runs\n");
-        printf("\n");
-    }
+
 #ifdef TIME
     Microseconds = (float) User_Time * Mic_secs_Per_Second / (float) Number_Of_Runs;
     Dhrystones_Per_Second = (float) Number_Of_Runs / (float) User_Time;
