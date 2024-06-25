@@ -30,16 +30,6 @@
 #include "cpufeature.h"
 
 #if defined(CFG_HAS_EXCP)
-/**
- * \brief  Global interrupt disabled
- * \details
- *  This function disable global interrupt.
- * \remarks
- *  - All the interrupt requests will be ignored by CPU.
- */
-.macro DISABLE_MIE
-    csrc CSR_MSTATUS, MSTATUS_MIE
-.endm
 
 /**
  * \brief  Macro for context save

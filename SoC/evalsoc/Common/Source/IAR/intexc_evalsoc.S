@@ -26,10 +26,6 @@
 
 #include "riscv_encoding.h"
 
-DISABLE_MIE MACRO
-  csrci CSR_MSTATUS, MSTATUS_MIE
-  ENDM
-
 SAVE_CONTEXT MACRO
 #ifndef __riscv_32e
     addi sp, sp, -20*REGBYTES
