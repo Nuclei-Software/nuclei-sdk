@@ -3,15 +3,15 @@
 Changelog
 =========
 
-V0.1.0-dev
-----------
+V0.1.0
+------
 
-This is release version ``0.1.0-dev`` of N100 SDK, which is still in development.
+This is release version ``0.1.0`` of N100 SDK.
 
 .. note::
 
     - Nuclei N100 SDK is modified based on Nuclei SDK 0.5.0 release, and will not merge back to Nuclei SDK in the future.
-    - This SDK is not compatible with Nuclei SDK for 200/300/600/900/1000 series.
+    - This SDK is not compatible with Nuclei SDK for 200/300/600/900/1000 series, if you want SDK for these series, please switch to master or develop branch.
 
 * Application
 

@@ -15,7 +15,7 @@ We also intergated three RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSI
 * Ubuntu Linux >=20.04 LTS or Windows >=7
   - **Linux**: GNU Make >= 3.82
   - **Windows**: [Windows Build Tools](https://nucleisys.com/download.php)
-* [Nuclei Studio >= 2023.10](https://nucleisys.com/download.php)
+* [Nuclei Studio >= 2024.02](https://nucleisys.com/download.php)
   - Nuclei Studio can support import Nuclei SDK NPK package to provide IDE project wizard create/build/debug.
   - Nuclei Studio also contains same release of Nuclei Toolchain/QEMU/OpenOCD, so just download IDE is enough.
 
