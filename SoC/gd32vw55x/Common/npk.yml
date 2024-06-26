@@ -180,10 +180,10 @@ buildconfig:
         condition: $( ${stdclib} == "nostd" )
       - flags:
         condition: $( ${stdclib} == "nospec" )
-      - flags: -isystem=/include/libncrt
+      - flags: -isystem =/include/libncrt
         condition: $( startswith(${stdclib}, "libncrt") )
       # For newlib nano, use system include newlib-nano
-      - flags: -isystem=/include/newlib-nano
+      - flags: -isystem =/include/newlib-nano
         condition: $( startswith(${stdclib}, "newlib") && ${stdclib} != "newlib_full" )
     ldflags:
       - flags: -nostartfiles -nodefaultlibs
