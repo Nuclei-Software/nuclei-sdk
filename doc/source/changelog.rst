@@ -3,10 +3,10 @@
 Changelog
 =========
 
-V0.6.0-dev
-----------
+V0.6.0
+------
 
-This is release version ``0.6.0-dev`` of Nuclei SDK, which is still in development.
+This is release version ``0.6.0`` of Nuclei SDK.
 
 .. note::
 
@@ -52,6 +52,7 @@ This is release version ``0.6.0-dev`` of Nuclei SDK, which is still in developme
   - Redesign ``evalsoc`` reference SoC support software for better evalsoc and nuclei cpu support, see :ref:`design_soc_evalsoc_usage`
   - Remove ``-msave-restore`` in npk.yml to fix dhrystone benchmark value is low in Nuclei Studio issue.
   - No need to get system clock using ``get_cpu_freq`` for gd32vf103.
+  - In npk.yml, when pass ``-isystem=`` should be changed to ``-isystem =`` as a workaround for Nuclei Studio to pass correct system include header.
   - Update standard c library and arch ext prompt for soc npk.yml for better hints.
   - Add ``gd32vf103c_dlink`` board support for Nuclei DLink development.
   - Fix non-ABS relocation R_RISCV_JAL against symbol '_start' fail for nuclei_llvm toolchain
