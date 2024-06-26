@@ -58,7 +58,6 @@ SECTIONS
     KEEP (*(.mintvec))
   }
 
-  . = SRAM_MEMORY_BASE;
   .init           :
   {
     *(.text.init)
