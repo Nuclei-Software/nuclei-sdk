@@ -4,7 +4,7 @@ variables:
   DOC_CENTER: /home/xl_ci/doc_center
   SHAREENVLOC: /home/share/devtools
   IMAGE: rego.corp.nucleisys.com/software/sdkbuild
-  IMAGE_TAG: "2024.06.20"
+  IMAGE_TAG: "2024.06.26"
   JOBCTRL: "RUN"
 
 workflow:
