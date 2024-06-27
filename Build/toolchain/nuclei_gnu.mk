@@ -118,6 +118,10 @@ COMMON_FLAGS += -DSIMULATION_MODE=$(SIMULATION_MODE)
 endif
 
 COMMON_FLAGS += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
+# For N100, access must be strict alignment, unaligned access is not supported
+# So we must pass -mstrict-align, see https://gcc.gnu.org/onlinedocs/gcc/RISC-V-Options.html
+COMMON_FLAGS += -mstrict-align
+
 ## Append mtune options when RISCV_TUNE is defined
 ## It might be defined in SoC/<SOC>/build.mk, and can be overwritten by make
 ifneq ($(RISCV_TUNE),)
