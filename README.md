@@ -5,23 +5,25 @@
 
 > Since 0.5.0 release, Nuclei Studio >= 2023.10 and Nuclei RISC-V Toolchain/Qemu/OpenOCD >= 2023.10 are required to build and run.
 
-**Nuclei Software Development Kit(Nuclei SDK)** is developed for developing and evaluating software using our FPGA evaluation board.
+**Nuclei Software Development Kit(Nuclei SDK)** is developed for developing and evaluating software for Nuclei Evaluation SoC.
 
 ![Nuclei SDK Diagram](doc/source/asserts/images/nuclei_sdk_diagram.png)
 
 This Nuclei SDK is built based on the **NMSIS** framework, user can access all the APIs provided by **NMSIS** and also the APIs that provided by Nuclei SDK which mainly for on-board peripherals access such as GPIO, UART, SPI and I2C etc.
 
-We also intergated three RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII** and **RTThread**, you can easily find it in the *OS* folder.
+This Nuclei SDK can support various compiler such as Nuclei riscv gcc/clang, IAR compiler and Terapines ZCC.
+
+We also intergated many RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII**, **RTThread** and **ThreadX**, you can easily find it in the *OS* folder.
 
 ## Quick Startup
 
 Wanner to a try with Nuclei SDK, click [Quick Start with Nuclei SDK](https://doc.nucleisys.com/nuclei_sdk/quickstart.html) to start up.
 
 ## Requirements
-* Ubuntu Linux >=16.04 LTS or Windows >=7
+* Ubuntu Linux >=20.04 LTS or Windows >=7
   - **Linux**: GNU Make >= 3.82
   - **Windows**: [Windows Build Tools](https://nucleisys.com/download.php)
-* [Nuclei Studio >= 2023.10](https://nucleisys.com/download.php)
+* [Nuclei Studio >= 2024.06](https://nucleisys.com/download.php)
   - Nuclei Studio can support import Nuclei SDK NPK package to provide IDE project wizard create/build/debug.
   - Nuclei Studio also contains same release of Nuclei Toolchain/QEMU/OpenOCD, so just download IDE is enough.
 
@@ -62,6 +64,7 @@ $NUCLEI_SDK_ROOT
 ├── OS
 │   ├── FreeRTOS
 │   ├── UCOSII
+│   ├── ThreadX
 │   └── RTThread
 ├── SoC
 │   ├── gd32vf103
@@ -90,12 +93,13 @@ $NUCLEI_SDK_ROOT
   - **FreeRTOS** applications, which will provide FreeRTOS applications using FreeRTOS RTOS, placed in *application/freertos/* folder.
   - **UCOSII** applications, which will provide UCOSII applications using UCOSII RTOS, placed in *application/ucosii/* folder.
   - **RTThread** applications, which will provide RT-Thread applications using RT-Thread RTOS, placed in *application/rtthread/* folder.
+  - **ThreadX** applications, which will provide ThreadX applications using ThreadX RTOS, placed in *application/threadx/* folder.
 
 * **SoC**
 
   This directory contains all the supported SoCs for this Nuclei SDK, the directory name for SoC and its boards should always in lower case.
 
-  Here we mainly support Nuclei processor cores running on Nuclei FPGA evaluation board(MCU200T/DDR200T), the support package placed in *SoC/evalsoc/*.
+  Here we mainly support Nuclei processor cores running on Nuclei FPGA evaluation boards, the support package placed in *SoC/evalsoc/*.
 
   In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/evalsoc/Common/Include/nuclei_sdk_soc.h*.
 
@@ -114,7 +118,7 @@ $NUCLEI_SDK_ROOT
 
 * **OS**
 
-  This directory provided three RTOS package we suppported which are **FreeRTOS**, **UCOSII** and **RT-Thread**.
+  This directory provided RTOS packages we suppported.
 
 * **LICENSE**
 
@@ -139,12 +143,14 @@ $NUCLEI_SDK_ROOT
 * **setup.sh**
 
   Nuclei SDK environment setup script for **Linux**. You need to create your own `setup_config.sh`.
+
   ~~~shell
   # This can be path to Nuclei Studio's toolchain folder
   NUCLEI_TOOL_ROOT=/path/to/your_tool_root
   ~~~
 
   In the **$NUCLEI_TOOL_ROOT** for **Linux**, you need to have Nuclei RISC-V toolchain and OpenOCD installed as below.
+
   ~~~
   ${NUCLEI_TOOL_ROOT}
   ├── gcc
@@ -166,11 +172,13 @@ $NUCLEI_SDK_ROOT
 * **setup.bat**
 
   Nuclei SDK environment setup bat script for **Windows**. You need to create your own `setup_config.bat`.
+
   ~~~bat
   set NUCLEI_TOOL_ROOT=\path\to\your_tool_root
   ~~~
 
   In the **%NUCLEI_TOOL_ROOT%** for **Windows**, you need to have Nuclei RISC-V toolchain, necessary Windows build tools and OpenOCD installed as below.
+
   ~~~console
   %NUCLEI_TOOL_ROOT%
   ├── build-tools
