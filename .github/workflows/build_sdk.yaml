@@ -65,7 +65,7 @@ jobs:
           mkdir -p prebuilt_tools
           cd prebuilt_tools
           echo "Prepare Nuclei Toolchain......"
-          toolzip=nuclei_riscv_newlibc_prebuilt_linux64_nuclei-2024.tar.bz2
+          toolzip=nuclei_riscv_newlibc_prebuilt_linux64_2024.06.tar.bz2
           if [ ! -e $toolzip ] ; then
             echo "Download Nuclei toolchain now!"
             wget --progress=dot:giga --no-check-certificate https://www.nucleisys.com/upload/files/toochain/gcc/$toolzip
@@ -74,7 +74,7 @@ jobs:
           fi
           tar -xjf $toolzip
           echo "Prepare Nuclei QEMU......"
-          toolzip=nuclei-qemu-2024.04.29-linux-x64.tar.gz
+          toolzip=nuclei-qemu-2024.06-linux-x64.tar.gz
           if [ ! -e $toolzip ] ; then
             echo "Download Nuclei qemu now!"
             wget --progress=dot:giga --no-check-certificate https://www.nucleisys.com/upload/files/toochain/qemu/$toolzip
