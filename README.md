@@ -3,6 +3,10 @@
 [![Build Documentation](https://github.com/Nuclei-Software/nuclei-sdk/workflows/Build%20Documentation/badge.svg)](https://github.com/Nuclei-Software/nuclei-sdk/actions?query=workflow%3A%22Build+Documentation%22)
 [![Build SDK](https://github.com/Nuclei-Software/nuclei-sdk/workflows/Build%20SDK/badge.svg)](https://github.com/Nuclei-Software/nuclei-sdk/actions?query=workflow%3A%22Build+SDK%22)
 
+
+> [!NOTE]
+> If you want to build and run on Nuclei 100 series CPU, please switch to **develop_n100** or **master_n100** branch.
+
 > Since 0.5.0 release, Nuclei Studio >= 2023.10 and Nuclei RISC-V Toolchain/Qemu/OpenOCD >= 2023.10 are required to build and run.
 
 **Nuclei Software Development Kit(Nuclei SDK)** is developed for developing and evaluating software for Nuclei Evaluation SoC.
@@ -37,6 +41,7 @@ $NUCLEI_SDK_ROOT
 │   ├── baremetal
 │   ├── freertos
 │   ├── ucosii
+│   ├── threadx
 │   └── rtthread
 ├── Build
 │   ├── gmsl
