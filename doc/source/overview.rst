@@ -11,7 +11,7 @@ Introduction
 .. note::
 
     Since 0.5.0 release of Nuclei SDK, we need to use Nuclei Studio >= 2023.10 or Nuclei Toolchain
-    >=2023.10 to build and run it, see release changelog.
+    >=2023.10 to build and run it, see release :ref:`changelog`.
 
 The **Nuclei Software Development Kit (SDK)** is an open-source software platform to
 speed up the software development of SoCs based on Nuclei Processor Cores.
@@ -25,7 +25,7 @@ software development and improve time-to-market through well-designed software f
 
 .. note::
 
-    To get a pdf version of this documentation, please click `Nuclei SDK Document`_
+    To **get a pdf version** of this documentation, please click `Nuclei SDK Document`_
 
 .. _overview_design_arch:
 

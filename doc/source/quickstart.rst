@@ -11,28 +11,26 @@ Use Nuclei SDK in Nuclei Studio
 .. caution::
 
    If you are looking for Nuclei 100 series such as N100 support, you need to switch to
-   ``develop_n100`` branch of this repository to try it out.
+   **master_n100** or **nuclei_n100** branch of this repository to try it out.
 
    If you are evaluating Nuclei CPU, in future released **nuclei_gen**, you will be able
    to use the generated Nuclei SDK, please see :ref:`design_soc_evalsoc_usage`.
 
-   For Nuclei SDK 0.5.0 version and later ones, please use `Nuclei Studio 2023.10`_ or
-   Nuclei RISC-V Toolchain/OpenOCD/QEMU 2023.10.
-
-   For Nuclei SDK 0.3.5 version and later ones, please use Nuclei Studio 2022.01 or
-   Nuclei GNU Toolchain/OpenOCD/QEMU 2022.01.
+   For **Nuclei SDK 0.6.0** version and later ones, please use `Nuclei Studio 2024.06`_ or
+   Nuclei RISC-V Toolchain/OpenOCD/QEMU 2024.06.
 
 From `Nuclei Toolchain 2023.10`_, both gnu and llvm toolchain are provided, and toolchain
 prefix changed from ``riscv-nuclei-elf-`` to ``riscv64-unknown-elf-``, and 0.5.0 SDK release
 will only support this ``2023.10`` or later toolchain.
 
 If you want to learn about how to use Nuclei Tools, see https://doc.nucleisys.com/nuclei_tools.
+
 If you want to report issues when using Nuclei Tools or Nuclei Studio, please open issue in
 https://github.com/Nuclei-Software/nuclei-studio.
 
-From **2020.08** release version of Nuclei Studio IDE, the nuclei-sdk **released**
-version will be deeply integrated with Nuclei Studio, and you can directly create
-nuclei-sdk project in Nuclei Studio IDE.
+Now the nuclei-sdk **released** versions are deeply integrated with Nuclei Studio IDE via menu
+**RV-Tools -> NPK Package Management**, and you can directly create nuclei-sdk project in Nuclei Studio IDE
+Menu **File -> New Nuclei RISC-V C/C++ Project**.
 
 You can download **Nuclei Studio IDE** from |nuclei_download_center|, and follow
 `Nuclei_Studio_User_Guide.pdf`_ to learn how to use it.
@@ -50,11 +48,6 @@ To start to use Nuclei SDK, you need to install the following tools:
 From **2020.10** release version of Nuclei Studio, you can directly use the prebuilt tools
 provided in Nuclei Studio(**strongly suggested**), please following :ref:`quickstart_setup_tools_env_nside`.
 
-If you want to use latest toolchain(version newer than Nuclei Studio preinstalled), you can follow guides below:
-
-* For Windows users, please check :ref:`quickstart_setup_tools_env_windows`
-* For Linux users, please check :ref:`quickstart_setup_tools_env_linux`
-
 .. _quickstart_setup_tools_env_nside:
 
 Use Prebuilt Tools in Nuclei Studio
@@ -66,133 +59,13 @@ no need to do the following steps below, the prebuilt tools are already included
 
 For example:
 
-* In Windows, if you have extracted the Nuclei Studio IDE to ``D:\Software\NucleiStudio_IDE_202310``,
-  then you can find the prebuilt tools in ``D:\Software\NucleiStudio_IDE_202310\NucleiStudio\toolchain``.
-* In Linux, if you have extracted the Nuclei Studio IDE to ``/home/labdev/NucleiStudio_IDE_202310``,
-  then you can find the prebuilt tools in ``/home/labdev/NucleiStudio_IDE_202310/NucleiStudio/toolchain``.
+* In Windows, if you have extracted the Nuclei Studio IDE to ``D:\Software\NucleiStudio_IDE_202406``,
+  then you can find the prebuilt tools in ``D:\Software\NucleiStudio_IDE_202406\NucleiStudio\toolchain``.
+* In Linux, if you have extracted the Nuclei Studio IDE to ``/home/labdev/NucleiStudio_IDE_202406``,
+  then you can find the prebuilt tools in ``/home/labdev/NucleiStudio_IDE_202406/NucleiStudio/toolchain``.
 
 You can also update tools located in the Nuclei Studio prebuilt tools ``toolchain`` by downloading newer version
 from `Nuclei Tools`_ and replace it.
-
-If you have downloaded and extracted the Nuclei Studio, then you can jump to :ref:`quickstart_get_set_nuclei_sdk` and ignore below steps.
-
-.. note::
-
-    The steps :ref:`quickstart_setup_tools_env_windows` and :ref:`quickstart_setup_tools_env_linux` are not recommended
-    as steps to setup tools and environment unless you want to use different toolchain/openocd/qemu, we **strongly recommend**
-    you just follow the simple steps in :ref:`quickstart_setup_tools_env_nside`.
-
-.. _quickstart_setup_tools_env_windows:
-
-Install and Setup Tools in Windows
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Make sure you are using at least **Windows 7**, and then you can follow the following steps
-to download and install tools for you.
-
-1. Create an ``Nuclei`` folder in your Windows Environment, such as ``D:\Software\Nuclei``
-
-2. Download the following tools from |nuclei_download_center|, please check and follow
-   the figure :ref:`figure_quickstart_1`.
-
-   - **Nuclei RISC-V GNU Toolchain for Windows**, see number **1** in the figure :ref:`figure_quickstart_1`
-   - **Nuclei OpenOCD for Windows**, see number **2** in the figure :ref:`figure_quickstart_1`
-   - **Windows Build Tools**, see number **3** in the figure :ref:`figure_quickstart_1`
-
-.. _figure_quickstart_1:
-
-.. figure:: /asserts/images/nuclei_tools_download_win.png
-   :width: 80 %
-   :align: center
-   :alt: Nuclei Tools need to be downloaded for Windows
-
-   Nuclei Tools need to be downloaded for Windows
-
-3. Setup tools in previously created ``Nuclei`` folder, create ``gcc``, ``openocd`` and ``build-tools`` folders.
-
-   - **Nuclei RISC-V GNU Toolchain for Windows**
-      Extract the download **gnu toolchain** into a temp folder, and copy the files into ``gcc`` folder,
-      make sure the ``gcc`` directory structure looks like this figure :ref:`figure_quickstart_2`
-
-      .. _figure_quickstart_2:
-
-      .. figure:: /asserts/images/nuclei_tool_gcc_directory.png
-         :width: 80 %
-         :align: center
-         :alt: Nuclei RISC-V GCC Toolchain directory structure of gcc
-
-         Nuclei RISC-V GCC Toolchain directory structure of gcc
-
-
-   - **Nuclei OpenOCD for Windows**
-      Extract the download **openocd** tool into a temp folder, and copy the files into ``openocd`` folder,
-      make sure the ``openocd`` directory structure looks like this figure :ref:`figure_quickstart_3`
-
-      .. _figure_quickstart_3:
-
-      .. figure:: /asserts/images/nuclei_tool_openocd_directory.png
-         :width: 80 %
-         :align: center
-         :alt: Nuclei OpenOCD directory structure of openocd
-
-         Nuclei OpenOCD directory structure of openocd
-
-
-   - **Windows Build Tools**
-      Extract the download **build-tools** tool into a temp folder, and copy the files into ``build-tools`` folder,
-      make sure the ``build-tools`` directory structure looks like this figure :ref:`figure_quickstart_4`
-
-      .. _figure_quickstart_4:
-
-      .. figure:: /asserts/images/nuclei_tool_build-tools_directory.png
-         :width: 80 %
-         :align: center
-         :alt: Nuclei Windows Build Tools directory structure of build-tools
-
-         Nuclei Windows Build Tools directory structure of build-tools
-
-If you have setuped the prebuilt tools in Windows, then you can jump to :ref:`quickstart_get_set_nuclei_sdk`.
-
-.. _quickstart_setup_tools_env_linux:
-
-Install and Setup Tools in Linux
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Make sure you are using **Centos or Ubuntu 64 bit**, and then you can follow the following steps
-to download and install tools for you.
-
-1. Create an ``Nuclei`` folder in your Linux Environment, such as ``~/Software/Nuclei``
-
-2. Download the following tools from |nuclei_download_center|, please check and follow
-   the figure :ref:`figure_quickstart_5`.
-
-   - **Nuclei RISC-V Toolchain for Linux**, for **CentOS or Ubuntu** click number **1**
-     in the figure :ref:`figure_quickstart_5`
-   - **Nuclei OpenOCD for Linux**, see number **2-1** for 64bit version in the figure :ref:`figure_quickstart_5`
-   - **Make >= 3.82**: Install ``Make`` using ``sudo apt-get install make`` in Ubuntu,
-     or ``sudo yum install make`` in CentOS.
-   - **For ubuntu 22.04**, you need to install ``libtinfo5`` and ``libncursesw5`` packages to make gdb work.
-
-.. _figure_quickstart_5:
-
-.. figure:: /asserts/images/nuclei_tools_download_linux.png
-   :width: 80 %
-   :align: center
-   :alt: Nuclei Tools need to be downloaded for Linux
-
-   Nuclei Tools need to be downloaded for Linux
-
-
-3. Setup tools in previously created ``Nuclei`` folder, create ``gcc`` and ``openocd`` folders.
-   Please follow similar steps described in **Step 3** in :ref:`quickstart_setup_tools_env_windows`
-   to extract and copy necessary files.
-
-    .. note::
-
-       * Only ``gcc`` and ``openocd`` are required for Linux.
-       * Extract the downloaded Linux tools, not the windows version.
-
-If you have setuped the prebuilt tools in Linux, then you can jump to :ref:`quickstart_get_set_nuclei_sdk`.
 
 .. _quickstart_get_set_nuclei_sdk:
 
@@ -224,37 +97,46 @@ The source code of Nuclei SDK is maintained in |github| and |gitee|.
 
 * Create tool environment config file for Nuclei SDK
 
+  .. note::
+
+    If you want to use **Terapines ZCC** toolchain, you can download it from https://www.terapines.com/, or use
+    **Nuclei Studio >= 2024.06**, a **Terapines ZCC Lite** version is integrated in **<NucleiStudio>/toolchain/zcc** folder,
+    and you also need to add extra **PATH** into your environment, like this:
+
+    - **Windows**: execute ``set PATH=\path\to\zcc\bin;%PATH%`` in windows cmd terminal before run Nuclei SDK
+    - **Linux**: execute ``set PATH=/path/to/zcc/bin:$PATH`` in linux shell terminal before build Nuclei SDK
+
   - **Windows**
      If you want to use Nuclei SDK in **Windows Command Prompt** terminal, you need to
      create ``setup_config.bat`` in ``nuclei-sdk`` folder, and open this file
      your editor, and paste the following content, assuming you followed
      :ref:`quickstart_setup_tools_env`, and prebuilt tools located in
-     ``D:\Software\NucleiStudio_IDE_202310\NucleiStudio\toolchain``,
+     ``D:\Software\NucleiStudio_IDE_202406\NucleiStudio\toolchain``,
      otherwise please use your correct tool root path.
 
      .. code-block:: bat
 
-        set NUCLEI_TOOL_ROOT=D:\Software\NucleiStudio_IDE_202310\NucleiStudio\toolchain
+        set NUCLEI_TOOL_ROOT=D:\Software\NucleiStudio_IDE_202406\NucleiStudio\toolchain
 
      If you want to use Nuclei SDK in **Windows PowerShell** terminal, you need to create
      a ``setup_config.ps1`` in ``nuclei-sdk`` folder, and edit this file with content below
-     if your prebuilt tools are located in ``D:\Software\NucleiStudio_IDE_202310\NucleiStudio\toolchain``:
+     if your prebuilt tools are located in ``D:\Software\NucleiStudio_IDE_202406\NucleiStudio\toolchain``:
 
      .. code-block:: ps1
 
-        $NUCLEI_TOOL_ROOT="D:\Software\NucleiStudio_IDE_202310\NucleiStudio\toolchain"
+        $NUCLEI_TOOL_ROOT="D:\Software\NucleiStudio_IDE_202406\NucleiStudio\toolchain"
 
 
   - **Linux**
      Create ``setup_config.sh`` in ``nuclei-sdk`` folder, and open this file
      your editor, and paste the following content, assuming you followed
      :ref:`quickstart_setup_tools_env` and prebuilt tools located in
-     ``/home/labdev/NucleiStudio_IDE_202310/NucleiStudio/toolchain``,
+     ``/home/labdev/NucleiStudio_IDE_202406/NucleiStudio/toolchain``,
      otherwise please use your correct tool root path.
 
      .. code-block:: shell
 
-        NUCLEI_TOOL_ROOT=/home/labdev/NucleiStudio_IDE_202310/NucleiStudio/toolchain
+        NUCLEI_TOOL_ROOT=/home/labdev/NucleiStudio_IDE_202406/NucleiStudio/toolchain
 
 
 .. _quickstart_buildrundebug_app:
@@ -355,6 +237,10 @@ to setup your hardware, mainly **JTAG debugger driver setup and on-board connect
   for this ``evalsoc`` is ``nuclei_fpga_eval``, then you don't need to pass ``BOARD=nuclei_fpga_eval``.
 * If you don't pass any SOC or BOARD via make, ``evalsoc`` and ``nuclei_fpga_eval`` are default SoC and Board.
 
+
+If you just want to try on **Nuclei Evaluation SoC**, no need to pass **SOC** or **BOARD**, the default value is that,
+you just need to pass correct :ref:`develop_buildsystem_var_core`, :ref:`develop_buildsystem_var_archext` and :ref:`develop_buildsystem_var_download`
+
 Build Application
 ~~~~~~~~~~~~~~~~~
 
@@ -362,7 +248,8 @@ We need to build application for this board :ref:`design_board_gd32vf103v_rvstar
 
 .. note::
 
-    * Since below steps are taking gd32vf103 SoC based board gd32vf103v_rvstar to do demostration,
+    * If you want to run on Nuclei Evaluation SoC, see :ref:`design_soc_evalsoc`
+    * Since below steps are taking gd32vf103 SoC based board **gd32vf103v_rvstar** to do demostration,
       and when you pass ``SOC=gd32vf103``, the default BOARD will be ``gd32vf103v_rvstar``, so
       do you don't need to pass ``BOARD=gd32vf103v_rvstar``
     * You can check default SOC/BOARD/CORE information passed by using make target ``info``, eg.
@@ -709,19 +596,24 @@ For more advanced usage, please follow the items as below:
          for more details, please click `Nuclei Tools`_ to download Nuclei Studio IDE, and refer to
          the `Nuclei_Studio_User_Guide.pdf`_ for how to use it.
 
-      2. You can take a try using Segger embedded studio, we provided prebuilt projects using Nuclei
-         SDK release version, click `Segger embedded studio projects for Nuclei SDK`_ to learn about it
+      2. Now **Terapines ZCC Lite** is deeply integrated in **Nuclei Studio >= 2024.06**, so you just need to
+         follow :ref:`quickstart_get_set_nuclei_sdk` to setup PATH for Terapines ZCC, and in Nuclei SDK,
+         you can just pass **TOOCHAIN=terapines** during make to take a try with Terapines ZCC, and in future
+         version of Nuclei SDK, you will be able to create project in Nuclei SDK using Terapines ZCC.
 
       3. You can take a try using IAR workbench, we provided prebuilt projects directly in Nuclei SDK,
          just check the `ideprojects/iar/README.md`_ to learn about it.
 
-      4. You can also take a try with the Cross-platform PlatformIO IDE, we provided our Nuclei platform
+      4. You can take a try using Segger embedded studio, we provided prebuilt projects using Nuclei
+         SDK release version, click `Segger embedded studio projects for Nuclei SDK`_ to learn about it
+
+      5. You can also take a try with the Cross-platform PlatformIO IDE, we provided our Nuclei platform
          and Nuclei SDK release version in PlatformIO, click `Platform Nuclei in PlatformIO`_ to learn
          more about it, or you can visit `Light on onboard LED of RVSTAR board using PlatformIO(Chinese)`_
          to play with PlatformIO for Nuclei.
 
-      5. You can also use source code in Nuclei SDK as base, and easily integrate with other IDE tools,
-         such as IAR workbench for RISC-V, Compiler-IDE and others.
+      6. You can also use source code in Nuclei SDK as base, and easily integrate with other IDE tools,
+         such as ZStudio IDE, Compiler-IDE and others.
 
 
 .. _GDB User Manual: https://www.gnu.org/software/gdb/documentation/
@@ -732,4 +624,4 @@ For more advanced usage, please follow the items as below:
 .. _Light on onboard LED of RVSTAR board using PlatformIO(Chinese): https://www.rvmcu.com/community-topic-id-310.html
 .. _Nuclei Toolchain 2023.10: https://github.com/riscv-mcu/riscv-gnu-toolchain/releases/tag/nuclei-2023.10
 .. _ideprojects/iar/README.md: https://github.com/Nuclei-Software/nuclei-sdk/blob/master/ideprojects/iar/README.md
-.. _Nuclei Studio 2023.10: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2023.10
+.. _Nuclei Studio 2024.06: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2024.06
