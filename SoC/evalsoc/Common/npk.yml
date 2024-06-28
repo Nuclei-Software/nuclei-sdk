@@ -62,9 +62,9 @@ configuration:
         cmodel: medlow
         tune: nuclei-100-series
         description: N100E Core(ARCH=rv32ec, ABI=ilp32e)
-      - name: n100m
-        arch: rv32imc
-        abi: ilp32
+      - name: n100em
+        arch: rv32emc
+        abi: ilp32e
         cmodel: medlow
         tune: nuclei-100-series
         description: N100EM Core(ARCH=rv32emc, ABI=ilp32e)
