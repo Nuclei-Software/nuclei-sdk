@@ -1,9 +1,9 @@
 # N100 Software Development Kit
 
 > [!NOTE]
-> If you want to develop and run program on Nuclei 200/300/600/900/1000 series RISC-V CPU, please switch to **develop** or **master** branch.
+> If you want to develop and run program on Nuclei **200/300/600/900/100**0 series RISC-V CPU, please switch to **develop** or **master** branch.
 
-This N100 SDK is modified based on the **Nuclei SDK** framework, NMSIS is also a modified version to support limited feature provided by Nuclei 100 series processor.
+This **N100 SDK** is modified based on the **Nuclei SDK** framework, **NMSIS** is also a modified version to support limited feature provided by Nuclei 100 series processor.
 
 We also intergated some RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII** and **RTThread**, you can easily find it in the *OS* folder.
 
@@ -11,7 +11,7 @@ Both Nuclei riscv gcc and IAR compiler are supported in Nuclei N100 SDK, for IAR
 
 ## Quick Startup
 
-Wanner to a try with Nuclei N100 SDK, click [Quick Start with Nuclei N100 SDK](https://doc.nucleisys.com/nuclei_n100_sdk/quickstart.html) to start up.
+Wanner to a try with **Nuclei N100 SDK**, click [Quick Start with Nuclei N100 SDK](https://doc.nucleisys.com/nuclei_n100_sdk/quickstart.html) to start up.
 
 ## Requirements
 
@@ -64,7 +64,8 @@ Wanner to a try with Nuclei N100 SDK, click [Quick Start with Nuclei N100 SDK](h
 
 ## Knowledge book
 
-* N100 SDK only support Nuclei RISC-V Toolchain >= 2024.06, and toolchain prefix is `riscv64-unknown-elf-`.
+* N100 SDK only support **Nuclei RISC-V Toolchain >= 2024.06**, and toolchain prefix is `riscv64-unknown-elf-`.
 
-* N100 SDK is modified based on Nuclei SDK, so the user experience are similiar to Nuclei SDK, and directory structure is also similar, if you have experience in using Nuclei SDK, it will be easy to use N100 SDK.
+* N100 SDK is modified based on Nuclei SDK, so the user experience are similiar to Nuclei SDK, and directory structure is also similar,
+  if you have experience in using Nuclei SDK, it will be easy to use N100 SDK.
 

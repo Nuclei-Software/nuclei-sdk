@@ -12,12 +12,14 @@ Introduction
 
     This is Nuclei N100 SDK which is modified based on **Nuclei SDK 0.5.0** to support Nuclei 100 series CPU.
 
-    If you are looking for Nuclei SDK for Nuclei 200/300/600/900/1000 CPU, please refer to https://doc.nucleisys.com/nuclei_sdk
+    If you are looking for Nuclei SDK for Nuclei **200/300/600/900/1000** CPU, please refer to https://doc.nucleisys.com/nuclei_sdk
+
+    Please use **Nuclei Studio >= 2024.06** with this Nuclei N100 SDK.
 
 The **Nuclei N100 Software Development Kit (SDK)** is an open-source software platform to
 speed up the software development of SoCs based on Nuclei Processor 100 series Cores.
 
-This Nuclei N100 SDK is built based on the modified |NMSIS| for N100 and also the APIs that provided by Nuclei N100 SDK which mainly for on-board
+This Nuclei N100 SDK is built based on the **modified** |NMSIS| for N100 and also the APIs that provided by Nuclei N100 SDK which mainly for on-board
 peripherals access such as UART etc.
 
 Nuclei N100 SDK provides a good start base for embedded developers which will help them simplify
@@ -45,7 +47,7 @@ The Nuclei N100 SDK general design and architecture are shown in the block diagr
 
 As :ref:`figure_overview_1` shown, The Nuclei N100 SDK provides the following features:
 
-* Nuclei Core API service is built on top of |NMSIS|, so silicon vendors of Nuclei processors can easily
+* Nuclei Core API service is built on top of **modified** |NMSIS|, so silicon vendors of Nuclei processors can easily
   port their SoCs to Nuclei N100 SDK, and quickly evaluate software on their SoC.
 * Mainly support :ref:`design_soc_evalsoc`
 * Provided realtime operation system service via :ref:`design_rtos_freertos`, :ref:`design_rtos_ucosii` and
@@ -56,7 +58,7 @@ As :ref:`figure_overview_1` shown, The Nuclei N100 SDK provides the following fe
   - **General applications for Nuclei 100 series Processors**: In the Nuclei N100 SDK software code, the applications provided
     are all general applications which can run on all Nuclei Processors, with basic UART service to provide ``printf`` function.
   - **Nuclei Eval SoC applications**: These applications are not included in the Nuclei N100 SDK software code, and it is
-    *maintained separately*, which will use resource from Nuclei Demo SoC and its evaluation boards to develop applications, which will
+    *maintained separately*, which will use resource from Nuclei Eval SoC and its evaluation boards to develop applications, which will
     not be compatible with different boards.
 
 .. _overview_getstarted:
