@@ -10,8 +10,8 @@ define memory mem with size = 4G;
 
 /* Set memory region information according to your device */
 /* For this case, ROM and RAM are both DDR region */
-define region ROM_region32 = mem:[from 0xA0000000 size 0x10000000];
-define region RAM_region32 = mem:[from 0xB0000000 size 0x10000000];
+define region ROM_region32 = mem:[from 0xA0000000 size 0x08000000];
+define region RAM_region32 = mem:[from 0xA8000000 size 0x08000000];
 
 initialize by copy { rw };
 do not initialize  { section *.noinit };
