@@ -79,7 +79,7 @@ latex_logo = 'asserts/images/nsdk_logo_small.png'
 latex_show_pagerefs = True
 latex_toplevel_sectioning = 'chapter'
 latex_show_urls = 'footnote'
-latex_documents = [('index', 'nuclei-n100sdk.tex', project, author, 'manual')]
+latex_documents = [('index', 'nuclei_n100sdk.tex', project, author, 'manual')]
 
 rst_prolog = """
 .. |nuclei_contact| replace:: email support@nucleisys.com
