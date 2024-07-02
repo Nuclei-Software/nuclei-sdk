@@ -12,7 +12,7 @@ This is release version ``0.1.0`` of N100 SDK.
 
     - Please use Nuclei N100 SDK with **Nuclei Studio 2024.06**, get it from https://nucleisys.com/download.php#tools
     - Nuclei N100 SDK is modified based on Nuclei SDK **0.5.0** release, and will not merge back to Nuclei SDK in the future.
-    - This SDK is not compatible with Nuclei SDK for **200/300/600/900/1000** series, if you want SDK for these series, please switch to **master** or **develop** branch.
+    - This SDK is not compatible with Nuclei SDK for **200/300/600/900/1000** series, if you want SDK for these series, please switch to **master** or **develop** branch, see https://doc.nucleisys.com/nuclei_sdk/
 
 * Application
 

@@ -11,7 +11,9 @@ Both Nuclei riscv gcc and IAR compiler are supported in Nuclei N100 SDK, for IAR
 
 ## Quick Startup
 
-Wanner to a try with **Nuclei N100 SDK**, click [Quick Start with Nuclei N100 SDK](https://doc.nucleisys.com/nuclei_n100_sdk/quickstart.html) to start up.
+Wanner to take a try with **Nuclei N100 SDK for Nuclei 100 series CPU**, click [Quick Start with Nuclei N100 SDK](https://doc.nucleisys.com/nuclei_n100_sdk/quickstart.html) to start up.
+
+Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CPU**, click [Quick Start with Nuclei SDK](https://doc.nucleisys.com/nuclei_sdk/quickstart.html) to start up.
 
 ## Requirements
 
