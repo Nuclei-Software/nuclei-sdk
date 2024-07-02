@@ -45,13 +45,13 @@ jobs:
         cp build/latex/*.pdf build/html/
         cd ..
     - name: Deploy Documentation
-      if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/master' }}
+      if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/master_n100' }}
       env:
           FTPUSER: ${{ secrets.FTPUSER }}
           FTPPWD: ${{ secrets.FTPPWD }}
           FTPSERVER: ${{ secrets.FTPSERVER }}
       run: |
-        bash .ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html n100_sdk
+        bash .ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html nuclei_n100_sdk
     - name: Upload Documentation
       uses: actions/upload-artifact@v3
       with:
