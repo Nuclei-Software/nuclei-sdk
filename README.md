@@ -21,7 +21,9 @@ We also intergated many RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII
 
 ## Quick Startup
 
-Wanner to a try with Nuclei SDK, click [Quick Start with Nuclei SDK](https://doc.nucleisys.com/nuclei_sdk/quickstart.html) to start up.
+Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CPU**, click [Quick Start with Nuclei SDK](https://doc.nucleisys.com/nuclei_sdk/quickstart.html) to start up.
+
+Wanner to take a try with **Nuclei N100 SDK for Nuclei 100 series CPU**, click [Quick Start with Nuclei N100 SDK](https://doc.nucleisys.com/nuclei_n100_sdk/quickstart.html) to start up.
 
 ## Requirements
 * Ubuntu Linux >=20.04 LTS or Windows >=7

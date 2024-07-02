@@ -13,6 +13,10 @@ Introduction
     Since 0.5.0 release of Nuclei SDK, we need to use Nuclei Studio >= 2023.10 or Nuclei Toolchain
     >=2023.10 to build and run it, see release :ref:`changelog`.
 
+.. note::
+
+    If you are looking for Nuclei N100 SDK for Nuclei 100 series CPU, please refer to https://doc.nucleisys.com/nuclei_n100_sdk
+
 The **Nuclei Software Development Kit (SDK)** is an open-source software platform to
 speed up the software development of SoCs based on Nuclei Processor Cores.
 

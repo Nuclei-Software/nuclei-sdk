@@ -15,7 +15,7 @@ This is release version ``0.6.0`` of Nuclei SDK.
    - This version introduced **ThreadX and FreeRTOS-SMP support** for Nuclei RISC-V Processors.
    - This version introduced a ``profiling`` middleware and an example to show code coverage and profiling technology
      using gcov and gprof in **Nuclei Studio 2024.06**.
-   - This version introduced support for **Nuclei 100 series RISC-V CPU**, but in seperated Nuclei SDK branches called **master_n100** or **develop_n100**
+   - We introduced support for **Nuclei 100 series RISC-V CPU**, but in seperated Nuclei SDK branches called **master_n100** or **develop_n100**, see https://doc.nucleisys.com/nuclei_n100_sdk
    - This version introduced support for gd32vw55x chip and Nuclei DLink Board.
    - Better **Terapines ZCC** toolchain integrated in Nuclei SDK and Nuclei Studio, try ZStudio Lite version here https://www.terapines.com/products/
    - Better **IAR Workbench** support in Nuclei SDK, with Baremetal SMP and FreeRTOS SMP supported.
