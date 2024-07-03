@@ -9,6 +9,17 @@ V0.7.0-dev
 This is **development** release version ``0.6.0`` of Nuclei SDK.
 
 
+* Application
+
+* NMSIS
+
+* SoC
+
+  - Add Terapines ZCC npk support, require Nuclei Studio >= 2024.06
+
+* Build System
+
+
 
 V0.6.0
 ------
