@@ -3,6 +3,13 @@
 Changelog
 =========
 
+V0.7.0-dev
+----------
+
+This is **development** release version ``0.6.0`` of Nuclei SDK.
+
+
+
 V0.6.0
 ------
 
