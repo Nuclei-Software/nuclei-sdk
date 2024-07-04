@@ -13,6 +13,14 @@ using GD32VW553HM as main MCU.
 
 If you want to learn about this board, please click `GD32VW553H EVAL Board Documents`_.
 
+.. _figure_design_board_gd32vw553h_eval_1:
+
+.. figure:: /asserts/images/gd32vw553h_eval_board.png
+    :width: 80 %
+    :align: center
+    :alt: GD32VW553H EVAL Board
+
+    GD32VW553H EVAL Board
 
 .. _design_board_gd32vw553h_eval_setup:
 
@@ -22,7 +30,7 @@ Setup
 Follow the guide in `GD32VW553H EVAL Board Documents`_ to setup the board,
 make sure the following items are set correctly:
 
-* Connect the GD-Link on board to your PC in order to download and debug programs.
+* Connect the **GD-Link** on board to your PC in order to download and debug programs.
 * Connect the ``USART`` to your PC as UART communication.
 * Following steps in board user manual to setup JTAG drivers for your development environment
 
