@@ -157,7 +157,9 @@ int main(void)
         ret = other_harts_main(hartid);
     }
 #else
-    printf("[ERROR]__CIDU_PRESENT must be defined as 1 in <Device>.h!\r\n");
+    if (hartid == BOOT_HARTID) { // boot hart
+        printf("[ERROR]__CIDU_PRESENT must be defined as 1 in <Device>.h!\r\n");
+    }
 #endif
     return ret;
 }
