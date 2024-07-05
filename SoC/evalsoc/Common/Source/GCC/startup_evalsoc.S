@@ -24,7 +24,12 @@
  *
  ******************************************************************************/
 
+/* Please check the TODO items */
+
 #include "riscv_encoding.h"
+
+/* TODO: Require Nuclei SDK >= 0.6.0, which introduced this cpufeature.h */
+#include "cpufeature.h"
 
 /* If BOOT_HARTID is not defined, default value is 0 */
 #ifndef BOOT_HARTID
@@ -176,6 +181,7 @@ _start:
 #endif
     .option pop
 
+/* TODO if don't have SMP, you can remove the SMP_CPU_CNT related code */
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     /* Set correct sp for each cpu
      * each stack size is __STACK_SIZE
@@ -243,6 +249,20 @@ _start:
     csrc mstatus, t0
     li t0, MSTATUS_VS_INITIAL
     csrs mstatus, t0
+#endif
+
+    /* TODO: Enable I/D Cache if present determined by cpufeature.h */
+    /* This should be only used by nuclei_gen which generate a correct cpufeature.h */
+    /* We use CPU_ISA macro to determine whether this cpufeature.h is generated or hand written */
+    /* This is used to speedup data loading */
+#ifdef CPU_ISA
+#ifdef CFG_HAS_ICACHE
+    csrsi CSR_MCACHE_CTL, MCACHE_CTL_IC_EN
+#endif
+#ifdef CFG_HAS_DCACHE
+    li t0, MCACHE_CTL_DC_EN
+    csrs CSR_MCACHE_CTL, t0
+#endif
 #endif
 
     /* Enable mcycle and minstret counter */
