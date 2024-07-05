@@ -147,12 +147,13 @@ extern __WEAK void irqc_uart0_handler(void);
 extern void default_intexc_handler(void);
 
 typedef void (*__fp)(void);
-// TODO irqc vector table
+// TODO irqc vector table, you can change 32 to real value of our interrupt number
 // Please fill in this irq vector table with your real interrupt function name
 // MUST marked as __USED to avoid unused variable elimination
 static const __fp vector_base[32] __USED __attribute__((section (".mintvec"))) = {
     irqc_msip_handler,          /* irq 0 ,  internal irq 0  */
     irqc_mtip_handler,          /* irq 1 ,  internal irq 1  */
+/* TODO Below are external interrupt handlers, please define them as your requirements, you need to increase or decrease it, and define correct interrupt handler name */
     irqc_uart0_handler,         /* irq 2 ,  ext_irq 0       */
     default_intexc_handler,     /* irq 3 ,  ext_irq 1       */
     default_intexc_handler,     /* irq 4 ,  ext_irq 2       */
