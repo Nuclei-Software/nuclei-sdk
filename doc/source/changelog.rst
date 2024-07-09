@@ -15,7 +15,9 @@ This is **development** release version ``0.6.0`` of Nuclei SDK.
 
 * SoC
 
-  - Add Terapines ZCC npk support, require Nuclei Studio >= 2024.06
+  - Add **Terapines ZCC NPK** support, require Nuclei Studio >= 2024.06
+  - Merge newlib stub code from many files into one file called ``stubs.c`` for all SoC supported in Nuclei SDK
+  - Enable I/D cache for evalsoc before data/bss initialization steps using ``cpufeature.h`` for faster data initialization
 
 * Build System
 
