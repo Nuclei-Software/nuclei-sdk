@@ -20,4 +20,11 @@ CORE ?= nx900
 # SMP CORE Number Settings
 SMP ?= 2
 
+# NOTE: only used internally by nuclei
+CIDU ?=
+
+ifeq ($(CIDU),1)
+COMMON_FLAGS += -DCFG_HAS_IDU
+endif
+
 include $(NUCLEI_SDK_ROOT)/Build/Makefile.base
