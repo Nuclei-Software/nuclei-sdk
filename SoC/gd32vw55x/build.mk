@@ -1,5 +1,5 @@
 ##### Put your SoC build configurations below #####
-CORE := n307fd
+CORE := n300fd
 ARCH_EXT ?= _zba_zbb_zbc_zbs_xxldspn1x
 DOWNLOAD ?= flashxip
 
