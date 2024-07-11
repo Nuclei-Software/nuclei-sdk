@@ -31,7 +31,7 @@ dependencies:
 ## Package Configurations
 configuration:
   nuclei_core:
-    default_value: n307fd
+    default_value: n300fd
     type: choice
     global: true
     description: Nuclei RISC-V Core
@@ -68,18 +68,6 @@ configuration:
         cmodel: medlow
         tune: nuclei-200-series
         description: N203E Core(ARCH=rv32emac, ABI=ilp32e)
-      - name: n205
-        arch: rv32imac
-        abi: ilp32
-        cmodel: medlow
-        tune: nuclei-200-series
-        description: N205 Core(ARCH=rv32imac, ABI=ilp32)
-      - name: n205e
-        arch: rv32emac
-        abi: ilp32e
-        cmodel: medlow
-        tune: nuclei-200-series
-        description: N205E Core(ARCH=rv32emac, ABI=ilp32e)
       - name: n300
         arch: rv32imac
         abi: ilp32
@@ -98,24 +86,6 @@ configuration:
         cmodel: medlow
         tune: nuclei-300-series
         description: N300FD Core(ARCH=rv32imafdc, ABI=ilp32d)
-      - name: n305
-        arch: rv32imac
-        abi: ilp32
-        cmodel: medlow
-        tune: nuclei-300-series
-        description: N305 Core(ARCH=rv32imac, ABI=ilp32)
-      - name: n307
-        arch: rv32imafc
-        abi: ilp32f
-        cmodel: medlow
-        tune: nuclei-300-series
-        description: N307 Core(ARCH=rv32imafc, ABI=ilp32f)
-      - name: n307fd
-        arch: rv32imafdc
-        abi: ilp32d
-        cmodel: medlow
-        tune: nuclei-300-series
-        description: N307FD Core(ARCH=rv32imafdc, ABI=ilp32d)
       - name: n600
         arch: rv32imac
         abi: ilp32
