@@ -1,6 +1,7 @@
 # Format for adding a new core
 # NXXX_CORE_ARCH_ABI = ARCH ABI TUNE
 # ARCH ABI is a MUST, TUNE is optional
+# NOTE: n205/n205e/n305/n307/n307fd will be removed in future
 N200_CORE_ARCH_ABI = rv32imc ilp32 nuclei-200-series
 N200E_CORE_ARCH_ABI = rv32emc ilp32e nuclei-200-series
 N201_CORE_ARCH_ABI = rv32iac ilp32 nuclei-200-series
