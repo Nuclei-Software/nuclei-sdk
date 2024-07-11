@@ -31,7 +31,7 @@
     ],
     "appconfig": {
         "application/baremetal/demo_cidu": {
-            "build_config" : {"CIDU": "1"},
+            "build_config" : {"XLCFG_CIDU": "1"},
             "checks": {
                 "PASS": ["[ERROR]__CIDU_PRESENT must be defined as 1 in <Device>.h!", "Core 1 has received interrupt from core 0", "[WARN] SMP & CIDU not present"]
             }
