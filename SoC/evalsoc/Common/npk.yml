@@ -44,6 +44,12 @@ configuration:
         cmodel: medlow
         tune: nuclei-200-series
         description: N200 Core(ARCH=rv32imc, ABI=ilp32)
+      - name: n200e
+        arch: rv32emc
+        abi: ilp32e
+        cmodel: medlow
+        tune: nuclei-200-series
+        description: N200E Core(ARCH=rv32emc, ABI=ilp32e)
       - name: n201
         arch: rv32iac
         abi: ilp32
@@ -56,6 +62,18 @@ configuration:
         cmodel: medlow
         tune: nuclei-200-series
         description: N201E Core(ARCH=rv32eac, ABI=ilp32e)
+      - name: n202
+        arch: rv32ic
+        abi: ilp32
+        cmodel: medlow
+        tune: nuclei-200-series
+        description: N202 Core(ARCH=rv32ic, ABI=ilp32)
+      - name: n202e
+        arch: rv32ec
+        abi: ilp32e
+        cmodel: medlow
+        tune: nuclei-200-series
+        description: N202E Core(ARCH=rv32ec, ABI=ilp32e)
       - name: n203
         arch: rv32imac
         abi: ilp32
