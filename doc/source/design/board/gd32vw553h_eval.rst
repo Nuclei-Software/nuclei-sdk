@@ -48,7 +48,7 @@ For **GD32VW553H-EVAL** board:
   - ``gcc_gd32vw55x_sram.ld``: Linker script file for ``DOWNLOAD=sram``
   - If you want to specify your own modified linker script, you can follow steps described in :ref:`develop_appdev_linkscript`
 
-* **CORE**: ``n307fd`` by default, this by default is ``rv32imafdc`` arch, but you can also choose ``n300`` or ``n300f``
+* **CORE**: ``n300fd`` by default, this by default is ``rv32imafdc`` arch, but you can also choose ``n300`` or ``n300f``
 * **ARCH_EXT**: ``_zba_zbb_zbc_zbs_xxldspn1x`` by default, you can pass less extensions such as ``_zba_zbb_zbc_zbs``
 
 * You can find its openocd configuration file in ``SoC/gd32vw55x/Board/gd32vw553h_eval/openocd_gd32vw55x.cfg``

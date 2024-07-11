@@ -60,6 +60,6 @@ Extra make variables supported only in this SoC(see ``SoC/gd32vw55x/build.mk``):
 .. note::
 
     * Since this ``gd32vw55x`` SoC is a real chip, it is using Nuclei RISC-V
-      N300 core, so the **CORE** is fixed to ``n307fd``
+      N300 core, so the **CORE** is fixed to ``n300fd``
 
 .. _GigaDevice Semiconductor: https://www.gigadevice.com/

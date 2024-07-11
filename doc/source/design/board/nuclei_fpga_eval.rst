@@ -117,19 +117,19 @@ you just need to use this **SOC** and **BOARD** variables.
 .. code-block:: shell
 
     ### For evalsoc
-    # Clean the application with DOWNLOAD=ilm CORE=n307
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 clean
-    # Build the application with DOWNLOAD=ilm CORE=n307
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 all
-    # Upload the application using openocd and gdb with DOWNLOAD=ilm CORE=n307
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 upload
-    # Debug the application using openocd and gdb with DOWNLOAD=ilm CORE=n307
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 debug
+    # Clean the application with DOWNLOAD=ilm CORE=n300f
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300f clean
+    # Build the application with DOWNLOAD=ilm CORE=n300f
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300f all
+    # Upload the application using openocd and gdb with DOWNLOAD=ilm CORE=n300f
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300f upload
+    # Debug the application using openocd and gdb with DOWNLOAD=ilm CORE=n300f
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300f debug
     ### For evalsoc
-    # Clean the application with DOWNLOAD=ilm CORE=n307
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 clean
-    # Upload the application using openocd and gdb with DOWNLOAD=ilm CORE=n307
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n307 upload
+    # Clean the application with DOWNLOAD=ilm CORE=n300f
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300f clean
+    # Upload the application using openocd and gdb with DOWNLOAD=ilm CORE=n300f
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300f upload
 
 If you want to try other toolchain, such as nuclei llvm or terapines zcc, you can pass an extra :ref:`develop_buildsystem_var_toolchain` make variable.
 

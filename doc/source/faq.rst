@@ -53,8 +53,8 @@ which is incompatible, similar cases such as ``bfd requires flen 8, but target h
 
 Just change your CORE to proper core settings and will solve this issue.
 
-For example, if you compile your core with ``CORE=n307``,
-just change it to ``CORE=n305``.
+For example, if you compile your core with ``CORE=n300f``,
+just change it to ``CORE=n300``.
 
 * **Case 3: bfd requires xlen 8, but target has xlen 4**
 
@@ -73,7 +73,7 @@ but the core is a riscv 32 core, so just change your program
 to be compiled using a riscv 32 compile option.
 
 For example, if you compile your core with ``CORE=ux600``,
-just change it to ``CORE=n305``.
+just change it to ``CORE=n300``.
 
 
 How to select correct FDTI debugger?
