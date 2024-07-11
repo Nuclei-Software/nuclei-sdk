@@ -26,6 +26,7 @@ Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CP
 Wanner to take a try with **Nuclei N100 SDK for Nuclei 100 series CPU**, click [Quick Start with Nuclei N100 SDK](https://doc.nucleisys.com/nuclei_n100_sdk/quickstart.html) to start up.
 
 ## Requirements
+
 * Ubuntu Linux >=20.04 LTS or Windows >=7
   - **Linux**: GNU Make >= 3.82
   - **Windows**: [Windows Build Tools](https://nucleisys.com/download.php)
@@ -224,28 +225,28 @@ $NUCLEI_SDK_ROOT
    * cd *application/baremetal/helloworld/*
    * you can run *make help* to show help message.
    * We provided different Nuclei Core configurations(CORE=<your_core>) we supported, see *Build/Makefile.core*.
-     - such as `CORE=n305`
+     - such as `CORE=n300`
    * We support several download modes(DOWNLOAD=<mode>) for different applications.
      - **flashxip**: Program will to be download into flash and run directly in Flash
      - **flash**: Program will be download into flash, when running, program will be copied to ilm/ram and run in ilm/ram
      - **ilm**: Program will be download into ilm/ram and run directly in ilm/ram, program lost when poweroff
-   * For example, if you want to build your application for *CORE=n305 DOWNLOAD=ilm*, you can easily run this command:
+   * For example, if you want to build your application for *CORE=n300 DOWNLOAD=ilm*, you can easily run this command:
      ~~~shell
-     make CORE=n305 DOWNLOAD=ilm all
+     make CORE=n300 DOWNLOAD=ilm all
      ~~~
-   * If you want to upload your application for *CORE=n305 DOWNLOAD=ilm*, you can easily run this command:
+   * If you want to upload your application for *CORE=n300 DOWNLOAD=ilm*, you can easily run this command:
      ~~~shell
-     make CORE=n305 DOWNLOAD=ilm upload
+     make CORE=n300 DOWNLOAD=ilm upload
      ~~~
-   * (Option 1)If you want to debug your application for *CORE=n305 DOWNLOAD=ilm*:
-     - First open a new terminal in the same application folder and run: `make CORE=n305 DOWNLOAD=ilm run_openocd`
-     - Then run this command `make CORE=n305 DOWNLOAD=ilm run_gdb` in the existing terminal, then you can debug it using gdb,
+   * (Option 1)If you want to debug your application for *CORE=n300 DOWNLOAD=ilm*:
+     - First open a new terminal in the same application folder and run: `make CORE=n300 DOWNLOAD=ilm run_openocd`
+     - Then run this command `make CORE=n300 DOWNLOAD=ilm run_gdb` in the existing terminal, then you can debug it using gdb,
        if you want to load your program, you need to type `load` to achieve it.
      - **Notice**: Since version 0.2.4, you can also pass extra `GDB_PORT=<portno>`, to change to use new gdb port other than default
-       `3333`, for example, `make CORE=n305 DOWNLOAD=ilm GDB_PORT=3344 run_openocd` and `make CORE=n305 DOWNLOAD=ilm GDB_PORT=3344 run_gdb`
-   * (Option 2)If you want to debug your application for *CORE=n305 DOWNLOAD=ilm*:
+       `3333`, for example, `make CORE=n300 DOWNLOAD=ilm GDB_PORT=3344 run_openocd` and `make CORE=n300 DOWNLOAD=ilm GDB_PORT=3344 run_gdb`
+   * (Option 2)If you want to debug your application for *CORE=n300 DOWNLOAD=ilm*:
      ~~~shell
-     make CORE=n305 DOWNLOAD=ilm debug
+     make CORE=n300 DOWNLOAD=ilm debug
      ~~~
    * If you want to use UART terminal tool to view the UART message, you can choose `screen` or `minicom` in Linux, `teraterm` in Windows, the default UART baudrate we use is `115200`.
 
@@ -270,7 +271,7 @@ changed from `riscv-nuclei-elf-` to `riscv64-unknown-elf-`.
 * Pass extra `V=1` to your make command, it will show verbose compiling information, otherwise it will only show basic information. Sample output with extra `V=1`
   ~~~console
   $ make V=1 all
-  Current Configuration: TOOLCHAIN=nuclei_gnu RISCV_ARCH=rv32imafdc RISCV_ABI=ilp32d RISCV_TUNE=nuclei-300-series RISCV_CMODEL=medlow SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n307fd ARCH_EXT= DOWNLOAD=ilm STDCLIB=newlib_nano SMP= BOOT_HARTID=0
+  Current Configuration: TOOLCHAIN=nuclei_gnu RISCV_ARCH=rv32imafdc RISCV_ABI=ilp32d RISCV_TUNE=nuclei-300-series RISCV_CMODEL=medlow SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n300fd ARCH_EXT= DOWNLOAD=ilm STDCLIB=newlib_nano SMP= BOOT_HARTID=0
   Assembling :  ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S
   riscv64-unknown-elf-gcc -x assembler-with-cpp -O2 -DBOOT_HARTID=0 -march=rv32imafdc -mabi=ilp32d -mcmodel=medlow -mtune=nuclei-300-series -g -fno-common  -ffunction-sections -fdata-sections -DDOWNLOAD_MODE=DOWNLOAD_MODE_ILM -DDOWNLOAD_MODE_STRING=\"ILM\" -DCPU_SERIES=300  -I. -I../../../NMSIS/Core/Include -I../../../SoC/evalsoc/Board/nuclei_fpga_eval/Include -I../../../SoC/evalsoc/Common/Include -Iinc -MMD -MT ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S.o -MF
   ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S.o.d -c -o ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S.o ../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S
