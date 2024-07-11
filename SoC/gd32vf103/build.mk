@@ -72,7 +72,7 @@ RISCV_ABI ?= ilp32
 # Handle QEMU Emulation
 # NOTE: QEMU emulation for gd32vf103 is no longer supported after nuclei release >= 2023.06
 QEMU_MACHINE := ${BOARD}
-QEMU_CPU := nuclei-n205
+QEMU_CPU := nuclei-n203
 
 ##### Extra compiler options
 COMMON_FLAGS += -DSYSTEM_CLOCK=$(SYSCLK)

@@ -60,7 +60,7 @@ endif
 CORE_UPPER := $(call uc, $(CORE))
 include $(NUCLEI_SDK_BUILD)/Makefile.core
 # you can override SUPPORTED_CORES defined in Makefile.core to limit the COREs used in this SoC
-# eg. override SUPPORTED_CORES := n305 n307
+# eg. override SUPPORTED_CORES := n300 n300f
 
 CORE_ARCH_ABI := $($(CORE_UPPER)_CORE_ARCH_ABI)
 # Check whether CORE is in SUPPORTED_CORES

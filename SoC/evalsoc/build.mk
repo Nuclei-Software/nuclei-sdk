@@ -15,7 +15,7 @@
 # RISCV_ABI: MUST, set this variable to the riscv abi you are using, see $(NUCLEI_SDK_BUILD)/Makefile.core
 # RISCV_TUNE: Optional, set this variable to the mtune you are using, see $(NUCLEI_SDK_BUILD)/Makefile.core
 # If your SoC used a fixed BOARD, CORE or DOWNLOAD mode, please use override to define a fixed variable value, eg.
-# override CORE := n205
+# override CORE := n203
 # override DOWNLOAD := flashxip
 # override BOARD := nuclei_fpga_eval
 #### Source Code Management Notice
@@ -140,7 +140,7 @@ endif
 CORE_UPPER := $(call uc, $(CORE))
 include $(NUCLEI_SDK_BUILD)/Makefile.core
 # you can override SUPPORTED_CORES defined in Makefile.core to limit the COREs used in this SoC
-# eg. override SUPPORTED_CORES := n305 n307
+# eg. override SUPPORTED_CORES := n300 n300f
 
 CORE_ARCH_ABI := $($(CORE_UPPER)_CORE_ARCH_ABI)
 # Check whether CORE is in SUPPORTED_CORES
