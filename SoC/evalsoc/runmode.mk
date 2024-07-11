@@ -99,3 +99,54 @@ BPU_EN ?=
 ifneq ($(BPU_EN),)
 COMMON_FLAGS += -DRUNMODE_BPU_EN=$(BPU_EN)
 endif
+
+# NOTE: extra XLCFG_xxx make variables to control
+# cpu feature present or not which is only internally used by Nuclei(XinLai)
+# This will affect the cpufeature.h and evalsoc.h
+XLCFG_SPMP ?=
+ifeq ($(XLCFG_SPMP),1)
+XLCFG_TEE := 1
+COMMON_FLAGS += -DCFG_HAS_SPMP
+endif
+
+XLCFG_SMPU ?=
+ifeq ($(XLCFG_SMPU),1)
+XLCFG_TEE := 1
+COMMON_FLAGS += -DCFG_HAS_SMPU
+endif
+
+XLCFG_TEE ?=
+ifeq ($(XLCFG_TEE),1)
+COMMON_FLAGS += -DCFG_HAS_TEE
+endif
+
+XLCFG_PMP ?=
+ifeq ($(XLCFG_PMP),1)
+COMMON_FLAGS += -DCFG_HAS_PMP
+endif
+
+XLCFG_CCM ?=
+ifeq ($(XLCFG_CCM),1)
+COMMON_FLAGS += -DCFG_HAS_IOCC
+endif
+
+XLCFG_ECLIC ?=
+ifeq ($(XLCFG_ECLIC),1)
+COMMON_FLAGS += -DCFG_HAS_CLIC
+endif
+
+XLCFG_SYSTIMER ?=
+ifeq ($(XLCFG_SYSTIMER),1)
+COMMON_FLAGS += -DCFG_TMR_PRIVATE
+endif
+
+XLCFG_CIDU ?=
+ifeq ($(XLCFG_CIDU),1)
+COMMON_FLAGS += -DCFG_HAS_IDU
+endif
+
+XLCFG_SMPCC ?=
+ifeq ($(XLCFG_SMPCC),1)
+COMMON_FLAGS += -DCFG_HAS_SMP
+endif
+
