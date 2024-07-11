@@ -21,7 +21,7 @@ USB_DRIVER ?=
 
 # override DOWNLOAD and CORE variable for GD32VF103 SoC
 # even though it was set with a command argument
-override CORE := n205
+override CORE := n203
 override DOWNLOAD := flashxip
 DEFAULT_BOARD := gd32vf103v_rvstar
 
