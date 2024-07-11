@@ -952,9 +952,9 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
     # cd to the demo_smode_eclic directory
     cd application/baremetal/demo_smode_eclic
     # MUST: Your CPU configuration must has TEE configured
-    # Change macro __TEE_PRESENT to 1 in <Device.h>
-    # here assume CORE=n300 is equipped with TEE
-    #define __TEE_PRESENT             1
+    # Since Nuclei SDK 0.7.0, if you are sure CFG_HAS_TEE is not defined in cpufeature.h, but you have TEE
+    # you can pass extra make variable XLCFG_TEE=1 during make command to tell sdk
+    # the TEE present, it will define CFG_HAS_TEE
     # Change macro SWIRQ_INTLEVEL_HIGHER value in demo_smode_eclic.c
     # to see different working mode of this demo
     # Clean the application first
@@ -1123,9 +1123,9 @@ This `demo_spmp application`_ is used to demonstrate how to grant physical memor
     # cd to the demo_spmp directory
     cd application/baremetal/demo_spmp
     # MUST: Your CPU configuration must has TEE configured
-    # Change macro __TEE_PRESENT to 1 in <Device.h>
-    # here assume CORE=n300 is equipped with TEE
-    #define __TEE_PRESENT             1
+    # Since Nuclei SDK 0.7.0, if you are sure CFG_HAS_SPMP is not defined in cpufeature.h, but you have sPMP
+    # you can pass extra make variable XLCFG_SPMP=1 during make command to tell sdk
+    # the SPMP present, it will define CFG_HAS_SPMP
     # Change macro TRIGGER_SPMP_VIOLATION_MODE value in demo_spmp.c
     # to see different working mode of this demo
     # Clean the application first
@@ -1354,10 +1354,9 @@ physical memory privileges(read, write, execute) on each physical memory region 
     # cd to the demo_smpu directory
     cd application/baremetal/demo_smpu
     # MUST: Your CPU configuration must has TEE configured
-    # Change macro __TEE_PRESENT and __SMPU_PRESENT to 1 in <Device.h>
-    # here assume CORE=n300 is equipped with TEE
-    #define __TEE_PRESENT             1
-    #define __SMPU_PRESENT             1
+    # Since Nuclei SDK 0.7.0, if you are sure CFG_HAS_SMPU is not defined in cpufeature.h, but you have SMPU
+    # you can pass extra make variable XLCFG_SMPU=1 during make command to tell sdk
+    # the SMPU present, it will define CFG_HAS_SMPU
     # Change macro TRIGGER_SMPU_VIOLATION_MODE value in demo_smpu.c
     # to see different working mode of this demo
     # Clean the application first
@@ -1752,6 +1751,9 @@ for all the cpu.
     # application needs to run in ddr memory not in ilm memory
     # cd to the demo_cidu directory
     cd application/baremetal/demo_cidu
+    # Since Nuclei SDK 0.7.0, if you are sure CFG_HAS_IDU is not defined in cpufeature.h, but you have CIDU
+    # you can pass extra make variable XLCFG_CIDU=1 during make command to tell sdk
+    # the cidu present, it will define CFG_HAS_IDU
     # Clean the application first
     make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=4 DOWNLOAD=ddr CORE=ux900 clean
     # Build and upload the application
@@ -1921,6 +1923,9 @@ because cache will bypass when run in ilm, data in dlm(private resource for cpu)
     # application needs to run in ddr memory not in ilm memory
     # cd to the demo_cache directory
     cd application/baremetal/demo_cache
+    # Since Nuclei SDK 0.7.0, if you are sure CFG_HAS_IOCC is not defined in cpufeature.h, but you have CCM
+    # you can pass extra make variable XLCFG_CCM=1 during make command to tell sdk
+    # the ccm present, it will define CFG_HAS_IOCC
     # Clean the application first
     make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ddr CORE=ux900 clean
     # Build and upload the application
