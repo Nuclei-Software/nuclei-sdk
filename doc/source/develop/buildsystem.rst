@@ -286,7 +286,7 @@ and append the new **CORE** to **SUPPORTED_CORES**.
 For example, if you want to add a new **CORE** called **n308**, and the **n308**'s
 **ARCH** and **ABI** are ``rv32imafdc`` and ``ilp32d``, then you can add a new line
 like this ``N308_CORE_ARCH_ABI = rv32imafdc ilp32d``, and append **n308** to **SUPPORTED_CORES**
-like this ``SUPPORTED_CORES = n201 n201e n203 n203e n205 n205e n305 n307 n307fd n308 nx600``
+like this ``SUPPORTED_CORES = n201 n201e n203 n203e n308 nx600``
 
 .. note::
 
@@ -594,7 +594,7 @@ you need to take care of the arch isa string order, please see ``riscv64-unknown
 And IAR compiler support is also done in Nuclei SDK, you can take a try with it
 via ``ideprojects/iar`` folder provided prebuilt ide projects.
 
-If you want to use old Nuclei GNU Toolchain <= 2022.12 in Nuclei SDK 0.5.0, you need to pass extra ``COMPILE_PREFIX=riscv-nuclei-elf-`` when build any application, such as ``make CORE=n307fd COMPILE_PREFIX=riscv-nuclei-elf-  STDCLIB=libncrt_small clean all``, but this is not recommended, and will be deprecated in future any time.
+If you want to use old Nuclei GNU Toolchain <= 2022.12 in Nuclei SDK 0.5.0, you need to pass extra ``COMPILE_PREFIX=riscv-nuclei-elf-`` when build any application, such as ``make CORE=n300fd COMPILE_PREFIX=riscv-nuclei-elf-  STDCLIB=libncrt_small clean all``, but this is not recommended, and will be deprecated in future any time.
 
 .. _develop_buildsystem_var_download:
 
@@ -681,18 +681,17 @@ Currently it has these cores supported as described in table
 
    ========  ========== =======  =================
    **CORE**  **ARCH**   **ABI**       **TUNE**
+   n200      rv32imc    ilp32    nuclei-200-series
+   n200e     rv32emc    ilp32e   nuclei-200-series
    n201      rv32iac    ilp32    nuclei-200-series
    n201e     rv32eac    ilp32e   nuclei-200-series
+   n202      rv32ic     ilp32    nuclei-200-series
+   n202e     rv32ec     ilp32e   nuclei-200-series
    n203      rv32imac   ilp32    nuclei-200-series
    n203e     rv32emac   ilp32e   nuclei-200-series
-   n205      rv32imac   ilp32    nuclei-200-series
-   n205e     rv32emac   ilp32e   nuclei-200-series
    n300      rv32imac   ilp32    nuclei-300-series
    n300f     rv32imafc  ilp32f   nuclei-300-series
    n300fd    rv32imafdc ilp32d   nuclei-300-series
-   n305      rv32imac   ilp32    nuclei-300-series
-   n307      rv32imafc  ilp32f   nuclei-300-series
-   n307fd    rv32imafdc ilp32d   nuclei-300-series
    n600      rv32imac   ilp32    nuclei-600-series
    n600f     rv32imafc  ilp32f   nuclei-600-series
    n600fd    rv32imafdc ilp32d   nuclei-600-series
@@ -726,9 +725,11 @@ depended on the implementation of SoC build.mk.
 
 .. note::
 
+    * ``n205/n205e/n305/n307/n307fd`` CORE are removed in Nuclei SDK 0.7.0
+    * ``n200e/n202/n202e`` CORE are added in Nuclei SDK 0.7.0
     * In Nuclei SDK, this **CORE** variable is just a **shorthand** to find a suitable **ARCH**,
       **ABI** and **TUNE** for target SoC to pass to the compiler as described in above table.
-      So for example, **CORE=n307fd** equals **CORE=n300fd**, **CORE=n900fd** equals **CORE=n900fd**
+      So for example, **CORE=n600fd** equals **CORE=u600fd**, **CORE=n900fd** equals **CORE=u900fd**
     * Nuclei CPU product name such as N310, NA300, NA900, NI900, N308 is just a name, since
       the CPU itself is configurable, so the final **ARCH** and **ABI** is different according
       to your configuration, you should find a proper base **CORE** name according to your CPU RTL
@@ -964,9 +965,9 @@ run_gdb and specify a different port other than ``3333``.
 
 You can do it like this, take ``nuclei_fpga_eval`` board for example, such as port ``3344``:
 
-* Open openocd server: ``make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_openocd``
+* Open openocd server: ``make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n300f GDB_PORT=3344 run_openocd``
 
-* connect gdb with openocd server: ``make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n307 GDB_PORT=3344 run_gdb``
+* connect gdb with openocd server: ``make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n300f GDB_PORT=3344 run_gdb``
 
 .. _develop_buildsystem_var_jtagsn:
 
@@ -1407,7 +1408,7 @@ It might override RISCV_ARCH defined in SoC build.mk, according to your build.mk
 
 Take ``SOC=evalsoc`` for example.
 
-* **CORE=n305 RISCV_ARCH=rv32imafdc_zk_zks RISCV_ABI=ilp32d ARCH_EXT=_zba_zbb_zbc_zbs**, then final compiler options will be
+* **CORE=n300 RISCV_ARCH=rv32imafdc_zk_zks RISCV_ABI=ilp32d ARCH_EXT=_zba_zbb_zbc_zbs**, then final compiler options will be
   ``-march=rv32imafdc_zk_zks -mabi=ilp32d -mtune=nuclei-300-series``. The **ARCH_EXT** is ignored.
 
 .. _develop_buildsystem_var_riscv_abi:
