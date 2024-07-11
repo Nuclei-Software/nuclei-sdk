@@ -112,17 +112,17 @@ configuration:
       - name: both
         description: USB Host and Device Driver Code
   nuclei_core:
-    default_value: n205
+    default_value: n203
     type: choice
     global: true
     description: Nuclei RISC-V Core
     choices:
-      - name: n205
+      - name: n203
         arch: rv32imac
         abi: ilp32
         cmodel: medlow
         tune: nuclei-200-series
-        description: N205/Bumblebee Core(ARCH=rv32imac, ABI=ilp32)
+        description: N203/Bumblebee Core(ARCH=rv32imac, ABI=ilp32)
   semihost:
     default_value: 0
     type: checkbox
