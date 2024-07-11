@@ -21,6 +21,7 @@ This is **development** release version ``0.6.0`` of Nuclei SDK.
 
 * Build System
 
+  - Introduce ``XLCFG_xxx`` make variable for evalsoc which is only internally used by Nuclei to overwrite default cpufeature.h macro definition, which will be useful for some applications such as demo_cidu, demo_cache, demo_spmp, demo_smpu and demo_smode_eclic
 
 
 V0.6.0

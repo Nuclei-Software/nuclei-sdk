@@ -82,6 +82,7 @@ Extra make variables supported only in this SoC and used internally only by Nucl
   * **L2_EN**: it is used internally by Nuclei, used to control L2 cache enable or disable, introduced in 0.6.0 release.
   * **LDSPEC_EN**: it is used internally by Nuclei, used to control load speculative enable or disable, introduced in 0.6.0 release.
   * **BPU_EN**: it is used internally by Nuclei, used to control branch prediction unit enable or disable, introduced in 0.6.0 release.
+  * **XLCFG_xxx** make variables such as **XLCFG_CIDU**, **XLCFG_CCM**, **XLCFG_TEE** and **XLCFG_SMPU** which are used to overwrite default macros defined in ``cpufeature.h`` which will affect **XXX_PRESENT** macros in ``evalsoc.h``
 
 .. code-block:: shell
 
