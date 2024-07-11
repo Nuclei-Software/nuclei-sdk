@@ -17,18 +17,18 @@
         "ARCH_EXT": ""
     },
     "build_configs": {
-        "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_xxlcz"},
-        "n305b-flash": {"DOWNLOAD": "flash", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxlcz"},
-        "n305bp-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n305", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
-        "n307bp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn1x_xxlcz"},
-        "n307-flash": {"DOWNLOAD": "flash", "CORE": "n307", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_xxlcz"},
-        "n307bpv-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n307", "ARCH_EXT": "_zve32f_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn2x_xxlcz"},
-        "n307fdp_zc-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_xxldsp_xxlcz"},
-        "n307fdbp_zc-flash": {"DOWNLOAD": "flash", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
-        "n307fdbpv_zc-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n307fd", "ARCH_EXT": "_zve32f_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
-        "n307fdp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcd_xxldsp_xxlcz"},
-        "n307fdbp-flash": {"DOWNLOAD": "flash", "CORE": "n307fd", "ARCH_EXT": "_zca_zcb_zcf_zcd_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
-        "n307fdbpv-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n307fd", "ARCH_EXT": "_zve32f_zca_zcb_zcf_zcd_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"}
+        "n300-ilm": {"DOWNLOAD": "ilm", "CORE": "n300", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_xxlcz"},
+        "n300b-flash": {"DOWNLOAD": "flash", "CORE": "n300", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxlcz"},
+        "n300bp-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n300", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
+        "n300fbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n300f", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn1x_xxlcz"},
+        "n300f-flash": {"DOWNLOAD": "flash", "CORE": "n300f", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_xxlcz"},
+        "n300fbpv-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n300f", "ARCH_EXT": "_zve32f_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn2x_xxlcz"},
+        "n300fdp_zc-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_xxldsp_xxlcz"},
+        "n300fdbp_zc-flash": {"DOWNLOAD": "flash", "CORE": "n300fd", "ARCH_EXT": "_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
+        "n300fdbpv_zc-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n300fd", "ARCH_EXT": "_zve32f_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
+        "n300fdp-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_zca_zcb_zcf_zcd_xxldsp_xxlcz"},
+        "n300fdbp-flash": {"DOWNLOAD": "flash", "CORE": "n300fd", "ARCH_EXT": "_zca_zcb_zcf_zcd_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"},
+        "n300fdbpv-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n300fd", "ARCH_EXT": "_zve32f_zca_zcb_zcf_zcd_zba_zbb_zbc_zbs_xxldspn3x_xxlcz"}
     },
     "appconfig": {
     },

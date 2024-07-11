@@ -10,7 +10,7 @@
     "build_config": {
         "SOC": "gd32vf103",
         "BOARD": "gd32vf103c_dlink",
-        "CORE": "n205",
+        "CORE": "n203",
         "DOWNLOAD": "flashxip",
         "ARCH_EXT": ""
     },

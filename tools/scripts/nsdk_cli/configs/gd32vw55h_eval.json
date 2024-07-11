@@ -10,7 +10,7 @@
     "build_config": {
         "SOC": "gd32vw55x",
         "BOARD": "gd32vw553h_rvstar",
-        "CORE": "n307fd",
+        "CORE": "n300fd",
         "DOWNLOAD": "flashxip",
         "ARCH_EXT": ""
     },

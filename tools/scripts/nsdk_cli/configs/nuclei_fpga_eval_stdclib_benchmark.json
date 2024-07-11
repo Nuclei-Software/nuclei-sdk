@@ -27,38 +27,38 @@
     "appconfig": {
         "application/baremetal/benchmark/coremark": {
             "build_configs" : {
-                "n305-newlib-small_default": {"CORE": "n305", "STDCLIB": "newlib_small"},
-                "n305-libncrt-small_default": {"CORE": "n305", "STDCLIB": "libncrt_small"},
-                "n305-libncrt-fast_default": {"CORE": "n305", "STDCLIB": "libncrt_fast"},
-                "n305-libncrt-balanced_default": {"CORE": "n305", "STDCLIB": "libncrt_balanced"},
-                "n305-newlib-small_case1": {"CORE": "n305", "STDCLIB": "newlib_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
-                "n305-libncrt-small_case1": {"CORE": "n305", "STDCLIB": "libncrt_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
-                "n305-libncrt-fast_case1": {"CORE": "n305", "STDCLIB": "libncrt_fast", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
-                "n305-libncrt-balanced_case1": {"CORE": "n305", "STDCLIB": "libncrt_balanced", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "}
+                "n300-newlib-small_default": {"CORE": "n300", "STDCLIB": "newlib_small"},
+                "n300-libncrt-small_default": {"CORE": "n300", "STDCLIB": "libncrt_small"},
+                "n300-libncrt-fast_default": {"CORE": "n300", "STDCLIB": "libncrt_fast"},
+                "n300-libncrt-balanced_default": {"CORE": "n300", "STDCLIB": "libncrt_balanced"},
+                "n300-newlib-small_case1": {"CORE": "n300", "STDCLIB": "newlib_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n300-libncrt-small_case1": {"CORE": "n300", "STDCLIB": "libncrt_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n300-libncrt-fast_case1": {"CORE": "n300", "STDCLIB": "libncrt_fast", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n300-libncrt-balanced_case1": {"CORE": "n300", "STDCLIB": "libncrt_balanced", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "}
             }
         },
         "application/baremetal/benchmark/dhrystone": {
             "build_configs" : {
-                "n305-newlib-small_default": {"CORE": "n305", "STDCLIB": "newlib_small"},
-                "n305-libncrt-small_default": {"CORE": "n305", "STDCLIB": "libncrt_small"},
-                "n305-libncrt-fast_default": {"CORE": "n305", "STDCLIB": "libncrt_fast"},
-                "n305-libncrt-balanced_default": {"CORE": "n305", "STDCLIB": "libncrt_balanced"},
-                "n305-newlib-small_case1": {"CORE": "n305", "STDCLIB": "newlib_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
-                "n305-libncrt-small_case1": {"CORE": "n305", "STDCLIB": "libncrt_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
-                "n305-libncrt-fast_case1": {"CORE": "n305", "STDCLIB": "libncrt_fast", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
-                "n305-libncrt-balanced_case1": {"CORE": "n305", "STDCLIB": "libncrt_balanced", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "}
+                "n300-newlib-small_default": {"CORE": "n300", "STDCLIB": "newlib_small"},
+                "n300-libncrt-small_default": {"CORE": "n300", "STDCLIB": "libncrt_small"},
+                "n300-libncrt-fast_default": {"CORE": "n300", "STDCLIB": "libncrt_fast"},
+                "n300-libncrt-balanced_default": {"CORE": "n300", "STDCLIB": "libncrt_balanced"},
+                "n300-newlib-small_case1": {"CORE": "n300", "STDCLIB": "newlib_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n300-libncrt-small_case1": {"CORE": "n300", "STDCLIB": "libncrt_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n300-libncrt-fast_case1": {"CORE": "n300", "STDCLIB": "libncrt_fast", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n300-libncrt-balanced_case1": {"CORE": "n300", "STDCLIB": "libncrt_balanced", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "}
             }
         },
         "application/baremetal/benchmark/whetstone": {
             "build_configs" : {
-                "n305-newlib-small_default": {"CORE": "n305", "STDCLIB": "newlib_small"},
-                "n305-libncrt-small_default": {"CORE": "n305", "STDCLIB": "libncrt_small"},
-                "n305-libncrt-fast_default": {"CORE": "n305", "STDCLIB": "libncrt_fast"},
-                "n305-libncrt-balanced_default": {"CORE": "n305", "STDCLIB": "libncrt_balanced"},
-                "n305-newlib-small_case1": {"CORE": "n305", "STDCLIB": "newlib_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
-                "n305-libncrt-small_case1": {"CORE": "n305", "STDCLIB": "libncrt_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
-                "n305-libncrt-fast_case1": {"CORE": "n305", "STDCLIB": "libncrt_fast", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
-                "n305-libncrt-balanced_case1": {"CORE": "n305", "STDCLIB": "libncrt_balanced", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "}
+                "n300-newlib-small_default": {"CORE": "n300", "STDCLIB": "newlib_small"},
+                "n300-libncrt-small_default": {"CORE": "n300", "STDCLIB": "libncrt_small"},
+                "n300-libncrt-fast_default": {"CORE": "n300", "STDCLIB": "libncrt_fast"},
+                "n300-libncrt-balanced_default": {"CORE": "n300", "STDCLIB": "libncrt_balanced"},
+                "n300-newlib-small_case1": {"CORE": "n300", "STDCLIB": "newlib_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n300-libncrt-small_case1": {"CORE": "n300", "STDCLIB": "libncrt_small", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n300-libncrt-fast_case1": {"CORE": "n300", "STDCLIB": "libncrt_fast", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "},
+                "n300-libncrt-balanced_case1": {"CORE": "n300", "STDCLIB": "libncrt_balanced", "BENCH_FLAGS": "-O2 -funroll-all-loops -finline-limit=600 "}
             }
         }
     },

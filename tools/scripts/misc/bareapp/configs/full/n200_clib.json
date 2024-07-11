@@ -15,10 +15,10 @@
         "DOWNLOAD": "ilm"
     },
     "build_configs": {
-        "n205-newlib-small": {"CORE": "n205", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
-        "n205-libncrt-small": {"CORE": "n205", "STDCLIB": "libncrt_small", "ARCH_EXT": ""},
-        "n205b-newlib-small": {"CORE": "n205", "STDCLIB": "newlib_small", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
-        "n205b-libncrt-small": {"CORE": "n205", "STDCLIB": "libncrt_small", "ARCH_EXT": "_zba_zbb_zbc_zbs"}
+        "n203-newlib-small": {"CORE": "n203", "STDCLIB": "newlib_small", "ARCH_EXT": ""},
+        "n203-libncrt-small": {"CORE": "n203", "STDCLIB": "libncrt_small", "ARCH_EXT": ""},
+        "n203b-newlib-small": {"CORE": "n203", "STDCLIB": "newlib_small", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n203b-libncrt-small": {"CORE": "n203", "STDCLIB": "libncrt_small", "ARCH_EXT": "_zba_zbb_zbc_zbs"}
     },
     "expected": {
         "application/baremetal/demo_nice": {"build": true, "run": false},

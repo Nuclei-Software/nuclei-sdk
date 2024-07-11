@@ -23,9 +23,9 @@
     },
     "build_configs": {
         "n201-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n201"},
-        "n205-flash": {"DOWNLOAD": "flash", "CORE": "n205"},
-        "n307-ilm": {"DOWNLOAD": "ilm", "CORE": "n307"},
-        "n307fd-sram": {"DOWNLOAD": "ilm", "CORE": "n307fd"},
+        "n203-flash": {"DOWNLOAD": "flash", "CORE": "n203"},
+        "n300f-ilm": {"DOWNLOAD": "ilm", "CORE": "n300f"},
+        "n300fd-sram": {"DOWNLOAD": "ilm", "CORE": "n300fd"},
         "nx900-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900"},
         "nx900f-flash": {"DOWNLOAD": "flash", "CORE": "nx900f"},
         "nx900fd-sram": {"DOWNLOAD": "flash", "CORE": "nx900fd"},
@@ -55,7 +55,7 @@
         },
         "application/baremetal/demo_dsp": {
             "build_configs" : {
-                "n307fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+                "n300fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
                 "n900fdbv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900fd", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs"},
                 "nx900fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f"},
                 "nx900fdv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v"},
@@ -81,9 +81,9 @@
             "n201-ilm": { "build": false, "run": false },
             "n201-flash": { "build": false, "run": false },
             "n201-flashxip": { "build": false, "run": false },
-            "n205e-ilm": { "build": false, "run": false },
-            "n205e-flash": { "build": false, "run": false },
-            "n205e-flashxip": { "build": false, "run": false },
+            "n203e-ilm": { "build": false, "run": false },
+            "n203e-flash": { "build": false, "run": false },
+            "n203e-flashxip": { "build": false, "run": false },
             "n201e-ilm": { "build": false, "run": false },
             "n201e-flash": { "build": false, "run": false },
             "n201e-flashxip": { "build": false, "run": false }

@@ -13,7 +13,7 @@
     "build_config": {
     },
     "build_configs": {
-        "n205": {"CORE": "n205", "ARCH_EXT": ""},
+        "n203": {"CORE": "n203", "ARCH_EXT": ""},
         "n300fbp": {"CORE": "n300f", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
         "n300fd": {"CORE": "n300fd", "ARCH_EXT": ""},
         "n300fdbp": {"CORE": "n300fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},

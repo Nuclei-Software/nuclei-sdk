@@ -16,10 +16,10 @@
         "BOARD": "nuclei_fpga_eval"
     },
     "build_configs": {
-        "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": ""},
-        "n305b-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
-        "n307fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": ""},
-        "n307fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n300-ilm": {"DOWNLOAD": "ilm", "CORE": "n300", "ARCH_EXT": ""},
+        "n300b-ilm": {"DOWNLOAD": "ilm", "CORE": "n300", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n300fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": ""},
+        "n300fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
         "ux600-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": ""},
         "ux600b-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
         "ux600fd-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600fd", "ARCH_EXT": ""},

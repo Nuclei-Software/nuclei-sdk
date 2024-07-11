@@ -19,16 +19,16 @@
     "build_configs": {
         "n201-ilm": {"DOWNLOAD": "ilm", "CORE": "n201"},
         "n201e-ilm": {"DOWNLOAD": "ilm", "CORE": "n201e"},
-        "n205-ilm": {"DOWNLOAD": "ilm", "CORE": "n205"},
-        "n307-ilm": {"DOWNLOAD": "ilm", "CORE": "n307"},
-        "n307fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd"}
+        "n203-ilm": {"DOWNLOAD": "ilm", "CORE": "n203"},
+        "n300f-ilm": {"DOWNLOAD": "ilm", "CORE": "n300f"},
+        "n300fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd"}
     },
     "appconfig": {
         "application/baremetal/demo_dsp": {
             "build_configs" : {
-                "n305-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_xxldspn1x"},
-                "n307-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n307", "ARCH_EXT": "_xxldspn1x"},
-                "n307fd-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_xxldspn1x"}
+                "n300-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n300", "ARCH_EXT": "_xxldspn1x"},
+                "n300f-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n300f", "ARCH_EXT": "_xxldspn1x"},
+                "n300fd-ilm-dsp": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_xxldspn1x"}
             },
             "checks": {
                 "PASS": ["all test are passed"],
@@ -41,9 +41,9 @@
             "n201-ilm": { "build": false, "run": false },
             "n201-flash": { "build": false, "run": false },
             "n201-flashxip": { "build": false, "run": false },
-            "n205e-ilm": { "build": false, "run": false },
-            "n205e-flash": { "build": false, "run": false },
-            "n205e-flashxip": { "build": false, "run": false },
+            "n203e-ilm": { "build": false, "run": false },
+            "n203e-flash": { "build": false, "run": false },
+            "n203e-flashxip": { "build": false, "run": false },
             "n201e-ilm": { "build": false, "run": false },
             "n201e-flash": { "build": false, "run": false },
             "n201e-flashxip": { "build": false, "run": false }

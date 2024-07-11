@@ -18,13 +18,13 @@
     "build_configs": {
         "n201-ilm": {"DOWNLOAD": "ilm", "CORE": "n201", "ARCH_EXT": ""},
         "n201e-ilm": {"DOWNLOAD": "ilm", "CORE": "n201e", "ARCH_EXT": ""},
-        "n205e-ilm": {"DOWNLOAD": "ilm", "CORE": "n205e", "ARCH_EXT": ""},
-        "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": ""},
-        "n305b-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
-        "n305bp-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
-        "n307fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": ""},
-        "n307fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
-        "n307fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"}
+        "n203e-ilm": {"DOWNLOAD": "ilm", "CORE": "n203e", "ARCH_EXT": ""},
+        "n300-ilm": {"DOWNLOAD": "ilm", "CORE": "n300", "ARCH_EXT": ""},
+        "n300b-ilm": {"DOWNLOAD": "ilm", "CORE": "n300", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n300bp-ilm": {"DOWNLOAD": "ilm", "CORE": "n300", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
+        "n300fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": ""},
+        "n300fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n300fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"}
     },
     "appconfig": {
         "application/baremetal/demo_dsp": {
@@ -48,8 +48,8 @@
         },
         "application/baremetal/benchmark/coremark": {
             "build_configs" : {
-                "n205-optimized": {"CORE": "n205", "CPU_SERIES": "200"},
-                "n305-optimized": {"CORE": "n305", "CPU_SERIES": "300"},
+                "n203-optimized": {"CORE": "n203", "CPU_SERIES": "200"},
+                "n300-optimized": {"CORE": "n300", "CPU_SERIES": "300"},
                 "n600f-optimized": {"CORE": "n600f", "CPU_SERIES": "600"},
                 "n900fd-optimized": {"CORE": "n900fd", "CPU_SERIES": "900"}
             }
@@ -59,11 +59,11 @@
         "application/baremetal/demo_dsp" : {
             "n201-ilm": { "build": false, "run": false },
             "n201e-ilm": { "build": false, "run": false },
-            "n205e-ilm": { "build": false, "run": false },
-            "n305b-ilm": { "build": false, "run": false },
-            "n305bp-ilm": { "build": false, "run": false },
-            "n307fdb-ilm": { "build": false, "run": false },
-            "n307fdbp-ilm": { "build": false, "run": false }
+            "n203e-ilm": { "build": false, "run": false },
+            "n300b-ilm": { "build": false, "run": false },
+            "n300bp-ilm": { "build": false, "run": false },
+            "n300fdb-ilm": { "build": false, "run": false },
+            "n300fdbp-ilm": { "build": false, "run": false }
         },
         "application/baremetal/benchmark/whetstone" : {
             "n201-ilm": { "build": true, "run": false },

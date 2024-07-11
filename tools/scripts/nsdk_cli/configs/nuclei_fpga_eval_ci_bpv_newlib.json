@@ -16,12 +16,12 @@
         "STDCLIB": "newlib_full"
     },
     "build_configs": {
-        "n305-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": ""},
-        "n305b-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
-        "n305bp-ilm": {"DOWNLOAD": "ilm", "CORE": "n305", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
-        "n307fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": ""},
-        "n307fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
-        "n307fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n307fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
+        "n300-ilm": {"DOWNLOAD": "ilm", "CORE": "n300", "ARCH_EXT": ""},
+        "n300b-ilm": {"DOWNLOAD": "ilm", "CORE": "n300", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n300bp-ilm": {"DOWNLOAD": "ilm", "CORE": "n300", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
+        "n300fd-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": ""},
+        "n300fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
+        "n300fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
         "ux600-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": ""},
         "ux600b-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
         "ux600bp-ilm": {"DOWNLOAD": "ilm", "CORE": "ux600", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldsp"},
