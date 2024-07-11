@@ -1,7 +1,7 @@
 function nsdk_build() {
     local TARGET=${1:-"clean all"}
     local PROGRAM=${2:-"application/baremetal/helloworld"}
-    local CORE=${3:-"n307"}
+    local CORE=${3:-"n300f"}
     local DOWNLOAD=${4:-"ilm"}
 
     BUILD_CMD="make ${TARGET} PROGRAM=${PROGRAM} CORE=${CORE} DOWNLOAD=${DOWNLOAD} "
