@@ -33,7 +33,6 @@ extern "C" {
 #endif
 
 #include "core_feature_base.h"
-#include <math.h>
 
 #if defined(__CIDU_PRESENT) && (__CIDU_PRESENT == 1)
 
