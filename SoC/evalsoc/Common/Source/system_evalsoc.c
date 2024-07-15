@@ -749,24 +749,42 @@ void _premain_init(void)
     // TODO This code controlled by macros RUNMODE_* are only used internally by Nuclei
     // You can remove it if you don't want it
     // No need to use in your code
-#if defined(RUNMODE_ILM_EN)
+#if defined(RUNMODE_ILM_EN) || defined(RUNMODE_ECC_EN)
     // Only disable ilm when it is present
     if (mcfginfo & MCFG_INFO_ILM) {
+#if defined(RUNMODE_ECC_EN)
+#if RUNMODE_ECC_EN == 0
+        __RV_CSR_CLEAR(CSR_MILM_CTL, MILM_CTL_ILM_ECC_EN | MILM_CTL_ILM_ECC_EXCP_EN | MILM_CTL_ILM_ECC_CHK_EN);
+#else
+        __RV_CSR_SET(CSR_MILM_CTL, MILM_CTL_ILM_ECC_EN | MILM_CTL_ILM_ECC_EXCP_EN | MILM_CTL_ILM_ECC_CHK_EN);
+#endif
+#endif
+#if defined(RUNMODE_ILM_EN)
 #if RUNMODE_ILM_EN == 0
         __RV_CSR_CLEAR(CSR_MILM_CTL, MILM_CTL_ILM_EN);
 #else
         __RV_CSR_SET(CSR_MILM_CTL, MILM_CTL_ILM_EN);
 #endif
+#endif
     }
 #endif
 
-#if defined(RUNMODE_DLM_EN)
+#if defined(RUNMODE_DLM_EN) || defined(RUNMODE_ECC_EN)
     // Only disable dlm when it is present
     if (mcfginfo & MCFG_INFO_DLM) {
+#if defined(RUNMODE_ECC_EN)
+#if RUNMODE_ECC_EN == 0
+        __RV_CSR_CLEAR(CSR_MDLM_CTL, MDLM_CTL_DLM_ECC_EN | MDLM_CTL_DLM_ECC_EXCP_EN | MDLM_CTL_DLM_ECC_CHK_EN);
+#else
+        __RV_CSR_SET(CSR_MDLM_CTL, MDLM_CTL_DLM_ECC_EN | MDLM_CTL_DLM_ECC_EXCP_EN | MDLM_CTL_DLM_ECC_CHK_EN);
+#endif
+#endif
+#if defined(RUNMODE_DLM_EN)
 #if RUNMODE_DLM_EN == 0
         __RV_CSR_CLEAR(CSR_MDLM_CTL, MDLM_CTL_DLM_EN);
 #else
         __RV_CSR_SET(CSR_MDLM_CTL, MDLM_CTL_DLM_EN);
+#endif
 #endif
     }
 #endif
@@ -784,14 +802,33 @@ void _premain_init(void)
     // __CCM_PRESENT is still default to 0 in evalsoc.h, since it is used in core_feature_eclic.h to register interrupt, if set to 1, it might cause exception
     // but in the cpu, icache or dcache might not exist due to cpu configuration, so here
     // we need to check whether icache/dcache really exist, if yes, then turn on it
-#if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1)
+#if defined(__ICACHE_PRESENT) || defined(RUNMODE_ECC_EN)
     if (ICachePresent()) { // Check whether icache real present or not
+#if defined(RUNMODE_ECC_EN)
+#if RUNMODE_ECC_EN == 0
+        __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_IC_ECC_EN | MCACHE_CTL_IC_ECC_EXCP_EN | MCACHE_CTL_IC_ECC_CHK_EN);
+#else
+        __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_IC_ECC_EN | MCACHE_CTL_IC_ECC_EXCP_EN | MCACHE_CTL_IC_ECC_CHK_EN);
+#endif
+#endif
+
+#if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1)
         EnableICache();
+#endif
     }
 #endif
-#if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1)
+#if defined(__DCACHE_PRESENT) || defined(RUNMODE_ECC_EN)
     if (DCachePresent()) { // Check whether dcache real present or not
+#if defined(RUNMODE_ECC_EN)
+#if RUNMODE_ECC_EN == 0
+        __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_DC_ECC_EN | MCACHE_CTL_DC_ECC_EXCP_EN | MCACHE_CTL_DC_ECC_CHK_EN);
+#else
+        __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_DC_ECC_EN | MCACHE_CTL_DC_ECC_EXCP_EN | MCACHE_CTL_DC_ECC_CHK_EN);
+#endif
+#endif
+#if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1)
         EnableDCache();
+#endif
     }
 #endif
 

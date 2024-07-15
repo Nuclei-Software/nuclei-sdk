@@ -100,6 +100,11 @@ ifneq ($(BPU_EN),)
 COMMON_FLAGS += -DRUNMODE_BPU_EN=$(BPU_EN)
 endif
 
+ECC_EN ?=
+ifneq ($(ECC_EN),)
+COMMON_FLAGS += -DRUNMODE_ECC_EN=$(ECC_EN)
+endif
+
 # NOTE: extra XLCFG_xxx make variables to control
 # cpu feature present or not which is only internally used by Nuclei(XinLai)
 # This will affect the cpufeature.h and evalsoc.h
