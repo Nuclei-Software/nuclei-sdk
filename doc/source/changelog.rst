@@ -13,16 +13,22 @@ This is **development** release version ``0.6.0`` of Nuclei SDK.
 
 * NMSIS
 
+  - Add more ECC related macros for ``milm_ctl/mdlm_ctl/mcache_ctl`` csr
+
 * SoC
 
   - Add **Terapines ZCC NPK** support, require Nuclei Studio >= 2024.06
   - Merge newlib stub code from many files into one file called ``stubs.c`` for all SoC supported in Nuclei SDK
   - Enable I/D cache for evalsoc before data/bss initialization steps using ``cpufeature.h`` for faster data initialization
+  - gd32vf103 default CORE name changed from ``n205`` to ``n203`` which are the same in software
+  - gd32vw55x default CORE name changed from ``n307fd`` to ``n300fd`` which are the same in software
+  - evalsoc default CORE name changed from ``n307fd`` to ``n300fd`` which are the same in software
 
 * Build System
 
   - Introduce ``XLCFG_xxx`` make variable for evalsoc which is only internally used by Nuclei to overwrite default cpufeature.h macro definition, which will be useful for some applications such as demo_cidu, demo_cache, demo_spmp, demo_smpu and demo_smode_eclic
-
+  - Introduce ``ECC_EN`` make variable for evalsoc which is only internally used by Nuclei to control whether ECC check is enabled or disabled.
+  - Add core ``n200e/n202/n202e`` and remove ``n205/n205e/n305/n307/n307fd`` which can be replaced by ``n203/n203e/n300/n300f/n300fd``
 
 V0.6.0
 ------
