@@ -194,7 +194,6 @@ void SystemCoreClockUpdate(void)             /* Get Core Clock Frequency */
      * Note: This function can be used to retrieve the system core clock frequeny
      *    after user changed register settings.
      */
-    SystemCoreClock = SYSTEM_CLOCK;
 }
 
 /**
@@ -211,7 +210,6 @@ void SystemInit(void)
      * Warn: do not use global variables because this function is called before
      * reaching pre-main. RW section maybe overwritten afterwards.
      */
-    SystemCoreClock = SYSTEM_CLOCK;
 }
 
 /**
@@ -265,6 +263,9 @@ typedef void (*EXC_HANDLER)(unsigned long cause, unsigned long sp);
  */
 static void system_default_exception_handler(unsigned long mcause, unsigned long sp)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
     /* TODO: Uncomment this if you have implement NSDK_DEBUG function */
     NSDK_DEBUG("MCAUSE : 0x%lx\r\n", mcause);
     NSDK_DEBUG("MDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_MDCAUSE));
@@ -279,6 +280,7 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
 #else
     while (1);
 #endif
+#endif
 }
 
 /**
@@ -291,6 +293,12 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
  */
 static void Exception_Init(void)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+    // TODO when CODESIZE macro is defined
+    // the exception handler table for m/s mode will not be initialized
+    // since all the exception handlers will not be classified, and just
+    // goto core_exception_handler or core_exception_handler_s for m/s exception
+#else
     for (int i = 0; i < MAX_SYSTEM_EXCEPTION_NUM; i++) {
         SystemExceptionHandlers[i] = (unsigned long)system_default_exception_handler;
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
@@ -298,6 +306,7 @@ static void Exception_Init(void)
 #endif
     }
     SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] = (unsigned long)system_default_exception_handler;
+#endif
 }
 
 /**
@@ -309,6 +318,9 @@ static void Exception_Init(void)
  */
 void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
     EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
 
 #ifndef __riscv_32e
@@ -330,6 +342,7 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
         /* msubm is exclusive to machine mode */
         NSDK_DEBUG("msubm: 0x%lx\n", exc_frame->msubm);
     }
+#endif
 }
 
 /**
@@ -342,11 +355,15 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
  */
 void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         SystemExceptionHandlers[EXCn] = exc_handler;
     } else if (EXCn == NMI_EXCn) {
         SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] = exc_handler;
     }
+#endif
 }
 
 /**
@@ -359,6 +376,9 @@ void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
  */
 unsigned long Exception_Get_EXC(uint32_t EXCn)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+    return 0;
+#else
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         return SystemExceptionHandlers[EXCn];
     } else if (EXCn == NMI_EXCn) {
@@ -366,6 +386,7 @@ unsigned long Exception_Get_EXC(uint32_t EXCn)
     } else {
         return 0;
     }
+#endif
 }
 
 /**
@@ -383,6 +404,12 @@ unsigned long Exception_Get_EXC(uint32_t EXCn)
  */
 uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+    // TODO when CODESIZE macro is defined
+    // Exception_xxx APIs will not be used, all the m-mode exception handlers
+    // will goto this function, and you can handle it here by yourself
+    while (1);
+#else
     uint32_t EXCn = (uint32_t)(mcause & 0X00000fff);
     EXC_HANDLER exc_handler;
 
@@ -397,6 +424,7 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
         exc_handler(mcause, sp);
     }
     return 0;
+#endif
 }
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
@@ -410,6 +438,8 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
  */
 static void system_default_exception_handler_s(unsigned long scause, unsigned long sp)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+#else
     /* TODO: Uncomment this if you have implement NSDK_DEBUG function */
     NSDK_DEBUG("SCAUSE : 0x%lx\r\n", scause);
     NSDK_DEBUG("SDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_SDCAUSE));
@@ -422,6 +452,7 @@ static void system_default_exception_handler_s(unsigned long scause, unsigned lo
     simulation_exit(1);
 #else
     while (1);
+#endif
 #endif
 }
 
@@ -436,9 +467,12 @@ static void system_default_exception_handler_s(unsigned long scause, unsigned lo
  */
 void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+#else
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         SystemExceptionHandlers_S[EXCn] = exc_handler;
     }
+#endif
 }
 
 /**
@@ -450,11 +484,15 @@ void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler)
  */
 unsigned long Exception_Get_EXC_S(uint32_t EXCn)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+    return 0;
+#else
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         return SystemExceptionHandlers[EXCn];
     } else {
         return 0;
     }
+#endif
 }
 
 /**
@@ -472,6 +510,12 @@ unsigned long Exception_Get_EXC_S(uint32_t EXCn)
  */
 uint32_t core_exception_handler_s(unsigned long scause, unsigned long sp)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+    // TODO when CODESIZE macro is defined
+    // Exception_xxx_S APIs will not be used, all the s-mode exception handlers
+    // will goto this function, and you can handle it here by yourself
+    while(1);
+#else
     uint32_t EXCn = (uint32_t)(scause & 0X00000fff);
     EXC_HANDLER exc_handler;
 
@@ -485,6 +529,7 @@ uint32_t core_exception_handler_s(unsigned long scause, unsigned long sp)
     }
     return 0;
 }
+#endif
 #endif
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
@@ -521,6 +566,8 @@ void ECLIC_Init(void)
  */
 void Interrupt_Init(void)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+#else
     if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_CLIC) {
         /* Set ECLIC vector interrupt base address to vector_base */
         __RV_CSR_WRITE(CSR_MTVT, (unsigned long)vector_base);
@@ -565,6 +612,7 @@ void Interrupt_Init(void)
         /* Set as CLINT interrupt mode */
         __RV_CSR_WRITE(CSR_MTVEC, (unsigned long)exc_entry);
     }
+#endif
 }
 
 #if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
@@ -741,6 +789,13 @@ static void Trap_Init(void)
  */
 void _premain_init(void)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+    // TODO to reduce the code size of application
+    // No need to do so complex premain initialization steps
+    // You just need to initialize the cpu resource you need to use in your
+    // application code.
+
+#else
     // TODO to make it possible for configurable boot hartid
     unsigned long hartid = __get_hart_id();
     unsigned long mcfginfo = __RV_CSR_READ(CSR_MCFG_INFO);
@@ -899,6 +954,8 @@ void _premain_init(void)
         /* Interrupt initialization */
         Interrupt_Init();
     }
+
+#endif
 }
 
 /**
@@ -912,9 +969,13 @@ void _premain_init(void)
  */
 void _postmain_fini(int status)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
     /* TODO: Add your own finishing code here, called after main */
     extern void simulation_exit(int status);
     simulation_exit(status);
+#endif
 }
 
 /**

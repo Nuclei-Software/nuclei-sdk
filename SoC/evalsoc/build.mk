@@ -179,6 +179,10 @@ ifneq ($(SEMIHOST),)
 QEMU_OPT += -semihosting
 endif
 
+ifneq ($(CODESIZE),)
+COMMON_FLAGS += -DCODESIZE=$(CODESIZE)
+endif
+
 ##### Put your Source code Management configurations below #####
 
 INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include

@@ -146,6 +146,8 @@ endif
 
 ifneq ($(findstring newlib,$(STDCLIB)),)
 # when compiled with -flto, need to pass the following options
+ifeq ($(CODESIZE),)
 LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek -u errno
+endif
 endif
 
