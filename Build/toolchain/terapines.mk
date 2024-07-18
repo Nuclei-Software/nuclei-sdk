@@ -26,11 +26,11 @@ STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
 LDLIBS += -lc_nano -lclang_rt.builtins
 # work around for relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references _printf_float when compile with rv64
-# so with this change below, newlib_nano = newlib_small now
-STDCLIB_LDFLAGS += -u _printf_float
+# If it report above error, you can add -u _printf_float
+STDCLIB_LDFLAGS += #-u _printf_float
 else
 LDLIBS += -lc_nano -lclang_rt.builtins
-STDCLIB_LDFLAGS += -u _printf_float
+STDCLIB_LDFLAGS += #-u _printf_float
 endif
 ###
 else ifneq ($(findstring libncrt,$(STDCLIB)),)
