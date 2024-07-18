@@ -541,8 +541,7 @@ buildconfig:
       - flags: -fuse-ld=lld
       - flags: -u __on_exit_args
         condition: $( startswith(${stdclib}, "newlib") )
-      # for clang, newlib_nano still need to define symbol _printf_float to make link pass
-      - flags: -lc_nano -lclang_rt.builtins -u _printf_float
+      - flags: -lc_nano -lclang_rt.builtins
         condition: $( ${stdclib} == "newlib_nano" )
       - flags: -lsemihost
         condition: $( ${semihost} == 1 )
