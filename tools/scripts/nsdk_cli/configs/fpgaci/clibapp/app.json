@@ -57,6 +57,12 @@
                 "PASS": ["MTimer msip and mtip interrupt test finish and pass"]
             }
         },
+        "application/baremetal/empty": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CPU HartID"]
+            }
+        },
         "application/baremetal/helloworld": {
             "build_config" : {},
             "checks": {
