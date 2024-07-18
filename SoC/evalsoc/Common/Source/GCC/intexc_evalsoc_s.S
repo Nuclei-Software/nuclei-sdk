@@ -25,6 +25,8 @@
  ******************************************************************************/
 
 #include "riscv_encoding.h"
+/* TODO: Require Nuclei SDK >= 0.6.0, which introduced this cpufeature.h */
+#include "cpufeature.h"
 
 /**
  * \brief  Global supervisor mode interrupt disabled
@@ -118,10 +120,17 @@
  * This macro store SCAUSE, SEPC to stack.
  */
 .macro SAVE_CSR_CONTEXT_S
+#ifdef CFG_HAS_CLIC
     /* Store CSR scause to stack using pushscause */
     csrrwi  x0, CSR_PUSHSCAUSE, 11
     /* Store CSR sepc to stack using pushsepc */
     csrrwi  x0, CSR_PUSHSEPC, 12
+#else
+    csrr x5, CSR_SEPC
+    STORE x5,  12*REGBYTES(sp)
+    csrr x5, CSR_SCAUSE
+    STORE x5,  11*REGBYTES(sp)
+#endif
 .endm
 
 /**

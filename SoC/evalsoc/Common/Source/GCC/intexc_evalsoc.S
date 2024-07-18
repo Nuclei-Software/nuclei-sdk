@@ -26,6 +26,9 @@
 
 #include "riscv_encoding.h"
 
+/* TODO: Require Nuclei SDK >= 0.6.0, which introduced this cpufeature.h */
+#include "cpufeature.h"
+
 /**
  * \brief  Global interrupt disabled
  * \details
@@ -119,12 +122,21 @@
  * This macro store MCAUSE, MEPC, MSUBM to stack.
  */
 .macro SAVE_CSR_CONTEXT
+#ifdef CFG_HAS_CLIC
     /* Store CSR mcause to stack using pushmcause */
     csrrwi  x0, CSR_PUSHMCAUSE, 11
     /* Store CSR mepc to stack using pushmepc */
     csrrwi  x0, CSR_PUSHMEPC, 12
     /* Store CSR msub to stack using pushmsub */
     csrrwi  x0, CSR_PUSHMSUBM, 13
+#else
+    csrr x5, CSR_MSUBM
+    STORE x5,  13*REGBYTES(sp)
+    csrr x5, CSR_MEPC
+    STORE x5,  12*REGBYTES(sp)
+    csrr x5, CSR_MCAUSE
+    STORE x5,  11*REGBYTES(sp)
+#endif
 .endm
 
 /**
