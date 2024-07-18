@@ -106,7 +106,6 @@ void SystemCoreClockUpdate(void)             /* Get Core Clock Frequency */
      * Note: This function can be used to retrieve the system core clock frequeny
      *    after user changed register settings.
      */
-    SystemCoreClock = SYSTEM_CLOCK;
 }
 
 /**
@@ -123,7 +122,6 @@ void SystemInit(void)
      * Warn: do not use global variables because this function is called before
      * reaching pre-main. RW section maybe overwritten afterwards.
      */
-    SystemCoreClock = SYSTEM_CLOCK;
 }
 
 /**
@@ -223,6 +221,10 @@ typedef void (*EXC_HANDLER)(unsigned long cause, unsigned long sp);
  */
 static void system_default_exception_handler(unsigned long mcause, unsigned long sp)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
+
 #ifndef DISABLE_EXCEPTION_DEBUG
     /* TODO: Uncomment this if you have implement NSDK_DEBUG function */
     NSDK_DEBUG("MCAUSE : 0x%lx\r\n", mcause);
@@ -238,6 +240,7 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
     while (1) {
         __WFI();
     }
+#endif
 }
 
 /**
@@ -249,9 +252,13 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
  */
 void Exception_Init(void)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
     for (int i = 0; i < MAX_SYSTEM_EXCEPTION_NUM; i++) {
         SystemExceptionHandlers[i] = (unsigned long)system_default_exception_handler;
     }
+#endif
 }
 
 /**
@@ -263,6 +270,9 @@ void Exception_Init(void)
  */
 void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
 #ifndef DISABLE_EXCEPTION_DEBUG
     EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
 
@@ -281,6 +291,7 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
            exc_frame->a4, exc_frame->a5, exc_frame->cause, exc_frame->epc);
 #endif
 #endif
+#endif
 }
 
 /**
@@ -292,9 +303,13 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
  */
 void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         SystemExceptionHandlers[EXCn] = exc_handler;
     }
+#endif
 }
 
 /**
@@ -306,9 +321,13 @@ void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
  */
 unsigned long Exception_Get_EXC(uint32_t EXCn)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         return SystemExceptionHandlers[EXCn];
     }
+#endif
     return 0;
 }
 
@@ -327,6 +346,9 @@ unsigned long Exception_Get_EXC(uint32_t EXCn)
  */
 uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+    while(1);
+#else
     uint32_t EXCn = (uint32_t)(mcause & 0X00000fff);
     EXC_HANDLER exc_handler;
 
@@ -339,6 +361,7 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
         exc_handler(mcause, sp);
     }
     return 0;
+#endif
 }
 #else /* Use Vendor implemented exception handling code __Vendor_EXCEPTION == 1 */
 
@@ -363,6 +386,9 @@ __WEAK void Exception_Init(void)
 /** Banner Print for Nuclei SDK */
 void SystemBannerPrint(void)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
 // TODO to reduce code size and less message output.
 // you can set NUCLEI_BANNER to 0 in nuclei_sdk_hal.h
 // but it will show no messsage when bringup
@@ -373,6 +399,8 @@ void SystemBannerPrint(void)
 #endif
     NSDK_DEBUG("CPU Frequency %u Hz\r\n", (unsigned int)SystemCoreClock);
     NSDK_DEBUG("CPU HartID: %u\r\n", (unsigned int)__get_hart_id());
+#endif
+
 #endif
 }
 
@@ -428,6 +456,9 @@ static void Trap_Init(void)
  */
 void _premain_init(void)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
     // TODO Code below used to do premain init, you can place pre main init code here
     // TODO implement get_cpu_freq function to get real cpu clock freq in HZ or directly give the real cpu HZ
     // Or directly give the correct freqency, no need to use this function
@@ -444,6 +475,7 @@ void _premain_init(void)
     Interrupt_Init();
 #endif
     Trap_Init();
+#endif
 }
 
 /**
@@ -457,9 +489,13 @@ void _premain_init(void)
  */
 void _postmain_fini(int status)
 {
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
     /* TODO: Add your own finishing code here, called after main */
     extern void simulation_exit(int status);
     simulation_exit(status);
+#endif
 }
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_SystemConfig */
