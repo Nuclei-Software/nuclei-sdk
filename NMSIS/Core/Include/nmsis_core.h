@@ -100,6 +100,8 @@
 #ifndef __NMSIS_GENERIC
 /* Include core eclic feature header file */
 #include "core_feature_eclic.h"
+/* Include core plic feature header file */
+#include "core_feature_plic.h"
 /* Include core systimer feature header file */
 #include "core_feature_timer.h"
 #endif
