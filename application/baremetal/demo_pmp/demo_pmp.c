@@ -3,6 +3,11 @@
 #include <string.h>
 #include "nuclei_sdk_soc.h"
 
+#if !defined(__PMP_PRESENT) || (__PMP_PRESENT == 0)
+/* __PMP_PRESENT should be defined in <Device>.h */
+#warning "__PMP_PRESENT is not defined or equal to 0, please check!"
+#endif
+
 /* different trigger condition */
 #define INSTRUCTION_FETCH_EXCEPTION    0
 #define LOAD_EXCEPTION                 1
@@ -65,6 +70,7 @@ typedef void(*__funcpt)(void);
 
 int main(void)
 {
+#if defined(__PMP_PRESENT) && (__PMP_PRESENT == 1)
     /* Configuration of execution region*/
     pmp_config pmp_config_x = {
         /*
@@ -143,7 +149,9 @@ int main(void)
     __funcpt fncptr = ((__funcpt)protected_execute);
     printf("Attempting to fetch instruction from protected address\n");
     fncptr();
-
+#else
+    printf("[ERROR]__PMP_PRESENT must be defined as 1 in <Device>.h!\r\n");
+#endif
     return 0;
 }
 
