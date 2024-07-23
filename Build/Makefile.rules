@@ -144,13 +144,13 @@ debug: $(TARGET_ELF)
 # just for evalsoc purpose
 run_qemu: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(QEMU)"
-	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) -nodefaults -nographic -serial stdio -kernel $<
+	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) -nodefaults -nographic -serial stdio $(QEMU_ELF_OPT) $<
 
 # just for evalsoc purpose
 run_qemu_debug: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(QEMU), and waiting for gdb connection on port $(GDB_PORT)"
 	@$(ECHO) "Then you can open a new terminal in the same directory and run make target: run_gdb to connect to this gdb connection"
-	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) -nodefaults -nographic -serial stdio -kernel $< -S -gdb tcp::$(GDB_PORT)
+	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) -nodefaults -nographic -serial stdio $(QEMU_ELF_OPT) $< -S -gdb tcp::$(GDB_PORT)
 
 # just works on evalsoc purpose, experimental support
 run_xlspike: $(TARGET_ELF)

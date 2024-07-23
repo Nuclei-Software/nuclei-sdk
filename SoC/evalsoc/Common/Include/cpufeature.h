@@ -24,13 +24,25 @@ extern "C" {
 #define CFG_CPU_VER                 0xFFFFFF
 
 // CPU Features
+#ifndef UNDEF_CFG_TMR_PRIVATE
 #define CFG_TMR_PRIVATE
+#endif
+#ifndef UNDEF_CFG_HAS_CLIC
 #define CFG_HAS_CLIC
+#endif
+//#define CFG_HAS_PLIC
+
 // External Interrupt Number
 #define CFG_IRQ_NUM                 50
 
+#ifndef UNDEF_CFG_HAS_SMP
 #define CFG_HAS_SMP
+#endif
+
+#ifndef UNDEF_CFG_HAS_PMP
 #define CFG_HAS_PMP
+#endif
+
 #define CFG_PMP_ENTRY_NUM           8
 
 //#define CFG_HAS_IDU

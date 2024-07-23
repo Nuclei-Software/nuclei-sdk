@@ -95,6 +95,13 @@ ifeq ($(DOWNLOAD), flash)
 COMMON_FLAGS += -DVECTOR_TABLE_REMAPPED
 endif
 
+## QEMU/XLSPIKE options
+ifeq ($(XLCFG_PLIC),1)
+QEMU_ELF_OPT := -bios
+else
+QEMU_ELF_OPT := -kernel
+endif
+
 ifneq ($(SMP),)
 $(call assert,$(call gt,$(SMP),1),SMP must be a integer number >= 2)
 ifneq ($(BOOT_HARTID),)
