@@ -7,6 +7,7 @@
 #warning "__PLIC_PRESENT is not defined or equal to 0, please check!"
 #endif
 
+#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
 // plic uart0 interrupt handler
 // plic claim and complete is done in system_mmode_extirq_handler
 void plic_uart0_handler(void)
@@ -23,6 +24,7 @@ void plic_uart0_handler(void)
         printf("\n");
     }
 }
+#endif
 
 
 int main(int argc, char **argv)
