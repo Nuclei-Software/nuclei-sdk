@@ -168,6 +168,14 @@
 #define MIE_HEIE            MIP_HEIP
 #define MIE_MEIE            MIP_MEIP
 
+#define SIP_SSIP            MIP_SSIP
+#define SIP_STIP            MIP_STIP
+#define SIP_SEIP            MIP_SEIP
+
+#define SIE_SSIE            MIP_SSIP
+#define SIE_STIE            MIP_STIP
+#define SIE_SEIE            MIP_SEIP
+
 #define MCAUSE_INTR         (1ULL << (__riscv_xlen - 1))
 #define MCAUSE_CAUSE        0x00000FFFUL
 #define SCAUSE_INTR         MCAUSE_INTR
