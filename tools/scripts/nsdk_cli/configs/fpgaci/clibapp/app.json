@@ -84,6 +84,12 @@
                 "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "[ERROR]__TEE_PRESENT"]
             }
         },
+        "application/baremetal/demo_plic": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["You can press any key now", "[ERROR]__PLIC_PRESENT"]
+            }
+        },
         "application/baremetal/demo_spmp": {
             "build_config" : {},
             "checks": {

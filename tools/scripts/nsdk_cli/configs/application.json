@@ -79,6 +79,12 @@
                 "PASS": ["software interrupt hit 5 times"]
             }
         },
+        "application/baremetal/demo_plic": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["You can press any key now", "[ERROR]__PLIC_PRESENT"]
+            }
+        },
         "application/baremetal/demo_smode_eclic": {
             "build_config" : {},
             "checks": {
