@@ -66,7 +66,6 @@ typedef enum {
 #define SIMULATION_MODE_XLSPIKE   0     /*!< xlspike simulation mode */
 #define SIMULATION_MODE_QEMU      1     /*!< qemu simulation mode */
 
-
 /* =========================================================================================================================== */
 /* ================                                Interrupt Number Definition                                ================ */
 /* =========================================================================================================================== */
@@ -154,14 +153,76 @@ typedef enum IRQn {
 #else
     SOC_INT_MAX,
 #endif
+
+    PLIC_INT0_IRQn           = 0,
+    PLIC_INT1_IRQn           = 1,
+    PLIC_INT2_IRQn           = 2,
+    PLIC_INT3_IRQn           = 3,
+    PLIC_INT4_IRQn           = 4,
+    PLIC_INT5_IRQn           = 5,
+    PLIC_INT6_IRQn           = 6,
+    PLIC_INT7_IRQn           = 7,
+    PLIC_INT8_IRQn           = 8,
+    PLIC_INT9_IRQn           = 9,
+    PLIC_INT10_IRQn           = 10,
+    PLIC_INT11_IRQn           = 11,
+    PLIC_INT12_IRQn           = 12,
+    PLIC_INT13_IRQn           = 13,
+    PLIC_INT14_IRQn           = 14,
+    PLIC_INT15_IRQn           = 15,
+    PLIC_INT16_IRQn           = 16,
+    PLIC_INT17_IRQn           = 17,
+    PLIC_INT18_IRQn           = 18,
+    PLIC_INT19_IRQn           = 19,
+    PLIC_INT20_IRQn           = 20,
+    PLIC_INT21_IRQn           = 21,
+    PLIC_INT22_IRQn           = 22,
+    PLIC_INT23_IRQn           = 23,
+    PLIC_INT24_IRQn           = 24,
+    PLIC_INT25_IRQn           = 25,
+    PLIC_INT26_IRQn           = 26,
+    PLIC_INT27_IRQn           = 27,
+    PLIC_INT28_IRQn           = 28,
+    PLIC_INT29_IRQn           = 29,
+    PLIC_INT30_IRQn           = 30,
+    PLIC_INT31_IRQn           = 31,
+    PLIC_INT32_IRQn           = 32,
+    PLIC_INT33_IRQn           = 33,
+    PLIC_INT34_IRQn           = 34,
+    PLIC_INT35_IRQn           = 35,
+    PLIC_INT36_IRQn           = 36,
+    PLIC_INT37_IRQn           = 37,
+    PLIC_INT38_IRQn           = 38,
+    PLIC_INT39_IRQn           = 39,
+    PLIC_INT40_IRQn           = 40,
+    PLIC_INT41_IRQn           = 41,
+    PLIC_INT42_IRQn           = 42,
+    PLIC_INT43_IRQn           = 43,
+#if defined(CFG_IRQ_NUM)
+    PLIC_INIT_MAX             = CFG_IRQ_NUM + 1,
+#else
+    PLIC_INIT_MAX,
+#endif
 } IRQn_Type;
 
+#ifdef CFG_HAS_CLIC
 /* UART0 Interrupt */
 #define UART0_IRQn                                 SOC_INT51_IRQn
 /* QSPI Interrupt */
 #define QSPI0_IRQn                                 SOC_INT53_IRQn
 #define QSPI1_IRQn                                 SOC_INT54_IRQn
 #define QSPI2_IRQn                                 SOC_INT55_IRQn
+#else
+/* UART0 Interrupt */
+#define UART0_IRQn                                 PLIC_INT33_IRQn
+/* QSPI Interrupt */
+#define QSPI0_IRQn                                 PLIC_INT35_IRQn
+#define QSPI1_IRQn                                 PLIC_INT36_IRQn
+#define QSPI2_IRQn                                 PLIC_INT37_IRQn
+#endif
+
+#define PLIC_UART0_IRQn                            PLIC_INT33_IRQn
+
 
 /* =========================================================================================================================== */
 /* ================                                  Exception Code Definition                                ================ */
@@ -192,7 +253,6 @@ typedef enum EXCn {
 /* ================                           Processor and Core Peripheral Section                           ================ */
 /* =========================================================================================================================== */
 // NOTE: macros __NUCLEI_CORE_REV/__NUCLEI_N_REV/__NUCLEI_NX_REV are removed now
-
 
 // NOTE: __FPU_PRESENT/__BITMANIP_PRESENT/__DSP_PRESENT/__VECTOR_PRESENT can be probed by compiler's -march= option
 // See https://gcc.gnu.org/onlinedocs/gcc/RISC-V-Options.html
@@ -254,7 +314,7 @@ extern volatile unsigned long CpuIRegionBase;
 #define __IREGION_BASEADDR          (CPU_IREGION_BASE)
 
 // ECLIC Configuration
-// To enable ECLIC, just define macro CFG_HAS_CLIC/CFG_CLICINTCTLBITS/__ECLIC_INTNUM in cpufeature.h
+// To enable ECLIC, just define macro CFG_HAS_CLIC/CFG_CLICINTCTLBITS/CFG_IRQ_NUM in cpufeature.h
 #ifdef CFG_HAS_CLIC
 #define __ECLIC_PRESENT             1
 #ifdef CFG_CLICINTCTLBITS
@@ -265,6 +325,16 @@ extern volatile unsigned long CpuIRegionBase;
 #define __ECLIC_PRESENT             0
 #endif
 #define __ECLIC_BASEADDR            (__IREGION_BASEADDR + IREGION_ECLIC_OFS)
+
+// PLIC Configuration
+// To enable PLIC, just define macro CFG_HAS_PLIC/CFG_IRQ_NUM in cpufeature.h
+#ifdef CFG_HAS_PLIC
+#define __PLIC_PRESENT              1
+#define __PLIC_INTNUM               (CFG_IRQ_NUM + 1)
+#else
+#define __PLIC_PRESENT              0
+#endif
+#define __PLIC_BASEADDR             (__IREGION_BASEADDR + IREGION_PLIC_OFS)
 
 // CPU System Timer Configuration
 // To enable CPU System Timer, just define macro CFG_TMR_PRIVATE in cpufeature.h

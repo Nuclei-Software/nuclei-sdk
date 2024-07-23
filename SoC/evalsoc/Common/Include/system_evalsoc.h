@@ -98,12 +98,43 @@ extern void Interrupt_Init(void);
 
 #if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
 /**
+ * \brief Do ECLIC Interrupt configuration
+ */
+extern void ECLIC_Interrupt_Init(void);
+
+/**
  * \brief  Initialize a specific IRQ and register the handler
  * \details
  * This function set vector mode, trigger mode and polarity, interrupt level and priority,
  * assign handler for specific IRQn.
  */
 extern int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler);
+#endif
+
+/**
+ * \brief Register an core interrupt handler for clint/plic interrupt mode
+ */
+extern void Interrupt_Register_CoreIRQ(uint32_t irqn, unsigned long int_handler);
+
+/**
+ * \brief Register an plic external interrupt handler for clint/plic interrupt mode
+ */
+extern void Interrupt_Register_ExtIRQ(uint32_t irqn, unsigned long int_handler);
+
+/**
+ * \brief Register a riscv core interrupt and register the handler for clint/plic interrupt mode
+ */
+extern int32_t Core_Register_IRQ(uint32_t irqn, void *handler);
+
+#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
+/**
+ * \brief  Do plic interrupt configuration for clint/plic interrupt mode
+ */
+extern void PLIC_Interrupt_Init(void);
+/**
+ * \brief  Register a specific plic interrupt and register the handler
+ */
+extern int32_t PLIC_Register_IRQ(uint32_t source, uint8_t priority, void *handler);
 #endif
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
