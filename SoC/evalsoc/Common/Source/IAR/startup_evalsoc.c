@@ -72,53 +72,8 @@ const __fp vector_base[SOC_INT_MAX] __attribute__((section (".mintvec"))) = {
     default_intexc_handler,
     default_intexc_handler,
     default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
-    default_intexc_handler,
     default_intexc_handler
+/* TODO other external interrupt handler don't provide default value, if you want to provide default value, please do it by yourself */
 };
 
 #if defined(FLASH_RAM_VECTOR)
@@ -252,7 +207,7 @@ int __low_level_init(void)
     _premain_init();
 
     /* Prepare ram vector table for initial vector table located in readonly section case */
-#if defined(FLASH_RAM_VECTOR)
+#if defined(FLASH_RAM_VECTOR) && (defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1))
     prepare_ram_vector();
 #endif
 
