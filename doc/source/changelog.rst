@@ -11,9 +11,14 @@ This is **development** release version ``0.6.0`` of Nuclei SDK.
 
 * Application
 
+  * Add ``demo_plic`` case to show how to use PLIC related API.
+  * Update ``demo_pmp`` case to make it suitable for when PMP not present.
+
 * NMSIS
 
   - Add more ECC related macros for ``milm_ctl/mdlm_ctl/mcache_ctl`` csr
+  - Add more PLIC interrupt API in ``core_feature_plic.h``
+  - Add more interrupt related API when in plic interrupt mode, see changes in ``core_feature_base.h``
 
 * SoC
 
@@ -23,6 +28,7 @@ This is **development** release version ``0.6.0`` of Nuclei SDK.
   - gd32vf103 default CORE name changed from ``n205`` to ``n203`` which are the same in software
   - gd32vw55x default CORE name changed from ``n307fd`` to ``n300fd`` which are the same in software
   - evalsoc default CORE name changed from ``n307fd`` to ``n300fd`` which are the same in software
+  - Add plic interrupt and exception related handling code for evalsoc
 
 * Build System
 
