@@ -148,7 +148,7 @@
 /**
  * \brief  supervisor mode Exception Entry
  * \details
- * This function provide common entry functions for supervison mode exception.
+ * This function provide common entry functions for supervison mode exception and interrupt of plic mode.
  * \remarks
  * This function provide a default supervison mode exception entry.
  * ABI defined caller save register and some supervison mode  CSR registers

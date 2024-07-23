@@ -130,8 +130,6 @@
     /* Store CSR msub to stack using pushmsub */
     csrrwi  x0, CSR_PUSHMSUBM, 13
 #else
-    csrr x5, CSR_MSUBM
-    STORE x5,  13*REGBYTES(sp)
     csrr x5, CSR_MEPC
     STORE x5,  12*REGBYTES(sp)
     csrr x5, CSR_MCAUSE
@@ -145,8 +143,10 @@
  * This macro restore MSUBM, MEPC, MCAUSE from stack.
  */
 .macro RESTORE_CSR_CONTEXT
+#ifdef CFG_HAS_CLIC
     LOAD x5,  13*REGBYTES(sp)
     csrw CSR_MSUBM, x5
+#endif
     LOAD x5,  12*REGBYTES(sp)
     csrw CSR_MEPC, x5
     LOAD x5,  11*REGBYTES(sp)
@@ -156,7 +156,7 @@
 /**
  * \brief  Exception/NMI Entry
  * \details
- * This function provide common entry functions for exception/nmi.
+ * This function provide common entry functions for exception/nmi and interrupt of plic mode.
  * \remarks
  * This function provide a default exception/nmi entry.
  * ABI defined caller save register and some CSR registers

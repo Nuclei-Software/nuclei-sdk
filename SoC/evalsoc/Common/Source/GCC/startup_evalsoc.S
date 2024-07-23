@@ -44,6 +44,7 @@
 #endif
 .endm
 
+#ifdef CFG_HAS_CLIC
     .section .text.vtable
 
     .weak eclic_msip_handler
@@ -144,6 +145,7 @@ vector_base:
     .option pop
 
     .size vector_base, . - vector_base
+#endif
 
     .section .text.init
     .globl _start
