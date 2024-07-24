@@ -387,6 +387,20 @@ __STATIC_FORCEINLINE uint32_t __get_rv_cycle(void)
 }
 
 /**
+ * \brief   Set whole 32 bits value of mcycle counter
+ * \details This function will set the whole 32 bits of MCYCLE register
+ * \remarks
+ * - mcycle in N100 is only 24 bits long, so upper bits are all zeros
+ * - when performance monitor unit not present, this function do nothing
+ */
+__STATIC_FORCEINLINE void __set_rv_cycle(uint32_t cycle)
+{
+#if defined(__PMON_PRESENT) && (__PMON_PRESENT == 1)
+    __RV_CSR_WRITE(CSR_MCYCLE, (uint32_t)(cycle));
+#endif
+}
+
+/**
  * \brief   Read whole 32 bits value of machine instruction-retired counter
  * \details This function will read the whole 32 bits of MINSTRET register
  * \return  The whole 32 bits value of MINSTRET
@@ -403,6 +417,20 @@ __STATIC_FORCEINLINE uint32_t __get_rv_instret(void)
     return full;
 #else
     return 0;
+#endif
+}
+
+/**
+ * \brief   Set whole 32 bits value of minstret counter
+ * \details This function will set the whole 32 bits of MINSTRET register
+ * \remarks
+ * - minstret in N100 is only 24 bits long, so upper bits are all zeros
+ * - when performance monitor unit not present, this function do nothing
+ */
+__STATIC_FORCEINLINE void __set_rv_instret(uint32_t instret)
+{
+#if defined(__PMON_PRESENT) && (__PMON_PRESENT == 1)
+    __RV_CSR_WRITE(CSR_MINSTRET, (uint32_t)(instret));
 #endif
 }
 
