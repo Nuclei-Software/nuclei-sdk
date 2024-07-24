@@ -1053,6 +1053,9 @@ void _premain_init(void)
     // No need to do so complex premain initialization steps
     // You just need to initialize the cpu resource you need to use in your
     // application code.
+    // TODO Still need to initialize uart for other code need to do printf
+    // If you want to reduce more code, you can comment below code
+    uart_init(SOC_DEBUG_UART, 115200);
 
 #else
     // TODO to make it possible for configurable boot hartid
@@ -1232,7 +1235,9 @@ void _premain_init(void)
 void _postmain_fini(int status)
 {
 #if defined(CODESIZE) && (CODESIZE == 1)
-
+#ifdef CFG_SIMULATION
+    SIMULATION_EXIT(status);
+#endif
 #else
     /* TODO: Add your own finishing code here, called after main */
     extern void simulation_exit(int status);

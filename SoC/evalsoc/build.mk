@@ -63,6 +63,11 @@ JTAGSN ?=
 # 2: means enable 2 hart gdb connection, will open two gdb ports
 SPLITMODE ?=
 
+# Please overwrite following variable in Makefile of your application
+# System Clock Frequency
+# eg. 50MHz in pure int value, 50000000
+SYSCLK ?=
+
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
 
@@ -93,6 +98,10 @@ endif
 # Add extra cflags for SoC related
 ifeq ($(DOWNLOAD), flash)
 COMMON_FLAGS += -DVECTOR_TABLE_REMAPPED
+endif
+
+ifneq ($(SYSCLK),)
+COMMON_FLAGS += -DSYSTEM_CLOCK=$(SYSCLK)
 endif
 
 ## QEMU/XLSPIKE options
