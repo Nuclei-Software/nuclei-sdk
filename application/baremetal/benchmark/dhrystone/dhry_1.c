@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "nuclei_sdk_soc.h"
+
 /* Global Variables: */
 Rec_Pointer     Ptr_Glob,
                 Next_Ptr_Glob;
@@ -257,6 +259,10 @@ int main(void)
 #ifdef TIME
     Begin_Time = time();
 #endif
+    // Reset cycle and instret to zero
+    __set_rv_cycle(0);
+    __set_rv_instret(0);
+
     Begin_Instret =  csr_instret();
     Begin_Cycle =  csr_cycle();
 

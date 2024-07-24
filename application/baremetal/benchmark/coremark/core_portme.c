@@ -27,6 +27,7 @@ static CORE_TICKS t0, t1;
 
 void start_time(void)
 {
+    __set_rv_cycle(0);
     t0 = __get_rv_cycle();
 }
 
