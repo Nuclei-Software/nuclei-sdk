@@ -36,7 +36,7 @@
 /* ToDo: add here your necessary defines for device initialization
          following is an example for different system frequencies */
 #ifndef SYSTEM_CLOCK
-#define SYSTEM_CLOCK    (80000000UL)
+#define SYSTEM_CLOCK    (16000000UL)
 #endif
 
 /**
