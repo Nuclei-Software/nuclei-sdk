@@ -551,6 +551,7 @@
                 <option>
                     <name>AsmIncludePath</name>
                     <state>$PROJ_DIR$\..\..\..\NMSIS\Core\Include</state>
+                    <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Include</state>
                 </option>
                 <option>
                     <name>AsmDefines</name>
@@ -2175,6 +2176,9 @@
                     <name>Include</name>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Include\evalsoc.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Include\cpufeature.h</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Include\evalsoc_uart.h</name>
