@@ -75,6 +75,7 @@ tool_check iarbuild
 
 folders=(rtos baremetal)
 
+faillist=""
 # Push to iar project directory
 pushd $IARPRODIR
 
@@ -93,8 +94,17 @@ do
                 upload_program $outfile
                 sleep 15
             fi
+        else
+            faillist=" $file"
         fi
     done
 done
 
 popd
+
+if [ "x$faillist" != "x" ] ; then
+    echo "These cases are failing, please check the following items!"
+    echo "$faillist"
+    exit -1
+fi
+exit 0
