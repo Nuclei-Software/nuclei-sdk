@@ -33,7 +33,7 @@
 /* ToDo: add here your necessary defines for device initialization
          following is an example for different system frequencies */
 #ifndef SYSTEM_CLOCK
-#define SYSTEM_CLOCK    (80000000UL)
+#define SYSTEM_CLOCK    (16000000UL)
 #endif
 
 /**
@@ -457,6 +457,13 @@ static void Trap_Init(void)
 void _premain_init(void)
 {
 #if defined(CODESIZE) && (CODESIZE == 1)
+    // TODO to reduce the code size of application
+    // No need to do so complex premain initialization steps
+    // You just need to initialize the cpu resource you need to use in your
+    // application code.
+    // TODO Still need to initialize uart for other code need to do printf
+    // If you want to reduce more code, you can comment below code
+    uart_init(SOC_DEBUG_UART, 115200);
 
 #else
     // TODO Code below used to do premain init, you can place pre main init code here
@@ -490,7 +497,9 @@ void _premain_init(void)
 void _postmain_fini(int status)
 {
 #if defined(CODESIZE) && (CODESIZE == 1)
-
+#ifdef CFG_SIMULATION
+    SIMULATION_EXIT(status);
+#endif
 #else
     /* TODO: Add your own finishing code here, called after main */
     extern void simulation_exit(int status);

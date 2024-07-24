@@ -33,6 +33,11 @@ include $(NUCLEI_SDK_SOC)/cpufeature.mk
 
 JTAGSN ?=
 
+# Please overwrite following variable in Makefile of your application
+# System Clock Frequency
+# eg. 50MHz in pure int value, 50000000
+SYSCLK ?=
+
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common
 
@@ -49,6 +54,11 @@ endif
 # Allow non-existance of LINKER_SCRIPT, it might be generated
 ifeq ($(wildcard $(LINKER_SCRIPT)),)
 $(warning The link script file $(LINKER_SCRIPT) for $(SOC) doesn't exist, please check!)
+endif
+
+# Add extra cflags for SoC related
+ifneq ($(SYSCLK),)
+COMMON_FLAGS += -DSYSTEM_CLOCK=$(SYSCLK)
 endif
 
 # if JTAGSN is not empty, pass it via openocd command
