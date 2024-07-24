@@ -258,11 +258,11 @@
                 </option>
                 <option>
                     <name>GDeviceCryptoNistSlave</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GDeviceCryptoShangMiSlave</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>GGeneralMisalignedDataAccess</name>
@@ -551,6 +551,7 @@
                 <option>
                     <name>AsmIncludePath</name>
                     <state>$PROJ_DIR$\..\..\..\NMSIS\Core\Include</state>
+                    <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Include</state>
                 </option>
                 <option>
                     <name>AsmDefines</name>
@@ -2147,10 +2148,10 @@
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_eclic.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_plic.h</name>
+                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_fpu.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_fpu.h</name>
+                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_plic.h</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_pmp.h</name>
@@ -2221,6 +2222,9 @@
                 <name>Common</name>
                 <group>
                     <name>Include</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Include\cpufeature.h</name>
+                    </file>
                     <file>
                         <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Include\evalsoc.h</name>
                     </file>
