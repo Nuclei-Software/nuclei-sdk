@@ -2131,6 +2131,9 @@
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_eclic.h</name>
                     </file>
                     <file>
+                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_plic.h</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_fpu.h</name>
                     </file>
                     <file>
