@@ -6,12 +6,13 @@ Changelog
 V0.7.0-dev
 ----------
 
-This is **development** release version ``0.6.0`` of Nuclei SDK.
+This is **development** release version ``0.7.0`` of Nuclei SDK.
 
 
 * Application
 
-  * Add ``demo_plic`` case to show how to use PLIC related API.
+  * Add ``demo_plic`` case to show how to use PLIC related API in PLIC interrupt mode.
+  * Add ``demo_clint_timer`` case to show how to use systimer in CLINT interrupt mode not ECLIC interrupt mode.
   * Update ``demo_pmp`` case to make it suitable for when PMP not present.
 
 * NMSIS
@@ -35,6 +36,8 @@ This is **development** release version ``0.6.0`` of Nuclei SDK.
   - Introduce ``XLCFG_xxx`` make variable for evalsoc which is only internally used by Nuclei to overwrite default cpufeature.h macro definition, which will be useful for some applications such as demo_cidu, demo_cache, demo_spmp, demo_smpu and demo_smode_eclic
   - Introduce ``ECC_EN`` make variable for evalsoc which is only internally used by Nuclei to control whether ECC check is enabled or disabled.
   - Add core ``n200e/n202/n202e`` and remove ``n205/n205e/n305/n307/n307fd`` which can be replaced by ``n203/n203e/n300/n300f/n300fd``
+  - Prebuilt IAR projects and workbench are updated due to evalsoc support changes for plic and clint interrupt modes.
+  - Add ``SYSCLK`` make variable for manually set default SYSTEM_CLOCK macro in evalsoc, it is useful for ``CODESIZE=1`` case
 
 V0.6.0
 ------

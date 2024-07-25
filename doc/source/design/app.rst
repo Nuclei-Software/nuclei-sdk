@@ -44,6 +44,11 @@ The following applications are running using RV-STAR board or Nuclei Eval SoC.
 
 .. note::
 
+    * Since 0.7.0 introduced support for CLINT and PLIC interrupt mode, if
+      you are working in such interrupt mode or don't have ECLIC module, then
+      all RTOSes will not able to run in your environment, due to RTOS port
+      require ECLIC interrupt.
+
     * Most of the application demostrated below using ``SOC=gd32vf103``,
       you can easily change it to other SoC such as evalsoc by change it to
       ``SOC=evalsoc``
@@ -168,11 +173,11 @@ demo_timer
 ~~~~~~~~~~
 
 This `demo_timer application`_ is used to demonstrate how to use
-the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
+the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt in ECLIC interrupt mode.
 
 * Both interrupts are registered as non-vector interrupt.
-* First the timer interrupt will run for 10 times
-* Then the software timer interrupt will start to run for 10 times
+* First the timer interrupt will run for 5 times
+* Then the software timer interrupt will start to run for 5 times
 
 **How to run this application:**
 
@@ -199,22 +204,60 @@ the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt.
     MTimer IRQ handler 3
     MTimer IRQ handler 4
     MTimer IRQ handler 5
-    MTimer IRQ handler 6
-    MTimer IRQ handler 7
-    MTimer IRQ handler 8
-    MTimer IRQ handler 9
-    MTimer IRQ handler 10
     MTimer SW IRQ handler 1
     MTimer SW IRQ handler 2
     MTimer SW IRQ handler 3
     MTimer SW IRQ handler 4
     MTimer SW IRQ handler 5
-    MTimer SW IRQ handler 6
-    MTimer SW IRQ handler 7
-    MTimer SW IRQ handler 8
-    MTimer SW IRQ handler 9
-    MTimer SW IRQ handler 10
     MTimer msip and mtip interrupt test finish and pass
+
+.. _design_app_demo_clint_timer:
+
+demo_clint_timer
+~~~~~~~~~~~~~~~~
+
+This `demo_clint_timer application`_ is used to demonstrate how to use
+the CORE TIMER API including the Timer Interrupt and Timer Software Interrupt in CLINT interrupt mode.
+
+* Interrupt is set to working in CLINT interrupt mode
+* Both interrupts are registered as core interrupt.
+* First the timer interrupt will run for 5 times
+* Then the software timer interrupt will start to run for 5 times
+* **NOTE**: not able to working in qemu, and only works for evalsoc
+
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_timer directory
+    cd application/baremetal/demo_clint_timer
+    # Clean the application first
+    make SOC=evalsoc clean
+    # Build and upload the application
+    make SOC=evalsoc upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jul 25 2024, 10:39:39
+    Download Mode: ILM
+    CPU Frequency 16000614 Hz
+    CPU HartID: 0
+    init timer and start
+    SysTimer IRQ handler 1
+    SysTimer IRQ handler 2
+    SysTimer IRQ handler 3
+    SysTimer IRQ handler 4
+    SysTimer IRQ handler 5
+    SysTimer SW IRQ handler 1
+    SysTimer SW IRQ handler 2
+    SysTimer SW IRQ handler 3
+    SysTimer SW IRQ handler 4
+    SysTimer SW IRQ handler 5
+    SysTimer MTIP and MSIP CLINT interrupt test finish and pass
 
 .. _design_app_demo_eclic:
 
@@ -222,7 +265,7 @@ demo_eclic
 ~~~~~~~~~~
 
 This `demo_eclic application`_ is used to demonstrate how to use
-the ECLIC API and Interrupt.
+the ECLIC API and Interrupt is working in ECLIC interrupt mode.
 
 .. note::
 
@@ -388,7 +431,7 @@ demo_plic
 ~~~~~~~~~
 
 This `demo_plic application`_ is used to demonstrate how to use
-the PLIC API and Interrupt.
+the PLIC API and Interrupt is working in CLINT/PLIC interrupt mode.
 
 .. note::
 
@@ -396,7 +439,7 @@ the PLIC API and Interrupt.
 
 * This demo will show how to use plic external interrupt
 * This demo use uart rx interrupt
-
+* **NOTE**: not able to working in qemu
 
 **How to run this application:**
 
@@ -2583,6 +2626,7 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx demo`` applicati
 .. _helloworld application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/helloworld
 .. _cpuinfo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/cpuinfo
 .. _demo_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_timer
+.. _demo_clint_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_clint_timer
 .. _demo_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic
 .. _demo_plic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_plic
 .. _demo_dsp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_dsp
