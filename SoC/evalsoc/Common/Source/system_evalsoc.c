@@ -1089,6 +1089,11 @@ void _premain_init(void)
     // No need to do so complex premain initialization steps
     // You just need to initialize the cpu resource you need to use in your
     // application code.
+
+#ifndef CFG_IREGION_BASE_ADDR       // Need to probe the cpu iregion base address
+    // Probe CPUIRegionBase for other cpu internal peripheral to use
+    CpuIRegionBase = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
+#endif
     // TODO Still need to initialize uart for other code need to do printf
     // If you want to reduce more code, you can comment below code
     uart_init(SOC_DEBUG_UART, 115200);
