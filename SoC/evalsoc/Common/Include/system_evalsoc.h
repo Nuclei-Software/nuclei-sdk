@@ -92,6 +92,11 @@ extern void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler);
 extern unsigned long Exception_Get_EXC(uint32_t EXCn);
 
 /**
+ * \brief Initialize Interrupt as Clint interrupt mode
+ */
+extern void CLINT_Interrupt_Init(void);
+
+/**
  * \brief Initialize Interrupt
  */
 extern void Interrupt_Init(void);

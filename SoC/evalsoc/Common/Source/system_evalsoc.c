@@ -238,12 +238,24 @@ static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM + 1];
 static unsigned long SystemMExtInterruptHandlers[__PLIC_INTNUM];
 #endif
 
+/**
+ * \brief      Exception Handler Function Typedef
+ * \note
+ * This typedef is only used internal in this system_<Device>.c file.
+ * It is used to do type conversion for registered exception handler before calling it.
+ */
+typedef void (*EXC_HANDLER)(unsigned long cause, unsigned long sp);
+typedef void (*INT_HANDLER)(unsigned long cause, unsigned long sp);
+
 #define SYSTEM_CORE_INTNUM      12 // 0-11 stop at machine external interrupt
 static unsigned long SystemCoreInterruptHandlers[SYSTEM_CORE_INTNUM];
 
-static uint32_t system_mmode_extirq_handler(unsigned long mcause, unsigned long sp);
-static uint32_t system_smode_extirq_handler(unsigned long mcause, unsigned long sp);
+static void system_mmode_extirq_handler(unsigned long exccode, unsigned long sp);
+static void system_smode_extirq_handler(unsigned long exccode, unsigned long sp);
+static void core_interrupt_handler(unsigned long exccode, unsigned long sp);
+
 uint32_t core_exception_handler(unsigned long mcause, unsigned long sp);
+static INT_HANDLER system_core_interrupt_handler = NULL;
 
 /**
  * \brief      Store the exception handlers for each exception ID in supervisor mode
@@ -256,14 +268,6 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp);
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
 static unsigned long SystemExceptionHandlers_S[MAX_SYSTEM_EXCEPTION_NUM];
 #endif
-/**
- * \brief      Exception Handler Function Typedef
- * \note
- * This typedef is only used internal in this system_<Device>.c file.
- * It is used to do type conversion for registered exception handler before calling it.
- */
-typedef void (*EXC_HANDLER)(unsigned long cause, unsigned long sp);
-typedef void (*INT_HANDLER)(unsigned long cause, unsigned long sp);
 
 /**
  * \brief      System Default Exception Handler
@@ -488,10 +492,10 @@ unsigned long Exception_Get_EXC(uint32_t EXCn)
  * \brief      M-Mode external interrupt handler common entry for plic interrupt mode
  * \details
  * This function provide common entry for m-mode external interrupt for plic interrupt mode.
- * \param [in]  mcause    code indicating the reason that caused the trap in machine mode
+ * \param [in]  exccode   exception code indicating the reason that caused the trap in machine mode
  * \param [in]  sp        stack pointer
  */
-static uint32_t system_mmode_extirq_handler(unsigned long mcause, unsigned long sp)
+static void system_mmode_extirq_handler(unsigned long exccode, unsigned long sp)
 {
 #if defined(__PLIC_PRESENT) && __PLIC_PRESENT == 1
     uint32_t irqn = PLIC_ClaimInterrupt();
@@ -499,25 +503,46 @@ static uint32_t system_mmode_extirq_handler(unsigned long mcause, unsigned long 
     if (irqn < __PLIC_INTNUM) {
         int_handler = (INT_HANDLER)(SystemMExtInterruptHandlers[irqn]);
         if (int_handler != NULL) {
-            int_handler(mcause, sp);
+            int_handler(exccode, sp);
         }
     }
     PLIC_CompleteInterrupt(irqn);
 #endif
-    return 0;
 }
 
 /**
  * \brief      S-Mode external interrupt handler common entry for plic interrupt mode
  * \details
  * This function provide common entry for s-mode external interrupt for plic interrupt mode.
- * \param [in]  scause    code indicating the reason that caused the trap in supervisor mode
+ * \param [in]  exccode   exception code indicating the reason that caused the trap in supervisor mode
  * \param [in]  sp        stack pointer
  */
-static uint32_t system_smode_extirq_handler(unsigned long scause, unsigned long sp)
+static void system_smode_extirq_handler(unsigned long exccode, unsigned long sp)
 {
     // TODO not yet implemented
 }
+
+/**
+ * \brief      Common Interrupt handler entry when in clint/plic mode
+ * \details
+ * This function provided a command entry for interrupt in clint/plic mode
+ * \param [in]  exccode   Exception Code
+ * \param [in]  sp        stack pointer
+ * \remarks
+ * - This is not used for clic interrupt mode, which is only used for clint/plic interrupt mode,
+ *   you should call \ref CLINT_Interrupt_Init or \ref PLIC_Interrupt_Init first to make sure this handler entry registered
+ * - If you are not in eclic interrupt mode, please use please use \ref Interrupt_Register_CoreIRQ to register internal interrupt
+ *   and use \ref Interrupt_Register_ExtIRQ to register external interrupt
+ */
+static void core_interrupt_handler(unsigned long exccode, unsigned long sp)
+{
+    INT_HANDLER int_handler = NULL;
+    int_handler = (INT_HANDLER)(SystemCoreInterruptHandlers[exccode]);
+    if (int_handler != NULL) {
+        int_handler(exccode, sp);
+    }
+}
+
 
 /**
  * \brief      Common NMI/Exception/Interrupt handler entry
@@ -544,31 +569,26 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
     while (1);
 #else
 
-#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
-    if (mcause & MCAUSE_INTR) {
-        INT_HANDLER int_handler = NULL;
-        uint32_t irqn = (uint32_t)(mcause & 0X00000fff);
-        int_handler = (INT_HANDLER)(SystemCoreInterruptHandlers[irqn]);
-        if (int_handler != NULL) {
-            int_handler(mcause, sp);
-        }
-        return 0;
-    }
-#endif
-
-    uint32_t EXCn = (uint32_t)(mcause & 0X00000fff);
+    unsigned long exccode = (mcause & MCAUSE_CAUSE);
     EXC_HANDLER exc_handler;
 
-    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
-        exc_handler = (EXC_HANDLER)SystemExceptionHandlers[EXCn];
-    } else if (EXCn == NMI_EXCn) {
-        exc_handler = (EXC_HANDLER)SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
+    if (mcause & MCAUSE_INTR) {
+        if (system_core_interrupt_handler != NULL) {
+            system_core_interrupt_handler(exccode, sp);
+        }
     } else {
-        exc_handler = (EXC_HANDLER)system_default_exception_handler;
+        if (exccode < MAX_SYSTEM_EXCEPTION_NUM) {
+            exc_handler = (EXC_HANDLER)SystemExceptionHandlers[exccode];
+        } else if (exccode == NMI_EXCn) {
+            exc_handler = (EXC_HANDLER)SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
+        } else {
+            exc_handler = (EXC_HANDLER)system_default_exception_handler;
+        }
+        if (exc_handler != NULL) {
+            exc_handler(mcause, sp);
+        }
     }
-    if (exc_handler != NULL) {
-        exc_handler(mcause, sp);
-    }
+
     return 0;
 #endif
 }
@@ -759,6 +779,23 @@ void ECLIC_Interrupt_Init(void)
 }
 
 /**
+ * \brief Do CLINT Interrupt configuration
+ * \details
+ * This function will initialize cpu interrupt mode to clint mode. It will
+ * - Set exception/interrupt entry to exc_entry, now interrupt and exception share the same entry point
+ * - Register interrupt handling routine system_core_interrupt_handler to core_interrupt_handler function,
+ *   which will be called in core_exception_handler function
+ */
+void CLINT_Interrupt_Init(void)
+{
+    /* Register core interrupt handler for clint/plic interrupt mode */
+    system_core_interrupt_handler = core_interrupt_handler;
+    /* Set as CLINT interrupt mode */
+    __RV_CSR_WRITE(CSR_MTVEC, (unsigned long)exc_entry);
+}
+
+
+/**
  * \brief Do PLIC Interrupt configuration
  * \details
  * This function will initialize cpu interrupt mode to clint/plic mode. It will
@@ -779,8 +816,7 @@ void PLIC_Interrupt_Init(void)
     SystemCoreInterruptHandlers[11] = (unsigned long)system_mmode_extirq_handler;
 #endif
 
-    /* Set as CLINT interrupt mode */
-    __RV_CSR_WRITE(CSR_MTVEC, (unsigned long)exc_entry);
+    CLINT_Interrupt_Init();
 }
 
 /**
