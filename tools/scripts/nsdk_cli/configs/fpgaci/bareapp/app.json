@@ -60,6 +60,12 @@
                 "PASS": ["MTimer msip and mtip interrupt test finish and pass"]
             }
         },
+        "application/baremetal/demo_clint_timer": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["test finish and pass"]
+            }
+        },
         "application/baremetal/helloworld": {
             "build_config" : {},
             "checks": {

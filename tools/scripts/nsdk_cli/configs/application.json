@@ -26,6 +26,7 @@
         "application/baremetal/demo_profiling",
         "application/baremetal/demo_vnice",
         "application/baremetal/demo_cidu",
+        "application/baremetal/demo_clint_timer",
         "application/baremetal/dsp_examples",
         "application/freertos/smpdemo",
         "application/baremetal/Internal"
@@ -53,6 +54,12 @@
             "build_config" : {},
             "checks": {
                 "PASS": ["MTimer msip and mtip interrupt test finish and pass"]
+            }
+        },
+        "application/baremetal/demo_clint_timer": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["test finish and pass"]
             }
         },
         "application/baremetal/empty": {
