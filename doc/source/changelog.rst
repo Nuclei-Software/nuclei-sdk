@@ -38,6 +38,8 @@ This is **development** release version ``0.7.0`` of Nuclei SDK.
   - Add core ``n200e/n202/n202e`` and remove ``n205/n205e/n305/n307/n307fd`` which can be replaced by ``n203/n203e/n300/n300f/n300fd``
   - Prebuilt IAR projects and workbench are updated due to evalsoc support changes for plic and clint interrupt modes.
   - Add ``SYSCLK`` make variable for manually set default SYSTEM_CLOCK macro in evalsoc, it is useful for ``CODESIZE=1`` case
+  - Add ``QEMU_MC_EXTOPT`` make variable to pass extra Nuclei Qemu ``-M`` machine options for evalsoc.
+  - Add ``QEMU_CPU_EXTOPT`` make variable to pass extra Nuclei Qemu ``-cpu`` cpu options for evalsoc.
 
 V0.6.0
 ------

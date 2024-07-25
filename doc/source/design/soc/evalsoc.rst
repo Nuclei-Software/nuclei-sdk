@@ -86,6 +86,11 @@ Extra make variables supported only in this SoC and used internally only by Nucl
   * **XLCFG_xxx** make variables such as **XLCFG_CIDU**, **XLCFG_CCM**, **XLCFG_TEE** and **XLCFG_SMPU** which are used to overwrite default macros defined in ``cpufeature.h`` which will affect **XXX_PRESENT** macros in ``evalsoc.h``, introduced in 0.7.0 release.
   * **CODESIZE**: it is used to control whether remove all template routine code for interrupt and exception and banner print code to measure basic code size requirement for evalsoc when ``CODESIZE=1``
   * **SYSCLK``: it is used together with ``CODESIZE=1`` to overwrite default ``SYSTEM_CLOCK`` macro value for different bitstream, eg. ``SYSCLK=50000000 CODESIZE=1``, it will set default SYSTEM_CLOCK to 50000000.
+  * **QEMU_MC_EXTOPT** is used to pass extra options to Nuclei Qemu ``-M`` machine options for evalsoc,
+    please dont pass any extra ``,`` to this make variable, you can pass such as ``QEMU_MC_EXTOPT=debug=1`` but not pass ``QEMU_MC_EXTOPT=,debug=1``
+  * **QEMU_CPU_EXTOPT** is used to pass extra options to Nuclei Qemu ``-cpu`` cpu options for evalsoc,
+    please dont pass any extra ``,`` to this make variable, you can pass such as ``QEMU_CPU_EXTOPT=vlen=512`` but
+    not pass ``QEMU_CPU_EXTOPT=,vlen=512``
 
 .. code-block:: shell
 
