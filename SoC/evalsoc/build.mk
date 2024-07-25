@@ -190,13 +190,21 @@ RISCV_TUNE ?= $(word 3, $(CORE_ARCH_ABI))
 # - QEMU_CPU_EXTOPT is used to pass extra options to qemu -cpu cpu options for evalsoc,
 #   please dont pass any extra , to this make variable, you can pass such
 #   as QEMU_CPU_EXTOPT=vlen=512 but not pass QEMU_CPU_EXTOPT=,vlen=512
-QEMU_MACHINE ?= nuclei_evalsoc,download=$(DOWNLOAD),$(QEMU_MC_EXTOPT)
+QEMU_MACHINE ?= nuclei_evalsoc,download=$(DOWNLOAD)
 # You can pass customized soc configuration here
 ifneq ($(QEMU_SOCCFG),)
 QEMU_MACHINE := $(QEMU_MACHINE),soc-cfg=$(NUCLEI_SDK_SOC)/$(QEMU_SOCCFG)
 endif
+ifneq ($(QEMU_MC_EXTOPT),)
+QEMU_MACHINE := $(QEMU_MACHINE),$(QEMU_MC_EXTOPT)
+endif
+
 QEMU_ARCHEXT ?= ${ARCH_EXT}
-QEMU_CPU ?= nuclei-$(CORE),ext=$(QEMU_ARCHEXT),$(QEMU_CPU_EXTOPT)
+QEMU_CPU ?= nuclei-$(CORE),ext=$(QEMU_ARCHEXT)
+ifneq ($(QEMU_CPU_EXTOPT),)
+QEMU_CPU := $(QEMU_CPU),$(QEMU_CPU_EXTOPT)
+endif
+
 ifneq ($(SEMIHOST),)
 QEMU_OPT += -semihosting
 endif
