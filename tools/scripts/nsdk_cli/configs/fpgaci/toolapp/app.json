@@ -89,7 +89,7 @@
         "application/baremetal/demo_plic": {
             "build_config" : {"XLCFG_PLIC": "1"},
             "checks": {
-                "PASS": ["You can press any key now", "[ERROR]__PLIC_PRESENT"]
+                "PASS": ["You can press any key now", "[ERROR]__PLIC_PRESENT", "PLIC is not present"]
             }
         },
         "application/baremetal/demo_smode_eclic": {
