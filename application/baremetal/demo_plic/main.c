@@ -31,6 +31,15 @@ int main(int argc, char **argv)
 {
 #if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
     int32_t returnCode;
+    CSR_MCFGINFO_Type mcfg;
+
+    // Do PLIC present check via CSR MCFGINFO register
+    // Just to confirm whether PLIC really present
+    mcfg = (CSR_MCFGINFO_Type)__RV_CSR_READ(CSR_MCFG_INFO);
+    if (mcfg.b.plic == 0) {
+        printf("PLIC is not present in this CPU, please check!\n");
+        return 0;
+    }
 
     // Initialize interrupt mode to clint/plic mode
     PLIC_Interrupt_Init();
