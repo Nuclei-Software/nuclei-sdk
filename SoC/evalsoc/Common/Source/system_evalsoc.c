@@ -838,8 +838,16 @@ void Interrupt_Init(void)
 #else
     /* Set as CLINT interrupt mode */
     __RV_CSR_WRITE(CSR_MTVEC, (unsigned long)exc_entry);
-    PLIC_Interrupt_Init();
+
+    /* Init interrupt as eclic mode when ECLIC present
+     * Otherwise will init interrupt as plic mode when PLIC present
+     * Only initialize necessary ones to reduce initialization code size usage */
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
     ECLIC_Interrupt_Init();
+#elif defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
+    PLIC_Interrupt_Init();
+#endif
+
 #endif
 }
 
