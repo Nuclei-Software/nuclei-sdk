@@ -46,21 +46,11 @@ SECTIONS
   PROVIDE(__SMP_CPU_CNT = 1);
   __TOT_STACK_SIZE = __STACK_SIZE * __SMP_CPU_CNT;
 
-  /* standalone section for exception handler */
-  .exception MTVEC_BASE : AT(MTVEC_BASE)
-  {
-    KEEP (*(.mexctrap))
-  }
-
-  /* standalone section for isr vector handler */
-  .isr_vector MTVT_BASE : AT(MTVT_BASE)
-  {
-    KEEP (*(.mintvec))
-  }
-
   .init           :
   {
+    KEEP (*(.mintvec))
     *(.text.init)
+    KEEP (*(.mexctrap))
 
     /* normal code section */
     KEEP (*(SORT_NONE(.init)))

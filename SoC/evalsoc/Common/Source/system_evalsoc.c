@@ -148,40 +148,13 @@ typedef void (*__fp)(void);
 // TODO irqc vector table, you can change 32 to real value of our interrupt number
 // Please fill in this irq vector table with your real interrupt function name
 // MUST marked as __USED to avoid unused variable elimination
-static const __fp vector_base[32] __USED __attribute__((section (".mintvec"))) = {
+static const __fp vector_base[__IRQC_INTNUM] __USED __attribute__((section (".mintvec"))) = {
     irqc_msip_handler,          /* irq 0 ,  internal irq 0  */
     irqc_mtip_handler,          /* irq 1 ,  internal irq 1  */
 /* TODO Below are external interrupt handlers, please define them as your requirements, you need to increase or decrease it, and define correct interrupt handler name */
+#if __IRQC_INTNUM > 2
     irqc_uart0_handler,         /* irq 2 ,  ext_irq 0       */
-    default_intexc_handler,     /* irq 3 ,  ext_irq 1       */
-    default_intexc_handler,     /* irq 4 ,  ext_irq 2       */
-    default_intexc_handler,     /* irq 5 ,  ext_irq 3       */
-    default_intexc_handler,     /* irq 6 ,  ext_irq 4       */
-    default_intexc_handler,     /* irq 7 ,  ext_irq 5       */
-    default_intexc_handler,     /* irq 8 ,  ext_irq 6       */
-    default_intexc_handler,     /* irq 9 ,  ext_irq 7       */
-    default_intexc_handler,     /* irq 10,  ext_irq 8       */
-    default_intexc_handler,     /* irq 11,  ext_irq 9       */
-    default_intexc_handler,     /* irq 12,  ext_irq 10      */
-    default_intexc_handler,     /* irq 13,  ext_irq 11      */
-    default_intexc_handler,     /* irq 14,  ext_irq 12      */
-    default_intexc_handler,     /* irq 15,  ext_irq 13      */
-    default_intexc_handler,     /* irq 16,  ext_irq 14      */
-    default_intexc_handler,     /* irq 17,  ext_irq 15      */
-    default_intexc_handler,     /* irq 18,  ext_irq 16      */
-    default_intexc_handler,     /* irq 19,  ext_irq 17      */
-    default_intexc_handler,     /* irq 20,  ext_irq 18      */
-    default_intexc_handler,     /* irq 21,  ext_irq 19      */
-    default_intexc_handler,     /* irq 22,  ext_irq 20      */
-    default_intexc_handler,     /* irq 23,  ext_irq 21      */
-    default_intexc_handler,     /* irq 24,  ext_irq 22      */
-    default_intexc_handler,     /* irq 25,  ext_irq 23      */
-    default_intexc_handler,     /* irq 26,  ext_irq 24      */
-    default_intexc_handler,     /* irq 27,  ext_irq 25      */
-    default_intexc_handler,     /* irq 28,  ext_irq 26      */
-    default_intexc_handler,     /* irq 29,  ext_irq 27      */
-    default_intexc_handler,     /* irq 30,  ext_irq 28      */
-    default_intexc_handler      /* irq 31,  ext_irq 29      */
+#endif
 };
 #endif
 

@@ -26,10 +26,24 @@
 
 #include "riscv_encoding.h"
 
+#include "cpufeature.h"
+
     .section .text.init
     .globl _start
     .type _start, @function
+    .globl _reset_vector
+    .type _reset_vector, @function
 
+_reset_vector:
+    .option push
+    .option norvc
+    .option arch,-zcb,-zca
+    j _start
+
+#ifdef CFG_HAS_EXCP
+    j exc_entry
+#endif
+    .option pop
 /**
  * Reset Handler called on controller reset
  */
