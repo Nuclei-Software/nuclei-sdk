@@ -219,8 +219,8 @@ typedef union {
  */
 typedef union {
     struct {
-        rv_csr_t mdcause:2;                     /*!< bit:     0..1   More detailed exception information as MCAUSE supplement */
-        rv_csr_t _reserved0:__RISCV_XLEN-2;     /*!< bit:     2..XLEN-1 Reserved */
+        rv_csr_t mdcause:3;                     /*!< bit:     0..2   More detailed exception information as MCAUSE supplement */
+        rv_csr_t _reserved0:__RISCV_XLEN-3;     /*!< bit:     3..XLEN-1 Reserved */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MDCAUSE_Type;

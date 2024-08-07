@@ -226,7 +226,7 @@
 #define MSUBM_PTYP                  (0x3<<8)
 #define MSUBM_TYP                   (0x3<<6)
 
-#define MDCAUSE_MDCAUSE             (0x3)
+#define MDCAUSE_MDCAUSE             (0x7)
 
 #define MMISC_CTL_LDSPEC_ENABLE     (1<<12)
 #define MMISC_CTL_SIJUMP_ENABLE     (1<<11)
