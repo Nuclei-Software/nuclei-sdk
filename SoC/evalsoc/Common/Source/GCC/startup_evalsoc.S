@@ -37,7 +37,7 @@
 _reset_vector:
     .option push
     .option norvc
-    .option arch,-zcb,-zca
+    .option arch,-zcmt,-zcmp,-zcb,-zca
     j _start
 
 #ifdef CFG_HAS_EXCP
