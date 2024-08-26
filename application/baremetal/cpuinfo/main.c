@@ -270,6 +270,7 @@ void nuclei_cpuinfo(void)
             printf("\r\n");
         }
         /* ECLIC */
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
         if (mcfg.b.clic) {
             printf("           ECLIC:");
             printf(" VERSION=0x%x", (unsigned int)ECLIC_GetInfoVer());
@@ -279,6 +280,7 @@ void nuclei_cpuinfo(void)
             printf(" NLBITS=%u", (unsigned int)ECLIC_GetCfgNlbits());
             printf("\r\n");
         }
+#endif
 
         /* L2CACHE */
         if (smp_cfg & BIT(0)) {
