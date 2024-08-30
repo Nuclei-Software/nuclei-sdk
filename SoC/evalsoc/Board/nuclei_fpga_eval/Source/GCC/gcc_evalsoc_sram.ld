@@ -48,8 +48,10 @@ SECTIONS
 
   .init           :
   {
+    /* TODO: if you have writable MTVT csr, you can place the following .mintvec to proper place you desired */
     KEEP (*(.mintvec))
     *(.text.init)
+    /* TODO: if you have writable MTVEC csr, you can place the following .mexctrap to proper place you desired */
     KEEP (*(.mexctrap))
 
     /* normal code section */

@@ -228,6 +228,14 @@ void Exception_Init(void)
 #if defined(CODESIZE) && (CODESIZE == 1)
 
 #else
+#if defined(__EXCP_PRESENT) && (__EXCP_PRESENT == 1)
+#ifdef CFG_HAS_TRAP_CSR
+    /* TODO when the exception entry csr MTVEC is writable, you can remap exception entry */
+    /* but you need to handle the remap by yourself by update linker script */
+    __RV_CSR_WRITE(CSR_MTVEC, exc_entry);
+#endif
+#endif
+
     for (int i = 0; i < MAX_SYSTEM_EXCEPTION_NUM; i++) {
         SystemExceptionHandlers[i] = (unsigned long)system_default_exception_handler;
     }
@@ -384,6 +392,15 @@ void SystemBannerPrint(void)
  */
 void Interrupt_Init(void)
 {
+#if defined(__IRQC_PRESENT) && (__IRQC_PRESENT == 1)
+
+#ifdef CFG_HAS_TRAP_CSR
+    /* TODO when the interrupt vector entry csr MTVT is writable, you can remap your vector table */
+    /* but you need to handle the remap by yourself by update linker script */
+    __RV_CSR_WRITE(CSR_MTVT, vector_base);
+#endif
+
+#endif
 }
 
 #if defined(__IRQC_PRESENT) && (__IRQC_PRESENT == 1)
