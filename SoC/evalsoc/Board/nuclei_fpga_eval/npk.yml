@@ -42,8 +42,6 @@ configuration:
     choices:
       - name: sram
         description: SRAM download mode, program will be download into sram and run directly in sram, program lost when poweroff
-      - name: flashxip
-        description: FLASHXIP download mode, program will to be download into flash and run directly in flash
 
 ## Source Code Management
 codemanage:
