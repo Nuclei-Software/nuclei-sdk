@@ -5,11 +5,6 @@
 
 define exported symbol _link_file_version_2 = 1;
 
-/* MTVT_BASE = CFG_MTVT_BASE_ADDR in cpufeature.h */
-define symbol MTVT_BASE  = 0x80000100;
-/* MTVT_BASE = CFG_MTVEC_BASE_ADDR in cpufeature.h */
-define symbol MTVEC_BASE = 0x80000180;
-
 define memory mem with size = 4G;
 
 /* Set memory region information according to your device */
@@ -32,11 +27,10 @@ keep { section FSymTab };
 keep { section VSymTab };
 keep { section .rti_fn* };
 
-"CSTARTUP32" : place at start of ROM_region32 { ro section .alias.hwreset,
-                                                ro section .cstartup };
-
-"isr_vector" : place at address mem:MTVT_BASE  { ro section .mintvec };
-"exception" : place at address mem:MTVEC_BASE { ro section .mexctrap };
+"CSTARTUP32" : place at start of ROM_region32 { ro section .mintvec,
+                                                ro section .alias.hwreset,
+                                                ro section .cstartup,
+                                                ro section .mexctrap };
 
 "ROM32":place in ROM_region32        { ro,
                                        block RTT_INIT_FUNC,
