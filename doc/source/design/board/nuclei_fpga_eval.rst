@@ -135,8 +135,8 @@ If you want to try other toolchain, such as nuclei llvm or terapines zcc, you ca
      the Nuclei Demo SoC Evaluation Core the Nuclei FPGA SoC you have.
    * You can also change the value passed to **DOWNLOAD** to run
      program in different modes.
-   * The FreeRTOS and UCOSII demos maybe not working in ``flashxip``
-     download mode in Nuclei FPGA board due to program running in Flash is really too slow.
+   * The FreeRTOS and UCOSII demos maybe not working in when run in xipflash
+     in Nuclei FPGA board due to program running in Flash is really too slow.
      If you want to try these demos, please use ``sram`` download mode.
 
 .. _Nuclei FPGA Evaluation Kit Board Documents: https://nucleisys.com/developboard.php
