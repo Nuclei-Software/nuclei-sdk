@@ -42,25 +42,24 @@ Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CP
    * We provided different Nuclei Core configurations(CORE=<your_core>) we supported, see *Build/Makefile.core*.
      - such as `CORE=n100m`
    * We support several download modes(DOWNLOAD=<mode>) for different applications.
-     - **ilm**: Program will be download into ilm/ram and run directly in ilm/ram, program lost when poweroff
-     - **flashxip**: Program will to be download into flash and run directly in Flash
-   * For example, if you want to build your application for *CORE=n100m DOWNLOAD=ilm*, you can easily run this command:
+     - **sram**: Program will be download into ram and run directly in ram, program lost when poweroff
+   * For example, if you want to build your application for *CORE=n100m DOWNLOAD=sram*, you can easily run this command:
      ~~~shell
-     make CORE=n100m DOWNLOAD=ilm all
+     make CORE=n100m DOWNLOAD=sram all
      ~~~
-   * If you want to upload your application for *CORE=n100m DOWNLOAD=ilm*, you can easily run this command:
+   * If you want to upload your application for *CORE=n100m DOWNLOAD=sram*, you can easily run this command:
      ~~~shell
-     make CORE=n100m DOWNLOAD=ilm upload
+     make CORE=n100m DOWNLOAD=sram upload
      ~~~
-   * (Option 1)If you want to debug your application for *CORE=n100m DOWNLOAD=ilm*:
-     - First open a new terminal in the same application folder and run: `make CORE=n100m DOWNLOAD=ilm run_openocd`
-     - Then run this command `make CORE=n100m DOWNLOAD=ilm run_gdb` in the existing terminal, then you can debug it using gdb,
+   * (Option 1)If you want to debug your application for *CORE=n100m DOWNLOAD=sram*:
+     - First open a new terminal in the same application folder and run: `make CORE=n100m DOWNLOAD=sram run_openocd`
+     - Then run this command `make CORE=n100m DOWNLOAD=sram run_gdb` in the existing terminal, then you can debug it using gdb,
        if you want to load your program, you need to type `load` to achieve it.
      - **Notice**: Since version 0.2.4, you can also pass extra `GDB_PORT=<portno>`, to change to use new gdb port other than default
-       `3333`, for example, `make CORE=n100m DOWNLOAD=ilm GDB_PORT=3344 run_openocd` and `make CORE=n100m DOWNLOAD=ilm GDB_PORT=3344 run_gdb`
-   * (Option 2)If you want to debug your application for *CORE=n100m DOWNLOAD=ilm*:
+       `3333`, for example, `make CORE=n100m DOWNLOAD=sram GDB_PORT=3344 run_openocd` and `make CORE=n100m DOWNLOAD=sram GDB_PORT=3344 run_gdb`
+   * (Option 2)If you want to debug your application for *CORE=n100m DOWNLOAD=sram*:
      ~~~shell
-     make CORE=n100m DOWNLOAD=ilm debug
+     make CORE=n100m DOWNLOAD=sram debug
      ~~~
    * If you want to use UART terminal tool to view the UART message, you can choose `screen` or `minicom` in Linux, `teraterm` in Windows, the default UART baudrate we use is `115200`.
 

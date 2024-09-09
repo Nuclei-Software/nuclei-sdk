@@ -98,10 +98,9 @@ For **Nuclei FPGA Evaluation board**:
 
     - ``evalsoc.memory``: Memory information for evalsoc
     - ``gcc_evalsoc_sram.ld``: Linker script file for ``DOWNLOAD=sram``
-    - ``gcc_evalsoc_flashxip.ld``: Linker script file for ``DOWNLOAD=flashxip``
 
   - If you want to specify your own modified linker script, you can follow steps described in :ref:`develop_appdev_linkscript`
-  - If you want to change the base address or size of SRAM, FlashXIP of linker script file,
+  - If you want to change the base address or size of SRAM of linker script file,
     you can adapt the ``evalsoc.memory`` file.
 
 * **CORE** support all the cores list in :ref:`develop_buildsystem_var_core`
