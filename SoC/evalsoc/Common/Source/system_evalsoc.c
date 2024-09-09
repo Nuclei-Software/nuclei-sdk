@@ -414,7 +414,7 @@ void Interrupt_Init(void)
  * \return       -1 means invalid input parameter. 0 means successful.
  * \remarks
  * - This function use to configure specific irqc interrupt and register its interrupt handler and enable its interrupt.
- * - If the vector table is placed in read-only section(FLASHXIP mode), handler could not be installed
+ * - If the vector table is placed in read-only section, handler could not be installed
  */
 int32_t IRQC_Register_IRQ(IRQn_Type IRQn, void* handler)
 {
