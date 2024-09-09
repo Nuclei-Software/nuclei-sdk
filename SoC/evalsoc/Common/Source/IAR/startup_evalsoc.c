@@ -53,6 +53,11 @@ int __low_level_init(void)
 {
     __disable_interrupt();
 
+#if defined(__riscv_zcmp) || defined(__riscv_zcmt)
+    /* Enable Zc feature when compiled zcmp & zcmt */
+    __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_ZC);
+#endif
+
     /* Enable mcycle and minstret counter */
     __RV_CSR_CLEAR(CSR_MCOUNTINHIBIT, 0x5);
 

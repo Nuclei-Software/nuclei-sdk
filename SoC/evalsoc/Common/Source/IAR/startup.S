@@ -8,6 +8,7 @@
 
 #include "iarMacros.m"
 #include "iarCfi.m"
+#include "cpufeature.h"
 
 
         MODULE  ?cstartup
@@ -138,11 +139,11 @@ call_low_level_init:
         SECTION `.alias.hwreset`:CODE:NOROOT(2)
         PUBLIC __alias_hw_reset
         PUBLIC _reset_vector
+        EXTERN exc_entry
+        /* TODO this is used to handle vector table + reset vector + exception entry */
 _reset_vector:
         .option push
         .option norelax
-        .option norvc
-        .option arch,-zcmt,-zcmp,-zcb,-zca
         j __alias_hw_reset
 
 #ifdef CFG_HAS_EXCP
