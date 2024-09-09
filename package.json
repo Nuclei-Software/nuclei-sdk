@@ -1,6 +1,6 @@
 {
   "name": "framework-n100-sdk",
-  "version": "0.1.0",
+  "version": "0.2.0-dev",
   "description": "Nuclei N100 Embedded Software Development Kit",
   "keywords": [
     "framework",
