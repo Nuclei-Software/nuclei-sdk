@@ -2225,6 +2225,9 @@
                             <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Source\IAR\intexc_evalsoc.S</name>
                         </file>
                         <file>
+                            <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Source\IAR\startup.S</name>
+                        </file>
+                        <file>
                             <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Source\IAR\startup_evalsoc.c</name>
                         </file>
                     </group>
