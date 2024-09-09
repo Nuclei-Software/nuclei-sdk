@@ -20,7 +20,6 @@ endif
 SOC ?= evalsoc
 ## Available choices:
 ## sram: Program will be download into sram and run directly in sram, program lost when poweroff
-## flashxip: Program will to be download into flash and run directly in Flash
 DOWNLOAD ?= sram
 ## If SIMULATION=1, it means the program is optimized for hardware simulation environment
 SIMULATION ?= 0
