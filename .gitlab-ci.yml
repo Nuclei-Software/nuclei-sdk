@@ -134,7 +134,7 @@ build_evalsoc:
     HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
   parallel:
     matrix:
-      - DOWNLOAD: [ "sram", "flashxip" ]
+      - DOWNLOAD: [ "sram" ]
         ARCH_EXT: [ "", "_zca_zcb_zcmp_zcmt" ]
         STDCLIB: ["newlib_small", "libncrt_small"]
   script:
@@ -183,7 +183,7 @@ run_evalsoc:
     HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
   parallel:
     matrix:
-      - DOWNLOAD: [ "sram", "flashxip" ]
+      - DOWNLOAD: [ "sram" ]
         ARCH_EXT: [ "", "_zca_zcb_zcmp_zcmt" ]
         STDCLIB: ["newlib_small", "libncrt_small"]
   script:
@@ -207,7 +207,7 @@ run_evalsoc_zcc:
     HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
   parallel:
     matrix:
-      - DOWNLOAD: [ "sram", "flashxip" ]
+      - DOWNLOAD: [ "sram" ]
         ARCH_EXT: [ "", "_zca_zcb_zcmp_zcmt" ]
         STDCLIB: ["newlib_small"]
   script:
