@@ -70,6 +70,30 @@ Usage
     according to your configured CPU ISA, and CPU feature defined in generated ``cpufeature.h``.
     Currently you still need to modify IAR linker script by yourself, it is not automatically modified.
 
+    In latest evalsoc for n100, the ``interrupt vector table`` + ``reset_vector`` + ``exception_entry`` will be placed tightly in the top of an RO/RW memory.
+
+    **It will looks like this as below:**
+
+.. code-block:: shell
+
+    Disassembly of section .init:       -> top of RO/RW memory
+
+    a0000000 <vector_base>:             -> vector table for interrupt, which is the MTVT
+        ...                                eg. for this case, there are 30 external interrupts(CFG_IRQ_NUM),
+                                           totally 32 interrupts
+
+    a0000080 <_reset_vector>:           -> reset vector right following the vector_table array, size may variable according to the external interrupt number count
+    a0000080:	0080006f          	j	a0000088 <_start>       -> the reset vector code, just jump to real startup code
+    a0000084:	0bc0006f          	j	a0000140 <exc_entry>    -> exception entry(MTVEC), just jump to real exception handling code
+
+    a0000088 <_start>:
+    a0000088:	30047073          	csrc	mstatus,8
+
+
+    **NOTE**: Since evalsoc implementation is just a reference, you can customized your vector table, reset vector, exception entry as you want,
+    but you **MUST** modify the startup code and linker script code to match your real CPU design.
+
+
 If you want to use this **Nuclei evalsoc SoC** in Nuclei N100 SDK, you need to set the
 :ref:`develop_buildsystem_var_soc` Makefile variable to ``evalsoc``.
 

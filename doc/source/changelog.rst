@@ -8,6 +8,23 @@ V0.2.0-dev
 
 This is development version ``0.2.0-dev`` of N100 SDK.
 
+* Application
+
+  - Add an empty project for n100 sdk
+  - reset cycle and instret when start to do benchmark
+
+* NMSIS
+
+  - Add ``__set_rv_instret`` and ``__set_rv_cycle`` API for N100 NMSIS Core
+
+* SoC
+
+  - Merge newlib stub code files into one stub code file
+  - Add ``CODESIZE`` make variable to reduce application code size
+  - Modify startup code for both gcc and iar startup code and linker script to support
+    new startup and exception rules, see :ref:`design_soc_evalsoc_usage`
+  - Now only ``sram`` linker script is provided for reference, you can always modify
+    startup and linker script code to match your real cpu design
 
 V0.1.0
 ------
