@@ -112,8 +112,8 @@ This **Makefile.misc** file mainly provide these functions:
     to do recursive match. e.g. ``$(call get_cxxsrcs, cppsrc cppsrc/abc)`` will return cpp source files in
     ``cppsrc`` and ``cppsrc/abc`` directories.
   - **check_item_exist**: Function to check if item existed in a set of items. e.g.
-    ``$(call check_item_exist, flash, flash ilm flashxip)`` will check ``flash`` whether existed in
-    ``flash ilm flashxip``, if existed, return ``flash``, otherwise return empty.
+    ``$(call check_item_exist, sram, sram ilm)`` will check ``sram`` whether existed in
+    ``sram ilm``, if existed, return ``sram``, otherwise return empty.
 
 * Check and define OS related functions, and also a set of trace print functions.
 
@@ -310,7 +310,7 @@ create the **<NUCLEI_SDK_ROOT>/Build/Makefile.global** as below:
 
     SOC ?= evalsoc
     BOARD ?= nuclei_fpga_eval
-    DOWNLOAD ?= flashxip
+    DOWNLOAD ?= sram
 
 .. note::
 
@@ -346,7 +346,7 @@ you can create ``application/baremetal/helloworld/Makefile.local`` as below:
 
     SOC ?= evalsoc
     BOARD ?= nuclei_fpga_eval
-    DOWNLOAD ?= flashxip
+    DOWNLOAD ?= sram
 
 .. note::
 
@@ -570,18 +570,14 @@ currently it has these modes supported as described in table
    * - sram
      - | Program will be download into sram and
        | run directly in sram, program will lost when poweroff
-   * - flashxip
-     - Program will to be download into flash and run directly in flash
 
 .. note::
 
     * This variable now target dependent, and its meaning depending on how this
       variable is implemented in SoC's build.mk
-    * **flashxip** mode in :ref:`design_soc_evalsoc` is very slow due to
-      the CORE frequency is very slow, and flash execution speed is slow
     * macro ``DOWNLOAD_MODE`` and ``DOWNLOAD_MODE_STRING`` will be defined in Makefile,
-      eg. when ``DOWNLOAD=flash``, macro will be defined as ``-DDOWNLOAD_MODE=DOWNLOAD_MODE_FLASH``,
-      and ``-DDOWNLOAD_MODE_STRING=\"flash\"``, the ``flash`` will be in upper case,
+      eg. when ``DOWNLOAD=sram``, macro will be defined as ``-DDOWNLOAD_MODE=DOWNLOAD_MODE_SRAM``,
+      and ``-DDOWNLOAD_MODE_STRING=\"sram\"``, the ``sram`` will be in upper case,
       currently ``DOWNLOAD_MODE_STRING`` macro is used in ``system_<Device>.c`` when
       banner is print.
 
