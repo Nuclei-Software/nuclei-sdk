@@ -113,7 +113,11 @@ void nuclei_cpuinfo(void)
         printf(" Xxldspn3x");
     }
     if (mcfg.b.zc_xlcz) {
+#if __RISCV_XLEN == 32
         printf(" Zc Xxlcz");
+#else
+        printf(" Zc");
+#endif
     }
     if (mcfg.b.sec_mode) {
         printf(" Smwg");
@@ -168,7 +172,11 @@ void nuclei_cpuinfo(void)
         printf(" DSP_N3");
     }
     if (mcfg.b.zc_xlcz) {
+#if __RISCV_XLEN == 32
         printf(" ZC_XLCZ_EXT");
+#else
+        printf(" ZC_EXT");
+#endif
     }
     if (mcfg.b.iregion) {
         printf(" IREGION");
