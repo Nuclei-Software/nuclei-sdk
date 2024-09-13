@@ -27,6 +27,7 @@ This is development version ``0.2.0-dev`` of N100 SDK.
     new startup and exception rules, see :ref:`design_soc_evalsoc_usage`
   - Now only ``sram`` linker script is provided for reference, you can always modify
     startup and linker script code to match your real cpu design
+  - Fix ``delay_1ms`` API may work wrongly due to TIME register overflow
 
 V0.1.0
 ------
