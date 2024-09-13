@@ -151,37 +151,6 @@ __STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
 }
 
 #if defined (__Vendor_SysTickConfig) && (__Vendor_SysTickConfig == 0U) && defined(__IRQC_PRESENT) && (__IRQC_PRESENT == 1)
-/**
- * \brief   System Tick Configuration
- * \details Initializes the System Timer and its non-vector interrupt, and starts the System Tick Timer.
- *
- *  In our default implementation, the timer counter will be set to zero, and it will start a timer compare non-vector interrupt
- *  when it matchs the ticks user set, during the timer interrupt user should reload the system tick using \ref SysTick_Reload function
- *  or similar function written by user, so it can produce period timer interrupt.
- * \param [in]  ticks  Number of ticks between two interrupts.
- * \return          0  Function succeeded.
- * \return          1  Function failed.
- * \remarks
- * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
- *   function \ref SysTick_Config is not included.
- * - In this case, the file <b><Device>.h</b> must contain a vendor-specific implementation
- *   of this function.
- * - If user need this function to start a period timer interrupt, then in timer interrupt handler
- *   routine code, user should call \ref SysTick_Reload with ticks to reload the timer.
- * - This function only available when __TIMER_PRESENT == 1 and __IRQC_PRESENT == 1 and __Vendor_SysTickConfig == 0
- * \sa
- * - \ref SysTimer_SetCompareValue; SysTimer_SetLoadValue
- */
-__STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
-{
-    uint32_t loadticks = SysTimer_GetLoadValue();
-    SysTimer_SetCompareValue(ticks + loadticks);
-    SysTimer_Start();
-    // TODO add IRQC related API
-    IRQC_EnableIRQ(SysTimer_IRQn);
-    return (0UL);
-}
-
 
 /**
  * \brief   System Tick Reload
@@ -215,7 +184,38 @@ __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint32_t ticks)
     return (0UL);
 }
 
+/**
+ * \brief   System Tick Configuration
+ * \details Initializes the System Timer and its non-vector interrupt, and starts the System Tick Timer.
+ *
+ *  In our default implementation, the timer counter will be set to zero, and it will start a timer compare non-vector interrupt
+ *  when it matchs the ticks user set, during the timer interrupt user should reload the system tick using \ref SysTick_Reload function
+ *  or similar function written by user, so it can produce period timer interrupt.
+ * \param [in]  ticks  Number of ticks between two interrupts.
+ * \return          0  Function succeeded.
+ * \return          1  Function failed.
+ * \remarks
+ * - When the variable \ref __Vendor_SysTickConfig is set to 1, then the
+ *   function \ref SysTick_Config is not included.
+ * - In this case, the file <b><Device>.h</b> must contain a vendor-specific implementation
+ *   of this function.
+ * - If user need this function to start a period timer interrupt, then in timer interrupt handler
+ *   routine code, user should call \ref SysTick_Reload with ticks to reload the timer.
+ * - This function only available when __TIMER_PRESENT == 1 and __IRQC_PRESENT == 1 and __Vendor_SysTickConfig == 0
+ * \sa
+ * - \ref SysTimer_SetCompareValue; SysTimer_SetLoadValue
+ */
+__STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
+{
+    SysTick_Reload(ticks);
+    SysTimer_Start();
+    // TODO add IRQC related API
+    IRQC_EnableIRQ(SysTimer_IRQn);
+    return (0UL);
+}
+
 #endif /* defined(__Vendor_SysTickConfig) && (__Vendor_SysTickConfig == 0U) */
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_SysTimer */
 
 #endif /* defined(__TIMER_PRESENT) && (__TIMER_PRESENT == 1) */
