@@ -72,13 +72,18 @@ uint32_t get_cpu_freq(void)
 void delay_1ms(uint32_t count)
 {
 #if defined(__TIMER_PRESENT) && (__TIMER_PRESENT == 1)
-    uint64_t start_mtime, delta_mtime;
-    uint64_t delay_ticks = (SOC_TIMER_FREQ * (uint64_t)count) / 1000;
+    uint32_t start_mtime, delta_mtime, sample_time;
+    uint32_t delay_ticks = (uint32_t)((SOC_TIMER_FREQ * (uint64_t)count) / 1000);
 
     start_mtime = SysTimer_GetLoadValue();
 
     do {
-        delta_mtime = SysTimer_GetLoadValue() - start_mtime;
+        sample_time = SysTimer_GetLoadValue();
+        if (sample_time < start_mtime) { // If TIME overflowed
+            delta_mtime = SysTimer_MTIME_Msk - start_mtime + sample_time + 1;
+        } else {
+            delta_mtime = sample_time - start_mtime;
+        }
     } while (delta_mtime < delay_ticks);
 #else
     #warning "delay_1ms function require timer present, if you are using this, it will not work"
