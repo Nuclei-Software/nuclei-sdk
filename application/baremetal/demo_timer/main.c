@@ -11,12 +11,22 @@ volatile unsigned int msip_trig_flag = 1; /* sw trigger mtimer sw interrupt flag
 
 #define LOOP_COUNT      5
 
+/* TODO uncomment below to enable timer interrupt via reset timer load register
+ * and not update timecmp register */
+//#define TIMER_RELOAD
+
+#define RELOAD_TICKS        SOC_TIMER_FREQ / 10
+
 __INTERRUPT void irqc_mtip_handler(void)
 {
     int0_cnt++;
     printf("MTimer IRQ handler %d\n\r", int0_cnt);
-    uint32_t now = SysTimer_GetLoadValue();
-    SysTimer_SetCompareValue(now + SOC_TIMER_FREQ / 10);
+
+#ifdef TIMER_RELOAD
+    SysTimer_SetLoadValue(0);
+#else
+    SysTick_Reload(RELOAD_TICKS);
+#endif
 }
 
 __INTERRUPT void irqc_msip_handler(void)
@@ -30,10 +40,15 @@ __INTERRUPT void irqc_msip_handler(void)
 void setup_timer()
 {
     printf("init timer and start\n\r");
-    uint32_t now = SysTimer_GetLoadValue();
-    uint32_t then = now + SOC_TIMER_FREQ / 10;
-    SysTimer_SetCompareValue(then);
+
+#ifdef TIMER_RELOAD
+    SysTimer_SetLoadValue(0);
+    SysTimer_SetCompareValue(RELOAD_TICKS);
+#else
+    SysTick_Reload(RELOAD_TICKS);
+#endif
 }
+
 #ifdef CFG_SIMULATION
 #define RUN_LOOPS   2
 #else
@@ -63,6 +78,7 @@ int main(void)
         if (msip_trig_flag == 1) {
             msip_trig_flag = 0;
             SysTimer_SetSWIRQ(); /* trigger timer sw interrupt */
+            // WARN take care when you modify time load register, below function may fail
             delay_1ms(10);
         }
     } while (int1_cnt < RUN_LOOPS); /* check test end condition */
