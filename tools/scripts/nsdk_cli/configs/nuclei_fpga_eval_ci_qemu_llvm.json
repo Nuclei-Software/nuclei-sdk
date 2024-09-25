@@ -15,7 +15,6 @@
     "parallel": "-j",
     "build_target": "clean all",
     "build_config": {
-        "TOOLCHAIN": "nuclei_llvm",
         "SOC": "evalsoc",
         "BOARD": "nuclei_fpga_eval",
         "ARCH_EXT": ""
@@ -24,9 +23,15 @@
         "n201-ilm": {"DOWNLOAD": "ilm", "CORE": "n201"},
         "n201-flash": {"DOWNLOAD": "flash", "CORE": "n201"},
         "n201-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n201"},
+        "n201e-ilm": {"DOWNLOAD": "ilm", "CORE": "n201e"},
+        "n201e-flash": {"DOWNLOAD": "flash", "CORE": "n201e"},
+        "n201e-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n201e"},
         "n203-ilm": {"DOWNLOAD": "ilm", "CORE": "n203"},
         "n203-flash": {"DOWNLOAD": "flash", "CORE": "n203"},
         "n203-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n203"},
+        "n203e-ilm": {"DOWNLOAD": "ilm", "CORE": "n203e"},
+        "n203e-flash": {"DOWNLOAD": "flash", "CORE": "n203e"},
+        "n203e-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n203e"},
         "n300f-ilm": {"DOWNLOAD": "ilm", "CORE": "n300f"},
         "n300f-flash": {"DOWNLOAD": "flash", "CORE": "n300f"},
         "n300f-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n300f"},
@@ -45,6 +50,7 @@
         "nx900fd-flash": {"DOWNLOAD": "flash", "CORE": "nx900fd"},
         "nx900fd-flashxip": {"DOWNLOAD": "flashxip", "CORE": "nx900fd"},
         "nx900fd-ddr": {"DOWNLOAD": "ddr", "CORE": "nx900fd"}
+
     },
     "appconfig": {
         "application/baremetal/benchmark/dhrystone": {
@@ -78,11 +84,19 @@
         },
         "application/baremetal/demo_dsp": {
             "build_configs" : {
-                "n300fdb-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_zba_zbb_zbc_zbs"},
-                "n900fdbv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900fd", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs"},
+                "n300p-ilm": {"DOWNLOAD": "ilm", "CORE": "n300", "ARCH_EXT": "_xxldspn1x"},
+                "n300fp-ilm": {"DOWNLOAD": "ilm", "CORE": "n300f", "ARCH_EXT": "_xxldspn1x"},
+                "n300fdp-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_xxldspn1x"},
+                "n300fdbp-ilm": {"DOWNLOAD": "ilm", "CORE": "n300fd", "ARCH_EXT": "_zba_zbb_zbc_zbs_xxldspn1x"},
+                "n900fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "n900fd", "ARCH_EXT": "_zve32f_zba_zbb_zbc_zbs_xxldspn1x"},
+                "nx900p-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900", "ARCH_EXT": "_xxldsp"},
+                "nx900fp-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_xxldsp"},
                 "nx900fv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f"},
+                "nx900fpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zve64f_xxldsp"},
+                "nx900fdp-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "_xxldsp"},
                 "nx900fdv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v"},
-                "nx900fdbv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs"}
+                "nx900fdpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_xxldsp"},
+                "nx900fdbpv-ilm": {"DOWNLOAD": "ilm", "CORE": "nx900fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldsp"}
             },
             "checks": {
                 "PASS": ["all test are passed"],
