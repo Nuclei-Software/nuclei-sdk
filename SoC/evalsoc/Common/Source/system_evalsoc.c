@@ -36,6 +36,10 @@
 #define SYSTEM_CLOCK    (16000000UL)
 #endif
 
+#ifdef CFG_HAS_EXCP
+extern void exc_entry(void);
+#endif
+
 /**
  * \defgroup  NMSIS_Core_SystemConfig       System Device Configuration
  * \brief Functions for system and clock setup available in system_<device>.c.

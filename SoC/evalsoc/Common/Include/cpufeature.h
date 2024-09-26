@@ -26,6 +26,10 @@ extern "C" {
 // EXCP is the exception module, if not defined, it means not present
 // If not present, you need to remove .exception section in linker script
 #define CFG_HAS_EXCP
+
+// Define it when you have TRAP related CSR such as MTVT and MTVEC
+//#define CFG_HAS_TRAP_CSR
+
 // PMONITOR is the mcycle and minsret counter, if not defined, it means not present
 #define CFG_HAS_PMONITOR
 
