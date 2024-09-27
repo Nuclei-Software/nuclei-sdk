@@ -570,7 +570,7 @@ smphello
 This `smphello application`_ is used to demonstrate how to use baremetal SMP feature.
 
 This demo requests the SMP cores share the same RAM and ROM, for example, in current
-evalsoc system, ilm/dlm are private resource for cpu, only the DDR memory are shared
+evalsoc system, ilm/dlm are private resource for cpu, only the DDR/SRAM memory are shared
 resource for all the cpu.
 
 And `RVA` atomic extension is required to run this application, this extension is used
@@ -592,16 +592,16 @@ to do spinlock in this example.
     # cd to the smphello directory
     cd application/baremetal/smphello
     # Clean the application first
-    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=2 DOWNLOAD=ddr CORE=ux900 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=2 CORE=ux900 clean
     # Build and upload the application
-    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=2 DOWNLOAD=ddr CORE=ux900 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=2 CORE=ux900 upload
 
 **Expected output as below:**
 
 .. code-block:: console
 
     Nuclei SDK Build Time: May 30 2022, 15:38:00
-    Download Mode: DDR
+    Download Mode: SRAM
     CPU Frequency 15998648 Hz
     Hello world from hart 0
     Hello world from hart 1
@@ -1800,7 +1800,7 @@ This `demo_cidu application`_ is used to demonstrate External Interrupt Distribu
 of Cluster Interrupt Distribution Unit (CIDU).
 
 This demo requests the SMP cores share the same RAM and ROM, for example, in current
-evalsoc/demosoc system, ilm/dlm are private resource for cpu, only the DDR memory are shared resource
+evalsoc/demosoc system, ilm/dlm are private resource for cpu, only the DDR/SRAM memory are shared resource
 for all the cpu.
 
 .. note::
@@ -1837,16 +1837,16 @@ for all the cpu.
     # you can pass extra make variable XLCFG_CIDU=1 during make command to tell sdk
     # the cidu present, it will define CFG_HAS_IDU
     # Clean the application first
-    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=4 DOWNLOAD=ddr CORE=ux900 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=4 CORE=ux900 clean
     # Build and upload the application
-    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=4 DOWNLOAD=ddr CORE=ux900 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval SMP=4 CORE=ux900 upload
 
 **Expected output(inter core interrupt) as below:**
 
 .. code-block:: console
 
     Nuclei SDK Build Time: Feb 10 2023, 18:39:17
-    Download Mode: DDR
+    Download Mode: SRAM
     CPU Frequency 100602675 Hz
     CPU HartID: 0
     Core 3 has received interrupt from core 0
@@ -1864,7 +1864,7 @@ both core 0 and core 2.
 .. code-block:: console
 
     Nuclei SDK Build Time: Feb 10 2023, 18:44:45
-    Download Mode: DDR
+    Download Mode: SRAM
     CPU Frequency 100612833 Hz
     CPU HartID: 0
     Core 3 has received interrupt from core 0
@@ -1910,7 +1910,7 @@ can claim the the interrupt(first come first claim) then process the uart0 input
 .. code-block:: console
 
     Nuclei SDK Build Time: Feb 10 2023, 18:48:47
-    Download Mode: DDR
+    Download Mode: SRAM
     CPU Frequency 100602675 Hz
     CPU HartID: 0
     Core 3 has received interrupt from core 0
@@ -1971,7 +1971,7 @@ demo_cache
 
 This `demo_cache application`_ is used to demonstrate how to understand cache mechanism.
 
-This demo requests DCache, ICache and CCM(Cache Control and Maintenance), and needs to run in ddr memory,
+This demo requests DCache, ICache and CCM(Cache Control and Maintenance), and needs to run in DDR/SRAM memory,
 because cache will bypass when run in ilm, data in dlm(private resource for cpu).
 
 .. note::
@@ -2009,16 +2009,16 @@ because cache will bypass when run in ilm, data in dlm(private resource for cpu)
     # you can pass extra make variable XLCFG_CCM=1 during make command to tell sdk
     # the ccm present, it will define CFG_HAS_IOCC
     # Clean the application first
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ddr CORE=ux900 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 clean
     # Build and upload the application
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ddr CORE=ux900 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 upload
 
 **Expected output(DISABLE_NMSIS_HPM defined) as below:**
 
 .. code-block:: console
 
     Nuclei SDK Build Time: Feb 14 2023, 18:14:18
-    Download Mode: DDR
+    Download Mode: SRAM
     CPU Frequency 100605952 Hz
     CPU HartID: 0
     DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
@@ -2055,7 +2055,7 @@ again**, ``array_test`` now (all 0x34) differs with cached array_test (all 0xab)
 .. code-block:: console
 
     Nuclei SDK Build Time: Feb 14 2023, 18:19:17
-    Download Mode: DDR
+    Download Mode: SRAM
     CPU Frequency 100612177 Hz
     CPU HartID: 0
     DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
@@ -2098,7 +2098,7 @@ decreases to 2(``HPM`` itself brings in), which means ``array_test`` has already
 .. code-block:: console
 
     Nuclei SDK Build Time: Feb 14 2023, 18:22:17
-    Download Mode: DDR
+    Download Mode: SRAM
     CPU Frequency 100612177 Hz
     CPU HartID: 0
     DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes

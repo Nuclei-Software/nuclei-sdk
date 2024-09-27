@@ -14,6 +14,7 @@ This is **development** release version ``0.7.0`` of Nuclei SDK.
   * Add ``demo_plic`` case to show how to use PLIC related API in PLIC interrupt mode.
   * Add ``demo_clint_timer`` case to show how to use systimer in CLINT interrupt mode not ECLIC interrupt mode.
   * Update ``demo_pmp`` case to make it suitable for when PMP not present.
+  * Change download mode from ``ddr`` to ``sram`` for smp and cache cases to be suitable for some custom soc sdk.
 
 * NMSIS
 
