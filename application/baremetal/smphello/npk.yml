@@ -34,7 +34,7 @@ setconfig:
   - config: stacksz
     value: 2K
   - config: download_mode
-    value: ddr
+    value: sram
   - config: nuclei_cache
     value: ["ic", "dc", "ccm"]
 

@@ -27,7 +27,7 @@ configuration:
 ## Set Configuration for other packages
 setconfig:
   - config: download_mode
-    value: ddr
+    value: sram
   - config: nuclei_cache
     value: ["ic", "dc", "ccm"]
 
