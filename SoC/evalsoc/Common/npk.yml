@@ -491,6 +491,8 @@ buildconfig:
     toolchain_name: RISC-V Clang/Newlib
     cross_prefix: riscv64-unknown-elf- # optional
     common_flags: # flags need to be combined together across all packages
+      # Enable experimental extensions for clang
+      - flags: -menable-experimental-extensions
       - flags: -isystem =/include/libncrt
         condition: $( startswith(${stdclib}, "libncrt") )
     ldflags:
@@ -525,6 +527,8 @@ buildconfig:
     description: Terapines ZCC Toolchain
     toolchain_name: Terapines ZCC
     common_flags: # flags need to be combined together across all packages
+      # Enable experimental extensions for zcc
+      - flags: -menable-experimental-extensions
       - flags: -mtune=${nuclei_core.tune}
         condition: $( ${nuclei_core.tune} != "" )
     ldflags:
