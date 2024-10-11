@@ -191,6 +191,9 @@ int __low_level_init(void)
         IAR_DATA_INIT();
     }
 
+    /* Enable BPU before enter to main, for 900, by default is off */
+    __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_BPU);
+
     /* Sync multiple harts */
     __sync_harts();
 
