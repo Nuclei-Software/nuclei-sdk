@@ -31,6 +31,7 @@ This is **development** release version ``0.7.0`` of Nuclei SDK.
   - gd32vw55x default CORE name changed from ``n307fd`` to ``n300fd`` which are the same in software
   - evalsoc default CORE name changed from ``n307fd`` to ``n300fd`` which are the same in software
   - Add plic interrupt and exception related handling code for evalsoc
+  - Fix BPU is not enabled during startup for startup code for IAR compiler, which will increase performance of 600/900/1000 series a lot
 
 * Build System
 
