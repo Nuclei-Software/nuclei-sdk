@@ -4,7 +4,7 @@ variables:
   DOC_CENTER: /home/xl_ci/doc_center
   SHAREENVLOC: /home/share/devtools
   IMAGE: rego.corp.nucleisys.com/software/sdkbuild
-  IMAGE_TAG: "2024.06"
+  IMAGE_TAG: "2025.02"
   JOBCTRL: "RUN"
 
 workflow:
@@ -185,11 +185,12 @@ run_evalsoc:
   parallel:
     matrix:
       - DOWNLOAD: [ "sram" ]
+        TOOLCHAIN: ["nuclei_gnu", "nuclei_llvm"]
         ARCH_EXT: [ "", "_zca_zcb_zcmp_zcmt" ]
         STDCLIB: ["newlib_small", "libncrt_small"]
   script:
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/${STDCLIB}_${DOWNLOAD}${ARCH_EXT}
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "STDCLIB=$STDCLIB DOWNLOAD=$DOWNLOAD ARCH_EXT=${ARCH_EXT}" --run --run_target qemu
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "TOOLCHAIN=$TOOLCHAIN STDCLIB=$STDCLIB DOWNLOAD=$DOWNLOAD ARCH_EXT=${ARCH_EXT}" --run --run_target qemu
 
 run_evalsoc_zcc:
   inherit:
@@ -209,6 +210,7 @@ run_evalsoc_zcc:
   parallel:
     matrix:
       - DOWNLOAD: [ "sram" ]
+        TOOLCHAIN: ["nuclei_gnu", "nuclei_llvm"]
         ARCH_EXT: [ "", "_zca_zcb_zcmp_zcmt" ]
         STDCLIB: ["newlib_small"]
   script:
@@ -217,7 +219,7 @@ run_evalsoc_zcc:
     - activate_swdev
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/${STDCLIB}_${DOWNLOAD}${ARCH_EXT}
     - export TOOLCHAIN=terapines
-    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "STDCLIB=$STDCLIB DOWNLOAD=$DOWNLOAD ARCH_EXT=${ARCH_EXT}" --run --run_target qemu
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "TOOLCHAIN=$TOOLCHAIN STDCLIB=$STDCLIB DOWNLOAD=$DOWNLOAD ARCH_EXT=${ARCH_EXT}" --run --run_target qemu
   artifacts:
     when: always
     name: "100_nsdkcli_logs-job${CI_JOB_ID}-${CI_COMMIT_SHA::8}"
