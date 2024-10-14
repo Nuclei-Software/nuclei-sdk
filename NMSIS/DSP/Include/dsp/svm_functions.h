@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _SVM_FUNCTIONS_H_
-#define _SVM_FUNCTIONS_H_
+#ifndef SVM_FUNCTIONS_H_
+#define SVM_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"
@@ -61,7 +61,6 @@ extern "C"
  * @param[in]    x           value
  * @param[in]    nb          integer exponent >= 1
  * @return x^nb
- *
  */
 __STATIC_INLINE float32_t riscv_exponent_f32(float32_t x, int32_t nb)
 {
@@ -74,9 +73,6 @@ __STATIC_INLINE float32_t riscv_exponent_f32(float32_t x, int32_t nb)
     }
     return(r);
 }
-
-  
-
 
 
 /**
@@ -109,6 +105,7 @@ typedef struct
   float32_t       gamma;                  /**< Gamma factor */
 } riscv_svm_polynomial_instance_f32;
 
+
 /**
  * @brief Instance structure for rbf SVM prediction function.
  */
@@ -122,6 +119,7 @@ typedef struct
   const int32_t   *classes;               /**< The two SVM classes */
   float32_t       gamma;                  /**< Gamma factor */
 } riscv_svm_rbf_instance_f32;
+
 
 /**
  * @brief Instance structure for sigmoid SVM prediction function.
@@ -138,6 +136,7 @@ typedef struct
   float32_t       gamma;                  /**< Gamma factor */
 } riscv_svm_sigmoid_instance_f32;
 
+
 /**
  * @brief        SVM linear instance init function
  * @param[in]    S                      Parameters for SVM functions
@@ -147,11 +146,7 @@ typedef struct
  * @param[in]    dualCoefficients       Array of dual coefficients
  * @param[in]    supportVectors         Array of support vectors
  * @param[in]    classes                Array of 2 classes ID
- * @return none.
- *
  */
-
-
 void riscv_svm_linear_init_f32(riscv_svm_linear_instance_f32 *S, 
   uint32_t nbOfSupportVectors,
   uint32_t vectorDimension,
@@ -160,15 +155,13 @@ void riscv_svm_linear_init_f32(riscv_svm_linear_instance_f32 *S,
   const float32_t *supportVectors,
   const int32_t  *classes);
 
+
 /**
  * @brief SVM linear prediction
  * @param[in]    S          Pointer to an instance of the linear SVM structure.
  * @param[in]    in         Pointer to input vector
  * @param[out]   pResult    Decision value
- * @return none.
- *
  */
-  
 void riscv_svm_linear_predict_f32(const riscv_svm_linear_instance_f32 *S, 
    const float32_t * in, 
    int32_t * pResult);
@@ -186,11 +179,7 @@ void riscv_svm_linear_predict_f32(const riscv_svm_linear_instance_f32 *S,
  * @param[in]    degree                 Polynomial degree
  * @param[in]    coef0                  coeff0 (scikit-learn terminology)
  * @param[in]    gamma                  gamma (scikit-learn terminology)
- * @return none.
- *
  */
-
-
 void riscv_svm_polynomial_init_f32(riscv_svm_polynomial_instance_f32 *S, 
   uint32_t nbOfSupportVectors,
   uint32_t vectorDimension,
@@ -203,13 +192,12 @@ void riscv_svm_polynomial_init_f32(riscv_svm_polynomial_instance_f32 *S,
   float32_t gamma
   );
 
+
 /**
  * @brief SVM polynomial prediction
  * @param[in]    S          Pointer to an instance of the polynomial SVM structure.
  * @param[in]    in         Pointer to input vector
  * @param[out]   pResult    Decision value
- * @return none.
- *
  */
 void riscv_svm_polynomial_predict_f32(const riscv_svm_polynomial_instance_f32 *S, 
    const float32_t * in, 
@@ -226,10 +214,7 @@ void riscv_svm_polynomial_predict_f32(const riscv_svm_polynomial_instance_f32 *S
  * @param[in]    supportVectors         Array of support vectors
  * @param[in]    classes                Array of 2 classes ID
  * @param[in]    gamma                  gamma (scikit-learn terminology)
- * @return none.
- *
  */
-
 void riscv_svm_rbf_init_f32(riscv_svm_rbf_instance_f32 *S, 
   uint32_t nbOfSupportVectors,
   uint32_t vectorDimension,
@@ -240,17 +225,17 @@ void riscv_svm_rbf_init_f32(riscv_svm_rbf_instance_f32 *S,
   float32_t gamma
   );
 
+
 /**
  * @brief SVM rbf prediction
  * @param[in]    S         Pointer to an instance of the rbf SVM structure.
  * @param[in]    in        Pointer to input vector
  * @param[out]   pResult   decision value
- * @return none.
- *
  */
 void riscv_svm_rbf_predict_f32(const riscv_svm_rbf_instance_f32 *S, 
    const float32_t * in, 
    int32_t * pResult);
+
 
 /**
  * @brief        SVM sigmoid instance init function
@@ -263,10 +248,7 @@ void riscv_svm_rbf_predict_f32(const riscv_svm_rbf_instance_f32 *S,
  * @param[in]    classes                Array of 2 classes ID
  * @param[in]    coef0                  coeff0 (scikit-learn terminology)
  * @param[in]    gamma                  gamma (scikit-learn terminology)
- * @return none.
- *
  */
-
 void riscv_svm_sigmoid_init_f32(riscv_svm_sigmoid_instance_f32 *S, 
   uint32_t nbOfSupportVectors,
   uint32_t vectorDimension,
@@ -278,13 +260,12 @@ void riscv_svm_sigmoid_init_f32(riscv_svm_sigmoid_instance_f32 *S,
   float32_t gamma
   );
 
+
 /**
  * @brief SVM sigmoid prediction
  * @param[in]    S        Pointer to an instance of the rbf SVM structure.
  * @param[in]    in       Pointer to input vector
  * @param[out]   pResult  Decision value
- * @return none.
- *
  */
 void riscv_svm_sigmoid_predict_f32(const riscv_svm_sigmoid_instance_f32 *S, 
    const float32_t * in, 

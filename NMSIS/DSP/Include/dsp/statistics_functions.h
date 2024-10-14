@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _STATISTICS_FUNCTIONS_H_
-#define _STATISTICS_FUNCTIONS_H_
+#ifndef STATISTICS_FUNCTIONS_H_
+#define STATISTICS_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"
@@ -781,7 +781,6 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
     @param[in]     pSrc       points to the input vector
     @param[in]     blockSize  number of samples in input vector
     @param[out]    pResult    maximum value returned here
-    @return        none
    */
   void riscv_max_no_idx_f32(
       const float32_t *pSrc,
@@ -793,7 +792,6 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
     @param[in]     pSrc       points to the input vector
     @param[in]     blockSize  number of samples in input vector
     @param[out]    pResult    minimum value returned here
-    @return        none
    */
   void riscv_min_no_idx_f32(
       const float32_t *pSrc,
@@ -805,7 +803,6 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
     @param[in]     pSrc       points to the input vector
     @param[in]     blockSize  number of samples in input vector
     @param[out]    pResult    maximum value returned here
-    @return        none
    */
   void riscv_max_no_idx_f64(
       const float64_t *pSrc,
@@ -817,7 +814,6 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
     @param[in]     pSrc       points to the input vector
     @param[in]     blockSize  number of samples in input vector
     @param[out]    pResult    maximum value returned here
-    @return        none
    */
   void riscv_max_no_idx_q31(
       const q31_t *pSrc,
@@ -829,7 +825,6 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
     @param[in]     pSrc       points to the input vector
     @param[in]     blockSize  number of samples in input vector
     @param[out]    pResult    maximum value returned here
-    @return        none
    */
   void riscv_max_no_idx_q15(
       const q15_t *pSrc,
@@ -841,7 +836,6 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
     @param[in]     pSrc       points to the input vector
     @param[in]     blockSize  number of samples in input vector
     @param[out]    pResult    maximum value returned here
-    @return        none
    */
   void riscv_max_no_idx_q7(
       const q7_t *pSrc,
@@ -853,7 +847,6 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
     @param[in]     pSrc       points to the input vector
     @param[in]     blockSize  number of samples in input vector
     @param[out]    pResult    minimum value returned here
-    @return        none
    */
   void riscv_min_no_idx_f64(
       const float64_t *pSrc,
@@ -865,7 +858,6 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
     @param[in]     pSrc       points to the input vector
     @param[in]     blockSize  number of samples in input vector
     @param[out]    pResult    minimum value returned here
-    @return        none
    */
   void riscv_min_no_idx_q31(
       const q31_t *pSrc,
@@ -877,7 +869,6 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
     @param[in]     pSrc       points to the input vector
     @param[in]     blockSize  number of samples in input vector
     @param[out]    pResult    minimum value returned here
-    @return        none
    */
   void riscv_min_no_idx_q15(
       const q15_t *pSrc,
@@ -889,10 +880,9 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
     @param[in]     pSrc       points to the input vector
     @param[in]     blockSize  number of samples in input vector
     @param[out]    pResult    minimum value returned here
-    @return        none
    */
-  void riscv_min_no_idx_q7(
-      const q7_t *pSrc,
+void riscv_min_no_idx_q7(
+     const q7_t *pSrc,
       uint32_t   blockSize,
       q7_t *pResult);
 
@@ -902,7 +892,6 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
   @param[in]     pSrcB       points to the second input vector
   @param[in]     blockSize  number of samples in input vector
   @param[out]    pResult    mean square error
-  @return        none 
 */
   
 void riscv_mse_q7(
@@ -917,7 +906,6 @@ void riscv_mse_q7(
   @param[in]     pSrcB       points to the second input vector
   @param[in]     blockSize  number of samples in input vector
   @param[out]    pResult    mean square error
-  @return        none 
 */
   
 void riscv_mse_q15(
@@ -932,7 +920,6 @@ void riscv_mse_q15(
   @param[in]     pSrcB       points to the second input vector
   @param[in]     blockSize  number of samples in input vector
   @param[out]    pResult    mean square error
-  @return        none 
 */
   
 void riscv_mse_q31(
@@ -947,7 +934,6 @@ void riscv_mse_q31(
   @param[in]     pSrcB       points to the second input vector
   @param[in]     blockSize  number of samples in input vector
   @param[out]    pResult    mean square error
-  @return        none 
 */
   
 void riscv_mse_f32(
@@ -962,7 +948,6 @@ void riscv_mse_f32(
   @param[in]     pSrcB       points to the second input vector
   @param[in]     blockSize  number of samples in input vector
   @param[out]    pResult    mean square error
-  @return        none 
 */
   
 void riscv_mse_f64(

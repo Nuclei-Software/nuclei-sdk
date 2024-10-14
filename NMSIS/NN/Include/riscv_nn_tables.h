@@ -22,14 +22,14 @@
  * Title:        riscv_nn_tables.h
  * Description:  Extern declaration for NN tables
  *
- * $Date:        28 October 2022
- * $Revision:    V.2.1.0
+ * $Date:        8 December 2022
+ * $Revision:    V.2.1.1
  *
  * Target Processor:  RISC-V Cores
  * -------------------------------------------------------------------- */
 
-#ifndef _RISCV_NN_TABLES_H
-#define _RISCV_NN_TABLES_H
+#ifndef RISCV_NN_TABLES_H
+#define RISCV_NN_TABLES_H
 
 #include "riscv_nn_math_types.h"
 

@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _BASIC_MATH_FUNCTIONS_H_
-#define _BASIC_MATH_FUNCTIONS_H_
+#ifndef BASIC_MATH_FUNCTIONS_H_
+#define BASIC_MATH_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"
@@ -653,7 +653,6 @@ const float64_t * pSrc,
    * @param[in]     pSrcB      points to input vector B
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_and_u16(
     const uint16_t * pSrcA,
@@ -667,7 +666,6 @@ const float64_t * pSrc,
    * @param[in]     pSrcB      points to input vector B
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_and_u32(
     const uint32_t * pSrcA,
@@ -681,7 +679,6 @@ const float64_t * pSrc,
    * @param[in]     pSrcB      points to input vector B
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_and_u8(
     const uint8_t * pSrcA,
@@ -695,7 +692,6 @@ const float64_t * pSrc,
    * @param[in]     pSrcB      points to input vector B
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_or_u16(
     const uint16_t * pSrcA,
@@ -709,7 +705,6 @@ const float64_t * pSrc,
    * @param[in]     pSrcB      points to input vector B
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_or_u32(
     const uint32_t * pSrcA,
@@ -723,7 +718,6 @@ const float64_t * pSrc,
    * @param[in]     pSrcB      points to input vector B
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_or_u8(
     const uint8_t * pSrcA,
@@ -736,7 +730,6 @@ const float64_t * pSrc,
    * @param[in]     pSrc       points to input vector 
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_not_u16(
     const uint16_t * pSrc,
@@ -748,7 +741,6 @@ const float64_t * pSrc,
    * @param[in]     pSrc       points to input vector 
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_not_u32(
     const uint32_t * pSrc,
@@ -760,7 +752,6 @@ const float64_t * pSrc,
    * @param[in]     pSrc       points to input vector 
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_not_u8(
     const uint8_t * pSrc,
@@ -773,7 +764,6 @@ const float64_t * pSrc,
    * @param[in]     pSrcB      points to input vector B
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_xor_u16(
     const uint16_t * pSrcA,
@@ -787,7 +777,6 @@ const float64_t * pSrc,
    * @param[in]     pSrcB      points to input vector B
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_xor_u32(
     const uint32_t * pSrcA,
@@ -801,7 +790,6 @@ const float64_t * pSrc,
    * @param[in]     pSrcB      points to input vector B
    * @param[out]    pDst       points to output vector
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_xor_u8(
     const uint8_t * pSrcA,
@@ -816,7 +804,6 @@ const float64_t * pSrc,
   @param[in]     low           lower bound
   @param[in]     high          higher bound
   @param[in]     numSamples    number of samples to clip
-  @return        none
  */
 
 void riscv_clip_f32(const float32_t * pSrc, 
@@ -832,7 +819,6 @@ void riscv_clip_f32(const float32_t * pSrc,
   @param[in]     low           lower bound
   @param[in]     high          higher bound
   @param[in]     numSamples    number of samples to clip
-  @return        none
  */
 
 void riscv_clip_q31(const q31_t * pSrc, 
@@ -848,7 +834,6 @@ void riscv_clip_q31(const q31_t * pSrc,
   @param[in]     low           lower bound
   @param[in]     high          higher bound
   @param[in]     numSamples    number of samples to clip
-  @return        none
  */
 
 void riscv_clip_q15(const q15_t * pSrc, 
@@ -864,7 +849,6 @@ void riscv_clip_q15(const q15_t * pSrc,
   @param[in]     low           lower bound
   @param[in]     high          higher bound
   @param[in]     numSamples    number of samples to clip
-  @return        none
  */
 
 void riscv_clip_q7(const q7_t * pSrc, 

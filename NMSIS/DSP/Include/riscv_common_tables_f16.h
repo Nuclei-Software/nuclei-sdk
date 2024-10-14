@@ -27,8 +27,8 @@
  * limitations under the License.
  */
 
-#ifndef _RISCV_COMMON_TABLES_F16_H
-#define _RISCV_COMMON_TABLES_F16_H
+#ifndef RISCV_COMMON_TABLES_F16_H
+#define RISCV_COMMON_TABLES_F16_H
 
 #include "riscv_math_types_f16.h"
 

@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _CONTROLLER_FUNCTIONS_H_
-#define _CONTROLLER_FUNCTIONS_H_
+#ifndef CONTROLLER_FUNCTIONS_H_
+#define CONTROLLER_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"
@@ -448,7 +448,6 @@ __STATIC_FORCEINLINE q15_t riscv_pid_q15(
    * @param[out] pIq     points to output   rotor reference frame q
    * @param[in]  sinVal  sine value of rotation angle theta
    * @param[in]  cosVal  cosine value of rotation angle theta
-   * @return     none
    *
    * The function implements the forward Park transform.
    *
@@ -478,7 +477,6 @@ __STATIC_FORCEINLINE q15_t riscv_pid_q15(
   @param[out] pIq     points to output rotor reference frame q
   @param[in]  sinVal  sine value of rotation angle theta
   @param[in]  cosVal  cosine value of rotation angle theta
-  @return     none
 
   \par Scaling and Overflow Behavior
          The function is implemented using an internal 32-bit accumulator.
@@ -550,7 +548,6 @@ __STATIC_FORCEINLINE void riscv_park_q31(
    * @param[out] pIbeta   points to output two-phase orthogonal vector axis beta
    * @param[in]  sinVal   sine value of rotation angle theta
    * @param[in]  cosVal   cosine value of rotation angle theta
-   * @return     none
    */
   __STATIC_FORCEINLINE void riscv_inv_park_f32(
   float32_t Id,
@@ -577,7 +574,6 @@ __STATIC_FORCEINLINE void riscv_park_q31(
   @param[out] pIbeta   points to output two-phase orthogonal vector axis beta
   @param[in]  sinVal   sine value of rotation angle theta
   @param[in]  cosVal   cosine value of rotation angle theta
-  @return     none
 
   @par Scaling and Overflow Behavior
          The function is implemented using an internal 32-bit accumulator.
@@ -651,7 +647,6 @@ __STATIC_FORCEINLINE void riscv_inv_park_q31(
    * @param[in]  Ib       input three-phase coordinate <code>b</code>
    * @param[out] pIalpha  points to output two-phase orthogonal vector axis alpha
    * @param[out] pIbeta   points to output two-phase orthogonal vector axis beta
-   * @return        none
    */
   __STATIC_FORCEINLINE void riscv_clarke_f32(
   float32_t Ia,
@@ -674,7 +669,6 @@ __STATIC_FORCEINLINE void riscv_inv_park_q31(
   @param[in]  Ib       input three-phase coordinate <code>b</code>
   @param[out] pIalpha  points to output two-phase orthogonal vector axis alpha
   @param[out] pIbeta   points to output two-phase orthogonal vector axis beta
-  @return     none
 
   \par Scaling and Overflow Behavior
          The function is implemented using an internal 32-bit accumulator.
@@ -733,7 +727,6 @@ __STATIC_FORCEINLINE void riscv_clarke_q31(
    * @param[in]  Ibeta   input two-phase orthogonal vector axis beta
    * @param[out] pIa     points to output three-phase coordinate <code>a</code>
    * @param[out] pIb     points to output three-phase coordinate <code>b</code>
-   * @return     none
    */
   __STATIC_FORCEINLINE void riscv_inv_clarke_f32(
   float32_t Ialpha,
@@ -756,7 +749,6 @@ __STATIC_FORCEINLINE void riscv_clarke_q31(
   @param[in]  Ibeta   input two-phase orthogonal vector axis beta
   @param[out] pIa     points to output three-phase coordinate <code>a</code>
   @param[out] pIb     points to output three-phase coordinate <code>b</code>
-  @return     none
 
   \par Scaling and Overflow Behavior
          The function is implemented using an internal 32-bit accumulator.

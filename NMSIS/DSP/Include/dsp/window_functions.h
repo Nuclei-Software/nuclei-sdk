@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _WINDOW_FUNCTIONS_H_
-#define _WINDOW_FUNCTIONS_H_
+#ifndef WINDOW_FUNCTIONS_H_
+#define WINDOW_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"

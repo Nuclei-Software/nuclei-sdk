@@ -28,8 +28,8 @@
  * limitations under the License.
  */
 
-#ifndef _RISCV_CONST_STRUCTS_F16_H
-#define _RISCV_CONST_STRUCTS_F16_H
+#ifndef RISCV_CONST_STRUCTS_F16_H
+#define RISCV_CONST_STRUCTS_F16_H
 
 #include "riscv_math_types_f16.h"
 #include "riscv_common_tables.h"

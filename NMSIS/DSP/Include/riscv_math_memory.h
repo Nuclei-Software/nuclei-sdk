@@ -24,9 +24,9 @@
  * limitations under the License.
  */
 
-#ifndef _RISCV_MATH_MEMORY_H_
+#ifndef RISCV_MATH_MEMORY_H_
 
-#define _RISCV_MATH_MEMORY_H_
+#define RISCV_MATH_MEMORY_H_
 
 #include "riscv_math_types.h"
 
@@ -122,7 +122,6 @@ __STATIC_FORCEINLINE q63_t read_q31x2_da (
   @brief         Write 2 Q31 to Q31 pointer.
   @param[in]     pQ31      points to input value
   @param[in]     value     Q63 value
-  @return        none
  */
 __STATIC_FORCEINLINE void write_q31x2 (
 		q31_t * pQ31,
@@ -143,7 +142,6 @@ __STATIC_FORCEINLINE void write_q31x2 (
   @brief         Write 2 Q31 to Q31 pointer and increment pointer afterwards.
   @param[in]     pQ31      points to input value
   @param[in]     value     Q63 value
-  @return        none
  */
 __STATIC_FORCEINLINE void write_q31x2_ia (
   q31_t ** pQ31,
@@ -208,7 +206,6 @@ __STATIC_FORCEINLINE q31_t read_q15x2_da (
   @brief         Write 2 Q15 to Q15 pointer.
   @param[in]     pQ15      points to input value
   @param[in]     value     Q31 value
-  @return        none
  */
 __STATIC_FORCEINLINE void write_q15x2 (
   q15_t * pQ15,
@@ -225,7 +222,6 @@ __STATIC_FORCEINLINE void write_q15x2 (
   @brief         Write 2 Q15 to Q15 pointer and increment pointer afterwards.
   @param[in]     pQ15      points to input value
   @param[in]     value     Q31 value
-  @return        none
  */
 __STATIC_FORCEINLINE void write_q15x2_ia (
   q15_t ** pQ15,
@@ -239,7 +235,6 @@ __STATIC_FORCEINLINE void write_q15x2_ia (
   @brief         Write 4 Q15 to Q15 pointer.
   @param[in]     pQ15      points to input value
   @param[in]     value     Q31 value
-  @return        none
  */
 __STATIC_FORCEINLINE void write_q15x4 (
 		q15_t * pQ15,
@@ -260,7 +255,6 @@ __STATIC_FORCEINLINE void write_q15x4 (
   @brief         Write 4 Q15 to Q15 pointer and increment pointer afterwards.
   @param[in]     pQ15      points to input value
   @param[in]     value     Q31 value
-  @return        none
  */
 __STATIC_FORCEINLINE void write_q15x4_ia (
   q15_t ** pQ15,
@@ -274,7 +268,6 @@ __STATIC_FORCEINLINE void write_q15x4_ia (
   @brief         Write 4 Q15 to Q15 pointer and decrement pointer afterwards.
   @param[in]     pQ15      points to input value
   @param[in]     value     Q31 value
-  @return        none
  */
 __STATIC_FORCEINLINE void write_q15x4_da (
   q15_t ** pQ15,
@@ -446,7 +439,6 @@ __STATIC_FORCEINLINE q63_t read_q7x8_da (
   @brief         Write 4 Q7 to Q7 pointer.
   @param[in]     pQ7       points to input value
   @param[in]     value     Q31 value
-  @return        none
  */
 __STATIC_FORCEINLINE void write_q7x4 (
   q7_t * pQ7,
@@ -464,7 +456,6 @@ __STATIC_FORCEINLINE void write_q7x4 (
   @brief         Write 4 Q7 to Q7 pointer and increment pointer afterwards.
   @param[in]     pQ7       points to input value
   @param[in]     value     Q31 value
-  @return        none
  */
 __STATIC_FORCEINLINE void write_q7x4_ia (
   q7_t ** pQ7,
@@ -478,7 +469,6 @@ __STATIC_FORCEINLINE void write_q7x4_ia (
   @brief         Write 8 Q7 to Q7 pointer and increment pointer afterwards.
   @param[in]     pQ7       points to input value
   @param[in]     value     Q63 value
-  @return        none
  */
 __STATIC_FORCEINLINE void write_q7x8_ia (
 		q7_t ** pQ7,

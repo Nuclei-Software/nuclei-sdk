@@ -27,8 +27,8 @@
  * limitations under the License.
  */
 
-#ifndef _RISCV_UTILS_HELIUM_H_
-#define _RISCV_UTILS_HELIUM_H_
+#ifndef RISCV_UTILS_HELIUM_H_
+#define RISCV_UTILS_HELIUM_H_
 
 
 #ifdef   __cplusplus

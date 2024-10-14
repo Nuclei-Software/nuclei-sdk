@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _TRANSFORM_FUNCTIONS_H_
-#define _TRANSFORM_FUNCTIONS_H_
+#ifndef TRANSFORM_FUNCTIONS_H_
+#define TRANSFORM_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"
@@ -828,7 +828,6 @@ riscv_status riscv_mfcc_init_f32(
   @param[in]     pSrc points to the input samples
   @param[out]     pDst  points to the output MFCC values
   @param[inout]     pTmp  points to a temporary buffer of complex
-  @return        none
  */
   void riscv_mfcc_f32(
   const riscv_mfcc_instance_f32 * S,
@@ -837,6 +836,9 @@ riscv_status riscv_mfcc_init_f32(
   float32_t *pTmp
   );
 
+ /**
+   * @brief Instance structure for the Q31 MFCC function.
+   */
 typedef struct
   {
      const q31_t *dctCoefs; /**< Internal DCT coefficients */
@@ -963,7 +965,7 @@ riscv_status riscv_mfcc_init_q31(
   @param[in]     pSrc points to the input samples
   @param[out]     pDst  points to the output MFCC values
   @param[inout]     pTmp  points to a temporary buffer of complex
-  @return        none
+  @return        error status
  */
   riscv_status riscv_mfcc_q31(
   const riscv_mfcc_instance_q31 * S,
@@ -972,6 +974,9 @@ riscv_status riscv_mfcc_init_q31(
   q31_t *pTmp
   );
 
+ /**
+   * @brief Instance structure for the Q15 MFCC function.
+   */
 typedef struct
   {
      const q15_t *dctCoefs; /**< Internal DCT coefficients */

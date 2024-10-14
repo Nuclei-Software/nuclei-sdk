@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _BAYES_FUNCTIONS_H_
-#define _BAYES_FUNCTIONS_H_
+#ifndef BAYES_FUNCTIONS_H_
+#define BAYES_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"
@@ -73,10 +73,7 @@ typedef struct
  * @param[out] *pOutputProbabilities    points to a buffer of length numberOfClasses containing estimated probabilities
  * @param[out] *pBufferB                points to a temporary buffer of length numberOfClasses
  * @return The predicted class
- *
  */
-
-
 uint32_t riscv_gaussian_naive_bayes_predict_f32(const riscv_gaussian_naive_bayes_instance_f32 *S, 
    const float32_t * in, 
    float32_t *pOutputProbabilities,

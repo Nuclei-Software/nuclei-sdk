@@ -24,8 +24,8 @@
  * limitations under the License.
  */
 
-#ifndef _RISCV_VEC_MATH_F16_H
-#define _RISCV_VEC_MATH_F16_H
+#ifndef RISCV_VEC_MATH_F16_H
+#define RISCV_VEC_MATH_F16_H
 
 #include "riscv_math_types_f16.h"
 #include "riscv_common_tables_f16.h"

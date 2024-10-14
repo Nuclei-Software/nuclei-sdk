@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _INTERPOLATION_FUNCTIONS_H_
-#define _INTERPOLATION_FUNCTIONS_H_
+#ifndef INTERPOLATION_FUNCTIONS_H_
+#define INTERPOLATION_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"
@@ -163,7 +163,7 @@ extern "C"
    *
    */
   float32_t riscv_linear_interp_f32(
-  riscv_linear_interp_instance_f32 * S,
+  const riscv_linear_interp_instance_f32 * S,
   float32_t x);
 
    /**

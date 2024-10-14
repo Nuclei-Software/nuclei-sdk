@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _SUPPORT_FUNCTIONS_F16_H_
-#define _SUPPORT_FUNCTIONS_F16_H_
+#ifndef SUPPORT_FUNCTIONS_F16_H_
+#define SUPPORT_FUNCTIONS_F16_H_
 
 #include "riscv_math_types_f16.h"
 #include "riscv_math_memory.h"
@@ -49,6 +49,7 @@ extern "C"
    */
 void riscv_copy_f16(const float16_t * pSrc, float16_t * pDst, uint32_t blockSize);
 
+
   /**
    * @brief  Fills a constant value into a floating-point vector.
    * @param[in]  value      input value to be filled
@@ -56,6 +57,7 @@ void riscv_copy_f16(const float16_t * pSrc, float16_t * pDst, uint32_t blockSize
    * @param[in]  blockSize  number of samples to process
    */
 void riscv_fill_f16(float16_t value, float16_t * pDst, uint32_t blockSize);
+
 
 /**
    * @brief Converts the elements of the floating-point vector to Q31 vector.
@@ -65,6 +67,7 @@ void riscv_fill_f16(float16_t value, float16_t * pDst, uint32_t blockSize);
    */
 void riscv_f16_to_q15(const float16_t * pSrc, q15_t * pDst, uint32_t blockSize);
 
+
 /**
    * @brief Converts the elements of the floating-point vector to Q31 vector.
    * @param[in]  pSrc       points to the q15 input vector
@@ -72,6 +75,7 @@ void riscv_f16_to_q15(const float16_t * pSrc, q15_t * pDst, uint32_t blockSize);
    * @param[in]  blockSize  length of the input vector
    */
 void riscv_q15_to_f16(const q15_t * pSrc, float16_t * pDst, uint32_t blockSize);
+
 
 /**
    * @brief Converts the elements of the 64 bit floating-point vector to 16 bit floating-point vector.
@@ -81,6 +85,7 @@ void riscv_q15_to_f16(const q15_t * pSrc, float16_t * pDst, uint32_t blockSize);
    */
 void riscv_f64_to_f16(const float64_t * pSrc, float16_t * pDst, uint32_t blockSize);
 
+
 /**
    * @brief Converts the elements of the 16 bit floating-point vector to 64 bit floating-point vector.
    * @param[in]  pSrc       points to the f16 input vector
@@ -88,6 +93,7 @@ void riscv_f64_to_f16(const float64_t * pSrc, float16_t * pDst, uint32_t blockSi
    * @param[in]  blockSize  length of the input vector
    */
 void riscv_f16_to_f64(const float16_t * pSrc, float64_t * pDst, uint32_t blockSize);
+
 
 /**
    * @brief Converts the elements of the floating-point vector to Q31 vector.
@@ -97,6 +103,7 @@ void riscv_f16_to_f64(const float16_t * pSrc, float64_t * pDst, uint32_t blockSi
    */
 void riscv_float_to_f16(const float32_t * pSrc, float16_t * pDst, uint32_t blockSize);
 
+
 /**
    * @brief Converts the elements of the floating-point vector to Q31 vector.
    * @param[in]  pSrc       points to the f16 input vector
@@ -105,31 +112,26 @@ void riscv_float_to_f16(const float32_t * pSrc, float16_t * pDst, uint32_t block
    */
 void riscv_f16_to_float(const float16_t * pSrc, float32_t * pDst, uint32_t blockSize);
 
+
 /**
- * @brief Weighted sum
- *
- *
+ * @brief Weighted average
  * @param[in]    *in           Array of input values.
  * @param[in]    *weigths      Weights
  * @param[in]    blockSize     Number of samples in the input array.
- * @return Weighted sum
- *
+ * @return Weighted average
  */
-float16_t riscv_weighted_sum_f16(const float16_t *in
+float16_t riscv_weighted_average_f16(const float16_t *in
   , const float16_t *weigths
   , uint32_t blockSize);
 
+
 /**
  * @brief Barycenter
- *
- *
  * @param[in]    in         List of vectors
  * @param[in]    weights    Weights of the vectors
  * @param[out]   out        Barycenter
  * @param[in]    nbVectors  Number of vectors
  * @param[in]    vecDim     Dimension of space (vector dimension)
- * @return       None
- *
  */
 void riscv_barycenter_f16(const float16_t *in
   , const float16_t *weights

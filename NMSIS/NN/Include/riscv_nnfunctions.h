@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright 2010-2023 Arm Limited and/or its affiliates <open-source-office@arm.com>
+ * SPDX-FileCopyrightText: Copyright 2010-2024 Arm Limited and/or its affiliates <open-source-office@arm.com>
  * Copyright (c) 2022 Nuclei Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -22,56 +22,11 @@
  * Title:        riscv_nnfunctions.h
  * Description:  Public header file for NMSIS NN Library
  *
- * $Date:        10 November 2023
- * $Revision:    V.12.4.0
-
+ * $Date:        23 April 2024
+ * $Revision:    V.16.0.0
  *
  * Target Processor: RISC-V Cores
  * -------------------------------------------------------------------- */
-
-/**
-   \mainpage NMSIS NN Software Library
-   *
-   * \tableofcontents
-   * \section Introduction
-   *
-   *
-   * This user manual describes the NMSIS NN software library,
-   * a collection of efficient neural network kernels developed to maximize the
-   * performance and minimize the memory footprint of neural networks on Nuclei N processor cores.
-   *
-   * The library is divided into a number of functions each covering a specific category:
-   * - \ref NNConv
-   * - \ref Acti
-   * - \ref FC
-   * - \ref SVDF
-   * - \ref Pooling
-   * - \ref Softmax
-   * - \ref groupElementwise
-   * - \ref LSTM
-   *
-   * The library has separate functions for operating on different weight and activation data
-   * types including 8-bit integers (q7_t) and 16-bit integers (q15_t). The descrition of the
-   * kernels are included in the function description. The implementation details are also
-   * described in this paper [1].
-   *
-   * \note Please refer to [NMSIS-NN](../../../nn/index.html)
-   *
-   * Block Diagram
-   * --------
-   * \image html NMSIS-NN-OVERVIEW.PNG
-   *
-   * Examples
-   * --------
-   *
-   * The library ships with a number of examples which demonstrate how to use the library functions.
-   *
-   * Pre-processor Macros
-   * ------------
-   *
-   * Each library project have different pre-processor macros controlled via CMakeLists.txt.
-   *
-   */
 
 /**
  * @defgroup Public Public
@@ -79,8 +34,8 @@
  * TensorFlow Lite framework.
  */
 
-#ifndef _RISCV_NNFUNCTIONS_H
-#define _RISCV_NNFUNCTIONS_H
+#ifndef RISCV_NNFUNCTIONS_H
+#define RISCV_NNFUNCTIONS_H
 
 #include "riscv_nn_math_types.h"
 #include "riscv_nn_types.h"
@@ -268,7 +223,8 @@ int32_t riscv_convolve_wrapper_s8_get_buffer_size_dsp(const nmsis_nn_conv_params
  *                                spatial filter dimensions
  * @param[in]      filter_data    Filter data pointer. Data type: int8
  * @param[in]      bias_dims      Bias tensor dimensions. Format: [C_OUT]
- * @param[in]      bias_data      Bias data pointer. Data type: int64
+ * @param[in]      bias_data      Struct with optional bias data pointer. Bias data type can be int64 or int32 depending
+ *                                flag in struct.
  * @param[in]      output_dims    Output tensor dimensions. Format: [N, H, W, C_OUT]
  * @param[out]     output_data    Output data pointer. Data type: int16
  *
@@ -285,7 +241,7 @@ riscv_nmsis_nn_status riscv_convolve_wrapper_s16(const nmsis_nn_context *ctx,
                                              const nmsis_nn_dims *filter_dims,
                                              const int8_t *filter_data,
                                              const nmsis_nn_dims *bias_dims,
-                                             const int64_t *bias_data,
+                                             const nmsis_nn_bias_data *bias_data,
                                              const nmsis_nn_dims *output_dims,
                                              int16_t *output_data);
 
@@ -372,15 +328,19 @@ riscv_nmsis_nn_status riscv_convolve_s4(const nmsis_nn_context *ctx,
  *                                It contains the multiplier and shift values to be applied to each output channel
  * @param[in]      input_dims     Input (activation) tensor dimensions. Format: [N, H, W, C_IN]
  * @param[in]      input_data     Input (activation) data pointer. Data type: int8
- * @param[in]      filter_dims    Filter tensor dimensions. Format: [C_OUT, HK, WK, C_IN] where HK and WK are the
- *                                spatial filter dimensions
+ * @param[in]      filter_dims    Filter tensor dimensions. Format: [C_OUT, HK, WK, CK] where HK, WK and CK are the
+ *                                spatial filter dimensions. CK != C_IN is used for grouped convolution, in which
+ *                                case the required conditions are C_IN = N * CK and C_OUT = N * M for N groups of
+ *                                size M.
  * @param[in]      filter_data    Filter data pointer. Data type: int8
  * @param[in]      bias_dims      Bias tensor dimensions. Format: [C_OUT]
  * @param[in]      bias_data      Optional bias data pointer. Data type: int32
  * @param[in]      output_dims    Output tensor dimensions. Format: [N, H, W, C_OUT]
  * @param[out]     output_data    Output data pointer. Data type: int8
-
- * @return     The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
+ *
+ * @return     The function returns <code>RISCV_NMSIS_NN_SUCCESS</code> if successful or
+ *                                  <code>RISCV_NMSIS_NN_ARG_ERROR</code> if incorrect arguments or
+ *                                  <code>RISCV_NMSIS_NN_NO_IMPL_ERROR</code>
  *
  * @details
  *    1. Supported framework: TensorFlow Lite micro
@@ -511,11 +471,14 @@ int32_t riscv_transpose_conv_s8_get_buffer_size_dsp(const nmsis_nn_dims *input_d
  *                                spatial filter dimensions
  * @param[in]      filter_data    Filter data pointer. Data type: int8
  * @param[in]      bias_dims      Bias tensor dimensions. Format: [C_OUT]
- * @param[in]      bias_data      Optional bias data pointer. Data type: int64
+ * @param[in]      bias_data      Struct with optional bias data pointer. Bias data type can be int64 or int32 depending
+ *                                flag in struct.
  * @param[in]      output_dims    Output tensor dimensions. Format: [N, H, W, C_OUT]
  * @param[out]     output_data    Output data pointer. Data type: int16
-
- * @return     The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
+ *
+ * @return     The function returns <code>RISCV_NMSIS_NN_SUCCESS</code> if successful or
+ *                                  <code>RISCV_NMSIS_NN_ARG_ERROR</code> if incorrect arguments or
+ *                                  <code>RISCV_NMSIS_NN_NO_IMPL_ERROR</code>
  *
  * @details
  *    1. Supported framework: TensorFlow Lite micro
@@ -530,50 +493,9 @@ riscv_nmsis_nn_status riscv_convolve_s16(const nmsis_nn_context *ctx,
                                      const nmsis_nn_dims *filter_dims,
                                      const int8_t *filter_data,
                                      const nmsis_nn_dims *bias_dims,
-                                     const int64_t *bias_data,
+                                     const nmsis_nn_bias_data *bias_data,
                                      const nmsis_nn_dims *output_dims,
                                      int16_t *output_data);
-/**
- * @brief Optimized s16 convolution function
- * @param[in, out] ctx            Function context that contains the additional buffer if required by the function.
- *                                riscv_convolve_fast_s16_get_buffer_size will return the buffer_size if required.
- *                                The caller is expected to clear the buffer ,if applicable, for security reasons.
- * @param[in]      conv_params    Convolution parameters (e.g. strides, dilations, pads,...).
- *                                conv_params->input_offset  : Not used
- *                                conv_params->output_offset : Not used
- * @param[in]      quant_params   Per-channel quantization info.
- *                                It contains the multiplier and shift values to be applied to each output channel
- * @param[in]      input_dims     Input (activation) tensor dimensions. Format: [N, H, W, C_IN]
- * @param[in]      input_data     Input (activation) data pointer. Data type: int16
- * @param[in]      filter_dims    Filter tensor dimensions. Format: [C_OUT, HK, WK, C_IN] where HK and WK are the
- *                                spatial filter dimensions. (filter_dims->w * filter_dims->h * input_dims->c) must not
- exceed 512
- * @param[in]      filter_data    Filter data pointer. Data type: int8
- * @param[in]      bias_dims      Bias tensor dimensions. Format: [C_OUT]
- * @param[in]      bias_data      Optional bias data pointer. Data type: int64
- * @param[in]      output_dims    Output tensor dimensions. Format: [N, H, W, C_OUT]
- * @param[out]     output_data    Output data pointer. Data type: int16
-
- * @return     The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
- *
- * @details
- *    1. Supported framework: TensorFlow Lite micro
- *    2. Additional memory is required for optimization. Refer to argument 'ctx' for details.
- *    3. Implementation supports kernel volumes (filter width * filter height * input channels) < 512.
- *
- */
-
-riscv_nmsis_nn_status riscv_convolve_fast_s16(const nmsis_nn_context *ctx,
-                                          const nmsis_nn_conv_params *conv_params,
-                                          const nmsis_nn_per_channel_quant_params *quant_params,
-                                          const nmsis_nn_dims *input_dims,
-                                          const int16_t *input_data,
-                                          const nmsis_nn_dims *filter_dims,
-                                          const int8_t *filter_data,
-                                          const nmsis_nn_dims *bias_dims,
-                                          const int64_t *bias_data,
-                                          const nmsis_nn_dims *output_dims,
-                                          int16_t *output_data);
 
 /**
  * @brief Get the required buffer size for s16 convolution function
@@ -585,17 +507,6 @@ riscv_nmsis_nn_status riscv_convolve_fast_s16(const nmsis_nn_context *ctx,
  *
  */
 int32_t riscv_convolve_s16_get_buffer_size(const nmsis_nn_dims *input_dims, const nmsis_nn_dims *filter_dims);
-
-/**
- * @brief Get the required buffer size for fast s16 convolution function
- *
- * @param[in]       input_dims    Input (activation) tensor dimensions. Format: [N, H, W, C_IN]
- * @param[in]       filter_dims   Filter tensor dimensions. Format: [C_OUT, HK, WK, C_IN] where HK and WK
- *                                are the spatial filter dimensions
- * @return          The function returns required buffer size(bytes)
- *
- */
-int32_t riscv_convolve_fast_s16_get_buffer_size(const nmsis_nn_dims *input_dims, const nmsis_nn_dims *filter_dims);
 
 /**
  * @brief Fast s4 version for 1x1 convolution (non-square shape)
@@ -1148,16 +1059,6 @@ riscv_nmsis_nn_status riscv_convolve_1_x_n_s8(const nmsis_nn_context *ctx,
                                           const nmsis_nn_dims *output_dims,
                                           int8_t *output_data);
 
-/**
- * @brief Get the required additional buffer size for 1xn convolution
- *
- * @param[in]       input_dims            Input (activation) tensor dimensions. Format: [N, H, W, C_IN]
- * @param[in]       filter_dims           Filter tensor dimensions. Format: [C_OUT, 1, WK, C_IN] where WK is the
- *                                        horizontal spatial filter dimension
- * @return          The function returns required buffer size(bytes)
- *
- */
-int32_t riscv_convolve_1_x_n_s8_get_buffer_size(const nmsis_nn_dims *input_dims, const nmsis_nn_dims *filter_dims);
 
 /**
  * @brief Q7 version of convolution for RGB image
@@ -1399,6 +1300,92 @@ riscv_nmsis_nn_status riscv_depthwise_separable_conv_HWC_q7_nonsquare(const q7_t
                                                          q7_t *bufferB);
 
 /**
+ * @brief 1xn convolution for s4 weights
+ *
+ * @param[in, out] ctx           Function context that contains the additional buffer if required by the function.
+ *                               riscv_convolve_1_x_n_s4_get_buffer_size will return the buffer_size if required
+ *                               The caller is expected to clear the buffer, if applicable, for security reasons.
+ * @param[in]      conv_params   Convolution parameters (e.g. strides, dilations, pads,...).
+ *                               Range of conv_params->input_offset  : [-127, 128]
+ *                               Range of conv_params->output_offset : [-128, 127]
+ * @param[in]      quant_params  Per-channel quantization info.
+ *                               It contains the multiplier and shift values to be applied to each output channel
+ * @param[in]      input_dims    Input (activation) tensor dimensions. Format: [N, H, W, C_IN]
+ * @param[in]      input_data    Input (activation) data pointer. Data type: int8
+ * @param[in]      filter_dims   Filter tensor dimensions. Format: [C_OUT, 1, WK, C_IN] where WK is the horizontal
+ *                               spatial filter dimension
+ * @param[in]      filter_data   Filter data pointer. Data type: int8 as packed int4
+ * @param[in]      bias_dims     Bias tensor dimensions. Format: [C_OUT]
+ * @param[in]      bias_data     Optional bias data pointer. Data type: int32
+ * @param[in]      output_dims   Output tensor dimensions. Format: [N, H, W, C_OUT]
+ * @param[out]     output_data   Output data pointer. Data type: int8
+ *
+ * @return     The function returns either
+ *                  <code>RISCV_NMSIS_NN_ARG_ERROR</code> if argument constraints fail. or,
+ *                  <code>RISCV_NMSIS_NN_SUCCESS</code> on successful completion.
+ *
+ * @details
+ *   - Supported framework : TensorFlow Lite Micro
+ *   - The following constrains on the arguments apply
+ *      -# stride.w * input_dims->c is a multiple of 4
+ *      -# Explicit constraints(since it is for 1xN convolution)
+ *      -## input_dims->h equals 1
+ *      -## output_dims->h equals 1
+ *      -## filter_dims->h equals 1
+ *@todo  Remove constraint on output_dims->w to make the function generic.
+ *
+ */
+riscv_nmsis_nn_status riscv_convolve_1_x_n_s4(const nmsis_nn_context *ctx,
+                                          const nmsis_nn_conv_params *conv_params,
+                                          const nmsis_nn_per_channel_quant_params *quant_params,
+                                          const nmsis_nn_dims *input_dims,
+                                          const int8_t *input_data,
+                                          const nmsis_nn_dims *filter_dims,
+                                          const int8_t *filter_data,
+                                          const nmsis_nn_dims *bias_dims,
+                                          const int32_t *bias_data,
+                                          const nmsis_nn_dims *output_dims,
+                                          int8_t *output_data);
+
+/**
+ * @brief Get the required additional buffer size for 1xn convolution
+ *
+ * @param[in]       conv_params           Convolution parameters (e.g. strides, dilations, pads,...).
+ *                                        Range of conv_params->input_offset  : [-127, 128]
+ *                                        Range of conv_params->output_offset : [-128, 127]
+ * @param[in]       input_dims            Input (activation) tensor dimensions. Format: [N, H, W, C_IN]
+ * @param[in]       filter_dims           Filter tensor dimensions. Format: [C_OUT, 1, WK, C_IN] where WK is the
+ *                                        horizontal spatial filter dimension
+ * @param[in]       output_dims           Output tensor dimensions. Format: [N, H, W, C_OUT]
+ *
+ * @return          The function returns required buffer size(bytes)
+ *
+ */
+int32_t riscv_convolve_1_x_n_s8_get_buffer_size(const nmsis_nn_conv_params *conv_params,
+                                              const nmsis_nn_dims *input_dims,
+                                              const nmsis_nn_dims *filter_dims,
+                                              const nmsis_nn_dims *output_dims);
+
+/**
+ * @brief Get the required additional buffer size for 1xn convolution
+ *
+ * @param[in]       conv_params           Convolution parameters (e.g. strides, dilations, pads,...).
+ *                                        Range of conv_params->input_offset  : [-127, 128]
+ *                                        Range of conv_params->output_offset : [-128, 127]
+ * @param[in]       input_dims            Input (activation) tensor dimensions. Format: [N, H, W, C_IN]
+ * @param[in]       filter_dims           Filter tensor dimensions. Format: [C_OUT, 1, WK, C_IN] where WK is the
+ *                                        horizontal spatial filter dimension
+ * @param[in]       output_dims           Output tensor dimensions. Format: [N, H, W, C_OUT]
+ *
+ * @return          The function returns required buffer size(bytes)
+ *
+ */
+int32_t riscv_convolve_1_x_n_s4_get_buffer_size(const nmsis_nn_conv_params *conv_params,
+                                              const nmsis_nn_dims *input_dims,
+                                              const nmsis_nn_dims *filter_dims,
+                                              const nmsis_nn_dims *output_dims);
+
+/**
  * @brief Wrapper function to pick the right optimized s8 depthwise convolution function
  *
  * @param[in, out] ctx             Function context (e.g. temporary buffer). Check the function
@@ -1447,7 +1434,7 @@ riscv_nmsis_nn_status riscv_depthwise_conv_wrapper_s8(const nmsis_nn_context *ct
                                                   int8_t *output_data);
 
 /**
-* @brief Wrapper function to pick the right optimized s4 depthwise convolution function
+ * @brief Wrapper function to pick the right optimized s4 depthwise convolution function
  *
  * @param[in, out] ctx             Function context (e.g. temporary buffer). Check the function
  *                                 definition file to see if an additional buffer is required.
@@ -1885,7 +1872,7 @@ riscv_nmsis_nn_status riscv_depthwise_conv_s4_opt(const nmsis_nn_context *ctx,
  * @param[in]       input_dims   Input (activation) tensor dimensions. Format: [1, H, W, C_IN]
  *                               Batch argument N is not used.
  * @param[in]       filter_dims  Filter tensor dimensions. Format: [1, H, W, C_OUT]
- * @return          The function returns  required buffer size in bytes
+ * @return          The function returns required buffer size in bytes
  *
  */
 int32_t riscv_depthwise_conv_s8_opt_get_buffer_size(const nmsis_nn_dims *input_dims, const nmsis_nn_dims *filter_dims);
@@ -2038,19 +2025,40 @@ riscv_nmsis_nn_status riscv_fully_connected_s8(const nmsis_nn_context *ctx,
                                            int8_t *output_data);
 
 /**
- * @brief Calculate vector sums that may be required by riscv_fully_connected_s8().
+ * @brief Calculate the sum of each row in vector_data, multiply by lhs_offset and optionally add s32 bias_data.
  * @param[in, out]      vector_sum_buf              Buffer for vector sums
  * @param[in]           vector_cols                 Number of vector columns
  * @param[in]           vector_rows                 Number of vector rows
- * @param[in]           vector_data                 Vector or weigths data
+ * @param[in]           vector_data                 Vector of weigths data
+ * @param[in]           lhs_offset                  Constant multiplied with each sum
+ * @param[in]           bias_data                   Vector of bias data, added to each sum.
  * @return              The function returns
  *                         <code>RISCV_NMSIS_NN_SUCCESS</code> - Successful operation
- *                         <code>RISCV_NMSIS_NN_ARG_ERROR</code> - If not for Riscv Architecture case.
  */
 riscv_nmsis_nn_status riscv_vector_sum_s8(int32_t *vector_sum_buf,
                                       const int32_t vector_cols,
                                       const int32_t vector_rows,
-                                      const int8_t *vector_data);
+                                      const int8_t *vector_data,
+                                      const int32_t lhs_offset,
+                                      const int32_t *bias_data);
+
+/**
+ * @brief Calculate the sum of each row in vector_data, multiply by lhs_offset and optionally add s64 bias_data.
+ * @param[in, out]      vector_sum_buf              Buffer for vector sums
+ * @param[in]           vector_cols                 Number of vector columns
+ * @param[in]           vector_rows                 Number of vector rows
+ * @param[in]           vector_data                 Vector of weigths data
+ * @param[in]           lhs_offset                  Constant multiplied with each sum
+ * @param[in]           bias_data                   Vector of bias data, added to each sum.
+ * @return              The function returns
+ *                         <code>RISCV_NMSIS_NN_SUCCESS</code> - Successful operation
+ */
+riscv_nmsis_nn_status riscv_vector_sum_s8_s64(int64_t *vector_sum_buf,
+                                          const int32_t vector_cols,
+                                          const int32_t vector_rows,
+                                          const int8_t *vector_data,
+                                          const int32_t lhs_offset,
+                                          const int64_t *bias_data);
 
 /**
  * @brief Get size of additional buffer required by riscv_fully_connected_s8().
@@ -2125,6 +2133,16 @@ riscv_nmsis_nn_status riscv_fully_connected_s16(const nmsis_nn_context *ctx,
  *
  */
 int32_t riscv_fully_connected_s16_get_buffer_size(const nmsis_nn_dims *filter_dims);
+
+/**
+ * @brief Get size of additional buffer required by riscv_fully_connected_s16() for processors with DSP extension.
+ *        Refer to riscv_fully_connected_s16_get_buffer_size() for function argument details.
+ *
+ * @note       Intended for compilation on Host. If compiling for an Arm target, use
+ *             riscv_fully_connected_s16_get_buffer_size().
+ *
+ */
+int32_t riscv_fully_connected_s16_get_buffer_size_dsp(const nmsis_nn_dims *filter_dims);
 
 /**
  * @brief Q7 opt fully-connected layer function
@@ -2515,21 +2533,23 @@ void riscv_nn_activations_direct_q15(q15_t *data, uint16_t size, uint16_t int_wi
 
 /**
  * @brief s16 neural network activation function using direct table look-up
- * @param[in]       input        pointer to input data
+ * @param[in]       input       pointer to input data
  * @param[out]      output      pointer to output
  * @param[in]       size        number of elements
- * @param[in]       left_shift  bit-width of the integer part, assume to be smaller than 3
+ * @param[in]       left_shift  bit-width of the integer part, assumed to be smaller than 3.
  * @param[in]       type        type of activation functions
+ * @return                      The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
+
  *
  * @details Supported framework: TensorFlow Lite for Microcontrollers.
- * This activation function must be bit precise congruent with the corresponding TFLM tanh and sigmoid actication
+ * This activation function must be bit precise congruent with the corresponding TFLM tanh and sigmoid activation
  * functions
  */
-void riscv_nn_activation_s16(const int16_t *input,
-                           int16_t *output,
-                           const uint16_t size,
-                           const uint16_t left_shift,
-                           const riscv_nn_activation_type type);
+riscv_nmsis_nn_status riscv_nn_activation_s16(const int16_t *input,
+                                          int16_t *output,
+                                          const int32_t size,
+                                          const int32_t left_shift,
+                                          const riscv_nn_activation_type type);
 
 /**
  * @defgroup Pooling Pooling Functions
@@ -2607,7 +2627,6 @@ void riscv_avepool_q7_HWC(q7_t *Im_in,
  *                              The caller is expected to clear the buffer, if applicable, for security reasons.
  * @param[in]      pool_params  Pooling parameters
  * @param[in]      input_dims   Input (activation) tensor dimensions. Format: [H, W, C_IN]
- *                              Argument 'N' is not used.
  * @param[in]      input_data   Input (activation) data pointer. Data type: int8
  * @param[in]      filter_dims  Filter tensor dimensions. Format: [H, W]
  *                              Argument N and C are not used.
@@ -2615,8 +2634,10 @@ void riscv_avepool_q7_HWC(q7_t *Im_in,
  *                              Argument N is not used.
  *                              C_OUT equals C_IN.
  * @param[in, out] output_data Output data pointer. Data type: int8
- * @return                     The function returns
- *                             <code>RISCV_NMSIS_NN_SUCCESS</code> - Successful operation
+ *
+ * @return     The function returns either
+ *                  <code>RISCV_NMSIS_NN_ARG_ERROR</code> if argument constraints fail. or,
+ *                  <code>RISCV_NMSIS_NN_SUCCESS</code> on successful completion.
  *
  * @details
  *    - Supported Framework: TensorFlow Lite
@@ -2659,7 +2680,6 @@ int32_t riscv_avgpool_s8_get_buffer_size_dsp(const int dim_dst_width, const int 
  *                              The caller is expected to clear the buffer, if applicable, for security reasons.
  * @param[in]      pool_params  Pooling parameters
  * @param[in]      input_dims   Input (activation) tensor dimensions. Format: [H, W, C_IN]
- *                              Argument 'N' is not used.
  * @param[in]      input_data   Input (activation) data pointer. Data type: int16
  * @param[in]      filter_dims  Filter tensor dimensions. Format: [H, W]
  *                              Argument N and C are not used.
@@ -2667,6 +2687,7 @@ int32_t riscv_avgpool_s8_get_buffer_size_dsp(const int dim_dst_width, const int 
  *                              Argument N is not used.
  *                              C_OUT equals C_IN.
  * @param[in, out] output_data  Output data pointer. Data type: int16
+ *
  * @return                        The function returns
  *                                    <code>RISCV_NMSIS_NN_SUCCESS</code> - Successful operation
  *                                    <code>RISCV_NMSIS_NN_ARG_ERROR</code> - In case of invalid arguments
@@ -2712,7 +2733,6 @@ int32_t riscv_avgpool_s16_get_buffer_size_dsp(const int dim_dst_width, const int
  *                              The caller is expected to clear the buffer, if applicable, for security reasons.
  * @param[in]      pool_params  Pooling parameters
  * @param[in]      input_dims   Input (activation) tensor dimensions. Format: [H, W, C_IN]
- *                              Argument 'N' is not used.
  * @param[in]      input_data   Input (activation) data pointer. The input tensor must not
  *                              overlap with the output tensor. Data type: int8
  * @param[in]      filter_dims  Filter tensor dimensions. Format: [H, W]
@@ -2721,8 +2741,10 @@ int32_t riscv_avgpool_s16_get_buffer_size_dsp(const int dim_dst_width, const int
  *                              Argument N is not used.
  *                              C_OUT equals C_IN.
  * @param[in, out] output_data    Output data pointer. Data type: int8
- * @return                        The function returns
- *                                    <code>RISCV_NMSIS_NN_SUCCESS</code> - Successful operation
+ *
+ * @return     The function returns either
+ *                  <code>RISCV_NMSIS_NN_ARG_ERROR</code> if argument constraints fail. or,
+ *                  <code>RISCV_NMSIS_NN_SUCCESS</code> on successful completion.
  *
  * @details
  *    - Supported Framework: TensorFlow Lite
@@ -2743,10 +2765,9 @@ riscv_nmsis_nn_status riscv_max_pool_s8(const nmsis_nn_context *ctx,
  *                              definition file to see if an additional buffer is required.
  *                              Optional function {API}_get_buffer_size() provides the buffer
  *                              size if an additional buffer is required.
- *                              The caller is expected to clear the buffer ,if applicable, for security reasons.
+ *                              The caller is expected to clear the buffer, if applicable, for security reasons.
  * @param[in]      pool_params  Pooling parameters
  * @param[in]      input_dims   Input (activation) tensor dimensions. Format: [H, W, C_IN]
- *                              Argument 'N' is not used.
  * @param[in]      src          Input (activation) data pointer. The input tensor must not
  *                              overlap with the output tensor. Data type: int16
  * @param[in]      filter_dims  Filter tensor dimensions. Format: [H, W]
@@ -2755,8 +2776,10 @@ riscv_nmsis_nn_status riscv_max_pool_s8(const nmsis_nn_context *ctx,
  *                              Argument N is not used.
  *                              C_OUT equals C_IN.
  * @param[in, out] dst          Output data pointer. Data type: int16
- * @return                        The function returns
- *                                    <code>RISCV_NMSIS_NN_SUCCESS</code> - Successful operation
+ *
+ * @return     The function returns either
+ *                  <code>RISCV_NMSIS_NN_ARG_ERROR</code> if argument constraints fail. or,
+ *                  <code>RISCV_NMSIS_NN_SUCCESS</code> on successful completion.
  *
  * @details
  *    - Supported Framework: TensorFlow Lite
@@ -2912,66 +2935,6 @@ void riscv_softmax_u8(const uint8_t *input,
                     const int32_t shift,
                     const int32_t diff_min,
                     uint8_t *output);
-
-/**
- * @brief uint8 depthwise convolution function with asymmetric quantization
- *        Unless specified otherwise, arguments are mandatory.
- *
- * @param[in]     input     Pointer to input tensor
- * @param[in]     input_x   Width of input tensor
- * @param[in]     input_y   Height of input tensor
- * @param[in]     input_ch  Channels in input tensor
- * @param[in]     kernel    Pointer to kernel weights
- * @param[in]     kernel_x  Width of kernel
- * @param[in]     kernel_y  Height of kernel
- * @param[in]     ch_mult   Number of channel multiplier
- * @param[in]     pad_x     Padding sizes x
- * @param[in]     pad_y     Padding sizes y
- * @param[in]     stride_x  stride along the width
- * @param[in]     stride_y  stride along the height
- * @param[in]     dilation_x Dilation along width. Not used and intended for future enhancement.
- * @param[in]     dilation_y Dilation along height. Not used and intended for future enhancement.
- * @param[in]     bias       Pointer to optional bias values. If no bias is
- *                           availble, NULL is expected
- * @param[in]     input_offset  Input tensor zero offset
- * @param[in]     filter_offset Kernel tensor zero offset
- * @param[in]     output_offset Output tensor zero offset
- * @param[in,out] output        Pointer to output tensor
- * @param[in]     output_x  Width of output tensor
- * @param[in]     output_y  Height of output tensor
- * @param[in]     output_activation_min   Minimum value to clamp the output to. Range : {0, 255}
- * @param[in]     output_activation_max   Minimum value to clamp the output to. Range : {0, 255}
- * @param[in]     out_shift  Amount of right-shift for output
- * @param[in]     out_mult   Output multiplier for requantization
- * @return        The function returns the following
- *                <code>RISCV_NMSIS_NN_SUCCESS</code> - Successful operation
- *
- */
-riscv_nmsis_nn_status riscv_depthwise_conv_u8_basic_ver1(const uint8_t *input,
-                                            const uint16_t input_x,
-                                            const uint16_t input_y,
-                                            const uint16_t input_ch,
-                                            const uint8_t *kernel,
-                                            const uint16_t kernel_x,
-                                            const uint16_t kernel_y,
-                                            const int16_t ch_mult,
-                                            const int16_t pad_x,
-                                            const int16_t pad_y,
-                                            const int16_t stride_x,
-                                            const int16_t stride_y,
-                                            const int16_t dilation_x,
-                                            const int16_t dilation_y,
-                                            const int32_t *bias,
-                                            const int32_t input_offset,
-                                            const int32_t filter_offset,
-                                            const int32_t output_offset,
-                                            uint8_t *output,
-                                            const uint16_t output_x,
-                                            const uint16_t output_y,
-                                            const int32_t output_activation_min,
-                                            const int32_t output_activation_max,
-                                            const int32_t out_shift,
-                                            const int32_t out_mult);
 
 /**
  * @defgroup Reshape Reshape Functions
@@ -3286,74 +3249,6 @@ riscv_nmsis_nn_status riscv_svdf_state_s16_s8(const nmsis_nn_context *input_ctx,
                                           int8_t *output_data);
 
 /**
- * @defgroup LSTM LSTM Layer Functions
- *
- */
-
-/**
- * @brief LSTM unidirectional function with 8 bit input and output and 16 bit gate output
- * Peephole connections, projection, clipping, combined input/forget gate and layer normalization are not supported.
- *
- * @param[in]   scratch_buffers                 Struct containing scratch buffers
- *                                              Expected size for each scratch buffer is
- *                                              lstm_dims->num_batches * lstm_dims->num_outputs.
- * @param[in]   input_data                      Pointer to input data
- * @param[in]   lstm_dims                       LSTM input parameters related to dimensions
- * @param[in]   input_to_input_weights          Input to input weights
- * @param[in]   input_to_forget_weights         Input to forget weights
- * @param[in]   input_to_cell_weights           Input to cell weights
- * @param[in]   input_to_output_weights         Input to output weights
- * @param[in]   recurrent_to_input_weights      Recurrent to input weights
- * @param[in]   recurrent_to_forget_weights     Recurrent to forget weights
- * @param[in]   recurrent_to_cell_weights       Recurrent to cell weights
- * @param[in]   recurrent_to_output_weights     Recurrent to output weights
- * @param[in]   cell_to_input_weights           Cell to input weights. Not used.
- * @param[in]   cell_to_forget_weights          Cell to forget weights. Not used.
- * @param[in]   cell_to_output_weights          Cell to output weights. Not used.
- * @param[in]   projection_weights              Projection weights. Not used.
- * @param[in]   lstm                            LSTM parameters. See struct declaration
- * @param[in]   output_state                    Pointer to (recurrent) output state
- * @param[in]   cell_state                      Pointer to cell state
- * @param[in]   output_data                     Pointer to output state
- *
- * @note Following assumptions are done based on LSTM functionality as supported by
- *       Keras version 2.9.0 at the time of development. As stated here,
- *       https://github.com/tensorflow/community/blob/master/rfcs/20180920-unify-rnn-interface.md
- *       Keras's LSTMCell is equivalent to TensorFlow's BasicLSTMCell,
- *       which does not support peephole, clipping or projection.
- *       Layer normalization and combined input/forget gate are not supported either.
- *
- *       1 Input to input weight can not be nullptr. Otherwise nullptr for combined input/forgat gate.
- *       2 Cell weights are not used and should be nullptr. Otherwise needed for peephole connections.
- *       3 Projection weight is not used and should be nullpr. Otherwise needed for projection.
- *
- * @return     The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
- *
- * @details
- *    1. Supported framework: TensorFlow Lite micro
- *
- */
-riscv_nmsis_nn_status riscv_lstm_unidirectional_s16_s8(nmsis_nn_lstm_context *scratch_buffers,
-                                                   const int8_t *input_data,
-                                                   const nmsis_nn_lstm_dims *lstm_dims,
-                                                   const int8_t *input_to_input_weights,
-                                                   const int8_t *input_to_forget_weights,
-                                                   const int8_t *input_to_cell_weights,
-                                                   const int8_t *input_to_output_weights,
-                                                   const int8_t *recurrent_to_input_weights,
-                                                   const int8_t *recurrent_to_forget_weights,
-                                                   const int8_t *recurrent_to_cell_weights,
-                                                   const int8_t *recurrent_to_output_weights,
-                                                   const int16_t *cell_to_input_weights,
-                                                   const int16_t *cell_to_forget_weights,
-                                                   const int16_t *cell_to_output_weights,
-                                                   const int8_t *projection_weights,
-                                                   const nmsis_nn_lstm_params *lstm,
-                                                   int8_t *output_state,
-                                                   int16_t *cell_state,
-                                                   int8_t *output_data);
-
-/**
  * @brief Get size of additional buffer required by riscv_svdf_s8().
  * @param[in]      filter_dims             dimension of filter
  * @return         The function returns    required buffer size in bytes
@@ -3365,14 +3260,69 @@ int32_t riscv_svdf_s8_get_buffer_size(const nmsis_nn_dims *filter_dims);
  * @brief Get size of additional buffer required by riscv_svdf_s8() for processors with DSP extension.
  *        Refer to riscv_svdf_s8_get_buffer_size() for function argument details.
  *
- * @note       Intended for compilation on Host. If compiling for an Riscv target, use
+ * @note       Intended for compilation on Host. If compiling for an Arm target, use
  *             riscv_svdf_s8_get_buffer_size().
  *
  */
 int32_t riscv_svdf_s8_get_buffer_size_dsp(const nmsis_nn_dims *filter_dims);
 
+/**
+ * @brief Get size of additional buffer required by riscv_svdf_s8() for Arm(R) Helium Architecture case.
+ *        Refer to riscv_svdf_s8_get_buffer_size() for function argument details.
+ *
+ * @note       Intended for compilation on Host. If compiling for an Arm target, use
+ *             riscv_svdf_s8_get_buffer_size().
+ *
+ */
+/**
+ * @defgroup LSTM LSTM Layer Functions
+ *
+ */
+
+/**
+ * @brief LSTM unidirectional function with 8 bit input and output and 16 bit gate output, 32 bit bias.
+ *
+ * @param[in]   input                      Pointer to input data
+ * @param[out]  output                     Pointer to output data
+ * @param[in]   params                     Struct containing all information about the lstm operator, see riscv_nn_types.
+ * @param[in]   buffers                    Struct containing pointers to all temporary scratch buffers needed for the
+ * lstm operator, see riscv_nn_types.
+ *
+ *
+ * @return     The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
+ *
+ * @details
+ *    1. Supported framework: TensorFlow Lite Micro
+ *
+ */
+riscv_nmsis_nn_status riscv_lstm_unidirectional_s8(const int8_t *input,
+                                               int8_t *output,
+                                               const nmsis_nn_lstm_params *params,
+                                               nmsis_nn_lstm_context *buffers);
+
+/**
+ * @brief LSTM unidirectional function with 16 bit input and output and 16 bit gate output, 64 bit bias.
+ *
+ * @param[in]   input                      Pointer to input data
+ * @param[out]  output                     Pointer to output data
+ * @param[in]   params                     Struct containing all information about the lstm operator, see riscv_nn_types.
+ * @param[in]   buffers                    Struct containing pointers to all temporary scratch buffers needed for the
+ * lstm operator, see riscv_nn_types.
+ *
+ *
+ * @return     The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
+ *
+ * @details
+ *    1. Supported framework: TensorFlow Lite Micro
+ *
+ */
+riscv_nmsis_nn_status riscv_lstm_unidirectional_s16(const int16_t *input,
+                                                int16_t *output,
+                                                const nmsis_nn_lstm_params *params,
+                                                nmsis_nn_lstm_context *buffers);
+
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* RISCV_NNFUNCTIONS_H */

@@ -24,9 +24,17 @@
  * limitations under the License.
  */
 
-#ifndef _RISCV_MATH_TYPES_H_
+#ifndef RISCV_MATH_TYPES_H_
 
-#define _RISCV_MATH_TYPES_H_
+#define RISCV_MATH_TYPES_H_
+
+#if defined(RISCV_DSP_CUSTOM_CONFIG)
+#include "riscv_dsp_config.h"
+#endif
+
+#ifndef RISCV_DSP_ATTRIBUTE 
+#define RISCV_DSP_ATTRIBUTE
+#endif
 
 #ifdef   __cplusplus
 extern "C"
@@ -34,11 +42,24 @@ extern "C"
 #endif
 
 /* Compiler specific diagnostic adjustment */
-#if defined ( __GNUC__ )
+#if defined ( __RISCVCC_VERSION ) && ( __RISCVCC_VERSION >= 6010050 )
+
+#elif defined ( __APPLE_CC__ )
+  #pragma GCC diagnostic ignored "-Wold-style-cast"
+
+#elif defined(__clang__)
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wsign-conversion"
   #pragma GCC diagnostic ignored "-Wconversion"
   #pragma GCC diagnostic ignored "-Wunused-parameter"
+
+#elif defined ( __GNUC__ )
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wsign-conversion"
+  #pragma GCC diagnostic ignored "-Wconversion"
+  #pragma GCC diagnostic ignored "-Wunused-parameter"
+  // Disable some code having issue with GCC
+  #define RISCV_DSP_BUILT_WITH_GCC 
 
 #elif defined ( __TI_RISCV__ )
 
@@ -205,6 +226,11 @@ extern "C"
 {
 #endif
 
+/**
+ * @defgroup genericTypes Generic Types
+ * @{
+*/
+
  /**
    * @brief 8-bit fractional data type in 1.7 format.
    */
@@ -238,6 +264,24 @@ extern "C"
   /**
    * @brief vector types
    */
+  /**
+   * @brief Error status returned by some functions in the library.
+   */
+  typedef enum
+  {
+    RISCV_MATH_SUCCESS                 =  0,        /**< No error */
+    RISCV_MATH_ARGUMENT_ERROR          = -1,        /**< One or more arguments are incorrect */
+    RISCV_MATH_LENGTH_ERROR            = -2,        /**< Length of data buffer is incorrect */
+    RISCV_MATH_SIZE_MISMATCH           = -3,        /**< Size of matrices is not compatible with the operation */
+    RISCV_MATH_NANINF                  = -4,        /**< Not-a-number (NaN) or infinity is generated */
+    RISCV_MATH_SINGULAR                = -5,        /**< Input matrix is singular and cannot be inverted */
+    RISCV_MATH_TEST_FAILURE            = -6,        /**< Test Failed */
+    RISCV_MATH_DECOMPOSITION_FAILURE   = -7         /**< Decomposition Failed */
+  } riscv_status;
+
+/**
+ * @} // endgroup generic
+*/
 
 
 #define F64_MAX   ((float64_t)DBL_MAX)
@@ -275,23 +319,6 @@ extern "C"
 
   /* Dimension C vector space */
   #define CMPLX_DIM 2
-
-  /**
-   * @brief Error status returned by some functions in the library.
-   */
-
-  typedef enum
-  {
-    RISCV_MATH_SUCCESS                 =  0,        /**< No error */
-    RISCV_MATH_ARGUMENT_ERROR          = -1,        /**< One or more arguments are incorrect */
-    RISCV_MATH_LENGTH_ERROR            = -2,        /**< Length of data buffer is incorrect */
-    RISCV_MATH_SIZE_MISMATCH           = -3,        /**< Size of matrices is not compatible with the operation */
-    RISCV_MATH_NANINF                  = -4,        /**< Not-a-number (NaN) or infinity is generated */
-    RISCV_MATH_SINGULAR                = -5,        /**< Input matrix is singular and cannot be inverted */
-    RISCV_MATH_TEST_FAILURE            = -6,        /**< Test Failed */
-    RISCV_MATH_DECOMPOSITION_FAILURE   = -7         /**< Decomposition Failed */
-  } riscv_status;
-
 
 #ifdef   __cplusplus
 }

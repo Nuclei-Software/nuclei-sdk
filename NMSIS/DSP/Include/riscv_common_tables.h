@@ -27,8 +27,8 @@
  * limitations under the License.
  */
 
-#ifndef _RISCV_COMMON_TABLES_H
-#define _RISCV_COMMON_TABLES_H
+#ifndef RISCV_COMMON_TABLES_H
+#define RISCV_COMMON_TABLES_H
 
 #include "riscv_math_types.h"
 #include "dsp/fast_math_functions.h"

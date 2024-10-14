@@ -26,8 +26,8 @@
  */
 
  
-#ifndef _SVM_DEFINES_H_
-#define _SVM_DEFINES_H_
+#ifndef SVM_DEFINES_H_
+#define SVM_DEFINES_H_
 
 /**
  * @brief Struct for specifying SVM Kernel

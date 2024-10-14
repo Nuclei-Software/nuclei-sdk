@@ -28,8 +28,8 @@
  * limitations under the License.
  */
 
- #ifndef _RISCV_MVE_TABLES_H
- #define _RISCV_MVE_TABLES_H
+ #ifndef RISCV_MVE_TABLES_H
+ #define RISCV_MVE_TABLES_H
 
 #include "riscv_math_types.h"
 

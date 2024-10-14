@@ -24,9 +24,9 @@
  * limitations under the License.
  */
 
-
-#ifndef _FAST_MATH_FUNCTIONS_H_
-#define _FAST_MATH_FUNCTIONS_H_
+ 
+#ifndef FAST_MATH_FUNCTIONS_H_
+#define FAST_MATH_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"
@@ -124,13 +124,11 @@ extern "C"
   q15_t x);
 
 
-
 /**
   @brief         Floating-point vector of log values.
   @param[in]     pSrc       points to the input vector
   @param[out]    pDst       points to the output vector
   @param[in]     blockSize  number of samples in each vector
-  @return        none
  */
   void riscv_vlog_f32(
   const float32_t * pSrc,
@@ -144,7 +142,6 @@ extern "C"
   @param[in]     pSrc       points to the input vector
   @param[out]    pDst       points to the output vector
   @param[in]     blockSize  number of samples in each vector
-  @return        none
  */
   void riscv_vlog_f64(
   const float64_t * pSrc,
@@ -158,7 +155,6 @@ extern "C"
    * @param[in]     pSrc       points to the input vector in q31
    * @param[out]    pDst       points to the output vector in q5.26
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_vlog_q31(const q31_t * pSrc,
         q31_t * pDst,
@@ -169,7 +165,6 @@ extern "C"
    * @param[in]     pSrc       points to the input vector in q15
    * @param[out]    pDst       points to the output vector in q4.11
    * @param[in]     blockSize  number of samples in each vector
-   * @return        none
    */
   void riscv_vlog_q15(const q15_t * pSrc,
         q15_t * pDst,
@@ -182,7 +177,6 @@ extern "C"
   @param[in]     pSrc       points to the input vector
   @param[out]    pDst       points to the output vector
   @param[in]     blockSize  number of samples in each vector
-  @return        none
  */
   void riscv_vexp_f32(
   const float32_t * pSrc,
@@ -196,7 +190,6 @@ extern "C"
   @param[in]     pSrc       points to the input vector
   @param[out]    pDst       points to the output vector
   @param[in]     blockSize  number of samples in each vector
-  @return        none
  */
   void riscv_vexp_f64(
   const float64_t * pSrc,

@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _MATRIX_UTILS_H_
-#define _MATRIX_UTILS_H_
+#ifndef MATRIX_UTILS_H_
+#define MATRIX_UTILS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"

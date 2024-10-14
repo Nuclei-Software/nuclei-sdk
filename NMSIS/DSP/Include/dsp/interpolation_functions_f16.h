@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _INTERPOLATION_FUNCTIONS_F16_H_
-#define _INTERPOLATION_FUNCTIONS_F16_H_
+#ifndef INTERPOLATION_FUNCTIONS_F16_H_
+#define INTERPOLATION_FUNCTIONS_F16_H_
 
 #include "riscv_math_types_f16.h"
 #include "riscv_math_memory.h"
@@ -41,6 +41,9 @@ extern "C"
 
 #if defined(RISCV_FLOAT16_SUPPORTED)
 
+/**
+ * @brief Instance structure for the half floating-point Linear Interpolate function.
+ */
 typedef struct
 {
     uint32_t  nValues;        /**< nValues */
@@ -69,10 +72,9 @@ typedef struct
    * @param[in,out] S  is an instance of the floating-point Linear Interpolation structure
    * @param[in]     x  input sample to process
    * @return y processed output sample.
-   *
    */
   float16_t riscv_linear_interp_f16(
-  riscv_linear_interp_instance_f16 * S,
+  const riscv_linear_interp_instance_f16 * S,
   float16_t x);
 
     /**

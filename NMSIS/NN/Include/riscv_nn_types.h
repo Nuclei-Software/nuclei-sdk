@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright 2020-2023 Arm Limited and/or its affiliates <open-source-office@arm.com>
+ * SPDX-FileCopyrightText: Copyright 2020-2024 Arm Limited and/or its affiliates <open-source-office@arm.com>
  * Copyright (c) 2019 Nuclei Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -23,16 +23,24 @@
  * Description:  Public header file to contain the NMSIS-NN structs for the
  *               TensorFlowLite micro compliant functions
  *
- * $Date:        27 October 2023
- * $Revision:    V.2.6.0
+ * $Date:        11 April 2024
+ * $Revision:    V.3.2.0
  *
  * Target Processor: RISC-V Cores
  * -------------------------------------------------------------------- */
 
-#ifndef _RISCV_NN_TYPES_H
-#define _RISCV_NN_TYPES_H
+#ifndef RISCV_NN_TYPES_H
+#define RISCV_NN_TYPES_H
 
+#include <stdbool.h>
 #include <stdint.h>
+
+/**
+ * @defgroup genPubTypes Structure Types
+ * @ingroup Public
+ * @brief Enums and Data Structures used in public API
+ * @{
+ */
 
 /** Enum for specifying activation function types */
 typedef enum
@@ -63,6 +71,13 @@ typedef struct
     void *buf;    /**< Pointer to a buffer needed for the optimization */
     int32_t size; /**< Buffer size */
 } nmsis_nn_context;
+
+/** NMSIS-NN object used to hold bias data for int16 variants. */
+typedef struct
+{
+    const void *data;         /**< Pointer to bias data */
+    const bool is_int32_bias; /**< Indicate type of bias data. True means int32 else int64 */
+} nmsis_nn_bias_data;
 
 /** NMSIS-NN object to contain the dimensions of the tensors */
 typedef struct
@@ -126,6 +141,7 @@ typedef struct
     nmsis_nn_tile dilation;
     nmsis_nn_activation activation;
 } nmsis_nn_transpose_conv_params;
+
 /** NMSIS-NN object for the depthwise convolution layer parameters */
 typedef struct
 {
@@ -137,6 +153,7 @@ typedef struct
     nmsis_nn_tile dilation;
     nmsis_nn_activation activation;
 } nmsis_nn_dw_conv_params;
+
 /** NMSIS-NN object for pooling layer parameters */
 typedef struct
 {
@@ -171,31 +188,6 @@ typedef struct
     const int16_t *one_by_one_lut;
 } nmsis_nn_softmax_lut_s16;
 
-/** LSTM guard parameters */
-typedef struct
-{
-    int32_t input_variance;
-    int32_t forget_variance;
-    int32_t cell_variance;
-    int32_t output_variance;
-} nmsis_nn_lstm_guard_params;
-
-/** LSTM scratch buffer container */
-typedef struct
-{
-    int16_t *input_gate;
-    int16_t *forget_gate;
-    int16_t *cell_gate;
-    int16_t *output_gate;
-} nmsis_nn_lstm_context;
-
-/** Quantized clip value for cell and projection of LSTM input. Zero value means no clipping. */
-typedef struct
-{
-    int16_t cell;
-    int8_t projection;
-} nmsis_nn_lstm_clip_params;
-
 /** NMSIS-NN object for quantization parameters */
 typedef struct
 {
@@ -203,68 +195,62 @@ typedef struct
     int32_t shift;      /**< Shift value */
 } nmsis_nn_scaling;
 
-/** NMSIS-NN norm layer coefficients */
+/** NMSIS-NN object for LSTM gate parameters*/
 typedef struct
 {
-    int16_t *input_weight;
-    int16_t *forget_weight;
-    int16_t *cell_weight;
-    int16_t *output_weight;
-} nmsis_nn_layer_norm;
+    int32_t input_multiplier;
+    int32_t input_shift;
+    const void *input_weights;
+    const void *input_effective_bias; /**< Bias added with precomputed kernel_sum * lhs_offset*/
 
-/** Parameters for integer LSTM, as defined in TFLM */
+    int32_t hidden_multiplier;
+    int32_t hidden_shift;
+    const void *hidden_weights;
+    const void *hidden_effective_bias; /**< Precomputed kernel_sum * lhs_offset*/
+
+    const void *bias;
+    riscv_nn_activation_type activation_type;
+} nmsis_nn_lstm_gate;
+
+/** NMSIS-NN object for LSTM parameters*/
 typedef struct
 {
-    int32_t time_major; /**< Nonzero (true) if first row of data is timestamps for input */
-    nmsis_nn_scaling input_to_input_scaling;
-    nmsis_nn_scaling input_to_forget_scaling;
-    nmsis_nn_scaling input_to_cell_scaling;
-    nmsis_nn_scaling input_to_output_scaling;
-    nmsis_nn_scaling recurrent_to_input_scaling;
-    nmsis_nn_scaling recurrent_to_forget_scaling;
-    nmsis_nn_scaling recurrent_to_cell_scaling;
-    nmsis_nn_scaling recurrent_to_output_scaling;
-    nmsis_nn_scaling cell_to_input_scaling;
-    nmsis_nn_scaling cell_to_forget_scaling;
-    nmsis_nn_scaling cell_to_output_scaling;
-    nmsis_nn_scaling projection_scaling;
-    nmsis_nn_scaling hidden_scaling;
-    nmsis_nn_scaling layer_norm_input_scaling;  /**< layer normalization for input layer */
-    nmsis_nn_scaling layer_norm_forget_scaling; /**< layer normalization for forget gate */
-    nmsis_nn_scaling layer_norm_cell_scaling;   /**< layer normalization for cell */
-    nmsis_nn_scaling layer_norm_output_scaling; /**< layer normalization for outpus layer */
+    int32_t time_major; /**< 0 if first dimension is batch, else first dimension is time */
+    int32_t batch_size;
+    int32_t time_steps;
+    int32_t input_size; /**< Size of new data input into the LSTM cell*/
+    int32_t
+        hidden_size; /**< Size of output from the LSTM cell, used as output and recursively into the next time step*/
 
-    int32_t cell_state_shift;
-    int32_t hidden_offset;
-    int32_t output_state_offset;
+    int32_t input_offset;
 
-    nmsis_nn_lstm_clip_params clip;
-    nmsis_nn_lstm_guard_params guard;
-    nmsis_nn_layer_norm layer_norm;
+    int32_t forget_to_cell_multiplier;
+    int32_t forget_to_cell_shift;
+    int32_t input_to_cell_multiplier;
+    int32_t input_to_cell_shift;
+    int32_t cell_clip; /**< Min/max value of cell output*/
+    int32_t cell_scale_power;
 
-    /* Effective bias is precalculated as bias + zero_point * weight.
-    Only applicable to when input/output are s8 and weights are s16 */
-    const int32_t *i2i_effective_bias; /**< input to input effective bias */
-    const int32_t *i2f_effective_bias; /**< input to forget gate effective bias */
-    const int32_t *i2c_effective_bias; /**< input to cell effective bias */
-    const int32_t *i2o_effective_bias; /**< input to output effective bias */
+    int32_t output_multiplier;
+    int32_t output_shift;
+    int32_t output_offset;
 
-    const int32_t *r2i_effective_bias; /**< recurrent gate to input effective bias */
-    const int32_t *r2f_effective_bias; /**< recurrent gate to forget gate effective bias */
-    const int32_t *r2c_effective_bias; /**< recurrent gate to cell effective bias */
-    const int32_t *r2o_effective_bias; /**< recurrent gate to output effective bias */
-
-    const int32_t *projection_effective_bias;
-
-    /* Not precalculated bias */
-    const int32_t *input_gate_bias;
-    const int32_t *forget_gate_bias;
-    const int32_t *cell_gate_bias;
-    const int32_t *output_gate_bias;
-
-    /* Activation min and max */
-    nmsis_nn_activation activation;
-
+    nmsis_nn_lstm_gate forget_gate;
+    nmsis_nn_lstm_gate input_gate;
+    nmsis_nn_lstm_gate cell_gate;
+    nmsis_nn_lstm_gate output_gate;
 } nmsis_nn_lstm_params;
 
-#endif // _RISCV_NN_TYPES_H
+/** NMSIS-NN object for LSTM scratch buffers*/
+typedef struct
+{
+    void *temp1;
+    void *temp2;
+    void *cell_state;
+} nmsis_nn_lstm_context;
+
+/**
+ * @} // end group genPubTypes
+ */
+
+#endif /* RISCV_NN_TYPES_H */

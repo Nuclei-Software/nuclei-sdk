@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _COMPLEX_MATH_FUNCTIONS_H_
-#define _COMPLEX_MATH_FUNCTIONS_H_
+#ifndef COMPLEX_MATH_FUNCTIONS_H_
+#define COMPLEX_MATH_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"

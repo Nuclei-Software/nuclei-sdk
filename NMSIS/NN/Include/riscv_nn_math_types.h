@@ -40,6 +40,7 @@
 extern "C" {
 #endif
 
+
 /* Compiler specific diagnostic adjustment */
 #if   defined(__GNUC__)
   #pragma GCC diagnostic push

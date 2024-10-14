@@ -23,9 +23,9 @@
  * limitations under the License.
  */
 
-#ifndef _RISCV_MATH_UTILS_H_
+#ifndef RISCV_MATH_UTILS_H_
 
-#define _RISCV_MATH_UTILS_H_
+#define RISCV_MATH_UTILS_H_
 
 #include "riscv_math_types.h"
 #include <limits.h>
@@ -49,10 +49,12 @@ extern "C"
   #define MAX(x,y) ((x) > (y) ? (x) : (y))
 #endif
 
-#define SQ(x) ((x) * (x))
+#ifndef RISCV_SQ
+#define RISCV_SQ(x) ((x) * (x))
+#endif
 
-#ifndef ROUND_UP
-  #define ROUND_UP(N, S) ((((N) + (S) - 1) / (S)) * (S))
+#ifndef RISCV_ROUND_UP
+  #define RISCV_ROUND_UP(N, S) ((((N) + (S) - 1) / (S)) * (S))
 #endif
 
 
@@ -252,6 +254,7 @@ __STATIC_INLINE int32_t riscv_div_int64_to_int32(int64_t num, int32_t den)
     return result;
 }
 
+#undef INDEX_MASK
 
 #ifdef   __cplusplus
 }

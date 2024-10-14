@@ -35,8 +35,8 @@ of intrinsics.
 
 */
  
-#ifndef _NONE_H_
-#define _NONE_H_
+#ifndef NONE_H_
+#define NONE_H_
 
 #include "riscv_math_types.h"
 

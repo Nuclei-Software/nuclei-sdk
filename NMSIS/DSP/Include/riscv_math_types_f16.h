@@ -24,8 +24,8 @@
  * limitations under the License.
  */
 
-#ifndef _RISCV_MATH_TYPES_F16_H
-#define _RISCV_MATH_TYPES_F16_H
+#ifndef RISCV_MATH_TYPES_F16_H
+#define RISCV_MATH_TYPES_F16_H
 
 //#include "riscv_math_types.h"
 

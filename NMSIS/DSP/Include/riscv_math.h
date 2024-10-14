@@ -109,8 +109,8 @@
 
 
 
-#ifndef _RISCV_MATH_H
-#define _RISCV_MATH_H
+#ifndef RISCV_MATH_H
+#define RISCV_MATH_H
 
 
 #include "riscv_math_types.h"

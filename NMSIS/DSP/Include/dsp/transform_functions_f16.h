@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _TRANSFORM_FUNCTIONS_F16_H_
-#define _TRANSFORM_FUNCTIONS_F16_H_
+#ifndef TRANSFORM_FUNCTIONS_F16_H_
+#define TRANSFORM_FUNCTIONS_F16_H_
 
 #include "riscv_math_types_f16.h"
 #include "riscv_math_memory.h"
@@ -291,7 +291,6 @@ riscv_status riscv_mfcc_init_f16(
   @param[in]     pSrc points to the input samples
   @param[out]     pDst  points to the output MFCC values
   @param[inout]     pTmp  points to a temporary buffer of complex
-  @return        none
  */
   void riscv_mfcc_f16(
   const riscv_mfcc_instance_f16 * S,

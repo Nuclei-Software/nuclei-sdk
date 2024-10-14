@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _BASIC_MATH_FUNCTIONS_F16_H_
-#define _BASIC_MATH_FUNCTIONS_F16_H_
+#ifndef BASIC_MATH_FUNCTIONS_F16_H_
+#define BASIC_MATH_FUNCTIONS_F16_H_
 
 #include "riscv_math_types_f16.h"
 #include "riscv_math_memory.h"
@@ -150,9 +150,7 @@ extern "C"
   @param[in]     low           lower bound
   @param[in]     high          higher bound
   @param[in]     numSamples    number of samples to clip
-  @return        none
  */
-
 void riscv_clip_f16(const float16_t * pSrc, 
   float16_t * pDst, 
   float16_t low, 

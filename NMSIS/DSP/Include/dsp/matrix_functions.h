@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _MATRIX_FUNCTIONS_H_
-#define _MATRIX_FUNCTIONS_H_
+#ifndef MATRIX_FUNCTIONS_H_
+#define MATRIX_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"

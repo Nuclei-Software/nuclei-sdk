@@ -25,8 +25,8 @@
  */
 
  
-#ifndef _FILTERING_FUNCTIONS_H_
-#define _FILTERING_FUNCTIONS_H_
+#ifndef FILTERING_FUNCTIONS_H_
+#define FILTERING_FUNCTIONS_H_
 
 #include "riscv_math_types.h"
 #include "riscv_math_memory.h"
@@ -804,7 +804,7 @@ extern "C"
   } riscv_fir_decimate_instance_q31;
 
 /**
-  @brief Instance structure for floating-point FIR decimator.
+  @brief Instance structure for single precision floating-point FIR decimator.
  */
 typedef struct
   {
@@ -814,8 +814,53 @@ typedef struct
           float32_t *pState;          /**< points to the state variable array. The array is of length numTaps+blockSize-1. */
   } riscv_fir_decimate_instance_f32;
 
+  /**
+  @brief Instance structure for double precision floating-point FIR decimator.
+ */
+  typedef struct
+  {
+    uint8_t M;                  /**< decimation factor. */
+    uint16_t numTaps;           /**< number of coefficients in the filter. */
+    const float64_t *pCoeffs;         /**< points to the coefficient array. The array is of length numTaps.*/
+    float64_t *pState;          /**< points to the state variable array. The array is of length numTaps+blockSize-1. */
+  } riscv_fir_decimate_instance_f64;
 
-/**
+  /**
+  @brief         Processing function for floating-point FIR decimator.
+  @param[in]     S         points to an instance of the floating-point FIR decimator structure
+  @param[in]     pSrc      points to the block of input data
+  @param[out]    pDst      points to the block of output data
+  @param[in]     blockSize number of samples to process
+ */
+  void riscv_fir_decimate_f64(
+      const riscv_fir_decimate_instance_f64 * S,
+      const float64_t * pSrc,
+      float64_t * pDst,
+      uint32_t blockSize);
+
+
+  /**
+    @brief         Initialization function for the floating-point FIR decimator.
+    @param[in,out] S          points to an instance of the floating-point FIR decimator structure
+    @param[in]     numTaps    number of coefficients in the filter
+    @param[in]     M          decimation factor
+    @param[in]     pCoeffs    points to the filter coefficients
+    @param[in]     pState     points to the state buffer
+    @param[in]     blockSize  number of input samples to process per call
+    @return        execution status
+                     - \ref RISCV_MATH_SUCCESS      : Operation successful
+                     - \ref RISCV_MATH_LENGTH_ERROR : <code>blockSize</code> is not a multiple of <code>M</code>
+   */
+  riscv_status riscv_fir_decimate_init_f64(
+      riscv_fir_decimate_instance_f64 * S,
+      uint16_t numTaps,
+      uint8_t M,
+      const float64_t * pCoeffs,
+      float64_t * pState,
+      uint32_t blockSize);
+
+
+  /**
   @brief         Processing function for floating-point FIR decimator.
   @param[in]     S         points to an instance of the floating-point FIR decimator structure
   @param[in]     pSrc      points to the block of input data
