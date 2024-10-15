@@ -713,6 +713,67 @@ class nsdk_runner(nsdk_builder):
         final_status = cmdsts
         return final_status, runner
 
+    def run_app_onxlmodel(self, appdir, runcfg:dict(), show_output=True, logfile=None):
+        app_runcfg = runcfg.get("run_config", dict())
+        app_runchecks = runcfg.get("checks", dict())
+        build_info = runcfg["misc"]["build_info"]
+        build_config = runcfg["misc"]["build_config"]
+        build_objects = runcfg["misc"]["build_objects"]
+        checktime = runcfg["misc"]["build_time"]
+        hwconfig = app_runcfg.get("xlmodel", dict())
+
+        timeout = 300 # xlmodel is slow compared with qemu
+        xlmodel_exe = None
+        xlmodel_extraopt = ""
+        if hwconfig is not None:
+            xlmodel_exe = hwconfig.get("xlmodel", "xl_cpumodel")
+            xlmodel_machine = hwconfig.get("machine", "nuclei_evalsoc")
+            xlmodel_cpu = hwconfig.get("xlmodel_cpu", None)
+            build_soc = build_info["SOC"]
+            build_board = build_info["BOARD"]
+            build_core = build_info["CORE"]
+            build_download = build_info["DOWNLOAD"]
+            build_smp = build_info.get("SMP", "")
+            build_arch_ext = build_config.get("ARCH_EXT", "")
+            build_semihost = False
+            if build_config.get("SEMIHOST", "") != "":
+                build_semihost = True
+
+            if build_arch_ext == "":
+                build_arch_ext = build_info.get("ARCH_EXT", "")
+            if build_smp != "":
+                xlmodel_extraopt = "%s --smp=%s" % (xlmodel_extraopt, build_smp)
+            #if build_semihost: # use xlmodel semihosting, if program build with semihost feature
+            #    xlmodel_extraopt = "%s -semihosting " % (xlmodel_extraopt)
+            if xlmodel_cpu is None:
+                xlmodel_sel_cpu = "%s" % (build_core.lower())
+            xlmodel_archext_opt = ""
+            if build_arch_ext and build_arch_ext.strip() != "":
+                xlmodel_archext_opt = "--ext=%s" % (build_arch_ext)
+            timeout = hwconfig.get("timeout", timeout)
+        runner = None
+        cmdsts = False
+        sdk_check = get_sdk_check()
+        if xlmodel_exe:
+            if os.path.isfile(build_objects["elf"]):
+                vercmd = "%s -v" % (xlmodel_exe)
+                verchk = "xl_cpumodel Version"
+                ret, verstr = check_tool_version(vercmd, verchk)
+                if ret:
+                    command = "%s %s -M %s --cpu=%s %s %s" \
+                        % (xlmodel_exe, xlmodel_extraopt, xlmodel_machine, xlmodel_sel_cpu, xlmodel_archext_opt, build_objects["elf"])
+                    print("Run command: %s" %(command))
+                    runner = {"cmd": command, "version": verstr}
+                    cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
+                        sdk_check, logfile, show_output)
+                else:
+                    print("%s doesn't exist in PATH, please check!" % xlmodel_exe)
+            else:
+                print("ELF file %s doesn't exist, can't run on xlmodel" % (build_objects["elf"]))
+
+        final_status = cmdsts
+        return final_status, runner
+
     def run_app_onxlspike(self, appdir, runcfg:dict(), show_output=True, logfile=None):
         app_runcfg = runcfg.get("run_config", dict())
         app_runchecks = runcfg.get("checks", dict())
@@ -722,7 +783,7 @@ class nsdk_runner(nsdk_builder):
         checktime = runcfg["misc"]["build_time"]
         hwconfig = app_runcfg.get("xlspike", dict())
 
-        timeout = 60
+        timeout = 300 # xlspike is slow compared with qemu
         xlspike_exe = None
         xlspike_extraopt = ""
         if hwconfig is not None:
@@ -739,7 +800,7 @@ class nsdk_runner(nsdk_builder):
             if not is_nuclei_evalsoc(build_soc):
                 xlspike_exe = None
                 print("SOC=%s BOARD=%s is not supported by xlspike" % (build_soc, build_board))
-            timeout = hwconfig.get("timeout", 60)
+            timeout = hwconfig.get("timeout", timeout)
         runner = None
         cmdsts = False
         sdk_check = get_sdk_check()
@@ -773,11 +834,11 @@ class nsdk_runner(nsdk_builder):
         checktime = runcfg["misc"]["build_time"]
         hwconfig = app_runcfg.get("ncycm", dict())
 
-        timeout = 60
+        timeout = 600 # ncycm is slow compared with xlmodel or xlspike
         ncycm_exe = None
         if hwconfig is not None:
             ncycm_exe = hwconfig.get("ncycm", "ncycm")
-            timeout = hwconfig.get("timeout", 600)
+            timeout = hwconfig.get("timeout", timeout)
         runner = None
         cmdsts = False
         sdk_check = get_sdk_check()
@@ -900,6 +961,15 @@ class nsdk_runner(nsdk_builder):
             appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
             if runner:
                 appsts["app"]["qemu"] = runner
+        elif app_runtarget == "xlmodel":
+            runstatus, runner = self.run_app_onxlmodel(appdir, runcfg, show_output, runlog)
+            # If run successfully, then do log analyze
+            if runlog and runstatus:
+                appsts["result"] = self.analyze_runlog(runlog, app_parsescript)
+            appsts["logs"]["run"] = runlog
+            appsts["status_code"]["run"] = RUNSTATUS_OK if runstatus else RUNSTATUS_FAIL
+            if runner:
+                appsts["app"]["xlmodel"] = runner
         elif app_runtarget == "xlspike":
             runstatus, runner = self.run_app_onxlspike(appdir, runcfg, show_output, runlog)
             # If run successfully, then do log analyze
