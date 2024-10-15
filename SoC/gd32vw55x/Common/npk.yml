@@ -246,6 +246,8 @@ buildconfig:
     toolchain_name: RISC-V Clang/Newlib
     cross_prefix: riscv64-unknown-elf- # optional
     common_flags: # flags need to be combined together across all packages
+      # Add zicsr extension for clang
+      - flags: -Xclang -target-feature -Xclang +zicsr
       - flags: -isystem =/include/libncrt
         condition: $( startswith(${stdclib}, "libncrt") )
     ldflags:
