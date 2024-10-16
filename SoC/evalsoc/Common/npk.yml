@@ -493,8 +493,6 @@ buildconfig:
     common_flags: # flags need to be combined together across all packages
       # Enable experimental extensions for clang
       - flags: -menable-experimental-extensions
-      # Add zicsr extension for clang
-      - flags: -Xclang -target-feature -Xclang +zicsr
       - flags: -isystem =/include/libncrt
         condition: $( startswith(${stdclib}, "libncrt") )
     ldflags:
