@@ -93,8 +93,6 @@ endif
 COMMON_FLAGS += -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=$(RISCV_CMODEL)
 # Enable some experimental extension for llvm clang
 COMMON_FLAGS += -menable-experimental-extensions
-# Add zicsr extension to clang, since our cpu always has zicsr extension
-COMMON_FLAGS += -Xclang -target-feature -Xclang +zicsr
 ## Append mtune options when RISCV_TUNE is defined
 ## It might be defined in SoC/<SOC>/build.mk, and can be overwritten by make
 ifneq ($(RISCV_TUNE),)
