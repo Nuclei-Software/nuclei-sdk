@@ -598,8 +598,8 @@ For more advanced usage, please follow the items as below:
 
       2. Now **Terapines ZCC Lite** is deeply integrated in **Nuclei Studio >= 2024.06**, so you just need to
          follow :ref:`quickstart_get_set_nuclei_sdk` to setup PATH for Terapines ZCC, and in Nuclei SDK,
-         you can just pass **TOOCHAIN=terapines** during make to take a try with Terapines ZCC, and in future
-         version of Nuclei SDK, you will be able to create project in Nuclei SDK using Terapines ZCC.
+         you can just pass **TOOCHAIN=terapines** during make to take a try with Terapines ZCC.
+         From 0.7.0 release, you can create project in Nuclei Studio >= 2024.06 using Terapines ZCC.
 
       3. You can take a try using IAR workbench, we provided prebuilt projects directly in Nuclei SDK,
          just check the `ideprojects/iar/README.md`_ to learn about it.

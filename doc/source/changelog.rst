@@ -3,10 +3,10 @@
 Changelog
 =========
 
-V0.7.0-dev
-----------
+V0.7.0
+------
 
-This is **development** release version ``0.7.0`` of Nuclei SDK.
+This is release version ``0.7.0`` of Nuclei SDK.
 
 
 * Application
@@ -21,6 +21,7 @@ This is **development** release version ``0.7.0`` of Nuclei SDK.
   - Add more ECC related macros for ``milm_ctl/mdlm_ctl/mcache_ctl`` csr
   - Add more PLIC interrupt API in ``core_feature_plic.h``
   - Add more interrupt related API when in plic interrupt mode, see changes in ``core_feature_base.h``
+  - Bump NMSIS version to 1.3.0 with updated NMSIS Core/DSP/NN header files and prebuilt library
 
 * SoC
 
