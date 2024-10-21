@@ -35,7 +35,7 @@ configuration:
     description: Download/Run Mode
     choices:
       - name: flashxip
-        description: FLASHXIP download mode, program will to be download into flash and run directly in Flash
+        description: FLASHXIP download mode, program will to be downloaded into flash and run directly in Flash
 
 ## Source Code Management
 codemanage:

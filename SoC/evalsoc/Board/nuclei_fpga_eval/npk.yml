@@ -41,13 +41,13 @@ configuration:
     description: Download/Run Mode
     choices:
       - name: ilm
-        description: ILM download mode, program will be download into ilm/ram and run directly in ilm/ram, program lost when poweroff
+        description: ILM download mode, program will be downloaded into ilm/ram and run directly in ilm/ram, program lost when poweroff
       - name: flash
-        description: FLASH download mode, program will be download into flash, when running, program will be copied to ilm/ram and run in ilm/ram
+        description: FLASH download mode, program will be downloaded into flash, when running, program will be copied to ilm/ram and run in ilm/ram
       - name: flashxip
-        description: FLASHXIP download mode, program will to be download into flash and run directly in Flash
+        description: FLASHXIP download mode, program will to be downloaded into flash and run directly in Flash
       - name: ddr
-        description: DDR download mode, program will be download into ddr and run directly in ddr, program lost when poweroff
+        description: DDR download mode, program will be downloaded into ddr and run directly in ddr, program lost when poweroff
       - name: sram
         description: SRAM download mode(sram mode use sram for 200/300, ddr for 600/900)
 
