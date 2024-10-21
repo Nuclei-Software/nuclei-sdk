@@ -34,6 +34,9 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
 
   - Add **COMPILE_PREFIX** support for :ref:`develop_buildsystem_var_toolchain:` ``nuclei_llvm``, now both ``nuclei_llvm`` and ``nuclei_gnu`` support this variable, you can change it like this ``COMPILE_PREFIX=/path/to/newgcc/bin/riscv64-unknown-elf-`` when do make command
 
+* Tools
+
+  - Add exclusive lock when program fpga for ``nsdk_cli`` tools
 
 V0.7.1
 ------

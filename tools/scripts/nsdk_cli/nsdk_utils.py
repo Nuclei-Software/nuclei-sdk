@@ -7,6 +7,7 @@ requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.
 
 try:
     import time
+    import datetime
     import random
     import shutil
     import signal
@@ -24,6 +25,8 @@ try:
     import json
     import yaml
     import importlib.util
+    import fcntl
+    import stat
 except Exception as exc:
     print("Import Error: %s" % (exc))
     print("Please install requried packages using: pip3 install -r %s" % (requirement_file))
@@ -53,6 +56,18 @@ INVAILD_SERNO = "xxxxx"
 BANNER_TMOUT = "banner_timeout"
 TTY_OP_ERR = "tty_operate_error"
 TTY_UNKNOWN_ERR = "tty_unknown_error"
+FILE_LOCK_NAME = "fpga_program.lock"
+
+DATE_FORMATE = "%Y-%m-%d %H:%M:%S"
+
+def get_tmpdir():
+    tempdir = tempfile.gettempdir()
+    if sys.platform == "win32":
+        wintempdir = "C:\\Users\\Public\\Temp"
+        if os.path.isdir(wintempdir) == False:
+            os.makedirs(wintempdir)
+        tempdir = wintempdir
+    return tempdir
 
 # get ci url information
 def get_ci_info():
@@ -1028,33 +1043,47 @@ def find_vivado_cmd():
                 return vivado_cmd
     return None
 
+def datetime_now():
+    return datetime.datetime.now().strftime(DATE_FORMATE)
+
 def program_fpga(bit, target):
     if os.path.isfile(bit) == False:
         print("Can't find bitstream in %s" % (bit))
         return False
     print("Try to program fpga bitstream %s to target board %s" % (bit, target))
     sys.stdout.flush()
-    vivado_cmd = find_vivado_cmd()
-    # check vivado is found or not
-    if vivado_cmd == None:
-        print("vivado is not found in PATH, please check!")
-        return False
-    tcl = os.path.join(os.path.dirname(os.path.realpath(__file__)), "program_bit.tcl")
-    target = "*%s" % (target)
-    progcmd = "%s -mode batch -nolog -nojournal -source %s -tclargs %s %s" % (vivado_cmd, tcl, bit, target)
-    tmout = get_sdk_fpga_prog_tmout()
-    if sys.platform != 'win32' and tmout is not None and tmout.strip() != "":
-        print("Timeout %s do fpga program" % (tmout))
-        progcmd = "timeout --foreground -s SIGKILL %s %s" % (tmout, progcmd)
-    print("Do fpga program using command: %s" % (progcmd))
-    sys.stdout.flush()
-    ret = os.system(progcmd)
-    sys.stdout.flush()
-    if ret != 0:
-        print("Program fpga bit failed, error code %d" % ret)
-        return False
-    print("Program fpga bit successfully")
-    return True
+    FILE_LOCK = os.path.join(get_tmpdir(), FILE_LOCK_NAME)
+    # TODO: use portable filelock for win32
+    with open(FILE_LOCK, 'w+') as filelock:
+        if sys.platform != "win32":
+            print("%s, Wait another board's programing fpga to finished" %(datetime_now()))
+            fcntl.flock(filelock, fcntl.LOCK_EX)
+            # set to 666, in case that other user can't access this file causing exception
+            if os.stat(FILE_LOCK).st_uid == os.getuid():
+                os.chmod(FILE_LOCK, stat.S_IWGRP | stat.S_IRGRP | stat.S_IWUSR | stat.S_IRUSR | stat.S_IWOTH | stat.S_IROTH)
+            print("%s, Has acquired the chance to do fpga programing!" %(datetime_now()))
+
+        vivado_cmd = find_vivado_cmd()
+        # check vivado is found or not
+        if vivado_cmd == None:
+            print("vivado is not found in PATH, please check!")
+            return False
+        tcl = os.path.join(os.path.dirname(os.path.realpath(__file__)), "program_bit.tcl")
+        target = "*%s" % (target)
+        progcmd = "%s -mode batch -nolog -nojournal -source %s -tclargs %s %s" % (vivado_cmd, tcl, bit, target)
+        tmout = get_sdk_fpga_prog_tmout()
+        if sys.platform != 'win32' and tmout is not None and tmout.strip() != "":
+            print("Timeout %s do fpga program" % (tmout))
+            progcmd = "timeout --foreground -s SIGKILL %s %s" % (tmout, progcmd)
+        print("Do fpga program using command: %s" % (progcmd))
+        sys.stdout.flush()
+        ret = os.system(progcmd)
+        sys.stdout.flush()
+        if ret != 0:
+            print("Program fpga bit failed, error code %d" % ret)
+            return False
+        print("Program fpga bit successfully")
+        return True
 
 def find_fpgas():
     vivado_cmd = find_vivado_cmd()
