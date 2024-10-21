@@ -615,18 +615,18 @@ currently it has these modes supported as described in table
    * - **DOWNLOAD**
      - Description
    * - ilm
-     - | Program will be download into ilm/ram and
+     - | Program will be downloaded into ilm/ram and
        | run directly in ilm/ram, program will lost when poweroff
    * - flash
-     - | Program will be download into flash, when running,
+     - | Program will be downloaded into flash, when running,
        | program will be copied to ilm/ram and run in ilm/ram
    * - flashxip
-     - Program will to be download into flash and run directly in flash
+     - Program will to be downloaded into flash and run directly in flash
    * - ddr
-     - | Program will to be download into ddr and
+     - | Program will to be downloaded into ddr and
        | run directly in ddr, program will lost when poweroff
    * - sram
-     - | Program will to be download into sram and
+     - | Program will to be downloaded into sram and
        | run directly in sram, program will lost when poweroff
 
 .. note::

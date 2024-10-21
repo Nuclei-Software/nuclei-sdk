@@ -124,7 +124,7 @@ Here is the directory structure for this Nuclei SDK.
 
 * **package.json**
 
-  PlatformIO package json file for Nuclei SDK, used in `Nuclei Plaform for PlatformIO`_.
+  PlatformIO package json file for Nuclei SDK, used in `Nuclei Platform for PlatformIO`_.
 
 * **SConscript**
 
@@ -132,7 +132,7 @@ Here is the directory structure for this Nuclei SDK.
 
 * **Makefile**
 
-  An external Makefile just for build, run, debug application without cd to any coresponding application directory, such as *application/baremetal/helloworld/*.
+  An external Makefile just for build, run, debug application without cd to any corresponding application directory, such as *application/baremetal/helloworld/*.
 
 * **setup.sh**
 
@@ -210,6 +210,6 @@ This Nuclei SDK project components is list as below:
 
 
 .. _NMSIS-Core Device Templates Guidance: https://doc.nucleisys.com/nmsis/core/core_templates.html
-.. _Nuclei Plaform for PlatformIO: https://platformio.org/platforms/nuclei/
+.. _Nuclei Platform for PlatformIO: https://platformio.org/platforms/nuclei/
 .. _NMSIS project: https://github.com/Nuclei-Software/NMSIS
 .. _RT-Thread package development: https://www.rt-thread.org/document/site/development-guide/package/package/

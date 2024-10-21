@@ -138,7 +138,7 @@ making the code elegant, structured, modular, and very tailorable.
 
 In our support for RT-Thread, we get the source code of RT-Thread from a project
 called `RT-Thread Nano`_, which only provide kernel code of RT-Thread, which is easy
-to be intergated with Nuclei SDK.
+to be integrated with Nuclei SDK.
 
 In our RT-Thread portable code, we are using ``SysTimer Interrupt`` as RTOS SysTick
 Interrupt, and using ``SysTimer Software Interrupt`` to do task switch.

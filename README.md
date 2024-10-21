@@ -17,7 +17,7 @@ This Nuclei SDK is built based on the **NMSIS** framework, user can access all t
 
 This Nuclei SDK can support various compiler such as Nuclei riscv gcc/clang, IAR compiler and Terapines ZCC.
 
-We also intergated many RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII**, **RTThread** and **ThreadX**, you can easily find it in the *OS* folder.
+We also integrated many RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII**, **RTThread** and **ThreadX**, you can easily find it in the *OS* folder.
 
 ## Quick Startup
 
@@ -138,7 +138,7 @@ $NUCLEI_SDK_ROOT
 
 * **package.json**
 
-  PlatformIO package json file for Nuclei SDK, used in [Nuclei Plaform for PlatformIO](https://platformio.org/platforms/nuclei/)
+  PlatformIO package json file for Nuclei SDK, used in [Nuclei Platform for PlatformIO](https://platformio.org/platforms/nuclei/)
 
 * **SConscript**
 
@@ -146,7 +146,7 @@ $NUCLEI_SDK_ROOT
 
 * **Makefile**
 
-  An external Makefile just for build, run, debug application without cd to any coresponding application directory, such as *application/baremetal/helloworld/*.
+  An external Makefile just for build, run, debug application without cd to any corresponding application directory, such as *application/baremetal/helloworld/*.
 
 * **setup.sh**
 
@@ -227,9 +227,9 @@ $NUCLEI_SDK_ROOT
    * We provided different Nuclei Core configurations(CORE=<your_core>) we supported, see *Build/Makefile.core*.
      - such as `CORE=n300`
    * We support several download modes(DOWNLOAD=<mode>) for different applications.
-     - **flashxip**: Program will to be download into flash and run directly in Flash
-     - **flash**: Program will be download into flash, when running, program will be copied to ilm/ram and run in ilm/ram
-     - **ilm**: Program will be download into ilm/ram and run directly in ilm/ram, program lost when poweroff
+     - **flashxip**: Program will to be downloaded into flash and run directly in Flash
+     - **flash**: Program will be downloaded into flash, when running, program will be copied to ilm/ram and run in ilm/ram
+     - **ilm**: Program will be downloaded into ilm/ram and run directly in ilm/ram, program lost when poweroff
    * For example, if you want to build your application for *CORE=n300 DOWNLOAD=ilm*, you can easily run this command:
      ~~~shell
      make CORE=n300 DOWNLOAD=ilm all
