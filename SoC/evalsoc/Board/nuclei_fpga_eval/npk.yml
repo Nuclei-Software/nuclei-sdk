@@ -41,7 +41,7 @@ configuration:
     description: Download/Run Mode
     choices:
       - name: sram
-        description: SRAM download mode, program will be download into sram and run directly in sram, program lost when poweroff
+        description: SRAM download mode, program will be downloaded into sram and run directly in sram, program lost when poweroff
 
 ## Source Code Management
 codemanage:

@@ -5,7 +5,7 @@
 
 This **N100 SDK** is modified based on the **Nuclei SDK** framework, **NMSIS** is also a modified version to support limited feature provided by Nuclei 100 series processor.
 
-We also intergated some RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII** and **RTThread**, you can easily find it in the *OS* folder.
+We also integrated some RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII** and **RTThread**, you can easily find it in the *OS* folder.
 
 Both Nuclei riscv gcc and IAR compiler are supported in Nuclei N100 SDK, for IAR compiler support, see [ideprojects/iar/README.md](ideprojects/iar/README.md).
 
@@ -42,7 +42,7 @@ Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CP
    * We provided different Nuclei Core configurations(CORE=<your_core>) we supported, see *Build/Makefile.core*.
      - such as `CORE=n100m`
    * We support several download modes(DOWNLOAD=<mode>) for different applications.
-     - **sram**: Program will be download into ram and run directly in ram, program lost when poweroff
+     - **sram**: Program will be downloaded into ram and run directly in ram, program lost when poweroff
    * For example, if you want to build your application for *CORE=n100m DOWNLOAD=sram*, you can easily run this command:
      ~~~shell
      make CORE=n100m DOWNLOAD=sram all

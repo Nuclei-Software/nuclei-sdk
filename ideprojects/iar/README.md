@@ -9,7 +9,7 @@ These projects demostrated the following features:
 - Provide support for Nuclei Evaluation SoC which is a prototype and evaluation SoC mainly
   used to evaluate Nuclei 100 series RISC-V Processor.
 - RISC-V Extension IMAC are supported in this project.
-- These projects are based on Nuclei SDK project which intergated modified NMSIS standard.
+- These projects are based on Nuclei SDK project which integrated modified NMSIS standard.
 - We have implemented CPU core startup, exception handling and linker script and ported NMSIS Core
   for IAR Compiler, please check the commit histories for the changes we have made.
 - These projects are using iar linker script icf file provided in this project not the one in IAR workbench.

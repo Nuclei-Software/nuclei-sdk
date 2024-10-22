@@ -19,7 +19,7 @@ endif
 ## The name of sub directories in $(NUCLEI_SDK_ROOT)/SoC/
 SOC ?= evalsoc
 ## Available choices:
-## sram: Program will be download into sram and run directly in sram, program lost when poweroff
+## sram: Program will be downloaded into sram and run directly in sram, program lost when poweroff
 DOWNLOAD ?= sram
 ## If SIMULATION=1, it means the program is optimized for hardware simulation environment
 SIMULATION ?= 0

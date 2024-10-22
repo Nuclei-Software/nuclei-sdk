@@ -568,7 +568,7 @@ currently it has these modes supported as described in table
    * - **DOWNLOAD**
      - Description
    * - sram
-     - | Program will be download into sram and
+     - | Program will be downloaded into sram and
        | run directly in sram, program will lost when poweroff
 
 .. note::
