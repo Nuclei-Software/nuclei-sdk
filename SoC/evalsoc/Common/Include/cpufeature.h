@@ -28,7 +28,7 @@ extern "C" {
 #define CFG_HAS_EXCP
 
 // Define it when you have TRAP related CSR such as MTVT and MTVEC
-//#define CFG_HAS_TRAP_CSR
+#define CFG_HAS_TRAP_CSR
 
 // PMONITOR is the mcycle and minsret counter, if not defined, it means not present
 #define CFG_HAS_PMONITOR
