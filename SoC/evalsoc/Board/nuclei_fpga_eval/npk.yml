@@ -45,7 +45,7 @@ configuration:
       - name: flash
         description: FLASH download mode, program will be downloaded into flash, when running, program will be copied to ilm/ram and run in ilm/ram
       - name: flashxip
-        description: FLASHXIP download mode, program will to be downloaded into flash and run directly in Flash
+        description: FLASHXIP download mode, program will be downloaded into flash and run directly in Flash
       - name: ddr
         description: DDR download mode, program will be downloaded into ddr and run directly in ddr, program lost when poweroff
       - name: sram

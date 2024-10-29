@@ -227,7 +227,7 @@ $NUCLEI_SDK_ROOT
    * We provided different Nuclei Core configurations(CORE=<your_core>) we supported, see *Build/Makefile.core*.
      - such as `CORE=n300`
    * We support several download modes(DOWNLOAD=<mode>) for different applications.
-     - **flashxip**: Program will to be downloaded into flash and run directly in Flash
+     - **flashxip**: Program will be downloaded into flash and run directly in Flash
      - **flash**: Program will be downloaded into flash, when running, program will be copied to ilm/ram and run in ilm/ram
      - **ilm**: Program will be downloaded into ilm/ram and run directly in ilm/ram, program lost when poweroff
    * For example, if you want to build your application for *CORE=n300 DOWNLOAD=ilm*, you can easily run this command:

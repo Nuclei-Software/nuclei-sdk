@@ -21,7 +21,7 @@ SOC ?= evalsoc
 ## Available choices:
 ## ilm: Program will be downloaded into ilm/ram and run directly in ilm/ram, program lost when poweroff
 ## flash: Program will be downloaded into flash, when running, program will be copied to ilm/ram and run in ilm/ram
-## flashxip: Program will to be downloaded into flash and run directly in Flash
+## flashxip: Program will be downloaded into flash and run directly in Flash
 DOWNLOAD ?= ilm
 ## If SIMULATION=1, it means the program is optimized for hardware simulation environment
 SIMULATION ?= 0
