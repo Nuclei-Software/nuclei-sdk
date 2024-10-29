@@ -16,10 +16,12 @@ SRAM_MEMORY_ROM_SIZE = 0x10000;
 
 /* MTVT and MTVEC Information */
 /*
- * MTVT_BASE and MTVEC_BASE must be set with an value
+ * MTVT_BASE and MTVEC_BASE must be set with an value(uncomment it) if it is present
  * If it is not present, you need to remove section in the linker script
  * MTVT_BASE: isr_vector section
  * MTVEC_BASE: exception section
+ *
+ * MTVT_BASE  = 0xA0000000;
+ * MTVEC_BASE = 0xA000004c;
  */
-MTVT_BASE  = 0xA0000000;
-MTVEC_BASE = 0xA0000084;
+

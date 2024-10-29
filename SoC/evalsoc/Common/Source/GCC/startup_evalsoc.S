@@ -66,7 +66,7 @@ _start:
     /* Set correct sp for current cpu */
     la sp, _sp
 
-    /* mtvec and mtvt are readonly CSRs for N100, no need to initialize it */
+    /* mtvec and mtvt are initialized in _premain_init if they are writable */
 
     /* ===== Startup Stage 2 ===== */
 

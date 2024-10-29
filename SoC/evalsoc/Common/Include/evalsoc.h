@@ -94,20 +94,6 @@ typedef enum IRQn {
     SOC_INT15_IRQn           = 15,                /*!< Device Interrupt */
     SOC_INT16_IRQn           = 16,                /*!< Device Interrupt */
     SOC_INT17_IRQn           = 17,                /*!< Device Interrupt */
-    SOC_INT18_IRQn           = 18,                /*!< Device Interrupt */
-    SOC_INT19_IRQn           = 19,                /*!< Device Interrupt */
-    SOC_INT20_IRQn           = 20,                /*!< Device Interrupt */
-    SOC_INT21_IRQn           = 21,                /*!< Device Interrupt */
-    SOC_INT22_IRQn           = 22,                /*!< Device Interrupt */
-    SOC_INT23_IRQn           = 23,                /*!< Device Interrupt */
-    SOC_INT24_IRQn           = 24,                /*!< Device Interrupt */
-    SOC_INT25_IRQn           = 25,                /*!< Device Interrupt */
-    SOC_INT26_IRQn           = 26,                /*!< Device Interrupt */
-    SOC_INT27_IRQn           = 27,                /*!< Device Interrupt */
-    SOC_INT28_IRQn           = 28,                /*!< Device Interrupt */
-    SOC_INT29_IRQn           = 29,                /*!< Device Interrupt */
-    SOC_INT30_IRQn           = 30,                /*!< Device Interrupt */
-    SOC_INT31_IRQn           = 31,                /*!< Device Interrupt */
 #ifdef CFG_IRQ_NUM
     SOC_INT_MAX              = 2 + CFG_IRQ_NUM,   /*!< Two fixed cpu interrupt and max 30 external interrupt */
 #else

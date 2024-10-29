@@ -21,7 +21,7 @@ extern "C" {
 #define CFG_TMR_PRIVATE
 #define CFG_HAS_IRQC
 // External Interrupt Number
-#define CFG_IRQ_NUM                 30
+#define CFG_IRQ_NUM                 16
 
 // EXCP is the exception module, if not defined, it means not present
 // If not present, you need to remove .exception section in linker script
