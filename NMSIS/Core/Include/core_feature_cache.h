@@ -259,7 +259,8 @@ __STATIC_FORCEINLINE int32_t GetICacheInfo(CacheInfo_Type *info)
     if (info == NULL) {
         return -1;
     }
-    CSR_MICFGINFO_Type csr_ccfg = (CSR_MICFGINFO_Type)__RV_CSR_READ(CSR_MICFG_INFO);
+    CSR_MICFGINFO_Type csr_ccfg;
+    csr_ccfg.d = __RV_CSR_READ(CSR_MICFG_INFO);
     info->setperway = (1 << csr_ccfg.b.set) << 3;
     info->ways = (1 + csr_ccfg.b.way);
     if (csr_ccfg.b.lsize == 0) {
@@ -780,7 +781,8 @@ __STATIC_FORCEINLINE int32_t GetDCacheInfo(CacheInfo_Type *info)
     if (info == NULL) {
         return -1;
     }
-    CSR_MDCFGINFO_Type csr_ccfg = (CSR_MDCFGINFO_Type)__RV_CSR_READ(CSR_MDCFG_INFO);
+    CSR_MDCFGINFO_Type csr_ccfg;
+    csr_ccfg.d = __RV_CSR_READ(CSR_MDCFG_INFO);
     info->setperway = (1 << csr_ccfg.b.set) << 3;
     info->ways = (1 + csr_ccfg.b.way);
     if (csr_ccfg.b.lsize == 0) {
