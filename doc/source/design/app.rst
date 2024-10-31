@@ -121,6 +121,8 @@ cpuinfo
 This `cpuinfo application`_ is used to print the Nuclei RISC-V CPU information
 to help you to know what CPU features are present in this processor.
 
+You can also use openocd to probe the cpu feature, see https://doc.nucleisys.com/nuclei_tools/openocd/intro.html#nuclei-customized-features
+
 **How to run this application:**
 
 .. code-block:: shell

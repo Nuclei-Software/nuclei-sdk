@@ -8,7 +8,14 @@ V0.7.1
 
 This is version ``0.7.1`` of Nuclei SDK which is still in development.
 
+* NMSIS
 
+  - Fix Cache CCM related API compile fail using c++ compiler
+
+
+* Misc
+
+  - Fix various typos found in source code and doc
 
 V0.7.0
 ------

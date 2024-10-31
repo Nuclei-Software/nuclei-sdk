@@ -23,10 +23,11 @@ From `Nuclei Toolchain 2023.10`_, both gnu and llvm toolchain are provided, and 
 prefix changed from ``riscv-nuclei-elf-`` to ``riscv64-unknown-elf-``, and 0.5.0 SDK release
 will only support this ``2023.10`` or later toolchain.
 
-If you want to learn about how to use Nuclei Tools, see https://doc.nucleisys.com/nuclei_tools.
+If you want to learn about how to use Nuclei Tools(IDE,Toolchain,Qemu,OpenOCD,XlModel),
+please checkout https://doc.nucleisys.com/nuclei_tools.
 
-If you want to report issues when using Nuclei Tools or Nuclei Studio, please open issue in
-https://github.com/Nuclei-Software/nuclei-studio.
+If you want to report issues and see application note when using Nuclei Tools or Nuclei Studio,
+please checkout https://github.com/Nuclei-Software/nuclei-studio.
 
 Now the nuclei-sdk **released** versions are deeply integrated with Nuclei Studio IDE via menu
 **RV-Tools -> NPK Package Management**, and you can directly create nuclei-sdk project in Nuclei Studio IDE

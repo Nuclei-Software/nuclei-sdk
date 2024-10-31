@@ -723,6 +723,9 @@ When **CORE** is selected, the **ARCH**, **ABI** and **TUNE** (optional) are set
 and it might affect the compiler options in combination with :ref:`develop_buildsystem_var_archext`
 depended on the implementation of SoC build.mk.
 
+If you are not sure about which ARCH and extension and cpu feature your Nuclei CPU has,
+you can run :ref:`design_app_cpuinfo` example to confirm it.
+
 .. note::
 
     * ``n205/n205e/n305/n307/n307fd`` CORE are removed in Nuclei SDK 0.7.0
