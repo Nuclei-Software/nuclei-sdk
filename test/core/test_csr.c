@@ -126,7 +126,6 @@ __INTERRUPT void SOC_MTIMER_HANDLER(void)
 {
     // Clear Systimer pending flag by set compare value very large
     SysTimer_SetCompareValue(0xFFFFFFFF);
-    IRQC_ClearPendingIRQ(SysTimer_IRQn);
     IRQC_DisableIRQ(SysTimer_IRQn);
 }
 
@@ -138,7 +137,6 @@ CTEST(core, wfi)
     __WFI();
     ASSERT_NOT_EQUAL(IRQC_GetEnableIRQ(SysTimer_IRQn), 0);
     IRQC_DisableIRQ(SysTimer_IRQn);
-    IRQC_ClearPendingIRQ(SysTimer_IRQn);
     SysTick_Config(10);
     SysTimer_Start();
     __enable_irq();
@@ -185,7 +183,6 @@ CTEST(core, sleepmode)
     // Should not enter interrupt handler
     ASSERT_NOT_EQUAL(IRQC_GetEnableIRQ(SysTimer_IRQn), 0);
     IRQC_DisableIRQ(SysTimer_IRQn);
-    IRQC_ClearPendingIRQ(SysTimer_IRQn);
     SysTick_Config(100);
     __enable_irq();
     // Uncomment the following line, the CPU will enter to deep sleep
