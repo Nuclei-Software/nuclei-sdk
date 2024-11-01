@@ -18,6 +18,7 @@ This is development version ``0.2.0-dev`` of N100 SDK.
 
   - Add ``__set_rv_instret`` and ``__set_rv_cycle`` API for N100 NMSIS Core
   - Fix ``SysTick_Config`` API by using ``SysTick_Reload`` instead of directly set MTIMECMP register to avoid easy 24b overflow
+  - Remove ``IRQC_SetPendingIRQ`` and ``IRQC_ClearPendingIRQ`` API due to N100 only support level interrupt
 
 * SoC
 
@@ -28,6 +29,7 @@ This is development version ``0.2.0-dev`` of N100 SDK.
   - Now only ``sram`` linker script is provided for reference, you can always modify
     startup and linker script code to match your real cpu design
   - Fix ``delay_1ms`` API may work wrongly due to TIME register overflow
+  - N100 evalsoc external interrupt number changed from 30 to 16
 
 V0.1.0
 ------
