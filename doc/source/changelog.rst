@@ -13,6 +13,10 @@ This is version ``0.7.1`` of Nuclei SDK which is still in development.
   - Fix Cache CCM related API compile fail using c++ compiler
 
 
+* SoC
+
+  - Only call ``EnableSUCCM`` in ``_premain_init`` process when CCM present and S/U mode present defined in auto generated cpufeature.h
+
 * Misc
 
   - Fix various typos found in source code and doc
