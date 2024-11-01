@@ -106,46 +106,11 @@ __STATIC_FORCEINLINE void IRQC_DisableIRQ(IRQn_Type IRQn)
  * - 1  Interrupt is pending
  * \remarks
  * - IRQn must not be negative.
- * \sa
- * - \ref IRQC_SetPendingIRQ
- * - \ref IRQC_ClearPendingIRQ
+ * - Currently only level interrupt supported.
  */
 __STATIC_FORCEINLINE int32_t IRQC_GetPendingIRQ(IRQn_Type IRQn)
 {
     return (uint32_t) ((__RV_CSR_READ(CSR_IRQCIP)) >> (IRQn) & 0x1);
-}
-
-/**
- * \brief  Set a specific interrupt to pending
- * \details
- * This function sets the pending bit for the specific interrupt \em IRQn.
- * \param [in]      IRQn  Interrupt number
- * \remarks
- * - IRQn must not be negative.
- * \sa
- * - \ref IRQC_GetPendingIRQ
- * - \ref IRQC_ClearPendingIRQ
- */
-__STATIC_FORCEINLINE void IRQC_SetPendingIRQ(IRQn_Type IRQn)
-{
-    __RV_CSR_SET(CSR_IRQCIP, (1<<IRQn));
-}
-
-/**
- * \brief  Clear a specific interrupt from pending
- * \details
- * This function removes the pending state of the specific interrupt \em IRQn.
- * \em IRQn cannot be a negative number.
- * \param [in]      IRQn  Interrupt number
- * \remarks
- * - IRQn must not be negative.
- * \sa
- * - \ref IRQC_SetPendingIRQ
- * - \ref IRQC_GetPendingIRQ
- */
-__STATIC_FORCEINLINE void IRQC_ClearPendingIRQ(IRQn_Type IRQn)
-{
-    __RV_CSR_CLEAR(CSR_IRQCIP, (1<<IRQn));
 }
 
 /**
