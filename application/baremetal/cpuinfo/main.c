@@ -102,7 +102,7 @@ void nuclei_cpuinfo(void)
             }
         }
     }
-    mcfg = (CSR_MCFGINFO_Type)__RV_CSR_READ(CSR_MCFG_INFO);
+    mcfg.d = __RV_CSR_READ(CSR_MCFG_INFO);
     if (mcfg.b.dsp_n1) {
         printf(" Xxldspn1x");
     }
@@ -196,7 +196,7 @@ void nuclei_cpuinfo(void)
 
     /* ILM */
     if (mcfg.b.ilm) {
-        micfg = (CSR_MICFGINFO_Type)__RV_CSR_READ(CSR_MICFG_INFO);
+        micfg.d = __RV_CSR_READ(CSR_MICFG_INFO);
         printf("             ILM:");
         print_size(POWER_FOR_TWO(micfg.b.lm_size - 1) * 256);
         if (micfg.b.lm_xonly) {
@@ -210,7 +210,7 @@ void nuclei_cpuinfo(void)
 
     /* DLM */
     if (mcfg.b.dlm) {
-        mdcfg = (CSR_MDCFGINFO_Type)__RV_CSR_READ(CSR_MDCFG_INFO);
+        mdcfg.d = __RV_CSR_READ(CSR_MDCFG_INFO);
         printf("             DLM:");
         print_size(POWER_FOR_TWO(mdcfg.b.lm_size - 1) * 256);
         if (mdcfg.b.lm_ecc) {
@@ -221,21 +221,21 @@ void nuclei_cpuinfo(void)
 
     /* ICACHE */
     if (mcfg.b.icache) {
-        micfg = (CSR_MICFGINFO_Type)__RV_CSR_READ(CSR_MICFG_INFO);
+        micfg.d = __RV_CSR_READ(CSR_MICFG_INFO);
         printf("          ICACHE:");
         show_cache_info(POWER_FOR_TWO(micfg.b.set + 3), micfg.b.way + 1, POWER_FOR_TWO(micfg.b.lsize + 2), mcfg.b.ecc);
     }
 
     /* DCACHE */
     if (mcfg.b.dcache) {
-        mdcfg = (CSR_MDCFGINFO_Type)__RV_CSR_READ(CSR_MDCFG_INFO);
+        mdcfg.d = __RV_CSR_READ(CSR_MDCFG_INFO);
         printf("          DCACHE:");
         show_cache_info(POWER_FOR_TWO(mdcfg.b.set + 3), mdcfg.b.way + 1, POWER_FOR_TWO(mdcfg.b.lsize + 2), mcfg.b.ecc);
     }
 
     /* TLB only present with MMU, when PLIC present MMU will present */
     if (mcfg.b.plic) {
-        mtlbcfg = (CSR_MTLBCFGINFO_Type)__RV_CSR_READ(CSR_MTLBCFG_INFO);
+        mtlbcfg.d = __RV_CSR_READ(CSR_MTLBCFG_INFO);
         printf("             TLB:");
         printf(" MainTLB(set=%lu,way=%lu,entry=%lu,ecc=%lu) ITLB(entry=%lu) DTLB(entry=%lu)\r\n", \
                 POWER_FOR_TWO(mtlbcfg.b.set + 3), mtlbcfg.b.way + 1, LINESZ(mtlbcfg.b.lsize), \

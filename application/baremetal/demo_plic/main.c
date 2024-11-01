@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 
     // Do PLIC present check via CSR MCFGINFO register
     // Just to confirm whether PLIC really present
-    mcfg = (CSR_MCFGINFO_Type)__RV_CSR_READ(CSR_MCFG_INFO);
+    mcfg.d = __RV_CSR_READ(CSR_MCFG_INFO);
     if (mcfg.b.plic == 0) {
         printf("PLIC is not present in this CPU, please check!\n");
         return 0;

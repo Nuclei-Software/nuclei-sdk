@@ -734,7 +734,8 @@ void vPortValidateInterruptPriority(void)
     uint8_t ucCurrentPriority;
 
     /* Obtain the number of the currently executing interrupt. */
-    CSR_MCAUSE_Type mcause = (CSR_MCAUSE_Type)__RV_CSR_READ(CSR_MCAUSE);
+    CSR_MCAUSE_Type mcause;
+    mcause.d = __RV_CSR_READ(CSR_MCAUSE);
     /* Make sure current trap type is interrupt */
     configASSERT(mcause.b.interrupt == 1);
     if (mcause.b.interrupt) {

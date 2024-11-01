@@ -6,9 +6,11 @@
 
 void print_misa(void)
 {
-    CSR_MISA_Type misa_bits = (CSR_MISA_Type) __RV_CSR_READ(CSR_MISA);
-    static char misa_chars[30];
+    CSR_MISA_Type misa_bits;
+    char misa_chars[30];
     uint8_t index = 0;
+
+    misa_bits.d = __RV_CSR_READ(CSR_MISA);
     if (misa_bits.b.mxl == 1) {
         misa_chars[index++] = '3';
         misa_chars[index++] = '2';
