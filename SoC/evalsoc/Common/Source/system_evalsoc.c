@@ -1234,7 +1234,10 @@ void _premain_init(void)
 #endif
 
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
+    // NOTE: CFG_HAS_SMODE and CFG_HAS_UMODE are defined in auto generated cpufeature.h if present in cpu
+#if defined(CFG_HAS_SMODE) || defined(CFG_HAS_UMODE)
     EnableSUCCM();
+#endif
 #endif
 
     if (hartid == BOOT_HARTID) { // only required for boot hartid
