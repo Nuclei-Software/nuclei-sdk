@@ -66,7 +66,7 @@
  * query a NMSIS release update including new features.
  *
  **/
-#define __NMSIS_VERSION_MINOR            (0U)
+#define __NMSIS_VERSION_MINOR            (1U)
 
 /**
  * \brief   Represent the NMSIS patch version
