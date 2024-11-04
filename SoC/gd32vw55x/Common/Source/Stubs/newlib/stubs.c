@@ -158,7 +158,7 @@ __WEAK int _lseek(int file, int offset, int whence)
     return 0;
 }
 
-__WEAK int _link(char* old, char* new)
+__WEAK int _link(char* path1, char* path2)
 {
     errno = EMLINK;
     return -1;
@@ -175,7 +175,7 @@ __WEAK int _close(int fd)
     return -1;
 }
 
-__WEAK int _unlink(const char* name)
+__WEAK int _unlink(const char* path)
 {
     return -1;
 }
