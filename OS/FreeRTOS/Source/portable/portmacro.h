@@ -63,9 +63,16 @@ typedef unsigned long UBaseType_t;
 typedef uint16_t TickType_t;
 #define portMAX_DELAY           ( TickType_t )0xffff
 #else
+/* TODO If you want to use openocd rtos-aware debug, you need to define OPENOCD_RTOS_AWARE macro */
+//#define OPENOCD_RTOS_AWARE
+#ifdef OPENOCD_RTOS_AWARE
+typedef uint32_t TickType_t;
+#define portMAX_DELAY           ( TickType_t )0xFFFFFFFFUL
+#else
 /* RISC-V TIMER is 64-bit long */
 typedef uint64_t TickType_t;
 #define portMAX_DELAY           ( TickType_t )0xFFFFFFFFFFFFFFFFULL
+#endif
 #endif
 /*-----------------------------------------------------------*/
 
