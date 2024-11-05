@@ -20,7 +20,9 @@ This is version ``0.7.1`` of Nuclei SDK which is still in development.
 * Misc
 
   - Fix various typos found in source code and doc
-  - Recommend evalsoc user to run :ref:`cpuinfo` to check cpu features it present.
+  - Recommend evalsoc user to run :ref:`cpuinfo` to check cpu features it present
+  - If you want to do openocd rtos aware debug, you need to follow note in commit b7ed34e96
+  - Evalsoc uart eclic irq maybe not working due to different cpu configuration
 
 V0.7.0
 ------
