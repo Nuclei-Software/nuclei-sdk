@@ -207,6 +207,8 @@ typedef enum IRQn {
 
 #ifdef CFG_HAS_CLIC
 /* UART0 Interrupt */
+/* NOTE: Take care the external uart irq may not work, it require a correct evalsoc cpu configuration */
+/* NOTE: For latest 200/300 cpu, this UART0_IRQn maybe SOC_INT19_IRQn */
 #define UART0_IRQn                                 SOC_INT51_IRQn
 /* QSPI Interrupt */
 #define QSPI0_IRQn                                 SOC_INT53_IRQn
