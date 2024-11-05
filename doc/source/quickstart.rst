@@ -249,7 +249,7 @@ We need to build application for this board :ref:`design_board_gd32vf103v_rvstar
 
 .. note::
 
-    * If you want to run on Nuclei Evaluation SoC, see :ref:`design_soc_evalsoc`
+    * If you want to run on Nuclei Evaluation SoC, see :ref:`design_soc_evalsoc`, recommend to run :ref:`design_app_cpuinfo` 
     * Since below steps are taking gd32vf103 SoC based board **gd32vf103v_rvstar** to do demostration,
       and when you pass ``SOC=gd32vf103``, the default BOARD will be ``gd32vf103v_rvstar``, so
       do you don't need to pass ``BOARD=gd32vf103v_rvstar``

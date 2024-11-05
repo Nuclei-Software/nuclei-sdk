@@ -51,6 +51,11 @@ Usage
 
 .. note::
 
+    To ensure compatibility when using Nuclei EvalSoC(FPGA), please verify with our Application Engineer (AE) the specific CPU configuration to confirm if the EvalSoC's CPU possesses the features you intend to test.
+    You can utilize the :ref:`design_app_cpuinfo` application to determine the available CPU features on your system and cross-reference this information with the Nuclei ISA specifications.
+
+.. note::
+
     In latest CPU RTL generation flow, it will also generate an Nuclei SDK to match CPU
     and EvalSoC RTL configuration, please use the generated Nuclei SDK to evaluate your
     CPU and EvalSoC feature.

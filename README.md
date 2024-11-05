@@ -211,6 +211,10 @@ $NUCLEI_SDK_ROOT
 
 ## How to use
 
+> [!NOTE]
+> To ensure compatibility when using Nuclei EvalSoC(FPGA), please verify with our Application Engineer (AE) the specific CPU configuration to confirm if the EvalSoC's CPU possesses the features you intend to test.
+> You can utilize the [cpuinfo][1] application to determine the available CPU features on your system and cross-reference this information with the Nuclei ISA specifications.
+
 1. Create and modify your own setup config
    * For **Linux**, create `setup_config.sh` in **$NUCLEI_SDK_ROOT**.
    * For **Windows**, create `setup_config.bat` in **%NUCLEI_SDK_ROOT%**.
@@ -284,3 +288,6 @@ changed from `riscv-nuclei-elf-` to `riscv64-unknown-elf-`.
 ## [Contributing](https://doc.nucleisys.com/nuclei_sdk/contribute.html)
 
 ## [Changelog](https://doc.nucleisys.com/nuclei_sdk/changelog.html)
+
+
+[1]: https://doc.nucleisys.com/nuclei_sdk/design/app.html#cpuinfo
