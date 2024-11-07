@@ -123,6 +123,7 @@
 #define CSR_JVT 0x17
 #define CSR_MTVT 0x307
 #define CSR_MSTATUS 0x300
+#define CSR_MSTATUSH 0x310
 #define CSR_MISA 0x301
 #define CSR_MIE 0x304
 #define CSR_MTVEC 0x305
