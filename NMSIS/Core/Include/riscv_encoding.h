@@ -957,6 +957,8 @@
 #define CSR_MTLB_CTL            0x7DD
 #define CSR_MECC_LOCK           0x7DE
 #define CSR_MFP16MODE           0x7E2
+/* mfp16mode is renamed to mmisc_ctl1 */
+#define CSR_MMISC_CTL1          0x7E2
 #define CSR_LSTEPFORC           0x7E9
 #define CSR_PUSHMSUBM           0x7EB
 #define CSR_MTVT2               0x7EC
