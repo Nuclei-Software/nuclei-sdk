@@ -11,7 +11,7 @@ This is version ``0.7.1`` of Nuclei SDK which is still in development.
 * NMSIS
 
   - Fix Cache CCM related API compile fail using c++ compiler
-
+  - **mfp16mode** csr is renamed to **mmisc_ctl1** due to hw changes
 
 * SoC
 
