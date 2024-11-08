@@ -56,7 +56,10 @@
 
 #include <stdint.h>
 #include <string.h>
+
+#ifndef TXM_MODULE
 #include <nuclei_sdk_soc.h>
+#endif
 
 /* Determine if the optional ThreadX user define file should be used.  */
 
@@ -300,6 +303,7 @@ typedef unsigned short                          USHORT;
 
 #endif
 
+#ifndef TXM_MODULE
 static inline void _tx_thread_system_return(void)
 {
         /* Set a software interrupt(SWI) request to request a context switch. */
@@ -308,6 +312,7 @@ static inline void _tx_thread_system_return(void)
         within the specified behaviour for the architecture. */
         __RWMB();
 }
+#endif
 
 /* Define the interrupt lockout macros for each ThreadX object.  */
 
