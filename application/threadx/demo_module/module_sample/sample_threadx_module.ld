@@ -1,16 +1,16 @@
 MEMORY
 {
-  FLASH (rx) : ORIGIN = 0x00030000, LENGTH = 0x00010000
-  RAM   (wx) : ORIGIN = 0, LENGTH = 0x00100000
+  FLASH (rx) : ORIGIN = 0xA0000000, LENGTH = 0x00020000
+  RAM   (wx) : ORIGIN = 0xA0040000, LENGTH = 0x00100000
 }
 
 
 SECTIONS
 {
-  __FLASH_segment_start__ = 0x00030000;
-  __FLASH_segment_end__   = 0x00040000;
-  __RAM_segment_start__   = 0x10000000;
-  __RAM_segment_end__     = 0x10008000;
+  __FLASH_segment_start__ = 0xA0000000;
+  __FLASH_segment_end__   = 0xA0020000;
+  __RAM_segment_start__   = 0xA0040000;
+  __RAM_segment_end__     = 0xA0140000;
 
   __HEAPSIZE__ = 128;
 
@@ -125,7 +125,7 @@ SECTIONS
     KEEP (*(.got*))
     . = ALIGN(4);
     _egot = .;
-  } 
+  }
   __got_end__ =  __got_load_start__ + SIZEOF(.got);
 
   __rodata_load_start__ = ALIGN(__got_end__ , 4);
@@ -135,7 +135,7 @@ SECTIONS
     *(.rodata .rodata.* .gnu.linkonce.r.*)
   }
   __rodata_end__ = __rodata_start__ + SIZEOF(.rodata);
- 
+
   __code_size__ =  SIZEOF(.data) + __rodata_end__ - __FLASH_segment_start__;
 
   __fast_load_start__ = ALIGN(__rodata_end__ , 4);
