@@ -172,25 +172,67 @@ typedef unsigned short                          USHORT;
 #endif
 
 
+
 /* Define the TX_THREAD control block extensions for this port. The main reason
    for the multiple macros is so that backward compatibility can be maintained with
    existing ThreadX kernel awareness modules.  */
 
 #define TX_THREAD_EXTENSION_0
 #define TX_THREAD_EXTENSION_1
-#define TX_THREAD_EXTENSION_2
+#ifdef  TX_ENABLE_IAR_LIBRARY_SUPPORT
+#define TX_THREAD_EXTENSION_2               VOID    *tx_thread_module_instance_ptr;         \
+                                            VOID    *tx_thread_module_entry_info_ptr;       \
+                                            ULONG   tx_thread_module_current_user_mode;     \
+                                            ULONG   tx_thread_module_user_mode;             \
+                                            ULONG   tx_thread_module_saved_lr;              \
+                                            VOID    *tx_thread_module_kernel_stack_start;   \
+                                            VOID    *tx_thread_module_kernel_stack_end;     \
+                                            ULONG   tx_thread_module_kernel_stack_size;     \
+                                            VOID    *tx_thread_module_stack_ptr;            \
+                                            VOID    *tx_thread_module_stack_start;          \
+                                            VOID    *tx_thread_module_stack_end;            \
+                                            ULONG   tx_thread_module_stack_size;            \
+                                            VOID    *tx_thread_module_reserved;             \
+                                            VOID    *tx_thread_iar_tls_pointer;
+#else
+#define TX_THREAD_EXTENSION_2               VOID    *tx_thread_module_instance_ptr;         \
+                                            VOID    *tx_thread_module_entry_info_ptr;       \
+                                            ULONG   tx_thread_module_current_user_mode;     \
+                                            ULONG   tx_thread_module_user_mode;             \
+                                            ULONG   tx_thread_module_saved_lr;              \
+                                            VOID    *tx_thread_module_kernel_stack_start;   \
+                                            VOID    *tx_thread_module_kernel_stack_end;     \
+                                            ULONG   tx_thread_module_kernel_stack_size;     \
+                                            VOID    *tx_thread_module_stack_ptr;            \
+                                            VOID    *tx_thread_module_stack_start;          \
+                                            VOID    *tx_thread_module_stack_end;            \
+                                            ULONG   tx_thread_module_stack_size;            \
+                                            VOID    *tx_thread_module_reserved;
+#endif
+#ifndef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
 #define TX_THREAD_EXTENSION_3
+#else
+#define TX_THREAD_EXTENSION_3           unsigned long long  tx_thread_execution_time_total; \
+                                        unsigned long long  tx_thread_execution_time_last_start;
+#endif
 
 
 /* Define the port extensions of the remaining ThreadX objects.  */
 
 #define TX_BLOCK_POOL_EXTENSION
 #define TX_BYTE_POOL_EXTENSION
-#define TX_EVENT_FLAGS_GROUP_EXTENSION
 #define TX_MUTEX_EXTENSION
-#define TX_QUEUE_EXTENSION
-#define TX_SEMAPHORE_EXTENSION
-#define TX_TIMER_EXTENSION
+#define TX_EVENT_FLAGS_GROUP_EXTENSION          VOID    *tx_event_flags_group_module_instance; \
+                                                VOID   (*tx_event_flags_group_set_module_notify)(struct TX_EVENT_FLAGS_GROUP_STRUCT *group_ptr);
+
+#define TX_QUEUE_EXTENSION                      VOID    *tx_queue_module_instance; \
+                                                VOID   (*tx_queue_send_module_notify)(struct TX_QUEUE_STRUCT *queue_ptr);
+
+#define TX_SEMAPHORE_EXTENSION                  VOID    *tx_semaphore_module_instance; \
+                                                VOID   (*tx_semaphore_put_module_notify)(struct TX_SEMAPHORE_STRUCT *semaphore_ptr);
+
+#define TX_TIMER_EXTENSION                      VOID    *tx_timer_module_instance; \
+                                                VOID   (*tx_timer_module_expiration_function)(ULONG id);
 
 
 /* Define the user extension field of the thread control block.  Nothing
@@ -199,6 +241,7 @@ typedef unsigned short                          USHORT;
 #ifndef TX_THREAD_USER_EXTENSION
 #define TX_THREAD_USER_EXTENSION
 #endif
+
 
 
 /* Define the macros for processing extensions in tx_thread_create, tx_thread_delete,
