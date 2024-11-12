@@ -43,24 +43,24 @@ SECTIONS
   __dynstr_end__ = __dynstr_load_start__ + SIZEOF(.dynstr);
 
   __reldyn_load_start__ =  ALIGN(__dynstr_end__ , 4);
-  .rel.dyn ALIGN(__reldyn_load_start__ , 4) : AT(ALIGN(__reldyn_load_start__ , 4))
+  .rela.dyn ALIGN(__reldyn_load_start__ , 4) : AT(ALIGN(__reldyn_load_start__ , 4))
   {
     . = ALIGN(4);
-    KEEP (*(.rel.dyn))
-    KEEP (*(.rel.dyn*))
+    KEEP (*(.rela.dyn))
+    KEEP (*(.rela.dyn*))
     . = ALIGN(4);
   }
-  __reldyn_end__ = __reldyn_load_start__ + SIZEOF(.rel.dyn);
+  __reldyn_end__ = __reldyn_load_start__ + SIZEOF(.rela.dyn);
 
   __relplt_load_start__ =  ALIGN(__reldyn_end__ , 4);
-  .rel.plt ALIGN(__relplt_load_start__ , 4) : AT(ALIGN(__relplt_load_start__ , 4))
+  .rela.plt ALIGN(__relplt_load_start__ , 4) : AT(ALIGN(__relplt_load_start__ , 4))
   {
     . = ALIGN(4);
-    KEEP (*(.rel.plt))
-    KEEP (*(.rel.plt*))
+    KEEP (*(.rela.plt))
+    KEEP (*(.rela.plt*))
     . = ALIGN(4);
   }
-  __relplt_end__ = __relplt_load_start__ + SIZEOF(.rel.plt);
+  __relplt_end__ = __relplt_load_start__ + SIZEOF(.rela.plt);
 
   __plt_load_start__ =  ALIGN(__relplt_end__ , 4);
   .plt ALIGN(__plt_load_start__ , 4) : AT(ALIGN(__plt_load_start__ , 4))
