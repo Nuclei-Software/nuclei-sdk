@@ -142,11 +142,7 @@ SECTIONS
 
   __fast_load_end__ = __fast_load_start__ + SIZEOF(.fast);
 
-  __new_got_start__ = ALIGN(__RAM_segment_start__ , 4);
-
-  __new_got_end__ =  __new_got_start__ + SIZEOF(.got);
-
-  .fast ALIGN(__new_got_end__ , 4) : AT(ALIGN(__rodata_end__ , 4))
+  .fast ALIGN(__RAM_segment_start__ , 4) : AT(ALIGN(__rodata_end__ , 4))
   {
     __fast_start__ = .;
     *(.fast .fast.*)

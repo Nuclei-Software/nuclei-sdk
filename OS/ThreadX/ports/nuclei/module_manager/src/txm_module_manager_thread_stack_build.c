@@ -26,5 +26,27 @@
 
 VOID _txm_module_manager_thread_stack_build(TX_THREAD *thread_ptr, VOID (*function_ptr)(TX_THREAD *, TXM_MODULE_INSTANCE *))
 {
+    struct thread_stack_frame *frame;
+    TXM_MODULE_THREAD_ENTRY_INFO *thread_entry_info;
+    uint8_t *stk;
+    int i;
 
+    stk  = thread_ptr -> tx_thread_stack_end;
+    thread_entry_info = (TXM_MODULE_THREAD_ENTRY_INFO *)(thread_ptr -> tx_thread_stack_ptr);
+    stk  = (uint8_t *)(((unsigned long)stk) & (~(unsigned long)(sizeof(ALIGN_TYPE) - 1)));
+    stk -= sizeof(struct thread_stack_frame);
+
+    frame = (struct thread_stack_frame*)stk;
+
+    for (i = 0; i < sizeof(struct thread_stack_frame) / sizeof(unsigned long); i++) {
+        ((unsigned long*)frame)[i] = 0xdeadbeef;
+    }
+
+    frame->a0      = thread_entry_info->txm_module_thread_entry_info_thread;
+    frame->a1      = thread_entry_info;
+
+    frame->epc     = (unsigned long)function_ptr;
+    frame->mstatus = THREAD_INITIAL_MSTATUS;
+
+    thread_ptr -> tx_thread_stack_ptr = stk;
 }

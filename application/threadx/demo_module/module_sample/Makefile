@@ -142,10 +142,14 @@ $(ALL_CXX_OBJS): %.o: % $(COMMON_PREREQS)
 
 dasm: $(TARGET).elf
 	$(OBJDUMP) -S -D $< > $(TARGET).dump
+	$(OBJDUMP) -S -d $< > $(TARGET).dasm
 	$(OBJCOPY) $< -O ihex $(TARGET).hex
 
 bin: $(TARGET).elf
-	$(OBJCOPY) $< -O binary $(TARGET).bin
+	$(OBJCOPY) --dump-section  .preamble=tmp_preamble.bin $<
+	$(OBJCOPY) -j .text -j .got -j .rodata $< -O binary tmp_content.bin
+	cat tmp_preamble.bin > $(TARGET).bin
+	cat tmp_content.bin >> $(TARGET).bin
 
 upload: $(TARGET).elf
 	@$(ECHO) "Download and run $<"

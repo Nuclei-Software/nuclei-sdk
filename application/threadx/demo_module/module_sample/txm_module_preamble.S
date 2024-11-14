@@ -18,7 +18,7 @@ __txm_module_preamble:
     .word      0x1                                              // Module Minor Version
     .word      32                                               // Module Preamble Size in 32-bit words
     .word      0x12345678                                       // Module ID (application defined)
-    .word      0x02000007                                       // Module Properties where:
+    .word      0x02000000                                       // Module Properties where:
                                                                 //   Bits 31-24: Compiler ID
                                                                 //           0 -> IAR
                                                                 //           1 -> RVDS

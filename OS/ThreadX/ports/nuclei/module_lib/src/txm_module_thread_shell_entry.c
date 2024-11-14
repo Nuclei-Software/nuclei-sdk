@@ -1,10 +1,10 @@
 /***************************************************************************
- * Copyright (c) 2024 Microsoft Corporation 
- * 
+ * Copyright (c) 2024 Microsoft Corporation
+ *
  * This program and the accompanying materials are made available under the
  * terms of the MIT License which is available at
  * https://opensource.org/licenses/MIT.
- * 
+ *
  * SPDX-License-Identifier: MIT
  **************************************************************************/
 
@@ -46,7 +46,7 @@ ULONG                           (*_txm_module_kernel_call_dispatcher)(ULONG kern
 /* Define the startup code that clears the uninitialized global data and sets up the
    preset global variables.  */
 
-extern VOID _gcc_setup(TXM_MODULE_INSTANCE *);
+extern VOID _gcc_setup(char *code_addr, char *data_addr);
 
 
 /**************************************************************************/
@@ -93,6 +93,53 @@ extern VOID _gcc_setup(TXM_MODULE_INSTANCE *);
 /*  10-15-2021      Scott Larson            Initial Version 6.1.9         */
 /*                                                                        */
 /**************************************************************************/
+
+extern char __FLASH_segment_start__[];
+extern char __RAM_segment_start__[];
+extern char __got_load_start__[], __got_end__[];
+
+extern char __data_load_start__[], __data_start__[], __data_end__[];
+extern char __bss_start__[], __bss_end__[];
+
+VOID _gcc_setup(char *code_addr, char *data_addr)
+{
+    char *start, *load_data_start, *bss_start;
+    unsigned long *got_items;
+    unsigned long i, size, load_data_size, bss_size;
+    unsigned long FLASH_segment_start = (unsigned long)__FLASH_segment_start__;
+    unsigned long data_start = (unsigned long)__data_start__;
+
+    start = code_addr + ((unsigned long)__got_load_start__ - (unsigned long)__FLASH_segment_start__);
+    size = (unsigned long)__got_end__ - (unsigned long)__got_load_start__;
+    load_data_start = code_addr + ((unsigned long)__data_load_start__ - (unsigned long)__FLASH_segment_start__);
+    load_data_size = (unsigned long)__data_end__ - (unsigned long)__data_start__;
+    bss_start = data_addr + ((unsigned long)__bss_start__ - (unsigned long)__data_start__);
+    bss_size = (unsigned long)__bss_end__ - (unsigned long)__bss_start__;
+
+    // Modify the GOT table to reference new code and data addresses
+    // TODO: CODE IN ROM is not working, since we cannot modify the GOT table in ROM
+    got_items = (unsigned long *) start;
+    for (i = 0; i < size / sizeof(unsigned long); i += 1) {
+        if (got_items[i] == 0) {
+            got_items[i] = 0;
+        } else if (got_items[i] >= (unsigned long)data_start) {
+            got_items[i] = data_addr + (got_items[i] - (unsigned long)data_start);
+        } else {
+            got_items[i] = code_addr + (got_items[i] - (unsigned long)FLASH_segment_start);
+        }
+    }
+
+    // Load data segment
+    for (i = 0; i < load_data_size; i += 1) {
+        data_addr[i] = start[i];
+    }
+
+    // Zero init bss segment
+    for (i = 0; i < bss_size; i += 1) {
+    	bss_start[i] = 0;
+    }
+}
+
 VOID  _txm_module_thread_shell_entry(TX_THREAD *thread_ptr, TXM_MODULE_THREAD_ENTRY_INFO *thread_info)
 {
 
@@ -106,15 +153,15 @@ VOID  _txm_module_thread_shell_entry(TX_THREAD *thread_ptr, TXM_MODULE_THREAD_EN
     if (thread_info -> txm_module_thread_entry_info_start_thread)
     {
         /* Initialize the C environment.  */
-        _gcc_setup(thread_info -> txm_module_thread_entry_info_code_base_address);
-        
+        _gcc_setup(thread_info -> txm_module_thread_entry_info_code_base_address, thread_info -> txm_module_thread_entry_info_data_base_address);
+
         /* Save the entry info pointer, for later use.  */
         _txm_module_entry_info =  thread_info;
-        
+
         /* Save the kernel function dispatch address. This is used to make all resident calls from
            the module.  */
         _txm_module_kernel_call_dispatcher =  thread_info -> txm_module_thread_entry_info_kernel_call_dispatcher;
-        
+
         /* Ensure that we have a valid pointer.  */
         while (!_txm_module_kernel_call_dispatcher)
         {
@@ -122,7 +169,7 @@ VOID  _txm_module_thread_shell_entry(TX_THREAD *thread_ptr, TXM_MODULE_THREAD_EN
                An error here typically indicates the resident portion of _tx_thread_schedule
                is not supporting the trap to obtain the function pointer.   */
         }
-        
+
         /* Resume the module's callback thread, already created in the manager.  */
         _txe_thread_resume(thread_info -> txm_module_thread_entry_info_callback_request_thread);
     }
