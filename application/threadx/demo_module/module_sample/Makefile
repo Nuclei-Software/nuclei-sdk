@@ -1,8 +1,8 @@
 TARGET := threadx_module_sample
 
 # Configuration parameters
-RISCV_ARCH := rv32imac
-RISCV_ABI := ilp32
+RISCV_ARCH ?= rv32imac
+RISCV_ABI ?= ilp32
 
 COMMON_FLAGS := -Og -g -fPIC -mno-plt
 

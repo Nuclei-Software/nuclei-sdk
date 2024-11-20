@@ -1,10 +1,10 @@
 /***************************************************************************
- * Copyright (c) 2024 Microsoft Corporation 
- * 
+ * Copyright (c) 2024 Microsoft Corporation
+ *
  * This program and the accompanying materials are made available under the
  * terms of the MIT License which is available at
  * https://opensource.org/licenses/MIT.
- * 
+ *
  * SPDX-License-Identifier: MIT
  **************************************************************************/
 
@@ -24,7 +24,7 @@
 /*                                                                        */
 /*  APPLICATION INTERFACE DEFINITION                       RELEASE        */
 /*                                                                        */
-/*    txm_module_port.h                                   Cortex-M3       */
+/*    txm_module_port.h                                   Nuclei RISC-V   */
 /*                                                           6.2.1        */
 /*  AUTHOR                                                                */
 /*                                                                        */
@@ -232,20 +232,20 @@ The following extensions must also be defined in tx_port.h:
 
 /* Define offset adjustments according to the compiler used to build the module.  */
 
-#define TXM_MODULE_IAR_SHELL_ADJUST             24
-#define TXM_MODULE_IAR_START_ADJUST             28
-#define TXM_MODULE_IAR_STOP_ADJUST              32
-#define TXM_MODULE_IAR_CALLBACK_ADJUST          44
+#define TXM_MODULE_IAR_SHELL_ADJUST             (6 * sizeof(ULONG))
+#define TXM_MODULE_IAR_START_ADJUST             (7 * sizeof(ULONG))
+#define TXM_MODULE_IAR_STOP_ADJUST              (8 * sizeof(ULONG))
+#define TXM_MODULE_IAR_CALLBACK_ADJUST          (11 * sizeof(ULONG))
 
 #define TXM_MODULE_RVDS_SHELL_ADJUST            0
 #define TXM_MODULE_RVDS_START_ADJUST            0
 #define TXM_MODULE_RVDS_STOP_ADJUST             0
 #define TXM_MODULE_RVDS_CALLBACK_ADJUST         0
 
-#define TXM_MODULE_GNU_SHELL_ADJUST             24
-#define TXM_MODULE_GNU_START_ADJUST             28
-#define TXM_MODULE_GNU_STOP_ADJUST              32
-#define TXM_MODULE_GNU_CALLBACK_ADJUST          44
+#define TXM_MODULE_GNU_SHELL_ADJUST             (6 * sizeof(ULONG))
+#define TXM_MODULE_GNU_START_ADJUST             (7 * sizeof(ULONG))
+#define TXM_MODULE_GNU_STOP_ADJUST              (8 * sizeof(ULONG))
+#define TXM_MODULE_GNU_CALLBACK_ADJUST          (11 * sizeof(ULONG))
 
 
 /* Define other module port-specific constants.  */
@@ -463,6 +463,6 @@ UINT  _txm_module_manager_inside_data_check(TXM_MODULE_INSTANCE *module_instance
 
 #define TXM_MODULE_MANAGER_VERSION_ID   \
 CHAR                            _txm_module_manager_version_id[] =  \
-                                    "Copyright (c) 2024 Microsoft Corporation.  *  ThreadX Module Cortex-M3 Version 6.4.1 *";
+                                    "Copyright (c) 2024 Microsoft Corporation.  *  ThreadX Module Nuclei RISC-V Version 6.4.1 *";
 
 #endif

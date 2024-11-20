@@ -13,9 +13,11 @@
 
 
 /* Define constants.  */
-
-#define DEMO_STACK_SIZE         512
-#define DEMO_BYTE_POOL_SIZE     6000
+// TODO previous for rv32 512 + 6000 is enough, but not enough for rv64
+// which will cause program run to exception
+// but for rv64 700 + 7000 will just be ok, if smaller will crash
+#define DEMO_STACK_SIZE         700
+#define DEMO_BYTE_POOL_SIZE     7000
 #define DEMO_BLOCK_POOL_SIZE    100
 #define DEMO_QUEUE_SIZE         100
 

@@ -9,7 +9,7 @@ ILM_MEMORY_SIZE = 0x40000;
 
 /* DLM Memory Information */
 DLM_MEMORY_PRESENT = 1;
-DLM_MEMORY_BASE = 0x90000000;
+DLM_MEMORY_BASE = 0xC0000000;
 DLM_MEMORY_SIZE = 0x40000;
 
 /* SpiFlash Memory Information */
