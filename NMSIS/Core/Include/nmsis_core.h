@@ -92,8 +92,9 @@
 /* Include core cache feature header file */
 #include "core_feature_cache.h"
 /* Include core cidu feature header file */
- #include "core_feature_cidu.h"
-
+#include "core_feature_cidu.h"
+/* Include core pma feature header file */
+#include "core_feature_pma.h"
 /* Include compatiable functions header file */
 #include "core_compatiable.h"
 
