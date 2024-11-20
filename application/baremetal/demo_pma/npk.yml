@@ -1,0 +1,48 @@
+## Package Base Information
+name: app-nsdk_demo_pma
+owner: nuclei
+version:
+description: Nuclei PMA Demo using Nuclei PMA feature
+type: app
+keywords:
+  - baremetal
+  - get started
+  - pma
+category: baremetal application
+license:
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    value: -O0
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+  - config: download_mode
+    value: sram
+  - config: nuclei_cache
+    value: ["ic", "dc", "ccm"]
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
