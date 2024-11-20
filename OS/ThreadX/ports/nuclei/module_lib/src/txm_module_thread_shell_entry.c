@@ -146,14 +146,15 @@ VOID  _txm_module_thread_shell_entry(TX_THREAD *thread_ptr, TXM_MODULE_THREAD_EN
 #ifndef TX_DISABLE_NOTIFY_CALLBACKS
     VOID            (*entry_exit_notify)(TX_THREAD *, UINT);
 #endif
-
+    VOID (*new_gcc_setup)(char *, char *);
 
     /* Determine if this is the start thread.  If so, we must prepare the module for
        execution.  If not, simply skip the C startup code.  */
     if (thread_info -> txm_module_thread_entry_info_start_thread)
     {
         /* Initialize the C environment.  */
-        _gcc_setup(thread_info -> txm_module_thread_entry_info_code_base_address, thread_info -> txm_module_thread_entry_info_data_base_address);
+        new_gcc_setup = (unsigned long)(thread_info -> txm_module_thread_entry_info_module -> txm_module_instance_shell_entry_function) - ((unsigned long)_txm_module_thread_shell_entry - (unsigned long)_gcc_setup);
+        new_gcc_setup(thread_info -> txm_module_thread_entry_info_code_base_address, thread_info -> txm_module_thread_entry_info_data_base_address);
 
         /* Save the entry info pointer, for later use.  */
         _txm_module_entry_info =  thread_info;

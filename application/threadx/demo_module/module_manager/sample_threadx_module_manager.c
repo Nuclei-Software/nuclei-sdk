@@ -15,7 +15,7 @@ TXM_MODULE_INSTANCE     my_module;
 /* Define the object pool area.  */
 
 UCHAR                   object_memory[16384];
-UCHAR                   module_ram[32768];
+UCHAR                   module_ram[60000];
 
 /* Define the count of memory faults.  */
 
@@ -73,31 +73,32 @@ void    module_manager_entry(ULONG thread_input)
 {
     uint32_t i = 0;
     ULONG *thread_6_counter;
+
     /* Initialize the module manager.   */
-    txm_module_manager_initialize((VOID *) module_ram, 32768);
+    txm_module_manager_initialize((VOID *) module_ram, sizeof(module_ram));
 
     txm_module_manager_object_pool_create(object_memory, sizeof(object_memory));
 
     /* Register a fault handler.  */
     txm_module_manager_memory_fault_notify(module_fault_handler);
 
-    // /* Load the module that is already there, in this example it is placed there by the multiple image download.  */
-    // txm_module_manager_memory_load(&my_module, "my module", (VOID *) 0xA0000000);
+    /* Load the module that is already there, in this example it is placed there by the multiple image download.  */
+    txm_module_manager_memory_load(&my_module, "my module", (VOID *) 0xA0000000);
 
-    // /* Enable 128 byte read/write shared memory region at 0x20010000.  */
-    // txm_module_manager_external_memory_enable(&my_module, (void *) 0xB0010000, 128, TXM_MODULE_MANAGER_SHARED_ATTRIBUTE_WRITE);
+    /* Enable 128 byte read/write shared memory region at 0x20010000.  */
+    txm_module_manager_external_memory_enable(&my_module, (void *) 0xB0010000, 128, TXM_MODULE_MANAGER_SHARED_ATTRIBUTE_WRITE);
 
-    // /* Start the module.  */
-    // txm_module_manager_start(&my_module);
+    /* Start the module.  */
+    txm_module_manager_start(&my_module);
 
-    // /* Sleep for a while....  */
-    // tx_thread_sleep(1000);
+    /* Sleep for a while....  */
+    tx_thread_sleep(20);
 
-    // /* Stop the module.  */
-    // txm_module_manager_stop(&my_module);
+    /* Stop the module.  */
+    txm_module_manager_stop(&my_module);
 
-    // /* Unload the module.  */
-    // txm_module_manager_unload(&my_module);
+    /* Unload the module.  */
+    txm_module_manager_unload(&my_module);
 
     /* Load the module that is already there.  */
     txm_module_manager_in_place_load(&my_module, "my module", (VOID *) 0xA0000000);
