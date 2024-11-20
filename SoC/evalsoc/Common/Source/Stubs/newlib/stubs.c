@@ -16,6 +16,8 @@ extern int errno;
 /* Key stub function for uart io via printf/scanf and heap management */
 #undef putchar
 
+// TODO Implement your own uart_write and uart_read for your debug uart device
+
 int putchar(int dat)
 {
     if (dat == '\n') {

@@ -8,7 +8,7 @@ define exported symbol _max_vector = 4096;
 
 define memory mem with size = 4G;
 
-/* Set memory region information according to your device */
+/* TODO: Set memory region information according to your device */
 /* For this case, ROM and RAM are both SRAM region */
 define region ROM_region32 = mem:[from 0xA0000000 size 0x20000];
 define region RAM_region32 = mem:[from 0xA0020000 size 0x20000];

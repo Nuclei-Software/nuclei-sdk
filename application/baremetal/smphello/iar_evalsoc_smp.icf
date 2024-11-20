@@ -10,6 +10,7 @@ define exported symbol __HEAP_SIZE = HEAP_SIZE;
 
 define memory mem with size = 4G;
 
+// TODO: Set memory region information according to your device
 define region ROM_region32 = mem:[from 0xA0000000 size 0x2000000];
 define region RAM_region32 = mem:[from 0xA2000000 size 0x2000000];
 

@@ -80,6 +80,10 @@ Usage
 If you want to use this **Nuclei Evaluation SoC** in Nuclei SDK, you need to set the
 :ref:`develop_buildsystem_var_soc` Makefile variable to ``evalsoc``.
 
+.. note::
+
+    IAR support is done by prebuilt IAR projects not through Makefile based build system, please check https://github.com/Nuclei-Software/nuclei-sdk/blob/master/ideprojects/iar/README.md for detailed usage.
+
 Extra make variables supported only in this SoC and used internally only by Nuclei, not designed for widely used:
   * **RUNMODE**: it is used internally by Nuclei, used to control ILM/DLM/ICache/DCache enable or disable
     via make variable, please check ``SoC/evalsoc/runmode.mk`` for details. It is not functional by default,

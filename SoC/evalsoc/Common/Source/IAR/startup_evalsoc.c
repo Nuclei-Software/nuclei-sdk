@@ -155,7 +155,7 @@ __weak int smp_main(void)
     return 0;
 }
 
-// TODO: Currently only single core is supported
+// NOTE: __lower_level_init will directly call main or smp_main and not return
 int __low_level_init(void)
 {
     unsigned long hartid = __get_hart_id();

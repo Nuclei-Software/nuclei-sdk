@@ -2,11 +2,13 @@
 
 // #define UART_AUTO_ECHO
 
-// uncomment it if you want to print via IAR Breakpoint(C-SPY emulated IO)
+// TODO uncomment it if you want to print via IAR Breakpoint(C-SPY emulated IO)
 // You need to set Library Configuration -> Stdout/Stderr -> Via IAR Breakpoint
 // #define DEBUG_IAR_BREAKPOINT
 
 // For more iar dlib stub function
+
+// TODO Implement your own uart_write and uart_read for your debug uart device
 
 #ifndef DEBUG_IAR_BREAKPOINT
 // By default print via uart io

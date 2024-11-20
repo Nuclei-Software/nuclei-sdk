@@ -6,7 +6,11 @@ Changelog
 V0.8.0
 ------
 
-This is version ``0.7.1`` of Nuclei SDK which is still in development.
+This is version ``0.8.0`` of Nuclei SDK which is still in development.
+
+* SoC
+
+  - Add more documentation about IAR compiler support and porting notes, especially the vector table alignment with the ``MTVT`` CSR.
 
 
 V0.7.1
@@ -27,7 +31,7 @@ This is release version ``0.7.1`` of Nuclei SDK.
 * Misc
 
   - Fix various typos found in source code and doc
-  - Recommend evalsoc user to run :ref:`cpuinfo` to check cpu features it present
+  - Recommend evalsoc user to run :ref:`design_app_cpuinfo` to check cpu features it present
   - If you want to do openocd rtos aware debug, you need to follow note in commit b7ed34e96
   - Evalsoc uart eclic irq maybe not working due to different cpu configuration
 

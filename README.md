@@ -23,6 +23,8 @@ We also integrated many RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII
 
 Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CPU**, click [Quick Start with Nuclei SDK](https://doc.nucleisys.com/nuclei_sdk/quickstart.html) to start up.
 
+> If you want to check how to use with IAR compiler, please check [ideprojects/iar/README.md](ideprojects/iar/README.md).
+
 Wanner to take a try with **Nuclei N100 SDK for Nuclei 100 series CPU**, click [Quick Start with Nuclei N100 SDK](https://doc.nucleisys.com/nuclei_n100_sdk/quickstart.html) to start up.
 
 ## Requirements

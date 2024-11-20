@@ -584,15 +584,15 @@ This variable is used to select different toolchain to compile application.
 Currently we support 3 toolchain in Nuclei SDK.
 
 * **nuclei_gnu**: default, it will choose nuclei gnu toolchain, distributed with Nuclei Toolchain.
-* **nuclei_llvm**: still in experiment, nuclei customized extensions not yet supported, distributed with Nuclei Toolchain.
-* **terapines**: still in experiment, it depends on the toolchain vendor about the supported extensions, if you want to take a try with it, just visit https://www.terapines.com/ and request an terapines toolchain evaluation.
+* **nuclei_llvm**: supported, nuclei customized extensions not yet supported, distributed with Nuclei Toolchain.
+* **terapines**: supported, it depends on the toolchain vendor about the supported extensions, if you want to take a try with it, just visit https://www.terapines.com/ and request an terapines toolchain evaluation.
 
 For **nuclei_gnu/nuclei_llvm** toolchain both newlib and libncrt library are supported,
 but nuclei_llvm toolchain multilib selection mechanism is not as good as gnu toolchain,
 you need to take care of the arch isa string order, please see ``riscv64-unknown-unknown-elf-clang -v`` output for supported multilib and its isa string order.
 
-And IAR compiler support is also done in Nuclei SDK, you can take a try with it
-via ``ideprojects/iar`` folder provided prebuilt ide projects.
+And **IAR compiler** support is also done in Nuclei SDK, you can take a try with it
+via `ideprojects/iar`_ folder provided prebuilt ide projects.
 
 If you want to use old Nuclei GNU Toolchain <= 2022.12 in Nuclei SDK 0.5.0, you need to pass extra ``COMPILE_PREFIX=riscv-nuclei-elf-`` when build any application, such as ``make CORE=n300fd COMPILE_PREFIX=riscv-nuclei-elf-  STDCLIB=libncrt_small clean all``, but this is not recommended, and will be deprecated in future any time.
 
@@ -1828,3 +1828,4 @@ For example, ``LINKER_SCRIPT := gcc.ld``.
 .. _zfh extension: https://wiki.riscv.org/display/HOME/Recently+Ratified+Extensions
 .. _zvfh extension: https://github.com/riscv/riscv-v-spec/releases/tag/zvfh
 .. _Nuclei Toolchain 2023.10: https://github.com/riscv-mcu/riscv-gnu-toolchain/releases/tag/nuclei-2023.10
+.. _ideprojects/iar: https://github.com/Nuclei-Software/nuclei-sdk/blob/master/ideprojects/iar/README.md

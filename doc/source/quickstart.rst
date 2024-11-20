@@ -600,7 +600,8 @@ For more advanced usage, please follow the items as below:
       2. Now **Terapines ZCC Lite** is deeply integrated in **Nuclei Studio >= 2024.06**, so you just need to
          follow :ref:`quickstart_get_set_nuclei_sdk` to setup PATH for Terapines ZCC, and in Nuclei SDK,
          you can just pass **TOOCHAIN=terapines** during make to take a try with Terapines ZCC.
-         From 0.7.0 release, you can create project in Nuclei Studio >= 2024.06 using Terapines ZCC.
+         From 0.7.0 release, you can create project in Nuclei Studio >= 2024.06 using Terapines ZCC, see
+         `Using Terapines ZCC Toolchain in Nuclei Studio`_.
 
       3. You can take a try using IAR workbench, we provided prebuilt projects directly in Nuclei SDK,
          just check the `ideprojects/iar/README.md`_ to learn about it.
@@ -614,7 +615,7 @@ For more advanced usage, please follow the items as below:
          to play with PlatformIO for Nuclei.
 
       6. You can also use source code in Nuclei SDK as base, and easily integrate with other IDE tools,
-         such as ZStudio IDE, Compiler-IDE and others.
+         such as `ZStudio IDE`_, `Compiler IDE`_ and others.
 
 
 .. _GDB User Manual: https://www.gnu.org/software/gdb/documentation/
@@ -626,3 +627,6 @@ For more advanced usage, please follow the items as below:
 .. _Nuclei Toolchain 2023.10: https://github.com/riscv-mcu/riscv-gnu-toolchain/releases/tag/nuclei-2023.10
 .. _ideprojects/iar/README.md: https://github.com/Nuclei-Software/nuclei-sdk/blob/master/ideprojects/iar/README.md
 .. _Nuclei Studio 2024.06: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2024.06
+.. _Using Terapines ZCC Toolchain in Nuclei Studio: https://1nfinite.ai/t/nuclei-studio-2024-06-ide-terapines-zcc/113
+.. _ZStudio IDE: https://1nfinite.ai/t/zstudio-ide-risc-v/71
+.. _Compiler IDE: https://www.compiler-dev.com/

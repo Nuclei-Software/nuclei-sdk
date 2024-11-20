@@ -8,6 +8,8 @@
 // When see issue above, please don't link -lm library
 // math library is already provided in libncrt library, no need to link -lm
 
+// TODO Implement your own uart_write and uart_read for your debug uart device
+
 __USED int metal_tty_putc(int c)
 {
     if (c == '\n') {
