@@ -4,9 +4,11 @@
 #if !defined(__CIDU_PRESENT) || (__CIDU_PRESENT != 1)
 /* __CIDU_PRESENT shoulu be defined in <Device>.h */
 #warning "__CIDU_PRESENT is not defined or equal to 1, please check!"
+#warning "This example require CPU CIDU feature!"
 #endif
 
 #if !defined(SMP_CPU_CNT)
+#warning "This example require CPU SMP feature!"
 #error "SMP_CPU_CNT macro is not defined, please set SMP_CPU_CNT to integer value > 1"
 #endif
 

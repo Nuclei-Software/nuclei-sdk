@@ -6,6 +6,7 @@
 #if !defined(__PMP_PRESENT) || (__PMP_PRESENT == 0)
 /* __PMP_PRESENT should be defined in <Device>.h */
 #warning "__PMP_PRESENT is not defined or equal to 0, please check!"
+#warning "This example require CPU PMP feature!"
 #endif
 
 /* different trigger condition */

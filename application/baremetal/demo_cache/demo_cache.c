@@ -9,6 +9,7 @@
 #if !defined(__CCM_PRESENT) || (__CCM_PRESENT != 1)
 /* __CCM_PRESENT should be defined in <Device>.h */
 #warning "__CCM_PRESENT is not defined or equal to 1, please check!"
+#warning "This example require CPU CCM feature!"
 #endif
 
 // Declare HPMCOUNTER4

@@ -6,6 +6,7 @@
 #endif
 
 #if !defined(SMP_CPU_CNT)
+#warning "This example require CPU SMP feature!"
 #error "SMP_CPU_CNT macro is not defined, please set SMP_CPU_CNT to integer value > 1"
 #endif
 

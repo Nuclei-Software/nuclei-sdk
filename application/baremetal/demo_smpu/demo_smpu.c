@@ -6,11 +6,13 @@
 #if !defined(__TEE_PRESENT) || (__TEE_PRESENT != 1)
 /* __TEE_PRESENT should be defined in <Device>.h */
 #warning "__TEE_PRESENT is not defined or equal to 1, please check!"
+#warning "This example require CPU TEE feature!"
 #endif
 
 #if !defined(__SMPU_PRESENT) || (__SMPU_PRESENT != 1)
 /* __SMPU_PRESENT should be defined in <Device>.h */
 #warning "__SMPU_PRESENT is not defined or equal to 1, please check!"
+#warning "This example require CPU SMPU feature!"
 #endif
 
 

@@ -5,6 +5,7 @@
 #if !defined(__PLIC_PRESENT) || (__PLIC_PRESENT == 0)
 /* __PLIC_PRESENT should be defined in <Device>.h */
 #warning "__PLIC_PRESENT is not defined or equal to 0, please check!"
+#warning "This example require CPU PLIC feature!"
 #endif
 
 #if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
