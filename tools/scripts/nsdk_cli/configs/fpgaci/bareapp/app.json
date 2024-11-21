@@ -195,6 +195,12 @@
                 "PASS": ["Stack check demo over"]
             }
         },
+        "application/baremetal/demo_pma": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CSV, Cacheable", "DCache not present in CPU"]
+            }
+        },
         "application/baremetal/cpuinfo": {
             "build_config" : {},
             "checks": {
