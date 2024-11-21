@@ -8,6 +8,14 @@ V0.8.0
 
 This is version ``0.8.0`` of Nuclei SDK which is still in development.
 
+* Application
+
+  * Add more application code compile check message for better example requirement explanation
+  * Remove ``demo_spmp`` application due to hw ``sPMP`` upgraded to ``sMPU`` and no longer supported,
+    please use :ref:`design_app_demo_smpu` now.
+  * Add ``-fno-tree-tail-merge`` compiler option for threadx RTOS example compiling, which is required for correct
+    compiling
+
 * SoC
 
   - Add more documentation about IAR compiler support and porting notes, especially the vector table alignment with the ``MTVT`` CSR.
