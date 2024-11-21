@@ -2041,6 +2041,71 @@ For now, this demo needs to run on **only 300 Series v4.2.0 or later**, which su
 
     Stack check demo over!
 
+.. _design_app_demo_pma:
+
+demo_pma
+~~~~~~~~
+
+This `demo_pma application`_ is used to demonstrate how to set memory region to different attribute(``Device``/``Non-Cacheable``/``Cacheable``)
+
+.. note::
+    * PMA are split into three attributes: ``Device``/``Cacheable``/``Non-Cacheable``, which correspondingly the whole memory region are split into
+    * Take care to set the region type and address range, which maybe causing function or performance issue!
+    * ``NMSIS/Core/Include/core_feature_pma.h`` provides apis like ``PMA_DisableHwXXRegion``, ``PMA_EnableHwXXRegion`` to disable/enable
+      hardware-defined regions, but please take care to use it, because maybe the region you disable will go to ``Device``
+      (maybe covered by another bigger-range ``Device`` region!), then instruction fetch exception happens!
+
+* Observe cycles taken when executing same task ``array_update_by_row`` by changing the same memory region to ``Non-Cacheable``/``Cacheable``
+* Struct ``PMA_CONFIG`` is used to assign PMA, which consists of ``region_type`` ``region_base`` ``region_size``  ``region_enable``
+* ``region_type`` could be ``PMA_REGION_TYPE_SECSHARE``, ``PMA_REGION_TYPE_NC``, ``PMA_REGION_TYPE_DEV``, ``PMA_REGION_TYPE_CA``
+* ``region_base`` is base physical address, which needs to be 4K byte aligned
+* ``region_size`` needs to be 4K byte aligned; the ``region_base`` should be integer multiples of ``region_size``
+* ``region_enable`` enable(1) or disable(0) the region, could be ``PMA_REGION_ENA``, ``PMA_REGION_DIS``
+* After ``pma_cfg`` is assigned, and give the ``entry_idx``, call ``PMA_SetRegion`` to take effect
+* The ``entry_idx`` (0-n) depends on number of paired ``mattri(n)_mask`` and ``mattri(n)_base``, refer to Nuclei ISA specifications for max region entries
+* The api will do aligning by 4KB(because region granularity is 4KB) to ``region_base`` and ``region_size`` forcely
+* The regions can be overlapped as the priority: ``Non-Cacheable`` > ``Cacheable`` > ``Device``, , but especially be careful not to 
+  overlap software's instruction/data sections by Device, or overlap Device(like uart) memory by Cacheable
+* ``PMA_GetRegion`` could retrieve the region info detail
+
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei ux900 Core RISC-V processor as example
+    # cd to the demo_pma directory
+    cd application/baremetal/demo_pma
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=sram CORE=ux900 clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=sram CORE=ux900 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Nov 21 2024, 12:27:11
+    Download Mode: SRAM
+    CPU Frequency 50000363 Hz
+    CPU HartID: 0
+    Benchmark initialized
+    
+    Set to NonCacheable region
+    Region type: 0x4,region base addr: 0xa0012000, region size: 0x8000, region status: 1
+    CSV, NonCacheable, 3719290
+    
+    Set to Cacheable region
+    Region type: 0x0,region base addr: 0xa0012000, region size: 0x8000, region status: 1
+    CSV, Cacheable, 782131
+
+From output, we can see the cycles taken varies a lot according to the memory attribute ``NonCacheable`` and ``Cacheable``
+
+.. note::
+    * In Nuclei Evalsoc core ux900 for example, the sram/ddr memory locates originally in hardware-defined Cacheable region(which configured by rtl configuration stage),
+      So this demo first covers original attribute by ``NonCacheable``, then ``Cacheable`` (that's recovered)
+    * As the prority: ``Non-Cacheable`` > ``Cacheable`` > ``Device``, it can't cover original attribute(``Cacheable``) by ``Device``!
 
 FreeRTOS applications
 ---------------------
@@ -2464,4 +2529,5 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx demo`` applicati
 .. _demo_cidu application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cidu
 .. _demo_cache application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cache
 .. _demo_stack_check application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_stack_check
+.. _demo_pma application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pma
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html
