@@ -32,6 +32,7 @@ VOID _txm_module_manager_thread_stack_build(TX_THREAD *thread_ptr, VOID (*functi
     int i;
 
     stk  = thread_ptr -> tx_thread_stack_end;
+    // thread_ptr -> tx_thread_stack_ptr stored thread_entry_info
     thread_entry_info = (TXM_MODULE_THREAD_ENTRY_INFO *)(thread_ptr -> tx_thread_stack_ptr);
     stk  = (uint8_t *)(((unsigned long)stk) & (~(unsigned long)(sizeof(ALIGN_TYPE) - 1)));
     stk -= sizeof(struct thread_stack_frame);

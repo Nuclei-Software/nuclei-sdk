@@ -24,7 +24,8 @@
 #include "tx_api.h"
 #include "txm_module.h"
 
+// TODO not applicable to current ThreadX Module implemented in M-Mode
 ALIGN_TYPE _txm_module_manager_user_mode_entry(ULONG kernel_request, ALIGN_TYPE param_1, ALIGN_TYPE param_2, ALIGN_TYPE param_3)
 {
-
+    return TX_NOT_AVAILABLE;
 }

@@ -129,81 +129,10 @@ The following extensions must also be defined in tx_port.h:
 #define TXM_MODULE_KERNEL_STACK_SIZE            768
 #endif
 
-/* For the following 3 access control settings, change TEX and C, B, S (bits 21 through 16 of MPU_RASR)
- * to reflect your system memory attributes (cache, shareable, memory type).  */
-/* Code region access control: privileged read-only, outer & inner write-back, normal memory, shareable.  */
-#ifndef TXM_MODULE_MPU_CODE_ACCESS_CONTROL
-#define TXM_MODULE_MPU_CODE_ACCESS_CONTROL      0x06070000
-#endif
-/* Data region access control: execute never, read/write, outer & inner write-back, normal memory, shareable.  */
-#ifndef TXM_MODULE_MPU_DATA_ACCESS_CONTROL
-#define TXM_MODULE_MPU_DATA_ACCESS_CONTROL      0x13070000
-#endif
-/* Shared region access control: execute never, read-only, outer & inner write-back, normal memory, shareable.  */
-#ifndef TXM_MODULE_MPU_SHARED_ACCESS_CONTROL
-#define TXM_MODULE_MPU_SHARED_ACCESS_CONTROL    0x12070000
-#endif
-
-/* For Cortex-M devices with 16 MPU regions, the last four regions (12-15)
-   are not used by ThreadX. These may be defined by the user.
-   RBAR needs the valid bit and region number set, as MPU alias registers are used.  */
-#define TXM_MODULE_MPU_USER_DEFINED_RBAR_12     0x1C
-#define TXM_MODULE_MPU_USER_DEFINED_RASR_12     0
-#define TXM_MODULE_MPU_USER_DEFINED_RBAR_13     0x1D
-#define TXM_MODULE_MPU_USER_DEFINED_RASR_13     0
-#define TXM_MODULE_MPU_USER_DEFINED_RBAR_14     0x1E
-#define TXM_MODULE_MPU_USER_DEFINED_RASR_14     0
-#define TXM_MODULE_MPU_USER_DEFINED_RBAR_15     0x1F
-#define TXM_MODULE_MPU_USER_DEFINED_RASR_15     0
-
-
-/* Users can define these default MPU configuration values.
-
-   If TXM_MODULE_MPU_DEFAULT is *not* defined, the MPU is disabled
-   when a thread that is not owned by a module is running
-   and the defines below are not used.
-
-   If TXM_MODULE_MPU_DEFAULT is defined, the MPU is configured to the
-   below values when a thread that is not owned by a module is running.
-   RBAR needs the valid bit and region number set, as MPU alias registers are used.  */
-#define TXM_MODULE_MPU_DEFAULT_RBAR_0           0x10
-#define TXM_MODULE_MPU_DEFAULT_RASR_0           0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_1           0x11
-#define TXM_MODULE_MPU_DEFAULT_RASR_1           0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_2           0x12
-#define TXM_MODULE_MPU_DEFAULT_RASR_2           0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_3           0x13
-#define TXM_MODULE_MPU_DEFAULT_RASR_3           0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_4           0x14
-#define TXM_MODULE_MPU_DEFAULT_RASR_4           0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_5           0x15
-#define TXM_MODULE_MPU_DEFAULT_RASR_5           0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_6           0x16
-#define TXM_MODULE_MPU_DEFAULT_RASR_6           0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_7           0x17
-#define TXM_MODULE_MPU_DEFAULT_RASR_7           0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_8           0x18
-#define TXM_MODULE_MPU_DEFAULT_RASR_8           0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_9           0x19
-#define TXM_MODULE_MPU_DEFAULT_RASR_9           0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_10          0x1A
-#define TXM_MODULE_MPU_DEFAULT_RASR_10          0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_11          0x1B
-#define TXM_MODULE_MPU_DEFAULT_RASR_11          0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_12          0x1C
-#define TXM_MODULE_MPU_DEFAULT_RASR_12          0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_13          0x1D
-#define TXM_MODULE_MPU_DEFAULT_RASR_13          0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_14          0x1E
-#define TXM_MODULE_MPU_DEFAULT_RASR_14          0
-#define TXM_MODULE_MPU_DEFAULT_RBAR_15          0x1F
-#define TXM_MODULE_MPU_DEFAULT_RASR_15          0
-
 
 /* Define constants specific to the tools the module can be built with for this particular modules port.  */
 
 #define TXM_MODULE_IAR_COMPILER                 0x00000000
-#define TXM_MODULE_RVDS_COMPILER                0x01000000
 #define TXM_MODULE_GNU_COMPILER                 0x02000000
 #define TXM_MODULE_COMPILER_MASK                0xFF000000
 #define TXM_MODULE_OPTIONS_MASK                 0x000000FF
@@ -211,7 +140,7 @@ The following extensions must also be defined in tx_port.h:
 
 /* Define the properties for this particular module port.  */
 
-#define TXM_MODULE_MEMORY_PROTECTION_ENABLED
+// #define TXM_MODULE_MEMORY_PROTECTION_ENABLED
 
 #ifdef  TXM_MODULE_MEMORY_PROTECTION_ENABLED
 #define TXM_MODULE_REQUIRE_ALLOCATED_OBJECT_MEMORY
@@ -226,7 +155,7 @@ The following extensions must also be defined in tx_port.h:
 
 /* Define the supported options for this module.   */
 
-#define TXM_MODULE_MANAGER_SUPPORTED_OPTIONS    (TXM_MODULE_USER_MODE | TXM_MODULE_MEMORY_PROTECTION | TXM_MODULE_SHARED_EXTERNAL_MEMORY_ACCESS)
+#define TXM_MODULE_MANAGER_SUPPORTED_OPTIONS    (0)
 #define TXM_MODULE_MANAGER_REQUIRED_OPTIONS     0
 
 
@@ -237,10 +166,6 @@ The following extensions must also be defined in tx_port.h:
 #define TXM_MODULE_IAR_STOP_ADJUST              (8 * sizeof(ULONG))
 #define TXM_MODULE_IAR_CALLBACK_ADJUST          (11 * sizeof(ULONG))
 
-#define TXM_MODULE_RVDS_SHELL_ADJUST            0
-#define TXM_MODULE_RVDS_START_ADJUST            0
-#define TXM_MODULE_RVDS_STOP_ADJUST             0
-#define TXM_MODULE_RVDS_CALLBACK_ADJUST         0
 
 #define TXM_MODULE_GNU_SHELL_ADJUST             (6 * sizeof(ULONG))
 #define TXM_MODULE_GNU_START_ADJUST             (7 * sizeof(ULONG))
@@ -253,61 +178,24 @@ The following extensions must also be defined in tx_port.h:
 /* Define INLINE_DECLARE to inline for this compiler.  */
 #define INLINE_DECLARE inline
 
-#define TXM_MPU_VALID_BIT                           0x10
-#define TXM_ENABLE_REGION                           0x01
-#define TXM_MODULE_MANAGER_MPU_KERNEL_ENTRY_INDEX   0
-
 /* Shared memory region attributes.  */
 #define TXM_MODULE_MANAGER_SHARED_ATTRIBUTE_WRITE   1
-#define TXM_MODULE_MANAGER_ATTRIBUTE_WRITE_MPU_BIT  0x01000000
 
-/* There are 2 registers to set up each MPU region: MPU_RBAR, MPU_RASR.  */
-typedef struct TXM_MODULE_MPU_INFO_STRUCT
-{
-    ULONG   txm_module_mpu_region_address;
-    ULONG   txm_module_mpu_region_attribute_size;
-} TXM_MODULE_MPU_INFO;
-
-
-#ifdef TXM_MODULE_MANAGER_16_MPU
-
-/* Define the number of MPU entries assigned to the code and data sections.
-   On some Cortex-M7 parts, there are 16 total entries. ThreadX uses one for access
-   to the kernel entry function, thus 15 remain for code and data protection.  */
-#define TXM_MODULE_MANAGER_MPU_TOTAL_ENTRIES        16
-#define TXM_MODULE_MANAGER_MPU_CODE_ENTRIES         4
-#define TXM_MODULE_MANAGER_MPU_DATA_ENTRIES         4
-#define TXM_MODULE_MANAGER_MPU_SHARED_ENTRIES       3
-#define TXM_MODULE_MANAGER_MPU_SHARED_INDEX         9
-#define TXM_MODULE_MANAGER_MPU_USER_REGION_INDEX    12
+#ifdef TXM_MODULE_MANAGER_PMP
 
 
 /* Define the port-extensions to the module manager instance structure.  */
 
-#define TXM_MODULE_MANAGER_PORT_EXTENSION                                                                       \
-    TXM_MODULE_MPU_INFO     txm_module_instance_mpu_registers[TXM_MODULE_MANAGER_MPU_TOTAL_ENTRIES];            \
-    ULONG                   txm_module_instance_shared_memory_count;                                            \
-    ULONG                   txm_module_instance_shared_memory_address[TXM_MODULE_MANAGER_MPU_SHARED_ENTRIES];   \
-    ULONG                   txm_module_instance_shared_memory_length[TXM_MODULE_MANAGER_MPU_SHARED_ENTRIES];
+#define TXM_MODULE_MANAGER_PORT_EXTENSION
 
-#else   /* TXM_MODULE_MANAGER_16_MPU is not defined */
-
-/* Define the number of MPU entries assigned to the code and data sections.
-   On Cortex-M3, M4, and some M7 parts, there are 8 total entries. ThreadX uses one for access
-   to the kernel entry function, thus 7 remain for code and data protection.  */
-#define TXM_MODULE_MANAGER_MPU_TOTAL_ENTRIES        8
-#define TXM_MODULE_MANAGER_CODE_MPU_ENTRIES         4
-#define TXM_MODULE_MANAGER_DATA_MPU_ENTRIES         3
-#define TXM_MODULE_MANAGER_SHARED_MPU_REGION        4
+#else   /* TXM_MODULE_MANAGER_PMP is not defined */
 
 /* Define the port-extensions to the module manager instance structure.  */
 
-#define TXM_MODULE_MANAGER_PORT_EXTENSION                                                               \
-    TXM_MODULE_MPU_INFO     txm_module_instance_mpu_registers[TXM_MODULE_MANAGER_MPU_TOTAL_ENTRIES];    \
-    ULONG                   txm_module_instance_shared_memory_address;                                  \
-    ULONG                   txm_module_instance_shared_memory_length;
+#define TXM_MODULE_MANAGER_PORT_EXTENSION
 
-#endif  /* TXM_MODULE_MANAGER_16_MPU */
+
+#endif  /* TXM_MODULE_MANAGER_PMP */
 
 
 /* Define the memory fault information structure that is populated when a memory fault occurs.  */
@@ -372,13 +260,6 @@ typedef struct TXM_MODULE_MANAGER_MEMORY_FAULT_INFO_STRUCT
         stop_function_adjust =      TXM_MODULE_IAR_STOP_ADJUST;                     \
         callback_function_adjust =  TXM_MODULE_IAR_CALLBACK_ADJUST;                 \
     }                                                                               \
-    else if ((properties & TXM_MODULE_COMPILER_MASK) == TXM_MODULE_RVDS_COMPILER)   \
-    {                                                                               \
-        shell_function_adjust =     TXM_MODULE_RVDS_SHELL_ADJUST;                   \
-        start_function_adjust =     TXM_MODULE_RVDS_START_ADJUST;                   \
-        stop_function_adjust =      TXM_MODULE_RVDS_STOP_ADJUST;                    \
-        callback_function_adjust =  TXM_MODULE_RVDS_CALLBACK_ADJUST;                \
-    }                                                                               \
     else                                                                            \
     {                                                                               \
         shell_function_adjust =     TXM_MODULE_GNU_SHELL_ADJUST;                    \
@@ -391,7 +272,7 @@ typedef struct TXM_MODULE_MANAGER_MEMORY_FAULT_INFO_STRUCT
 /* Define the macro to populate the thread control block with module port-specific information.
    Check if the module is in user mode and set up txm_module_thread_entry_info_kernel_call_dispatcher accordingly.
 */
-
+// TODO only M-mode execution is supported now
 #define TXM_MODULE_MANAGER_THREAD_SETUP(thread_ptr, module_instance)                                                                    \
     thread_ptr -> tx_thread_module_current_user_mode =  module_instance -> txm_module_instance_property_flags & TXM_MODULE_USER_MODE;   \
     thread_ptr -> tx_thread_module_user_mode =          module_instance -> txm_module_instance_property_flags & TXM_MODULE_USER_MODE;   \
@@ -429,7 +310,8 @@ typedef struct TXM_MODULE_MANAGER_MEMORY_FAULT_INFO_STRUCT
 /* Define the macros to perform port-specific checks when passing pointers to the kernel.  */
 
 /* Define macro to make sure object is inside the module's data.  */
-#ifdef TXM_MODULE_MANAGER_16_MPU
+/* TODO: TXM_MODULE_MANAGER_PMP is not implemented */
+#ifdef TXM_MODULE_MANAGER_PMP
 #define TXM_MODULE_MANAGER_CHECK_INSIDE_DATA(module_instance, obj_ptr, obj_size) \
     _txm_module_manager_inside_data_check(module_instance, obj_ptr, obj_size)
 #else
@@ -438,10 +320,7 @@ typedef struct TXM_MODULE_MANAGER_MEMORY_FAULT_INFO_STRUCT
     (((obj_ptr) < ((obj_ptr) + (obj_size))) && \
     /* Check if it's inside module data.  */ \
      ((((obj_ptr) >= (ALIGN_TYPE) module_instance -> txm_module_instance_data_start) && \
-     (((obj_ptr) + (obj_size)) <= ((ALIGN_TYPE) module_instance -> txm_module_instance_data_end + 1))) || \
-    /* Check if it's inside shared memory.  */ \
-     (((obj_ptr) >= (ALIGN_TYPE) module_instance -> txm_module_instance_shared_memory_address) && \
-     (((obj_ptr) + (obj_size)) <= (ALIGN_TYPE) (module_instance -> txm_module_instance_shared_memory_address + module_instance -> txm_module_instance_shared_memory_length)))))
+     (((obj_ptr) + (obj_size)) <= ((ALIGN_TYPE) module_instance -> txm_module_instance_data_end + 1)))))
 #endif
 
 /* Define some internal prototypes to this module port.  */
@@ -456,9 +335,6 @@ VOID  _txm_module_manager_alignment_adjust(TXM_MODULE_PREAMBLE *module_preamble,
 VOID  _txm_module_manager_memory_fault_handler(VOID);                                                                           \
 UINT  _txm_module_manager_memory_fault_notify(VOID (*notify_function)(TX_THREAD *, TXM_MODULE_INSTANCE *));                     \
 VOID  _txm_module_manager_mm_register_setup(TXM_MODULE_INSTANCE *module_instance);                                              \
-ULONG _txm_power_of_two_block_size(ULONG size);                                                                                 \
-ULONG _txm_module_manager_calculate_srd_bits(ULONG block_size, ULONG length);                                                   \
-ULONG _txm_module_manager_region_size_get(ULONG block_size);                                                                    \
 UINT  _txm_module_manager_inside_data_check(TXM_MODULE_INSTANCE *module_instance, ALIGN_TYPE obj_ptr, UINT obj_size);
 
 #define TXM_MODULE_MANAGER_VERSION_ID   \

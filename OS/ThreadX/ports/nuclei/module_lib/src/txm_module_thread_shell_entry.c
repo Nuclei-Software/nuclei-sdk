@@ -53,8 +53,8 @@ extern VOID _gcc_setup(char *code_addr, char *data_addr);
 /*                                                                        */
 /*  FUNCTION                                               RELEASE        */
 /*                                                                        */
-/*    _txm_module_thread_shell_entry                    Cortex-M3/GNU     */
-/*                                                           6.1.9        */
+/*    _txm_module_thread_shell_entry                       Nuclei RISC-V  */
+/*                                                           6.4.1        */
 /*  AUTHOR                                                                */
 /*                                                                        */
 /*    Scott Larson, Microsoft Corporation                                 */
@@ -90,7 +90,6 @@ extern VOID _gcc_setup(char *code_addr, char *data_addr);
 /*                                                                        */
 /*    DATE              NAME                      DESCRIPTION             */
 /*                                                                        */
-/*  10-15-2021      Scott Larson            Initial Version 6.1.9         */
 /*                                                                        */
 /**************************************************************************/
 

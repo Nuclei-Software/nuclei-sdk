@@ -1,10 +1,10 @@
 /***************************************************************************
- * Copyright (c) 2024 Microsoft Corporation 
- * 
+ * Copyright (c) 2024 Microsoft Corporation
+ *
  * This program and the accompanying materials are made available under the
  * terms of the MIT License which is available at
  * https://opensource.org/licenses/MIT.
- * 
+ *
  * SPDX-License-Identifier: MIT
  **************************************************************************/
 
@@ -40,44 +40,6 @@ VOID    (*_txm_module_manager_fault_notify)(TX_THREAD *, TXM_MODULE_INSTANCE *);
 TXM_MODULE_MANAGER_FAULT_INFO
 
 
-/**************************************************************************/
-/*                                                                        */
-/*  FUNCTION                                               RELEASE        */
-/*                                                                        */
-/*    _txm_module_manager_memory_fault_handler            Cortex-M3       */
-/*                                                           6.1.9        */
-/*  AUTHOR                                                                */
-/*                                                                        */
-/*    Scott Larson, Microsoft Corporation                                 */
-/*                                                                        */
-/*  DESCRIPTION                                                           */
-/*                                                                        */
-/*    This function handles a fault associated with a memory protected    */
-/*    module.                                                             */
-/*                                                                        */
-/*  INPUT                                                                 */
-/*                                                                        */
-/*    None                                                                */
-/*                                                                        */
-/*  OUTPUT                                                                */
-/*                                                                        */
-/*    None                                                                */
-/*                                                                        */
-/*  CALLS                                                                 */
-/*                                                                        */
-/*    _tx_thread_terminate              Terminate thread                  */
-/*                                                                        */
-/*  CALLED BY                                                             */
-/*                                                                        */
-/*    Fault handler                                                       */
-/*                                                                        */
-/*  RELEASE HISTORY                                                       */
-/*                                                                        */
-/*    DATE              NAME                      DESCRIPTION             */
-/*                                                                        */
-/*  10-15-2021      Scott Larson            Initial Version 6.1.9         */
-/*                                                                        */
-/**************************************************************************/
 VOID  _txm_module_manager_memory_fault_handler(VOID)
 {
 
@@ -89,7 +51,7 @@ TX_THREAD               *thread_ptr;
 
     /* Initialize the module instance pointer to NULL.  */
     module_instance_ptr =  TX_NULL;
-    
+
     /* Is there a thread?  */
     if (thread_ptr)
     {
@@ -99,7 +61,7 @@ TX_THREAD               *thread_ptr;
         /* Terminate the current thread.  */
         _tx_thread_terminate(_tx_thread_current_ptr);
     }
-    
+
     /* Determine if there is a user memory fault notification callback.  */
     if (_txm_module_manager_fault_notify)
     {

@@ -24,20 +24,19 @@ __txm_module_preamble:
     ULONG      0x4D4F4455                                       // Module ID
     ULONG      0x6                                              // Module Major Version
     ULONG      0x1                                              // Module Minor Version
-    ULONG      32                                               // Module Preamble Size in 32-bit words
+    ULONG      __riscv_xlen                                     // Module Preamble Size in 32-bit words
     ULONG      0x12345678                                       // Module ID (application defined)
     ULONG      0x02000000                                       // Module Properties where:
                                                                 //   Bits 31-24: Compiler ID
-                                                                //           0 -> IAR
-                                                                //           1 -> RVDS
+                                                                //           0 -> IAR (not applicable)
                                                                 //           2 -> GNU
                                                                 //   Bits 23-3: Reserved
-                                                                //   Bit 2:  0 -> Disable shared/external memory access
-                                                                //           1 -> Enable shared/external memory access
-                                                                //   Bit 1:  0 -> No MPU protection
-                                                                //           1 -> MPU protection (must have user mode selected - bit 0 set)
+                                                                //   Bit 2:  0 -> Disable shared/external memory access (not applicable)
+                                                                //           1 -> Enable shared/external memory access (not applicable)
+                                                                //   Bit 1:  0 -> No PMP protection
+                                                                //           1 -> PMP protection (not applicable)
                                                                 //   Bit 0:  0 -> Privileged mode execution
-                                                                //           1 -> User mode execution
+                                                                //           1 -> User mode execution (not applicable)
     ULONG      _txm_module_thread_shell_entry - . - 0           // Module Shell Entry Point
     ULONG      demo_module_start - . - 0                        // Module Start Thread Entry Point
     ULONG      0                                                // Module Stop Thread Entry Point
