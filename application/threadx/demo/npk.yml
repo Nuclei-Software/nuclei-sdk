@@ -21,7 +21,7 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value: -O2 -DTX_INCLUDE_USER_DEFINE_FILE
+    value: -O2 -fno-tree-tail-merge -DTX_INCLUDE_USER_DEFINE_FILE
     type: text
     description: Application Compile Flags
 
