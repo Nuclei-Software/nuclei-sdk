@@ -42,8 +42,8 @@ VOID _txm_module_manager_thread_stack_build(TX_THREAD *thread_ptr, VOID (*functi
         ((unsigned long*)frame)[i] = 0xdeadbeef;
     }
 
-    frame->a0      = thread_entry_info->txm_module_thread_entry_info_thread;
-    frame->a1      = thread_entry_info;
+    frame->a0      = (unsigned long)thread_entry_info->txm_module_thread_entry_info_thread;
+    frame->a1      = (unsigned long)thread_entry_info;
 
     frame->epc     = (unsigned long)function_ptr;
     frame->mstatus = THREAD_INITIAL_MSTATUS;
