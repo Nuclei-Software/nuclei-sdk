@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <string.h>
 #include "insn.h"
 
 #ifndef CFG_HAS_VNICE
@@ -62,8 +63,8 @@ void vnice_case(uint32_t *addr_in1, uint32_t *addr_in2, uint32_t vnice_addr, uin
     size_t l;
     uint32_t blkCnt;
     // mask sequence
-    uint8_t vmgroup[16] = {0xfe, 0xfe, 0xfe, 0xfe, 0xfe, 0xfe, 0xfe, 0xfe,
-                           0xfe, 0xfe, 0xfe, 0xfe, 0xfe, 0xfe, 0xfe, 0xfe};
+    uint8_t vmgroup[128];
+    memset(vmgroup, 0xfe, sizeof(vmgroup));
 
     // Testing vnice custom complex multiplication intruction
     blkCnt = DATASIZE;

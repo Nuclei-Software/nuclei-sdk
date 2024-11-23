@@ -9,7 +9,7 @@ extern "C" {
 #include <nuclei_sdk_soc.h>
 #include <riscv_vector.h>
 
-#define DATASIZE    256
+#define DATASIZE    1024
 
 /*
 ******************************************************************************************
