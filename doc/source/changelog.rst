@@ -8,6 +8,10 @@ V0.8.0
 
 This is version ``0.8.0`` of Nuclei SDK which is still in development.
 
+* NMSIS
+
+  * Fix wrong macro ``PLIC_GetThreshold`` & ``PLIC_GetThreshold_S`` implementation
+
 * Application
 
   * Add more application code compile check message for better example requirement explanation
