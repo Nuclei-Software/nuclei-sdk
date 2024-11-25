@@ -381,8 +381,8 @@ __STATIC_FORCEINLINE void PLIC_Context_Init(uint32_t ctxid, uint32_t num_sources
 #define PLIC_SetThreshold(source, thresh)               PLIC_SetContextThreshold(PLIC_GetHartMContextID(), (source), (thresh))
 #define PLIC_SetThreshold_S(source, thresh)             PLIC_SetContextThreshold(PLIC_GetHartSContextID(), (source), (thresh))
 
-#define PLIC_GetThreshold(source)                       PLIC_GetContextThreshold(PLIC_GetHartMContextID(), (source))
-#define PLIC_GetThreshold_S(source)                     PLIC_GetContextThreshold(PLIC_GetHartSContextID(), (source))
+#define PLIC_GetThreshold()                             PLIC_GetContextThreshold(PLIC_GetHartMContextID())
+#define PLIC_GetThreshold_S()                           PLIC_GetContextThreshold(PLIC_GetHartSContextID())
 
 /**
  * \brief  Set Trap entry address
