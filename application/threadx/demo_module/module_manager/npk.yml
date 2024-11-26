@@ -1,8 +1,8 @@
 ## Package Base Information
-name: app-nsdk_threadx_demo
+name: app-nsdk_threadx_module_manager
 owner: nuclei
 version:
-description: ThreadX Task Demo
+description: ThreadX Module Manager Example
 type: app
 keywords:
   - threadx
@@ -21,7 +21,7 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value: -O2 -DTX_INCLUDE_USER_DEFINE_FILE
+    value: -O2 -fno-tree-tail-merge -DTX_INCLUDE_USER_DEFINE_FILE
     type: text
     description: Application Compile Flags
 

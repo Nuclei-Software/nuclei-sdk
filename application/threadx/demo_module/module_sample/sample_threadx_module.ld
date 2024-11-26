@@ -1,16 +1,16 @@
 MEMORY
 {
-  FLASH (rx) : ORIGIN = 0xA0000000, LENGTH = 0x00020000
-  RAM   (wx) : ORIGIN = 0xA0040000, LENGTH = 0x00100000
+  FLASH (rx) : ORIGIN = 0xA0400000, LENGTH = 0x00040000
+  RAM   (wx) : ORIGIN = 0xA0440000, LENGTH = 0x00080000
 }
 
 
 SECTIONS
 {
-  __FLASH_segment_start__ = 0xA0000000;
-  __FLASH_segment_end__   = 0xA0020000;
-  __RAM_segment_start__   = 0xA0040000;
-  __RAM_segment_end__     = 0xA0140000;
+  __FLASH_segment_start__ = ORIGIN(FLASH);
+  __FLASH_segment_end__   = __FLASH_segment_start__ + LENGTH(FLASH);
+  __RAM_segment_start__   = ORIGIN(RAM);
+  __RAM_segment_end__     = __RAM_segment_start__ + LENGTH(RAM);
 
   __HEAPSIZE__ = 128;
 
