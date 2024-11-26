@@ -14,7 +14,8 @@ typedef struct {
     uint32_t state;
 } spinlock;
 
-spinlock lock;
+// volatile required
+volatile spinlock lock;
 volatile uint32_t lock_ready = 0;
 volatile uint32_t cpu_count = 0;
 volatile uint32_t finished = 0;
@@ -119,6 +120,8 @@ int other_harts_main(unsigned long hartid)
     // wait for all harts boot and print hello
     while (cpu_count < SMP_CPU_CNT);
     // wait for boot hart to set finished flag
+    // Attention: must wait until all the harts stop print,
+    // because the _postmain_fini will print some dummy '\0', which has no lock-protecting
     while (finished == 0);
     return 0;
 }
