@@ -605,6 +605,12 @@ to do spinlock in this example.
     * **MUST** Need to enable I/D Cache in <Device.h> if I/D Cache present in CPU.
     * It needs at least a 2-Core SMP CPU
 
+* Each hart must wait until all the harts stop printing(or just stay in ``while (1);`` after its job has finished),
+  because the ``_postmain_fini`` will print some dummy '\0', which has no lock-protecting to UART causing ``corrupted-printing``
+
+* ``spinlock lock`` should be ``volatile``, or else the compiler maybe optimize out the ``spinlock_unlock`` if
+  more than one pair of ``spinlock_lock`` ``spinlock_unlock`` used in one function/branch, causing the lock unreleased
+
 **How to run this application:**
 
 .. code-block:: shell
