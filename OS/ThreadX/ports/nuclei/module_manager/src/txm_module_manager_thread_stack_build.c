@@ -50,4 +50,5 @@ VOID _txm_module_manager_thread_stack_build(TX_THREAD *thread_ptr, VOID (*functi
     frame->mstatus = THREAD_INITIAL_MSTATUS;
 
     thread_ptr -> tx_thread_stack_ptr = stk;
+    __FENCE_I();
 }
