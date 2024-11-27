@@ -3,6 +3,10 @@
         "CPU_SERIES": "1000"
     },
     "build_configs": {
+        "rv64imacb": {"CORE":"ux1000", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv64imacb_zicond": {"CORE":"ux1000", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond", "NMSIS_LIB_ARCH": "rv64imac_zba_zbb_zbc_zbs"},
+        "rv64imafcb": {"CORE":"ux1000f", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv64imafcb_zicond": {"CORE":"ux1000f", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond", "NMSIS_LIB_ARCH": "rv64imafc_zba_zbb_zbc_zbs"},
         "rv64imafdcb": {"CORE":"ux1000fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
         "rv64imafdcb_zicond": {"CORE":"ux1000fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond", "NMSIS_LIB_ARCH": "rv64imafdc_zba_zbb_zbc_zbs"}
     }
