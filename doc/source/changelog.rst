@@ -20,6 +20,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   * Add ``-fno-tree-tail-merge`` compiler option for threadx RTOS example compiling, which is required for correct
     compiling
   * Fix ``demo_vnice`` insufficient mask length when vlen > 128
+  * Add more documentation for :ref:`design_app_demo_dsp` example
 
 * SoC
 

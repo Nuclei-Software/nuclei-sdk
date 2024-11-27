@@ -1157,8 +1157,10 @@ NMSIS_LIB
 
 Currently you can select the following libraries:
 
-* **nmsis_dsp**: NMSIS DSP prebuilt library.
-* **nmsis_nn**: NMSIS NN prebuilt library.
+* **nmsis_dsp**: NMSIS DSP prebuilt library, see https://doc.nucleisys.com/nmsis/dsp/index.html.
+* **nmsis_nn**: NMSIS NN prebuilt library, see https://doc.nucleisys.com/nmsis/nn/index.html.
+
+NMSIS DSP and NN library source code can be found in https://github.com/Nuclei-Software/NMSIS.
 
 You can select more than libraries of NMSIS. For example, if you want to use NMSIS NN library,
 NMSIS DSP library is also required. so you need to set **NMSIS_LIB** like this ``NMSIS_LIB := nmsis_nn nmsis_dsp``
@@ -1167,6 +1169,8 @@ NMSIS DSP library is also required. so you need to set **NMSIS_LIB** like this `
 
 NMSIS_LIB_ARCH
 ~~~~~~~~~~~~~~
+
+This can be used to fix issue of prebuilt library for selected arch is not found during linking.
 
 This variable is used to select real nmsis dsp/nn library arch used, if not set, it will use **RISCV_ARCH** passed.
 

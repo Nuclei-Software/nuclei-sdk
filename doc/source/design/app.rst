@@ -474,9 +474,30 @@ demo_dsp
 
 This `demo_dsp application`_ is used to demonstrate how to NMSIS-DSP API.
 
-* Mainly show how we can use DSP library and header files.
+* Mainly show how we can use NMSIS DSP library and header files.
 * It mainly demo the ``riscv_conv_xx`` functions and its reference functions
-* By default, the application will use NMSIS-DSP library with DSP enabled.
+* By default, the application will use prebuilt NMSIS-DSP library match riscv isa arch
+  defined by :ref:`develop_buildsystem_var_core` and :ref:`develop_buildsystem_var_archext`
+
+* If your selected **CORE** and **ARCH_EXT** don't have a prebuilt NMSIS DSP library,
+  you can use :ref:`develop_buildsystem_var_nmsis_lib_arch` make variable to select
+  another most suitable prebuilt NMSIS DSP or NN library.
+
+eg. If you build with ``make CORE=n900f ARCH_EXT=_zca_zcb_zcf_zcmp_zcmt_xxldsp clean all``,
+you will get a link error like this ``riscv64-unknown-elf/bin/ld: cannot find -lnmsis_dsp_rv32imaf_zca_zcb_zcf_zcmp_zcmt_xxldsp: No such file or directory``, this is
+caused by no prebuilt libraries are built with ``Zc*`` extension. But you can build it
+by modify this example's Makefile by adding ``NMSIS_LIB_ARCH := rv32imafc_xxldsp`` newline.
+
+Take care ``Zc*`` is not fully compatiable with ``C`` extension, especially when ``D`` extension
+present, see latest RISC-V ISA manual ``riscv-unprivileged.pdf`` which can found in
+https://github.com/riscv/riscv-isa-manual/releases .
+
+And if you want to modify and build your own NMSIS DSP and NN library and see other
+DSP and NN examples and test cases, you can checkout the following links:
+
+- https://github.com/Nuclei-Software/NMSIS
+- https://doc.nucleisys.com/nmsis/dsp/index.html
+- https://doc.nucleisys.com/nmsis/nn/index.html
 
 .. note::
 
