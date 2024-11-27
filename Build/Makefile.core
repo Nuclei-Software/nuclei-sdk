@@ -42,6 +42,11 @@ NX900FD_CORE_ARCH_ABI = rv64imafdc lp64d nuclei-900-series
 UX900_CORE_ARCH_ABI = rv64imac lp64 nuclei-900-series
 UX900F_CORE_ARCH_ABI = rv64imafc lp64f nuclei-900-series
 UX900FD_CORE_ARCH_ABI = rv64imafdc lp64d nuclei-900-series
+NX1000_CORE_ARCH_ABI = rv64imac lp64 nuclei-1000-series
+NX1000F_CORE_ARCH_ABI = rv64imafc lp64f nuclei-1000-series
+NX1000FD_CORE_ARCH_ABI = rv64imafdc lp64d nuclei-1000-series
+UX1000_CORE_ARCH_ABI = rv64imac lp64 nuclei-1000-series
+UX1000F_CORE_ARCH_ABI = rv64imafc lp64f nuclei-1000-series
 UX1000FD_CORE_ARCH_ABI = rv64imafdc lp64d nuclei-1000-series
 
 # Don't forget to add a new core below
@@ -57,4 +62,5 @@ SUPPORTED_CORES = n200 n200e n201 n201e n202 n202e \
 		u900 u900f u900fd \
 		nx900 nx900f nx900fd \
 		ux900 ux900f ux900fd \
-		ux1000fd
+		nx1000 nx1000f nx1000fd \
+		ux1000 ux1000f ux1000fd

@@ -679,7 +679,7 @@ Currently it has these cores supported as described in table
    :widths: 20 20 20
    :align: center
 
-   ========  ========== =======  =================
+   ========  ========== =======  ====================
    **CORE**  **ARCH**   **ABI**       **TUNE**
    n200      rv32imc    ilp32    nuclei-200-series
    n200e     rv32emc    ilp32e   nuclei-200-series
@@ -716,8 +716,13 @@ Currently it has these cores supported as described in table
    ux900     rv64imac   lp64     nuclei-900-series
    ux900f    rv64imafc  lp64f    nuclei-900-series
    ux900fd   rv64imafdc lp64d    nuclei-900-series
+   nx1000    rv64imac   lp64     nuclei-1000-series
+   nx1000f   rv64imafc  lp64f    nuclei-1000-series
+   nx1000fd  rv64imafdc lp64d    nuclei-1000-series
+   ux1000    rv64imac   lp64     nuclei-1000-series
+   ux1000f   rv64imafc  lp64f    nuclei-1000-series
    ux1000fd  rv64imafdc lp64d    nuclei-1000-series
-   ========  ========== =======  =================
+   ========  ========== =======  ====================
 
 When **CORE** is selected, the **ARCH**, **ABI** and **TUNE** (optional) are set,
 and it might affect the compiler options in combination with :ref:`develop_buildsystem_var_archext`

@@ -248,6 +248,36 @@ configuration:
         cmodel: medany
         tune: nuclei-900-series
         description: UX900FD Core(ARCH=rv64imafdc, ABI=lp64d)
+      - name: nx1000
+        arch: rv64imac
+        abi: lp64
+        cmodel: medany
+        tune: nuclei-1000-series
+        description: NX1000 Core(ARCH=rv64imac, ABI=lp64)
+      - name: nx1000f
+        arch: rv64imafc
+        abi: lp64f
+        cmodel: medany
+        tune: nuclei-1000-series
+        description: NX1000F Core(ARCH=rv64imafc, ABI=lp64f)
+      - name: nx1000fd
+        arch: rv64imafdc
+        abi: lp64d
+        cmodel: medany
+        tune: nuclei-1000-series
+        description: NX1000FD Core(ARCH=rv64imafdc, ABI=lp64d)
+      - name: ux1000
+        arch: rv64imac
+        abi: lp64
+        cmodel: medany
+        tune: nuclei-1000-series
+        description: UX1000 Core(ARCH=rv64imac, ABI=lp64)
+      - name: ux1000f
+        arch: rv64imafc
+        abi: lp64f
+        cmodel: medany
+        tune: nuclei-1000-series
+        description: UX1000F Core(ARCH=rv64imafc, ABI=lp64f)
       - name: ux1000fd
         arch: rv64imafdc
         abi: lp64d
