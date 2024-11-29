@@ -10,18 +10,19 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
 
 * NMSIS
 
-  * Fix wrong macro ``PLIC_GetThreshold`` & ``PLIC_GetThreshold_S`` implementation
+  - Fix wrong macro ``PLIC_GetThreshold`` & ``PLIC_GetThreshold_S`` implementation for ``core_feature_plic.h``
+  - Add ``MTIME_SRW_CTRL`` bitfields in **SysTimer_Type** structure for ``core_feature_timer.h``
 
 * Application
 
-  * Add more application code compile check message for better example requirement explanation
-  * Remove ``demo_spmp`` application due to hw ``sPMP`` upgraded to ``sMPU`` and no longer supported,
-    please use :ref:`design_app_demo_smpu` now.
-  * Add ``-fno-tree-tail-merge`` compiler option for threadx RTOS example compiling, which is required for correct
-    compiling
-  * Fix ``demo_vnice`` insufficient mask length when vlen > 128
-  * Add more documentation for :ref:`design_app_demo_dsp` example
-  * Optimize :ref:`design_app_smphello` spinlock usage and update doc for it
+  - Add more application code compile check message for better example requirement explanation
+  - Remove ``demo_spmp`` application due to hw ``sPMP`` upgraded to ``sMPU`` and no longer supported,
+  - please use :ref:`design_app_demo_smpu` now.
+  - Add ``-fno-tree-tail-merge`` compiler option for threadx RTOS example compiling, which is required for correct
+  - compiling
+  - Fix ``demo_vnice`` insufficient mask length when vlen > 128
+  - Add more documentation for :ref:`design_app_demo_dsp` example
+  - Optimize :ref:`design_app_smphello` spinlock usage and update doc for it
 
 * SoC
 
@@ -64,10 +65,10 @@ This is release version ``0.7.0`` of Nuclei SDK.
 
 * Application
 
-  * Add ``demo_plic`` case to show how to use PLIC related API in PLIC interrupt mode.
-  * Add ``demo_clint_timer`` case to show how to use systimer in CLINT interrupt mode not ECLIC interrupt mode.
-  * Update ``demo_pmp`` case to make it suitable for when PMP not present.
-  * Change download mode from ``ddr`` to ``sram`` for smp and cache cases to be suitable for some custom soc sdk.
+  - Add ``demo_plic`` case to show how to use PLIC related API in PLIC interrupt mode.
+  - Add ``demo_clint_timer`` case to show how to use systimer in CLINT interrupt mode not ECLIC interrupt mode.
+  - Update ``demo_pmp`` case to make it suitable for when PMP not present.
+  - Change download mode from ``ddr`` to ``sram`` for smp and cache cases to be suitable for some custom soc sdk.
 
 * NMSIS
 
