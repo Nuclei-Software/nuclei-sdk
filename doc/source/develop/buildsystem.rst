@@ -583,18 +583,23 @@ TOOLCHAIN
 This variable is used to select different toolchain to compile application.
 Currently we support 3 toolchain in Nuclei SDK.
 
-* **nuclei_gnu**: default, it will choose nuclei gnu toolchain, distributed with Nuclei Toolchain.
-* **nuclei_llvm**: supported, nuclei customized extensions not yet supported, distributed with Nuclei Toolchain.
-* **terapines**: supported, it depends on the toolchain vendor about the supported extensions, if you want to take a try with it, just visit https://www.terapines.com/ and request an terapines toolchain evaluation.
+* **nuclei_gnu**: default, it will choose nuclei gnu toolchain, distributed with Nuclei Toolchain, see ``Build/toolchain/nuclei_gnu.mk``.
+* **nuclei_llvm**: supported, nuclei customized extensions not yet supported, distributed with Nuclei Toolchain, see ``Build/toolchain/nuclei_llvm.mk``.
+* **terapines**: supported, see ``Build/toolchain/nuclei_gnu.mk``, and it depends on the toolchain vendor about the supported extensions, if you want to take a try with it, just visit https://www.terapines.com/ and request an terapines toolchain evaluation, or you can take a try with Nuclei Studio >= 2024.06.
+
+If you want to add support for your own toolchain which is based on gcc/llvm, you can refer to above toolchain support makefile.
 
 For **nuclei_gnu/nuclei_llvm** toolchain both newlib and libncrt library are supported,
-but nuclei_llvm toolchain multilib selection mechanism is not as good as gnu toolchain,
+but **nuclei_llvm** toolchain multilib selection mechanism is not as good as gnu toolchain,
 you need to take care of the arch isa string order, please see ``riscv64-unknown-unknown-elf-clang -v`` output for supported multilib and its isa string order.
 
 And **IAR compiler** support is also done in Nuclei SDK, you can take a try with it
 via `ideprojects/iar`_ folder provided prebuilt ide projects.
 
 If you want to use old Nuclei GNU Toolchain <= 2022.12 in Nuclei SDK 0.5.0, you need to pass extra ``COMPILE_PREFIX=riscv-nuclei-elf-`` when build any application, such as ``make CORE=n300fd COMPILE_PREFIX=riscv-nuclei-elf-  STDCLIB=libncrt_small clean all``, but this is not recommended, and will be deprecated in future any time.
+
+From 0.8.0, **COMPILE_PREFIX** are supported by ``nuclei_gnu`` and ``nuclei_llvm``, but for ``nuclei_llvm``, ``llvm-ar`` and ``llvm-size`` are not set
+by this **COMPILE_PREFIX**.
 
 .. _develop_buildsystem_var_download:
 
