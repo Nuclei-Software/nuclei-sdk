@@ -259,12 +259,15 @@ _start:
     /* We use CPU_ISA macro to determine whether this cpufeature.h is generated or hand written */
     /* This is used to speedup data loading */
 #ifdef CPU_ISA
+#ifndef CFG_HAS_ECC
+    /* Only enable i/dcache when ecc not present */
 #ifdef CFG_HAS_ICACHE
     csrsi CSR_MCACHE_CTL, MCACHE_CTL_IC_EN
 #endif
 #ifdef CFG_HAS_DCACHE
     li t0, MCACHE_CTL_DC_EN
     csrs CSR_MCACHE_CTL, t0
+#endif
 #endif
 #endif
 
