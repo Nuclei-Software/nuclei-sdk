@@ -28,7 +28,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
 
   - Add more documentation about IAR compiler support and porting notes, especially the vector table alignment with the ``MTVT`` CSR.
   - Add ``nx1000/nx1000f/nx1000fd/ux1000/ux1000f/ux1000fd`` in supported CPU :ref:`develop_buildsystem_var_core` list
-
+  - Only enable i/d cache when ecc not present in evalsoc startup asm code to avoid x-state propagation during rtl simulation
 
 * Build System
 
