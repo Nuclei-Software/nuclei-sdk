@@ -1,9 +1,11 @@
-CC      := riscv64-unknown-elf-clang
-CXX     := riscv64-unknown-elf-clang++
-OBJDUMP := riscv64-unknown-elf-objdump
-OBJCOPY := riscv64-unknown-elf-objcopy
+COMPILE_PREFIX ?= riscv64-unknown-elf-
+
+CC      := $(COMPILE_PREFIX)clang
+CXX     := $(COMPILE_PREFIX)clang++
+OBJDUMP := $(COMPILE_PREFIX)objdump
+OBJCOPY := $(COMPILE_PREFIX)objcopy
 # use gnu gdb to debug or upload
-GDB     := riscv64-unknown-elf-gdb
+GDB     := $(COMPILE_PREFIX)gdb
 AR      := llvm-ar
 SIZE    := llvm-size
 OPENOCD := openocd
