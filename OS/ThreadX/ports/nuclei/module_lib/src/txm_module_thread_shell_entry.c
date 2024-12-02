@@ -95,6 +95,7 @@ extern VOID _gcc_setup(char *code_addr, char *data_addr);
 
 extern char __FLASH_segment_start__[];
 extern char __RAM_segment_start__[];
+extern char _GLOBAL_OFFSET_TABLE_[];
 extern char __got_load_start__[], __got_end__[];
 
 extern char __data_load_start__[], __data_start__[], __data_end__[];
@@ -108,7 +109,7 @@ VOID _gcc_setup(char *code_addr, char *data_addr)
     unsigned long FLASH_segment_start = (unsigned long)__FLASH_segment_start__;
     unsigned long data_start = (unsigned long)__data_start__;
 
-    start = code_addr + ((unsigned long)__got_load_start__ - (unsigned long)__FLASH_segment_start__);
+    start = code_addr + ((unsigned long)_GLOBAL_OFFSET_TABLE_ - (unsigned long)__FLASH_segment_start__);
     size = (unsigned long)__got_end__ - (unsigned long)__got_load_start__;
     load_data_start = code_addr + ((unsigned long)__data_load_start__ - (unsigned long)__FLASH_segment_start__);
     load_data_size = (unsigned long)__data_end__ - (unsigned long)__data_start__;
@@ -130,7 +131,7 @@ VOID _gcc_setup(char *code_addr, char *data_addr)
 
     // Load data segment
     for (i = 0; i < load_data_size; i += 1) {
-        data_addr[i] = start[i];
+        data_addr[i] = load_data_start[i];
     }
 
     // Zero init bss segment
