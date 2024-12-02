@@ -4,7 +4,7 @@ TARGET := threadx_module_sample
 RISCV_ARCH ?= rv32imafdc
 RISCV_ABI ?= ilp32d
 
-COMMON_FLAGS := -Og -g -fPIC -mno-plt
+COMMON_FLAGS := -Os -g -fPIC -mno-plt -fno-builtin
 
 NUCLEI_SDK_ROOT := ../../../..
 
