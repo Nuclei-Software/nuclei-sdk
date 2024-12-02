@@ -92,7 +92,10 @@ void    module_manager_entry(ULONG thread_input)
     txm_module_manager_start(&my_module);
 
     /* Sleep for a while....  */
-    tx_thread_sleep(20);
+    tx_thread_sleep(100);
+
+    thread_6_counter = (ULONG *) ((ULONG)my_module.txm_module_instance_module_data_base_address + 6 * sizeof(unsigned long));
+    printf("Memory loaded module executed, thread_6_counter %d!\n", *thread_6_counter);
 
     /* Stop the module.  */
     txm_module_manager_stop(&my_module);
