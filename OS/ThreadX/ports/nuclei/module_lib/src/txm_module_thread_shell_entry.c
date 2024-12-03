@@ -123,9 +123,9 @@ VOID _gcc_setup(char *code_addr, char *data_addr)
         if (got_items[i] == 0) {
             got_items[i] = 0;
         } else if (got_items[i] >= (unsigned long)data_start) {
-            got_items[i] = data_addr + (got_items[i] - (unsigned long)data_start);
+            got_items[i] = (unsigned long)data_addr + (got_items[i] - (unsigned long)data_start);
         } else {
-            got_items[i] = code_addr + (got_items[i] - (unsigned long)FLASH_segment_start);
+            got_items[i] = (unsigned long)code_addr + (got_items[i] - (unsigned long)FLASH_segment_start);
         }
     }
 
@@ -136,7 +136,7 @@ VOID _gcc_setup(char *code_addr, char *data_addr)
 
     // Zero init bss segment
     for (i = 0; i < bss_size; i += 1) {
-    	bss_start[i] = 0;
+        bss_start[i] = 0;
     }
 }
 
@@ -153,7 +153,7 @@ VOID  _txm_module_thread_shell_entry(TX_THREAD *thread_ptr, TXM_MODULE_THREAD_EN
     if (thread_info -> txm_module_thread_entry_info_start_thread)
     {
         /* Initialize the C environment.  */
-        new_gcc_setup = (unsigned long)(thread_info -> txm_module_thread_entry_info_module -> txm_module_instance_shell_entry_function) - ((unsigned long)_txm_module_thread_shell_entry - (unsigned long)_gcc_setup);
+        new_gcc_setup = (void (*)(char *, char *))((unsigned long)(thread_info -> txm_module_thread_entry_info_module -> txm_module_instance_shell_entry_function) - ((unsigned long)_txm_module_thread_shell_entry - (unsigned long)_gcc_setup));
         new_gcc_setup(thread_info -> txm_module_thread_entry_info_code_base_address, thread_info -> txm_module_thread_entry_info_data_base_address);
 
         /* Save the entry info pointer, for later use.  */
