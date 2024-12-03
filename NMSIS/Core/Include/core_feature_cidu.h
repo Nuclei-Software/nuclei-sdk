@@ -38,9 +38,10 @@ extern "C" {
 
 /* ##########################  CIDU functions  #################################### */
 /**
- * \defgroup NMSIS_Core_CIDU         CIDU Functions
+ * \defgroup NMSIS_Core_CIDU_Functions         CIDU Functions
+ * \ingroup  NMSIS_Core
  * \brief    Functions that manage external interrupts, inter core interrupts and semaphores.
- * @{
+ * \details
  *
  * Nuclei provide Cluster Interrupt Distribution Unit (CIDU) for scenarios that a SMP system is designed for real
  * time application or both Linux and real time application, and Nuclei processor core can optionally support CIDU.
@@ -52,6 +53,7 @@ extern "C" {
  * * Support up to 16 Inter Core Interrupts
  * * Support 32 Semaphores
  *
+ *   @{
  */
 
 #ifndef __CIDU_BASEADDR
@@ -430,6 +432,8 @@ __STATIC_FORCEINLINE void CIDU_ReleaseSemaphore(uint32_t semph_n)
     __SW(addr, 0xFFFFFFFF);
 }
 /** @} */ /* End of Doxygen Group NMSIS_Core_Semaphore */
+
+/** @} */ /* End of Doxygen Group NMSIS_Core_CIDU_Functions */
 #endif /* defined(__CIDU_PRESENT) && (__CIDU_PRESENT == 1) */
 
 #ifdef __cplusplus
