@@ -314,6 +314,9 @@ extern volatile unsigned long CpuIRegionBase;
 #define CPU_IREGION_BASE            CFG_IREGION_BASE_ADDR
 #endif
 #define __IREGION_BASEADDR          (CPU_IREGION_BASE)
+#define __IINFO_BASEADDR            (__IREGION_BASEADDR + IREGION_IINFO_OFS)
+#define __IINFO_MPASIZE_OFS         0
+#define __IINFO_MPASIZE_ADDR        (__IINFO_BASEADDR + __IINFO_MPASIZE_OFS)
 
 // ECLIC Configuration
 // To enable ECLIC, just define macro CFG_HAS_CLIC/CFG_CLICINTCTLBITS/CFG_IRQ_NUM in cpufeature.h
