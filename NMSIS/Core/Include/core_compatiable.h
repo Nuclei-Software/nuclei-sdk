@@ -251,6 +251,8 @@ __STATIC_FORCEINLINE uint8_t __CLZ(uint32_t data)
  * \details Return the count of least-significant bit zero.for example, return 3 if x=0bxxx1000
  * \param [in] data   Value to count the tailing zeros
  * \return            number of tailing zeros in value
+ * \remark
+ * - The value mustn't be 0, or else it will spin here
  */
 __STATIC_FORCEINLINE unsigned long __CTZ(unsigned long data)
 {
