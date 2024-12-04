@@ -694,8 +694,8 @@ uint32_t core_exception_handler_s(unsigned long scause, unsigned long sp)
         exc_handler(scause, sp);
     }
     return 0;
-}
 #endif
+}
 #endif
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
