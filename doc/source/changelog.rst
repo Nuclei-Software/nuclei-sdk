@@ -12,6 +12,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
 
   - Fix wrong macro ``PLIC_GetThreshold`` & ``PLIC_GetThreshold_S`` implementation for ``core_feature_plic.h``
   - Add ``MTIME_SRW_CTRL`` bitfields in **SysTimer_Type** structure for ``core_feature_timer.h``
+  - Optimize ECLIC API for better code performance in ``core_feature_eclic.h``
 
 * Application
 

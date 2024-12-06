@@ -312,8 +312,10 @@ typedef enum IRQn {
  */
 __STATIC_FORCEINLINE void __ECLIC_SetCfgNlbits(uint32_t nlbits)
 {
-    ECLIC->CFG &= ~CLIC_CLICCFG_NLBIT_Msk;
-    ECLIC->CFG |= (uint8_t)((nlbits <<CLIC_CLICCFG_NLBIT_Pos) & CLIC_CLICCFG_NLBIT_Msk);
+    uint8_t temp = ECLIC->CFG;
+
+    ECLIC->CFG = (temp & ~CLIC_CLICCFG_NLBIT_Msk) | \
+                 ((uint8_t)((nlbits << CLIC_CLICCFG_NLBIT_Pos) & CLIC_CLICCFG_NLBIT_Msk));
 }
 
 /**
@@ -526,8 +528,10 @@ __STATIC_FORCEINLINE void __ECLIC_ClearPendingIRQ(IRQn_Type IRQn)
  */
 __STATIC_FORCEINLINE void __ECLIC_SetTrigIRQ(IRQn_Type IRQn, uint32_t trig)
 {
-    ECLIC->CTRL[IRQn].INTATTR &= ~CLIC_INTATTR_TRIG_Msk;
-    ECLIC->CTRL[IRQn].INTATTR |= (uint8_t)(trig << CLIC_INTATTR_TRIG_Pos);
+    uint8_t temp = ECLIC->CTRL[IRQn].INTATTR;
+
+    ECLIC->CTRL[IRQn].INTATTR = (temp & ~CLIC_INTATTR_TRIG_Msk) | \
+                                ((uint8_t)(trig << CLIC_INTATTR_TRIG_Pos));
 }
 
 /**
@@ -565,8 +569,10 @@ __STATIC_FORCEINLINE uint32_t __ECLIC_GetTrigIRQ(IRQn_Type IRQn)
  */
 __STATIC_FORCEINLINE void __ECLIC_SetShvIRQ(IRQn_Type IRQn, uint32_t shv)
 {
-    ECLIC->CTRL[IRQn].INTATTR &= ~CLIC_INTATTR_SHV_Msk;
-    ECLIC->CTRL[IRQn].INTATTR |= (uint8_t)(shv << CLIC_INTATTR_SHV_Pos);
+    uint8_t temp = ECLIC->CTRL[IRQn].INTATTR;
+
+    ECLIC->CTRL[IRQn].INTATTR = (temp & ~CLIC_INTATTR_SHV_Msk) | \
+                                ((uint8_t)(shv << CLIC_INTATTR_SHV_Pos));
 }
 
 /**
@@ -878,8 +884,10 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetSth(void)
  */
 __STATIC_FORCEINLINE void __ECLIC_SetTrigIRQ_S(IRQn_Type IRQn, uint32_t trig)
 {
-    ECLIC->SCTRL[IRQn].INTATTR &= ~CLIC_INTATTR_TRIG_Msk;
-    ECLIC->SCTRL[IRQn].INTATTR |= (uint8_t)(trig << CLIC_INTATTR_TRIG_Pos);
+    uint8_t temp = ECLIC->SCTRL[IRQn].INTATTR;
+
+    ECLIC->SCTRL[IRQn].INTATTR = (temp & ~CLIC_INTATTR_TRIG_Msk) | \
+                                 ((uint8_t)(trig << CLIC_INTATTR_TRIG_Pos));
 }
 
 /**
@@ -918,8 +926,10 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetTrigIRQ_S(IRQn_Type IRQn)
  */
 __STATIC_FORCEINLINE void __ECLIC_SetShvIRQ_S(IRQn_Type IRQn, uint32_t shv)
 {
-    ECLIC->SCTRL[IRQn].INTATTR &= ~CLIC_INTATTR_SHV_Msk;
-    ECLIC->SCTRL[IRQn].INTATTR |= (uint8_t)(shv << CLIC_INTATTR_SHV_Pos);
+    uint8_t temp = ECLIC->SCTRL[IRQn].INTATTR;
+
+    ECLIC->SCTRL[IRQn].INTATTR = (temp & ~CLIC_INTATTR_SHV_Msk) | \
+                                 ((uint8_t)(shv << CLIC_INTATTR_SHV_Pos));
 }
 
 /**
