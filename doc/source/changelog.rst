@@ -24,6 +24,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Fix ``demo_vnice`` insufficient mask length when vlen > 128
   - Add more documentation for :ref:`design_app_demo_dsp` example
   - Optimize :ref:`design_app_smphello` spinlock usage and update doc for it
+  - Optimize :ref:`design_app_demo_profiling` example execution speed on hw from about 5min to 30s by decease the loop count
 
 * SoC
 

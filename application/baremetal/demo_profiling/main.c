@@ -8,7 +8,7 @@
 #ifdef CFG_SIMULATION
 #define RUN_LOOPS 1
 #else
-#define RUN_LOOPS 500
+#define RUN_LOOPS 10
 #endif
 
 // Enable ECB, CTR and CBC mode. Note this can be done before including aes.h or
