@@ -9,7 +9,7 @@
     "build_target": "clean all",
     "build_config": {
         "SOC": "gd32vw55x",
-        "BOARD": "gd32vw553h_rvstar",
+        "BOARD": "gd32vw553h_eval",
         "CORE": "n300fd",
         "DOWNLOAD": "flashxip",
         "ARCH_EXT": ""
