@@ -94,7 +94,12 @@
         "application/baremetal/demo_cache": {
             "build_config" : {},
             "checks": {
-                "PASS": ["[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!"]
+                "PASS": [
+                    "[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!",
+                    "DCache not present in CPU!",
+                    "dcachemiss_readonebyte",
+                    "when mapped value in memory has changed"
+                ]
             }
         },
         "application/baremetal/demo_cidu": {

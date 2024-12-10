@@ -41,7 +41,11 @@
         },
         "application/baremetal/demo_cache": {
             "run": false,
-            "build": true
+            "build": false
+        },
+        "application/baremetal/demo_pma": {
+            "run": false,
+            "build": false
         }
     }
 }
