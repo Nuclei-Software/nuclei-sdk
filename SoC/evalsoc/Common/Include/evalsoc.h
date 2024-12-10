@@ -427,6 +427,23 @@ extern volatile unsigned long CpuIRegionBase;
 #define __CCM_PRESENT               0
 #endif
 
+// PMA Configuration
+// To enable PMA, just define macro CFG_HAS_PMA in cpufeature.h
+#ifdef CFG_HAS_PMA
+#define __PMA_PRESENT               1
+#define __PMA_CSR_NUM               CFG_PMA_CSR_NUM
+#define __PMA_SEC_CSR_NUM           CFG_PMA_SEC_CSR_NUM
+
+#ifdef CFG_HAS_PMA_MACRO
+#define __PMA_MACRO_PRESENT         1
+#else
+#define __PMA_MACRO_PRESENT         0
+#endif
+#else
+#define __PMA_PRESENT               0
+#define __PMA_MACRO_PRESENT         0
+#endif
+
 // NICE Configuration
 // To enable NICE, just define macro CFG_HAS_NICE in cpufeature.h
 #ifdef CFG_HAS_NICE

@@ -48,6 +48,10 @@ extern "C" {
 //#define CFG_HAS_IDU
 //#define CFG_HAS_TEE
 //#define CFG_HAS_SMPU
+#define CFG_HAS_PMA
+#define CFG_HAS_PMA_MACRO
+#define CFG_PMA_CSR_NUM             8
+#define CFG_PMA_SEC_CSR_NUM         8
 #define CFG_HAS_STACK_CHECK
 #define CFG_HAS_NICE
 #define CFG_HAS_VNICE
