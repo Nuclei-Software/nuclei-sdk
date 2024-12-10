@@ -7,12 +7,17 @@
 
 #if !defined(__CCM_PRESENT) || (__CCM_PRESENT != 1)
 /* __CCM_PRESENT should be defined in <Device>.h */
-#error "This example require CPU CCM feature!"
+#warning "This example require CPU CCM feature!"
 #endif
 
 #if !defined(__DCACHE_PRESENT) || (__DCACHE_PRESENT != 1)
 /* __DCACHE_PRESENT should be defined in <Device>.h */
 #error "This example require CPU DCACHE feature!"
+#endif
+
+#if !defined(__PMA_PRESENT) || (__PMA_PRESENT != 1)
+/* __PMA_PRESENT should be defined in <Device>.h */
+#error "This example require CPU PMA feature!"
 #endif
 
 #define ROW_SIZE         512
@@ -37,7 +42,7 @@ BENCH_DECLARE_VAR();
 
 int main(void)
 {
-
+#if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
     pma_config pma_cfg_r;
     pma_config pma_cfg = {
         // Take care to set the region type and address range, which maybe causing function or performance issue!
@@ -80,7 +85,9 @@ int main(void)
     BENCH_START(Cacheable);
     array_update_by_row();
     BENCH_END(Cacheable);
-
+#else
+    printf("[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!\r\n");
+#endif
     return 0;
 }
 
