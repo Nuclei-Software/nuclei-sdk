@@ -9,7 +9,12 @@
 #if !defined(__CCM_PRESENT) || (__CCM_PRESENT != 1)
 /* __CCM_PRESENT should be defined in <Device>.h */
 #warning "__CCM_PRESENT is not defined or equal to 1, please check!"
-#warning "This example require CPU CCM feature!"
+#warning "This example requires CPU CCM feature!"
+#endif
+
+#if !defined(__DCACHE_PRESENT) || (__DCACHE_PRESENT != 1)
+/* __DCACHE_PRESENT should be defined in <Device>.h */
+#error "This example requires CPU DCACHE feature!"
 #endif
 
 // Declare HPMCOUNTER4
@@ -65,11 +70,10 @@ int main(void)
     int32_t val = 0;
     CacheInfo_Type cacheinfo_type;
 
-    if (!DCachePresent() || !ICachePresent()) {
-        printf("DCache or ICache not present in CPU!\n");
+    if (!DCachePresent()) {
+        printf("DCache not present in CPU!\n");
         return -1;
     }
-
     GetDCacheInfo(&cacheinfo_type);
     printf("DCache Linesize is %d bytes, ways is %d, setperway is %d, total size is %d bytes\n\n", cacheinfo_type.linesize, \
             cacheinfo_type.ways, cacheinfo_type.setperway,cacheinfo_type.size);
@@ -77,7 +81,6 @@ int main(void)
 
     printf("\n------Update array in memory------\n");
     EnableDCache();
-    EnableICache();
 
     MFlushDCache();
     MInvalDCache();
