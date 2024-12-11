@@ -28,6 +28,8 @@
 
 #include "core_compatiable.h"
 
+#if defined(__PMA_PRESENT) && (__PMA_PRESENT==1)
+
 /* =====  PMA functions  ===== */
 /**
  * \defgroup NMSIS_Core_PMA_Functions         PMA Functions
@@ -82,6 +84,7 @@ typedef struct PMA_CONFIG {
  * \details  Set the region(0-n) info of base address/region type/region size/enable status
  * \param [in]    entry_idx    Index(0-n) of paired mattri(n)_mask and mattri(n)_base
  * \param [in]    pma_cfg      Region info to configure
+ * \return  -1 failure, else 0 success
  * \remarks
  * - The entry_idx(0-n) depends on number of paired mattri(n)_mask and mattri(n)_base, refer to
      Nuclei ISA specifications
@@ -93,11 +96,15 @@ typedef struct PMA_CONFIG {
  * - The regions can be overlapped as the prority: Non-Cacheable > Cacheable > Device, but especially be careful not to
  *   overlap software's instruction/data sections by Device, or overlap Device(like uart) memory by Cacheable
  */
-__STATIC_FORCEINLINE void PMA_SetRegion(unsigned long entry_idx, pma_config *pma_cfg)
+__STATIC_FORCEINLINE long PMA_SetRegion(unsigned long entry_idx, pma_config *pma_cfg)
 {
     // 4KB aligned
     unsigned long size = (pma_cfg->region_size >> 12) << 12;
     unsigned long base_addr = (pma_cfg->region_base >> 12) << 12;
+
+    if ((entry_idx + 1) > __PMA_CSR_NUM) {
+        return -1;
+    }
 
     rv_csr_t mask = (unsigned long)(~(size - 1));
     rv_csr_t base = pma_cfg->region_type | base_addr | pma_cfg->region_enable;
@@ -112,8 +119,10 @@ __STATIC_FORCEINLINE void PMA_SetRegion(unsigned long entry_idx, pma_config *pma
         case 5: __RV_CSR_WRITE(CSR_MATTRI5_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI5_BASE, base); break;
         case 6: __RV_CSR_WRITE(CSR_MATTRI6_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI6_BASE, base); break;
         case 7: __RV_CSR_WRITE(CSR_MATTRI7_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI7_BASE, base); break;
-        default: return;
+        default: return -1;
     }
+
+    return 0;
 }
 
 /**
@@ -131,6 +140,10 @@ __STATIC_FORCEINLINE long PMA_GetRegion(unsigned long entry_idx, pma_config *pma
 {
     rv_csr_t mask, base;
     uint32_t mpasize = *(uint32_t *)__IINFO_MPASIZE_ADDR;
+
+    if ((entry_idx + 1) > __PMA_CSR_NUM) {
+        return -1;
+    }
 
     switch (entry_idx) {
         case 0: mask = __RV_CSR_READ(CSR_MATTRI0_MASK); base = __RV_CSR_READ(CSR_MATTRI0_BASE); break;
@@ -157,6 +170,7 @@ __STATIC_FORCEINLINE long PMA_GetRegion(unsigned long entry_idx, pma_config *pma
  * \details  Set the region(0-7) info of base address/region size/enable status
  * \param [in]    entry_idx    Index(0-7) of paired sattri(n)_mask and sattri(n)_base
  * \param [in]    pma_cfg      Region info to configure
+ * \return  0 if success, else -1
  * \remarks
  * - sattri(n)_mask must be written first, before sattri(n)_base, which the api takes care of
  * - The higher bits of sattri(n)_mask should be continuously 1, the remaining lower bits should be all 0
@@ -164,11 +178,15 @@ __STATIC_FORCEINLINE long PMA_GetRegion(unsigned long entry_idx, pma_config *pma
  * - Region granularity is 4KB, so the low 12-bits of sattri(n)_mask must be 0, which the api takes care of
  * - Unlike mattri(n)_base, there's no DEV Region/NC Region/CA Region type
  */
-__STATIC_FORCEINLINE void PMA_SetRegion_S(unsigned long entry_idx, pma_config *pma_cfg)
+__STATIC_FORCEINLINE long PMA_SetRegion_S(unsigned long entry_idx, pma_config *pma_cfg)
 {
     // 4KB aligned
     unsigned long size = (pma_cfg->region_size >> 12) << 12;
     unsigned long base_addr = (pma_cfg->region_base >> 12) << 12;
+
+    if ((entry_idx + 1) > __PMA_SEC_CSR_NUM) {
+        return -1;
+    }
 
     rv_csr_t mask = (unsigned long)(~(size - 1));
     rv_csr_t base = base_addr | pma_cfg->region_enable;
@@ -183,8 +201,10 @@ __STATIC_FORCEINLINE void PMA_SetRegion_S(unsigned long entry_idx, pma_config *p
         case 5: __RV_CSR_WRITE(CSR_SATTRI5_MASK, mask); __RV_CSR_WRITE(CSR_SATTRI5_BASE, base); break;
         case 6: __RV_CSR_WRITE(CSR_SATTRI6_MASK, mask); __RV_CSR_WRITE(CSR_SATTRI6_BASE, base); break;
         case 7: __RV_CSR_WRITE(CSR_SATTRI7_MASK, mask); __RV_CSR_WRITE(CSR_SATTRI7_BASE, base); break;
-        default: return;
+        default: return -1;
     }
+
+    return 0;
 }
 
 /**
@@ -200,6 +220,10 @@ __STATIC_FORCEINLINE long PMA_GetRegion_S(unsigned long entry_idx, pma_config *p
 {
     rv_csr_t mask, base;
     uint32_t mpasize = *(uint32_t *)__IINFO_MPASIZE_ADDR;
+
+    if ((entry_idx + 1) > __PMA_SEC_CSR_NUM) {
+        return -1;
+    }
 
     switch (entry_idx) {
         case 0: mask = __RV_CSR_READ(CSR_SATTRI0_MASK); base = __RV_CSR_READ(CSR_SATTRI0_BASE); break;
@@ -220,6 +244,7 @@ __STATIC_FORCEINLINE long PMA_GetRegion_S(unsigned long entry_idx, pma_config *p
     return 0;
 }
 
+#if defined(__PMA_MACRO_PRESENT) && (__PMA_MACRO_PRESENT == 1)
 /**
  * \brief  Enable hardware defined Device regions
  * \details Enable Device region by corresponding index
@@ -327,8 +352,9 @@ __STATIC_FORCEINLINE void PMA_DisableHwCARegion(unsigned long entry_idx)
 {
     __RV_CSR_CLEAR(CSR_MMACRO_CA_EN, 1UL << entry_idx);
 }
-
+#endif /* defined(__PMA_MACRO_PRESENT) && (__PMA_MACRO_PRESENT == 1) */
 /** @} */ /* End of Doxygen Group NMSIS_Core_PMA_Functions */
+#endif /* defined(__PMA_PRESENT) && (__PMA_PRESENT==1) */
 
 #ifdef __cplusplus
 }
