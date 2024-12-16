@@ -15,6 +15,13 @@
 
 #include "cpuport.h"
 
+#ifndef BOOT_HARTID
+#define EXECUTE_HARTID  0
+#else
+#define EXECUTE_HARTID  BOOT_HARTID
+#endif
+
+
 #define SYSTICK_TICK_CONST                          (SOC_TIMER_FREQ / RT_TICK_PER_SECOND)
 
 #ifndef configKERNEL_INTERRUPT_PRIORITY
@@ -26,7 +33,13 @@
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
 #endif
 
-#define portINITIAL_MSTATUS                         ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
+#ifdef SMODE_RTOS
+#define SysTick_Handler     eclic_stip_handler
+#define portINITIAL_XSTATUS ( SSTATUS_SPP | SSTATUS_SPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
+#else
+#define SysTick_Handler     eclic_mtip_handler
+#define portINITIAL_XSTATUS ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
+#endif
 
 volatile rt_ubase_t  rt_interrupt_from_thread = 0;
 volatile rt_ubase_t  rt_interrupt_to_thread   = 0;
@@ -64,7 +77,7 @@ struct rt_hw_stack_frame {
     rt_ubase_t t5;         /* x30 - t5     - temporary register 5                */
     rt_ubase_t t6;         /* x31 - t6     - temporary register 6                */
 #endif
-    rt_ubase_t mstatus;    /*              - machine status register             */
+    rt_ubase_t xstatus;    /*              - m/s status register             */
 };
 
 /**
@@ -100,7 +113,7 @@ rt_uint8_t* rt_hw_stack_init(void*       tentry,
     frame->a0      = (rt_ubase_t)parameter;
     frame->epc     = (rt_ubase_t)tentry;
 
-    frame->mstatus = portINITIAL_MSTATUS;
+    frame->xstatus = portINITIAL_XSTATUS;
 
     return stk;
 }
@@ -116,7 +129,15 @@ void rt_hw_context_switch_interrupt(rt_ubase_t from, rt_ubase_t to)
 
     rt_interrupt_to_thread = to;
     rt_thread_switch_interrupt_flag = 1;
-    portYIELD();
+    /* Set a software interrupt(SWI) request to request a context switch. */
+#ifdef SMODE_RTOS
+    SysTimer_SetHartSWIRQ(EXECUTE_HARTID);
+#else
+    SysTimer_SetSWIRQ();
+#endif
+    /* Barriers are normally not required but do ensure the code is completely
+        within the specified behaviour for the architecture. */
+    __RWMB();
 }
 
 void rt_hw_context_switch(rt_ubase_t from, rt_ubase_t to)
@@ -139,7 +160,11 @@ void rt_hw_cpu_shutdown()
 void xPortTaskSwitch(void)
 {
     /* Clear Software IRQ, A MUST */
+#ifdef SMODE_RTOS
+    SysTimer_ClearHartSWIRQ(EXECUTE_HARTID);
+#else
     SysTimer_ClearSWIRQ();
+#endif
     rt_thread_switch_interrupt_flag = 0;
     // make from thread to be to thread
     // If there is another swi interrupt triggered by other harts
@@ -152,6 +177,18 @@ void vPortSetupTimerInterrupt(void)
 {
     uint64_t ticks = SYSTICK_TICK_CONST;
 
+#ifdef SMODE_RTOS
+    SysTick_HartConfig(ticks, EXECUTE_HARTID);
+    ECLIC_DisableIRQ_S(SysTimer_IRQn);
+    ECLIC_SetLevelIRQ_S(SysTimer_IRQn, configKERNEL_INTERRUPT_PRIORITY);
+    ECLIC_SetShvIRQ_S(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
+    ECLIC_EnableIRQ_S(SysTimer_IRQn);
+
+    /* Set SWI interrupt level to lowest level/priority, SysTimerSW as Vector Interrupt */
+    ECLIC_SetShvIRQ_S(SysTimerSW_IRQn, ECLIC_VECTOR_INTERRUPT);
+    ECLIC_SetLevelIRQ_S(SysTimerSW_IRQn, configKERNEL_INTERRUPT_PRIORITY);
+    ECLIC_EnableIRQ_S(SysTimerSW_IRQn);
+#else
     /* Make SWI and SysTick the lowest priority interrupts. */
     /* Stop and clear the SysTimer. SysTimer as Non-Vector Interrupt */
     SysTick_Config(ticks);
@@ -164,6 +201,8 @@ void vPortSetupTimerInterrupt(void)
     ECLIC_SetShvIRQ(SysTimerSW_IRQn, ECLIC_VECTOR_INTERRUPT);
     ECLIC_SetLevelIRQ(SysTimerSW_IRQn, configKERNEL_INTERRUPT_PRIORITY);
     ECLIC_EnableIRQ(SysTimerSW_IRQn);
+
+#endif
 }
 
 
@@ -201,16 +240,18 @@ void rt_hw_board_init()
     rt_system_heap_init(rt_heap_begin_get(), rt_heap_end_get());
 #endif
 
-    __disable_irq();
+    rt_hw_interrupt_disable();
 }
-
-#define SysTick_Handler     eclic_mtip_handler
 
 /* This is the timer interrupt service routine. */
 void SysTick_Handler(void)
 {
     // Reload timer
+#ifdef SMODE_RTOS
+    SysTick_HartReload(SYSTICK_TICK_CONST, EXECUTE_HARTID);
+#else
     SysTick_Reload(SYSTICK_TICK_CONST);
+#endif
 
     /* enter interrupt */
     rt_interrupt_enter();
@@ -242,10 +283,10 @@ char rt_hw_console_getchar(void)
 
 rt_base_t rt_hw_interrupt_disable(void)
 {
-    return __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
+    return __RV_CSR_READ_CLEAR(CSR_XSTATUS, XSTATUS_XIE);
 }
 
 void rt_hw_interrupt_enable(rt_base_t level)
 {
-    __RV_CSR_WRITE(CSR_MSTATUS, level);
+    __RV_CSR_WRITE(CSR_XSTATUS, level);
 }
