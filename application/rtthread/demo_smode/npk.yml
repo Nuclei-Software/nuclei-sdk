@@ -1,0 +1,48 @@
+## Package Base Information
+name: app-nsdk_rtthread_smode_demo
+owner: nuclei
+version:
+description: S-Mode RTThread Task Demo
+type: app
+keywords:
+  - rtthread
+  - task demo
+category: rtthread application
+license:
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+  - name: osp-nsdk_rtthread
+    version:
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    value: -O3
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+  - config: rtthread_msh
+    value: 0
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      # SMODE_RTOS is required, and CFG_HAS_TEE is defined to expect TEE feature present in hw
+      - flags: -DSMODE_RTOS -DCFG_HAS_TEE ${app_commonflags}
