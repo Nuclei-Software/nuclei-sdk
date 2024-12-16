@@ -381,7 +381,11 @@ __skip_init:
 #else
 #ifdef RTOS_RTTHREAD
     // Call entry function when using RT-Thread
+#ifdef SMODE_RTOS
+    call main_entry
+#else
     call entry
+#endif
 #else
     call main
 #endif
@@ -420,7 +424,11 @@ smp_main:
 2:
 #ifdef RTOS_RTTHREAD
     // Call entry function when using RT-Thread
+#ifdef SMODE_RTOS
+    call main_entry
+#else
     call entry
+#endif
 #else
     call main
 #endif

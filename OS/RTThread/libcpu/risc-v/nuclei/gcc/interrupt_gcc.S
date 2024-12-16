@@ -20,8 +20,8 @@
  * \remarks
  *  - All the interrupt requests will be ignored by CPU.
  */
-.macro DISABLE_MIE
-    csrc CSR_MSTATUS, MSTATUS_MIE
+.macro DISABLE_XIE
+    csrc CSR_XSTATUS, XSTATUS_XIE
 .endm
 
 /**
@@ -34,7 +34,7 @@
 */
 /* Save caller registers */
 .macro SAVE_CONTEXT
-    csrrw sp, CSR_MSCRATCHCSWL, sp
+    csrrw sp, CSR_XSCRATCHCSWL, sp
     /* Allocate stack space for context saving */
 #ifndef __riscv_32e
     addi sp, sp, -20*REGBYTES
@@ -98,7 +98,7 @@
     /* De-allocate the stack space */
     addi sp, sp, 14*REGBYTES
 #endif /* __riscv_32e */
-    csrrw sp, CSR_MSCRATCHCSWL, sp
+    csrrw sp, CSR_XSCRATCHCSWL, sp
 .endm
 
 /**
@@ -108,11 +108,13 @@
  */
 .macro SAVE_CSR_CONTEXT
     /* Store CSR mcause to stack using pushmcause */
-    csrrwi  x0, CSR_PUSHMCAUSE, 11
+    csrrwi  x0, CSR_PUSHXCAUSE, 11
     /* Store CSR mepc to stack using pushmepc */
-    csrrwi  x0, CSR_PUSHMEPC, 12
+    csrrwi  x0, CSR_PUSHXEPC, 12
+#ifndef SMODE_RTOS
     /* Store CSR msub to stack using pushmsub */
     csrrwi  x0, CSR_PUSHMSUBM, 13
+#endif
 .endm
 
 /**
@@ -121,12 +123,14 @@
  * This macro restore MSUBM, MEPC, MCAUSE from stack.
  */
 .macro RESTORE_CSR_CONTEXT
+#ifndef SMODE_RTOS
     LOAD x5,  13*REGBYTES(sp)
-    csrw CSR_MSUBM, x5
+    csrw CSR_XSUBM, x5
+#endif
     LOAD x5,  12*REGBYTES(sp)
-    csrw CSR_MEPC, x5
+    csrw CSR_XEPC, x5
     LOAD x5,  11*REGBYTES(sp)
-    csrw CSR_MCAUSE, x5
+    csrw CSR_XCAUSE, x5
 .endm
 
 /**
@@ -141,9 +145,9 @@
 .section .text.trap
 /* In CLIC mode, the exeception entry must be 64bytes aligned */
 .align 6
-.global exc_entry
-.type exc_entry, @function
-exc_entry:
+.global x_exc_entry
+.type x_exc_entry, @function
+x_exc_entry:
     /* Save the caller saving registers (context) */
     SAVE_CONTEXT
     /* Save the necessary CSR registers */
@@ -169,9 +173,9 @@ exc_entry:
     RESTORE_CONTEXT
 
     /* Return to regular code */
-    mret
+    XRET
 
-    .size exc_entry, . - exc_entry
+    .size x_exc_entry, . - x_exc_entry
 
 /**
  * \brief  Non-Vector Interrupt Entry
@@ -186,10 +190,10 @@ exc_entry:
 .section      .text.irq
 /* In CLIC mode, the interrupt entry must be 4bytes aligned */
 .align 2
-.global irq_entry
-.type irq_entry, @function
+.global x_irq_entry
+.type x_irq_entry, @function
 /* This label will be set to MTVT2 register */
-irq_entry:
+x_irq_entry:
     /* Save the caller saving registers (context) */
     SAVE_CONTEXT
     /* Save the necessary CSR registers */
@@ -200,10 +204,10 @@ irq_entry:
      * is not 0, then automatically enable the mstatus.MIE, and
      * jump to its vector-entry-label, and update the link register
      */
-    csrrw ra, CSR_JALMNXTI, ra
+    csrrw ra, CSR_JALXNXTI, ra
 
     /* Critical section with interrupts disabled */
-    DISABLE_MIE
+    DISABLE_XIE
 
     /* Restore the necessary CSR registers */
     RESTORE_CSR_CONTEXT
@@ -211,9 +215,9 @@ irq_entry:
     RESTORE_CONTEXT
 
     /* Return to regular code */
-    mret
+    XRET
 
-    .size irq_entry, . - irq_entry
+    .size x_irq_entry, . - x_irq_entry
 
 /* Default Handler for Exceptions / Interrupts */
 .global default_intexc_handler

@@ -43,17 +43,17 @@ rt_hw_context_switch_to:
        The stack that was used by main()
        before the scheduler is started is
        no longer required after the scheduler is started.
-       Interrupt stack pointer is stored in CSR_MSCRATCH */
+       Interrupt stack pointer is stored in CSR_XSCRATCH */
     la t0, _sp
-    csrw CSR_MSCRATCH, t0
+    csrw CSR_XSCRATCH, t0
     LOAD sp, 0x0(a0)                /* Read sp from first TCB member(a0) */
 
     /* Pop PC from stack and set MEPC */
     LOAD t0,  0  * REGBYTES(sp)
-    csrw CSR_MEPC, t0
+    csrw CSR_XEPC, t0
     /* Pop mstatus from stack and set it */
     LOAD t0,  (portRegNum - 1)  * REGBYTES(sp)
-    csrw CSR_MSTATUS, t0
+    csrw CSR_XSTATUS, t0
     /* Interrupt still disable here */
     /* Restore Registers from Stack */
     LOAD x1,  1  * REGBYTES(sp)    /* RA */
@@ -89,14 +89,14 @@ rt_hw_context_switch_to:
 
     addi sp, sp, portCONTEXT_SIZE
 
-    mret
+    XRET
 
     .size rt_hw_context_switch_to, . - rt_hw_context_switch_to
 
 .align 2
-.global eclic_msip_handler
-.type eclic_msip_handler, @function
-eclic_msip_handler:
+.global eclic_xsip_handler
+.type eclic_xsip_handler, @function
+eclic_xsip_handler:
     addi sp, sp, -portCONTEXT_SIZE
     STORE x1,  1  * REGBYTES(sp)    /* RA */
     STORE x5,  2  * REGBYTES(sp)
@@ -129,7 +129,7 @@ eclic_msip_handler:
     STORE x31, 28 * REGBYTES(sp)
 #endif
     /* Push mstatus to stack */
-    csrr t0, CSR_MSTATUS
+    csrr t0, CSR_XSTATUS
     STORE t0,  (portRegNum - 1)  * REGBYTES(sp)
 
     /* Push additional registers */
@@ -138,7 +138,7 @@ eclic_msip_handler:
     LOAD t0, rt_interrupt_from_thread
     STORE sp, 0(t0)
 
-    csrr t0, CSR_MEPC
+    csrr t0, CSR_XEPC
     STORE t0, 0(sp)
 
     jal xPortTaskSwitch
@@ -149,12 +149,12 @@ eclic_msip_handler:
 
     /* Pop PC from stack and set MEPC */
     LOAD t0,  0  * REGBYTES(sp)
-    csrw CSR_MEPC, t0
+    csrw CSR_XEPC, t0
     /* Pop additional registers */
 
     /* Pop mstatus from stack and set it */
     LOAD t0,  (portRegNum - 1)  * REGBYTES(sp)
-    csrw CSR_MSTATUS, t0
+    csrw CSR_XSTATUS, t0
     /* Interrupt still disable here */
     /* Restore Registers from Stack */
     LOAD x1,  1  * REGBYTES(sp)    /* RA */
@@ -189,6 +189,6 @@ eclic_msip_handler:
 #endif
 
     addi sp, sp, portCONTEXT_SIZE
-    mret
+    XRET
 
-    .size eclic_msip_handler, . - eclic_msip_handler
+    .size eclic_xsip_handler, . - eclic_xsip_handler
