@@ -752,24 +752,26 @@ void ECLIC_Interrupt_Init(void)
         ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-        /*
-         * Intialize ECLIC supervisor mode vector interrupt
-         * base address stvt to vector_table_s
-         */
-        __RV_CSR_WRITE(CSR_STVT, (unsigned long)vector_table_s);
-        /*
-         * Set ECLIC supervisor mode non-vector entry to be controlled
-         * by stvt2 CSR register.
-         * Intialize supervisor mode ECLIC non-vector interrupt
-         * base address stvt2 to irq_entry_s.
-        */
-        __RV_CSR_WRITE(CSR_STVT2, (unsigned long)irq_entry_s);
-        __RV_CSR_SET(CSR_STVT2, 0x01);
-        /*
-         * Set supervisor exception entry stvec to exc_entry_s */
-        __RV_CSR_WRITE(CSR_STVEC, (unsigned long)exc_entry_s);
-        /* Global Configuration about STH */
-        ECLIC_SetSth(0);
+        if (mcfg_info & MCFG_INFO_TEE) {
+            /*
+             * Intialize ECLIC supervisor mode vector interrupt
+             * base address stvt to vector_table_s
+             */
+            __RV_CSR_WRITE(CSR_STVT, (unsigned long)vector_table_s);
+            /*
+             * Set ECLIC supervisor mode non-vector entry to be controlled
+             * by stvt2 CSR register.
+             * Intialize supervisor mode ECLIC non-vector interrupt
+             * base address stvt2 to irq_entry_s.
+            */
+            __RV_CSR_WRITE(CSR_STVT2, (unsigned long)irq_entry_s);
+            __RV_CSR_SET(CSR_STVT2, 0x01);
+            /*
+             * Set supervisor exception entry stvec to exc_entry_s */
+            __RV_CSR_WRITE(CSR_STVEC, (unsigned long)exc_entry_s);
+            /* Global Configuration about STH */
+            ECLIC_SetSth(0);
+        }
 #endif
     } else {
         /* Set as CLINT interrupt mode */
