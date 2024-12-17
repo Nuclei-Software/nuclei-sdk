@@ -2154,6 +2154,9 @@
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_plic.h</name>
                     </file>
                     <file>
+                        <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_pma.h</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\..\..\NMSIS\Core\Include\core_feature_pmp.h</name>
                     </file>
                     <file>
