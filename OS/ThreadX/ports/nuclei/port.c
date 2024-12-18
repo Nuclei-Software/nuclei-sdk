@@ -68,6 +68,22 @@ void PortThreadSwitch(void)
 #ifdef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
     _tx_execution_thread_exit();
 #endif
+    /*
+     * ThreadX don't have idle task, so _tx_thread_execute_ptr could be NULL
+     * If it is NULL, it means it should goto idle state, and wait for interrupt
+     */
+    if (!_tx_thread_execute_ptr) {
+        /* mcause must be saved and restore if interrupt nested */
+        rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
+        ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY + 1);
+        __enable_irq();
+        while (!_tx_thread_execute_ptr) {
+            __WFI();
+        }
+        __disable_irq();
+        ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
+        __RV_CSR_WRITE(CSR_MCAUSE, mcause);
+    }
     /* Determine if the time-slice is active.  */
     if (_tx_timer_time_slice) {
         /* Preserve current remaining time-slice for the thread and clear the current time-slice.  */
