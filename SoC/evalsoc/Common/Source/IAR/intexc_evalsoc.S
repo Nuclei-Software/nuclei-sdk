@@ -105,7 +105,7 @@ RESTORE_CSR_CONTEXT MACRO
     SECTION `.mexctrap`:CODE:NOROOT(2)
     CODE
 
-    ALIGN 6
+    ALIGN 2
 exc_entry:
     /* Save the caller saving registers (context) */
     SAVE_CONTEXT

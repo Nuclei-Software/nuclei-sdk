@@ -143,7 +143,7 @@
  */
 # Fix has non-ABS relocation R_RISCV_CALL_PLT against symbol for clang
 .section .mexctrap, "ax"
-.align 4
+.align 2
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
 .type exc_entry, @function
@@ -181,7 +181,7 @@ exc_entry:
 
 #if defined(CFG_HAS_IRQC)
 .section .text
-.align 6
+.align 2
 /* Default Handler for Exceptions / Interrupts */
 # gnu let .weak override .globl, but llvm will show warning
 # see https://reviews.llvm.org/D90108
