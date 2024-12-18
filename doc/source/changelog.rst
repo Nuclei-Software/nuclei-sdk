@@ -30,6 +30,7 @@ This is development version ``0.2.0-dev`` of N100 SDK.
     startup and linker script code to match your real cpu design
   - Fix ``delay_1ms`` API may work wrongly due to TIME register overflow
   - N100 evalsoc external interrupt number changed from 30 to 16
+  - N100 exception entry alignment changed to 4bytes to match n100 design
 
 V0.1.0
 ------
