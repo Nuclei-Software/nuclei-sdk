@@ -33,8 +33,15 @@ _tx_thread_schedule:
        Interrupt stack pointer is stored in CSR_MSCRATCH */
     la t0, _sp
     csrw CSR_MSCRATCH, t0
+    /* Enable interrupt to wait _tx_thread_execute_ptr is not null */
+    csrsi CSR_MSTATUS, MSTATUS_MIE
+_tx_thread_schedule_loop:
     la a0, _tx_thread_execute_ptr   /* Pick current thread to a0 */
     LOAD a0, 0(a0)
+    beqz a0, _tx_thread_schedule_loop
+_tx_thread_schedule_ready:
+    /* Disable interrupt to load first thread */
+    csrci CSR_MSTATUS, MSTATUS_MIE
     la a1, _tx_thread_current_ptr  /* _tx_thread_current_ptr = _tx_thread_execute_ptr */
     STORE a0, 0(a1)
     LOAD sp, 2  * REGBYTES(a0)      /* Read sp from _tx_thread_execute_ptr -> tx_thread_stack_ptr */
