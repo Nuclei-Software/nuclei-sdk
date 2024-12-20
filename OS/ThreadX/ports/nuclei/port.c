@@ -95,7 +95,7 @@ void PortThreadSwitch(void)
         __RV_CSR_WRITE(CSR_MCAUSE, mcause);
     }
     /* Determine if the time-slice is active.  */
-    if (_tx_timer_time_slice) {
+    if (_tx_timer_time_slice && !_tx_thread_current_ptr) {
         /* Preserve current remaining time-slice for the thread and clear the current time-slice.  */
         _tx_thread_current_ptr -> tx_thread_time_slice = _tx_timer_time_slice;
         _tx_timer_time_slice =  0;

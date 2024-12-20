@@ -132,14 +132,17 @@ eclic_msip_handler:
 
     /* Push additional registers */
 
-    /* Store sp to task stack to _tx_thread_current_ptr -> tx_thread_stack_ptr*/
+    /* If _tx_thread_current_ptr is null, no sp need to be saved */
     la t0, _tx_thread_current_ptr
     LOAD t0, 0(t0)
+    beqz t0, _tx_thread_switch
+    /* Store sp to task stack to _tx_thread_current_ptr -> tx_thread_stack_ptr */
     STORE sp, 2 * REGBYTES(t0)
-
+    /* Store last pc to thread stack */
     csrr t0, CSR_MEPC
     STORE t0, 0(sp)
 
+_tx_thread_switch:
     jal PortThreadSwitch
 
     /* Switch task context to _tx_thread_execute_ptr */
