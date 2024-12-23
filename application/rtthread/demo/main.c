@@ -13,9 +13,12 @@
 #include <rtthread.h>
 
 #define THREAD_PRIORITY 2
-#define THREAD_STACK_SIZE 512
-#define THREAD_TIMESLICE 5
-#define THREAD_NUM      5
+/* Reserve enough stack if rvv autovectorization enabled,
+ * it will use stack to save and restore rvv registers,
+ * which may corrupt stack, take care */
+#define THREAD_STACK_SIZE 1024
+#define THREAD_TIMESLICE  5
+#define THREAD_NUM        5
 
 /* Align stack when using static thread */
 ALIGN(RT_ALIGN_SIZE)
@@ -28,7 +31,7 @@ static void thread_entry(void* parameter)
     rt_uint32_t count = 0;
 
     while (1) {
-        rt_kprintf("thread %d count: %d\n", (rt_uint32_t)parameter, count++);
+        rt_kprintf("thread %d count: %d\n", (rt_uint32_t)(unsigned long)parameter, count++);
         rt_thread_mdelay(250);
     }
 }
