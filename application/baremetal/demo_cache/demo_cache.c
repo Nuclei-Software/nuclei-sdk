@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include "nuclei_sdk_soc.h"
 
-#define DISABLE_NMSIS_HPM
 #include "nmsis_bench.h"
 
 #if !defined(__CCM_PRESENT) || (__CCM_PRESENT != 1)
@@ -17,9 +16,14 @@
 #error "This example requires CPU DCACHE feature!"
 #endif
 
+
+// Declare HPMCOUNTER3
+HPM_DECLARE_VAR(3);
 // Declare HPMCOUNTER4
 HPM_DECLARE_VAR(4);
-// Means select the Dcache miss events, record Dcache miss event for all M/S/U mode, using 
+// Means select the ICache miss events, record ICache miss event for all M/S/U mode
+#define HPM_EVENT3      HPM_EVENT(EVENT_SEL_MEMORY_ACCESS, EVENT_MEMORY_ACCESS_ICACHE_MISS, MSU_EVENT_ENABLE)
+// Means select the DCache miss events, record DCache miss event for all M/S/U mode
 #define HPM_EVENT4      HPM_EVENT(EVENT_SEL_MEMORY_ACCESS, EVENT_MEMORY_ACCESS_DCACHE_MISS, MSU_EVENT_ENABLE)
 
 //#define BIG_ROW_SIZE
@@ -63,13 +67,15 @@ void array_init(void)
         }
 }
 
+BENCH_DECLARE_VAR();
+
 int main(void)
 {
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
     int32_t ret = 0;
     int32_t val = 0;
     CacheInfo_Type cacheinfo_type;
-
+    BENCH_INIT();
     if (!DCachePresent()) {
         printf("DCache not present in CPU!\n");
         return -1;
@@ -84,28 +90,38 @@ int main(void)
 
     MFlushDCache();
     MInvalDCache();
+    MInvalICache();
 
     // Init HPM bench, only need to do it once
     HPM_INIT();
+    printf("\n------Update array to all 0xab in cache: array_update_by_row------\n");
 
     // start to record hpm3 and hpm4
-    printf("\n------Update array to all 0xab in cache: array_update_by_row------\n");
-    // start to record hpm4
+    HPM_START(3, array_update_by_row_icache_miss, HPM_EVENT3);
     HPM_START(4, array_update_by_row_dcache_miss, HPM_EVENT4);
+    BENCH_START(array_update_by_row_cycle);
     array_update_by_row();
+    BENCH_END(array_update_by_row_cycle);
     // finish record and print hpm value
     HPM_END(4, array_update_by_row_dcache_miss, HPM_EVENT4);
+    HPM_END(3, array_update_by_row_icache_miss, HPM_EVENT3);
 
     printf("\n-------Keep DCache valid, do array_update_by_row again-------\n");
+    HPM_START(3, array_update_by_row_icache_miss, HPM_EVENT3);
     HPM_START(4, array_update_by_row_dcache_miss, HPM_EVENT4);
+    BENCH_START(array_update_by_row_cycle);
     array_update_by_row();
+    BENCH_END(array_update_by_row_cycle);
     HPM_END(4, array_update_by_row_dcache_miss, HPM_EVENT4);
+    HPM_END(3, array_update_by_row_icache_miss, HPM_EVENT3);
 
     printf("\n-------Invalidate all the Dcache-------\n");
     MInvalDCache();
     printf("\n------Update array to all 0xab in cache: array_update_by_col ------\n");
     HPM_START(4, array_update_by_col_dcache_miss, HPM_EVENT4);
+    BENCH_START(array_update_by_col_cycle);
     array_update_by_col();
+    BENCH_END(array_update_by_col_cycle);
     HPM_END(4, array_update_by_col_dcache_miss, HPM_EVENT4);
 
     printf("Read out array_test[0][0] 0x%x in cache, then disable DCache\n", array_test[0][0]);
