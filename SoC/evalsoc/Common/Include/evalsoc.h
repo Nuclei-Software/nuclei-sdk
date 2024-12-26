@@ -444,6 +444,13 @@ extern volatile unsigned long CpuIRegionBase;
 #define __PMA_MACRO_PRESENT         0
 #endif
 
+// HPM Configuration
+// To enable HPM, just define macro CFG_HAS_HPM in cpufeature.h
+#ifdef CFG_HAS_HPM
+#define __HPM_PRESENT               1
+#define __HPM_VER                   CFG_HPM_VER
+#endif
+
 // NICE Configuration
 // To enable NICE, just define macro CFG_HAS_NICE in cpufeature.h
 #ifdef CFG_HAS_NICE

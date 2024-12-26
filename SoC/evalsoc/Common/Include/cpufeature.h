@@ -45,6 +45,9 @@ extern "C" {
 
 #define CFG_PMP_ENTRY_NUM           8
 
+//#define CFG_HAS_HPM
+#define CFG_HPM_VER                 1
+
 //#define CFG_HAS_IDU
 //#define CFG_HAS_TEE
 //#define CFG_HAS_SMPU
