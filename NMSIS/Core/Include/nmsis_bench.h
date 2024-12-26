@@ -148,7 +148,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #endif
 
 // High performance monitor bench helpers
-#ifndef DISABLE_NMSIS_HPM
+#if defined(__HPM_PRESENT) && (__HPM_PRESENT == 1) && (!defined(DISABLE_NMSIS_HPM))
 
 /* Events type select */
 #define EVENT_SEL_INSTRUCTION_COMMIT                                               0
