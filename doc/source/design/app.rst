@@ -1807,7 +1807,7 @@ because cache will bypass when run in ilm, data in dlm(private resource for cpu)
 * Different compile optimization level such as -O2/-O0 effects cache miss
 
 .. note::
-    * There's ``printf`` hidden in ``HPM_END``, if there is another HPM_END before it, the ``printf`` will bring about 10 or more cache miss
+    * There's ``printf`` hidden in ``HPM_END``, if there is another HPM_END before it, the ``printf`` will bring some cache miss
 
 **How to run this application:**
 
@@ -1822,9 +1822,9 @@ because cache will bypass when run in ilm, data in dlm(private resource for cpu)
     # you can pass extra make variable XLCFG_CCM=1 during make command to tell sdk
     # the ccm present, it will define CFG_HAS_IOCC
     # Clean the application first
-    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=sram CCM_EN=1 clean
     # Build and upload the application
-    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=sram CCM_EN=1 upload
 
 **Expected output(DISABLE_NMSIS_HPM defined) as below:**
 
@@ -1867,10 +1867,11 @@ again**, ``array_test`` now (all 0x34) differs with cached array_test (all 0xab)
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Feb 14 2023, 18:19:17
-    Download Mode: SRAM
-    CPU Frequency 100612177 Hz
+    Nuclei SDK Build Time: Dec 27 2024, 11:07:56
+    Download Mode: DDR
+    CPU Frequency 50002001 Hz
     CPU HartID: 0
+    Benchmark initialized
     DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
 
     array_test 10 * 64 bytes
@@ -1879,15 +1880,20 @@ again**, ``array_test`` now (all 0x34) differs with cached array_test (all 0xab)
     High performance monitor initialized
 
     ------Update array to all 0xab in cache: array_update_by_row------
-    HPM4:0xf0000021, array_update_by_row_dcache_miss, 13
+    CSV, array_update_by_row_cycle, 15544
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 21
+    HPM3:0xf0000011, array_update_by_row_icache_miss, 60
 
     -------Keep DCache valid, do array_update_by_row again-------
-    HPM4:0xf0000021, array_update_by_row_dcache_miss, 2
+    CSV, array_update_by_row_cycle, 15164
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 3
+    HPM3:0xf0000011, array_update_by_row_icache_miss, 26
 
     -------Invalidate all the Dcache-------
 
     ------Update array to all 0xab in cache: array_update_by_col ------
-    HPM4:0xf0000021, array_update_by_col_dcache_miss, 12
+    CSV, array_update_by_col_cycle, 16194
+    HPM4:0xf0000021, array_update_by_col_dcache_miss, 22
     Read out array_test[0][0] 0xab in cache, then disable DCache
 
     ------Init array in memory to all 0x34------
@@ -1900,9 +1906,9 @@ again**, ``array_test`` now (all 0x34) differs with cached array_test (all 0xab)
     HPM4:0xf0000021, dcachemiss_readonebyte, 4
 
 From output, ``HPM`` is enabled, cache miss is counted and ``array_test`` size is 10 * 64 bytes.
-**At first, DCache is invalid**, the first time ``array_test`` update by row has 10 miss(HPM4 shows 13,
-because HPM itself brings in 3 miss); **Keep DCache valid**, update array_test by row again, cache miss
-decreases to 2(``HPM`` itself brings in), which means ``array_test`` has already cached;
+**At first, DCache is invalid**, the first time ``array_test`` update by row has 10 miss(HPM4 shows more,
+because HPM4 and other execution it wraps bring some); **Keep DCache valid**, update array_test by row again,
+cache miss decreases rapidly, which means ``array_test`` has already cached;
 **Then invalidate all the Dcache**, array_test update by col seems has the same cache miss as update by row.
 
 
@@ -1910,10 +1916,11 @@ decreases to 2(``HPM`` itself brings in), which means ``array_test`` has already
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Feb 14 2023, 18:22:17
-    Download Mode: SRAM
-    CPU Frequency 100612177 Hz
+    Nuclei SDK Build Time: Dec 27 2024, 11:07:28
+    Download Mode: DDR
+    CPU Frequency 50002001 Hz
     CPU HartID: 0
+    Benchmark initialized
     DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
 
     array_test 2048 * 64 bytes
@@ -1922,15 +1929,20 @@ decreases to 2(``HPM`` itself brings in), which means ``array_test`` has already
     High performance monitor initialized
 
     ------Update array to all 0xab in cache: array_update_by_row------
-    HPM4:0xf0000021, array_update_by_row_dcache_miss, 2052
+    CSV, array_update_by_row_cycle, 3166169
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 2076
+    HPM3:0xf0000011, array_update_by_row_icache_miss, 58
 
     -------Keep DCache valid, do array_update_by_row again-------
-    HPM4:0xf0000021, array_update_by_row_dcache_miss, 1301
+    CSV, array_update_by_row_cycle, 3195588
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 2058
+    HPM3:0xf0000011, array_update_by_row_icache_miss, 27
 
     -------Invalidate all the Dcache-------
 
     ------Update array to all 0xab in cache: array_update_by_col ------
-    HPM4:0xf0000021, array_update_by_col_dcache_miss, 88336
+    CSV, array_update_by_col_cycle, 5091193
+    HPM4:0xf0000021, array_update_by_col_dcache_miss, 130975
     Read out array_test[0][0] 0xab in cache, then disable DCache
 
     ------Init array in memory to all 0x34------
@@ -1943,9 +1955,12 @@ decreases to 2(``HPM`` itself brings in), which means ``array_test`` has already
     HPM4:0xf0000021, dcachemiss_readonebyte, 4
 
 From output, ``array_test`` size is enlarged to ``2048 * 64`` bytes, which is **two times the size of DCache (1024 * 64 bytes)**.
-Cache miss brought by ``HPM`` itself ignored, array update by col has **43 times cache miss(88336) as the array update by row has(2052)**.
+Cache miss brought by ``HPM`` itself ignored, array update by col has **63 times cache miss(130975) as the array update by row has(2076)**.
 That's because when first byte access brings one cache misse, **one cache line(64 bytes in this demo) is fetched to cache**,
-and it works best if other 63 cached bytes can be accessed before getting dirty as soon as possible, as update by row does.
+and it works best if other 63 cached bytes can be accessed before getting dirty as soon as possible, as update by row does, so the cache miss
+equals nearly to ``ROW_SIZE``, while when updated by col, every byte in ``ROW_SIZE`` * ``COL_SIZE`` will cause a cache miss! which is cache-unfriendly.
+What's more, considering ``array_test`` size is two times the size of DCache, the cached data has been kicked out when ``do array_update_by_row again``,
+so the cache miss is nearly the same as the first time.
 
 .. _design_app_demo_stack_check:
 
@@ -2078,27 +2093,32 @@ This `demo_pma application`_ is used to demonstrate how to set memory region to 
     # cd to the demo_pma directory
     cd application/baremetal/demo_pma
     # Clean the application first
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=sram CORE=ux900 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=sram CCM_EN=1 clean
     # Build and upload the application
-    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=sram CORE=ux900 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=sram CCM_EN=1 upload
 
 **Expected output as below:**
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Nov 21 2024, 12:27:11
+    Nuclei SDK Build Time: Dec 26 2024, 21:48:11
     Download Mode: SRAM
-    CPU Frequency 50000363 Hz
+    CPU Frequency 50002001 Hz
     CPU HartID: 0
     Benchmark initialized
-    
+    DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
+
+    array_test size: 10 * 64 bytes, addr: 0xa0012000
+
     Set to NonCacheable region
-    Region type: 0x4,region base addr: 0xa0012000, region size: 0x8000, region status: 1
-    CSV, NonCacheable, 3719290
-    
+    Region type: 0x4,region base addr: 0xa0012000, region size: 0x10000, region status: 1
+    CSV, NonCacheable, 345
+    HPM4:0xf0000021, array_update_by_row_dcache_miss_noncacheable, 0
+
     Set to Cacheable region
-    Region type: 0x0,region base addr: 0xa0012000, region size: 0x8000, region status: 1
-    CSV, Cacheable, 782131
+    Region type: 0x0,region base addr: 0xa0012000, region size: 0x10000, region status: 1
+    CSV, Cacheable, 166
+    HPM4:0xf0000021, array_update_by_row_dcache_miss_cacheable, 2
 
 From output, we can see the cycles taken varies a lot according to the memory attribute ``NonCacheable`` and ``Cacheable``
 
