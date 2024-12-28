@@ -8,9 +8,9 @@
         "application/baremetal/demo_pmp": {"build": true, "run": false},
         "application/baremetal/demo_smode_eclic": {"build": true, "run": false},
         "application/baremetal/demo_cidu": {"build": true, "run": false},
+        "application/baremetal/demo_stack_check": {"build": true, "run": false},
         "application/baremetal/demo_cache": {"build": true, "run": false},
         "application/baremetal/demo_pma": {"build": true, "run": false},
-        "application/baremetal/demo_stack_check": {"build": true, "run": false},
         "test/core": {"build": true, "run": true}
     },
     "expecteds": {

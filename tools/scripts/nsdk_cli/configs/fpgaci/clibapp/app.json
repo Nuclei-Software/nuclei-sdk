@@ -109,7 +109,7 @@
             }
         },
         "application/baremetal/demo_cache": {
-            "build_config" : {},
+            "build_config" : {"XLCFG_CCM": "1", "XLCFG_HPM": "1"},
             "checks": {
                 "PASS": [
                     "[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!",
@@ -201,7 +201,7 @@
             }
         },
         "application/baremetal/demo_pma": {
-            "build_config" : {"CCM_EN": "1"},
+            "build_config" : {"XLCFG_CCM": "1", "XLCFG_HPM": "1", "DOWNLOAD": "ddr"},
             "checks": {
                 "PASS": ["CSV, Cacheable", "DCache not present in CPU", "[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!"]
             }
