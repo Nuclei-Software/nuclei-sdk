@@ -109,7 +109,7 @@
             }
         },
         "application/baremetal/demo_cache": {
-            "build_config" : {"XLCFG_CCM": "1", "XLCFG_HPM": "1"},
+            "build_config" : {"XLCFG_CCM": "1", "XLCFG_HPM": "1", "DOWNLOAD": "ddr"},
             "checks": {
                 "PASS": [
                     "[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!",
