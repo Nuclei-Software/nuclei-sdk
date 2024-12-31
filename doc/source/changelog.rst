@@ -19,6 +19,7 @@ This is development version ``0.2.0-dev`` of N100 SDK.
   - Add ``__set_rv_instret`` and ``__set_rv_cycle`` API for N100 NMSIS Core
   - Fix ``SysTick_Config`` API by using ``SysTick_Reload`` instead of directly set MTIMECMP register to avoid easy 24b overflow
   - Remove ``IRQC_SetPendingIRQ`` and ``IRQC_ClearPendingIRQ`` API due to N100 only support level interrupt
+  - Update ``CSR_MCAUSE_Type/CSR_MSTATUS_Type/CSR_MSTATUSH_Type`` union member
 
 * SoC
 

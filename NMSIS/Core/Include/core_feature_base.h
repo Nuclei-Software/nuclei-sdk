@@ -103,42 +103,27 @@ typedef union {
 } CSR_MISA_Type;
 
 /**
+ * \brief  Union type to access MSTATUSH CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t _reserved0:5;                  /*!< bit:     0..4  Reserved */
+        rv_csr_t mbe:1;                         /*!< bit:     5  Machine Mode Big endian control */
+        rv_csr_t _reserved1:26;                 /*!< bit:     6..31  Reserved */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MSTATUSH_Type;
+
+/**
  * \brief  Union type to access MSTATUS CSR register.
  */
 typedef union {
     struct {
-#if defined(__RISCV_XLEN) && __RISCV_XLEN == 64
         rv_csr_t _reserved0:3;                  /*!< bit:     0..2  Reserved */
-        rv_csr_t mie:1;                         /*!< bit:     3  Machine mode interrupt enable flag */
+        rv_csr_t mie:1;                         /*!< bit:     3  Machine mode interrupt enable */
         rv_csr_t _reserved1:3;                  /*!< bit:     4..6  Reserved */
-        rv_csr_t mpie:1;                        /*!< bit:     7  mirror of MIE flag */
-        rv_csr_t _reserved2:3;                  /*!< bit:     8..10  Reserved */
-        rv_csr_t mpp:2;                         /*!< bit:     11..12 mirror of Privilege Mode */
-        rv_csr_t fs:2;                          /*!< bit:     13..14 FS status flag */
-        rv_csr_t xs:2;                          /*!< bit:     15..16 XS status flag */
-        rv_csr_t mprv:1;                        /*!< bit:     Machine mode PMP */
-        rv_csr_t _reserved3:14;                 /*!< bit:     18..31 Reserved */
-        rv_csr_t uxl:2;                         /*!< bit:     32..33 user mode xlen */
-        rv_csr_t _reserved6:29;                 /*!< bit:     34..62 Reserved  */
-        rv_csr_t sd:1;                          /*!< bit:     Dirty status for XS or FS */
-#else
-        rv_csr_t _reserved0:1;                  /*!< bit:     0  Reserved */
-        rv_csr_t sie:1;                         /*!< bit:     1  supervisor interrupt enable flag */
-        rv_csr_t _reserved1:1;                  /*!< bit:     2  Reserved */
-        rv_csr_t mie:1;                         /*!< bit:     3  Machine mode interrupt enable flag */
-        rv_csr_t _reserved2:1;                  /*!< bit:     4  Reserved */
-        rv_csr_t spie:1;                        /*!< bit:     3  Supervisor Privilede mode interrupt enable flag */
-        rv_csr_t _reserved3:1;                  /*!< bit:     Reserved */
-        rv_csr_t mpie:1;                        /*!< bit:     mirror of MIE flag */
-        rv_csr_t _reserved4:3;                  /*!< bit:     Reserved */
-        rv_csr_t mpp:2;                         /*!< bit:     mirror of Privilege Mode */
-        rv_csr_t fs:2;                          /*!< bit:     FS status flag */
-        rv_csr_t xs:2;                          /*!< bit:     XS status flag */
-        rv_csr_t mprv:1;                        /*!< bit:     Machine mode PMP */
-        rv_csr_t sum:1;                         /*!< bit:     Supervisor Mode load and store protection */
-        rv_csr_t _reserved6:12;                 /*!< bit:     19..30 Reserved  */
-        rv_csr_t sd:1;                          /*!< bit:     Dirty status for XS or FS */
-#endif
+        rv_csr_t mpie:1;                        /*!< bit:     7  Machine mode previous privilege mode interrupt enable */
+        rv_csr_t _reserved2:24;                 /*!< bit:     8..31 Reserved */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MSTATUS_Type;
@@ -148,11 +133,11 @@ typedef union {
  */
 typedef union {
     struct {
-        rv_csr_t mode:6;                        /*!< bit:     0..5   interrupt mode control */
+        rv_csr_t _reserved0:2;                  /*!< bit:     0..1   Reserved */
 #if defined(__RISCV_XLEN) && __RISCV_XLEN == 64
-        rv_csr_t addr:58;                       /*!< bit:     6..63  mtvec address */
+        rv_csr_t addr:62;                       /*!< bit:     2..63  mtvec address */
 #else
-        rv_csr_t addr:26;                       /*!< bit:     6..31  mtvec address */
+        rv_csr_t addr:30;                       /*!< bit:     2..31  mtvec address */
 #endif
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
@@ -164,12 +149,7 @@ typedef union {
 typedef union {
     struct {
         rv_csr_t exccode:12;                    /*!< bit:     11..0  exception or interrupt code */
-        rv_csr_t _reserved0:4;                  /*!< bit:     15..12  Reserved */
-        rv_csr_t mpil:8;                        /*!< bit:     23..16  Previous interrupt level */
-        rv_csr_t _reserved1:3;                  /*!< bit:     26..24  Reserved */
-        rv_csr_t mpie:1;                        /*!< bit:     27  Interrupt enable flag before enter interrupt */
-        rv_csr_t mpp:2;                         /*!< bit:     29..28  Privilede mode flag before enter interrupt */
-        rv_csr_t minhv:1;                       /*!< bit:     30  Machine interrupt vector table */
+        rv_csr_t _reserved0:19;                  /*!< bit:     12..30  Reserved */
 #if defined(__RISCV_XLEN) && __RISCV_XLEN == 64
         rv_csr_t _reserved2:32;                 /*!< bit:     31..62  Reserved */
         rv_csr_t interrupt:1;                   /*!< bit:     63  trap type. 0 means exception and 1 means interrupt */
