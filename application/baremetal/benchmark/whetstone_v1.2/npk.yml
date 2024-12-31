@@ -1,0 +1,50 @@
+## Package Base Information
+name: app-nsdk_whetstone
+owner: nuclei
+version:
+description: Whetstone Benchmark
+type: app
+keywords:
+  - baremetal
+  - benchmark
+category: baremetal application
+license:
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+
+## Package Configurations
+configuration:
+
+## Set Configuration for other packages
+setconfig:
+  - config: stdclib
+    value: newlib_small
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    # only link with math library when using newlib library
+    # no need for libncrt library
+    - libs: ["m"]
+      condition: $( startswith(${stdclib}, "newlib") )
+
+## Build Configuration
+buildconfig:
+  - type: gcc
+    common_flags: # flags need to be combined together across all packages
+      - flags: -Ofast -fsingle-precision-constant -mstrict-align -funroll-all-loops -falign-functions=8 -falign-jumps=8 -falign-loops=8
+  - type: clang
+    common_flags: # flags need to be combined together across all packages
+      - flags: -Ofast -funroll-loops
+  - type: zcc
+    common_flags: # flags need to be combined together across all packages
+      - flags: -Ofast -funroll-loops -flto
