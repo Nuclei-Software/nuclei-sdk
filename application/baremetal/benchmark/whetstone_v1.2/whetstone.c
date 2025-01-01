@@ -1,5 +1,5 @@
 /*
- * C Converted Whetstone Double Precision Benchmark
+ * C Converted Whetstone Single or Double Precision Benchmark
  *		Version 1.2	22 March 1998
  *
  *	(c) Copyright 1998 Painter Engineering, Inc.
@@ -38,7 +38,7 @@
  */
 /*
 C**********************************************************************
-C     Benchmark #2 -- Double  Precision Whetstone (A001)
+C     Benchmark #2 -- Single or Double Precision Whetstone (A001)
 C
 C     o	This is a REAL*8 version of
 C	the Whetstone benchmark program.
@@ -60,48 +60,51 @@ C**********************************************************************
 /* the following is optional depending on the timing function used */
 #include "nuclei_sdk_soc.h"
 
+/* Single or Double Precision decided by __riscv_flen, ported by Nuclei */
+#include "config.h"
+
 /* map the FORTRAN math functions, etc. to the C versions */
-#define DSIN	sin
-#define DCOS	cos
-#define DATAN	atan
-#define DLOG	log
-#define DEXP	exp
-#define DSQRT	sqrt
+
 #define IF		if
 
 /* function prototypes */
-void POUT(long N, long J, long K, double X1, double X2, double X3, double X4);
-void PA(double E[]);
+void POUT(long N, long J, long K, SPDP X1, SPDP X2, SPDP X3, SPDP X4);
+void PA(SPDP E[]);
 void P0(void);
-void P3(double X, double Y, double *Z);
+void P3(SPDP X, SPDP Y, SPDP *Z);
 #define USAGE	"usage: whetdc [-c] [loops]\n"
-uint64_t        Begin_Cycle,
-                End_Cycle,
-                User_Cycle;
-uint64_t        Begin_Instret,
-                End_Instret,
-                User_Instret;
+static uint64_t start_cycle, end_cycle, used_cycle;
+static uint64_t start_instret, end_instret, used_instret;
+
+SPDP time()
+{
+#if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
+    return (SPDP) SysTimer_GetLoadValue() / SOC_TIMER_FREQ;
+#else
+#error "This example require CPU System Timer feature"
+#endif
+}
+
+/* Only support dec number < 1000 */
+static char *dec2str(uint32_t val)
+{
+    static char str[4];
+    val = val % 1000;
+    int decnum = 100;
+    for (int i = 0; i < 3; i ++) {
+        str[i] = val / decnum + '0';
+        val = val % decnum;
+        decnum = decnum / 10;
+    }
+    str[3] = '\0';
+    return str;
+}
+
 /*
 	COMMON T,T1,T2,E1(4),J,K,L
 */
-double T,T1,T2,E1[5];
+SPDP T,T1,T2,E1[5];
 int J,K,L;
-
-
-long csr_cycle(void)
-{
-    return __get_rv_cycle();
-}
-
-long csr_instret(void)
-{
-    return __get_rv_instret();
-}
-
-long time(void)
-{
-    return SysTimer_GetLoadValue() / SOC_TIMER_FREQ;
-}
 
 int
 main(void)
@@ -109,7 +112,7 @@ main(void)
 	/* used in the FORTRAN version */
 	long I;
 	long N1, N2, N3, N4, N6, N7, N8, N9, N10, N11;
-	double X1,X2,X3,X4,X,Y,Z;
+	SPDP X1,X2,X3,X4,X,Y,Z;
 	long LOOP;
 	int II, JJ;
 
@@ -117,12 +120,20 @@ main(void)
 	long loopstart;
 	long startsec, finisec;
 	float KIPS;
+    SPDP mwips, mwips_mhz;
 	int continuous;
 
-	loopstart = 50000;		/* see the note about LOOP below */
+#if CFG_SIMULATION
+//for simulation we make it small
+    loopstart = 10;
+#else
+    loopstart = 50000;		/* see the note about LOOP below */
+#endif
 	continuous = 0;
 
-
+    printf("\n");
+    printf("##########################################\n");
+    printf("%s Precision C Whetstone Benchmark Version 1.2	22 March 1998\n", Precision);
 
 LCONT:
 /*
@@ -130,9 +141,11 @@ C
 C	Start benchmark timing at this point.
 C
 */
-	startsec = time();
-	Begin_Cycle = csr_cycle();
-	Begin_Instret = csr_instret();
+    __set_rv_cycle(0);
+    __set_rv_instret(0);
+    startsec = time(0);
+    start_cycle = __get_rv_cycle();
+    start_instret = __get_rv_instret();
 
 /*
 C
@@ -367,10 +380,11 @@ C
 C      Stop benchmark timing at this point.
 C
 */
-	End_Cycle = csr_cycle();
-	End_Instret = csr_instret();
-	finisec = time();
-
+    end_cycle = __get_rv_cycle();
+    end_instret = __get_rv_instret();
+    finisec = time();
+    used_cycle = end_cycle - start_cycle;
+    used_instret = end_instret - start_instret;
 /*
 C----------------------------------------------------------------
 C      Performance in Whetstone KIP's per second is given by
@@ -380,29 +394,30 @@ C
 C      where TIME is in seconds.
 C--------------------------------------------------------------------
 */
-	printf("\n");
-	if (finisec-startsec <= 0) {
-		printf("Insufficient duration- Increase the LOOP count\n");
-		return(1);
-	}
+    printf("\n");
+    if (finisec-startsec <= 0) {
+        printf("Insufficient duration- Increase the LOOP count\n");
+    }
 
 	printf("Loops: %ld, Iterations: %d, Duration: %ld sec.\n",
 			LOOP, II, finisec-startsec);
 
 	KIPS = (100.0*LOOP*II)/(float)(finisec-startsec);
-	if (KIPS >= 1000.0)
-		printf("C Converted Double Precision Whetstones: %.1f MIPS\n", KIPS/1000.0);
-	else
-		printf("C Converted Double Precision Whetstones: %.1f KIPS\n", KIPS);
+    mwips = KIPS/1000.0;
+	printf("C Converted %s Precision Whetstones: %.1f MIPS\n", Precision, mwips);
+    mwips_mhz = mwips / SystemCoreClock * 1000000;
 
-	User_Cycle = End_Cycle - Begin_Cycle;
-    User_Instret = End_Instret - Begin_Instret;
+    uint32_t whet_mwips = (uint32_t)(mwips_mhz * 1000);
+    char *pstr = dec2str(whet_mwips);
+    printf("\nCSV, Benchmark, MWIPS/MHz\n");
+    printf("CSV, Whetstone_v1.2, %u.%s\n", (unsigned int)(whet_mwips/1000), pstr);
 
-	float whet_mips = (100000.0*LOOP*II)/(float)User_Cycle;
-    printf("Begin_Cycle %ld, End_Cycle %ld, User_Cycle %ld cycles\n", Begin_Cycle, End_Cycle, User_Cycle);
-    printf("Begin_Instret %ld, End_Instret %ld, User_Instret %ld Instrets\n", Begin_Instret, End_Instret, User_Instret);
-    printf("MIPS/MHz calc via cycle: %2.6f MIPS/MHz\n", whet_mips);
-    printf("IPC: %6.3f\n", ((float)User_Instret/User_Cycle));
+    float f_ipc = (((float)used_instret / used_cycle));
+    uint32_t i_ipc = (uint32_t)(f_ipc * 1000);
+    pstr = dec2str(i_ipc);
+
+    printf("IPC = Instret/Cycle = %u/%u = %u.%s\n", (unsigned int)used_instret, (unsigned int)used_cycle, (unsigned int)(i_ipc/1000), pstr);
+
 	if (continuous)
 		goto LCONT;
 
@@ -410,7 +425,7 @@ C--------------------------------------------------------------------
 }
 
 void
-PA(double E[])
+PA(SPDP E[])
 {
 	J = 0;
 
@@ -434,9 +449,9 @@ P0(void)
 }
 
 void
-P3(double X, double Y, double *Z)
+P3(SPDP X, SPDP Y, SPDP *Z)
 {
-	double X1, Y1;
+	SPDP X1, Y1;
 
 	X1 = X;
 	Y1 = Y;
@@ -447,7 +462,7 @@ P3(double X, double Y, double *Z)
 
 #ifdef PRINTOUT
 void
-POUT(long N, long J, long K, double X1, double X2, double X3, double X4)
+POUT(long N, long J, long K, SPDP X1, SPDP X2, SPDP X3, SPDP X4)
 {
 	printf("%7ld %7ld %7ld %12.4e %12.4e %12.4e %12.4e\n",
 						N, J, K, X1, X2, X3, X4);

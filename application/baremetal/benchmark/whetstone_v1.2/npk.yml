@@ -1,8 +1,8 @@
 ## Package Base Information
-name: app-nsdk_whetstone
+name: app-nsdk_whetstone_v1.2
 owner: nuclei
 version:
-description: Whetstone Benchmark
+description: Whetstone Benchmark Version 1.2 22 March 1998
 type: app
 keywords:
   - baremetal
@@ -41,7 +41,7 @@ codemanage:
 buildconfig:
   - type: gcc
     common_flags: # flags need to be combined together across all packages
-      - flags: -Ofast -fsingle-precision-constant -mstrict-align -funroll-all-loops -falign-functions=8 -falign-jumps=8 -falign-loops=8
+      - flags: -O3 -funroll-loops -fsingle-precision-constant
   - type: clang
     common_flags: # flags need to be combined together across all packages
       - flags: -Ofast -funroll-loops
