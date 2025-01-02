@@ -1087,6 +1087,60 @@ __STATIC_FORCEINLINE unsigned long __get_hart_id(void)
     return id;
 }
 
+
+/**
+ * \brief   Get cluster id of current cluster in supervisor mode
+ * \details This function will get cluster id of current cluster in a multiple cluster system
+ * \return  The cluster id of current cluster
+ * \remarks hartid bit 15-8 is designed for cluster id in nuclei subsystem reference design
+ * \attention function is allowed in machine/supervisor mode,
+ * currently only present in 600/900 series from 2024 released version
+ */
+__STATIC_FORCEINLINE unsigned long __get_cluster_id_s(void)
+{
+    unsigned long id;
+
+    id = (__RV_CSR_READ(CSR_SHARTID) >> 8) & 0xFF;
+    return id;
+}
+
+/**
+ * \brief   Get hart index of current cluster in supervisor mode
+ * \details This function will get hart index of current cluster in a multiple cluster system,
+ * hart index is hartid - hartid offset, for example if your hartid is 1, and offset is 1, then
+ * hart index is 0
+ * \return  The hart index of current cluster
+ * \attention function is allowed in machine/supervisor mode,
+ * currently only present in 600/900 series from 2024 released version
+ */
+__STATIC_FORCEINLINE unsigned long __get_hart_index_s(void)
+{
+    unsigned long id;
+#ifdef __HARTID_OFFSET
+    id = __RV_CSR_READ(CSR_SHARTID) - __HARTID_OFFSET;
+#else
+    id = __RV_CSR_READ(CSR_SHARTID);
+#endif
+    return id;
+}
+
+/**
+ * \brief   Get hart id of current cluster in supervisor mode
+ * \details This function will get hart id of current cluster in a multiple cluster system
+ * \return  The hart id of current cluster
+ * \remarks it will return full hartid not part of it for reference subsystem design,
+ * if your reference subsystem design has hartid offset, please define __HARTID_OFFSET in
+ * <Device>.h
+ * \attention function is allowed in machine/supervisor mode,
+ * currently only present in 600/900 series from 2024 released version
+ */
+__STATIC_FORCEINLINE unsigned long __get_hart_id_s(void)
+{
+    unsigned long id;
+    id = __RV_CSR_READ(CSR_SHARTID);
+    return id;
+}
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_CSR_Register_Access */
 
 /* ###########################  CPU Intrinsic Functions ########################### */

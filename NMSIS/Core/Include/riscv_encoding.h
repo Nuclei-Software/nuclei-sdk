@@ -181,16 +181,37 @@
 #define SCAUSE_INTR         MCAUSE_INTR
 #define SCAUSE_CAUSE        0x000003FFUL
 
-#define MENVCFG_CBIE_EN                 (0x11 << 4)
-#define MENVCFG_CBIE_FLUSH              (0x01 << 4)
-#define MENVCFG_CBIE_INVAL              (0x11 << 4)
-#define MENVCFG_CBCFE                   (0x1 << 6)
-#define MENVCFG_CBZE                    (0x1 << 7)
-#define SENVCFG_CBIE_EN                 (0x11 << 4)
-#define SENVCFG_CBIE_FLUSH              (0x01 << 4)
-#define SENVCFG_CBIE_INVAL              (0x11 << 4)
-#define SENVCFG_CBCFE                   (0x1 << 6)
-#define SENVCFG_CBZE                    (0x1 << 7)
+#define MENVCFG_CBIE_EN     (0x11 << 4)
+#define MENVCFG_CBIE_FLUSH  (0x01 << 4)
+#define MENVCFG_CBIE_INVAL  (0x11 << 4)
+#define SENVCFG_CBIE_EN     (0x11 << 4)
+#define SENVCFG_CBIE_FLUSH  (0x01 << 4)
+#define SENVCFG_CBIE_INVAL  (0x11 << 4)
+
+#define MENVCFG_FIOM        0x00000001
+#define MENVCFG_LPE         0x00000004
+#define MENVCFG_SSE         0x00000008
+#define MENVCFG_CBIE        0x00000030
+#define MENVCFG_CBCFE       0x00000040
+#define MENVCFG_CBZE        0x00000080
+#define MENVCFG_PMM         0x0000000300000000
+#define MENVCFG_DTE         0x0800000000000000
+#define MENVCFG_ADUE        0x2000000000000000
+#define MENVCFG_PBMTE       0x4000000000000000
+#define MENVCFG_STCE        0x8000000000000000
+
+#define MENVCFGH_DTE        0x08000000
+#define MENVCFGH_ADUE       0x20000000
+#define MENVCFGH_PBMTE      0x40000000
+#define MENVCFGH_STCE       0x80000000
+
+#define SENVCFG_FIOM        0x00000001
+#define SENVCFG_LPE         0x00000004
+#define SENVCFG_SSE         0x00000008
+#define SENVCFG_CBIE        0x00000030
+#define SENVCFG_CBCFE       0x00000040
+#define SENVCFG_CBZE        0x00000080
+#define SENVCFG_PMM         0x0000000300000000
 
 /* === P-ext CSR bit mask === */
 
@@ -204,8 +225,16 @@
 #define TXEVT_TXEVT                 (0x1)
 #define SLEEPVALUE_SLEEPVALUE       (0x1)
 
-#define MCOUNTINHIBIT_IR            (1<<2)
-#define MCOUNTINHIBIT_CY            (1<<0)
+#define MCOUNTEREN_CY_SHIFT         0
+#define MCOUNTEREN_TIME_SHIFT       1
+#define MCOUNTEREN_IR_SHIFT         2
+
+#define MCOUNTEREN_CY               (1U << MCOUNTEREN_CY_SHIFT)
+#define MCOUNTEREN_TIME             (1U << MCOUNTEREN_TIME_SHIFT)
+#define MCOUNTEREN_IR               (1U << MCOUNTEREN_IR_SHIFT)
+
+#define MCOUNTINHIBIT_CY            MCOUNTEREN_CY
+#define MCOUNTINHIBIT_IR            MCOUNTEREN_IR
 
 #define MILM_CTL_ILM_BPA            (((1ULL<<((__riscv_xlen)-10))-1)<<10)
 #define MILM_CTL_ILM_ECC_CHK_EN     (1<<4)
@@ -528,6 +557,7 @@
 #define CSR_VL 0xc20
 #define CSR_VTYPE 0xc21
 #define CSR_VLENB 0xc22
+#define CSR_TIMEH 0xc81
 #define CSR_SSTATUS 0x100
 #define CSR_SEDELEG 0x102
 #define CSR_SIDELEG 0x103
@@ -546,6 +576,7 @@
 #define CSR_STVAL 0x143
 #define CSR_SIP 0x144
 #define CSR_STIMECMP 0x14d
+#define CSR_STIMECMPH 0x15d
 #define CSR_SATP 0x180
 #define CSR_SCONTEXT 0x5a8
 #define CSR_VSSTATUS 0x200
@@ -601,6 +632,7 @@
 #define CSR_MTVEC 0x305
 #define CSR_MCOUNTEREN 0x306
 #define CSR_MENVCFG 0x30a
+#define CSR_MENVCFGH 0x31a
 #define CSR_MSTATEEN0 0x30c
 #define CSR_MSTATEEN1 0x30d
 #define CSR_MSTATEEN2 0x30e
@@ -1052,6 +1084,7 @@
 #define CSR_CCM_UDATA           0x4CD
 #define CSR_CCM_FPIPE           0x4CF
 
+#define CSR_SHARTID             0x146
 /** @} */ /** End of Doxygen Group NMSIS_Core_CSR_Registers **/
 
 /* Exception Code in MCAUSE CSR */
