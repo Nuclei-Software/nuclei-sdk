@@ -80,13 +80,13 @@ typedef enum IRQn {
     /* =======================================  Nuclei Core Specific Interrupt Numbers  ======================================== */
 
     Reserved0_IRQn            =   0,              /*!<  Internal reserved */
-    Reserved1_IRQn            =   1,              /*!<  Internal reserved */
+    SysTimerSW_S_IRQn         =   1,              /*!<  System Timer supervisor mode SW interrupt triggered by ssip  */
     Reserved2_IRQn            =   2,              /*!<  Internal reserved */
-    SysTimerSW_IRQn           =   3,              /*!<  System Timer SW interrupt for both M/S mode in ECLIC */
+    SysTimerSW_IRQn           =   3,              /*!<  System Timer machine mode SW interrupt triggered by msip */
     Reserved3_IRQn            =   4,              /*!<  Internal reserved */
-    Reserved4_IRQn            =   5,              /*!<  Internal reserved */
+    SysTimer_S_IRQn           =   5,              /*!<  System Timer supervisor mode interrupt triggered by stimecmp csr */
     Reserved5_IRQn            =   6,              /*!<  Internal reserved */
-    SysTimer_IRQn             =   7,              /*!<  System Timer Interrupt for both M/S mode in ECLIC */
+    SysTimer_IRQn             =   7,              /*!<  System Timer machine mode interrupt triggered by mtimecmp */
     Reserved6_IRQn            =   8,              /*!<  Internal reserved */
     Reserved7_IRQn            =   9,              /*!<  Internal reserved */
     Reserved8_IRQn            =  10,              /*!<  Internal reserved */
@@ -354,6 +354,13 @@ extern volatile unsigned long CpuIRegionBase;
 #define __SYSTIMER_BASEADDR         (__IREGION_BASEADDR + IREGION_TIMER_OFS)
 #endif
 #define __CLINT_TIMER_BASEADDR      (__SYSTIMER_BASEADDR + 0x1000)
+
+// CPU System Timer SSTC Configuration
+#if defined(CFG_HAS_ISA_SSTC)
+#define __SSTC_PRESENT              1
+#else
+#define __SSTC_PRESENT              0
+#endif
 
 // CIDU Configuration
 // To enable CIDU, just define macro CFG_HAS_IDU in cpufeature.h
