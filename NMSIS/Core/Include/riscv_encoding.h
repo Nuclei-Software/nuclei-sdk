@@ -400,7 +400,7 @@
 
 
 /* === FPU FRM Rounding Mode === */
-/** FPU Round to Nearest, ties to Even*/
+/** FPU Round to Nearest, ties to Even */
 #define FRM_RNDMODE_RNE     0x0
 /** FPU Round Towards Zero */
 #define FRM_RNDMODE_RTZ     0x1
@@ -1068,6 +1068,7 @@
 
 /* === Stack protect === */
 #define CSR_MSTACK_CTRL         0x7C6
+#define CSR_MSTACK_CTL          0x7C6
 #define CSR_MSTACK_BOUND        0x7C7
 #define CSR_MSTACK_BASE         0x7C8
 
@@ -1084,7 +1085,12 @@
 #define CSR_CCM_UDATA           0x4CD
 #define CSR_CCM_FPIPE           0x4CF
 
-#define CSR_SHARTID             0x146
+#define CSR_SHARTID             0xDC0
+/* === Worldguard CSRs === */
+#define CSR_MLWID               0x390
+#define CSR_MWIDDELEG           0x738
+#define CSR_SLWID               0x190
+
 /** @} */ /** End of Doxygen Group NMSIS_Core_CSR_Registers **/
 
 /* Exception Code in MCAUSE CSR */
