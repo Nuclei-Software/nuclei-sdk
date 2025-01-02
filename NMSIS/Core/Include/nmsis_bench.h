@@ -154,7 +154,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #define EVENT_SEL_INSTRUCTION_COMMIT                                               0
 #define EVENT_SEL_MEMORY_ACCESS                                                    1
 
-/* Instruction commit events idx define*/
+/* Instruction commit events idx macros */
 #define EVENT_INSTRUCTION_COMMIT_CYCLE_COUNT                                       1
 #define EVENT_INSTRUCTION_COMMIT_RETIRED_COUNT                                     2
 /* Integer load instruction (includes LR) */
@@ -191,7 +191,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #define EVENT_INSTRUCTION_COMMIT_JAL_PREDICTION_FAIL                               25
 #define EVENT_INSTRUCTION_COMMIT_JALR_PREDICTION_FAIL                              26
 
-/* Memory access events idx define*/
+/* Memory access events idx macros */
 #define EVENT_MEMORY_ACCESS_ICACHE_MISS                                            1
 #define EVENT_MEMORY_ACCESS_DCACHE_MISS                                            2
 #define EVENT_MEMORY_ACCESS_ITLB_MISS                                              3
