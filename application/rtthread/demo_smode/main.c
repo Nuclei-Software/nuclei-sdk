@@ -86,6 +86,15 @@ extern void entry(void);
 // Execute Hart ID
 #define EXECUTE_HARTID          0
 
+#if defined(__SSTC_PRESENT) && __SSTC_PRESENT == 1
+#define SMODE_TIMER_IRQ         SysTimer_S_IRQn
+#define SMODE_SWI_IRQ           SysTimerSW_S_IRQn
+#else
+#define SMODE_TIMER_IRQ         SysTimer_IRQn
+#define SMODE_SWI_IRQ           SysTimerSW_IRQn
+#endif
+
+
 /* Create a stack for supervisor mode execution */
 uint8_t smode_stack[SMODE_STACK_SIZE] __attribute__((aligned(16)));
 
@@ -112,10 +121,19 @@ int main_entry(void)
     };
 
     __set_PMPENTRYx(0, &pmp_cfg);
-    printf("Set ECLIC Timer Interrupt and Software Timer Interrupt to be executed in S-Mode\r\n");
     // before drop to S Mode, specifies in which privilege mode the interrupt should be taken
-    ECLIC_SetModeIRQ(SysTimerSW_IRQn, PRV_S);
-    ECLIC_SetModeIRQ(SysTimer_IRQn, PRV_S);
+    ECLIC_SetModeIRQ(SMODE_TIMER_IRQ, PRV_S);
+    ECLIC_SetModeIRQ(SMODE_SWI_IRQ, PRV_S);
+#if defined(__SSTC_PRESENT) && __SSTC_PRESENT == 1
+    /* Disable S-mode access some system timer registers */
+    SysTimer_DisableSAccess();
+    /* Enable CY,TM,IR in CSR_MCOUNTEREN to allow S-mode access cycle,time,instret csr */
+    SysTimer_EnableSSTC();
+    printf("Set ECLIC Timer S-Mode Interrupt and Software Timer S-Mode Interrupt to be executed in S-Mode\r\n");
+#else
+    printf("Set ECLIC Timer M-Mode Interrupt and Software Timer M-Mode Interrupt to be executed in S-Mode\r\n");
+    SysTimer_EnableSAccess();
+#endif
 
     printf("Drop to S-Mode to prepare RT-Thread Environment\r\n");
     /* Drop to S mode */
