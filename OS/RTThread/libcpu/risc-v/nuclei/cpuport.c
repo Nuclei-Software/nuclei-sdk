@@ -35,7 +35,25 @@
 
 #ifdef SMODE_RTOS
 #define SysTick_Handler     eclic_stip_handler
+extern void eclic_ssip_handler(void);
 #define portINITIAL_XSTATUS ( SSTATUS_SPP | SSTATUS_SPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
+
+#if defined(__SSTC_PRESENT) && __SSTC_PRESENT == 1
+#define SMODE_TIMER_IRQ         SysTimer_S_IRQn
+#define SMODE_SWI_IRQ           SysTimerSW_S_IRQn
+#define SMODE_SET_SWI()         SysTimer_SetSWIRQ_S()
+#define SMODE_CLR_SWI()         SysTimer_ClearSWIRQ_S()
+#define SMODE_TICK_CONFIG()     SysTick_Config_S(SYSTICK_TICK_CONST)
+#define SMODE_TICK_RELOAD()     SysTick_Reload_S(SYSTICK_TICK_CONST)
+#else
+#define SMODE_TIMER_IRQ         SysTimer_IRQn
+#define SMODE_SWI_IRQ           SysTimerSW_IRQn
+#define SMODE_SET_SWI()         SysTimer_SetHartSWIRQ(EXECUTE_HARTID)
+#define SMODE_CLR_SWI()         SysTimer_ClearHartSWIRQ(EXECUTE_HARTID)
+#define SMODE_TICK_CONFIG()     SysTick_HartConfig(SYSTICK_TICK_CONST, EXECUTE_HARTID)
+#define SMODE_TICK_RELOAD()     SysTick_HartReload(SYSTICK_TICK_CONST, EXECUTE_HARTID)
+#endif
+
 #else
 #define SysTick_Handler     eclic_mtip_handler
 #define portINITIAL_XSTATUS ( MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
@@ -44,6 +62,7 @@
 volatile rt_ubase_t  rt_interrupt_from_thread = 0;
 volatile rt_ubase_t  rt_interrupt_to_thread   = 0;
 volatile rt_ubase_t rt_thread_switch_interrupt_flag = 0;
+void SysTick_Handler(void);
 
 struct rt_hw_stack_frame {
     rt_ubase_t epc;        /* epc - epc    - program counter                     */
@@ -131,7 +150,7 @@ void rt_hw_context_switch_interrupt(rt_ubase_t from, rt_ubase_t to)
     rt_thread_switch_interrupt_flag = 1;
     /* Set a software interrupt(SWI) request to request a context switch. */
 #ifdef SMODE_RTOS
-    SysTimer_SetHartSWIRQ(EXECUTE_HARTID);
+    SMODE_SET_SWI();
 #else
     SysTimer_SetSWIRQ();
 #endif
@@ -161,7 +180,7 @@ void xPortTaskSwitch(void)
 {
     /* Clear Software IRQ, A MUST */
 #ifdef SMODE_RTOS
-    SysTimer_ClearHartSWIRQ(EXECUTE_HARTID);
+    SMODE_CLR_SWI();
 #else
     SysTimer_ClearSWIRQ();
 #endif
@@ -175,23 +194,23 @@ void xPortTaskSwitch(void)
 
 void vPortSetupTimerInterrupt(void)
 {
-    uint64_t ticks = SYSTICK_TICK_CONST;
-
 #ifdef SMODE_RTOS
-    SysTick_HartConfig(ticks, EXECUTE_HARTID);
-    ECLIC_DisableIRQ_S(SysTimer_IRQn);
-    ECLIC_SetLevelIRQ_S(SysTimer_IRQn, configKERNEL_INTERRUPT_PRIORITY);
-    ECLIC_SetShvIRQ_S(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
-    ECLIC_EnableIRQ_S(SysTimer_IRQn);
+    SMODE_TICK_CONFIG();
+    ECLIC_DisableIRQ_S(SMODE_TIMER_IRQ);
+    ECLIC_SetLevelIRQ_S(SMODE_TIMER_IRQ, configKERNEL_INTERRUPT_PRIORITY);
+    ECLIC_SetShvIRQ_S(SMODE_TIMER_IRQ, ECLIC_NON_VECTOR_INTERRUPT);
+    ECLIC_SetVector_S(SMODE_TIMER_IRQ, (rv_csr_t)SysTick_Handler);
+    ECLIC_EnableIRQ_S(SMODE_TIMER_IRQ);
 
     /* Set SWI interrupt level to lowest level/priority, SysTimerSW as Vector Interrupt */
-    ECLIC_SetShvIRQ_S(SysTimerSW_IRQn, ECLIC_VECTOR_INTERRUPT);
-    ECLIC_SetLevelIRQ_S(SysTimerSW_IRQn, configKERNEL_INTERRUPT_PRIORITY);
-    ECLIC_EnableIRQ_S(SysTimerSW_IRQn);
+    ECLIC_SetShvIRQ_S(SMODE_SWI_IRQ, ECLIC_VECTOR_INTERRUPT);
+    ECLIC_SetLevelIRQ_S(SMODE_SWI_IRQ, configKERNEL_INTERRUPT_PRIORITY);
+    ECLIC_SetVector_S(SMODE_SWI_IRQ, (rv_csr_t)eclic_ssip_handler);
+    ECLIC_EnableIRQ_S(SMODE_SWI_IRQ);
 #else
     /* Make SWI and SysTick the lowest priority interrupts. */
     /* Stop and clear the SysTimer. SysTimer as Non-Vector Interrupt */
-    SysTick_Config(ticks);
+    SysTick_Config(SYSTICK_TICK_CONST);
     ECLIC_DisableIRQ(SysTimer_IRQn);
     ECLIC_SetLevelIRQ(SysTimer_IRQn, configKERNEL_INTERRUPT_PRIORITY);
     ECLIC_SetShvIRQ(SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
@@ -248,7 +267,7 @@ void SysTick_Handler(void)
 {
     // Reload timer
 #ifdef SMODE_RTOS
-    SysTick_HartReload(SYSTICK_TICK_CONST, EXECUTE_HARTID);
+    SMODE_TICK_RELOAD();
 #else
     SysTick_Reload(SYSTICK_TICK_CONST);
 #endif
