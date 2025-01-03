@@ -129,16 +129,25 @@ static void system_default_exception_handler_s(unsigned long scause, unsigned lo
 const unsigned long vector_table_s[SOC_INT_MAX] __SMODE_VECTOR_ATTR =
 {
     (unsigned long)(default_intexc_handler),        /* 0: Reserved */
+#if defined(__SSTC_PRESENT) && __SSTC_PRESENT == 1
+    (unsigned long)(eclic_ssip_handler),            /* 1: supervisor software interrupt triggered by SSIP */
+#else
     (unsigned long)(default_intexc_handler),        /* 1: Reserved */
+#endif
     (unsigned long)(default_intexc_handler),        /* 2: Reserved */
 
-    (unsigned long)(eclic_ssip_handler),            /* 3: supervisor software interrupt in eclic mode */
+    (unsigned long)(eclic_ssip_handler),            /* 3: machine software interrupt triggered by MSIP but handled in S-Mode  */
 
     (unsigned long)(default_intexc_handler),        /* 4: Reserved */
+#if defined(__SSTC_PRESENT) && __SSTC_PRESENT == 1
+    (unsigned long)(eclic_stip_handler),            /* 5: supervisor timer interrupt triggered by stimecmp(SSTC) */
+#else
     (unsigned long)(default_intexc_handler),        /* 5: Reserved */
+#endif
+
     (unsigned long)(default_intexc_handler),        /* 6: Reserved */
 
-    (unsigned long)(eclic_stip_handler),            /* 7: supervisor timer interrupt in eclic mode */
+    (unsigned long)(eclic_stip_handler),            /* 7: machine timer interrupt triggered by mtimecmp but handled in S-Mode */
 
     (unsigned long)(default_intexc_handler),        /* 8: Reserved */
     (unsigned long)(default_intexc_handler),        /* 9: Reserved */
