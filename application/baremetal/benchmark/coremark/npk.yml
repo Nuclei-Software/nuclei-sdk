@@ -74,20 +74,20 @@ buildconfig:
               --param max-jump-thread-duplication-stmts=12 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
         condition: $( ${cpu_series} == 600 )
       - flags: >-
-              -Ofast -fgcse-las -fno-code-hoisting -fipa-pta -mbranch-cost=1 -funroll-all-loops -finline-limit=240
-              -fno-tree-copy-prop -fno-tree-partial-pre -fno-crossjumping -fno-version-loops-for-strides -ftree-vectorize
-              -fno-tree-sra -ftree-slp-vectorize -fno-tree-sink -fno-tree-partial-pre
-              -fno-shrink-wrap-separate -ffloat-store -fno-selective-scheduling -funroll-loops -finline-functions -falign-functions=15
-              -falign-jumps=8 -falign-loops=6 -fno-if-conversion2 -fno-tree-loop-ivcanon
-              --param=max-loop-header-insns=4 --param loop-max-datarefs-for-datadeps=4
-              --param max-jump-thread-duplication-stmts=30 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
+              -Ofast -fgcse-las -fno-code-hoisting -fipa-pta -mbranch-cost=1 -funroll-all-loops -finline-limit=300
+	            -fno-crossjumping -fno-version-loops-for-strides
+	            -fno-tree-sra -fno-tree-sink -fno-tree-partial-pre
+	            -fno-shrink-wrap-separate -ffloat-store -funroll-loops -falign-functions=16
+	            -falign-jumps=8 -falign-loops=6 -fno-if-conversion2 -fno-tree-loop-ivcanon
+	            -fstack-protector -fno-tree-loop-distribute-patterns -fno-cse-follow-jumps -fno-sched-dep-count-heuristic --param loop-max-datarefs-for-datadeps=4
+	            --param max-jump-thread-duplication-stmts=30 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
         condition: $( ${cpu_series} == 900 ) && $( contains(${nuclei_core}, "x"))
       - flags: >-
-              -Ofast -fno-shrink-wrap-separate -fno-tree-partial-pre -fno-version-loops-for-strides -ffloat-store -fipa-pta -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=500
-              -fno-tree-copy-prop -fno-tree-partial-pre -fno-crossjumping -fno-bit-tests -ftree-dominator-opts -fno-selective-scheduling -funroll-loops -finline-functions -falign-functions=12
-              -fno-ipa-bit-cp -falign-jumps=12 -falign-loops=8 -fno-if-conversion2 -fno-tree-loop-ivcanon
-              -fgcse-las --param=max-loop-header-insns=3 --param loop-max-datarefs-for-datadeps=6
-              --param max-jump-thread-duplication-stmts=58 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
+              -Ofast -mno-autovec-dsp -fno-shrink-wrap-separate -fno-tree-partial-pre -fno-version-loops-for-strides -mbranch-cost=1 -mstrict-align -funroll-all-loops -finline-limit=350
+	            -fno-code-hoisting -fno-sched-last-insn-heuristic -fno-toplevel-reorder -fno-tree-copy-prop -fno-crossjumping -fno-bit-tests -ftree-dominator-opts -funroll-loops -finline-functions -falign-functions=4
+	            -fno-ipa-bit-cp -falign-jumps=16 -falign-loops=8 -fno-if-conversion2 -fno-tree-loop-ivcanon
+	            -fgcse-las --param=max-loop-header-insns=3 --param loop-max-datarefs-for-datadeps=6
+	            --param max-jump-thread-duplication-stmts=58 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
         condition: $( ${cpu_series} == 900 )
       - flags: >-
               -Ofast -fgcse-las -ffloat-store -mbranch-cost=1 -mstrict-align -funroll-all-loops
