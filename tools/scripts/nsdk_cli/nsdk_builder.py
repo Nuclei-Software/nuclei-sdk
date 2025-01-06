@@ -547,11 +547,13 @@ class nsdk_runner(nsdk_builder):
         baudrate = 115200
         fpgabit = None
         fpgaserial = None
+        run_tmout = get_sdk_run_tmout()
         if hwconfig is not None:
             most_possible_serport = find_most_possible_serport()
             serport = hwconfig.get("serport", most_possible_serport)
             baudrate = hwconfig.get("baudrate", 115200)
-            timeout = hwconfig.get("timeout", 60)
+            # priority: environment var SDK_RUN_TMOUT > hwconfig in app.json
+            timeout = run_tmout if run_tmout is not None else hwconfig.get("timeout", 60)
             fpgabit = hwconfig.get("fpgabit", None)
             fpgaserial = hwconfig.get("fpgaserial", None)
         ser_thread = None

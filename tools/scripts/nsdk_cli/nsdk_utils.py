@@ -142,6 +142,13 @@ def get_sdk_banner_tmout():
 
     return tmout
 
+# some case may run more than default timeout in app.json
+def get_sdk_run_tmout():
+    tmout = os.environ.get("SDK_RUN_TMOUT")
+    if tmout is not None:
+        tmout = int(tmout)
+    return tmout
+
 def get_sdk_fpga_prog_tmout():
     tmout = os.environ.get("FPGA_PROG_TMOUT")
     return tmout
