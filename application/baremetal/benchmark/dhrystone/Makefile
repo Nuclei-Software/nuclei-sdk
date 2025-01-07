@@ -17,6 +17,8 @@ else ifneq ($(findstring 60,$(CORE)),)
 CPU_SERIES ?= 600
 else ifneq ($(findstring 90,$(CORE)),)
 CPU_SERIES ?= 900
+else ifneq ($(findstring 1000,$(CORE)),)
+CPU_SERIES ?= 1000
 else
 CPU_SERIES ?= 300
 endif

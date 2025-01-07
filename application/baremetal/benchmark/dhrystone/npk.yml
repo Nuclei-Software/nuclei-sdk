@@ -49,6 +49,10 @@ buildconfig:
   - type: gcc
     common_flags: # flags need to be combined together across all packages
       - flags: >-
+              -O3 -fno-if-conversion -flto -fno-inline -fno-builtin-printf -funroll-loops -falign-functions=6 -falign-jumps=16 -falign-loops=8
+
+        condition: $( ${dhry_mode} == 'ground' ) &&  $( ${cpu_series} == 1000 )
+      - flags: >-
               -O3 -flto -fno-inline -fno-builtin-printf -funroll-loops -falign-functions=4 -falign-jumps=15 -falign-loops=6
               -fno-if-conversion2 -fno-toplevel-reorder -fno-sched-last-insn-heuristic -fno-sched-dep-count-heuristic -mbranch-cost=1 -fipa-pta
 
@@ -58,6 +62,11 @@ buildconfig:
               -falign-functions=4 -falign-jumps=4 -falign-loops=8 -finline-functions
 
         condition: $( ${dhry_mode} == 'inline' )
+      - flags: >-
+              -Ofast -flto -fwhole-program -finline -fno-builtin-printf -funroll-loops
+              -falign-functions=4 -falign-jumps=4 -falign-loops=8 -finline-functions
+
+        condition: $( ${dhry_mode} == 'best' ) &&  $( ${cpu_series} == 1000 )
       - flags: >-
               -Ofast -fipa-pta -flto -fwhole-program -finline -fno-builtin-printf -funroll-loops
               -falign-functions=4 -falign-jumps=4 -falign-loops=8 -finline-functions
