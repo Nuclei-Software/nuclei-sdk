@@ -52,7 +52,7 @@ done
 
 popd > /dev/null
 
-if [[ $totaladdibnecnt > 0 ]] ; then
+if [[ $totaladdibnecnt -ge 0 ]] ; then
     echo "Generate totally $totaladdibnecnt xl.addibne instructions"
     exit 0
 fi
