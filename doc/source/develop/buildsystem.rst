@@ -807,7 +807,7 @@ Here are several examples when using **ARCH_EXT** for Nuclei RISC-V Processors:
   - Xxldsp: means P 0.5.4 + Nuclei default enabled additional 8 expd instructions for both RV32 and RV64, you can pass **ARCH_EXT=_xxldsp**
   - Xxldspn1x: means Xxldsp + Nuclei N1 additional instructions for RV32 only, you can pass **ARCH_EXT=_xxldspn1x**
   - Xxldspn2x: means Xxldspn1x + Nuclei N2 additional instructions for RV32 only, you can pass **ARCH_EXT=_xxldspn2x**
-  - Xxldspn3x: means Xxldspn1x + Nuclei N3 additional instructions for RV32 only, you can pass **ARCH_EXT=_xxldspn3x**
+  - Xxldspn3x: means Xxldspn2x + Nuclei N3 additional instructions for RV32 only, you can pass **ARCH_EXT=_xxldspn3x**
 * If you want to use `K 1.0 extension`_, you can pass **ARCH_EXT=_zk_zks**
 * If you want to use `V 1.0 extension`_
 
