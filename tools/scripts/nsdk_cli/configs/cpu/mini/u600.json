@@ -5,6 +5,7 @@
     "build_configs": {
         "rv32imacb": {"CORE":"u600", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
         "rv32imacbp": {"CORE":"u600", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafdc": {"CORE":"u600fd", "ARCH_EXT":""},
         "rv32imafdcb": {"CORE":"u600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
         "rv32imafdcbp": {"CORE":"u600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
         "rv32imafdcbp_zicond": {"CORE":"u600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldspn1x", "NMSIS_LIB_ARCH": "rv32imafdc_zba_zbb_zbc_zbs_xxldspn1x"}
