@@ -5,13 +5,13 @@
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.jtagDevice" value="GNU MCU QEMU"/>
-    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="true"/>
-    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="true"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadImage" value="false"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.loadSymbols" value="false"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
     <intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="3333"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
     <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="false"/>
-    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>
+    <booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="false"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.stopAt" value="main"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsFileName" value=""/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.symbolsOffset" value=""/>
@@ -24,7 +24,7 @@
     <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
     <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="0"/>
     <stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value=""/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="application/threadx/demo_module/module_manager/threadx_module_manager.elf"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="application/threadx/demo_module/module_sample/threadx_module_sample.elf"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="nsdk"/>
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="ilg.gnumcueclipse.managedbuild.cross.riscv.toolchain.base.1172339835"/>
@@ -35,15 +35,16 @@
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="4"/>
     </listAttribute>
+    <booleanAttribute key="org.eclipse.debug.core.TERMINATE_DESCENDANTS" value="false"/>
     <stringAttribute key="org.eclipse.dsf.launch.MEMORY_BLOCKS" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;memoryBlockExpressionList context=&quot;Context string&quot;&gt;&#13;&#10;    &lt;memoryBlockExpression address=&quot;2684354560&quot; label=&quot;0xA0000000&quot;/&gt;&#13;&#10;    &lt;memoryBlockExpression address=&quot;2684360452&quot; label=&quot;0xa0001704&quot;/&gt;&#13;&#10;    &lt;memoryBlockExpression address=&quot;2684360872&quot; label=&quot;0xA00018a8&quot;/&gt;&#13;&#10;    &lt;memoryBlockExpression address=&quot;2415935882&quot; label=&quot;0x9000418a&quot;/&gt;&#13;&#10;    &lt;memoryBlockExpression address=&quot;2415942016&quot; label=&quot;0x90005980&quot;/&gt;&#13;&#10;    &lt;memoryBlockExpression address=&quot;2415953928&quot; label=&quot;0x90008808&quot;/&gt;&#13;&#10;&lt;/memoryBlockExpressionList&gt;&#13;&#10;"/>
     <stringAttribute key="org.riscvstudio.debug.gdbjtag.qemu.architecture" value="riscv32"/>
     <booleanAttribute key="org.riscvstudio.debug.gdbjtag.qemu.disableGraphics" value="true"/>
-    <booleanAttribute key="org.riscvstudio.debug.gdbjtag.qemu.doContinue" value="true"/>
+    <booleanAttribute key="org.riscvstudio.debug.gdbjtag.qemu.doContinue" value="false"/>
     <booleanAttribute key="org.riscvstudio.debug.gdbjtag.qemu.doDebugInRam" value="false"/>
     <booleanAttribute key="org.riscvstudio.debug.gdbjtag.qemu.doFirstReset" value="false"/>
     <booleanAttribute key="org.riscvstudio.debug.gdbjtag.qemu.doGdbServerAllocateConsole" value="true"/>
     <booleanAttribute key="org.riscvstudio.debug.gdbjtag.qemu.doGdbServerPreferXpacksBin" value="false"/>
-    <booleanAttribute key="org.riscvstudio.debug.gdbjtag.qemu.doSecondReset" value="true"/>
+    <booleanAttribute key="org.riscvstudio.debug.gdbjtag.qemu.doSecondReset" value="false"/>
     <booleanAttribute key="org.riscvstudio.debug.gdbjtag.qemu.doStartGdbServer" value="false"/>
     <booleanAttribute key="org.riscvstudio.debug.gdbjtag.qemu.enableSemihosting" value="false"/>
     <stringAttribute key="org.riscvstudio.debug.gdbjtag.qemu.extension.vector.length" value="128"/>

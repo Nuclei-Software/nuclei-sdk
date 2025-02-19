@@ -1,0 +1,34 @@
+add-symbol-file application/threadx/demo_module/module_sample/threadx_module_sample.elf my_module.txm_module_instance_code_start -s .bss my_module.txm_module_instance_data_start
+
+C:/Work/Code/nuclei-sdk/application/threadx/demo_module/module_manager/threadx_module_manager.elf
+
+dir application\\threadx\\demo_module\\module_manager;application\\threadx\\demo_module\\module_sample
+
+text 0xa01039b8
+bss 0xa01055f8
+
+x _txm_module_thread_shell_entry
+0xa0104916 <_txm_module_thread_shell_entry>:	0x014160a2
+
+0xa0104a16
+
+# rv64
+file
+# check map file threadx_module_sample.map
+# 0xa0103ab8 = my_module.txm_module_instance_code_start + 0x100
+# 0xa01055f8 = my_module.txm_module_instance_data_start + 0x0
+add-symbol-file application/threadx/demo_module/module_sample/threadx_module_sample.elf -s .text 0xa0103ab8 -s .bss 0xa01055f8
+file
+add-symbol-file application/threadx/demo_module/module_manager/threadx_module_manager.elf
+
+restore ../module_sample/threadx_module_sample.bin binary 0xA0400000
+
+O2
+riscv64-unknown-elf-size threadx_module_sample.elf
+   text    data     bss     dec     hex filename
+   6544     608   20360   27512    6b78 threadx_module_sample.elf
+
+Og
+riscv64-unknown-elf-size threadx_module_sample.elf
+   text    data     bss     dec     hex filename
+   6332     612   20360   27304    6aa8 threadx_module_sample.elf
