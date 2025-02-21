@@ -158,6 +158,12 @@ static void supervisor_mode_entry_point(void)
 
 int main(int argc, char** argv)
 {
+    CSR_MCFGINFO_Type mcfg;
+    mcfg.d = __RV_CSR_READ(CSR_MCFG_INFO);
+    if ((mcfg.b.tee & mcfg.b.clic) == 0) {
+        printf("INFO: TEE and ECLIC feature are required to run this SSTC interrupt Demo\n");
+        return 0;
+    }
 #if defined(__PMP_PRESENT) && (__PMP_PRESENT == 1)
     // set pmp, S mode can access all address range
     pmp_config pmp_cfg = {

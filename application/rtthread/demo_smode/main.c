@@ -106,8 +106,8 @@ int main_entry(void)
     mcfg.d = __RV_CSR_READ(CSR_MCFG_INFO);
 
     if ((mcfg.b.tee & mcfg.b.clic) == 0) {
-        printf("ERROR: TEE and ECLIC feature are required to run this SMode RT-Thread Demo\n");
-        return 1;
+        printf("INFO: TEE and ECLIC feature are required to run this SMode RT-Thread Demo\n");
+        return 0;
     }
 
     // set pmp, S mode can access all address range
