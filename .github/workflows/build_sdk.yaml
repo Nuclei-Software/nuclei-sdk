@@ -41,13 +41,13 @@ jobs:
         soc: [evalsoc]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
         fetch-depth: 0
 
     - name: Caching tools
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           prebuilt_tools/*.tar.bz2
@@ -109,7 +109,7 @@ jobs:
         done
 
     - name: Upload Build Log for ${{ matrix.soc }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build_${{ matrix.soc }}
         path: |
