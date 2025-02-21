@@ -214,6 +214,18 @@
                 "PASS": ["thread 6_7 is running, current is 7, thread 6 counter 9, thread 7 counter 8"]
             }
         },
+        "application/baremetal/demo_sstc": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "[ERROR]__TEE_PRESENT", "feature are required"]
+            }
+        },
+        "application/rtthread/demo_smode": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Main thread count: 3", "feature are required"]
+            }
+        },
         "test/core": {
             "build_config" : {},
             "checks": {

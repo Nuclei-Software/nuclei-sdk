@@ -206,6 +206,18 @@
                 "PASS": ["CSV, Cacheable", "DCache not present in CPU", "[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!"]
             }
         },
+        "application/baremetal/demo_sstc": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "[ERROR]__TEE_PRESENT", "feature are required"]
+            }
+        },
+        "application/rtthread/demo_smode": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Main thread count: 3", "feature are required"]
+            }
+        },
         "application/baremetal/cpuinfo": {
             "build_config" : {},
             "checks": {

@@ -41,6 +41,14 @@
             "run": true,
             "build": true
         },
+        "application/baremetal/demo_sstc": {
+            "run": false,
+            "build": false
+        },
+        "application/rtthread/demo_smode": {
+            "run": false,
+            "build": false
+        },
         "application/baremetal/demo_cidu": {
             "run": false,
             "build": false
