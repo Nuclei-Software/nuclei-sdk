@@ -1172,6 +1172,65 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
     Current sp is 0x90000ee0, so it is in Supervisor Mode!
     [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
 
+.. _design_app_demo_sstc:
+
+demo_sstc
+~~~~~~~~~
+
+This `demo_sstc application`_ is used to demostrate how to use
+the ECLIC API and Interrupt in supervisor mode with TEE and SSTC.
+
+This demo is similar with :ref:`design_app_demo_smode_eclic`
+
+.. note::
+
+    * It doesn't work with gd32vf103 processor.
+    * It needs Nuclei CPU configured with TEE feature and S-Mode ECLIC and SSTC feature
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_sstc directory
+    cd application/baremetal/demo_sstc
+    # MUST: Your CPU configuration must has TEE and SSTC configured
+    # Assume you are using n300
+    # Clean the application first
+    make SOC=evalsoc CORE=n300 clean
+    # Build and upload the application
+    make SOC=evalsoc CORE=n300 upload
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Feb 21 2025, 11:12:45
+    Download Mode: ILM
+    CPU Frequency 15987179 Hz
+    CPU HartID: 0
+    Current sp is 0x9000ff70, so it is in Machine Mode!
+    Drop to S-Mode now
+    [IN S-MODE ENTRY POINT] Hello Supervisor Mode!!!
+    Current sp is 0x90001040, so it is in Supervisor Mode!
+    Initialize timer and start timer interrupt periodically
+    Current sp is 0x90000f50, so it is in Supervisor Mode!
+    -------------------
+    [IN S-MODE TIMER INTERRUPT]timer interrupt hit 0 times
+    [IN S-MODE TIMER INTERRUPT]trigger software interrupt
+    [IN S-MODE TIMER INTERRUPT]software interrupt will run during timer interrupt
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 0 times
+    Current sp is 0x90000e10, so it is in Supervisor Mode!
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
+    [IN S-MODE TIMER INTERRUPT]timer interrupt end
+    Current sp is 0x90000f50, so it is in Supervisor Mode!
+    -------------------
+    [IN S-MODE TIMER INTERRUPT]timer interrupt hit 1 times
+    [IN S-MODE TIMER INTERRUPT]trigger software interrupt
+    [IN S-MODE TIMER INTERRUPT]software interrupt will run during timer interrupt
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 1 times
+    Current sp is 0x90000e10, so it is in Supervisor Mode!
+    [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
+    [IN S-MODE TIMER INTERRUPT]timer interrupt end
+    Current sp is 0x90000f50, so it is in Supervisor Mode!
 
 .. _design_app_demo_spmp:
 
@@ -2472,6 +2531,73 @@ In Nuclei SDK, we provided code and Makefile for this ``rtthread msh`` applicati
     Hello Nuclei SDK!
     msh >
 
+.. _design_app_rtthread_demo_smode:
+
+demo_smode
+~~~~~~~~~~
+
+This `rt-thread demo smode application`_ is show how to use rt-thread in S-Mode.
+
+It is similar to the normal rt-thread demo, but rt-thread itself is running in S-Mode,
+so we have to do some PMP and TEE configuration in M-Mode before go to S-Mode.
+
+The main feature required is the TEE, and SSTC is also preferred.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the rtthread demo_smode directory
+    cd application/rtthread/demo_smode
+    # Clean the application first
+    # Assume you are using n300
+    make SOC=evalsoc CORE=n300 clean
+    # Build and upload the application
+    make SOC=evalsoc CORE=n300 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Feb 21 2025, 11:12:24
+    Download Mode: ILM
+    CPU Frequency 16005857 Hz
+    CPU HartID: 0
+    Set ECLIC Timer S-Mode Interrupt and Software Timer S-Mode Interrupt to be executed in S-Mode
+    Drop to S-Mode to prepare RT-Thread Environment
+
+     \ | /
+    - RT -     Thread Operating System
+     / | \     3.1.5 build Feb 21 2025
+     2006 - 2020 Copyright by rt-thread team
+    Main thread count: 0
+    thread 0 count: 0
+    thread 1 count: 0
+    thread 2 count: 0
+    thread 3 count: 0
+    thread 4 count: 0
+    thread 0 count: 1
+    thread 1 count: 1
+    thread 2 count: 1
+    thread 3 count: 1
+    thread 4 count: 1
+    Main thread count: 1
+    thread 0 count: 2
+    thread 1 count: 2
+    thread 2 count: 2
+    thread 3 count: 2
+    thread 4 count: 2
+    thread 0 count: 3
+    thread 1 count: 3
+    thread 2 count: 3
+    thread 3 count: 3
+    thread 4 count: 3
+    Main thread count: 2
+
+.. _design_app_rtthread_msh:
+
+
 ThreadX applications
 --------------------
 
@@ -2539,9 +2665,11 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx demo`` applicati
 .. _freertos smpdemo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/freertos/smpdemo
 .. _ucosii demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/ucosii/demo
 .. _rt-thread demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo
+.. _rt-thread demo_smode application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo_smode
 .. _rt-thread msh application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/msh
 .. _threadx demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/threadx/demo
 .. _demo_smode_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_eclic
+.. _demo_sstc application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_sstc
 .. _demo_spmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_spmp
 .. _demo_smpu application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smpu
 .. _demo_pmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pmp

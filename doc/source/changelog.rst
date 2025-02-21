@@ -13,10 +13,15 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Fix wrong macro ``PLIC_GetThreshold`` & ``PLIC_GetThreshold_S`` implementation for ``core_feature_plic.h``
   - Add ``MTIME_SRW_CTRL`` bitfields in **SysTimer_Type** structure for ``core_feature_timer.h``
   - Optimize ECLIC API for better code performance in ``core_feature_eclic.h``
+  - Add SSTC support in ``core_feature_timer.h``, a new macro called ``__SSTC_PRESENT`` is added
+  - Update and add more CSR Union types
+  - Add more CSR macros such shartid csr, worldguard csrs, and related csr bitfield macro
 
 * Application
 
   - Add more application code compile check message for better example requirement explanation
+  - Add :ref:`design_app_demo_sstc` to show how to SSTC(S-Mode timer interrupt extension)
+  - Add :ref:`design_app_rtthread_demo_smode`  to show how to run rt_thread in S-Mode, it will require TEE and PMP extension
   - Remove ``demo_spmp`` application due to hw ``sPMP`` upgraded to ``sMPU`` and no longer supported,
   - please use :ref:`design_app_demo_smpu` now.
   - Add ``-fno-tree-tail-merge`` compiler option for threadx RTOS example compiling, which is required for correct
@@ -31,7 +36,13 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Add more documentation about IAR compiler support and porting notes, especially the vector table alignment with the ``MTVT`` CSR.
   - Add ``nx1000/nx1000f/nx1000fd/ux1000/ux1000f/ux1000fd`` in supported CPU :ref:`develop_buildsystem_var_core` list
   - Only enable i/d cache when ecc not present in evalsoc startup asm code to avoid x-state propagation during rtl simulation
-  - Fix #endif not placed correctly when XLCFG_TEE=1 and CODESIZE=1 in system_evalsoc.c
+  - Fix ``#endif`` not placed correctly when XLCFG_TEE=1 and CODESIZE=1 in system_evalsoc.c
+  - Only initialize ECLIC SMode related registers when TEE really present for evalsoc
+  - Place default vector entry for vector_table_s when SSTC present for evalsoc
+
+* RTOS
+
+  - Add S-Mode RT-Thread support which rely on TEE feature, SSTC feature is preferred
 
 * Build System
 
