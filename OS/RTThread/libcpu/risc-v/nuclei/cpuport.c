@@ -195,6 +195,8 @@ void xPortTaskSwitch(void)
 void vPortSetupTimerInterrupt(void)
 {
 #ifdef SMODE_RTOS
+
+#if defined(__TEE_PRESENT) && __TEE_PRESENT == 1
     SMODE_TICK_CONFIG();
     ECLIC_DisableIRQ_S(SMODE_TIMER_IRQ);
     ECLIC_SetLevelIRQ_S(SMODE_TIMER_IRQ, configKERNEL_INTERRUPT_PRIORITY);
@@ -207,6 +209,10 @@ void vPortSetupTimerInterrupt(void)
     ECLIC_SetLevelIRQ_S(SMODE_SWI_IRQ, configKERNEL_INTERRUPT_PRIORITY);
     ECLIC_SetVector_S(SMODE_SWI_IRQ, (rv_csr_t)eclic_ssip_handler);
     ECLIC_EnableIRQ_S(SMODE_SWI_IRQ);
+#else
+    #error "TEE feature is required for RT-Thread S-Mode support"
+#endif
+
 #else
     /* Make SWI and SysTick the lowest priority interrupts. */
     /* Stop and clear the SysTimer. SysTimer as Non-Vector Interrupt */
