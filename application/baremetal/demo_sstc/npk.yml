@@ -7,6 +7,7 @@ type: app
 keywords:
   - baremetal
   - riscv smode timer
+  - tee
 category: baremetal application
 license:
 homepage:
@@ -19,7 +20,7 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value:
+    value: -DCFG_HAS_ISA_SSTC -DCFG_HAS_TEE
     type: text
     description: Application Compile Flags
 

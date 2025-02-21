@@ -7,6 +7,7 @@ type: app
 keywords:
   - baremetal
   - riscv smode eclic
+  - tee
 category: baremetal application
 license:
 homepage:

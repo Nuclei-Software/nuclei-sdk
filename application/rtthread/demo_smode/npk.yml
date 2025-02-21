@@ -7,6 +7,7 @@ type: app
 keywords:
   - rtthread
   - task demo
+  - tee
 category: rtthread application
 license:
 homepage:
@@ -21,7 +22,9 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value: -O3
+    # SMODE_RTOS is required, and CFG_HAS_TEE is defined to expect TEE feature present in hw
+    # CFG_HAS_ISA_SSTC could be optional, but we recommended for tee scenario
+    value: -O3 -DSMODE_RTOS -DCFG_HAS_TEE -DCFG_HAS_ISA_SSTC
     type: text
     description: Application Compile Flags
 
@@ -44,5 +47,4 @@ codemanage:
 buildconfig:
   - type: common
     common_flags: # flags need to be combined together across all packages
-      # SMODE_RTOS is required, and CFG_HAS_TEE is defined to expect TEE feature present in hw
-      - flags: -DSMODE_RTOS -DCFG_HAS_TEE ${app_commonflags}
+      - flags: ${app_commonflags}
