@@ -4,17 +4,17 @@
 
 #if !defined(__TEE_PRESENT) || (__TEE_PRESENT != 1)
 /* __TEE_PRESENT should be defined in <Device>.h */
-#warning "__TEE_PRESENT is not defined or equal to 1, please check!"
+#error "__TEE_PRESENT is not defined or equal to 1, please check!"
 #endif
 
 #if !defined(__PMP_PRESENT) || (__PMP_PRESENT != 1)
 /* __PMP_PRESENT should be defined in <Device>.h */
-#warning "__PMP_PRESENT is not defined or equal to 1, please check!"
+#error "__PMP_PRESENT is not defined or equal to 1, please check!"
 #endif
 
 #if !defined(__SSTC_PRESENT) || (__SSTC_PRESENT != 1)
 /* __SSTC_PRESENT should be defined in <Device>.h */
-#warning "__SSTC_PRESENT is not defined or equal to 1, please check!"
+#error "__SSTC_PRESENT is not defined or equal to 1, please check!"
 #endif
 
 // If define SWIRQ_INTLEVEL_HIGHER equals 1 the software interrupt will have a higher interrupt level.
