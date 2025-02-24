@@ -105,7 +105,7 @@ int main_entry(void)
     CSR_MCFGINFO_Type mcfg;
     mcfg.d = __RV_CSR_READ(CSR_MCFG_INFO);
 
-    if ((mcfg.b.tee & mcfg.b.clic) == 0) {
+    if ((mcfg.b.tee & mcfg.b.clic & mcfg.b.sstc) == 0) {
         printf("INFO: TEE and ECLIC feature are required to run this SMode RT-Thread Demo\n");
         return 0;
     }
