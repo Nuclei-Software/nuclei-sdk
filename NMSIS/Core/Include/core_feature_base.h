@@ -379,7 +379,8 @@ typedef union {
         rv_csr_t vnice:1;                       /*!< bit: 23 VNICE present */
         rv_csr_t xlcz:1;                        /*!< bit: 24 XLCZ extension present */
         rv_csr_t zilsd:1;                       /*!< bit: 25 Zilsd/Zclsd extension present */
-        rv_csr_t _reserved1:__RISCV_XLEN-26;    /*!< bit: 26..XLEN-1 Reserved */
+        rv_csr_t sstc:1;                        /*!< bit: 26 SSTC extension present */
+        rv_csr_t _reserved1:__RISCV_XLEN-27;    /*!< bit: 27..XLEN-1 Reserved */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MCFGINFO_Type;
