@@ -34,7 +34,7 @@ Now the nuclei-sdk **released** versions are deeply integrated with Nuclei Studi
 Menu **File -> New Nuclei RISC-V C/C++ Project**.
 
 You can download **Nuclei Studio IDE** from |nuclei_download_center|, and follow
-`Nuclei_Studio_User_Guide.pdf`_ to learn how to use it.
+`Nuclei Studio and Nuclei Tools User Guide`_ to learn how to use it.
 
 But if you want to use latest source code of Nuclei SDK, please follow the rest
 part of this guide to build and run using Nuclei SDK Build System in Makefile.
@@ -595,7 +595,7 @@ For more advanced usage, please follow the items as below:
          Nuclei Studio IDE, you can easily create a Nuclei SDK Project in Nuclei Studio through IDE
          Project Wizard, and easily configure selected Nuclei SDK project using SDK Configuration Tool,
          for more details, please click `Nuclei Tools`_ to download Nuclei Studio IDE, and refer to
-         the `Nuclei_Studio_User_Guide.pdf`_ for how to use it.
+         the `Nuclei Studio and Nuclei Tools User Guide`_ for how to use it.
 
       2. Now **Terapines ZCC Lite** is deeply integrated in **Nuclei Studio >= 2024.06**, so you just need to
          follow :ref:`quickstart_get_set_nuclei_sdk` to setup PATH for Terapines ZCC, and in Nuclei SDK,
@@ -622,7 +622,7 @@ For more advanced usage, please follow the items as below:
 .. _Nuclei Tools: https://nucleisys.com/download.php
 .. _Segger embedded studio projects for Nuclei SDK: https://github.com/riscv-mcu/ses_nuclei_sdk_projects
 .. _Platform Nuclei in PlatformIO: https://github.com/Nuclei-Software/platform-nuclei
-.. _Nuclei_Studio_User_Guide.pdf: https://www.nucleisys.com/upload/files/doc/nucleistudio/Nuclei_Studio_User_Guide.pdf
+.. _Nuclei Studio and Nuclei Tools User Guide: https://doc.nucleisys.com/nuclei_tools/
 .. _Light on onboard LED of RVSTAR board using PlatformIO(Chinese): https://www.rvmcu.com/community-topic-id-310.html
 .. _Nuclei Toolchain 2023.10: https://github.com/riscv-mcu/riscv-gnu-toolchain/releases/tag/nuclei-2023.10
 .. _ideprojects/iar/README.md: https://github.com/Nuclei-Software/nuclei-sdk/blob/master/ideprojects/iar/README.md
