@@ -1,5 +1,7 @@
 # Debug in Qemu
 
+> Just for personal usage, maybe not work for you. Take care!!!
+
 Here demonstrates how to debug module manager and module sample code built for nx900fd(rv64) in Qemu.
 
 Assume you have setup build environment for nuclei sdk, see https://doc.nucleisys.com/nuclei_sdk/quickstart.html#setup-tools-and-environment
