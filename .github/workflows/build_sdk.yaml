@@ -35,7 +35,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04]
+        os: [ubuntu-22.04]
         soc: [evalsoc, gd32vf103, gd32vw55x]
 
     steps:
@@ -63,7 +63,7 @@ jobs:
           # ERROR: Cannot uninstall 'pyserial'. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall.
           pip3 install -q -r tools/scripts/requirements.txt
           mkdir -p prebuilt_tools
-          export TOOLVER=2024.06
+          export TOOLVER=2025.02
           cd prebuilt_tools
           echo "Prepare Nuclei Toolchain......"
           toolzip=nuclei_riscv_newlibc_prebuilt_linux64_${TOOLVER}.tar.bz2
