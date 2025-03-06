@@ -9,7 +9,7 @@ Use Nuclei N100 SDK in Nuclei Studio
 ------------------------------------
 
 You can download **Nuclei Studio IDE >= 2024.06** from |nuclei_download_center|, and follow
-`Nuclei_Studio_User_Guide.pdf`_ to learn how to use it.
+`Nuclei Studio and Nuclei Tools User Guide`_ to learn how to use it.
 
 But if you want to use latest source code of Nuclei N100 SDK, please follow the rest
 part of this guide to build and run using Nuclei N100 SDK Build System in Makefile.
@@ -539,7 +539,7 @@ For more advanced usage, please follow the items as below:
          Nuclei Studio IDE, you can easily create a Nuclei N100 SDK Project in Nuclei Studio through IDE
          Project Wizard, and easily configure selected Nuclei N100 SDK project using SDK Configuration Tool,
          for more details, please click `Nuclei Tools`_ to download Nuclei Studio IDE, and refer to
-         the `Nuclei_Studio_User_Guide.pdf`_ for how to use it.
+         the `Nuclei Studio and Nuclei Tools User Guide`_ for how to use it.
 
       2. You can take a try using IAR workbench, we provided prebuilt projects directly in Nuclei N100 SDK,
          just check the ``ideprojects/iar`` folder to learn about it.
@@ -547,4 +547,4 @@ For more advanced usage, please follow the items as below:
 
 .. _GDB User Manual: https://www.gnu.org/software/gdb/documentation/
 .. _Nuclei Tools: https://nucleisys.com/download.php
-.. _Nuclei_Studio_User_Guide.pdf: https://www.nucleisys.com/upload/files/doc/nucleistudio/Nuclei_Studio_User_Guide.pdf
+.. _Nuclei Studio and Nuclei Tools User Guide: https://doc.nucleisys.com/nuclei_tools/
