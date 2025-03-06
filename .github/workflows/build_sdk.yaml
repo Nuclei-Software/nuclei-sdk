@@ -71,7 +71,7 @@ jobs:
           toolzip=nuclei_riscv_newlibc_prebuilt_linux64_${TOOLVER}.tar.bz2
           if [ ! -e $toolzip ] ; then
             echo "Download Nuclei toolchain now!"
-            wget --progress=dot:giga --no-check-certificate https://www.nucleisys.com/upload/files/toochain/gcc/$toolzip
+            wget --progress=dot:giga --no-check-certificate https://download.nucleisys.com/upload/files/toolchain/gcc/$toolzip
             ls -lh $toolzip
             md5sum $toolzip
           fi
@@ -80,7 +80,7 @@ jobs:
           toolzip=nuclei-qemu-${TOOLVER}-linux-x64.tar.gz
           if [ ! -e $toolzip ] ; then
             echo "Download Nuclei qemu now!"
-            wget --progress=dot:giga --no-check-certificate https://www.nucleisys.com/upload/files/toochain/qemu/$toolzip
+            wget --progress=dot:giga --no-check-certificate https://download.nucleisys.com/upload/files/toolchain/qemu/$toolzip
             ls -lh $toolzip
             md5sum $toolzip
           fi
