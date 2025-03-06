@@ -7,6 +7,7 @@ concurrency:
 on:
   push:
     paths:
+        - ".github/build_sdk.yaml"
         - "Build/**"
         - "application/**"
         - "NMSIS/**"
@@ -19,6 +20,7 @@ on:
 
   pull_request:
     paths:
+        - ".github/build_sdk.yaml"
         - "Build/**"
         - "application/**"
         - "NMSIS/**"
