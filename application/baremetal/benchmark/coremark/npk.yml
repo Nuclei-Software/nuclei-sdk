@@ -72,7 +72,7 @@ buildconfig:
               -fno-if-conversion2 -fno-tree-loop-distribute-patterns -fno-tree-loop-ivcanon
               -ftree-vrp --param=max-loop-header-insns=2 --param=unroll-jam-min-percent=0
               --param max-jump-thread-duplication-stmts=12 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
-        condition: $( ${cpu_series} == 600 )
+        condition: $( ${cpu_series} == 600 ) && $( ! contains(${nuclei_core}, "x"))
       - flags: >-
               -Ofast -fgcse-las -fno-code-hoisting -fipa-pta -mbranch-cost=1 -funroll-all-loops -finline-limit=300
               -fno-crossjumping -fno-version-loops-for-strides
@@ -88,7 +88,7 @@ buildconfig:
               -fno-ipa-bit-cp -falign-jumps=16 -falign-loops=8 -fno-if-conversion2 -fno-tree-loop-ivcanon
               -fgcse-las --param=max-loop-header-insns=3 --param loop-max-datarefs-for-datadeps=6
               --param max-jump-thread-duplication-stmts=58 --param fsm-scale-path-stmts=3 --param max-grow-copy-bb-insns=12
-        condition: $( ${cpu_series} == 900 )
+        condition: $( ${cpu_series} == 900 ) && $( ! contains(${nuclei_core}, "x"))
       - flags: >-
               -Ofast -fgcse-las -ffloat-store -mbranch-cost=1 -mstrict-align -funroll-all-loops
               -fno-if-conversion -ftree-dominator-opts -fno-selective-scheduling -finline-functions -falign-functions=12
