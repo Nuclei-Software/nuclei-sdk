@@ -360,6 +360,124 @@ prvPortStartFirstTask:
 .global eclic_msip_handler
 .type eclic_msip_handler, @function
 eclic_msip_handler:
+#if defined(__riscv_flen)
+    addi sp, sp, -(2 * REGBYTES)
+    STORE t0, 0 * REGBYTES(sp)
+    STORE t1, 1 * REGBYTES(sp)
+_save_fp_stack:
+    csrr t0, CSR_MSTATUS
+    li t1, MSTATUS_FS_DIRTY
+    and t0,t0,t1
+#if defined(__riscv_vector)
+    bne t0, t1, _save_vector_stack
+#else
+    bne t0, t1, _save_integer_stack
+#endif
+    LOAD t0, 0 * REGBYTES(sp)
+    LOAD t1, 1 * REGBYTES(sp)
+    addi sp, sp, (2 * REGBYTES)
+
+    /* Save fp registers and fcsr */
+    addi sp, sp, -(2 * REGBYTES)
+    STORE t0,   0 * REGBYTES(sp)
+    csrr  t0, CSR_FCSR
+    STORE t0,   1 * REGBYTES(sp)
+    LOAD t0, 0 * REGBYTES(sp)
+    addi sp, sp, (1 * REGBYTES)
+    addi sp, sp, -(32 * FPREGBYTES)
+    FPSTORE f0 , 0  * FPREGBYTES(sp)
+    FPSTORE f1 , 1  * FPREGBYTES(sp)
+    FPSTORE f2 , 2  * FPREGBYTES(sp)
+    FPSTORE f3 , 3  * FPREGBYTES(sp)
+    FPSTORE f4 , 4  * FPREGBYTES(sp)
+    FPSTORE f5 , 5  * FPREGBYTES(sp)
+    FPSTORE f6 , 6  * FPREGBYTES(sp)
+    FPSTORE f7 , 7  * FPREGBYTES(sp)
+    FPSTORE f8 , 8  * FPREGBYTES(sp)
+    FPSTORE f9 , 9  * FPREGBYTES(sp)
+    FPSTORE f10, 10 * FPREGBYTES(sp)
+    FPSTORE f11, 11 * FPREGBYTES(sp)
+    FPSTORE f12, 12 * FPREGBYTES(sp)
+    FPSTORE f13, 13 * FPREGBYTES(sp)
+    FPSTORE f14, 14 * FPREGBYTES(sp)
+    FPSTORE f15, 15 * FPREGBYTES(sp)
+    FPSTORE f16, 16 * FPREGBYTES(sp)
+    FPSTORE f17, 17 * FPREGBYTES(sp)
+    FPSTORE f18, 18 * FPREGBYTES(sp)
+    FPSTORE f19, 19 * FPREGBYTES(sp)
+    FPSTORE f20, 20 * FPREGBYTES(sp)
+    FPSTORE f21, 21 * FPREGBYTES(sp)
+    FPSTORE f22, 22 * FPREGBYTES(sp)
+    FPSTORE f23, 23 * FPREGBYTES(sp)
+    FPSTORE f24, 24 * FPREGBYTES(sp)
+    FPSTORE f25, 25 * FPREGBYTES(sp)
+    FPSTORE f26, 26 * FPREGBYTES(sp)
+    FPSTORE f27, 27 * FPREGBYTES(sp)
+    FPSTORE f28, 28 * FPREGBYTES(sp)
+    FPSTORE f29, 29 * FPREGBYTES(sp)
+    FPSTORE f30, 30 * FPREGBYTES(sp)
+    FPSTORE f31, 31 * FPREGBYTES(sp)
+#endif
+#if defined(__riscv_vector)
+    addi sp, sp, -(2 * REGBYTES)
+    STORE t0, 0 * REGBYTES(sp)
+    STORE t1, 1 * REGBYTES(sp)
+_save_vector_stack:
+    csrr t0, CSR_MSTATUS
+    li t1, MSTATUS_VS_DIRTY
+    and t0,t0,t1
+    bne t0, t1, _save_integer_stack
+    LOAD t0, 0 * REGBYTES(sp)
+    LOAD t1, 1 * REGBYTES(sp)
+    addi sp, sp, (2 * REGBYTES)
+
+    /* Save vector registers and vtype/vl/vstart/vcsr */
+    addi sp, sp, -(6 * REGBYTES)
+    STORE t0,   0 * REGBYTES(sp)
+    STORE t1,   1 * REGBYTES(sp)
+    csrr  t0, CSR_VSTART
+    STORE t0,   2 * REGBYTES(sp)
+    csrr  t0, CSR_VTYPE
+    STORE t0,   3 * REGBYTES(sp)
+    csrr  t0, CSR_VL
+    STORE t0,   4 * REGBYTES(sp)
+    csrr  t0, CSR_VCSR
+    STORE t0,   5 * REGBYTES(sp)
+
+    mv t1, sp
+    csrr  t0, CSR_VLENB
+    slli t0, t0, 5
+    /* t1 is the new temp stack where t0, t1 saved */
+    sub t1, t1, t0
+    LOAD t0, 0 * REGBYTES(sp)
+    STORE t0,   0 * REGBYTES(t1)
+    LOAD t0, 1 * REGBYTES(sp)
+    STORE t0,   1 * REGBYTES(t1)
+    mv sp, t1
+    /* new sp -> t1 to save vector registers */
+    addi t1, t1, (2 * REGBYTES)
+    vsetvli t0, x0, e8, m8, ta, ma
+    vse8.v v0, (t1)
+    add t1, t1, t0
+    vse8.v v8, (t1)
+    add t1, t1, t0
+    vse8.v v16, (t1)
+    add t1, t1, t0
+    vse8.v v24, (t1)
+    LOAD t0, 0 * REGBYTES(sp)
+    LOAD t1, 1 * REGBYTES(sp)
+    addi sp, sp, (2 * REGBYTES)
+#endif
+
+#if defined(__riscv_flen) || defined(__riscv_vector)
+    addi sp, sp, -(2 * REGBYTES)
+    STORE t0, 0 * REGBYTES(sp)
+    STORE t1, 1 * REGBYTES(sp)
+_save_integer_stack:
+    LOAD t0, 0 * REGBYTES(sp)
+    LOAD t1, 1 * REGBYTES(sp)
+    addi sp, sp, (2 * REGBYTES)
+#endif
     addi sp, sp, -portCONTEXT_SIZE
     STORE x1,  1  * REGBYTES(sp)    /* RA */
     STORE x5,  2  * REGBYTES(sp)
@@ -467,6 +585,122 @@ eclic_msip_handler:
 #endif
 
     addi sp, sp, portCONTEXT_SIZE
+
+#if defined(__riscv_vector)
+    /* Pop vector stack if needed */
+    addi sp, sp, -(2 * REGBYTES)
+    STORE t0, 0 * REGBYTES(sp)
+    STORE t1, 1 * REGBYTES(sp)
+_restore_vector_stack:
+    csrr t0, CSR_MSTATUS
+    li t1, MSTATUS_VS_DIRTY
+    and t0,t0,t1
+#if defined(__riscv_flen)
+    bne t0, t1, _restore_fp_stack
+#else
+    bne t0, t1, _restore_done
+#endif
+    LOAD t0, 0 * REGBYTES(sp)
+    LOAD t1, 1 * REGBYTES(sp)
+    addi sp, sp, (2 * REGBYTES)
+
+    /* pop vector registers and vtype/vl/vstart/vcsr */
+    addi sp, sp, -(3 * REGBYTES)
+    STORE t0,   0 * REGBYTES(sp)
+    STORE t1,   1 * REGBYTES(sp)
+    STORE t2,   2 * REGBYTES(sp)
+    mv t2, sp
+    /* temp regs are stored in t2 stack top */
+    addi sp, sp, (3 * REGBYTES)
+    vsetvli t0, x0, e8, m8, ta, ma
+    vle8.v v0, (sp)
+    add sp, sp, t0
+    vle8.v v8, (sp)
+    add sp, sp, t0
+    vle8.v v16, (sp)
+    add sp, sp, t0
+    vle8.v v24, (sp)
+    add sp, sp, t0
+
+    LOAD t0,   2 * REGBYTES(sp)
+    LOAD t1,   1 * REGBYTES(sp)
+    vsetvl x0, t0, t1
+    LOAD t0,   0 * REGBYTES(sp)
+    csrw  CSR_VSTART, t0
+    LOAD t0,   3 * REGBYTES(sp)
+    csrw  CSR_VCSR, t0
+    addi sp, sp, (4 * REGBYTES)
+
+    LOAD t0,   0 * REGBYTES(t2)
+    LOAD t1,   1 * REGBYTES(t2)
+    LOAD t2,   2 * REGBYTES(t2)
+#endif
+
+#if defined(__riscv_flen)
+    addi sp, sp, -(2 * REGBYTES)
+    STORE t0, 0 * REGBYTES(sp)
+    STORE t1, 1 * REGBYTES(sp)
+_restore_fp_stack:
+    csrr t0, CSR_MSTATUS
+    li t1, MSTATUS_FS_DIRTY
+    and t0,t0,t1
+    bne t0, t1, _restore_done
+    LOAD t0, 0 * REGBYTES(sp)
+    LOAD t1, 1 * REGBYTES(sp)
+    addi sp, sp, (2 * REGBYTES)
+
+    /* Save fp registers and fcsr */
+    FPLOAD f0 , 0  * FPREGBYTES(sp)
+    FPLOAD f1 , 1  * FPREGBYTES(sp)
+    FPLOAD f2 , 2  * FPREGBYTES(sp)
+    FPLOAD f3 , 3  * FPREGBYTES(sp)
+    FPLOAD f4 , 4  * FPREGBYTES(sp)
+    FPLOAD f5 , 5  * FPREGBYTES(sp)
+    FPLOAD f6 , 6  * FPREGBYTES(sp)
+    FPLOAD f7 , 7  * FPREGBYTES(sp)
+    FPLOAD f8 , 8  * FPREGBYTES(sp)
+    FPLOAD f9 , 9  * FPREGBYTES(sp)
+    FPLOAD f10, 10 * FPREGBYTES(sp)
+    FPLOAD f11, 11 * FPREGBYTES(sp)
+    FPLOAD f12, 12 * FPREGBYTES(sp)
+    FPLOAD f13, 13 * FPREGBYTES(sp)
+    FPLOAD f14, 14 * FPREGBYTES(sp)
+    FPLOAD f15, 15 * FPREGBYTES(sp)
+    FPLOAD f16, 16 * FPREGBYTES(sp)
+    FPLOAD f17, 17 * FPREGBYTES(sp)
+    FPLOAD f18, 18 * FPREGBYTES(sp)
+    FPLOAD f19, 19 * FPREGBYTES(sp)
+    FPLOAD f20, 20 * FPREGBYTES(sp)
+    FPLOAD f21, 21 * FPREGBYTES(sp)
+    FPLOAD f22, 22 * FPREGBYTES(sp)
+    FPLOAD f23, 23 * FPREGBYTES(sp)
+    FPLOAD f24, 24 * FPREGBYTES(sp)
+    FPLOAD f25, 25 * FPREGBYTES(sp)
+    FPLOAD f26, 26 * FPREGBYTES(sp)
+    FPLOAD f27, 27 * FPREGBYTES(sp)
+    FPLOAD f28, 28 * FPREGBYTES(sp)
+    FPLOAD f29, 29 * FPREGBYTES(sp)
+    FPLOAD f30, 30 * FPREGBYTES(sp)
+    FPLOAD f31, 31 * FPREGBYTES(sp)
+    addi sp, sp, (32 * FPREGBYTES)
+
+    addi sp, sp, -(1 * REGBYTES)
+    STORE t0,   0 * REGBYTES(sp)
+    LOAD  t0,   1 * REGBYTES(sp)
+    csrw  CSR_FCSR, t0
+    LOAD t0,   0 * REGBYTES(sp)
+    addi sp, sp, (2 * REGBYTES)
+#endif
+
+#if defined(__riscv_flen) || defined(__riscv_vector)
+    addi sp, sp, -(2 * REGBYTES)
+    STORE t0, 0 * REGBYTES(sp)
+    STORE t1, 1 * REGBYTES(sp)
+_restore_done:
+    LOAD t0, 0 * REGBYTES(sp)
+    LOAD t1, 1 * REGBYTES(sp)
+    addi sp, sp, (2 * REGBYTES)
+#endif
     mret
 
     .size eclic_msip_handler, . - eclic_msip_handler
