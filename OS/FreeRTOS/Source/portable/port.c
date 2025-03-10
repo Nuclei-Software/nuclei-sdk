@@ -691,6 +691,14 @@ __attribute__((weak)) void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTi
  */
 __attribute__((weak)) void vPortSetupTimerInterrupt(void)
 {
+    /**
+     * NOTICE:
+     *
+     * Nuclei CPU Systimer's tick and software interrupt
+     * are required for FreeRTOS porting:
+     * - Tick interrupt(SysTimer_IRQn) is a eclic non-vector interrupt, lowest interrupt level and priority
+     * - Software interrupt(SysTimerSW_IRQn) is a eclic vector interrupt, lowest interrupt level and priority
+     **/
     /* Calculate the constants required to configure the tick interrupt. */
 #if( configUSE_TICKLESS_IDLE == 1 )
     {
