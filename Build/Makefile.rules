@@ -25,7 +25,7 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(ALL_DEPS)
 endif
 
-.PHONY: all info showflags showtoolver help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike run_qemu_debug run_xlspike_rbb run_xlspike_openocd clean debug
+.PHONY: all info showflags showtoolver help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike run_xlmodel run_qemu_debug run_xlspike_rbb run_xlspike_openocd clean debug
 
 info:
 	@$(ECHO) Current Configuration: TOOLCHAIN=$(TOOLCHAIN) RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) RISCV_TUNE=$(RISCV_TUNE) RISCV_CMODEL=$(RISCV_CMODEL) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) ARCH_EXT=$(ARCH_EXT) DOWNLOAD=$(DOWNLOAD) STDCLIB=$(STDCLIB) SMP=$(SMP) BOOT_HARTID=$(BOOT_HARTID)
@@ -142,6 +142,7 @@ debug: $(TARGET_ELF)
 	$(GDB) $< -ex "set remotetimeout 240" -ex "target remote $(GDBREMOTE)"
 
 # just for evalsoc purpose
+# https://doc.nucleisys.com/nuclei_tools/qemu/intro.html
 run_qemu: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(QEMU)"
 	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) -nodefaults -nographic -serial stdio $(QEMU_ELF_OPT) $<
@@ -151,6 +152,12 @@ run_qemu_debug: $(TARGET_ELF)
 	@$(ECHO) "Run program $< on $(QEMU), and waiting for gdb connection on port $(GDB_PORT)"
 	@$(ECHO) "Then you can open a new terminal in the same directory and run make target: run_gdb to connect to this gdb connection"
 	$(QEMU) -M $(QEMU_MACHINE) -cpu $(QEMU_CPU) $(QEMU_OPT) -nodefaults -nographic -serial stdio $(QEMU_ELF_OPT) $< -S -gdb tcp::$(GDB_PORT)
+
+# just for evalsoc purpose using xlmodel
+# https://doc.nucleisys.com/nuclei_tools/xlmodel/intro.html
+run_xlmodel: $(TARGET_ELF)
+	@$(ECHO) "Run program $< on $(XLMODEL)"
+	$(XLMODEL) $(XLMODEL_OPT) $(XLMODEL_EXTOPT) $<
 
 # just works on evalsoc purpose, experimental support
 run_xlspike: $(TARGET_ELF)
