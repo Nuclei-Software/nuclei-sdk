@@ -1,0 +1,54 @@
+## Package Base Information
+name: app-nsdk_freertos_fprvv_demo
+owner: nuclei
+version:
+description: FreeRTOS FP and RVV Task Demo
+type: app
+keywords:
+  - freertos
+  - task demo
+category: freertos application
+license:
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+  - name: osp-nsdk_freertos
+    version:
+
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    value: -Os
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+  - config: nuclei_core
+    value: nx900fd
+  - config: nuclei_archext
+    value: v_zvl128b
+  - config: download_mode
+    value: ddr
+  - config: stdclib
+    value: newlib_small
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
