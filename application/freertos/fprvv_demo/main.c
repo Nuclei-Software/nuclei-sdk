@@ -95,6 +95,7 @@ static QueueHandle_t xQueue = NULL;
 static TaskHandle_t StartTask1_Handler;
 static TaskHandle_t StartTask2_Handler;
 static TaskHandle_t StartTask3_Handler;
+static TaskHandle_t StartTask4_Handler;
 
 void prvSetupHardware(void)
 {
@@ -104,10 +105,12 @@ void prvSetupHardware(void)
 void start_task1(void* pvParameters);
 void start_task2(void* pvParameters);
 void start_task3(void* pvParameters);
+void start_task4(void* pvParameters);
 
 extern int do_sgemm(void);
 extern int do_sgemm_c(void);
 extern int do_strcmp(void);
+extern int whets(void);
 
 int main(void)
 {
@@ -135,8 +138,11 @@ int main(void)
                 (TaskHandle_t*)&StartTask2_Handler);
 
     xTaskCreate((TaskFunction_t)start_task3, (const char*)"start_task3",
-                (uint16_t)1024, (void*)NULL, (UBaseType_t)2,
+                (uint16_t)1024, (void*)NULL, (UBaseType_t)3,
                 (TaskHandle_t*)&StartTask3_Handler);
+    xTaskCreate((TaskFunction_t)start_task4, (const char*)"start_task4",
+                (uint16_t)1024, (void*)NULL, (UBaseType_t)3,
+                (TaskHandle_t*)&StartTask4_Handler);
     xExampleSoftwareTimer =
         xTimerCreate((const char*)"ExTimer", mainSOFTWARE_TIMER_PERIOD_MS,
                      pdTRUE, (void*)0, vExampleTimerCallback);
@@ -165,6 +171,8 @@ void start_task1(void* pvParameters)
         if ((cnt % 100) == 0) {
             printf("task1 is running pass %d fail %d.....\r\n", pass, fail);
         }
+        vTaskDelay(pdMS_TO_TICKS(2));
+        configASSERT(fail == 0);
     //    vTaskDelay(TASKDLYMS);
     }
 }
@@ -183,6 +191,8 @@ void start_task2(void* pvParameters)
         if ((cnt % 100) == 0) {
             printf("task2 is running pass %d fail %d.....\r\n", pass, fail);
         }
+        configASSERT(fail == 0);
+        vTaskDelay(pdMS_TO_TICKS(2));
       //  vTaskDelay(TASKDLYMS);
     }
 }
@@ -201,9 +211,31 @@ void start_task3(void* pvParameters)
         if ((cnt % 100) == 0) {
             printf("task3 is running pass %d fail %d.....\r\n", pass, fail);
         }
+        configASSERT(fail == 0);
+        vTaskDelay(pdMS_TO_TICKS(10));
         //vTaskDelay(TASKDLYMS);
     }
 }
+
+void start_task4(void* pvParameters)
+{
+    int cnt = 0, pass = 0, fail = 0;
+    printf("Enter to task_4\r\n");
+    while (1) {
+        if (whets() == 0) {
+            pass ++;
+        } else {
+            fail ++;
+        }
+        cnt ++;
+        if ((cnt % 100) == 0) {
+            printf("task4 is running pass %d fail %d.....\r\n", pass, fail);
+        }
+        configASSERT(fail == 0);
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+}
+
 
 static void vExampleTimerCallback(TimerHandle_t xTimer)
 {
@@ -211,7 +243,10 @@ static void vExampleTimerCallback(TimerHandle_t xTimer)
     timer that calls this function is an auto re-load timer, so it will
     execute periodically. */
     static int cnt = 0;
-    printf("timers Callback %d\r\n", cnt++);
+    if ((cnt % 100) == 0) {
+        printf("timers Callback %d\r\n", cnt);
+    }
+    cnt ++;
 #ifdef CFG_SIMULATION
     if (cnt > 2) {
         // directly exit if in nuclei internally simulation
@@ -264,7 +299,7 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask, char* pcTaskName)
     function is called if a stack overflow is detected.  pxCurrentTCB can be
     inspected in the debugger if the task name passed into this function is
     corrupt. */
-    printf("Stack Overflow\n");
+    printf("Task %s Stack Overflow\n", pcTaskName);
     while (1);
 }
 /*-----------------------------------------------------------*/

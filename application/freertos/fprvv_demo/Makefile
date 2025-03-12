@@ -12,4 +12,7 @@ STDCLIB := newlib_small
 SRCDIRS = .
 INCDIRS = .
 
+LDLIBS := -lm
+
+
 include $(NUCLEI_SDK_ROOT)/Build/Makefile.base

@@ -131,8 +131,10 @@ your application. */
 #define configKERNEL_INTERRUPT_PRIORITY         0
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    7
 
+#include <stdio.h>
+
 /* Define to trap errors during development. */
-#define configASSERT( x ) if( ( x ) == 0 ) {taskDISABLE_INTERRUPTS(); for( ;; );}
+#define configASSERT( x ) if( ( x ) == 0 ) {taskDISABLE_INTERRUPTS(); printf("Assert here: %s %s: line=%lu\n", __func__, __FILE__, __LINE__); for( ;; );}
 
 /* FreeRTOS MPU specific definitions. */
 //#define configINCLUDE_APPLICATION_DEFINED_PRIVILEGED_FUNCTIONS 0
