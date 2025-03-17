@@ -14,5 +14,12 @@ INCDIRS = .
 
 LDLIBS := -lm
 
+TOOLCHAIN ?= nuclei_gnu
+# Disable autovectorization due to timer task
+# code will generate rvv code
+AUTOVEC := 0
+
+# Include toolchain specified options
+-include toolchain_$(TOOLCHAIN).mk
 
 include $(NUCLEI_SDK_ROOT)/Build/Makefile.base
