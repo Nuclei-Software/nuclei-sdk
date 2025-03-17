@@ -73,6 +73,18 @@
                 "PASS": ["software interrupt hit 5 times"]
             }
         },
+        "application/baremetal/demo_extirq": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["You can press any key now to trigger uart receive interrupt"]
+            }
+        },
+        "application/baremetal/demo_irqc": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["IRQC Demo finished sucessfully in 20 loops"]
+            }
+        },
         "application/baremetal/demo_smode_eclic": {
             "build_config" : {},
             "checks": {
