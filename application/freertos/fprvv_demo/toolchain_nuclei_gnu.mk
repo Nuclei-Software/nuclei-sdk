@@ -13,7 +13,7 @@ else ifeq ($(AUTOVEC),0)
 ifneq ($(findstring 13,$(GCCVER)),)
 COMMON_FLAGS += --param=riscv-autovec-preference=none
 endif
-COMMON_FLAGS += -fno-tree-loop-vectorize -fno-tree-slp-vectorize
+COMMON_FLAGS += -fno-tree-vectorize -fno-tree-loop-vectorize -fno-tree-slp-vectorize
 else
 COMMON_FLAGS +=
 endif
