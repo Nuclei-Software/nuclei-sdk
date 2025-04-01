@@ -1,0 +1,46 @@
+## Package Base Information
+name: app-nsdk_dhrystone_v2.2
+owner: nuclei
+version:
+description: Dhrystone Benchmark version 2.2
+type: app
+keywords:
+  - baremetal
+  - benchmark
+category: baremetal application
+license:
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+
+## Package Configurations
+configuration:
+
+## Set Configuration for other packages
+setconfig:
+  - config: stdclib
+    value: newlib_small
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h", "*.S"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+
+## Build Configuration
+buildconfig:
+  - type: gcc
+    common_flags: # flags need to be combined together across all packages
+      - flags: -O3 -Wno-implicit-int -Wno-implicit-function-declaration
+  - type: clang
+    common_flags: # flags need to be combined together across all packages
+      - flags: -O3 -Wno-implicit-int -Wno-implicit-function-declaration
+  - type: zcc
+    common_flags: # flags need to be combined together across all packages
+      - flags: -O3 -Wno-implicit-int -Wno-implicit-function-declaration

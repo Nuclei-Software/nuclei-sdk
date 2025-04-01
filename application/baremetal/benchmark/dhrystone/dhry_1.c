@@ -394,6 +394,7 @@ int main(void)
     Dhrystones_Per_Second = ((float) HZ * (float) Number_Of_Runs)
                             / (float) User_Time;
 #endif
+
     Instret =  User_Instret / Number_Of_Runs;
 
     DMIPS_MHZ = (1000000 / ((float)User_Cycle / (float)Number_Of_Runs)) / 1757;

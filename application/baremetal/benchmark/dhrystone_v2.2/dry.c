@@ -373,6 +373,7 @@
  ***************************************************************************
  */
 
+#define TIME
 /* Compiler and system dependent definitions: */
 
 /* variables for time measurement: */
@@ -427,7 +428,13 @@ struct tms      time_info;
 
 
 #define Mic_secs_Per_Second     1000000.0
-#define NUMBER_OF_RUNS		50000 /* Default number of runs */
+
+#ifdef CFG_SIMULATION
+//for simulation we make it small
+#define NUMBER_OF_RUNS        200
+#else
+#define NUMBER_OF_RUNS        50000 /* Default number of runs */
+#endif
 
 #ifdef  NOSTRUCTASSIGN
 #define structassign(d, s)      memcpy(&(d), &(s), sizeof(d))
@@ -451,6 +458,7 @@ struct tms      time_info;
 /* General definitions: */
 
 #include <stdio.h>
+#include <stdint.h>
                 /* for strcpy, strcmp */
 
 #define Null 0 
@@ -517,11 +525,34 @@ Enumeration     Func_1 ();
 
 Boolean		Done;
 
+long            Begin_Cycle,
+                End_Cycle,
+                User_Cycle;
+long            Begin_Instret,
+                End_Instret,
+                User_Instret,
+                Instret;
 long            Begin_Time,
                 End_Time,
                 User_Time;
 float           Microseconds,
                 Dhrystones_Per_Second;
+float           DMIPS_MHZ;
+
+/* Only support dec number < 1000 */
+static char *dec2str(uint32_t val)
+{
+    static char str[4];
+    val = val % 1000;
+    int decnum = 100;
+    for (int i = 0; i < 3; i ++) {
+        str[i] = val / decnum + '0';
+        val = val % decnum;
+        decnum = decnum / 10;
+    }
+    str[3] = '\0';
+    return str;
+}
 
 /* end of variables for time measurement */
 
@@ -603,6 +634,14 @@ main (argc, argv) int argc; char *argv[];
 
     Start_Timer();
 
+    // Reset cycle and instret to zero
+    reset_cycle();
+    reset_instret();
+
+    // Start sample
+    Begin_Cycle =  csr_cycle();
+    Begin_Instret =  csr_instret();
+
     for (Run_Index = 1; Run_Index <= Number_Of_Runs; ++Run_Index)
     {
 
@@ -652,6 +691,8 @@ main (argc, argv) int argc; char *argv[];
     /**************/
     /* Stop timer */
     /**************/
+    End_Cycle = csr_cycle();
+    End_Instret = csr_instret();
 
     Stop_Timer();
 
@@ -660,8 +701,9 @@ main (argc, argv) int argc; char *argv[];
     if (User_Time < Too_Small_Time)
     {
       printf ("Measured time too small to obtain meaningful results\n");
-      Number_Of_Runs = Number_Of_Runs * 10;
       printf ("\n");
+      // only run the default Number_Of_Runs
+      Done = true;
     } else Done = true;
   }
 
@@ -716,6 +758,8 @@ main (argc, argv) int argc; char *argv[];
   fprintf (stderr, "        should be:   DHRYSTONE PROGRAM, 2'ND STRING\n");
   fprintf (stderr, "\n");
 
+    User_Instret = End_Instret - Begin_Instret;
+    User_Cycle = End_Cycle - Begin_Cycle;
 
     Microseconds = (float) User_Time * Mic_secs_Per_Second 
                         / ((float) HZ * ((float) Number_Of_Runs));
@@ -727,7 +771,29 @@ main (argc, argv) int argc; char *argv[];
     printf ("Dhrystones per Second:                      ");
     printf ("%10.0f \n", Dhrystones_Per_Second);
     printf ("\n");
-  
+
+    Instret =  User_Instret / Number_Of_Runs;
+
+    DMIPS_MHZ = (1000000 / ((float)User_Cycle / (float)Number_Of_Runs)) / 1757;
+
+    printf(" (*) User_Cycle for total run through Dhrystone with loops %d: \n", Number_Of_Runs);
+    printf("%ld \n", User_Cycle);
+    printf("       So the DMIPS/MHz can be calculated by: \n");
+    printf("       1000000/(User_Cycle/Number_Of_Runs)/1757 = %2.6f DMIPS/MHz\n", DMIPS_MHZ);
+    printf("\n");
+
+    uint32_t dhry_dmips = (uint32_t)(DMIPS_MHZ * 1000);
+    char *pstr = dec2str(dhry_dmips);
+    printf("\nCSV, Benchmark, Iterations, Cycles, DMIPS/MHz\n");
+    printf("CSV, Dhrystone_v2.2, %u, %u, %u.%s\n", \
+        (unsigned int)Number_Of_Runs, (unsigned int)User_Cycle, (unsigned int)(dhry_dmips/1000), pstr);
+
+    float f_ipc = (((float)User_Instret / User_Cycle));
+    uint32_t i_ipc = (uint32_t)(f_ipc * 1000);
+    pstr = dec2str(i_ipc);
+
+    printf("IPC = Instret/Cycle = %u/%u = %u.%s\n", (unsigned int)User_Instret, (unsigned int)User_Cycle, (unsigned int)(i_ipc/1000), pstr);
+
 }
 
 
