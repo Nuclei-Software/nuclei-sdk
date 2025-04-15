@@ -217,7 +217,7 @@ void vPortRecursiveLock(unsigned long ulLockNum, spin_lock_t *pxSpinLock, BaseTy
 }
 #endif
 
-static unsigned long ulSchedulerReady = 0;
+static volatile unsigned long ulSchedulerReady = 0;
 /*-----------------------------------------------------------*/
 
 /*
