@@ -205,25 +205,32 @@ typedef enum IRQn {
 #endif
 } IRQn_Type;
 
+#if defined(CFG_IRQ_NUM) && (CFG_IRQ_NUM > 38)
+#define IRQn_OFFSET             0
+#else
+#define IRQn_OFFSET             32
+#endif
+
 #ifdef CFG_HAS_CLIC
 /* UART0 Interrupt */
 /* NOTE: Take care the external uart irq may not work, it require a correct evalsoc cpu configuration */
 /* NOTE: For latest 200/300 cpu, this UART0_IRQn maybe SOC_INT19_IRQn */
-#define UART0_IRQn                                 SOC_INT51_IRQn
+/* Please check Interrupts of Eval_SoC section in Nuclei_Processor_Integration_Guide.pdf */
+#define UART0_IRQn                                 (SOC_INT51_IRQn - IRQn_OFFSET)
 /* QSPI Interrupt */
-#define QSPI0_IRQn                                 SOC_INT53_IRQn
-#define QSPI1_IRQn                                 SOC_INT54_IRQn
-#define QSPI2_IRQn                                 SOC_INT55_IRQn
+#define QSPI0_IRQn                                 (SOC_INT53_IRQn - IRQn_OFFSET)
+#define QSPI1_IRQn                                 (SOC_INT54_IRQn - IRQn_OFFSET)
+#define QSPI2_IRQn                                 (SOC_INT55_IRQn - IRQn_OFFSET)
 #else
 /* UART0 Interrupt */
-#define UART0_IRQn                                 PLIC_INT33_IRQn
+#define UART0_IRQn                                 (PLIC_INT33_IRQn - IRQn_OFFSET)
 /* QSPI Interrupt */
-#define QSPI0_IRQn                                 PLIC_INT35_IRQn
-#define QSPI1_IRQn                                 PLIC_INT36_IRQn
-#define QSPI2_IRQn                                 PLIC_INT37_IRQn
+#define QSPI0_IRQn                                 (PLIC_INT35_IRQn - IRQn_OFFSET)
+#define QSPI1_IRQn                                 (PLIC_INT36_IRQn - IRQn_OFFSET)
+#define QSPI2_IRQn                                 (PLIC_INT37_IRQn - IRQn_OFFSET)
 #endif
 
-#define PLIC_UART0_IRQn                            PLIC_INT33_IRQn
+#define PLIC_UART0_IRQn                            (PLIC_INT33_IRQn - IRQn_OFFSET)
 
 
 /* =========================================================================================================================== */
