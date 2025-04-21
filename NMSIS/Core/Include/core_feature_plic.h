@@ -78,13 +78,15 @@
  */
 #ifndef __PLIC_HARTID
 #define PLIC_GetHartID()                    (__get_hart_index())
+#define PLIC_GetHartID_S()                  (__get_hart_index_s())
 #else
 #define PLIC_GetHartID()                    (__PLIC_HARTID)
+#define PLIC_GetHartID_S()                  (__PLIC_HARTID)
 #endif
 
 #define PLIC_GetHartMContextID()            (PLIC_GetHartID() << 1)
 // TODO SMODE HARTID need to handle, maybe use a predefined variable of hartid
-#define PLIC_GetHartSContextID()            ((PLIC_GetHartID() << 1) + 1)
+#define PLIC_GetHartSContextID()            ((PLIC_GetHartID_S() << 1) + 1)
 
 #define PLIC_PRIORITY_REGADDR(source)       ((PLIC_BASE) + (PLIC_PRIORITY_OFFSET)  + ((source) << PLIC_PRIORITY_SHIFT_PER_SOURCE))
 #define PLIC_PENDING_REGADDR(source)        ((PLIC_BASE) + (PLIC_PENDING_OFFSET)   + (((source) >> 5) * 4))
