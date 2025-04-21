@@ -1924,6 +1924,18 @@ __STATIC_FORCEINLINE void __set_medeleg(unsigned long mask)
 }
 
 /**
+ * \brief   Set interrupt delegation to S mode
+ * \details Set certain interrupt of supervisor mode or user mode
+ *          delegated from machined mode to supervisor mode.
+ * \remarks
+ *          interrupt should trigger in supervisor mode or user mode.
+ */
+__STATIC_FORCEINLINE void __set_mideleg(unsigned long mask)
+{
+    __RV_CSR_WRITE(CSR_MIDELEG, mask);
+}
+
+/**
  * \brief Execute fence instruction, p -> pred, s -> succ
  * \details
  * the FENCE instruction ensures that all memory accesses from instructions preceding
