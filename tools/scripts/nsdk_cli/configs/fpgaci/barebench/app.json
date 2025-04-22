@@ -43,6 +43,18 @@
                 "PASS": ["CSV, Whetstone"]
             }
         },
+        "application/baremetal/benchmark/dhrystone_v2.2": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CSV, Dhrystone_v2.2"]
+            }
+        },
+        "application/baremetal/benchmark/whetstone_v1.2": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CSV, Whetstone_v1.2"]
+            }
+        },
         "application/baremetal/benchmark/coremark": {
             "build_config" : {},
             "checks": {

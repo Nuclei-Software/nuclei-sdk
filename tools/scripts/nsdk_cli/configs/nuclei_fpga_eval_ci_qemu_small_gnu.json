@@ -46,6 +46,12 @@
                 "PASS": ["1000000/(User_Cycle/Number_Of_Runs)", "Please increase number"]
             }
         },
+        "application/baremetal/benchmark/dhrystone_v2.2": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Measured time too small to obtain meaningful results"]
+            }
+        },
         "application/baremetal/benchmark/coremark": {
             "build_configs" : {
                 "n203b-optimized": {"CORE": "n203", "ARCH_EXT": "_zba_zbb_zbc_zbs", "CPU_SERIES": "200"},

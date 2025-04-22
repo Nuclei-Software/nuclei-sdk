@@ -29,6 +29,12 @@
             "checks": {
                 "PASS": ["msh >", "Hello RT-Thread!"]
             }
+        },
+        "application/baremetal/benchmark/dhrystone_v2.2": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Measured time too small to obtain meaningful results"]
+            }
         }
     },
     "expected": {

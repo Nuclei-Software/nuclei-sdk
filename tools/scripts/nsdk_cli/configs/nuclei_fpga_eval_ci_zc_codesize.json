@@ -40,6 +40,12 @@
         "nx900fd-ilm-zc": {"DOWNLOAD": "ilm", "CORE": "nx900f", "ARCH_EXT": "_zca_zcb_zcmp_zcmt"}
     },
     "appconfig": {
+        "application/baremetal/benchmark/whetstone_v1.2": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Insufficient duration- Increase the LOOP count", "Precision C Whetstone Benchmark Version 1.2"]
+            }
+        }
     },
     "expected": {
         "application/baremetal/demo_nice" : {
