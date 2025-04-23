@@ -1166,6 +1166,45 @@ __STATIC_FORCEINLINE uint64_t __get_rv_time(void)
 }
 
 /**
+ * \brief   Read the CYCLE register
+ * \details This function will read the CYCLE register without taking the
+ *          CYCLEH register into account
+ * \return  32 bits value when XLEN=32
+ *          64 bits value when XLEN=64
+ *          TODO: XLEN=128 need to be supported
+ */
+__STATIC_FORCEINLINE unsigned long __read_cycle_csr()
+{
+    return __RV_CSR_READ(CSR_CYCLE);
+}
+
+/**
+ * \brief   Read the INSTRET register
+ * \details This function will read the INSTRET register without taking the
+ *          INSTRETH register into account
+ * \return  32 bits value when XLEN=32
+ *          64 bits value when XLEN=64
+ *          TODO: XLEN=128 need to be supported
+ */
+__STATIC_FORCEINLINE unsigned long __read_instret_csr()
+{
+    return __RV_CSR_READ(CSR_INSTRET);
+}
+
+/**
+ * \brief   Read the TIME register
+ * \details This function will read the TIME register without taking the
+ *          TIMEH register into account
+ * \return  32 bits value when XLEN=32
+ *          64 bits value when XLEN=64
+ *          TODO: XLEN=128 need to be supported
+ */
+__STATIC_FORCEINLINE unsigned long __read_time_csr()
+{
+    return __RV_CSR_READ(CSR_TIME);
+}
+
+/**
  * \brief   Get cluster id of current cluster
  * \details This function will get cluster id of current cluster in a multiple cluster system
  * \return  The cluster id of current cluster

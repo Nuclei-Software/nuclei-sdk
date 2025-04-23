@@ -16,6 +16,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Add SSTC support in ``core_feature_timer.h``, a new macro called ``__SSTC_PRESENT`` is added
   - Update and add more CSR Union types
   - Add more CSR macros such shartid csr, worldguard csrs, and related csr bitfield macro
+  - Add the ``BENCH_XLEN_MODE`` macro to enable more precise and accurate cycle measurements on RV32
 
 * Application
 

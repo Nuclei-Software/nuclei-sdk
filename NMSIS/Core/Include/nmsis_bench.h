@@ -73,14 +73,32 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 }
 
 #ifndef READ_CYCLE
-/** Read run cycle of cpu */
+/**
+ * When XLEN=32, reading the full 64-bit CYCLE register incurs additional overhead.
+ * `BENCH_XLEN_MODE` skips reading the upper 32 bits, reducing the extra cycle cost
+ * and allowing for more accurate measurements of small cycle counts.
+ *
+ * NOTE: It is only applicable when the total cycle count does not exceed 2^32.
+ *
+ */
+#ifdef BENCH_XLEN_MODE
+/** Read single CYCLE register */
+#define READ_CYCLE              __read_cycle_csr
+typedef unsigned long Bench_Type;
+#else
+/** Read the whole 64 bits value of MCYCLE register */
 #define READ_CYCLE              __get_rv_cycle
-#endif
+typedef uint64_t Bench_Type;
+#endif /* #ifdef BENCH_XLEN_MODE */
+#else
+typedef uint64_t Bench_Type;
+#endif /* #ifndef READ_CYCLE */
 
 #ifndef DISABLE_NMSIS_BENCH
 
 /** Declare benchmark required variables, need to be placed above all BENCH_xxx macros in each c source code if BENCH_xxx used */
-#define BENCH_DECLARE_VAR()     static volatile uint64_t _bc_sttcyc, _bc_endcyc, _bc_usecyc, _bc_sumcyc, _bc_lpcnt, _bc_ercd;
+#define BENCH_DECLARE_VAR()     static volatile Bench_Type _bc_sttcyc, _bc_endcyc, _bc_usecyc, _bc_sumcyc; \
+                                static volatile unsigned long _bc_lpcnt, _bc_ercd;
 
 /** Initialize benchmark environment, need to called in before other BENCH_xxx macros are called */
 #define BENCH_INIT()            printf("Benchmark initialized\n"); \
@@ -127,7 +145,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
                                     printf("SUCCESS, %s\n", #proc); \
                                 }
 #else
-#define BENCH_DECLARE_VAR()     static volatile uint64_t _bc_ercd, _bc_lpcnt;
+#define BENCH_DECLARE_VAR()     static volatile unsigned long _bc_ercd, _bc_lpcnt;
 #define BENCH_INIT()            _bc_ercd = 0; __prepare_bench_env();
 #define BENCH_RESET(proc)
 #define BENCH_START(proc)       _bc_ercd = 0;
