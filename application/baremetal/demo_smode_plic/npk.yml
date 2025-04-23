@@ -1,0 +1,43 @@
+## Package Base Information
+name: app-nsdk_demo_smode_plic
+owner: nuclei
+description: S-Mode PLIC Interrupt Demo
+type: app
+keywords:
+  - app
+  - risc-v
+  - plic
+license:
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    value:
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs: [""]
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
