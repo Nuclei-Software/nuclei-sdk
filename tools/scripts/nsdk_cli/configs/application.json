@@ -27,7 +27,6 @@
         "application/baremetal/demo_vnice",
         "application/baremetal/demo_cidu",
         "application/baremetal/demo_clint_timer",
-        "application/baremetal/demo_smode_plic",
         "application/baremetal/dsp_examples",
         "application/freertos/smpdemo",
         "application/baremetal/Internal"
@@ -91,6 +90,12 @@
             "build_config" : {},
             "checks": {
                 "PASS": ["You can press any key now", "[ERROR]__PLIC_PRESENT", "PLIC is not present"]
+            }
+        },
+        "application/baremetal/demo_smode_plic": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["You can press any key now", "[ERROR]__PMP_PRESENT & __PLIC_PRESENT", "PLIC is not present"]
             }
         },
         "application/baremetal/demo_smode_eclic": {

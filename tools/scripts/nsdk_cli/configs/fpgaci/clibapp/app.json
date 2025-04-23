@@ -96,6 +96,12 @@
                 "PASS": ["You can press any key now", "[ERROR]__PLIC_PRESENT", "PLIC is not present"]
             }
         },
+        "application/baremetal/demo_smode_plic": {
+            "build_config" : {"XLCFG_PLIC": "1"},
+            "checks": {
+                "PASS": ["You can press any key now", "[ERROR]__PMP_PRESENT & __PLIC_PRESENT", "PLIC is not present"]
+            }
+        },
         "application/baremetal/demo_spmp": {
             "build_config" : {},
             "checks": {
