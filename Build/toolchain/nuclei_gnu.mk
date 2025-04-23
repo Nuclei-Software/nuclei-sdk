@@ -137,6 +137,12 @@ ifneq ($(findstring v,$(ARCH_EXT)),)
 COMMON_FLAGS += -mstringop-strategy=scalar
 endif
 
+# Disable auto vectorization when AUTOVEC=0
+# see https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-ftree-vectorize
+ifeq ($(AUTOVEC),0)
+COMMON_FLAGS += -fno-tree-vectorize -fno-tree-loop-vectorize -fno-tree-slp-vectorize
+endif
+
 LDFLAGS += -nodefaultlibs
 # For binutils 2.40 in Nuclei GNU Toolchain, need add below option
 # to remove link warning

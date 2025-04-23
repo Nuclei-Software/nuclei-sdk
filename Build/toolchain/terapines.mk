@@ -94,6 +94,12 @@ ifneq ($(RISCV_TUNE),)
 COMMON_FLAGS += -mtune=$(RISCV_TUNE)
 endif
 
+# Disable auto vectorization when AUTOVEC=0
+# see https://llvm.org/docs/Vectorizers.html
+ifeq ($(AUTOVEC),0)
+COMMON_FLAGS += -fno-vectorize -fno-slp-vectorize
+endif
+
 ifneq ($(findstring newlib,$(STDCLIB)),)
 LDFLAGS += -u __on_exit_args
 endif

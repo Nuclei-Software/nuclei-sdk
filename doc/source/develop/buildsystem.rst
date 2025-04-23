@@ -1133,6 +1133,14 @@ You can easily find the supported RTOSes in the **<NUCLEI_SDK_ROOT>/OS** directo
     you need to have an ``tx_user.h`` header file prepared in you application.
     See examples in ``application/threadx``.
 
+.. _develop_buildsystem_var_autovec:
+
+AUTOVEC
+~~~~~~~
+
+**AUTOVEC** variable is used to control whether to enable compiler auto vectorization feature.
+
+When **AUTOVEC=0**, it will disable compiler auto vectorization feature as much as possible.
 
 .. _develop_buildsystem_var_middleware:
 

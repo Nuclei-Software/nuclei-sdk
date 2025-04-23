@@ -66,6 +66,8 @@ NCRTIO ?= uart
 NOGC ?=
 ## If BANNER=0, it will not display sdk banner when program run
 BANNER ?=
+## If AUTOVEC=0, it will try to disable compiler auto vectorization as much as possible
+AUTOVEC ?=
 
 # Directory variables for NMSIS, SoC/RTOS chosen, Middleware Components
 # NUCLEI_SDK_SOC and NUCLEI_SDK_RTOS variables need to be set deferred
