@@ -16,7 +16,14 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Add SSTC support in ``core_feature_timer.h``, a new macro called ``__SSTC_PRESENT`` is added
   - Update and add more CSR Union types
   - Add more CSR macros such shartid csr, worldguard csrs, and related csr bitfield macro
-  - Add the ``BENCH_XLEN_MODE`` macro to enable more precise and accurate cycle measurements on RV32
+  - Add the ``BENCH_XLEN_MODE`` macro to enable more accurate cycle and HPM counter measurements for RV32
+  - Fix return type error of ``__get_hpm_counter``
+  - Add new APIs to read cycle/instret/time/hpm_counter with XLEN bits:
+
+    - ``unsigned long __read_cycle_csr()``
+    - ``unsigned long __read_instret_csr()``
+    - ``unsigned long __read_time_csr()``
+    - ``unsigned long __read_hpm_counter(unsigned long idx)``
 
 * Application
 

@@ -31,6 +31,12 @@
 #include "core_feature_base.h"
 #include <stdio.h>
 
+#ifdef BENCH_XLEN_MODE
+typedef unsigned long Bench_Type;
+#else
+typedef uint64_t Bench_Type;
+#endif
+
 /**
  * \defgroup NMSIS_Core_Bench_Helpers   NMSIS Bench and Test Related Helper Functions
  * \ingroup  NMSIS_Core
@@ -84,14 +90,10 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #ifdef BENCH_XLEN_MODE
 /** Read single CYCLE register */
 #define READ_CYCLE              __read_cycle_csr
-typedef unsigned long Bench_Type;
 #else
 /** Read the whole 64 bits value of MCYCLE register */
 #define READ_CYCLE              __get_rv_cycle
-typedef uint64_t Bench_Type;
 #endif /* #ifdef BENCH_XLEN_MODE */
-#else
-typedef uint64_t Bench_Type;
 #endif /* #ifndef READ_CYCLE */
 
 #ifndef DISABLE_NMSIS_BENCH
@@ -222,8 +224,18 @@ typedef uint64_t Bench_Type;
 #define SEVENT_EN                                                                  0x02
 #define UEVENT_EN                                                                  0x01
 
+#ifdef BENCH_XLEN_MODE
+/**
+ * NOTE: when XLEN=32 and `BENCH_XLEN_MODE` is enabled, the counter should not exceed 2^32
+ */
+#define READ_HPM_COUNTER           __read_hpm_counter
+#else
+#define READ_HPM_COUNTER           __get_hpm_counter
+#endif /* #ifdef BENCH_XLEN_MODE */
+
 /** Declare high performance monitor counter idx benchmark required variables, need to be placed above all HPM_xxx macros in each c source code if HPM_xxx used */
-#define HPM_DECLARE_VAR(idx)    static volatile uint64_t __hpm_sttcyc##idx, __hpm_endcyc##idx, __hpm_usecyc##idx, __hpm_sumcyc##idx, __hpm_lpcnt##idx, __hpm_val##idx;
+#define HPM_DECLARE_VAR(idx)    static volatile Bench_Type __hpm_sttcyc##idx, __hpm_endcyc##idx, __hpm_usecyc##idx, __hpm_sumcyc##idx; \
+                                static volatile unsigned long __hpm_lpcnt##idx, __hpm_val##idx;
 
 #define HPM_SEL_ENABLE(ena)         (ena << 28)
 #define HPM_SEL_EVENT(sel, idx)     ((sel) | (idx << 4))
@@ -243,11 +255,11 @@ typedef uint64_t Bench_Type;
                                 __hpm_val##idx = (event);                                   \
                                 __set_hpm_event(idx, __hpm_val##idx);                       \
                                 __set_hpm_counter(idx, 0);                                  \
-                                __hpm_sttcyc##idx = __get_hpm_counter(idx);
+                                __hpm_sttcyc##idx = READ_HPM_COUNTER(idx);
 
 /** Do high performance benchmark sample for proc, and sum it into sum counter */
 #define HPM_SAMPLE(idx, proc, event)                 \
-                                __hpm_endcyc##idx = __get_hpm_counter(idx);                 \
+                                __hpm_endcyc##idx = READ_HPM_COUNTER(idx);                 \
                                 __hpm_usecyc##idx = __hpm_endcyc##idx - __hpm_sttcyc##idx;  \
                                 __hpm_sumcyc##idx += __hpm_usecyc##idx;                     \
                                 __hpm_lpcnt##idx += 1;
