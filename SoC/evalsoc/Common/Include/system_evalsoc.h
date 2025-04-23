@@ -122,9 +122,29 @@ extern int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Typ
 extern void Interrupt_Register_CoreIRQ(uint32_t irqn, unsigned long int_handler);
 
 /**
- * \brief Register an plic external interrupt handler for clint/plic interrupt mode
+ * \brief Register an m-mode plic external interrupt handler for clint/plic interrupt mode
  */
 extern void Interrupt_Register_ExtIRQ(uint32_t irqn, unsigned long int_handler);
+
+/**
+ * \brief Register an s-mode plic external interrupt handler for clint/plic interrupt mode
+ */
+extern void Interrupt_Register_ExtIRQ_S(uint32_t irqn, unsigned long int_handler);
+
+/**
+ * \brief       Get an core interrupt handler for core interrupt number
+ */
+extern unsigned long Interrupt_Get_CoreIRQ(uint32_t irqn);
+
+/**
+ * \brief       Get an m-mode external interrupt handler for external interrupt number
+ */
+extern unsigned long Interrupt_Get_ExtIRQ(uint32_t irqn);
+
+/**
+ * \brief       Get an s-mode external interrupt handler for external interrupt number
+ */
+extern unsigned long Interrupt_Get_ExtIRQ_S(uint32_t irqn);
 
 /**
  * \brief Register a riscv core interrupt and register the handler for clint/plic interrupt mode
@@ -137,9 +157,13 @@ extern int32_t Core_Register_IRQ(uint32_t irqn, void *handler);
  */
 extern void PLIC_Interrupt_Init(void);
 /**
- * \brief  Register a specific plic interrupt and register the handler
+ * \brief  Register a m-mode specific plic interrupt and register the handler
  */
 extern int32_t PLIC_Register_IRQ(uint32_t source, uint8_t priority, void *handler);
+/**
+ * \brief  Register a s-mode specific plic interrupt and register the handler
+ */
+extern int32_t PLIC_Register_IRQ_S(uint32_t source, uint8_t priority, void *handler);
 #endif
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
