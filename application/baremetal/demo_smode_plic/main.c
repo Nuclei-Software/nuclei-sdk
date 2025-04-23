@@ -6,13 +6,13 @@
 #if !defined(__PMP_PRESENT) || (__PMP_PRESENT != 1)
 /* __PMP_PRESENT should be defined in <Device>.h */
 #warning "__PMP_PRESENT is not defined or equal to 1, please check!"
-#error "This example require CPU PMP feature!"
+#warning "This example require CPU PMP feature!"
 #endif
 
 #if !defined(__PLIC_PRESENT) || (__PLIC_PRESENT == 0)
 /* __PLIC_PRESENT should be defined in <Device>.h */
 #warning "__PLIC_PRESENT is not defined or equal to 0, please check!"
-#error "This example require CPU PLIC feature!"
+#warning "This example require CPU PLIC feature!"
 #endif
 
 // 2048 is enough
