@@ -59,20 +59,25 @@ typedef portSTACK_TYPE StackType_t;
 typedef long BaseType_t;
 typedef unsigned long UBaseType_t;
 
-#if( configUSE_16_BIT_TICKS == 1 )
-typedef uint16_t TickType_t;
-#define portMAX_DELAY           ( TickType_t )0xffff
-#else
+
 /* TODO If you want to use openocd rtos-aware debug, you need to define OPENOCD_RTOS_AWARE macro */
 //#define OPENOCD_RTOS_AWARE
 #ifdef OPENOCD_RTOS_AWARE
+#undef configTICK_TYPE_WIDTH_IN_BITS
+#define configTICK_TYPE_WIDTH_IN_BITS TICK_TYPE_WIDTH_32_BITS
+#endif
+
+// configTICK_TYPE_WIDTH_IN_BITS
+// see https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/03db672b8f45db24aa99f12051f7cf86746b9ed9/examples/template_configuration/FreeRTOSConfig.h#L124-L139
+#if ( configTICK_TYPE_WIDTH_IN_BITS == TICK_TYPE_WIDTH_16_BITS )
+typedef uint16_t TickType_t;
+#define portMAX_DELAY           ( TickType_t )0xffff
+#elif ( configTICK_TYPE_WIDTH_IN_BITS == TICK_TYPE_WIDTH_32_BITS )
 typedef uint32_t TickType_t;
 #define portMAX_DELAY           ( TickType_t )0xFFFFFFFFUL
 #else
-/* RISC-V TIMER is 64-bit long */
 typedef uint64_t TickType_t;
 #define portMAX_DELAY           ( TickType_t )0xFFFFFFFFFFFFFFFFULL
-#endif
 #endif
 /*-----------------------------------------------------------*/
 
