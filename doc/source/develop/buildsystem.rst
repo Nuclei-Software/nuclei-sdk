@@ -1061,6 +1061,7 @@ e.g. ``application/baremetal/demo_timer/Makefile``.
 * :ref:`develop_buildsystem_var_middleware`
 * :ref:`develop_buildsystem_var_rtos`
 * :ref:`develop_buildsystem_var_stdclib`
+* :ref:`develop_buildsystem_var_autovec`
 * :ref:`develop_buildsystem_var_nmsis_lib`
 * :ref:`develop_buildsystem_var_nmsis_lib_arch`
 * :ref:`develop_buildsystem_var_riscv_arch`
@@ -1140,7 +1141,13 @@ AUTOVEC
 
 **AUTOVEC** variable is used to control whether to enable compiler auto vectorization feature.
 
-When **AUTOVEC=0**, it will disable compiler auto vectorization feature as much as possible.
+By default, the compiler auto vectorization feature is controlled by the compiler options it passed.
+
+When **AUTOVEC=0**, it will disable compiler auto vectorization feature as much as possible by passing
+extra compiler options, otherwise no extra compiler options will be passed.
+
+- **nuclei_gnu**: ``-fno-tree-vectorize -fno-tree-loop-vectorize -fno-tree-slp-vectorize``
+- **nuclei_llvm/terapines**: ``-fno-vectorize -fno-slp-vectorize``
 
 .. _develop_buildsystem_var_middleware:
 

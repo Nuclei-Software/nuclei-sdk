@@ -56,7 +56,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
 * Build System
 
   - Add **COMPILE_PREFIX** support for :ref:`develop_buildsystem_var_toolchain:` ``nuclei_llvm``, now both ``nuclei_llvm`` and ``nuclei_gnu`` support this variable, you can change it like this ``COMPILE_PREFIX=/path/to/newgcc/bin/riscv64-unknown-elf-`` when do make command
-  - Add **AUTOVEC** make variable, when **AUTOVEC=0**, it will disable auto vectorization as much as possible, this is useful for some application which require no auto vectorization
+  - Add :ref:`develop_buildsystem_var_autovec` make variable, when **AUTOVEC=0**, it will disable auto vectorization as much as possible, this is useful for some application which require no auto vectorization
 
 * Tools
 
