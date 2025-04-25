@@ -343,6 +343,11 @@ configuration:
     type: checkbox
     tips: "If semihosting is enabled, c library stub source files will not be copied"
     description: Enable Semihosting
+  autovec:
+    default_value: 1
+    type: checkbox
+    tips: "It autovec is enabled, compiler will enable auto vectorization according to compiler options, otherwise, it will try to disable auto vectorization as much as possible"
+    description: Enable Compiler Auto Vectorization
   stdclib:
     default_value: newlib_nano
     type: choice
@@ -489,6 +494,8 @@ buildconfig:
         condition: $( contains(${nuclei_archext}, "zc"))
       - flags: -isystem =/include/libncrt
         condition: $( startswith(${stdclib}, "libncrt") )
+      - flags: -fno-tree-vectorize -fno-tree-loop-vectorize -fno-tree-slp-vectorize
+        condition: $( ${autovec} == 0)
     ldflags:
       - flags: -lstdc++
         condition: $( startswith(${stdclib}, "newlib") )
@@ -525,6 +532,8 @@ buildconfig:
       - flags: -menable-experimental-extensions
       - flags: -isystem =/include/libncrt
         condition: $( startswith(${stdclib}, "libncrt") )
+      - flags: -fno-vectorize -fno-slp-vectorize
+        condition: $( ${autovec} == 0)
     ldflags:
       - flags: -lstdc++
         condition: $( startswith(${stdclib}, "newlib") )
@@ -561,6 +570,8 @@ buildconfig:
       - flags: -menable-experimental-extensions
       - flags: -mtune=${nuclei_core.tune}
         condition: $( ${nuclei_core.tune} != "" )
+      - flags: -fno-vectorize -fno-slp-vectorize
+        condition: $( ${autovec} == 0)
     ldflags:
       - flags: -lc++ -lunwind
         condition: $( startswith(${stdclib}, "newlib") )
