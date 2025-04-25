@@ -3637,7 +3637,7 @@ static BaseType_t prvCreateIdleTasks( void )
         #endif /* configSUPPORT_STATIC_ALLOCATION */
 
         /* Break the loop if any of the idle task is failed to be created. */
-        if( xReturn == pdFAIL )
+        if( xReturn != pdPASS )
         {
             break;
         }
