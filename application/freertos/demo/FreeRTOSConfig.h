@@ -87,7 +87,7 @@ your application. */
 #define configMAX_PRIORITIES                    4
 #define configMINIMAL_STACK_SIZE                256
 #define configMAX_TASK_NAME_LEN                 16
-#define configUSE_16_BIT_TICKS                  0
+#define configTICK_TYPE_WIDTH_IN_BITS           TICK_TYPE_WIDTH_64_BITS
 #define configIDLE_SHOULD_YIELD                 0
 #define configUSE_TASK_NOTIFICATIONS            1
 #define configUSE_MUTEXES                       1
