@@ -54,6 +54,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
 
   - Add S-Mode RT-Thread support which rely on TEE feature, SSTC feature is preferred
   - Update FreeRTOS port to use ``configTICK_TYPE_WIDTH_IN_BITS`` instead of ``configUSE_16_BIT_TICKS``
+  - Cherry-pick a FreeRTOS incorrect error checking of prvCreateIdleTasks fix, see https://github.com/FreeRTOS/FreeRTOS-Kernel/commit/a49c35b5dc0f1f521eef3ef993d401af7f26f439
 
 * Build System
 
