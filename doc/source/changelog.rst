@@ -39,6 +39,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Add more documentation for :ref:`design_app_demo_dsp` example
   - Optimize :ref:`design_app_smphello` spinlock usage and update doc for it
   - Optimize :ref:`design_app_demo_profiling` example execution speed on hw from about 5min to 30s by decease the loop count
+  - Update ``freertos/demo`` example to use ``configTICK_TYPE_WIDTH_IN_BITS`` instead of ``configUSE_16_BIT_TICKS``
 
 * SoC
 
@@ -52,6 +53,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
 * RTOS
 
   - Add S-Mode RT-Thread support which rely on TEE feature, SSTC feature is preferred
+  - Update FreeRTOS port to use ``configTICK_TYPE_WIDTH_IN_BITS`` instead of ``configUSE_16_BIT_TICKS``
 
 * Build System
 
