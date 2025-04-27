@@ -63,6 +63,11 @@ extern "C" {
 #define CFG_HAS_ICACHE
 #define CFG_HAS_DCACHE
 
+// When PLIC present or TEE present, S-Mode also present
+#if defined(CFG_HAS_PLIC) || defined(CFG_HAS_TEE)
+#define CFG_HAS_SMODE
+#endif
+
 // CCM default still set to 0, you can uncomment it when it really exist
 // #define CFG_HAS_IOCC
 #define CFG_ILM_BASE_ADDR           (0x80000000UL)

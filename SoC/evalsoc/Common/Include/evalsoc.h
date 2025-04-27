@@ -465,6 +465,12 @@ extern volatile unsigned long CpuIRegionBase;
 #define __HPM_VER                   CFG_HPM_VER
 #endif
 
+// SMODE Configuration
+// To enable S-Mode, just define macro CFG_HAS_SMODE in cpufeature.h
+#ifdef CFG_HAS_SMODE
+#define __SMODE_PRESENT             1
+#endif
+
 // NICE Configuration
 // To enable NICE, just define macro CFG_HAS_NICE in cpufeature.h
 #ifdef CFG_HAS_NICE
