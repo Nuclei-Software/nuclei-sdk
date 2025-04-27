@@ -1,4 +1,7 @@
 /* See LICENSE of license details. */
+// If you want to enable GNU extensions, please define _GNU_SOURCE
+// Enable POSIX-1.2008 with BSD and SVr4 extensions via _DEFAULT_SOURCE
+#define _DEFAULT_SOURCE
 #include <stdint.h>
 #include <errno.h>
 #include <unistd.h>

@@ -49,6 +49,8 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Fix ``#endif`` not placed correctly when XLCFG_TEE=1 and CODESIZE=1 in system_evalsoc.c
   - Only initialize ECLIC SMode related registers when TEE really present for evalsoc
   - Place default vector entry for vector_table_s when SSTC present for evalsoc
+  - Add ``#define _DEFAULT_SOURCE`` in all SoC's newlibc stub implementation to use BSD Standard API when compiler c standard is not gnu c standard ``-std=gnu23``,
+    such as ``-std=c23``, to fix compiler error ``error: implicit declaration of function 'TIMEVAL_TO_TIMESPEC' [-Wimplicit-function-declaration]``
 
 * RTOS
 
