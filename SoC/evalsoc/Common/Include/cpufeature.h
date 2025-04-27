@@ -64,7 +64,7 @@ extern "C" {
 #define CFG_HAS_DCACHE
 
 // When PLIC present or TEE present, S-Mode also present
-#if defined(CFG_HAS_PLIC) || defined(CFG_HAS_TEE)
+#if defined(CFG_HAS_PLIC) || defined(CFG_HAS_TEE) || defined(CFG_HAS_ISA_SSTC)
 #define CFG_HAS_SMODE
 #endif
 

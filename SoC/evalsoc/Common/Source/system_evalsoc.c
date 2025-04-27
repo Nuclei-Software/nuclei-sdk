@@ -72,11 +72,12 @@
  * @{
  */
 
-#if (defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)) || (defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1))
+#if (defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1))
 extern void exc_entry_s(void);
 /* default s-mode exception handler, which user can modify it at your need */
 static void system_default_exception_handler_s(unsigned long scause, unsigned long sp);
 #endif
+static void system_default_exception_handler(unsigned long mcause, unsigned long sp);
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
 
@@ -94,25 +95,18 @@ extern void eclic_ssip_handler(void) __WEAK;
 extern void eclic_stip_handler(void) __WEAK;
 #else
 /** eclic s-mode software interrupt handler in eclic mode */
-__WEAK __SUPERVISOR_INTERRUPT void eclic_ssip_handler(void)
-{
-
-}
+__WEAK __SUPERVISOR_INTERRUPT void eclic_ssip_handler(void) { }
 /** eclic s-mode time interrupt handler in eclic mode */
-__WEAK __SUPERVISOR_INTERRUPT __WEAK void eclic_stip_handler(void)
-{
-
-}
+__WEAK __SUPERVISOR_INTERRUPT __WEAK void eclic_stip_handler(void)  { }
 #endif
 
-
+// TODO: change the aligned(512) to match stvt alignment requirement according to your eclic max interrupt number
+// TODO: place your interrupt handler into this vector table, important if your vector table is in flash
 #ifndef __ICCRISCV__
 #define __SMODE_VECTOR_ATTR   __attribute__((section (".text.vtable_s"), aligned(512)))
 #else
 #define __SMODE_VECTOR_ATTR   __attribute__((section (".sintvec"), aligned(512)))
 #endif
-// TODO: change the aligned(512) to match stvt alignment requirement according to your eclic max interrupt number
-// TODO: place your interrupt handler into this vector table, important if your vector table is in flash
 /**
  * \var unsigned long vector_table_s[SOC_INT_MAX]
  * \brief vector interrupt storing ISRs for supervisor mode
@@ -168,6 +162,7 @@ const unsigned long vector_table_s[SOC_INT_MAX] __SMODE_VECTOR_ATTR =
 /* TODO other external interrupt handler don't provide default value, if you want to provide default value, please do it by yourself */
 };
 #endif
+
 /*----------------------------------------------------------------------------
   System Core Clock Variable
  *----------------------------------------------------------------------------*/
@@ -234,22 +229,6 @@ void SystemInit(void)
  *
  * @{
  */
-/** \brief Max exception handler number, don't include the NMI(0xFFF) one */
-#define MAX_SYSTEM_EXCEPTION_NUM        26
-/**
- * \brief      Store the exception handlers for each exception ID
- * \note
- * - This SystemExceptionHandlers are used to store all the handlers for all
- * the exception codes Nuclei N/NX core provided.
- * - Exception code 0 - 25, totally 26 exceptions are mapped to SystemExceptionHandlers[0:25]
- * - Exception for NMI is also re-routed to exception handling(exception code 0xFFF) in startup code configuration, the handler itself is mapped to SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM]
- */
-static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM + 1];
-
-#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
-static unsigned long SystemMExtInterruptHandlers[__PLIC_INTNUM];
-static unsigned long SystemSExtInterruptHandlers[__PLIC_INTNUM];
-#endif
 
 /**
  * \brief      Exception Handler Function Typedef
@@ -260,223 +239,50 @@ static unsigned long SystemSExtInterruptHandlers[__PLIC_INTNUM];
 typedef void (*EXC_HANDLER)(unsigned long cause, unsigned long sp);
 typedef void (*INT_HANDLER)(unsigned long cause, unsigned long sp);
 
-#define SYSTEM_CORE_INTNUM      12 // 0-11 stop at machine external interrupt
-static unsigned long SystemCoreInterruptHandlers[SYSTEM_CORE_INTNUM];
-static unsigned long SystemCoreInterruptHandlers_S[SYSTEM_CORE_INTNUM];
+/** \brief Max exception handler number, don't include the NMI(0xFFF) one */
+#define MAX_SYSTEM_EXCEPTION_NUM        20
+/**
+ * \brief      Store the exception handlers for each exception ID
+ * \note
+ * - This SystemExceptionHandlers are used to store all the handlers for all
+ * the exception codes Nuclei N/NX core provided.
+ * - Exception code 0 - 19, totally 20 exceptions are mapped to SystemExceptionHandlers[0:19]
+ * - Exception for NMI is also re-routed to exception handling(exception code 0xFFF) in startup code configuration, the handler itself is mapped to SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM]
+ */
+static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM + 1];
+
+#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
+static unsigned long SystemMExtInterruptHandlers[__PLIC_INTNUM];
+#endif
+
+#define SYSTEM_CORE_INTNUM      16 // >=16 Designated for platform use
 
 static void system_mmode_extirq_handler(unsigned long exccode, unsigned long sp);
-static void system_smode_extirq_handler(unsigned long exccode, unsigned long sp);
 static void core_interrupt_handler(unsigned long exccode, unsigned long sp);
-static void core_interrupt_handler_s(unsigned long exccode, unsigned long sp);
+static unsigned long SystemCoreInterruptHandlers[SYSTEM_CORE_INTNUM];
 
 uint32_t core_exception_handler(unsigned long mcause, unsigned long sp);
 static INT_HANDLER system_core_interrupt_handler = NULL;
-static INT_HANDLER system_core_interrupt_handler_s = NULL;
 
 /**
  * \brief      Store the exception handlers for each exception ID in supervisor mode
  * \note
  * - This SystemExceptionHandlers_S are used to store all the handlers for all
  * the exception codes Nuclei N/NX core provided.
- * - Exception code 0 - 11, totally 12 exceptions are mapped to SystemExceptionHandlers_S[0:11]
- * - The NMI (Non-maskable-interrupt) cannot be trapped to the supervisor-mode or user-mode for any configuration
+ * - Exception code 0 - 19, totally 20 exceptions are mapped to SystemExceptionHandlers_S[0:19]
  */
-#if (defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)) || (defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1))
+#if (defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1))
 static unsigned long SystemExceptionHandlers_S[MAX_SYSTEM_EXCEPTION_NUM];
-#endif
 
-/**
- * \brief      System Default Exception Handler
- * \details
- * This function provides a default exception and NMI handler for all exception ids.
- * By default, It will just print some information for debug, Vendor can customize it according to its requirements.
- * \param [in]  mcause    code indicating the reason that caused the trap in machine mode
- * \param [in]  sp        stack pointer
- */
-static void system_default_exception_handler(unsigned long mcause, unsigned long sp)
-{
-#if defined(CODESIZE) && (CODESIZE == 1)
-
-#else
-    NSDK_DEBUG("MCAUSE : 0x%lx\r\n", mcause);
-    NSDK_DEBUG("MDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_MDCAUSE));
-    NSDK_DEBUG("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
-    NSDK_DEBUG("MTVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
-    NSDK_DEBUG("HARTID : %u\r\n", (unsigned int)__get_hart_id());
-    Exception_DumpFrame(sp, PRV_M);
-#if defined(SIMULATION_MODE)
-    // directly exit if in SIMULATION
-    extern void simulation_exit(int status);
-    simulation_exit(1);
-#else
-    while (1);
-#endif
-#endif
-}
-
-/**
- * \brief      m-mode System Default Interrupt Handler for CLINT/PLIC Interrupt Mode
- * \details
- * This function provided a default interrupt handling code for all interrupt ids.
- */
-static void system_default_interrupt_handler(unsigned long mcause, unsigned long sp)
-{
-#if defined(CODESIZE) && (CODESIZE == 1)
-
-#else
-    NSDK_DEBUG("Trap in Interrupt\r\n");
-    NSDK_DEBUG("MCAUSE: 0x%lx\r\n", mcause);
-    NSDK_DEBUG("MEPC  : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
-    NSDK_DEBUG("MTVAL : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
-#endif
-}
-
-/**
- * \brief      s-mode System Default Interrupt Handler for CLINT/PLIC Interrupt Mode
- * \details
- * This function provided a default interrupt handling code for all interrupt ids.
- */
-static void system_default_interrupt_handler_s(unsigned long scause, unsigned long sp)
-{
-#if defined(CODESIZE) && (CODESIZE == 1)
-
-#else
-    NSDK_DEBUG("Trap in S-Mode Interrupt\r\n");
-    NSDK_DEBUG("SCAUSE: 0x%lx\r\n", scause);
-    NSDK_DEBUG("SEPC  : 0x%lx\r\n", __RV_CSR_READ(CSR_SEPC));
-    NSDK_DEBUG("STVAL : 0x%lx\r\n", __RV_CSR_READ(CSR_STVAL));
-#endif
-}
-
-/**
- * \brief      Initialize all the default core exception handlers
- * \details
- * The core exception handler for each exception id will be initialized to \ref system_default_exception_handler.
- * \note
- * Called in \ref _init function, used to initialize default exception handlers for all exception IDs
- * SystemExceptionHandlers contains NMI, but SystemExceptionHandlers_S not, because NMI can't be delegated to S-mode.
- */
-static void Exception_Init(void)
-{
-#if defined(CODESIZE) && (CODESIZE == 1)
-    // TODO when CODESIZE macro is defined
-    // the exception handler table for m/s mode will not be initialized
-    // since all the exception handlers will not be classified, and just
-    // goto core_exception_handler or core_exception_handler_s for m/s exception
-#else
-    for (int i = 0; i < MAX_SYSTEM_EXCEPTION_NUM; i++) {
-        SystemExceptionHandlers[i] = (unsigned long)system_default_exception_handler;
-#if (defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)) || (defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1))
-        SystemExceptionHandlers_S[i] = (unsigned long)system_default_exception_handler_s;
-#endif
-    }
-    SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] = (unsigned long)system_default_exception_handler;
-#endif
-}
-
-/**
- * \brief       Register an core interrupt handler for core interrupt number
- * \details
- * * For irqn <=  10, it will be registered into SystemCoreInterruptHandlers[irqn-1].
- * \param   irqn    See \ref IRQn
- * \param   int_handler     The core interrupt handler for this interrupt code irqn
- * \remarks
- *          You can only use it when you are not in ECLIC interrupt mode.
- */
-void Interrupt_Register_CoreIRQ(uint32_t irqn, unsigned long int_handler)
-{
-    if ((irqn < SYSTEM_CORE_INTNUM) && (irqn >= 0)) {
-        SystemCoreInterruptHandlers[irqn] = int_handler;
-    }
-}
-
-/**
- * \brief       Register an m-mode external interrupt handler for plic external interrupt number
- * \details
- * * For irqn <= \ref __PLIC_INTNUM, it will be registered into SystemMExtInterruptHandlers[irqn-1].
- * \param   irqn    See \ref IRQn
- * \param   int_handler     The external interrupt handler for this interrupt code irqn
- * \remarks
- *          You can only use it when you are in PLIC interrupt mode.
- */
-void Interrupt_Register_ExtIRQ(uint32_t irqn, unsigned long int_handler)
-{
+static void system_default_interrupt_handler_s(unsigned long scause, unsigned long sp);
+static void system_smode_extirq_handler(unsigned long exccode, unsigned long sp);
+static void core_interrupt_handler_s(unsigned long exccode, unsigned long sp);
+static INT_HANDLER system_core_interrupt_handler_s = NULL;
+static unsigned long SystemCoreInterruptHandlers_S[SYSTEM_CORE_INTNUM];
 #if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
-    if ((irqn < __PLIC_INTNUM) && (irqn >= 0)) {
-        SystemMExtInterruptHandlers[irqn] = int_handler;
-    }
+static unsigned long SystemSExtInterruptHandlers[__PLIC_INTNUM];
 #endif
-}
-
-/**
- * \brief       Register an s-mode external interrupt handler for plic external interrupt number
- * \details
- * * For irqn <= \ref __PLIC_INTNUM, it will be registered into SystemSExtInterruptHandlers[irqn-1].
- * \param   irqn    See \ref IRQn
- * \param   int_handler     The external interrupt handler for this interrupt code irqn
- * \remarks
- *          You can only use it when you are in PLIC interrupt mode.
- */
-void Interrupt_Register_ExtIRQ_S(uint32_t irqn, unsigned long int_handler)
-{
-#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
-    if ((irqn < __PLIC_INTNUM) && (irqn >= 0)) {
-        SystemSExtInterruptHandlers[irqn] = int_handler;
-    }
 #endif
-}
-
-/**
- * \brief       Get an core interrupt handler for core interrupt number
- * \param   irqn    See \ref IRQn
- * \return
- * The core interrupt handler for this interrupt code irqn
- * \remarks
- *          You can only use it when you are not in ECLIC interrupt mode.
- */
-unsigned long Interrupt_Get_CoreIRQ(uint32_t irqn)
-{
-    if ((irqn < SYSTEM_CORE_INTNUM) && (irqn >= 0)) {
-        return SystemCoreInterruptHandlers[irqn];
-    }
-    return 0;
-}
-
-/**
- * \brief       Get an m-mode external interrupt handler for external interrupt number
- * \param   irqn    See \ref IRQn
- * \return
- * The external interrupt handler for this interrupt code irqn
- * \remarks
- *          You can only use it when you are in PLIC interrupt mode.
- */
-unsigned long Interrupt_Get_ExtIRQ(uint32_t irqn)
-{
-#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
-    if ((irqn < __PLIC_INTNUM) && (irqn >= 0)) {
-        return SystemMExtInterruptHandlers[irqn];
-    }
-#endif
-    return 0;
-}
-
-/**
- * \brief       Get an s-mode external interrupt handler for external interrupt number
- * \param   irqn    See \ref IRQn
- * \return
- * The external interrupt handler for this interrupt code irqn
- * \remarks
- *          You can only use it when you are in PLIC interrupt mode.
- */
-unsigned long Interrupt_Get_ExtIRQ_S(uint32_t irqn)
-{
-#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
-    if ((irqn < __PLIC_INTNUM) && (irqn >= 0)) {
-        return SystemSExtInterruptHandlers[irqn];
-    }
-#endif
-    return 0;
-}
 
 /**
  * \brief      Dump Exception Frame
@@ -515,95 +321,53 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 }
 
 /**
- * \brief       Register an exception handler for exception code EXCn
+ * \brief      M-Mode System Default Exception Handler
  * \details
- * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers[EXCn-1].
- * - For EXCn == NMI_EXCn, it will be registered into SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM].
- * \param [in]  EXCn    See \ref EXCn_Type
- * \param [in]  exc_handler     The exception handler for this exception code EXCn
+ * This function provides a default exception and NMI handler for all exception ids.
+ * By default, It will just print some information for debug, Vendor can customize it according to its requirements.
+ * \param [in]  mcause    code indicating the reason that caused the trap in machine mode
+ * \param [in]  sp        stack pointer
  */
-void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
+static void system_default_exception_handler(unsigned long mcause, unsigned long sp)
 {
 #if defined(CODESIZE) && (CODESIZE == 1)
 
 #else
-    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
-        SystemExceptionHandlers[EXCn] = exc_handler;
-    } else if (EXCn == NMI_EXCn) {
-        SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] = exc_handler;
-    }
+    NSDK_DEBUG("MCAUSE : 0x%lx\r\n", mcause);
+    NSDK_DEBUG("MDCAUSE: 0x%lx\r\n", __RV_CSR_READ(CSR_MDCAUSE));
+    NSDK_DEBUG("MEPC   : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
+    NSDK_DEBUG("MTVAL  : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
+    NSDK_DEBUG("HARTID : %u\r\n", (unsigned int)__get_hart_id());
+    Exception_DumpFrame(sp, PRV_M);
+#if defined(SIMULATION_MODE)
+    // directly exit if in SIMULATION
+    extern void simulation_exit(int status);
+    simulation_exit(1);
+#else
+    while (1);
+#endif
 #endif
 }
 
 /**
- * \brief       Get current exception handler for exception code EXCn
+ * \brief      M-Mode System Default Interrupt Handler for CLINT/PLIC Interrupt Mode
  * \details
- * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers[EXCn-1].
- * - For EXCn == NMI_EXCn, it will return SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM].
- * \param [in]  EXCn    See \ref EXCn_Type
- * \return  Current exception handler for exception code EXCn, if not found, return 0.
+ * This function provided a default interrupt handling code for all interrupt ids.
  */
-unsigned long Exception_Get_EXC(uint32_t EXCn)
+static void system_default_interrupt_handler(unsigned long mcause, unsigned long sp)
 {
 #if defined(CODESIZE) && (CODESIZE == 1)
-    return 0;
+
 #else
-    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
-        return SystemExceptionHandlers[EXCn];
-    } else if (EXCn == NMI_EXCn) {
-        return SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
-    } else {
-        return 0;
-    }
+    NSDK_DEBUG("Trap in Interrupt\r\n");
+    NSDK_DEBUG("MCAUSE: 0x%lx\r\n", mcause);
+    NSDK_DEBUG("MEPC  : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
+    NSDK_DEBUG("MTVAL : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
 #endif
 }
 
 /**
- * \brief      M-Mode external interrupt handler common entry for plic interrupt mode
- * \details
- * This function provide common entry for m-mode external interrupt for plic interrupt mode.
- * \param [in]  exccode   exception code indicating the reason that caused the trap in machine mode
- * \param [in]  sp        stack pointer
- */
-static void system_mmode_extirq_handler(unsigned long exccode, unsigned long sp)
-{
-#if defined(__PLIC_PRESENT) && __PLIC_PRESENT == 1
-    uint32_t irqn = PLIC_ClaimInterrupt();
-    INT_HANDLER int_handler = NULL;
-    if (irqn < __PLIC_INTNUM) {
-        int_handler = (INT_HANDLER)(SystemMExtInterruptHandlers[irqn]);
-        if (int_handler != NULL) {
-            int_handler(exccode, sp);
-        }
-    }
-    PLIC_CompleteInterrupt(irqn);
-#endif
-}
-
-/**
- * \brief      S-Mode external interrupt handler common entry for plic interrupt mode
- * \details
- * This function provide common entry for s-mode external interrupt for plic interrupt mode.
- * \param [in]  exccode   exception code indicating the reason that caused the trap in supervisor mode
- * \param [in]  sp        stack pointer
- */
-static void system_smode_extirq_handler(unsigned long exccode, unsigned long sp)
-{
-#if defined(__PLIC_PRESENT) && __PLIC_PRESENT == 1
-    uint32_t irqn = PLIC_ClaimInterrupt_S();
-    INT_HANDLER int_handler = NULL;
-    if (irqn < __PLIC_INTNUM) {
-        int_handler = (INT_HANDLER)(SystemSExtInterruptHandlers[irqn]);
-        if (int_handler != NULL) {
-            int_handler(exccode, sp);
-        }
-    }
-    PLIC_CompleteInterrupt_S(irqn);
-#endif
-}
-
-/**
- * \brief      Common Interrupt handler entry when in clint/plic mode
+ * \brief      M-Mode Common Interrupt handler entry when in clint/plic mode
  * \details
  * This function provided a command entry for interrupt in clint/plic mode
  * \param [in]  exccode   Exception Code
@@ -624,29 +388,7 @@ static void core_interrupt_handler(unsigned long exccode, unsigned long sp)
 }
 
 /**
- * \brief     S-Mode Common Interrupt handler entry when in clint/plic mode
- * \details
- * This function provided a command entry for interrupt in clint/plic mode
- * \param [in]  exccode   Exception Code
- * \param [in]  sp        stack pointer
- * \remarks
- * - This is not used for clic interrupt mode, which is only used for clint/plic interrupt mode,
- *   you should call \ref CLINT_Interrupt_Init or \ref PLIC_Interrupt_Init first to make sure this handler entry registered
- * - If you are not in eclic interrupt mode, please use please use \ref Interrupt_Register_CoreIRQ to register internal interrupt
- *   and use \ref Interrupt_Register_ExtIRQ to register external interrupt
- */
-static void core_interrupt_handler_s(unsigned long exccode, unsigned long sp)
-{
-    INT_HANDLER int_handler = NULL;
-    int_handler = (INT_HANDLER)(SystemCoreInterruptHandlers_S[exccode]);
-    if (int_handler != NULL) {
-        int_handler(exccode, sp);
-    }
-}
-
-
-/**
- * \brief      Common NMI/Exception/Interrupt handler entry
+ * \brief     M-Mode Common NMI/Exception/Interrupt handler entry
  * \details
  * This function provided a command entry for NMI and exception. Silicon Vendor could modify
  * this template implementation according to requirement.
@@ -694,7 +436,168 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
 #endif
 }
 
-#if (defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)) || (defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1))
+/**
+ * \brief      M-Mode external interrupt handler common entry for plic interrupt mode
+ * \details
+ * This function provide common entry for m-mode external interrupt for plic interrupt mode.
+ * \param [in]  exccode   exception code indicating the reason that caused the trap in machine mode
+ * \param [in]  sp        stack pointer
+ */
+static void system_mmode_extirq_handler(unsigned long exccode, unsigned long sp)
+{
+#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
+    uint32_t irqn = PLIC_ClaimInterrupt();
+    INT_HANDLER int_handler = NULL;
+    if (irqn < __PLIC_INTNUM) {
+        int_handler = (INT_HANDLER)(SystemMExtInterruptHandlers[irqn]);
+        if (int_handler != NULL) {
+            int_handler(exccode, sp);
+        }
+    }
+    PLIC_CompleteInterrupt(irqn);
+#endif
+}
+
+/**
+ * \brief       Register a m-mode core interrupt handler for core interrupt number
+ * \details
+ * * For irqn <=  SYSTEM_CORE_INTNUM, it will be registered into SystemCoreInterruptHandlers[irqn-1], only used in non-eclic mode.
+ * \param   irqn    See \ref IRQn
+ * \param   int_handler     The core interrupt handler for this interrupt code irqn
+ * \remarks
+ *          You can only use it when you are not in ECLIC interrupt mode.
+ */
+void Interrupt_Register_CoreIRQ(uint32_t irqn, unsigned long int_handler)
+{
+    if ((irqn < SYSTEM_CORE_INTNUM) && (irqn >= 0)) {
+        SystemCoreInterruptHandlers[irqn] = int_handler;
+    }
+}
+
+/**
+ * \brief       Get a m-mode core interrupt handler for core interrupt number
+ * \param   irqn    See \ref IRQn
+ * \return
+ * The core interrupt handler for this interrupt code irqn, only used in non-eclic mode.
+ * \remarks
+ *          You can only use it when you are not in ECLIC interrupt mode.
+ */
+unsigned long Interrupt_Get_CoreIRQ(uint32_t irqn)
+{
+    if ((irqn < SYSTEM_CORE_INTNUM) && (irqn >= 0)) {
+        return SystemCoreInterruptHandlers[irqn];
+    }
+    return 0;
+}
+
+/**
+ * \brief       Register a m-mode external interrupt handler for plic external interrupt number
+ * \details
+ * * For irqn <= \ref __PLIC_INTNUM, it will be registered into SystemMExtInterruptHandlers[irqn-1].
+ * \param   irqn    See \ref IRQn
+ * \param   int_handler     The external interrupt handler for this interrupt code irqn
+ * \remarks
+ *          You can only use it when you are in PLIC interrupt mode.
+ */
+void Interrupt_Register_ExtIRQ(uint32_t irqn, unsigned long int_handler)
+{
+#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
+    if ((irqn < __PLIC_INTNUM) && (irqn >= 0)) {
+        SystemMExtInterruptHandlers[irqn] = int_handler;
+    }
+#endif
+}
+
+/**
+ * \brief       Get a m-mode external interrupt handler for external interrupt number
+ * \param   irqn    See \ref IRQn
+ * \return
+ * The external interrupt handler for this interrupt code irqn
+ * \remarks
+ *          You can only use it when you are in PLIC interrupt mode.
+ */
+unsigned long Interrupt_Get_ExtIRQ(uint32_t irqn)
+{
+#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
+    if ((irqn < __PLIC_INTNUM) && (irqn >= 0)) {
+        return SystemMExtInterruptHandlers[irqn];
+    }
+#endif
+    return 0;
+}
+
+
+/**
+ * \brief       Register a m-mode exception handler for exception code EXCn
+ * \details
+ * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers[EXCn-1].
+ * - For EXCn == NMI_EXCn, it will be registered into SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM].
+ * \param [in]  EXCn    See \ref EXCn_Type
+ * \param [in]  exc_handler     The exception handler for this exception code EXCn
+ */
+void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
+{
+#if defined(CODESIZE) && (CODESIZE == 1)
+
+#else
+    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
+        SystemExceptionHandlers[EXCn] = exc_handler;
+    } else if (EXCn == NMI_EXCn) {
+        SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] = exc_handler;
+    }
+#endif
+}
+
+/**
+ * \brief       Get current m-mode exception handler for exception code EXCn
+ * \details
+ * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers[EXCn-1].
+ * - For EXCn == NMI_EXCn, it will return SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM].
+ * \param [in]  EXCn    See \ref EXCn_Type
+ * \return  Current exception handler for exception code EXCn, if not found, return 0.
+ */
+unsigned long Exception_Get_EXC(uint32_t EXCn)
+{
+#if defined(CODESIZE) && (CODESIZE == 1)
+    return 0;
+#else
+    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
+        return SystemExceptionHandlers[EXCn];
+    } else if (EXCn == NMI_EXCn) {
+        return SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
+    } else {
+        return 0;
+    }
+#endif
+}
+
+/**
+ * \brief      Initialize all the default core exception handlers
+ * \details
+ * The core exception handler for each exception id will be initialized to \ref system_default_exception_handler.
+ * \note
+ * Called in \ref _init function, used to initialize default exception handlers for all exception IDs
+ * SystemExceptionHandlers contains NMI, but SystemExceptionHandlers_S not, because NMI can't be delegated to S-mode.
+ */
+static void Exception_Init(void)
+{
+#if defined(CODESIZE) && (CODESIZE == 1)
+    // TODO when CODESIZE macro is defined
+    // the exception handler table for m/s mode will not be initialized
+    // since all the exception handlers will not be classified, and just
+    // goto core_exception_handler or core_exception_handler_s for m/s exception
+#else
+    for (int i = 0; i < MAX_SYSTEM_EXCEPTION_NUM; i++) {
+        SystemExceptionHandlers[i] = (unsigned long)system_default_exception_handler;
+#if (defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1))
+        SystemExceptionHandlers_S[i] = (unsigned long)system_default_exception_handler_s;
+#endif
+    }
+    SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] = (unsigned long)system_default_exception_handler;
+#endif
+}
+
+#if (defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1))
 /**
  * \brief      Supervisor mode system Default Exception Handler
  * \details
@@ -724,41 +627,64 @@ static void system_default_exception_handler_s(unsigned long scause, unsigned lo
 }
 
 /**
- * \brief       Register an exception handler for exception code EXCn of supervisor mode
+ * \brief      s-mode System Default Interrupt Handler for CLINT/PLIC Interrupt Mode
  * \details
- * -For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers_S[EXCn-1].
- * -For EXCn == NMI_EXCn, The NMI (Non-maskable-interrupt) cannot be trapped to the supervisor-mode or user-mode for any
- *    configuration, so NMI won't be registered into SystemExceptionHandlers_S.
- * \param [in]  EXCn            See \ref EXCn_Type
- * \param [in]  exc_handler     The exception handler for this exception code EXCn
+ * This function provided a default interrupt handling code for all interrupt ids.
  */
-void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler)
+static void system_default_interrupt_handler_s(unsigned long scause, unsigned long sp)
 {
 #if defined(CODESIZE) && (CODESIZE == 1)
+
 #else
-    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
-        SystemExceptionHandlers_S[EXCn] = exc_handler;
+    NSDK_DEBUG("Trap in S-Mode Interrupt\r\n");
+    NSDK_DEBUG("SCAUSE: 0x%lx\r\n", scause);
+    NSDK_DEBUG("SEPC  : 0x%lx\r\n", __RV_CSR_READ(CSR_SEPC));
+    NSDK_DEBUG("STVAL : 0x%lx\r\n", __RV_CSR_READ(CSR_STVAL));
+#endif
+}
+
+/**
+ * \brief     S-Mode Common Interrupt handler entry when in clint/plic mode
+ * \details
+ * This function provided a command entry for interrupt in clint/plic mode
+ * \param [in]  exccode   Exception Code
+ * \param [in]  sp        stack pointer
+ * \remarks
+ * - This is not used for clic interrupt mode, which is only used for clint/plic interrupt mode,
+ *   you should call \ref CLINT_Interrupt_Init or \ref PLIC_Interrupt_Init first to make sure this handler entry registered
+ * - If you are not in eclic interrupt mode, please use please use \ref Interrupt_Register_CoreIRQ to register internal interrupt
+ *   and use \ref Interrupt_Register_ExtIRQ to register external interrupt
+ */
+static void core_interrupt_handler_s(unsigned long exccode, unsigned long sp)
+{
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+    INT_HANDLER int_handler = NULL;
+    int_handler = (INT_HANDLER)(SystemCoreInterruptHandlers_S[exccode]);
+    if (int_handler != NULL) {
+        int_handler(exccode, sp);
     }
 #endif
 }
 
 /**
- * \brief       Get current exception handler for exception code EXCn of supervisor mode
+ * \brief      S-Mode external interrupt handler common entry for plic interrupt mode
  * \details
- * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers_S[EXCn-1].
- * \param [in]  EXCn    See \ref EXCn_Type
- * \return  Current exception handler for exception code EXCn, if not found, return 0.
+ * This function provide common entry for s-mode external interrupt for plic interrupt mode.
+ * \param [in]  exccode   exception code indicating the reason that caused the trap in supervisor mode
+ * \param [in]  sp        stack pointer
  */
-unsigned long Exception_Get_EXC_S(uint32_t EXCn)
+static void system_smode_extirq_handler(unsigned long exccode, unsigned long sp)
 {
-#if defined(CODESIZE) && (CODESIZE == 1)
-    return 0;
-#else
-    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
-        return SystemExceptionHandlers_S[EXCn];
-    } else {
-        return 0;
+#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
+    uint32_t irqn = PLIC_ClaimInterrupt_S();
+    INT_HANDLER int_handler = NULL;
+    if (irqn < __PLIC_INTNUM) {
+        int_handler = (INT_HANDLER)(SystemSExtInterruptHandlers[irqn]);
+        if (int_handler != NULL) {
+            int_handler(exccode, sp);
+        }
     }
+    PLIC_CompleteInterrupt_S(irqn);
 #endif
 }
 
@@ -802,6 +728,117 @@ uint32_t core_exception_handler_s(unsigned long scause, unsigned long sp)
     return 0;
 #endif
 }
+
+/**
+ * \brief       Register an exception handler for exception code EXCn of supervisor mode
+ * \details
+ * -For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will be registered into SystemExceptionHandlers_S[EXCn-1].
+ * -For EXCn == NMI_EXCn, The NMI (Non-maskable-interrupt) cannot be trapped to the supervisor-mode or user-mode for any
+ *    configuration, so NMI won't be registered into SystemExceptionHandlers_S.
+ * \param [in]  EXCn            See \ref EXCn_Type
+ * \param [in]  exc_handler     The exception handler for this exception code EXCn
+ */
+void Exception_Register_EXC_S(uint32_t EXCn, unsigned long exc_handler)
+{
+#if defined(CODESIZE) && (CODESIZE == 1)
+#else
+    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
+        SystemExceptionHandlers_S[EXCn] = exc_handler;
+    }
+#endif
+}
+
+/**
+ * \brief       Get current exception handler for exception code EXCn of supervisor mode
+ * \details
+ * - For EXCn < \ref MAX_SYSTEM_EXCEPTION_NUM, it will return SystemExceptionHandlers_S[EXCn-1].
+ * \param [in]  EXCn    See \ref EXCn_Type
+ * \return  Current exception handler for exception code EXCn, if not found, return 0.
+ */
+unsigned long Exception_Get_EXC_S(uint32_t EXCn)
+{
+#if defined(CODESIZE) && (CODESIZE == 1)
+    return 0;
+#else
+    if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
+        return SystemExceptionHandlers_S[EXCn];
+    } else {
+        return 0;
+    }
+#endif
+}
+
+/**
+ * \brief       Register an s-mode core interrupt handler for core interrupt number
+ * \details
+ * * For irqn <=  SYSTEM_CORE_INTNUM, it will be registered into SystemCoreInterruptHandlers[irqn-1], only used in non-eclic mode.
+ * \param   irqn    See \ref IRQn
+ * \param   int_handler     The core interrupt handler for this interrupt code irqn
+ * \remarks
+ *          You can only use it when you are not in ECLIC interrupt mode.
+ */
+void Interrupt_Register_CoreIRQ_S(uint32_t irqn, unsigned long int_handler)
+{
+    if ((irqn < SYSTEM_CORE_INTNUM) && (irqn >= 0)) {
+        SystemCoreInterruptHandlers_S[irqn] = int_handler;
+    }
+}
+
+/**
+ * \brief       Get a s-mode core interrupt handler for core interrupt number
+ * \param   irqn    See \ref IRQn
+ * \return
+ * The core interrupt handler for this interrupt code irqn, only used in non-eclic mode.
+ * \remarks
+ *          You can only use it when you are not in ECLIC interrupt mode.
+ */
+unsigned long Interrupt_Get_CoreIRQ_S(uint32_t irqn)
+{
+    if ((irqn < SYSTEM_CORE_INTNUM) && (irqn >= 0)) {
+        return SystemCoreInterruptHandlers_S[irqn];
+    }
+    return 0;
+}
+
+/**
+ * \brief       Register an s-mode external interrupt handler for plic external interrupt number
+ * \details
+ * * For irqn <= \ref __PLIC_INTNUM, it will be registered into SystemSExtInterruptHandlers[irqn-1].
+ * \param   irqn    See \ref IRQn
+ * \param   int_handler     The external interrupt handler for this interrupt code irqn
+ * \remarks
+ *          You can only use it when you are in PLIC interrupt mode.
+ */
+void Interrupt_Register_ExtIRQ_S(uint32_t irqn, unsigned long int_handler)
+{
+#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+    if ((irqn < __PLIC_INTNUM) && (irqn >= 0)) {
+        SystemSExtInterruptHandlers[irqn] = int_handler;
+    }
+#endif
+#endif
+}
+
+/**
+ * \brief       Get an s-mode external interrupt handler for external interrupt number
+ * \param   irqn    See \ref IRQn
+ * \return
+ * The external interrupt handler for this interrupt code irqn
+ * \remarks
+ *          You can only use it when you are in PLIC interrupt mode.
+ */
+unsigned long Interrupt_Get_ExtIRQ_S(uint32_t irqn)
+{
+#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+    if ((irqn < __PLIC_INTNUM) && (irqn >= 0)) {
+        return SystemSExtInterruptHandlers[irqn];
+    }
+#endif
+#endif
+    return 0;
+}
 #endif
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_ExceptionAndNMI */
@@ -818,6 +855,7 @@ void SystemBannerPrint(void)
     NSDK_DEBUG("CPU HartID: %u\r\n", (unsigned int)__get_hart_id());
 #endif
 }
+
 
 #if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
 extern unsigned long vector_base[];
@@ -900,15 +938,20 @@ void CLINT_Interrupt_Init(void)
     system_core_interrupt_handler = core_interrupt_handler;
     /* Set as CLINT interrupt mode */
     __RV_CSR_WRITE(CSR_MTVEC, (unsigned long)exc_entry);
-#if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     /*
      * Set supervisor exception entry stvec to exc_entry_s
      */
     __RV_CSR_WRITE(CSR_STVEC, (unsigned long)exc_entry_s);
     system_core_interrupt_handler_s = core_interrupt_handler_s;
 #endif
+    for (int i = 0; i < SYSTEM_CORE_INTNUM; i++) {
+        SystemCoreInterruptHandlers[i] = (unsigned long)system_default_interrupt_handler;
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+        SystemCoreInterruptHandlers_S[i] = (unsigned long)system_default_interrupt_handler_s;
+#endif
+    }
 }
-
 
 /**
  * \brief Do PLIC Interrupt configuration
@@ -919,23 +962,23 @@ void CLINT_Interrupt_Init(void)
  */
 void PLIC_Interrupt_Init(void)
 {
+    CLINT_Interrupt_Init();
 #if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
     int i;
     for (i = 0; i < __PLIC_INTNUM; i++) {
         SystemMExtInterruptHandlers[i] = (unsigned long)system_default_interrupt_handler;
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
         SystemSExtInterruptHandlers[i] = (unsigned long)system_default_interrupt_handler_s;
+#endif
     }
-    for (i = 0; i < SYSTEM_CORE_INTNUM; i++) {
-        SystemCoreInterruptHandlers[i] = (unsigned long)system_default_interrupt_handler;
-        SystemCoreInterruptHandlers_S[i] = (unsigned long)system_default_interrupt_handler_s;
-    }
+
     SystemCoreInterruptHandlers[9] = (unsigned long)system_mmode_extirq_handler;
     SystemCoreInterruptHandlers[11] = (unsigned long)system_mmode_extirq_handler;
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     SystemCoreInterruptHandlers_S[9] = (unsigned long)system_smode_extirq_handler;
     SystemCoreInterruptHandlers_S[11] = (unsigned long)system_smode_extirq_handler;
 #endif
-
-    CLINT_Interrupt_Init();
+#endif
 }
 
 /**
@@ -1013,9 +1056,9 @@ int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_
 #endif
 
 /**
- * \brief  Register a riscv core interrupt and register the handler
+ * \brief  Register a m-mode riscv core interrupt and register the handler
  * \details
- * This function set interrupt handler for core interrupt
+ * This function set interrupt handler for core interrupt in non-eclic mode
  * \param [in]  irqn        interrupt number
  * \param [in]  handler     interrupt handler, if NULL, handler will not be installed
  * \return       -1 means invalid input parameter. 0 means successful.
@@ -1046,6 +1089,43 @@ int32_t Core_Register_IRQ(uint32_t irqn, void *handler)
 
     return 0;
 }
+
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+/**
+ * \brief  Register a riscv s-mode core interrupt and register the handler
+ * \details
+ * This function set interrupt handler for core interrupt in non-eclic mode
+ * \param [in]  irqn        interrupt number
+ * \param [in]  handler     interrupt handler, if NULL, handler will not be installed
+ * \return       -1 means invalid input parameter. 0 means successful.
+ * \remarks
+ * - This function use to configure riscv core interrupt and register its interrupt handler and enable its interrupt.
+ * - You can only use it when you are not in eclic interrupt mode
+ */
+int32_t Core_Register_IRQ_S(uint32_t irqn, void *handler)
+{
+    if ((irqn > SYSTEM_CORE_INTNUM)) {
+        return -1;
+    }
+
+    if (handler != NULL) {
+        /* register interrupt handler entry to core handlers */
+        Interrupt_Register_CoreIRQ_S(irqn, (unsigned long)handler);
+    }
+    switch (irqn) {
+        case SysTimerSW_S_IRQn:
+            __enable_sw_irq_s();
+            break;
+        case SysTimer_S_IRQn:
+            __enable_timer_irq_s();
+            break;
+        default:
+            break;
+    }
+
+    return 0;
+}
+#endif
 
 #if defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
 /**
@@ -1078,6 +1158,7 @@ int32_t PLIC_Register_IRQ(uint32_t source, uint8_t priority, void *handler)
     return 0;
 }
 
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
 /**
  * \brief  Register a s-mode specific plic interrupt and register the handler
  * \details
@@ -1107,6 +1188,7 @@ int32_t PLIC_Register_IRQ_S(uint32_t source, uint8_t priority, void *handler)
     __enable_ext_irq_s();
     return 0;
 }
+#endif
 #endif
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
