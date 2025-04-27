@@ -51,6 +51,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Place default vector entry for vector_table_s when SSTC present for evalsoc
   - Add ``#define _DEFAULT_SOURCE`` in all SoC's newlibc stub implementation to use BSD Standard API when compiler c standard is not gnu c standard ``-std=gnu23``,
     such as ``-std=c23``, to fix compiler error ``error: implicit declaration of function 'TIMEVAL_TO_TIMESPEC' [-Wimplicit-function-declaration]``
+  - Add ``__SMODE_PRESENT`` macro in ``evalsoc.h`` to represent s-mode present or not
 
 * RTOS
 
