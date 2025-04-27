@@ -991,7 +991,7 @@ __STATIC_FORCEINLINE void __disable_timer_irq_s(void)
  */
 __STATIC_FORCEINLINE void __enable_sw_irq_s(void)
 {
-    __RV_CSR_SET(CSR_MIE, MIE_SSIE);
+    __RV_CSR_SET(CSR_SIE, MIE_SSIE);
 }
 
 /**
