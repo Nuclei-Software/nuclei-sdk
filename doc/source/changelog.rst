@@ -25,6 +25,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
     - ``unsigned long __read_instret_csr()``
     - ``unsigned long __read_time_csr()``
     - ``unsigned long __read_hpm_counter(unsigned long idx)``
+  - Fix ``__clear_core_irq_pending`` and ``__clear_core_irq_pending_s`` implementation in ``core_feature_base.h``
 
 * Application
 

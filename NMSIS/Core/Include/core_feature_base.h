@@ -914,7 +914,7 @@ __STATIC_FORCEINLINE uint32_t __get_core_irq_pending(uint32_t irq)
  */
 __STATIC_FORCEINLINE void __clear_core_irq_pending(uint32_t irq)
 {
-    __RV_CSR_SET(CSR_MIP, 1 << irq);
+    __RV_CSR_CLEAR(CSR_MIP, 1 << irq);
 }
 
 /**
@@ -1046,7 +1046,7 @@ __STATIC_FORCEINLINE uint32_t __get_core_irq_pending_s(uint32_t irq)
  */
 __STATIC_FORCEINLINE void __clear_core_irq_pending_s(uint32_t irq)
 {
-    __RV_CSR_SET(CSR_SIP, 1 << irq);
+    __RV_CSR_CLEAR(CSR_SIP, 1 << irq);
 }
 
 /**
