@@ -27,6 +27,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
     - ``unsigned long __read_hpm_counter(unsigned long idx)``
   - Fix ``__clear_core_irq_pending`` and ``__clear_core_irq_pending_s`` implementation in ``core_feature_base.h``
   - Fix ``__enable_sw_irq_s`` implementation in ``core_feature_base.h``
+  - Add PMA(Physical Memory Attribute) APIs for managing attribute type(Device/Non-Cacheable/Cacheable) of memory regions when **__PMA_PRESENT=1**
 
 * Application
 
@@ -42,6 +43,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Optimize :ref:`design_app_smphello` spinlock usage and update doc for it
   - Optimize :ref:`design_app_demo_profiling` example execution speed on hw from about 5min to 30s by decease the loop count
   - Update ``freertos/demo`` example to use ``configTICK_TYPE_WIDTH_IN_BITS`` instead of ``configUSE_16_BIT_TICKS``
+  - Add ``demo_pma`` case to show how to use PMA related API
 
 * SoC
 
