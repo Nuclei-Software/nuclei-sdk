@@ -63,11 +63,13 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Add S-Mode RT-Thread support which rely on TEE feature, SSTC feature is preferred
   - Update FreeRTOS port to use ``configTICK_TYPE_WIDTH_IN_BITS`` instead of ``configUSE_16_BIT_TICKS``
   - Cherry-pick a FreeRTOS incorrect error checking of prvCreateIdleTasks fix, see https://github.com/FreeRTOS/FreeRTOS-Kernel/commit/a49c35b5dc0f1f521eef3ef993d401af7f26f439
+  - Add ThreadX module support for both RISC-V 32 and 64 bit
 
 * Build System
 
   - Add **COMPILE_PREFIX** support for :ref:`develop_buildsystem_var_toolchain:` ``nuclei_llvm``, now both ``nuclei_llvm`` and ``nuclei_gnu`` support this variable, you can change it like this ``COMPILE_PREFIX=/path/to/newgcc/bin/riscv64-unknown-elf-`` when do make command
   - Add :ref:`develop_buildsystem_var_autovec` make variable, when **AUTOVEC=0**, it will disable auto vectorization as much as possible, this is useful for some application which require no auto vectorization
+  - Add ``GDB_UPLOAD_EXTRA_CMDS`` make variable to execute extra commands after upload elf file to target
 
 * Tools
 
