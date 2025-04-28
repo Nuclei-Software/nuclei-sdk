@@ -1172,6 +1172,63 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
     Current sp is 0x90000ee0, so it is in Supervisor Mode!
     [IN S-MODE SOFTWARE INTERRUPT]software interrupt end
 
+.. _design_app_demo_smode_plic:
+
+demo_smode_plic
+~~~~~~~~~~~~~~~
+
+This `demo_smode_plic application`_ is a bare metal program demonstrating the
+PLIC (Platform Level Interrupt Controller) functionality in RISC-V processor's
+S-Mode (Supervisor Mode). The program shows how to switch from M-Mode to S-Mode
+and handle UART interrupts in S-Mode.
+
+.. note::
+
+    * Ensure hardware supports required processor features
+    * It needs Nuclei CPU configured with PLIC, S-Mode and PMP
+    * Proper definitions in <Device>.h
+    * Need to enable PLIC in <Device.h> if PLIC present in CPU
+
+      - ``__PMP_PRESENT=1`` and ``__PLIC_PRESENT=1``
+
+This demo will demostrate the following features:
+
+- Demonstrates M-Mode to S-Mode transition
+- Configures PMP to allow S-Mode access to all address spaces
+- Registers and handles UART interrupts in S-Mode
+- Supports UART receive interrupt handling
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_smode_plic directory
+    cd application/baremetal/demo_smode_plic
+    # MUST: Your CPU configuration must has PLIC/PMP/SMode configured
+    # Since Nuclei SDK 0.7.0, if you are sure CFG_HAS_PLIC is not defined in cpufeature.h, but you have PLIC
+    # you can pass extra make variable XLCFG_PLIC=1 during make command to tell sdk
+    # the PLIC present, it will define CFG_HAS_PLIC
+    # Clean the application first
+    make SOC=evalsoc CORE=n900 clean
+    # Build and upload the application
+    make SOC=evalsoc CORE=n900 upload
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Apr 28 2025, 15:06:30
+    Download Mode: ILM
+    CPU Frequency 50002329 Hz
+    CPU HartID: 0
+    Current sp is 0x9000ff80, so it is in Machine Mode!
+    Drop to S-Mode now
+    [IN S-MODE ENTRY POINT] Hello Supervisor Mode!!!
+    Current sp is 0x900010c0, so it is in Supervisor Mode!
+    You can press any key now to trigger uart receive interrupt
+    Enter uart0 interrupt, you just typed: 1
+    Enter uart0 interrupt, you just typed: 2
+
+
 .. _design_app_demo_sstc:
 
 demo_sstc
@@ -2138,7 +2195,7 @@ This `demo_pma application`_ is used to demonstrate how to set memory region to 
 * After ``pma_cfg`` is assigned, and give the ``entry_idx``, call ``PMA_SetRegion`` to take effect
 * The ``entry_idx`` (0-n) depends on number of paired ``mattri(n)_mask`` and ``mattri(n)_base``, refer to Nuclei ISA specifications for max region entries
 * The api will do aligning by 4KB(because region granularity is 4KB) to ``region_base`` and ``region_size`` forcely
-* The regions can be overlapped as the priority: ``Non-Cacheable`` > ``Cacheable`` > ``Device``, , but especially be careful not to 
+* The regions can be overlapped as the priority: ``Non-Cacheable`` > ``Cacheable`` > ``Device``, , but especially be careful not to
   overlap software's instruction/data sections by Device, or overlap Device(like uart) memory by Cacheable
 * ``PMA_GetRegion`` could retrieve the region info detail
 
@@ -2669,6 +2726,7 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx demo`` applicati
 .. _rt-thread msh application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/msh
 .. _threadx demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/threadx/demo
 .. _demo_smode_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_eclic
+.. _demo_smode_plic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_plic
 .. _demo_sstc application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_sstc
 .. _demo_spmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_spmp
 .. _demo_smpu application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smpu
