@@ -45,6 +45,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Update :ref:`_design_app_freertos_demo` example to use ``configTICK_TYPE_WIDTH_IN_BITS`` instead of ``configUSE_16_BIT_TICKS``
   - Add :ref:`design_app_demo_pma` case to show how to use PMA related API in ``core_feature_pma.h``
   - Add :ref:`design_app_demo_smode_plic` to show how to use PLIC in S-Mode, it will require PLIC and PMP extension
+  - Increase freertos timer stack size from 256 to 512 due to timer task still generate vector instruction even with ``AUTOVEC=0``
 
 * SoC
 

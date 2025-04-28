@@ -126,7 +126,7 @@ your application. */
 #define configUSE_TIMERS                        1
 #define configTIMER_TASK_PRIORITY               3
 #define configTIMER_QUEUE_LENGTH                5
-#define configTIMER_TASK_STACK_DEPTH            configMINIMAL_STACK_SIZE
+#define configTIMER_TASK_STACK_DEPTH            512
 
 #define configKERNEL_INTERRUPT_PRIORITY         0
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    7
