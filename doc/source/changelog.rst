@@ -33,17 +33,18 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
 
   - Add more application code compile check message for better example requirement explanation
   - Add :ref:`design_app_demo_sstc` to show how to SSTC(S-Mode timer interrupt extension)
-  - Add :ref:`design_app_rtthread_demo_smode`  to show how to run rt_thread in S-Mode, it will require TEE and PMP extension
+  - Add :ref:`design_app_rtthread_demo_smode` to show how to run rt_thread in S-Mode, it will require TEE and PMP extension
   - Remove ``demo_spmp`` application due to hw ``sPMP`` upgraded to ``sMPU`` and no longer supported,
   - please use :ref:`design_app_demo_smpu` now.
   - Add ``-fno-tree-tail-merge`` compiler option for threadx RTOS example compiling, which is required for correct
   - compiling
-  - Fix ``demo_vnice`` insufficient mask length when vlen > 128
+  - Fix :ref:`_design_app_demo_vnice` insufficient mask length when vlen > 128
   - Add more documentation for :ref:`design_app_demo_dsp` example
   - Optimize :ref:`design_app_smphello` spinlock usage and update doc for it
   - Optimize :ref:`design_app_demo_profiling` example execution speed on hw from about 5min to 30s by decease the loop count
-  - Update ``freertos/demo`` example to use ``configTICK_TYPE_WIDTH_IN_BITS`` instead of ``configUSE_16_BIT_TICKS``
-  - Add ``demo_pma`` case to show how to use PMA related API
+  - Update :ref:`_design_app_freertos_demo` example to use ``configTICK_TYPE_WIDTH_IN_BITS`` instead of ``configUSE_16_BIT_TICKS``
+  - Add :ref:`design_app_demo_pma` case to show how to use PMA related API in ``core_feature_pma.h``
+  - Add :ref:`design_app_demo_smode_plic` to show how to use PLIC in S-Mode, it will require PLIC and PMP extension
 
 * SoC
 
