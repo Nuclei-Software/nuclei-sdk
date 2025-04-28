@@ -56,7 +56,10 @@
 
 #include <stdint.h>
 #include <string.h>
+
+#ifndef TXM_MODULE
 #include <nuclei_sdk_soc.h>
+#endif
 
 /* Determine if the optional ThreadX user define file should be used.  */
 
@@ -172,25 +175,67 @@ typedef unsigned short                          USHORT;
 #endif
 
 
+
 /* Define the TX_THREAD control block extensions for this port. The main reason
    for the multiple macros is so that backward compatibility can be maintained with
    existing ThreadX kernel awareness modules.  */
 
 #define TX_THREAD_EXTENSION_0
 #define TX_THREAD_EXTENSION_1
-#define TX_THREAD_EXTENSION_2
+#ifdef  TX_ENABLE_IAR_LIBRARY_SUPPORT
+#define TX_THREAD_EXTENSION_2               VOID    *tx_thread_module_instance_ptr;         \
+                                            VOID    *tx_thread_module_entry_info_ptr;       \
+                                            ULONG   tx_thread_module_current_user_mode;     \
+                                            ULONG   tx_thread_module_user_mode;             \
+                                            ULONG   tx_thread_module_saved_lr;              \
+                                            VOID    *tx_thread_module_kernel_stack_start;   \
+                                            VOID    *tx_thread_module_kernel_stack_end;     \
+                                            ULONG   tx_thread_module_kernel_stack_size;     \
+                                            VOID    *tx_thread_module_stack_ptr;            \
+                                            VOID    *tx_thread_module_stack_start;          \
+                                            VOID    *tx_thread_module_stack_end;            \
+                                            ULONG   tx_thread_module_stack_size;            \
+                                            VOID    *tx_thread_module_reserved;             \
+                                            VOID    *tx_thread_iar_tls_pointer;
+#else
+#define TX_THREAD_EXTENSION_2               VOID    *tx_thread_module_instance_ptr;         \
+                                            VOID    *tx_thread_module_entry_info_ptr;       \
+                                            ULONG   tx_thread_module_current_user_mode;     \
+                                            ULONG   tx_thread_module_user_mode;             \
+                                            ULONG   tx_thread_module_saved_lr;              \
+                                            VOID    *tx_thread_module_kernel_stack_start;   \
+                                            VOID    *tx_thread_module_kernel_stack_end;     \
+                                            ULONG   tx_thread_module_kernel_stack_size;     \
+                                            VOID    *tx_thread_module_stack_ptr;            \
+                                            VOID    *tx_thread_module_stack_start;          \
+                                            VOID    *tx_thread_module_stack_end;            \
+                                            ULONG   tx_thread_module_stack_size;            \
+                                            VOID    *tx_thread_module_reserved;
+#endif
+#ifndef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
 #define TX_THREAD_EXTENSION_3
+#else
+#define TX_THREAD_EXTENSION_3           unsigned long long  tx_thread_execution_time_total; \
+                                        unsigned long long  tx_thread_execution_time_last_start;
+#endif
 
 
 /* Define the port extensions of the remaining ThreadX objects.  */
 
 #define TX_BLOCK_POOL_EXTENSION
 #define TX_BYTE_POOL_EXTENSION
-#define TX_EVENT_FLAGS_GROUP_EXTENSION
 #define TX_MUTEX_EXTENSION
-#define TX_QUEUE_EXTENSION
-#define TX_SEMAPHORE_EXTENSION
-#define TX_TIMER_EXTENSION
+#define TX_EVENT_FLAGS_GROUP_EXTENSION          VOID    *tx_event_flags_group_module_instance; \
+                                                VOID   (*tx_event_flags_group_set_module_notify)(struct TX_EVENT_FLAGS_GROUP_STRUCT *group_ptr);
+
+#define TX_QUEUE_EXTENSION                      VOID    *tx_queue_module_instance; \
+                                                VOID   (*tx_queue_send_module_notify)(struct TX_QUEUE_STRUCT *queue_ptr);
+
+#define TX_SEMAPHORE_EXTENSION                  VOID    *tx_semaphore_module_instance; \
+                                                VOID   (*tx_semaphore_put_module_notify)(struct TX_SEMAPHORE_STRUCT *semaphore_ptr);
+
+#define TX_TIMER_EXTENSION                      VOID    *tx_timer_module_instance; \
+                                                VOID   (*tx_timer_module_expiration_function)(ULONG id);
 
 
 /* Define the user extension field of the thread control block.  Nothing
@@ -199,6 +244,7 @@ typedef unsigned short                          USHORT;
 #ifndef TX_THREAD_USER_EXTENSION
 #define TX_THREAD_USER_EXTENSION
 #endif
+
 
 
 /* Define the macros for processing extensions in tx_thread_create, tx_thread_delete,
@@ -257,6 +303,7 @@ typedef unsigned short                          USHORT;
 
 #endif
 
+#ifndef TXM_MODULE
 static inline void _tx_thread_system_return(void)
 {
         /* Set a software interrupt(SWI) request to request a context switch. */
@@ -265,6 +312,45 @@ static inline void _tx_thread_system_return(void)
         within the specified behaviour for the architecture. */
         __RWMB();
 }
+#endif
+
+#define THREAD_INITIAL_MSTATUS      (MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
+
+struct thread_stack_frame {
+    unsigned long epc;        /* epc - epc    - program counter                     */
+    unsigned long ra;         /* x1  - ra     - return address for jumps            */
+    unsigned long t0;         /* x5  - t0     - temporary register 0                */
+    unsigned long t1;         /* x6  - t1     - temporary register 1                */
+    unsigned long t2;         /* x7  - t2     - temporary register 2                */
+    unsigned long s0_fp;      /* x8  - s0/fp  - saved register 0 or frame pointer   */
+    unsigned long s1;         /* x9  - s1     - saved register 1                    */
+    unsigned long a0;         /* x10 - a0     - return value or function argument 0 */
+    unsigned long a1;         /* x11 - a1     - return value or function argument 1 */
+    unsigned long a2;         /* x12 - a2     - function argument 2                 */
+    unsigned long a3;         /* x13 - a3     - function argument 3                 */
+    unsigned long a4;         /* x14 - a4     - function argument 4                 */
+    unsigned long a5;         /* x15 - a5     - function argument 5                 */
+#ifndef __riscv_32e
+    unsigned long a6;         /* x16 - a6     - function argument 6                 */
+    unsigned long a7;         /* x17 - s7     - function argument 7                 */
+    unsigned long s2;         /* x18 - s2     - saved register 2                    */
+    unsigned long s3;         /* x19 - s3     - saved register 3                    */
+    unsigned long s4;         /* x20 - s4     - saved register 4                    */
+    unsigned long s5;         /* x21 - s5     - saved register 5                    */
+    unsigned long s6;         /* x22 - s6     - saved register 6                    */
+    unsigned long s7;         /* x23 - s7     - saved register 7                    */
+    unsigned long s8;         /* x24 - s8     - saved register 8                    */
+    unsigned long s9;         /* x25 - s9     - saved register 9                    */
+    unsigned long s10;        /* x26 - s10    - saved register 10                   */
+    unsigned long s11;        /* x27 - s11    - saved register 11                   */
+    unsigned long t3;         /* x28 - t3     - temporary register 3                */
+    unsigned long t4;         /* x29 - t4     - temporary register 4                */
+    unsigned long t5;         /* x30 - t5     - temporary register 5                */
+    unsigned long t6;         /* x31 - t6     - temporary register 6                */
+#endif
+    unsigned long mstatus;    /*              - machine status register             */
+};
+
 
 /* Define the interrupt lockout macros for each ThreadX object.  */
 
