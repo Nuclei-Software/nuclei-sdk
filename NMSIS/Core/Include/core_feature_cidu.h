@@ -38,7 +38,7 @@ extern "C" {
 
 /* ##########################  CIDU functions  #################################### */
 /**
- * \defgroup NMSIS_Core_CIDU_Functions         CIDU Functions
+ * \defgroup NMSIS_Core_CIDU         CIDU Functions
  * \ingroup  NMSIS_Core
  * \brief    Functions that manage external interrupts, inter core interrupts and semaphores.
  * \details

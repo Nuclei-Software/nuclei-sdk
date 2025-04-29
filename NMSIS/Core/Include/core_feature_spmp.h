@@ -42,7 +42,7 @@ extern "C" {
 
 /* ===== sPMP Operations ===== */
 /**
- * \defgroup NMSIS_Core_SPMP_Functions sPMP Functions
+ * \defgroup NMSIS_Core_SPMP sPMP or sMPU Functions
  * \ingroup  NMSIS_Core
  * \brief    Functions that related to the RISCV supervisor-mode Phyiscal Memory Protection.
  * \details

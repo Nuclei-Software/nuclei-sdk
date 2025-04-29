@@ -54,6 +54,8 @@
  * For Nuclei RISC-V GCC 13/Clang 17, the intrinsic API supported is v0.12 version, see
  * https://github.com/riscv-non-isa/rvv-intrinsic-doc/releases/tag/v0.12.0
  *
+ * For Nuclei RISC-V GCC 14.2/Clang 19, the intrinsic API supported is v0.11.x version, see
+ * https://github.com/riscv-non-isa/rvv-intrinsic-doc/tree/v0.11.x
  *   @{
  */
 
