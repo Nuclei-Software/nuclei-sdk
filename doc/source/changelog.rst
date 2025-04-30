@@ -59,6 +59,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
     such as ``-std=c23``, to fix compiler error ``error: implicit declaration of function 'TIMEVAL_TO_TIMESPEC' [-Wimplicit-function-declaration]``
   - Add ``__SMODE_PRESENT`` macro in ``evalsoc.h`` to represent s-mode present or not
   - Add support for smode clint and plic support for evalsoc
+  - Add a README.md to introduce evalsoc reference implementation of NMSIS Device Templates in ``SoC/evalsoc/README.md``
 
 * RTOS
 
