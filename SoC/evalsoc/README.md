@@ -1,6 +1,6 @@
 # NMSIS Core Device Templates
 
-The [**evalsoc**](4) implementation in Nuclei SDK serves as a latest reference implementation of the [**NMSIS Core Device Templates**][1].
+The [**evalsoc**][4] implementation in Nuclei SDK serves as a **latest reference implementation** of the [**NMSIS Core Device Templates**][1].
 
 Device templates located in https://github.com/Nuclei-Software/NMSIS/tree/master/Device/_Template_Vendor will not be updated anymore.
 
