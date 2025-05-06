@@ -801,52 +801,57 @@ to get different score number.
     # Assume that you can set up the Tools and Nuclei SDK environment
     # cd to the coremark directory
     cd application/baremetal/benchmark/coremark
-    # change ITERATIONS value in Makefile for gd32vf103 based board to 5000
     # Clean the application first
-    make SOC=gd32vf103 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300fd ARCH_EXT=_zba_zbb_zbc_zbs_zicond clean
     # Build and upload the application
-    make SOC=gd32vf103 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300fd ARCH_EXT=_zba_zbb_zbc_zbs_zicond upload
 
 **Expected output as below:**
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Mar 30 2020, 18:08:53
-    Download Mode: FLASHXIP
-    CPU Frequency 107190000 Hz
-    Start to run coremark for 5000 iterations
+    Nuclei SDK Build Time: May  6 2025, 16:33:08
+    Download Mode: ILM
+    CPU Frequency 16003563 Hz
+    CPU HartID: 0
+    Start to run coremark for 800 iterations
     2K performance run parameters for coremark.
     CoreMark Size    : 666
-    Total ticks      : 1622809457
-    Total time (secs): 15.139593
-    Iterations/Sec   : 330.259868
-    Iterations       : 5000
-    Compiler version : GCC9.2.0
-    Compiler flags   : -O2 -flto -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4
+    Total ticks      : 207671961
+    Total time (secs): 12.976789
+    Iterations/Sec   : 61.648533
+    Iterations       : 800
+    Compiler version : GCC14.2.1 20240816
+    Compiler flags   : -Ofast -fno-code-hoisting -fno-common -finline-functions -falign-functions=6 -falign-jumps=6 -falign-loops=4 -finline-limit=2001
     Memory location  : STACK
     seedcrc          : 0xe9f5
     [0]crclist       : 0xe714
     [0]crcmatrix     : 0x1fd7
     [0]crcstate      : 0x8e3a
-    [0]crcfinal      : 0xbd59
+    [0]crcfinal      : 0xcc42
     Correct operation validated. See readme.txt for run and reporting rules.
-    CoreMark 1.0 : 330.259868 / GCC9.2.0 -O2 -flto -funroll-all-loops -finline-limit=600 -ftree-dominator-opts -fno-if-conversion2 -fselective-scheduling -fno-code-hoisting -fno-common -funroll-loops -finline-functions -falign-functions=4 -falign-jumps=4 -falign-loops=4 / STACK
 
 
-    Print Personal Added Addtional Info to Easy Visual Analysis
 
-        (Iterations is: 5000
-        (total_ticks is: 1622809457
-    (*) Assume the core running at 1 MHz
-        So the CoreMark/MHz can be caculated by:
-        (Iterations*1000000/total_ticks) = 3.081076 CoreMark/MHz
+    CoreMark 1.0 : 61.648533 / GCC14.2.1 20240816 -Ofast -fno-code-hoisting -fno-common -finline-functions -falign-functions=6 -falign-jumps=6 -faligns
+
+         (Iterations is: 800
+         (total_ticks is: 207671961
+     (*) Assume the core running at 1 MHz
+         So the CoreMark/MHz can be calculated by:
+         (Iterations*1000000/total_ticks) = 3.852229 CoreMark/MHz
+
+
+    CSV, Benchmark, Iterations, Cycles, CoreMark/MHz
+    CSV, CoreMark, 800, 207671961, 3.852
+    IPC = Instret/Cycle = 184031355/207671961 = 0.886
 
 .. _design_app_dhrystone:
 
 dhrystone
 ~~~~~~~~~
 
-This `dhrystone benchmark application`_ is used to run DHRYSTONE Benchmark Software.
+This `dhrystone benchmark application`_ is used to run DHRYSTONE Benchmark Software, whose version is v2.1.
 
 The Dhrystone benchmark program has become a popular benchmark for CPU/compiler performance measurement,
 in particular in the area of minicomputers, workstations, PC's and microprocesors.
@@ -863,7 +868,7 @@ You can also optimize the ``COMMON_FLAGS`` defined in dhrystone application Make
 to get different score number.
 
 * **STDCLIB ?= newlib_small** is added in its Makefile to enable float value print
-* You can change ``Number_Of_Runs`` in ``dhry_1.c`` line 134 to increate or decrease
+* You can change ``Number_Of_Runs`` in ``dhry_1.c`` to increate or decrease
   number of iterations
 
 **How to run this application:**
@@ -874,17 +879,18 @@ to get different score number.
     # cd to the dhrystone directory
     cd application/baremetal/benchmark/dhrystone
     # Clean the application first
-    make SOC=gd32vf103 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300fd ARCH_EXT=_zba_zbb_zbc_zbs clean
     # Build and upload the application
-    make SOC=gd32vf103 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300fd ARCH_EXT=_zba_zbb_zbc_zbs upload
 
 **Expected output as below:**
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Feb 21 2020, 14:23:55
-    Download Mode: FLASHXIP
-    CPU Frequency 108801980 Hz
+    Nuclei SDK Build Time: May  6 2025, 16:29:34
+    Download Mode: ILM
+    CPU Frequency 16004874 Hz
+    CPU HartID: 0
 
     Dhrystone Benchmark, Version 2.1 (Language: C)
 
@@ -909,7 +915,7 @@ to get different score number.
     Arr_2_Glob[8][7]:    500010
             should be:   Number_Of_Runs + 10
     Ptr_Glob->
-      Ptr_Comp:          536883352
+      Ptr_Comp:          -1879032528
             should be:   (implementation-dependent)
       Discr:             0
             should be:   0
@@ -920,7 +926,7 @@ to get different score number.
       Str_Comp:          DHRYSTONE PROGRAM, SOME STRING
             should be:   DHRYSTONE PROGRAM, SOME STRING
     Next_Ptr_Glob->
-      Ptr_Comp:          536883352
+      Ptr_Comp:          -1879032528
             should be:   (implementation-dependent), same as above
       Discr:             0
             should be:   0
@@ -944,9 +950,120 @@ to get different score number.
             should be:   DHRYSTONE PROGRAM, 2'ND STRING
 
      (*) User_Cycle for total run through Dhrystone with loops 500000:
-    223500116
-           So the DMIPS/MHz can be caculated by:
-           1000000/(User_Cycle/Number_Of_Runs)/1757 = 1.273270 DMIPS/MHz
+    151000097
+           So the DMIPS/MHz can be calculated by:
+           1000000/(User_Cycle/Number_Of_Runs)/1757 = 1.884608 DMIPS/MHz
+
+
+    CSV, Benchmark, Iterations, Cycles, DMIPS/MHz
+    CSV, Dhrystone, 500000, 151000097, 1.884
+    IPC = Instret/Cycle = 145000036/151000097 = 0.960
+
+.. _design_app_dhrystone_v2.2:
+
+dhrystone_v2.2
+~~~~~~~~~~~~~~
+
+This `dhrystone_v2.2 benchmark application`_ is used to run DHRYSTONE Benchmark Software, whose version is v2.2.
+
+In Nuclei SDK, we provided code and Makefile for this ``dhrystone`` application.
+You can also optimize the ``COMMON_FLAGS`` defined in dhrystone application Makefile
+to get different score number.
+
+* **STDCLIB ?= newlib_small** is added in its Makefile to enable float value print
+* ``Number_Of_Runs`` will increase itself if running time is too small
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the dhrystone_v2.2 directory
+    cd application/baremetal/benchmark/dhrystone_v2.2
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300fd ARCH_EXT=_zba_zbb_zbc_zbs clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300fd ARCH_EXT=_zba_zbb_zbc_zbs upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: May  6 2025, 16:22:34
+    Download Mode: ILM
+    CPU Frequency 16006184 Hz
+    CPU HartID: 0
+
+    Dhrystone Benchmark, Version C, Version 2.2
+    Program compiled without 'register' attribute
+    Using time(), HZ=1
+
+    Trying 50000 runs through Dhrystone:
+    Measured time too small to obtain meaningful results
+
+    Trying 500000 runs through Dhrystone:
+    Final values of the variables used in the benchmark:
+
+    Int_Glob:            5
+            should be:   5
+    Bool_Glob:           1
+            should be:   1
+    Ch_1_Glob:           A
+            should be:   A
+    Ch_2_Glob:           B
+            should be:   B
+    Arr_1_Glob[8]:       7
+            should be:   7
+    Arr_2_Glob[8][7]:    550010
+            should be:   Number_Of_Runs + 10
+    Ptr_Glob->
+      Ptr_Comp:          -1879032368
+            should be:   (implementation-dependent)
+      Discr:             0
+            should be:   0
+      Enum_Comp:         2
+            should be:   2
+      Int_Comp:          17
+            should be:   17
+      Str_Comp:          DHRYSTONE PROGRAM, SOME STRING
+            should be:   DHRYSTONE PROGRAM, SOME STRING
+    Next_Ptr_Glob->
+      Ptr_Comp:          -1879032368
+            should be:   (implementation-dependent), same as above
+      Discr:             0
+            should be:   0
+      Enum_Comp:         1
+            should be:   1
+      Int_Comp:          18
+            should be:   18
+      Str_Comp:          DHRYSTONE PROGRAM, SOME STRING
+            should be:   DHRYSTONE PROGRAM, SOME STRING
+    Int_1_Loc:           5
+            should be:   5
+    Int_2_Loc:           13
+            should be:   13
+    Int_3_Loc:           7
+            should be:   7
+    Enum_Loc:            1
+            should be:   1
+    Str_1_Loc:           DHRYSTONE PROGRAM, 1'ST STRING
+            should be:   DHRYSTONE PROGRAM, 1'ST STRING
+    Str_2_Loc:           DHRYSTONE PROGRAM, 2'ND STRING
+            should be:   DHRYSTONE PROGRAM, 2'ND STRING
+
+    Microseconds for one run through Dhrystone:       14.0
+    Dhrystones per Second:                           71429
+
+     (*) User_Cycle for total run through Dhrystone with loops 500000:
+    128000082
+           So the DMIPS/MHz can be calculated by:
+           1000000/(User_Cycle/Number_Of_Runs)/1757 = 2.223248 DMIPS/MHz
+
+
+    CSV, Benchmark, Iterations, Cycles, DMIPS/MHz
+    CSV, Dhrystone_v2.2, 500000, 128000082, 2.223
+    IPC = Instret/Cycle = 117500053/128000082 = 0.917
+
 
 .. _design_app_whetstone:
 
@@ -954,7 +1071,7 @@ whetstone
 ~~~~~~~~~
 
 This `whetstone benchmark application`_ is used to run C/C++ Whetstone Benchmark Software
-(Single or Double Precision).
+(Single or Double Precision), whose version is roy@roylongbottom.org.uk, 6 November 1996.
 
 The Fortran Whetstone programs were the first general purpose benchmarks that set industry
 standards of computer system performance. Whetstone programs also addressed the question
@@ -977,43 +1094,104 @@ to get different score number.
     # cd to the whetstone directory
     cd application/baremetal/benchmark/whetstone
     # Clean the application first
-    make SOC=gd32vf103 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300fd clean
     # Build and upload the application
-    make SOC=gd32vf103 upload
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300fd upload
 
 **Expected output as below:**
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Feb 21 2020, 14:50:15
-    Download Mode: FLASHXIP
-    CPU Frequency 109069306 Hz
+    Nuclei SDK Build Time: May  6 2025, 16:31:23
+    Download Mode: ILM
+    CPU Frequency 15984885 Hz
+    CPU HartID: 0
 
     ##########################################
-    Single Precision C Whetstone Benchmark Opt 3 32 Bit
+    Double Precision C Whetstone Benchmark Opt 3 32 Bit
     Calibrate
-           1.96 Seconds          1   Passes (x 100)
-           9.81 Seconds          5   Passes (x 100)
+           0.37 Seconds          1   Passes (x 100)
 
-    Use 5  passes (x 100)
+    Use 8  passes (x 100)
 
-              Single Precision C/C++ Whetstone Benchmark
 
+              Double Precision C/C++ Whetstone Benchmark
     Loop content                  Result              MFLOPS      MOPS   Seconds
 
-    N1 floating point -1.12475013732910156         1.053              0.091
-    N2 floating point -1.12274742126464844         1.053              0.638
-    N3 if then else    1.00000000000000000               108527.617    0.000
-    N4 fixed point    12.00000000000000000                   5.630    0.280
-    N5 sin,cos etc.    0.49909299612045288                   0.109    3.829
-    N6 floating point  0.99999982118606567         1.082              2.493
-    N7 assignments     3.00000000000000000                 419.794    0.002
-    N8 exp,sqrt etc.   0.75110614299774170                   0.075    2.492
+    N1 floating point -1.12441415430187974        12.486              0.012
+    N2 floating point -1.12239951147853168        16.874              0.064
+    N3 if then else    1.00000000000000000                   0.000    0.000
+    N4 fixed point    12.00000000000000000                 120.022    0.021
+    N5 sin,cos etc.    0.49907428465337039                   0.402    1.654
+    N6 floating point  0.99999988495142078         9.600              0.449
+    N7 assignments     3.00000000000000000                  71.982    0.021
+    N8 exp,sqrt etc.   0.75095530233199781                   0.423    0.704
 
-    MWIPS                                              5.089              9.825
+    MWIPS                                             27.355              2.925
 
 
-    MWIPS/MHz                                          0.046              9.825
+    MWIPS/MHz                                          1.711              2.925
+
+
+    CSV, Benchmark, MWIPS/MHz
+    CSV, Whetstone, 1.711
+    IPC = Instret/Cycle = 35858111/49362436 = 0.726
+
+
+.. _design_app_whetstone_v1.2:
+
+whetstone_v1.2
+~~~~~~~~~~~~~
+
+This `whetstone_v1.2 benchmark application`_ is used to run C Converted Whetstone
+Single or Double Precision Benchmark Version 1.2 22 March 1998, which has different
+algorithm to this version `whetstone benchmark application`_(they are incomparable).
+
+In Nuclei SDK, we provided code and Makefile for this ``whetstone_v1.2`` application.
+You can also optimize the ``COMMON_FLAGS`` defined in whetstone application Makefile
+to get different score number.
+
+* **STDCLIB ?= newlib_small** is added in its Makefile to enable float value print
+* Extra **LDFLAGS := -lm** is added in its Makefile to include the math library
+
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the whetstone_v1.2 directory
+    cd application/baremetal/benchmark/whetstone_v1.2
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300fd clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300fd upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: May  6 2025, 16:11:48
+    Download Mode: ILM
+    CPU Frequency 15984885 Hz
+    CPU HartID: 0
+
+    ##########################################
+    Single Precision C Whetstone Benchmark Version 1.2      22 March 1998
+    Nuclei SDK Build Time: May  6 2025, 16:13:56
+    Download Mode: ILM
+    CPU Frequency 16004874 Hz
+    CPU HartID: 0
+
+    ##########################################
+    Double Precision C Whetstone Benchmark Version 1.2      22 March 1998
+
+    Loops: 50000, Iterations: 1, Duration: 70 sec.
+    C Converted Double Precision Whetstones: 71.4 MIPS
+
+    CSV, Benchmark, MWIPS/MHz
+    CSV, Whetstone_v1.2, 4.462
+    IPC = Instret/Cycle = 704074177/1133874283 = 0.620
 
 
 .. _design_app_demo_smode_eclic:
@@ -2717,7 +2895,9 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx demo`` applicati
 .. _demo_vnice application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_vnice
 .. _coremark benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/coremark
 .. _dhrystone benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/dhrystone
+.. _dhrystone_v2.2 benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/dhrystone_v2.2
 .. _whetstone benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/whetstone
+.. _whetstone_v1.2 benchmark application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/benchmark/whetstone_v1.2
 .. _freertos demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/freertos/demo
 .. _freertos smpdemo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/freertos/smpdemo
 .. _ucosii demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/ucosii/demo
