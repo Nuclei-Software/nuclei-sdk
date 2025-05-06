@@ -64,6 +64,16 @@ extern "C" {
 // to not loose precision.
 #define MAX_COL_COUNT (512)
 
+// NMSIS-NN has two implementations of the transpose conv operator, selected depending on the number of input
+// channels. This is based on heuristics and may be finetuned depending on other parameters of the operator
+#define REVERSE_TCOL_EFFICIENT_THRESHOLD (16)
+
+// By default this will have no effect. During compilation this may be set to __restrict,
+// which may be beneficial for performance. See README.md for more intformation.
+#ifndef OPTIONAL_RESTRICT_KEYWORD
+    #define OPTIONAL_RESTRICT_KEYWORD
+#endif
+
 /**
  * @brief definition to pack four 8 bit values.
  */
@@ -589,6 +599,55 @@ riscv_nmsis_nn_status riscv_nn_mat_mult_nt_t_s4(const int8_t *lhs,
  *        This function assumes:
  *        - LHS input matrix NOT transposed (nt)
  *        - RHS input matrix transposed (t)
+ *        - RHS is int8 packed with 2x int4
+ *        - LHS is int8
+ *        - LHS/RHS input columns must be even numbered
+ *        - LHS must be interleaved. Compare to riscv_nn_mat_mult_nt_t_s4 where LHS is not interleaved.
+ *
+ *  @note This operation also performs the broadcast bias addition before the requantization
+ *
+ * @param[in]  lhs                Pointer to the LHS input matrix
+ * @param[in]  rhs                Pointer to the RHS input matrix
+ * @param[in]  bias               Pointer to the bias vector. The length of this vector is equal to the number of
+ *                                output columns (or RHS input rows)
+ * @param[out] dst                Pointer to the output matrix with "m" rows and "n" columns
+ * @param[in]  dst_multipliers    Pointer to the multipliers vector needed for the per-channel requantization.
+ *                                The length of this vector is equal to the number of output columns (or RHS input
+ *                                rows)
+ * @param[in]  dst_shifts         Pointer to the shifts vector needed for the per-channel requantization. The length
+ *                                of this vector is equal to the number of output columns (or RHS input rows)
+ * @param[in]  lhs_rows           Number of LHS input rows
+ * @param[in]  rhs_rows           Number of RHS input rows
+ * @param[in]  rhs_cols           Number of LHS/RHS input columns. Note this must be even.
+ * @param[in]  lhs_offset         Offset to be applied to the LHS input value
+ * @param[in]  dst_offset         Offset to be applied the output result
+ * @param[in]  activation_min     Minimum value to clamp down the output. Range : int8
+ * @param[in]  activation_max     Maximum value to clamp up the output. Range : int8
+ * @param[in]  lhs_cols_offset    Column offset between subsequent lhs_rows
+ *
+ * @return     The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
+ *
+ */
+riscv_nmsis_nn_status riscv_nn_mat_mult_nt_interleaved_t_even_s4(const int8_t *lhs,
+                                                             const int8_t *rhs,
+                                                             const int32_t *bias,
+                                                             int8_t *dst,
+                                                             const int32_t *dst_multipliers,
+                                                             const int32_t *dst_shifts,
+                                                             const int32_t lhs_rows,
+                                                             const int32_t rhs_rows,
+                                                             const int32_t rhs_cols,
+                                                             const int32_t lhs_offset,
+                                                             const int32_t dst_offset,
+                                                             const int32_t activation_min,
+                                                             const int32_t activation_max,
+                                                             const int32_t lhs_cols_offset);
+
+/**
+ * @brief General Matrix-multiplication function with per-channel requantization.
+ *        This function assumes:
+ *        - LHS input matrix NOT transposed (nt)
+ *        - RHS input matrix transposed (t)
  *
  *  @note This operation also performs the broadcast bias addition before the requantization
  *
@@ -778,7 +837,48 @@ riscv_nmsis_nn_status riscv_nn_vec_mat_mult_t_s8(const int8_t *lhs,
                                              const int32_t rhs_offset);
 
 /**
- * @brief s16 Vector by Matrix (transposed) multiplication
+ * @brief s8 Vector by Matrix (transposed) multiplication using per channel quantization for output
+ *
+ * @param[in]      lhs             Input left-hand side vector
+ * @param[in]      rhs             Input right-hand side matrix (transposed)
+ * @param[in]      kernel_sum      Kernel sums of the kernels (rhs). See riscv_vector_sum_s8 for more info.
+ * @param[in]      bias            Input bias
+ * @param[out]     dst             Output vector
+ * @param[in]      lhs_offset      Offset to be added to the input values of the left-hand side vector.
+ *                                 Range: -127 to 128
+ * @param[in]      dst_offset      Offset to be added to the output values. Range: -127 to 128
+ * @param[in]      dst_multiplier  Output multipliers
+ * @param[in]      dst_shift       Output shifts
+ * @param[in]      rhs_cols        Number of columns in the right-hand side input matrix
+ * @param[in]      rhs_rows        Number of rows in the right-hand side input matrix
+ * @param[in]      activation_min  Minimum value to clamp the output to. Range: int8
+ * @param[in]      activation_max  Maximum value to clamp the output to. Range: int8
+ * @param[in]      address_offset  Memory position offset for dst. First output is stored at 'dst', the
+ *                                 second at 'dst + address_offset' and so on. Default value is typically 1.
+ * @param[in]      rhs_offset      Offset to be added to the input values of the right-hand side vector.
+ *                                 Range: -127 to 128
+ *
+ * @return         The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
+ *
+ */
+riscv_nmsis_nn_status riscv_nn_vec_mat_mult_t_per_ch_s8(const int8_t *lhs,
+                                                    const int8_t *rhs,
+                                                    const int32_t *kernel_sum,
+                                                    const int32_t *bias,
+                                                    int8_t *dst,
+                                                    const int32_t lhs_offset,
+                                                    const int32_t dst_offset,
+                                                    const int32_t *dst_multiplier,
+                                                    const int32_t *dst_shift,
+                                                    const int32_t rhs_cols,
+                                                    const int32_t rhs_rows,
+                                                    const int32_t activation_min,
+                                                    const int32_t activation_max,
+                                                    const int32_t address_offset,
+                                                    const int32_t rhs_offset);
+
+/**
+ * @brief s16 Vector by s8 Matrix (transposed) multiplication
  *
  * @param[in]      lhs             Input left-hand side vector
  * @param[in]      rhs             Input right-hand side matrix (transposed)
@@ -804,6 +904,34 @@ riscv_nmsis_nn_status riscv_nn_vec_mat_mult_t_s16(const int16_t *lhs,
                                               const int32_t rhs_rows,
                                               const int32_t activation_min,
                                               const int32_t activation_max);
+
+/**
+ * @brief s16 Vector by s16 Matrix (transposed) multiplication
+ *
+ * @param[in]      lhs             Input left-hand side vector
+ * @param[in]      rhs             Input right-hand side matrix (transposed)
+ * @param[in]      bias            Input bias
+ * @param[out]     dst             Output vector
+ * @param[in]      dst_multiplier  Output multiplier
+ * @param[in]      dst_shift       Output shift
+ * @param[in]      rhs_cols        Number of columns in the right-hand side input matrix
+ * @param[in]      rhs_rows        Number of rows in the right-hand side input matrix
+ * @param[in]      activation_min  Minimum value to clamp the output to. Range: int16
+ * @param[in]      activation_max  Maximum value to clamp the output to. Range: int16
+ *
+ * @return         The function returns <code>RISCV_NMSIS_NN_SUCCESS</code>
+ *
+ */
+riscv_nmsis_nn_status riscv_nn_vec_mat_mult_t_s16_s16(const int16_t *lhs,
+                                                  const int16_t *rhs,
+                                                  const int64_t *bias,
+                                                  int16_t *dst,
+                                                  const int32_t dst_multiplier,
+                                                  const int32_t dst_shift,
+                                                  const int32_t rhs_cols,
+                                                  const int32_t rhs_rows,
+                                                  const int32_t activation_min,
+                                                  const int32_t activation_max);
 
 /**
  * @brief s8 Vector by Matrix (transposed) multiplication with s16 output
@@ -1005,6 +1133,48 @@ int16_t *riscv_nn_depthwise_conv_nt_t_s16(const int16_t *lhs,
                                         int16_t *out);
 
 /**
+ * @brief Row of s8 scalars multiplicated with a s8 matrix ad accumulated into a s32 rolling scratch buffer.
+ * Helpfunction for transposed convolution.
+ *
+ * @param[in]      lhs             Input left-hand side scalars
+ * @param[in]      rhs             Input right-hand side matrix
+ * @param[out]     output_start    Output buffer start
+ * @param[in]      output_index    Output buffer current index
+ * @param[in]      output_max      Output buffer size
+ * @param[in]      rhs_rows        Number of rows in rhs matrix
+ * @param[in]      rhs_cols        Number of columns in rhs matrix
+ * @param[in]      input_channels  Number of input channels
+ * @param[in]      output_channels Number of output channels
+ * @param[in]      lhs_offset      Offset added to lhs before multiplication
+ * @param[in]      row_offset      Address offset between each row of data output
+ * @param[in]      input_x         Length of lhs scalar row.
+ * @param[in]      stride_x        Address offset between each scalar-matrix multiplication result.
+ * @param[in]      skip_row_top    Skip rows on top of the filter, used for padding.
+ * @param[in]      skip_row_bottom Skip rows in the bottom of the filter, used for padding.
+ *
+ * @return         The function returns RISCV_NMSIS_NN_SUCCESS
+ *
+ * @note           Rolling buffer refers to how the function wraps around the scratch buffer, e.g. it starts writing at
+ * [output_start + output_index], writes to [output_start + output_max] and then continues at [output_start] again.
+ */
+riscv_nmsis_nn_status riscv_nn_transpose_conv_row_s8_s32(const int8_t *lhs,
+                                                     const int8_t *rhs,
+                                                     int32_t *output_start,
+                                                     const int32_t output_index,
+                                                     const int32_t output_max,
+                                                     const int32_t rhs_rows,
+                                                     const int32_t rhs_cols,
+                                                     const int32_t input_channels,
+                                                     const int32_t output_channels,
+                                                     const int32_t lhs_offset,
+                                                     const int32_t row_offset,
+                                                     const int32_t input_x,
+                                                     const int32_t stride_x,
+                                                     const int32_t skip_row_top,
+                                                     const int32_t skip_row_bottom);
+                                                     
+/**
+
  *@brief Matrix-multiplication function for convolution with reordered columns
  *@param[in]       pA          pointer to operand A
  *@param[in]       pInBuffer   pointer to operand B, always conssists of 2 vectors
@@ -2468,6 +2638,26 @@ riscv_nmsis_nn_status riscv_elementwise_mul_acc_s16(const int16_t *input_1_vect,
                                                 const int32_t out_activation_min,
                                                 const int32_t out_activation_max,
                                                 const int32_t block_size);
+
+/**
+ * @brief Check if a broadcast is required between 2 nmsis_nn_dims.
+ * @param[in]       shape_1             pointer to input tensor 1
+ * @param[in]       shape_2             pointer to input tensor 2
+ * @return          The function returns 1 if a broadcast is required, or 0 if not.
+ *
+ * @details   Compares each dimension and returns 1 if any dimension does not match.
+ *            This function does not check that broadcast rules are met.
+ */
+__STATIC_FORCEINLINE int32_t riscv_check_broadcast_required(const nmsis_nn_dims *shape_1, const nmsis_nn_dims *shape_2)
+{
+    if ((shape_1->n != shape_2->n) || (shape_1->h != shape_2->h) || (shape_1->w != shape_2->w) ||
+        (shape_1->c != shape_2->c))
+    {
+        return 1;
+    }
+
+    return 0;
+}
 
 #ifdef __cplusplus
 }

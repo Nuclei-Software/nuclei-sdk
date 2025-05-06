@@ -55,7 +55,7 @@ typedef enum
     RISCV_NMSIS_NN_SUCCESS = 0,        /**< No error */
     RISCV_NMSIS_NN_ARG_ERROR = -1,     /**< One or more arguments are incorrect */
     RISCV_NMSIS_NN_NO_IMPL_ERROR = -2, /**<  No implementation available */
-    RISCV_NMSIS_NN_SIZE_MISMATCH = -3,        /**< Size of matrices is not compatible with the operation */
+    RISCV_NMSIS_NN_FAILURE = -3,       /**<  Logical error */
 } riscv_nmsis_nn_status;
 
 /** NMSIS-NN object to contain the width and height of a tile */
@@ -112,6 +112,17 @@ typedef struct
     int32_t shift;      /**< Shift value */
 } nmsis_nn_per_tensor_quant_params;
 
+/** NMSIS-NN object for quantization parameters.
+ *  This struct supports both per-tensor and per-channels requantization
+ *  and is recommended for new operators.
+ */
+typedef struct
+{
+    int32_t *multiplier;    /**< Multiplier values */
+    int32_t *shift;         /**< Shift values */
+    int32_t is_per_channel; /** Indicating if per channel or per tensor quantization */
+} nmsis_nn_quant_params;
+
 /** NMSIS-NN object for the quantized Relu activation */
 typedef struct
 {
@@ -166,10 +177,25 @@ typedef struct
 typedef struct
 {
     int32_t input_offset;  /**< The negative of the zero value for the input tensor */
-    int32_t filter_offset; /**< The negative of the zero value for the filter tensor. Not used */
+    int32_t filter_offset; /**< The negative of the zero value for the filter tensor */
     int32_t output_offset; /**< The negative of the zero value for the output tensor */
     nmsis_nn_activation activation;
 } nmsis_nn_fc_params;
+
+/** NMSIS-NN object for Batch Matmul layer parameters */
+typedef struct
+{
+    const bool adj_x;
+    const bool adj_y;
+    nmsis_nn_fc_params fc_params;
+} nmsis_nn_bmm_params;
+
+/** NMSIS-NN object for Transpose layer parameters */
+typedef struct
+{
+    const int32_t num_dims;
+    const uint32_t *permutations; /**< The dimensions applied to the input dimensions */
+} nmsis_nn_transpose_params;
 
 /** NMSIS-NN object for SVDF layer parameters */
 typedef struct
