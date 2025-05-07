@@ -604,9 +604,12 @@ def parse_result2dict(result):
                 continue
             apptype = appresult[cfg]["result"]["type"]
             appsubtype = appresult[cfg]["result"].get("subtype", "")
+            appvalue = appresult[cfg]["result"].get("value", None)
             if appsubtype == "":
                 appsubtype = "default"
             if apptype == "unknown":
+                continue
+            if not appvalue:
                 continue
             if apptype not in csvdict[cfg]:
                 csvdict[cfg][apptype] = dict()
@@ -623,7 +626,7 @@ def parse_result2dict(result):
 
             if "value" not in csvdict[cfg][apptype][appsubtype]:
                 csvdict[cfg][apptype][appsubtype]["value"] = dict()
-            csvdict[cfg][apptype][appsubtype]["value"].update(appresult[cfg]["result"]["value"])
+            csvdict[cfg][apptype][appsubtype]["value"].update(appvalue)
             csvdict[cfg][apptype][appsubtype]["size"] = appresult[cfg]["size"]
     return csvdict
 
