@@ -208,8 +208,14 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #define EVENT_INSTRUCTION_COMMIT_FLOATING_POINT_DIVISION_OR_SQUARE_ROOT            22
 #define EVENT_INSTRUCTION_COMMIT_OTHER_FLOATING_POINT_INSTRUCTION                  23
 #define EVENT_INSTRUCTION_COMMIT_CONDITIONAL_BRANCH_PREDICTION_FAIL                24
-#define EVENT_INSTRUCTION_COMMIT_JAL_PREDICTION_FAIL                               25
-#define EVENT_INSTRUCTION_COMMIT_JALR_PREDICTION_FAIL                              26
+/* JAL_PREDICTION_FAIL never existed, it is wrong documented, JALR_PREDICTION_FAIL should be 25 not 26 */
+#define EVENT_INSTRUCTION_COMMIT_JALR_PREDICTION_FAIL                              25
+#define EVENT_INSTRUCTION_COMMIT_POP_PREDICTION_FAIL                               26
+#define EVENT_INSTRUCTION_COMMIT_FENCEI_INSTRUCTION                                27
+#define EVENT_INSTRUCTION_COMMIT_SFENCE_INSTRUCTION                                28
+#define EVENT_INSTRUCTION_COMMIT_ECALL_INSTRUCTION                                 29
+#define EVENT_INSTRUCTION_COMMIT_EXCEPTION_INSTRUCTION                             30
+#define EVENT_INSTRUCTION_COMMIT_INTERRUPT_INSTRUCTION                             31
 
 /* Memory access events idx macros */
 #define EVENT_MEMORY_ACCESS_ICACHE_MISS                                            1
