@@ -15,7 +15,9 @@ HPM_EVENTS= [
          "Integer division/remainder instruction", "Floating-point load instruction", "Floating-point store instruction",
          "Floating-point addition/subtraction", "Floating-point multiplication",
          "Floating-point fused multiply-add (FMADD, FMSUB, FNMSUB, FNMADD)", "Floating-point division or square-root",
-         "Other floating-point instruction", "Conditional branch prediction fail", "JAL prediction fail", "JALR prediction fail"],
+         "Other floating-point instruction", "Conditional branch prediction fail", "JALR prediction fail",
+         "POP predication fail", "FENCEI instruction", "SFENCE instruction", "ECALL instruction",
+         "EXCEPTION instruction", "INTERRUPT instruction"],
         ["Reserved", "Icache miss", "Dcache miss", "ITLB miss", "DTLB miss", "Main TLB miss"]
 ]
 
