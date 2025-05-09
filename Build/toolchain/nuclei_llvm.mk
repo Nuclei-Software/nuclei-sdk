@@ -109,7 +109,7 @@ endif
 
 ifneq ($(findstring newlib,$(STDCLIB)),)
 #LDFLAGS += -u _isatty -u _write -u _sbrk -u _read -u _close -u _fstat -u _lseek
-LDFLAGS += -u __on_exit_args
+LDFLAGS += -u __on_exit_args -u __call_exitprocs
 endif
 # -nodefaultlibs to ignore the auto added -lc -lgloss in RISCV::Linker::ConstructJob of clang/lib/Driver/ToolChains/RISCVToolchain.cpp
 LDFLAGS += -fuse-ld=lld -nodefaultlibs
