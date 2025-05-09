@@ -577,6 +577,8 @@ main (argc, argv) int argc; char *argv[];
   if (argc > 2)
   {
      printf ("Usage: %s [number of loops]\n", argv[0]);
+     // To fix issue (function exit: .text.exit+0x6): relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references '__call_exitprocs'
+     // you can comment out exit(1) and add return -1; or pass -u __call_exitprocs in link option
      exit (1);
   }
   if (argc == 2)
