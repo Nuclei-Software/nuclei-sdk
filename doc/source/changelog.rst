@@ -28,6 +28,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Fix ``__clear_core_irq_pending`` and ``__clear_core_irq_pending_s`` implementation in ``core_feature_base.h``
   - Fix ``__enable_sw_irq_s`` implementation in ``core_feature_base.h``
   - Add PMA(Physical Memory Attribute) APIs for managing attribute type(Device/Non-Cacheable/Cacheable) of memory regions when **__PMA_PRESENT=1**
+  - Fix and update HPM v1 event macro due to Nuclei ISA documentation update in ``nmsis_bench.h``
 
 * Application
 
@@ -46,6 +47,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Add :ref:`design_app_demo_pma` case to show how to use PMA related API in ``core_feature_pma.h``
   - Add :ref:`design_app_demo_smode_plic` to show how to use PLIC in S-Mode, it will require PLIC and PMP extension
   - Increase freertos timer stack size from 256 to 512 due to timer task still generate vector instruction even with ``AUTOVEC=0``
+  - Add two new benchmark cases ``dhrystone_v2.2`` and ``whetstone_v1.2`` which are the ones used in linux benchmark
 
 * SoC
 
@@ -77,6 +79,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
 * Tools
 
   - Add exclusive lock when program fpga for ``nsdk_cli`` tools
+  - Update ``hpm_parse.py`` to match hpm v1 update
 
 V0.7.1
 ------
