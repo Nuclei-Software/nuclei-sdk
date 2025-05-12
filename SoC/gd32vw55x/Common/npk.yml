@@ -270,6 +270,9 @@ buildconfig:
       - flags: -fuse-ld=lld
       - flags: -u __on_exit_args
         condition: $( startswith(${stdclib}, "newlib") )
+      # workaround for call exit function
+      - flags: -u __call_exitprocs
+        condition: $( startswith(${stdclib}, "newlib") )
       # for clang, newlib_nano still need to define symbol _printf_float to make link pass
       - flags: -lc_nano -lgcc -u _printf_float
         condition: $( ${stdclib} == "newlib_nano" )
