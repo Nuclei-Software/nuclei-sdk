@@ -229,6 +229,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #define EVENT_MEMORY_ACCESS_ITLB_MISS                                           3
 #define EVENT_MEMORY_ACCESS_DTLB_MISS                                           4
 #define EVENT_MEMORY_ACCESS_MAIN_DTLB_MISS                                      5
+#define EVENT_MEMORY_ACCESS_MAIN_TLB_MISS                                       5
 /* The following events are introduced in PMU v2 */
 #define EVENT_MEMORY_ACCESS_L2_CACHE_ACCESS                                     8
 #define EVENT_MEMORY_ACCESS_L2_CACHE_MISS                                       9
@@ -283,7 +284,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #define EVENT_TYPE_1_DCACHE_RW_MISS                                             2
 #define EVENT_TYPE_1_ITLB_READ_MISS                                             3
 #define EVENT_TYPE_1_DTLB_RW_MISS                                               4
-#define EVENT_TYPE_1_MAIN_DTLB_MISS                                             5
+#define EVENT_TYPE_1_MAIN_TLB_MISS                                              5
 #define EVENT_TYPE_1_L2_CACHE_ACCESS                                            8
 #define EVENT_TYPE_1_L2_CACHE_MISS                                              9
 #define EVENT_TYPE_1_MEMORY_BUS_REQUEST                                         10
