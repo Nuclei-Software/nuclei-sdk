@@ -1391,6 +1391,7 @@ __STATIC_FORCEINLINE void UUnlockDCacheLines(unsigned long addr, unsigned long c
 __STATIC_FORCEINLINE void MInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_INVAL_ALL);
+    __RWMB();
 }
 
 /**
@@ -1405,6 +1406,7 @@ __STATIC_FORCEINLINE void MInvalDCache(void)
 __STATIC_FORCEINLINE void SInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_INVAL_ALL);
+    __RWMB();
 }
 
 /**
@@ -1421,6 +1423,7 @@ __STATIC_FORCEINLINE void SInvalDCache(void)
 __STATIC_FORCEINLINE void UInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_INVAL_ALL);
+    __RWMB();
 }
 
 /**
@@ -1435,6 +1438,7 @@ __STATIC_FORCEINLINE void UInvalDCache(void)
 __STATIC_FORCEINLINE void MFlushDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WB_ALL);
+    __RWMB();
 }
 
 /**
@@ -1449,6 +1453,7 @@ __STATIC_FORCEINLINE void MFlushDCache(void)
 __STATIC_FORCEINLINE void SFlushDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WB_ALL);
+    __RWMB();
 }
 
 /**
@@ -1463,6 +1468,7 @@ __STATIC_FORCEINLINE void SFlushDCache(void)
 __STATIC_FORCEINLINE void UFlushDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WB_ALL);
+    __RWMB();
 }
 
 /**
@@ -1477,6 +1483,7 @@ __STATIC_FORCEINLINE void UFlushDCache(void)
 __STATIC_FORCEINLINE void MFlushInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WBINVAL_ALL);
+    __RWMB();
 }
 
 /**
@@ -1491,6 +1498,7 @@ __STATIC_FORCEINLINE void MFlushInvalDCache(void)
 __STATIC_FORCEINLINE void SFlushInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WBINVAL_ALL);
+    __RWMB();
 }
 
 /**
@@ -1505,6 +1513,7 @@ __STATIC_FORCEINLINE void SFlushInvalDCache(void)
 __STATIC_FORCEINLINE void UFlushInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WBINVAL_ALL);
+    __RWMB();
 }
 #endif /* defined(__CCM_PRESENT) && (__CCM_PRESENT == 1) */
 
