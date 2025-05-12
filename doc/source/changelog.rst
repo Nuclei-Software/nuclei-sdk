@@ -29,6 +29,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Fix ``__enable_sw_irq_s`` implementation in ``core_feature_base.h``
   - Add PMA(Physical Memory Attribute) APIs for managing attribute type(Device/Non-Cacheable/Cacheable) of memory regions when **__PMA_PRESENT=1**
   - Fix and update HPM v1 event macro due to Nuclei ISA documentation update in ``nmsis_bench.h``
+  - Add new PMU v1 and v2 event macros in ``nmsis_bench.h``
 
 * Application
 
@@ -79,7 +80,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
 * Tools
 
   - Add exclusive lock when program fpga for ``nsdk_cli`` tools
-  - Update ``hpm_parse.py`` to match hpm v1 update
+  - Update ``hpm_parse.py`` to match hpm v1 and v2 update
 
 V0.7.1
 ------
