@@ -30,7 +30,7 @@ This is version ``0.8.0`` of Nuclei SDK which is still in development.
   - Add PMA(Physical Memory Attribute) APIs for managing attribute type(Device/Non-Cacheable/Cacheable) of memory regions when **__PMA_PRESENT=1**
   - Fix and update HPM v1 event macro due to Nuclei ISA documentation update in ``nmsis_bench.h``
   - Add new PMU v1 and v2 event macros in ``nmsis_bench.h``
-  - Add ``fence`` after flush, invalidate dcache in ``core_feature_cache.h``
+  - Add ``flushpipe`` and ``fence`` after flush, invalidate dcache in ``core_feature_cache.h``
 
 * Application
 

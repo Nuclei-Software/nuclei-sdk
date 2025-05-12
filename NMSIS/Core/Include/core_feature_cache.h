@@ -286,6 +286,8 @@ __STATIC_FORCEINLINE void MInvalICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_INVAL);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -307,6 +309,8 @@ __STATIC_FORCEINLINE void MInvalICacheLines(unsigned long addr, unsigned long cn
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_INVAL);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -324,6 +328,8 @@ __STATIC_FORCEINLINE void SInvalICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_INVAL);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -345,6 +351,8 @@ __STATIC_FORCEINLINE void SInvalICacheLines(unsigned long addr, unsigned long cn
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_INVAL);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -362,6 +370,8 @@ __STATIC_FORCEINLINE void UInvalICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_INVAL);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -383,6 +393,8 @@ __STATIC_FORCEINLINE void UInvalICacheLines(unsigned long addr, unsigned long cn
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_INVAL);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -400,6 +412,8 @@ __STATIC_FORCEINLINE unsigned long MLockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_LOCK);
+    FlushPipeCCM();
+    __RWMB();
     return __RV_CSR_READ(CSR_CCM_MDATA);
 }
 
@@ -423,6 +437,8 @@ __STATIC_FORCEINLINE unsigned long MLockICacheLines(unsigned long addr, unsigned
         __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_LOCK);
+            FlushPipeCCM();
+            __RWMB();
             fail_info = __RV_CSR_READ(CSR_CCM_MDATA);
             if (CCM_OP_SUCCESS != fail_info) {
                 return fail_info;
@@ -446,6 +462,8 @@ __STATIC_FORCEINLINE unsigned long SLockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_LOCK);
+    FlushPipeCCM();
+    __RWMB();
     return __RV_CSR_READ(CSR_CCM_SDATA);
 }
 
@@ -469,6 +487,8 @@ __STATIC_FORCEINLINE unsigned long SLockICacheLines(unsigned long addr, unsigned
         __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_LOCK);
+            FlushPipeCCM();
+            __RWMB();
             fail_info = __RV_CSR_READ(CSR_CCM_SDATA);
             if (CCM_OP_SUCCESS != fail_info) {
                 return fail_info;
@@ -492,6 +512,8 @@ __STATIC_FORCEINLINE unsigned long ULockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_LOCK);
+    FlushPipeCCM();
+    __RWMB();
     return __RV_CSR_READ(CSR_CCM_UDATA);
 }
 
@@ -515,6 +537,8 @@ __STATIC_FORCEINLINE unsigned long ULockICacheLines(unsigned long addr, unsigned
         __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_LOCK);
+            FlushPipeCCM();
+            __RWMB();
             fail_info = __RV_CSR_READ(CSR_CCM_UDATA);
             if (CCM_OP_SUCCESS != fail_info) {
                 return fail_info;
@@ -537,6 +561,8 @@ __STATIC_FORCEINLINE void MUnlockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_UNLOCK);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -558,6 +584,8 @@ __STATIC_FORCEINLINE void MUnlockICacheLines(unsigned long addr, unsigned long c
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_UNLOCK);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -574,6 +602,8 @@ __STATIC_FORCEINLINE void SUnlockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_UNLOCK);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -595,6 +625,8 @@ __STATIC_FORCEINLINE void SUnlockICacheLines(unsigned long addr, unsigned long c
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_UNLOCK);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -611,6 +643,8 @@ __STATIC_FORCEINLINE void UUnlockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_UNLOCK);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -632,6 +666,8 @@ __STATIC_FORCEINLINE void UUnlockICacheLines(unsigned long addr, unsigned long c
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_UNLOCK);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -647,6 +683,8 @@ __STATIC_FORCEINLINE void UUnlockICacheLines(unsigned long addr, unsigned long c
 __STATIC_FORCEINLINE void MInvalICache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_INVAL_ALL);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -661,6 +699,8 @@ __STATIC_FORCEINLINE void MInvalICache(void)
 __STATIC_FORCEINLINE void SInvalICache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_INVAL_ALL);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -675,6 +715,8 @@ __STATIC_FORCEINLINE void SInvalICache(void)
 __STATIC_FORCEINLINE void UInvalICache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_INVAL_ALL);
+    FlushPipeCCM();
+    __RWMB();
 }
 #endif /* defined(__CCM_PRESENT) && (__CCM_PRESENT == 1) */
 /** @} */ /* End of Doxygen Group NMSIS_Core_ICache */
@@ -808,6 +850,8 @@ __STATIC_FORCEINLINE void MInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_INVAL);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -829,6 +873,8 @@ __STATIC_FORCEINLINE void MInvalDCacheLines(unsigned long addr, unsigned long cn
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_INVAL);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -846,6 +892,8 @@ __STATIC_FORCEINLINE void SInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_INVAL);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -867,6 +915,8 @@ __STATIC_FORCEINLINE void SInvalDCacheLines(unsigned long addr, unsigned long cn
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_INVAL);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -884,6 +934,8 @@ __STATIC_FORCEINLINE void UInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_INVAL);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -905,6 +957,8 @@ __STATIC_FORCEINLINE void UInvalDCacheLines(unsigned long addr, unsigned long cn
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_INVAL);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -921,6 +975,8 @@ __STATIC_FORCEINLINE void MFlushDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WB);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -942,6 +998,8 @@ __STATIC_FORCEINLINE void MFlushDCacheLines(unsigned long addr, unsigned long cn
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WB);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -958,6 +1016,8 @@ __STATIC_FORCEINLINE void SFlushDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WB);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -979,6 +1039,8 @@ __STATIC_FORCEINLINE void SFlushDCacheLines(unsigned long addr, unsigned long cn
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WB);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -995,6 +1057,8 @@ __STATIC_FORCEINLINE void UFlushDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WB);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -1016,6 +1080,8 @@ __STATIC_FORCEINLINE void UFlushDCacheLines(unsigned long addr, unsigned long cn
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WB);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -1032,6 +1098,8 @@ __STATIC_FORCEINLINE void MFlushInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WBINVAL);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -1053,6 +1121,8 @@ __STATIC_FORCEINLINE void MFlushInvalDCacheLines(unsigned long addr, unsigned lo
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WBINVAL);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -1069,6 +1139,8 @@ __STATIC_FORCEINLINE void SFlushInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WBINVAL);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -1090,6 +1162,8 @@ __STATIC_FORCEINLINE void SFlushInvalDCacheLines(unsigned long addr, unsigned lo
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WBINVAL);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -1106,6 +1180,8 @@ __STATIC_FORCEINLINE void UFlushInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WBINVAL);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -1127,6 +1203,8 @@ __STATIC_FORCEINLINE void UFlushInvalDCacheLines(unsigned long addr, unsigned lo
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WBINVAL);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -1144,6 +1222,8 @@ __STATIC_FORCEINLINE unsigned long MLockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_LOCK);
+    FlushPipeCCM();
+    __RWMB();
     return __RV_CSR_READ(CSR_CCM_MDATA);
 }
 
@@ -1167,6 +1247,8 @@ __STATIC_FORCEINLINE unsigned long MLockDCacheLines(unsigned long addr, unsigned
         __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_LOCK);
+            FlushPipeCCM();
+            __RWMB();
             fail_info = __RV_CSR_READ(CSR_CCM_MDATA);
             if (CCM_OP_SUCCESS != fail_info) {
                 return fail_info;
@@ -1190,6 +1272,8 @@ __STATIC_FORCEINLINE unsigned long SLockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_LOCK);
+    FlushPipeCCM();
+    __RWMB();
     return __RV_CSR_READ(CSR_CCM_SDATA);
 }
 
@@ -1213,6 +1297,8 @@ __STATIC_FORCEINLINE unsigned long SLockDCacheLines(unsigned long addr, unsigned
         __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_LOCK);
+            FlushPipeCCM();
+            __RWMB();
             fail_info = __RV_CSR_READ(CSR_CCM_SDATA);
             if (CCM_OP_SUCCESS != fail_info) {
                 return fail_info;
@@ -1236,6 +1322,8 @@ __STATIC_FORCEINLINE unsigned long ULockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_LOCK);
+    FlushPipeCCM();
+    __RWMB();
     return __RV_CSR_READ(CSR_CCM_UDATA);
 }
 
@@ -1259,6 +1347,8 @@ __STATIC_FORCEINLINE unsigned long ULockDCacheLines(unsigned long addr, unsigned
         __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_LOCK);
+            FlushPipeCCM();
+            __RWMB();
             fail_info = __RV_CSR_READ(CSR_CCM_UDATA);
             if (CCM_OP_SUCCESS != fail_info) {
                 return fail_info;
@@ -1281,6 +1371,8 @@ __STATIC_FORCEINLINE void MUnlockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_UNLOCK);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -1302,6 +1394,8 @@ __STATIC_FORCEINLINE void MUnlockDCacheLines(unsigned long addr, unsigned long c
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_UNLOCK);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -1318,6 +1412,8 @@ __STATIC_FORCEINLINE void SUnlockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_UNLOCK);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -1339,6 +1435,8 @@ __STATIC_FORCEINLINE void SUnlockDCacheLines(unsigned long addr, unsigned long c
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_UNLOCK);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -1355,6 +1453,8 @@ __STATIC_FORCEINLINE void UUnlockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_UNLOCK);
+    FlushPipeCCM();
+    __RWMB();
 }
 
 /**
@@ -1376,6 +1476,8 @@ __STATIC_FORCEINLINE void UUnlockDCacheLines(unsigned long addr, unsigned long c
         for (i = 0; i < cnt; i++) {
             __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_UNLOCK);
         }
+        FlushPipeCCM();
+        __RWMB();
     }
 }
 
@@ -1391,6 +1493,7 @@ __STATIC_FORCEINLINE void UUnlockDCacheLines(unsigned long addr, unsigned long c
 __STATIC_FORCEINLINE void MInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_INVAL_ALL);
+    FlushPipeCCM();
     __RWMB();
 }
 
@@ -1406,6 +1509,7 @@ __STATIC_FORCEINLINE void MInvalDCache(void)
 __STATIC_FORCEINLINE void SInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_INVAL_ALL);
+    FlushPipeCCM();
     __RWMB();
 }
 
@@ -1423,6 +1527,7 @@ __STATIC_FORCEINLINE void SInvalDCache(void)
 __STATIC_FORCEINLINE void UInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_INVAL_ALL);
+    FlushPipeCCM();
     __RWMB();
 }
 
@@ -1438,6 +1543,7 @@ __STATIC_FORCEINLINE void UInvalDCache(void)
 __STATIC_FORCEINLINE void MFlushDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WB_ALL);
+    FlushPipeCCM();
     __RWMB();
 }
 
@@ -1453,6 +1559,7 @@ __STATIC_FORCEINLINE void MFlushDCache(void)
 __STATIC_FORCEINLINE void SFlushDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WB_ALL);
+    FlushPipeCCM();
     __RWMB();
 }
 
@@ -1468,6 +1575,7 @@ __STATIC_FORCEINLINE void SFlushDCache(void)
 __STATIC_FORCEINLINE void UFlushDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WB_ALL);
+    FlushPipeCCM();
     __RWMB();
 }
 
@@ -1483,6 +1591,7 @@ __STATIC_FORCEINLINE void UFlushDCache(void)
 __STATIC_FORCEINLINE void MFlushInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WBINVAL_ALL);
+    FlushPipeCCM();
     __RWMB();
 }
 
@@ -1498,6 +1607,7 @@ __STATIC_FORCEINLINE void MFlushInvalDCache(void)
 __STATIC_FORCEINLINE void SFlushInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WBINVAL_ALL);
+    FlushPipeCCM();
     __RWMB();
 }
 
@@ -1513,6 +1623,7 @@ __STATIC_FORCEINLINE void SFlushInvalDCache(void)
 __STATIC_FORCEINLINE void UFlushInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WBINVAL_ALL);
+    FlushPipeCCM();
     __RWMB();
 }
 #endif /* defined(__CCM_PRESENT) && (__CCM_PRESENT == 1) */
