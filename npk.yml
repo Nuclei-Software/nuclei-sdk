@@ -2,7 +2,7 @@
 ## This npk.yml only works with Nuclei Studio 2023.10 or later
 name: sdk-nuclei_sdk
 owner: nuclei
-version: 0.8.0-dev
+version: 0.8.0
 description: Nuclei Embedded Software Development Kit
 type: sdk
 keywords:
