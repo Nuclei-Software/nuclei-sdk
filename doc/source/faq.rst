@@ -231,7 +231,7 @@ using c asm intrinsic.
 riscv-nuclei-elf-gcc: not found when using Nuclei Studio 2023.10
 ----------------------------------------------------------------
 
-``riscv-nuclei-elf-gcc``(gcc10) has changed to ``riscv64-unknown-elf-gcc``(gcc13) since Nuclei Studio 2023.10 or
+``riscv-nuclei-elf-gcc`` (gcc10) has changed to ``riscv64-unknown-elf-gcc`` (gcc13) since Nuclei Studio 2023.10 or
 Nuclei RISC-V Toolchain 2023.10, so if you are using older toolchain created npk package or ide project, you
 may face this build fail issue, you can follow the user guide of Nuclei Studio 2023.10 to fix this issue, see chapter 8.
 

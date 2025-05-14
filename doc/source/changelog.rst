@@ -51,15 +51,15 @@ This is release version ``0.8.0`` of Nuclei SDK.
   - please use :ref:`design_app_demo_smpu` now.
   - Add ``-fno-tree-tail-merge`` compiler option for threadx RTOS example compiling, which is required for correct
   - compiling
-  - Fix :ref:`_design_app_demo_vnice` insufficient mask length when vlen > 128
+  - Fix :ref:`design_app_demo_vnice` insufficient mask length when vlen > 128
   - Add more documentation for :ref:`design_app_demo_dsp` example
   - Optimize :ref:`design_app_smphello` spinlock usage and update doc for it
   - Optimize :ref:`design_app_demo_profiling` example execution speed on hw from about 5min to 30s by decease the loop count
-  - Update :ref:`_design_app_freertos_demo` example to use ``configTICK_TYPE_WIDTH_IN_BITS`` instead of ``configUSE_16_BIT_TICKS``
+  - Update :ref:`design_app_freertos_demo` example to use ``configTICK_TYPE_WIDTH_IN_BITS`` instead of ``configUSE_16_BIT_TICKS``
   - Add :ref:`design_app_demo_pma` case to show how to use PMA related API in ``core_feature_pma.h``
   - Add :ref:`design_app_demo_smode_plic` to show how to use PLIC in S-Mode, it will require PLIC and PMP extension
-  - Increase freertos timer stack size from 256 to 512 due to timer task still generate vector instruction even with ``AUTOVEC=0``
-  - Add two new benchmark cases ``dhrystone_v2.2`` and ``whetstone_v1.2`` which are the ones used in linux benchmark
+  - Increase freertos timer stack size from ``256`` to ``512`` due to timer task still generate vector instruction even with :ref:`AUTOVEC=0 <develop_buildsystem_var_autovec>`
+  - Add two new benchmark cases :ref:`design_app_dhrystone_v2.2` and :ref:`design_app_whetstone_v1.2` which are the ones used in linux benchmark
 
 * SoC
 
@@ -84,7 +84,7 @@ This is release version ``0.8.0`` of Nuclei SDK.
 
 * Build System
 
-  - Add **COMPILE_PREFIX** support for :ref:`develop_buildsystem_var_toolchain:` ``nuclei_llvm``, now both ``nuclei_llvm`` and ``nuclei_gnu`` support this variable, you can change it like this ``COMPILE_PREFIX=/path/to/newgcc/bin/riscv64-unknown-elf-`` when do make command
+  - Add **COMPILE_PREFIX** support for :ref:`develop_buildsystem_var_toolchain` ``nuclei_llvm``, now both ``nuclei_llvm`` and ``nuclei_gnu`` support this variable, you can change it like this ``COMPILE_PREFIX=/path/to/newgcc/bin/riscv64-unknown-elf-`` when do make command
   - Add :ref:`develop_buildsystem_var_autovec` make variable, when **AUTOVEC=0**, it will disable auto vectorization as much as possible, this is useful for some application which require no auto vectorization
   - Add ``GDB_UPLOAD_EXTRA_CMDS`` make variable to execute extra commands after upload elf file to target
 

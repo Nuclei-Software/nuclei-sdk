@@ -1141,11 +1141,11 @@ to get different score number.
 .. _design_app_whetstone_v1.2:
 
 whetstone_v1.2
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 This `whetstone_v1.2 benchmark application`_ is used to run C Converted Whetstone
 Single or Double Precision Benchmark Version 1.2 22 March 1998, which has different
-algorithm to this version `whetstone benchmark application`_(they are incomparable).
+algorithm to this version `whetstone benchmark application`_ (they are incomparable).
 
 In Nuclei SDK, we provided code and Makefile for this ``whetstone_v1.2`` application.
 You can also optimize the ``COMMON_FLAGS`` defined in whetstone application Makefile
@@ -2830,9 +2830,6 @@ The main feature required is the TEE, and SSTC is also preferred.
     thread 4 count: 3
     Main thread count: 2
 
-.. _design_app_rtthread_msh:
-
-
 ThreadX applications
 --------------------
 
@@ -2902,7 +2899,7 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx demo`` applicati
 .. _freertos smpdemo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/freertos/smpdemo
 .. _ucosii demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/ucosii/demo
 .. _rt-thread demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo
-.. _rt-thread demo_smode application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo_smode
+.. _rt-thread demo smode application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo_smode
 .. _rt-thread msh application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/msh
 .. _threadx demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/threadx/demo
 .. _demo_smode_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_eclic

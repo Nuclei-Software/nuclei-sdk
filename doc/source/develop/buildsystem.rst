@@ -1652,13 +1652,14 @@ e.g. To search C/CPP/ASM source files in directory ``.`` and ``src``
 
     SRCDIRS = . src
 
+
 .. _develop_buildsystem_var_c_srcdirs:
 
 C_SRCDIRS
 ~~~~~~~~~
 
 This **C_SRCDIRS** is used to set the source directories used to search
-the C only source code files(*.c, *.C), it will not do recursively.
+the C only source code files(``*.c, *.C``), it will not do recursively.
 
 e.g. To search C only source files in directory ``.`` and ``csrc``
 
@@ -1673,7 +1674,7 @@ CXX_SRCDIRS
 ~~~~~~~~~~~
 
 This **CXX_SRCDIRS** is used to set the source directories used to search
-the CPP only source code files(*.cpp, *.CPP), it will not do recursively.
+the CPP only source code files(``*.cpp, *.CPP``), it will not do recursively.
 
 e.g. To search CPP only source files in directory ``.`` and ``cppsrc``
 
@@ -1688,7 +1689,7 @@ ASM_SRCDIRS
 ~~~~~~~~~~~
 
 This **ASM_SRCDIRS** is used to set the source directories used to search
-the ASM only source code files(*.s, *.S), it will not do recursively.
+the ASM only source code files(``*.s, *.S``), it will not do recursively.
 
 e.g. To search ASM only source files in directory ``.`` and ``asmsrc``
 
