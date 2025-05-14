@@ -6,6 +6,16 @@ Changelog
 V0.8.0
 ------
 
+.. note::
+
+    - Two new benchmark cases ``dhrystone_v2.2`` and ``whetstone_v1.2`` are added in this release.
+    - In Nuclei Studio IDE, if you are importing this Nuclei SDK 0.8.0 as a NPK package, you will be able to see following versions in new project wizard:
+
+      - **Dhrystone Benchmark, Version 2.1**: located in ``application/baremetal/benchmark/dhrystone``, previous existed version
+      - **Whetstone Benchmark, Roy Longbottom Version**: located in ``application/baremetal/benchmark/whetstone``, previous existed version
+      - **Dhrystone Benchmark, Version 2.2**: located in ``application/baremetal/benchmark/dhrystone_v2.2``, **new** introduced version
+      - **Whetstone Benchmark, Netlib Version 1.2**: located in ``application/baremetal/benchmark/whetstone_v1.2``, **new** introduced version
+
 This is release version ``0.8.0`` of Nuclei SDK.
 
 * NMSIS
