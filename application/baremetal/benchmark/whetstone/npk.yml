@@ -2,14 +2,14 @@
 name: app-nsdk_whetstone
 owner: nuclei
 version:
-description: Whetstone Benchmark
+description: Whetstone Benchmark, Roy Longbottom Version
 type: app
 keywords:
   - baremetal
   - benchmark
 category: baremetal application
 license:
-homepage:
+homepage: http://www.roylongbottom.org.uk/whetstone.htm
 
 ## Package Dependency
 dependencies:

@@ -2,14 +2,14 @@
 name: app-nsdk_whetstone_v1.2
 owner: nuclei
 version:
-description: Whetstone Benchmark Version 1.2 22 March 1998
+description: Whetstone Benchmark, Netlib Version 1.2
 type: app
 keywords:
   - baremetal
   - benchmark
 category: baremetal application
 license:
-homepage:
+homepage: https://www.netlib.org/benchmark/whetstone.c
 
 ## Package Dependency
 dependencies:

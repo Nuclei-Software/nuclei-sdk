@@ -2,14 +2,14 @@
 name: app-nsdk_dhrystone
 owner: nuclei
 version:
-description: Dhrystone Benchmark
+description: Dhrystone Benchmark, Version 2.1
 type: app
 keywords:
   - baremetal
   - benchmark
 category: baremetal application
 license:
-homepage:
+homepage: https://github.com/Keith-S-Thompson/dhrystone/tree/master/v2.1
 
 ## Package Dependency
 dependencies:
