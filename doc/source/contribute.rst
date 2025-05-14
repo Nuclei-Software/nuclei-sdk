@@ -26,9 +26,9 @@ CPU features, if you are already using it, please keep in update of the evalsoc 
 release, you can track it by diff each release changes, and please also remember Nuclei SDK release may
 also bump with NMSIS release.
 
-Assume your SoC name is ``ncstar``, based on Nuclei core **n300f**, and **RISCV_ARCH**
+Assume your SoC name is ``ncstar``, based on Nuclei core :ref:`n300f <develop_buildsystem_var_core>`, and **RISCV_ARCH**
 is ``rv32imafc``, **RISCV_ABI** is ``ilp32f``, and you made a new board called ``ncstar_eval``,
-and this SoC only support **FlashXIP** download mode.
+and this SoC only support **flashxip** :ref:`download <develop_buildsystem_var_download>` mode.
 
 Make sure the SoC name and Board name used in this Nuclei SDK is all in lowercase.
 
