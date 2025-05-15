@@ -26,7 +26,7 @@ void nice_case(unsigned int array[ROW_LEN][COL_LEN], unsigned int col_sum[COL_LE
     int i;
     volatile unsigned long init_buf[COL_LEN] = {0};
 
-    custom_lbuf(init_buf);
+    custom_lbuf((unsigned long *)init_buf);
     for (i = 0; i < ROW_LEN; i++) {
         row_sum[i] = custom_rowsum((unsigned long*)array[i]);
     }
