@@ -124,10 +124,14 @@ main(void)
 	int continuous;
 
 #if CFG_SIMULATION
-//for simulation we make it small
+    /* for simulation we make it small */
     loopstart = 200;
 #else
-    loopstart = 50000;		/* see the note about LOOP below */
+#ifdef __riscv_flen
+    loopstart = 50000; /* see the note about LOOP below */
+#else
+    loopstart = 500;   /* when no fpu present, run less loops */
+#endif
 #endif
 	continuous = 0;
 
