@@ -409,7 +409,7 @@ C--------------------------------------------------------------------
 
     uint32_t whet_mwips = (uint32_t)(mwips_mhz * 1000);
     char *pstr = dec2str(whet_mwips);
-    printf("\nCSV, Benchmark, MWIPS/MHz\n");
+    printf("\nCSV, Benchmark, MWIPS/MHz-v1.2\n");
     printf("CSV, Whetstone_v1.2, %u.%s\n", (unsigned int)(whet_mwips/1000), pstr);
 
     float f_ipc = (((float)used_instret / used_cycle));

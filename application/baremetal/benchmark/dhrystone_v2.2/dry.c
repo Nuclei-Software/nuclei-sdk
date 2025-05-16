@@ -786,7 +786,7 @@ main (argc, argv) int argc; char *argv[];
 
     uint32_t dhry_dmips = (uint32_t)(DMIPS_MHZ * 1000);
     char *pstr = dec2str(dhry_dmips);
-    printf("\nCSV, Benchmark, Iterations, Cycles, DMIPS/MHz\n");
+    printf("\nCSV, Benchmark, Iterations, Cycles, DMIPS/MHz-v2.2\n");
     printf("CSV, Dhrystone_v2.2, %u, %u, %u.%s\n", \
         (unsigned int)Number_Of_Runs, (unsigned int)User_Cycle, (unsigned int)(dhry_dmips/1000), pstr);
 
