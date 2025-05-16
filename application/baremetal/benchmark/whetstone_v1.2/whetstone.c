@@ -76,7 +76,7 @@ void P3(SPDP X, SPDP Y, SPDP *Z);
 static uint64_t start_cycle, end_cycle, used_cycle;
 static uint64_t start_instret, end_instret, used_instret;
 
-SPDP time()
+SPDP time(void)
 {
 #if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
     return (SPDP) SysTimer_GetLoadValue() / SOC_TIMER_FREQ;
@@ -143,7 +143,7 @@ C
 */
     __set_rv_cycle(0);
     __set_rv_instret(0);
-    startsec = time(0);
+    startsec = time();
     start_cycle = __get_rv_cycle();
     start_instret = __get_rv_instret();
 
