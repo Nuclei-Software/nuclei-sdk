@@ -187,7 +187,7 @@
 
 /*PRECISION PRECISION PRECISION PRECISION PRECISION PRECISION PRECISION*/
 
-#define opt "Opt 3 32 Bit"
+#define Version "Roy Longbottom Version"
 
 void whetstones(long xtra, long x100, int calibrate);
 void pa(SPDP e[4], SPDP t, SPDP t2);
@@ -237,7 +237,7 @@ int main(void)
 
     printf("\n");
     printf("##########################################\n");
-    printf("%s Precision C Whetstone Benchmark %s \n", Precision, opt);
+    printf("%s Precision C Whetstone Benchmark %s \n", Precision, Version);
 
     printf("Calibrate\n");
     do {
