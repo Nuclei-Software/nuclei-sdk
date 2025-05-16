@@ -125,7 +125,7 @@ main(void)
 
 #if CFG_SIMULATION
 //for simulation we make it small
-    loopstart = 10;
+    loopstart = 200;
 #else
     loopstart = 50000;		/* see the note about LOOP below */
 #endif
