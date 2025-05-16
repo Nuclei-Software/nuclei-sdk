@@ -406,7 +406,11 @@ C--------------------------------------------------------------------
 	printf("Loops: %ld, Iterations: %d, Duration: %ld sec.\n",
 			LOOP, II, finisec-startsec);
 
-	KIPS = (100.0*LOOP*II)/(float)(finisec-startsec);
+    if ((finisec - startsec) > 0) {
+        KIPS = (100.0*LOOP*II)/(float)(finisec-startsec);
+    } else {
+        KIPS = ((100.0*LOOP*II)/(float)used_cycle) * SystemCoreClock;
+    }
     mwips = KIPS/1000.0;
 	printf("C Converted %s Precision Whetstones: %.1f MIPS\n", Precision, mwips);
     mwips_mhz = mwips / SystemCoreClock * 1000000;
