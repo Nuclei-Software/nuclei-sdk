@@ -52,12 +52,12 @@
  *
  *  Collection of Results:
  *              Reinhold Weicker (address see above) and
- *              
+ *
  *              Rick Richardson
  *              PC Research. Inc.
  *              94 Apple Orchard Drive
  *              Tinton Falls, NJ 07724
- *                      Phone:  (201) 389-8963 (9-17 EST)               
+ *                      Phone:  (201) 389-8963 (9-17 EST)
  *                      Usenet: ...!uunet!pcrat!rick
  *
  *      Please send results to Rick Richardson and/or Reinhold Weicker.
@@ -96,7 +96,7 @@
  *      -DTIME
  *              The "times" function of UNIX (returning process times)
  *              or the "time" function (returning wallclock time)
- *              is used for measurement. 
+ *              is used for measurement.
  *              For single user machines, "time ()" is adequate. For
  *              multi-user machines where you cannot get single-user
  *              access, use the "times ()" function. If you have
@@ -150,7 +150,7 @@
  *      version previously distributed by Reinhold Weicker.
  *
  *      At several places in the benchmark, code has been added,
- *      but within the measurement loop only in branches that 
+ *      but within the measurement loop only in branches that
  *      are not executed. The intention is that optimizing compilers
  *      should be prevented from moving code out of the measurement
  *      loop, or from removing code altogether. Since the statements
@@ -228,23 +228,23 @@
  *   different from the Ada version.]
  *
  *  The following program contains statements of a high level programming
- *  language (here: C) in a distribution considered representative:           
+ *  language (here: C) in a distribution considered representative:
  *
  *    assignments                  52 (51.0 %)
  *    control statements           33 (32.4 %)
  *    procedure, function calls    17 (16.7 %)
  *
  *  103 statements are dynamically executed. The program is balanced with
- *  respect to the three aspects:                                             
+ *  respect to the three aspects:
  *
  *    - statement type
  *    - operand type
  *    - operand locality
- *         operand global, local, parameter, or constant.                     
+ *         operand global, local, parameter, or constant.
  *
- *  The combination of these three aspects is balanced only approximately.    
+ *  The combination of these three aspects is balanced only approximately.
  *
- *  1. Statement Type:                                                        
+ *  1. Statement Type:
  *  -----------------             number
  *
  *     V1 = V2                     9
@@ -288,9 +288,9 @@
  *       library procedure    1
  *     X = F (...)
  *             function  call      6
- *       user function        5                                         
- *       library function     1                                               
- *                                --                                          
+ *       user function        5
+ *       library function     1
+ *                                --
  *                                17       17
  *                                        ---
  *                                        103
@@ -303,10 +303,10 @@
  *                          number    approximate
  *                                    percentage
  *
- *    Arithmetic             32          50.8                                 
+ *    Arithmetic             32          50.8
  *
- *       +                     21          33.3                              
- *       -                      7          11.1                              
+ *       +                     21          33.3
+ *       -                      7          11.1
  *       *                      3           4.8
  *       / (int div)            1           1.6
  *
@@ -324,7 +324,7 @@
  *       && (AND-THEN)          1            1.6
  *       |  (OR)                1            1.6
  *       !  (NOT)               2            3.2
- * 
+ *
  *                           --          -----
  *                           63          100.1
  *
@@ -344,10 +344,10 @@
  *                           242       100.0 %
  *
  *  When there is an access path leading to the final operand (e.g. a record
- *  component), only the final data type on the access path is counted.       
+ *  component), only the final data type on the access path is counted.
  *
  *
- *  4. Operand Locality:                                                      
+ *  4. Operand Locality:
  *  -------------------
  *                                number    approximate
  *                                          percentage
@@ -461,7 +461,10 @@ struct tms      time_info;
 #include <stdint.h>
                 /* for strcpy, strcmp */
 
-#define Null 0 
+#include <string.h>
+#include <stdlib.h>
+
+#define Null 0
                 /* Value of a Null pointer */
 #define true  1
 #define false 0
@@ -474,7 +477,7 @@ typedef char    Str_30 [31];
 typedef int     Arr_1_Dim [50];
 typedef int     Arr_2_Dim [50] [50];
 
-typedef struct record 
+typedef struct record
     {
     struct record *Ptr_Comp;
     Enumeration    Discr;
@@ -508,7 +511,6 @@ char            Ch_1_Glob,
 int             Arr_1_Glob [50];
 int             Arr_2_Glob [50] [50];
 
-extern char     *malloc ();
 Enumeration     Func_1 ();
   /* forward declaration necessary since Enumeration may not simply be int */
 
@@ -602,7 +604,7 @@ main (argc, argv) int argc; char *argv[];
   Ptr_Glob->Discr                       = Ident_1;
   Ptr_Glob->variant.var_1.Enum_Comp     = Ident_3;
   Ptr_Glob->variant.var_1.Int_Comp      = 40;
-  strcpy (Ptr_Glob->variant.var_1.Str_Comp, 
+  strcpy (Ptr_Glob->variant.var_1.Str_Comp,
           "DHRYSTONE PROGRAM, SOME STRING");
   strcpy (Str_1_Loc, "DHRYSTONE PROGRAM, 1'ST STRING");
 
@@ -763,7 +765,7 @@ main (argc, argv) int argc; char *argv[];
     User_Instret = End_Instret - Begin_Instret;
     User_Cycle = End_Cycle - Begin_Cycle;
 
-    Microseconds = (float) User_Time * Mic_secs_Per_Second 
+    Microseconds = (float) User_Time * Mic_secs_Per_Second
                         / ((float) HZ * ((float) Number_Of_Runs));
     Dhrystones_Per_Second = ((float) HZ * (float) Number_Of_Runs)
                         / (float) User_Time;
@@ -805,27 +807,27 @@ Proc_1 (Ptr_Val_Par)
 REG Rec_Pointer Ptr_Val_Par;
     /* executed once */
 {
-  REG Rec_Pointer Next_Record = Ptr_Val_Par->Ptr_Comp;  
+  REG Rec_Pointer Next_Record = Ptr_Val_Par->Ptr_Comp;
                                         /* == Ptr_Glob_Next */
   /* Local variable, initialized with Ptr_Val_Par->Ptr_Comp,    */
   /* corresponds to "rename" in Ada, "with" in Pascal           */
-  
-  structassign (*Ptr_Val_Par->Ptr_Comp, *Ptr_Glob); 
+
+  structassign (*Ptr_Val_Par->Ptr_Comp, *Ptr_Glob);
   Ptr_Val_Par->variant.var_1.Int_Comp = 5;
-  Next_Record->variant.var_1.Int_Comp 
+  Next_Record->variant.var_1.Int_Comp
         = Ptr_Val_Par->variant.var_1.Int_Comp;
   Next_Record->Ptr_Comp = Ptr_Val_Par->Ptr_Comp;
   Proc_3 (&Next_Record->Ptr_Comp);
-    /* Ptr_Val_Par->Ptr_Comp->Ptr_Comp 
+    /* Ptr_Val_Par->Ptr_Comp->Ptr_Comp
                         == Ptr_Glob->Ptr_Comp */
   if (Next_Record->Discr == Ident_1)
     /* then, executed */
   {
     Next_Record->variant.var_1.Int_Comp = 6;
-    Proc_6 (Ptr_Val_Par->variant.var_1.Enum_Comp, 
+    Proc_6 (Ptr_Val_Par->variant.var_1.Enum_Comp,
            &Next_Record->variant.var_1.Enum_Comp);
     Next_Record->Ptr_Comp = Ptr_Glob->Ptr_Comp;
-    Proc_7 (Next_Record->variant.var_1.Int_Comp, 10, 
+    Proc_7 (Next_Record->variant.var_1.Int_Comp, 10,
            &Next_Record->variant.var_1.Int_Comp);
   }
   else /* not executed */
@@ -840,7 +842,7 @@ Proc_2 (Int_Par_Ref)
 
 One_Fifty   *Int_Par_Ref;
 {
-  One_Fifty  Int_Loc;  
+  One_Fifty  Int_Loc;
   Enumeration   Enum_Loc;
 
   Int_Loc = *Int_Par_Ref + 10;
@@ -934,10 +936,10 @@ Enumeration *Enum_Ref_Par;
     *Enum_Ref_Par = Ident_4;
   switch (Enum_Val_Par)
   {
-    case Ident_1: 
+    case Ident_1:
       *Enum_Ref_Par = Ident_1;
       break;
-    case Ident_2: 
+    case Ident_2:
       if (Int_Glob > 100)
         /* then */
       *Enum_Ref_Par = Ident_1;
@@ -947,7 +949,7 @@ Enumeration *Enum_Ref_Par;
       *Enum_Ref_Par = Ident_2;
       break;
     case Ident_4: break;
-    case Ident_5: 
+    case Ident_5:
       *Enum_Ref_Par = Ident_3;
       break;
   } /* switch */
@@ -956,7 +958,7 @@ Enumeration *Enum_Ref_Par;
 
 Proc_7 (Int_1_Par_Val, Int_2_Par_Val, Int_Par_Ref)
 /**********************************************/
-    /* executed three times                                      */ 
+    /* executed three times                                      */
     /* first call:      Int_1_Par_Val == 2, Int_2_Par_Val == 3,  */
     /*                  Int_Par_Ref becomes 7                    */
     /* second call:     Int_1_Par_Val == 10, Int_2_Par_Val == 5, */
