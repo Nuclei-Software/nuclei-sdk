@@ -81,6 +81,7 @@ This is release version ``0.8.0`` of Nuclei SDK.
   - Update FreeRTOS port to use ``configTICK_TYPE_WIDTH_IN_BITS`` instead of ``configUSE_16_BIT_TICKS``
   - Cherry-pick a FreeRTOS incorrect error checking of prvCreateIdleTasks fix, see https://github.com/FreeRTOS/FreeRTOS-Kernel/commit/a49c35b5dc0f1f521eef3ef993d401af7f26f439
   - Add ThreadX module support for both RISC-V 32 and 64 bit
+  - Add FreeRTOS lazy fp/vector registers save and restore support
 
 * Build System
 
