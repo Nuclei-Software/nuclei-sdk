@@ -33,6 +33,7 @@ extern "C" {
 #endif
 
 // NOTE: this cpufeature.h header file is introduced in Nuclei N100 SDK 0.1.0
+// TODO: please update this cpufeature.h header file content according to your SoC specification
 #include "cpufeature.h"
 
 /** @addtogroup Nuclei
@@ -196,6 +197,7 @@ typedef enum EXCn {
 #define RTC_FREQ                    32768
 #endif
 // The TIMER frequency is just the RTC frequency
+// TODO change it for your real soc timer frequency
 #define SOC_TIMER_FREQ              RTC_FREQ
 /* =========================================================================================================================== */
 /* ================                            Device Specific Peripheral Section                             ================ */
@@ -397,6 +399,7 @@ typedef struct {
 // Misc
 
 // Only used by Nuclei Internally, please dont use it
+// TODO: If you don't have simulation mode, please change it to {}
 #define SIMULATION_EXIT(ret)    { __WMB(); UART0->RXFIFO = (ret);       \
                                     while (UART0->TXFIFO & (1<<31));    \
                                     UART0->TXFIFO = 4; }

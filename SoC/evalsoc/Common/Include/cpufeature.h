@@ -7,6 +7,7 @@ extern "C" {
 
 
 // NOTE: This header file is used to tell us the Nuclei CPU Feature
+// see https://doc.nucleisys.com/nuclei_n100_sdk/design/soc/evalsoc.html#usage
 // Currently for the evalsoc's cpu feature, we manually create this header file
 // but for our customer, you can use nuclei_gen tool to generate it, and just replace it
 // If you want to create it on your own, please modify these files:
