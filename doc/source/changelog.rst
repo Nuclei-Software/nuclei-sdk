@@ -3,10 +3,15 @@
 Changelog
 =========
 
-V0.2.0-dev
-----------
+V0.2.0
+-------
 
-This is development version ``0.2.0-dev`` of N100 SDK.
+.. note::
+
+    - Please use Nuclei N100 SDK with **Nuclei Studio 2025.02**, get it from https://nucleisys.com/download.php#tools
+    - This version of N100 SDK only support latest n100/ns100 cpu core.
+
+This is release version ``0.2.0`` of N100 SDK.
 
 * Application
 
@@ -32,6 +37,11 @@ This is development version ``0.2.0-dev`` of N100 SDK.
   - Fix ``delay_1ms`` API may work wrongly due to TIME register overflow
   - N100 evalsoc external interrupt number changed from 30 to 16
   - N100 exception entry alignment changed to 4bytes to match n100 design
+
+* Build System
+
+  - Add ``nuclei_llvm`` and ``terapines`` toolchain supported, required Nuclei Studio 2025.02
+  - Fix IAR prebuild projects build issues
 
 V0.1.0
 ------
