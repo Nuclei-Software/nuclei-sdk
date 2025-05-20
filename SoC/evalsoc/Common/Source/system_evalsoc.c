@@ -236,7 +236,7 @@ void Exception_Init(void)
 #ifdef CFG_HAS_TRAP_CSR
     /* TODO when the exception entry csr MTVEC is writable, you can remap exception entry */
     /* but you need to handle the remap by yourself by update linker script */
-    __RV_CSR_WRITE(CSR_MTVEC, exc_entry);
+    __RV_CSR_WRITE(CSR_MTVEC, (rv_csr_t)exc_entry);
 #endif
 #endif
 
@@ -401,7 +401,7 @@ void Interrupt_Init(void)
 #ifdef CFG_HAS_TRAP_CSR
     /* TODO when the interrupt vector entry csr MTVT is writable, you can remap your vector table */
     /* but you need to handle the remap by yourself by update linker script */
-    __RV_CSR_WRITE(CSR_MTVT, vector_base);
+    __RV_CSR_WRITE(CSR_MTVT, (rv_csr_t)vector_base);
 #endif
 
 #endif
