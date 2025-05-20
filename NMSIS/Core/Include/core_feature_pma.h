@@ -50,11 +50,11 @@
  *   @{
  */
 
-#define PMA_REGION_TYPE_SECSHARE      (0x1 << 3)    /*!< Set this region shareable between secure world and non-secure world, or else default is invalid */
-#define PMA_REGION_TYPE_NC            (0x1 << 2)    /*!< Set this region Non-Cacheable, or else default is invalid */
-#define PMA_REGION_TYPE_DEV           (0x1 << 1)    /*!< Set this region Device, or else default is invalid */
+#define PMA_REGION_TYPE_SECSHARE      (1UL << 3)    /*!< Set this region shareable between secure world and non-secure world, or else default is invalid */
+#define PMA_REGION_TYPE_NC            (1UL << 2)    /*!< Set this region Non-Cacheable, or else default is invalid */
+#define PMA_REGION_TYPE_DEV           (1UL << 1)    /*!< Set this region Device, or else default is invalid */
 #define PMA_REGION_TYPE_CA            (0)           /*!< Set this region Cacheable, which is default */
-#define PMA_REGION_ENA                (0x1 << 0)    /*!< Enable this region, then the region type will take effect */
+#define PMA_REGION_ENA                (1UL << 0)    /*!< Enable this region, then the region type will take effect */
 #define PMA_REGION_DIS                (0)           /*!< Disable this region */
 
 typedef struct PMA_CONFIG {

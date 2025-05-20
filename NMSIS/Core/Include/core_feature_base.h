@@ -881,7 +881,7 @@ __STATIC_FORCEINLINE void __disable_sw_irq(void)
  */
 __STATIC_FORCEINLINE void __disable_core_irq(uint32_t irq)
 {
-    __RV_CSR_CLEAR(CSR_MIE, 1 << irq);
+    __RV_CSR_CLEAR(CSR_MIE, 1UL << irq);
 }
 
 /**
@@ -892,7 +892,7 @@ __STATIC_FORCEINLINE void __disable_core_irq(uint32_t irq)
  */
 __STATIC_FORCEINLINE void __enable_core_irq(uint32_t irq)
 {
-    __RV_CSR_SET(CSR_MIE, 1 << irq);
+    __RV_CSR_SET(CSR_MIE, 1UL << irq);
 }
 
 /**
@@ -914,7 +914,7 @@ __STATIC_FORCEINLINE uint32_t __get_core_irq_pending(uint32_t irq)
  */
 __STATIC_FORCEINLINE void __clear_core_irq_pending(uint32_t irq)
 {
-    __RV_CSR_CLEAR(CSR_MIP, 1 << irq);
+    __RV_CSR_CLEAR(CSR_MIP, 1UL << irq);
 }
 
 /**
@@ -1013,7 +1013,7 @@ __STATIC_FORCEINLINE void __disable_sw_irq_s(void)
  */
 __STATIC_FORCEINLINE void __disable_core_irq_s(uint32_t irq)
 {
-    __RV_CSR_CLEAR(CSR_SIE, 1 << irq);
+    __RV_CSR_CLEAR(CSR_SIE, 1UL << irq);
 }
 
 /**
@@ -1024,7 +1024,7 @@ __STATIC_FORCEINLINE void __disable_core_irq_s(uint32_t irq)
  */
 __STATIC_FORCEINLINE void __enable_core_irq_s(uint32_t irq)
 {
-    __RV_CSR_SET(CSR_SIE, 1 << irq);
+    __RV_CSR_SET(CSR_SIE, 1UL << irq);
 }
 
 /**
@@ -1046,7 +1046,7 @@ __STATIC_FORCEINLINE uint32_t __get_core_irq_pending_s(uint32_t irq)
  */
 __STATIC_FORCEINLINE void __clear_core_irq_pending_s(uint32_t irq)
 {
-    __RV_CSR_CLEAR(CSR_SIP, 1 << irq);
+    __RV_CSR_CLEAR(CSR_SIP, 1UL << irq);
 }
 
 /**
@@ -1463,7 +1463,7 @@ __STATIC_FORCEINLINE void __disable_minstret_counter(void)
  */
 __STATIC_FORCEINLINE void __enable_mhpm_counter(unsigned long idx)
 {
-    __RV_CSR_CLEAR(CSR_MCOUNTINHIBIT, (1 << idx));
+    __RV_CSR_CLEAR(CSR_MCOUNTINHIBIT, (1UL << idx));
 }
 
 /**
@@ -1474,7 +1474,7 @@ __STATIC_FORCEINLINE void __enable_mhpm_counter(unsigned long idx)
  */
 __STATIC_FORCEINLINE void __disable_mhpm_counter(unsigned long idx)
 {
-    __RV_CSR_SET(CSR_MCOUNTINHIBIT, (1 << idx));
+    __RV_CSR_SET(CSR_MCOUNTINHIBIT, (1UL << idx));
 }
 
 /**

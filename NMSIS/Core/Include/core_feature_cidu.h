@@ -62,7 +62,7 @@ extern "C" {
 #endif
 
 #define CIDU_BASE                                __CIDU_BASEADDR
-#define CIDU_RECEIVE_INTERRUPT_EN(core_id)       (0x1U << core_id)   /*!< Indicates the core can receive corresponding interrupt */
+#define CIDU_RECEIVE_INTERRUPT_EN(core_id)       (0x1UL << core_id)   /*!< Indicates the core can receive corresponding interrupt */
 
 #define CIDU_CORE_INT_STATUS_OFS      0x0        /*!< Core n Inter Core Interrupt status register base offset */
 #define CIDU_SEMAPHORE_OFS            0x80       /*!< Semaphore n register base offset */
@@ -187,7 +187,7 @@ __STATIC_FORCEINLINE long CIDU_SetFirstClaimMode(uint32_t int_id, uint32_t core_
 {
     uint32_t val = 0;
     uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(int_id);
-    uint32_t mask = 1 << core_id;
+    uint32_t mask = 1UL << core_id;
 
     __SW(addr, mask);
     val = __LW(addr);
@@ -311,7 +311,7 @@ __STATIC_FORCEINLINE void CIDU_ClearInterCoreIntReq(uint32_t send_core_id, uint3
     uint32_t val = 0;
     uint32_t* addr = (uint32_t*)CIDU_CORE_INT_STATUS_ADDR(recv_core_id);
 
-    val = (uint32_t)(1 << send_core_id);
+    val = (uint32_t)(1UL << send_core_id);
     __SW(addr, val);
 }
 /** @} */ /* End of Doxygen Group NMSIS_Core_ICI */

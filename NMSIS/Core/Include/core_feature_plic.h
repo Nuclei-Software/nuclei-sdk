@@ -155,7 +155,7 @@ __STATIC_FORCEINLINE void PLIC_EnableContextInterrupt(uint32_t ctxid, uint32_t s
     volatile uint32_t *enable_reg = (uint32_t *)PLIC_ENABLE_REGADDR(ctxid, source);
 
     uint32_t current = *enable_reg;
-    current = current | (1 << (source & 0x1F));
+    current = current | (1UL << (source & 0x1F));
     *enable_reg = current;
 }
 
@@ -174,7 +174,7 @@ __STATIC_FORCEINLINE void PLIC_DisableContextInterrupt(uint32_t ctxid, uint32_t 
     volatile uint32_t *enable_reg = (uint32_t *)PLIC_ENABLE_REGADDR(ctxid, source);
 
     uint32_t current = *enable_reg;
-    current = current & (~(1 << (source & 0x1F)));
+    current = current & (~(1UL << (source & 0x1F)));
     *enable_reg = current;
 }
 
@@ -214,7 +214,7 @@ __STATIC_FORCEINLINE void PLIC_SetInterruptPending(uint32_t source)
     volatile uint32_t *pending_reg = (uint32_t *)PLIC_PENDING_REGADDR(source);
 
     uint32_t current = *pending_reg;
-    current = current | (1 << (source & 0x1F));
+    current = current | (1UL << (source & 0x1F));
     *pending_reg = current;
 }
 
@@ -233,7 +233,7 @@ __STATIC_FORCEINLINE void PLIC_ClearInterruptPending(uint32_t source)
     volatile uint32_t *pending_reg = (uint32_t *)PLIC_PENDING_REGADDR(source);
 
     uint32_t current = *pending_reg;
-    current = current & (~(1 << (source & 0x1F)));
+    current = current & (~(1UL << (source & 0x1F)));
     *pending_reg = current;
 }
 

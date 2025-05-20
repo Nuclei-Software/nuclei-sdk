@@ -652,7 +652,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetLevelIRQ(IRQn_Type IRQn, uint8_t lvl_abs)
     if (nlbits > intctlbits) {
         nlbits = intctlbits;
     }
-    uint8_t maxlvl = ((1 << nlbits) - 1);
+    uint8_t maxlvl = ((1UL << nlbits) - 1);
     if (lvl_abs > maxlvl) {
         lvl_abs = maxlvl;
     }
@@ -710,7 +710,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetPriorityIRQ(IRQn_Type IRQn, uint8_t pri)
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = (uint8_t)__ECLIC_INTCTLBITS;
     if (nlbits < intctlbits) {
-        uint8_t maxpri = ((1 << (intctlbits - nlbits)) - 1);
+        uint8_t maxpri = ((1UL << (intctlbits - nlbits)) - 1);
         if (pri > maxpri) {
             pri = maxpri;
         }
@@ -1009,7 +1009,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetLevelIRQ_S(IRQn_Type IRQn, uint8_t lvl_abs)
     if (nlbits > intctlbits) {
         nlbits = intctlbits;
     }
-    uint8_t maxlvl = ((1 << nlbits) - 1);
+    uint8_t maxlvl = ((1UL << nlbits) - 1);
     if (lvl_abs > maxlvl) {
         lvl_abs = maxlvl;
     }
@@ -1068,7 +1068,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetPriorityIRQ_S(IRQn_Type IRQn, uint8_t pri)
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = (uint8_t)__ECLIC_INTCTLBITS;
     if (nlbits < intctlbits) {
-        uint8_t maxpri = ((1 << (intctlbits - nlbits)) - 1);
+        uint8_t maxpri = ((1UL << (intctlbits - nlbits)) - 1);
         if (pri > maxpri) {
             pri = maxpri;
         }
