@@ -54,3 +54,14 @@ buildconfig:
               -falign-jumps=4 -falign-loops=4 -finline-limit=200 -fselective-scheduling -funroll-loops
 
         condition: $( ${cpu_series} == 100 )
+  - type: clang
+    common_flags: # flags need to be combined together across all packages
+      - flags: -O3 -flto -falign-functions=4 -falign-loops=4
+    ldflags:
+      - flags: -Wl,-mllvm,--align-all-nofallthru-blocks=2
+  - type: zcc
+    common_flags: # flags need to be combined together across all packages
+      - flags: -O3 -flto -falign-functions=4 -falign-loops=4 -flate-loop-unroll -malign-branch
+    ldflags:
+      - flags: -Wl,-mllvm,--align-all-nofallthru-blocks=2
+
