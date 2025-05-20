@@ -66,11 +66,6 @@ ifneq ($(JTAGSN),)
 OPENOCD_CMD_ARGS += set JTAGSN $(JTAGSN);
 endif
 
-# If using generated cpu configs done by nuclei_gen
-ifeq ($(CPU_CONFIG_K),1)
-COMMON_FLAGS += -DHAS_AUTOGEN_CPUCFG
-endif
-
 # Set RISCV_ARCH and RISCV_ABI
 CORE_UPPER := $(call uc, $(CORE))
 include $(NUCLEI_SDK_BUILD)/Makefile.core
