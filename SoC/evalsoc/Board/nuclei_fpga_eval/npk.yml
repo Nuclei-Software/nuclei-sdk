@@ -90,6 +90,9 @@ debugconfig:
          value: ${nuclei_core.abi}
        - key: machine
          value: nuclei_evalsoc
+       # must set to true, since it is running in ram
+       - key: doDebugInRam
+         value: true
 
 ## Build Configuration
 buildconfig:
