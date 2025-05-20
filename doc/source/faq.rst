@@ -76,7 +76,7 @@ For example, if you compile your core with ``CORE=ux600``,
 just change it to ``CORE=n300``.
 
 
-How to select correct FDTI debugger?
+How to select correct FTDI debugger?
 ------------------------------------
 
 From Nuclei SDK release 0.2.9, the openocd configuration file doesn't
@@ -97,6 +97,7 @@ its serial number via windows FT_PROG tool.
 * For **Nuclei RVSTAR Board**, you can check the openocd configuration file
   in *SoC/gd32vf103/Board/gd32vf103v_rvstar/openocd_gd32vf103.cfg*.
 
+For more details, please check `Debug with multiple FTDI devices <https://doc.nucleisys.com/nuclei_studio_supply/27-debug_with_multiple_ftdi_devices/>`_
 
 Why I can't download application in Linux?
 ------------------------------------------
