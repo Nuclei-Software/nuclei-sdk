@@ -538,7 +538,7 @@ This variable is used to select different toolchain to compile application.
 Currently we support 3 toolchain in Nuclei N100 SDK.
 
 * **nuclei_gnu**: default, it will choose nuclei gnu toolchain, distributed with Nuclei Toolchain.
-* **nuclei_llvm**: not yet supported for N100, still in experiment, nuclei customized extensions not yet supported, distributed with Nuclei Toolchain.
+* **nuclei_llvm**: supported for N100, still in experiment, nuclei customized extensions not yet supported, distributed with Nuclei Toolchain.
 * **terapines**: still in experiment, it depends on the toolchain vendor about the supported extensions, if you want to take a try with it, just visit https://www.terapines.com/ and request an terapines toolchain evaluation.
 
 For **nuclei_gnu/nuclei_llvm** toolchain both newlib and libncrt library are supported,

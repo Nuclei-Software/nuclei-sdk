@@ -14,7 +14,7 @@ Introduction
 
     If you are looking for Nuclei SDK for Nuclei **200/300/600/900/1000** CPU, please refer to https://doc.nucleisys.com/nuclei_sdk
 
-    Please use **Nuclei Studio >= 2024.06** with this Nuclei N100 SDK.
+    Please use **Nuclei Studio >= 2025.02** with this Nuclei N100 SDK.
 
 The **Nuclei N100 Software Development Kit (SDK)** is an open-source software platform to
 speed up the software development of SoCs based on Nuclei Processor 100 series Cores.

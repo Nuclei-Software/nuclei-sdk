@@ -30,7 +30,7 @@ The following applications are running Nuclei Eval SoC.
 
 .. note::
 
-    * Only benchmark/helloworld can run on Nuclei Qemu >= 2024.02 now.
+    * Only benchmark/helloworld can run on Nuclei Qemu >= 2025.02 now.
     * Most of the application demostrated below using ``SOC=evalsoc``,
       you can easily change it to other SoC such as evalsoc by change it to
       ``SOC=evalsoc``
