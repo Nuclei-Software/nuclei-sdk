@@ -17,10 +17,10 @@ Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CP
 
 ## Requirements
 
-* Ubuntu Linux >=20.04 LTS or Windows >=7
+* Ubuntu Linux >=20.04 LTS or Windows >=10
   - **Linux**: GNU Make >= 3.82
   - **Windows**: [Windows Build Tools](https://nucleisys.com/download.php)
-* [Nuclei Studio >= 2024.06](https://nucleisys.com/download.php)
+* [Nuclei Studio >= 2025.02](https://nucleisys.com/download.php)
   - Nuclei Studio can support import Nuclei SDK NPK package to provide IDE project wizard create/build/debug.
   - Nuclei Studio also contains same release of Nuclei Toolchain/QEMU/OpenOCD, so just download IDE is enough.
 
@@ -65,7 +65,7 @@ Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CP
 
 ## Knowledge book
 
-* N100 SDK only support **Nuclei RISC-V Toolchain >= 2024.06**, and toolchain prefix is `riscv64-unknown-elf-`.
+* N100 SDK only support **Nuclei RISC-V Toolchain >= 2025.02**, and toolchain prefix is `riscv64-unknown-elf-`.
 
 * N100 SDK is modified based on Nuclei SDK, so the user experience are similiar to Nuclei SDK, and directory structure is also similar,
   if you have experience in using Nuclei SDK, it will be easy to use N100 SDK.

@@ -2,7 +2,7 @@
 ## This npk.yml only works with Nuclei Studio 2023.10 or later
 name: sdk-n100_sdk
 owner: nuclei
-version: 0.2.0-dev
+version: 0.2.0
 description: Nuclei N100 Software Development Kit
 type: sdk
 keywords:
@@ -10,7 +10,7 @@ keywords:
   - sdk
   - risc-v
 license: Apache-2.0
-homepage: https://github.com/Nuclei-Software/nuclei-sdk/tree/develop_n100
+homepage: https://github.com/Nuclei-Software/nuclei-sdk/tree/master_n100
 contributors:
   - Huaqi Fang, 578567190@qq.com
 
