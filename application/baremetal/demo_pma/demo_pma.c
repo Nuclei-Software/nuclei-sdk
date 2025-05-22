@@ -22,28 +22,59 @@
 #error "This example require CPU PMA feature!"
 #endif
 
+// PMA Region granule is 4KB (0x1000)
+#define REGION_GRANULE    (1UL << 12)
+// 64 bytes intended, corresponding to cache line 64 bytes
+#define COL_SIZE         64
+
 //#define BIG_ROW_SIZE
 #ifndef BIG_ROW_SIZE
-#define ROW_SIZE         10
+// region size 4KB, must be aligned to REGION_GRANULE
+#define REGION_SIZE                     (1 * REGION_GRANULE)
+// ROW_SIZE is 64
+#define ROW_SIZE         (REGION_SIZE/COL_SIZE)
 #else
-#define ROW_SIZE         1024
+// region size 64KB, must be aligned to REGION_GRANULE
+#define REGION_SIZE                     (16 * REGION_GRANULE)
+// ROW_SIZE is 1024
+#define ROW_SIZE         (REGION_SIZE/COL_SIZE)
 #endif
-#define COL_SIZE         64
-// 64KB
-#define REGION_SIZE                     (1024 * 64)
 
-// 4K aligned
-uint8_t array_test[ROW_SIZE][COL_SIZE] __attribute__((aligned(0x1000))) = {0};
-
+// region base address should be aligined by region_size
+uint8_t array_test[ROW_SIZE][COL_SIZE] __attribute__((aligned(REGION_SIZE))) = {0};
+uint8_t array_test_r[ROW_SIZE][COL_SIZE];
 // Declare HPMCOUNTER4
 HPM_DECLARE_VAR(4);
 // Means select the Dcache miss events, record Dcache miss event for all M/S/U mode
 #define HPM_EVENT4      HPM_EVENT(EVENT_SEL_MEMORY_ACCESS, EVENT_MEMORY_ACCESS_DCACHE_MISS, MSU_EVENT_ENABLE)
 
-
-void array_update_by_row(void)
+static unsigned long check_aligned(unsigned long base_addr, unsigned long region_size)
 {
-    memset(array_test, 0xab, sizeof(array_test));
+    if ( 0 != (base_addr % REGION_GRANULE))
+        return 0;
+    if ( 0 != (base_addr % region_size))
+        return 0;
+    return 1;
+}
+
+void array_init(void)
+{
+    int32_t i, j = 0;
+
+    for (i = 0; i < ROW_SIZE; i++)
+        for (j = 0; j < COL_SIZE; j++) {
+            array_test[i][j] = 0x34;
+        }
+}
+
+void array_read_by_row(void)
+{
+    int32_t i, j = 0;
+
+    for (i = 0; i < ROW_SIZE; i++)
+        for (j = 0; j < COL_SIZE; j++) {
+            array_test_r[i][j] = array_test[i][j];
+        }
 }
 
 BENCH_DECLARE_VAR();
@@ -65,10 +96,20 @@ int main(void)
         printf("DCache not present in CPU!\n");
         return -1;
     }
+
+    if (!check_aligned(pma_cfg.region_base, pma_cfg.region_size)) {
+        printf("Error: Region base address 0x%x must be aligned to region granule 0x%x and region size 0x%x!\n", pma_cfg.region_base, REGION_GRANULE, pma_cfg.region_size);
+        return -1;
+    }
+
     GetDCacheInfo(&cacheinfo_type);
     printf("DCache Linesize is %d bytes, ways is %d, setperway is %d, total size is %d bytes\n\n", cacheinfo_type.linesize, \
             cacheinfo_type.ways, cacheinfo_type.setperway,cacheinfo_type.size);
+
+    array_init();
+
     printf("array_test size: %d * %d bytes, addr: 0x%x\r\n", ROW_SIZE, COL_SIZE, (unsigned long)&array_test);
+    EnableICache();
 
     EnableDCache(); // enable dcache here on purpose before setting NonCacheable, which actually takes no effect to array update
     // To ensure cached data consistency, because it's NonCacheable now
@@ -80,29 +121,27 @@ int main(void)
     PMA_GetRegion(0, &pma_cfg_r);
     printf("Region type: 0x%x,region base addr: 0x%lx, region size: 0x%lx, region status: %d\n\r",\
         pma_cfg_r.region_type, pma_cfg_r.region_base, pma_cfg_r.region_size, pma_cfg_r.region_enable);
-    // hot the cache here takes no effect if it's NonCacheable
-    array_update_by_row();
 
-    HPM_START(4, array_update_by_row_dcache_miss_noncacheable, HPM_EVENT4);
     BENCH_START(NonCacheable);
-    array_update_by_row();
+    HPM_START(4, array_read_by_row_dcache_miss_noncacheable, HPM_EVENT4);
+    array_read_by_row();
+    HPM_END(4, array_read_by_row_dcache_miss_noncacheable, HPM_EVENT4);
     BENCH_END(NonCacheable);
-    HPM_END(4, array_update_by_row_dcache_miss_noncacheable, HPM_EVENT4);
 
+    MFlushInvalDCache();
+    EnableDCache();
     printf("\nSet to Cacheable region\n\r");
     pma_cfg.region_type = PMA_REGION_TYPE_CA;
     PMA_SetRegion(0, &pma_cfg);
     PMA_GetRegion(0, &pma_cfg_r);
     printf("Region type: 0x%x,region base addr: 0x%lx, region size: 0x%lx, region status: %d\n\r",\
         pma_cfg_r.region_type, pma_cfg_r.region_base, pma_cfg_r.region_size, pma_cfg_r.region_enable);
-    // hot the cache
-    array_update_by_row();
 
-    HPM_START(4, array_update_by_row_dcache_miss_cacheable, HPM_EVENT4);
     BENCH_START(Cacheable);
-    array_update_by_row();
+    HPM_START(4, array_read_by_row_dcache_miss_cacheable, HPM_EVENT4);
+    array_read_by_row();
+    HPM_END(4, array_read_by_row_dcache_miss_cacheable, HPM_EVENT4);
     BENCH_END(Cacheable);
-    HPM_END(4, array_update_by_row_dcache_miss_cacheable, HPM_EVENT4);
 #else
     printf("[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!\r\n");
 #endif
