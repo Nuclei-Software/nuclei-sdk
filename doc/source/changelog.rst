@@ -41,6 +41,7 @@ This is release version ``0.8.0`` of Nuclei SDK.
   - Fix and update HPM v1 event macro due to Nuclei ISA documentation update in ``nmsis_bench.h``
   - Add new PMU v1 and v2 event macros in ``nmsis_bench.h``
   - Add ``flushpipe`` and ``fence`` in each ccm operation API in ``core_feature_cache.h``
+  - Use ``1UL`` instead of ``1`` in NMSIS/Core header files to avoid left shift overflow issue
 
 * Application
 
@@ -60,6 +61,8 @@ This is release version ``0.8.0`` of Nuclei SDK.
   - Add :ref:`design_app_demo_smode_plic` to show how to use PLIC in S-Mode, it will require PLIC and PMP extension
   - Increase freertos timer stack size from ``256`` to ``512`` due to timer task still generate vector instruction even with :ref:`AUTOVEC=0 <develop_buildsystem_var_autovec>`
   - Add two new benchmark cases :ref:`design_app_dhrystone_v2.2` and :ref:`design_app_whetstone_v1.2` which are the ones used in linux benchmark
+  - Update Terapines ZCC dhrystone and coremark options for ZCC v4.0.0 and give better code size
+  - ``-Ofast`` is deprecated in clang, use ``-O3 -ffast-math``
 
 * SoC
 
@@ -88,11 +91,16 @@ This is release version ``0.8.0`` of Nuclei SDK.
   - Add **COMPILE_PREFIX** support for :ref:`develop_buildsystem_var_toolchain` ``nuclei_llvm``, now both ``nuclei_llvm`` and ``nuclei_gnu`` support this variable, you can change it like this ``COMPILE_PREFIX=/path/to/newgcc/bin/riscv64-unknown-elf-`` when do make command
   - Add :ref:`develop_buildsystem_var_autovec` make variable, when **AUTOVEC=0**, it will disable auto vectorization as much as possible, this is useful for some application which require no auto vectorization
   - Add ``GDB_UPLOAD_EXTRA_CMDS`` make variable to execute extra commands after upload elf file to target
+  - Add ``run_xlmodel`` make target for evalsoc to run Nuclei Near Cycle Model Simulation
 
 * Tools
 
   - Add exclusive lock when program fpga for ``nsdk_cli`` tools
   - Update ``hpm_parse.py`` to match hpm v1 and v2 update
+
+* Misc
+
+  - Attach url of supply doc about debug with multiple FTDI devices in FAQ section
 
 V0.7.1
 ------
