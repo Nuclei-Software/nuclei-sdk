@@ -63,7 +63,7 @@ typedef struct PMA_CONFIG {
      */
     unsigned long region_base;
     /**
-     * Region size, which needs to be 4K byte aligned; the \ref region_base should be integer multiples of \ref region_size
+     * Region size, which needs to be 4K byte aligned; the \ref region_base should be aligined by \ref region_size
      */
     unsigned long region_size;
     /**
