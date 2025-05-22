@@ -1278,18 +1278,19 @@ void __sync_harts(void)
         // Should not enter to here if iregion feature present
         while(1);
     }
-    // Enable SMP
-    SMP_CTRLREG(smp_base, 0xc) = 0xFFFFFFFF;
-    // Enaable L2, disable cluster local memory
-    if (SMP_CTRLREG(smp_base, 0x4) & 0x1) {
-        SMP_CTRLREG(smp_base, 0x10) = 0x1;
-        SMP_CTRLREG(smp_base, 0xd8) = 0x0;
-    }
-    __SMP_RWMB();
 
     // pre-condition: interrupt must be disabled, this is done before calling this function
     // BOOT_HARTID is defined <Device.h>
     if (hartid == BOOT_HARTID) { // boot hart
+        // Enaable L2, disable cluster local memory
+        if (SMP_CTRLREG(smp_base, 0x4) & 0x1) {
+            SMP_CTRLREG(smp_base, 0x10) = 0x1;
+            SMP_CTRLREG(smp_base, 0xd8) = 0x0;
+        }
+        // Enable SMP
+        SMP_CTRLREG(smp_base, 0xc) = 0xFFFFFFFF;
+        __SMP_RWMB();
+        // L1 I/D Cache Enable is done in _premain_init
         // clear msip pending
         for (int i = 0; i < SMP_CPU_CNT; i ++) {
             CLINT_MSIP(clint_base, i) = 0;
@@ -1440,7 +1441,7 @@ void _premain_init(void)
 #endif
 
 #if defined(RUNMODE_L2_EN)
-    if ((mcfginfo & (0x1 << 11)) && SMP_CTRLREG(__SMPCC_BASEADDR, 0x4) & 0x1 ) { // L2 Cache present
+    if ( (hartid == BOOT_HARTID) && ((mcfginfo & (0x1 << 11)) && (SMP_CTRLREG(__SMPCC_BASEADDR, 0x4) & 0x1)) ) { // L2 Cache present
 #if RUNMODE_L2_EN == 1
         // Enable L2, disable cluster local memory
         SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) = 0x1;
