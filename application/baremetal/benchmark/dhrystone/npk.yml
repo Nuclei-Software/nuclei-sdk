@@ -88,7 +88,7 @@ buildconfig:
 
         condition: $( ${dhry_mode} == 'ground' )
       - flags: >-
-              -O3 -ffast-math -flto -finline -fno-builtin-printf -funroll-loops -falign-functions=4 -falign-loops=4 -finline-functions -flate-loop-unroll -malign-branch -fuse-size-lib
+              -O3 -ffast-math -flto -finline -fno-builtin-printf -funroll-loops -falign-functions=4 -falign-loops=4 -finline-functions -flate-loop-unroll -malign-branch
 
         condition: $( ${dhry_mode} == 'inline' )
       - flags: >-
@@ -96,4 +96,4 @@ buildconfig:
 
         condition: $( ${dhry_mode} == 'best' )
     ldflags:
-      - flags: -Wl,-mllvm,--align-all-nofallthru-blocks=2
+      - flags: -Wl,-mllvm,--align-all-nofallthru-blocks=2 -fuse-size-lib
