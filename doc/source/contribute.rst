@@ -17,6 +17,11 @@ improve and grow stronger.
 Port your Nuclei SoC into Nuclei SDK
 ------------------------------------
 
+.. note::
+
+    If you just want to do quick porting based on evalsoc implementation of Nuclei SDK
+    to get quick ramp up, you can refer to `Quick Porting to you SoC based on Evalsoc in Nuclei SDK`_
+
 If you want to port you Nuclei Processor Core based Board to Nuclei SDK,
 you need to follow these steps:
 
@@ -255,3 +260,4 @@ of git commit, see here https://chris.beams.io/posts/git-commit/ for details
     - misc: changes not categorized
     - env: changes related to environment
 
+.. _Quick Porting to you SoC based on Evalsoc in Nuclei SDK: https://doc.nucleisys.com/nuclei_studio_supply/28-quick_porting_from_evalsoc_to_customsoc_based_on_Nuclei_SDK/
