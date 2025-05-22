@@ -17,7 +17,8 @@ Nuclei provides the following `RISC-V IP Products`_ for AIoT:
 
 * **N100 series:** Designed for mixed digital and analog, IoT or
   other extremely low-power and small area scenarios, which
-  is the perfect replacement of traditional 8051 cores.
+  is the perfect replacement of traditional 8051 cores, you need
+  to use it with `Nuclei N100 SDK`_ .
 
 * **N200 series:** Designed for ultra-low power consumption and
   embedded scenarios, perfectly replaces the arm Cortex-M series cores.
@@ -27,6 +28,11 @@ Nuclei provides the following `RISC-V IP Products`_ for AIoT:
 
 * **600 series and 900 series:** Fully support Linux for high-performance
   edge computing and smart AIoT.
+
+* **1000 series:** The UX1000 Series have three different variants: UX1030, UX1040 and UX1060.
+  UX1030 is a 3-wide processor with good performance and smaller power & area;
+  UX1040 is a 4-wide processor with better performance and balanced power & area;
+  UX1060 is a 6-wide processor with even higher performance targeting high-end applications.
 
 .. note::
 
@@ -130,3 +136,4 @@ common resources:
 .. _NMSIS Core API: https://doc.nucleisys.com/nmsis/core/api/index.html
 .. _NMSIS DSP API: https://doc.nucleisys.com/nmsis/dsp/api/index.html
 .. _NMSIS NN API: https://doc.nucleisys.com/nmsis/nn/api/index.html
+.. _Nuclei N100 SDK: https://doc.nucleisys.com/nuclei_n100_sdk

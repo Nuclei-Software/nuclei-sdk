@@ -399,9 +399,11 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
    * - debug
      - build and debug application with selected configuration
    * - run_qemu
-     - run application on qemu machine with selected configuration
+     - run application on `Nuclei Qemu Evalsoc`_ machine with selected configuration
    * - run_xlspike
-     - run application on xlspike with selected configuration
+     - **internal used only**, run application on xlspike with selected configuration
+   * - run_xlmodel
+     - run application on `Nuclei Near Cycle Model`_ with selected configuration
    * - size
      - show program size
 
@@ -586,6 +588,8 @@ Currently we support 3 toolchain in Nuclei SDK.
 * **nuclei_gnu**: default, it will choose nuclei gnu toolchain, distributed with Nuclei Toolchain, see ``Build/toolchain/nuclei_gnu.mk``.
 * **nuclei_llvm**: supported, nuclei customized extensions not yet supported, distributed with Nuclei Toolchain, see ``Build/toolchain/nuclei_llvm.mk``.
 * **terapines**: supported, see ``Build/toolchain/nuclei_gnu.mk``, and it depends on the toolchain vendor about the supported extensions, if you want to take a try with it, just visit https://www.terapines.com/ and request an terapines toolchain evaluation, or you can take a try with Nuclei Studio >= 2024.06.
+
+To learn about how to use Nuclei RISC-V Toolchain, you can refer to https://doc.nucleisys.com/nuclei_tools/
 
 If you want to add support for your own toolchain which is based on gcc/llvm, you can refer to above toolchain support makefile.
 
@@ -1850,6 +1854,8 @@ For example, ``LINKER_SCRIPT := gcc.ld``.
 
 
 .. _GNU Make Standard Library (GMSL): http://sourceforge.net/projects/gmsl/
+.. _Nuclei Qemu Evalsoc: https://doc.nucleisys.com/nuclei_tools/qemu/intro.html
+.. _Nuclei Near Cycle Model: https://doc.nucleisys.com/nuclei_tools/xlmodel/intro.html
 .. _B 1.0 extension: https://github.com/riscv/riscv-bitmanip/releases/tag/1.0.0
 .. _P 0.5.4 extension: https://github.com/riscv/riscv-p-spec/blob/33be869910077afd52653031f18a235b1f9d4442/P-ext-proposal.adoc
 .. _K 1.0 extension: https://github.com/riscv/riscv-crypto/releases/tag/v1.0.0
