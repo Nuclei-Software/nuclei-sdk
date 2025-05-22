@@ -258,7 +258,7 @@ _start:
     /* This should be only used by nuclei_gen which generate a correct cpufeature.h */
     /* We use CPU_ISA macro to determine whether this cpufeature.h is generated or hand written */
     /* This is used to speedup data loading */
-#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
+#if !defined(SMP_CPU_CNT)
 #ifdef CPU_ISA
 #ifndef CFG_HAS_ECC
     /* Only enable i/dcache when ecc not present */
