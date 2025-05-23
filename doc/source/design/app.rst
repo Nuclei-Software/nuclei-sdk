@@ -2364,7 +2364,7 @@ This `demo_pma application`_ is used to demonstrate how to set memory region to 
       hardware-defined regions, but please take care to use it, because maybe the region you disable will go to ``Device``
       (maybe covered by another bigger-range ``Device`` region!), then instruction fetch exception happens!
 
-* Observe cycles taken when executing same task ``array_update_by_row`` by changing the same memory region to ``Non-Cacheable``/``Cacheable``
+* Observe cycles taken when executing same task ``array_read_by_row``(read from ``array_test``, update into ``array_test_r``) by changing the same memory region to ``Non-Cacheable``/``Cacheable``
 * Struct ``PMA_CONFIG`` is used to assign PMA, which consists of ``region_type`` ``region_base`` ``region_size``  ``region_enable``
 * ``region_type`` could be ``PMA_REGION_TYPE_SECSHARE``, ``PMA_REGION_TYPE_NC``, ``PMA_REGION_TYPE_DEV``, ``PMA_REGION_TYPE_CA``
 * ``region_base`` is base physical address, which needs to be 4K byte aligned
@@ -2395,26 +2395,25 @@ This `demo_pma application`_ is used to demonstrate how to set memory region to 
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Dec 26 2024, 21:48:11
+    Nuclei SDK Build Time: May 23 2025, 15:02:30
     Download Mode: SRAM
-    CPU Frequency 50002001 Hz
+    CPU Frequency 50005606 Hz
     CPU HartID: 0
-    Benchmark initialized
     DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
 
-    array_test size: 10 * 64 bytes, addr: 0xa0012000
+    array_test size: 64 * 64 bytes, addr: 0xa0013000
 
     Set to NonCacheable region
-    Region type: 0x4,region base addr: 0xa0012000, region size: 0x10000, region status: 1
-    CSV, NonCacheable, 345
-    HPM4:0xf0000021, array_update_by_row_dcache_miss_noncacheable, 0
+    Region type: 0x4,region base addr: 0xa0013000, region size: 0x1000, region status: 1
+    HPM4:0xf0000021, array_read_by_row_dcache_miss_noncacheable, 64
 
     Set to Cacheable region
-    Region type: 0x0,region base addr: 0xa0012000, region size: 0x10000, region status: 1
-    CSV, Cacheable, 166
-    HPM4:0xf0000021, array_update_by_row_dcache_miss_cacheable, 2
+    Region type: 0x0,region base addr: 0xa0013000, region size: 0x1000, region status: 1
+    HPM4:0xf0000021, array_read_by_row_dcache_miss_cacheable, 128
 
-From output, we can see the cycles taken varies a lot according to the memory attribute ``NonCacheable`` and ``Cacheable``
+From output, considering ``array_read_by_row_dcache_miss_noncacheable`` counting the common part cache miss including ``array_test_r`` which belongs to Cacheable.
+So ``array_read_by_row_dcache_miss_cacheable`` minus ``array_read_by_row_dcache_miss_noncacheable``, we get exactly the cache miss(here is the row number 64) that
+``array_test`` brings in Cacheable region, and it demonstrates ``array_test`` brings no cache miss in NonCacheable region as expected.
 
 .. note::
     * In Nuclei Evalsoc core ux900 for example, the sram/ddr memory locates originally in hardware-defined Cacheable region(which configured by rtl configuration stage),
