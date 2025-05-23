@@ -11,6 +11,12 @@ We support the following toolchains in this evalsoc implementation:
 - **IAR RISC-V Toolchain**: http://iar.com/riscv
 - **Terapines ZCC Toolchain**: https://www.terapines.com/products/zcc
 
+## Quick Porting Guide
+
+To quickly port this SDK to your custom SoC (designed with Nuclei 200/300/600/900/1000 series CPU), please refer to our comprehensive porting guide:
+
+[Porting Guide: From EvalSoC to Custom SoC](https://doc.nucleisys.com/nuclei_studio_supply/28-quick_porting_from_evalsoc_to_customsoc_based_on_Nuclei_SDK)
+
 ## Directory Structure 
 
 ### Board Support (`Board/nuclei_fpga_eval/`)
