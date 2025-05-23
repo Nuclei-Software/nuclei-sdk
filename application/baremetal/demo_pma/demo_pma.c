@@ -86,12 +86,11 @@ int main(void)
     pma_config pma_cfg_r;
     pma_config pma_cfg = {
         // Take care to set the region type and address range, which maybe causing function or performance issue!
-        .region_type = PMA_REGION_TYPE_DEV,
+        .region_type = PMA_REGION_TYPE_CA,
         .region_base = (unsigned long)&array_test,
         .region_size = REGION_SIZE,
         .region_enable = PMA_REGION_ENA
     };
-    BENCH_INIT();
     if (!DCachePresent()) {
         printf("DCache not present in CPU!\n");
         return -1;
@@ -103,6 +102,10 @@ int main(void)
     }
 
     GetDCacheInfo(&cacheinfo_type);
+    if (COL_SIZE != cacheinfo_type.linesize) {
+        printf("\nWarning: change COL_SIZE to %d to make them same!\n\n", cacheinfo_type.linesize);
+    }
+
     printf("DCache Linesize is %d bytes, ways is %d, setperway is %d, total size is %d bytes\n\n", cacheinfo_type.linesize, \
             cacheinfo_type.ways, cacheinfo_type.setperway,cacheinfo_type.size);
 
@@ -122,11 +125,9 @@ int main(void)
     printf("Region type: 0x%x,region base addr: 0x%lx, region size: 0x%lx, region status: %d\n\r",\
         pma_cfg_r.region_type, pma_cfg_r.region_base, pma_cfg_r.region_size, pma_cfg_r.region_enable);
 
-    BENCH_START(NonCacheable);
     HPM_START(4, array_read_by_row_dcache_miss_noncacheable, HPM_EVENT4);
     array_read_by_row();
     HPM_END(4, array_read_by_row_dcache_miss_noncacheable, HPM_EVENT4);
-    BENCH_END(NonCacheable);
 
     MFlushInvalDCache();
     EnableDCache();
@@ -137,11 +138,9 @@ int main(void)
     printf("Region type: 0x%x,region base addr: 0x%lx, region size: 0x%lx, region status: %d\n\r",\
         pma_cfg_r.region_type, pma_cfg_r.region_base, pma_cfg_r.region_size, pma_cfg_r.region_enable);
 
-    BENCH_START(Cacheable);
     HPM_START(4, array_read_by_row_dcache_miss_cacheable, HPM_EVENT4);
     array_read_by_row();
     HPM_END(4, array_read_by_row_dcache_miss_cacheable, HPM_EVENT4);
-    BENCH_END(Cacheable);
 #else
     printf("[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!\r\n");
 #endif

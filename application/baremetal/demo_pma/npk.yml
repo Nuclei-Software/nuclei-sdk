@@ -20,7 +20,7 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value: -O0
+    value: -O2
     type: text
     description: Application Compile Flags
 
