@@ -1,13 +1,16 @@
 # N100 Software Development Kit
 
 > [!NOTE]
-> If you want to develop and run program on Nuclei **200/300/600/900/100**0 series RISC-V CPU, please switch to **develop** or **master** branch.
+> If you want to develop and run program on Nuclei **200/300/600/900/1000 series** RISC-V CPU, please switch to [**develop**][1] or [**master**][2] branch.
 
-This **N100 SDK** is modified based on the **Nuclei SDK** framework, **NMSIS** is also a modified version to support limited feature provided by Nuclei 100 series processor.
+This **N100 SDK** is **modified** based on the **Nuclei SDK** framework, **NMSIS** is also a **modified** version to support limited feature provided by Nuclei 100 series processor.
 
 We also integrated some RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII** and **RTThread**, you can easily find it in the *OS* folder.
 
-Both Nuclei riscv gcc and IAR compiler are supported in Nuclei N100 SDK, for IAR compiler support, see [ideprojects/iar/README.md](ideprojects/iar/README.md).
+[Nuclei RISC-V GCC/Clang][3], [IAR compiler][4] and [Terapines ZCC][5] are supported in Nuclei N100 SDK.
+
+- For Nuclei RISC-V GCC/Clang and Terapines ZCC, see [Nuclei N100 SDK - TOOLCHAIN support][6]
+- For IAR compiler support, see [ideprojects/iar/README.md](ideprojects/iar/README.md).
 
 ## Quick Startup
 
@@ -70,3 +73,9 @@ Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CP
 * N100 SDK is modified based on Nuclei SDK, so the user experience are similiar to Nuclei SDK, and directory structure is also similar,
   if you have experience in using Nuclei SDK, it will be easy to use N100 SDK.
 
+[1]: https://github.com/Nuclei-Software/nuclei-sdk/tree/develop
+[2]: https://github.com/Nuclei-Software/nuclei-sdk/tree/master
+[3]: https://nucleisys.com/download.php#tools
+[4]: https://iar.com/riscv
+[5]: https://www.terapines.com/products/zcc
+[6]: https://doc.nucleisys.com/nuclei_n100_sdk/develop/buildsystem.html#develop-buildsystem-var-toolchain
