@@ -5,7 +5,7 @@
 
 
 > [!NOTE]
-> If you want to build and run on Nuclei 100 series CPU, please switch to **develop_n100** or **master_n100** branch.
+> If you want to build and run on Nuclei 100 series CPU, please switch to [**develop_n100**][3] or [**master_n100**][2] branch.
 
 > Since 0.5.0 release, Nuclei Studio >= 2023.10 and Nuclei RISC-V Toolchain/Qemu/OpenOCD >= 2023.10 are required to build and run.
 
@@ -13,9 +13,9 @@
 
 ![Nuclei SDK Diagram](doc/source/asserts/images/nuclei_sdk_diagram.png)
 
-This Nuclei SDK is built based on the **NMSIS** framework, user can access all the APIs provided by **NMSIS** and also the APIs that provided by Nuclei SDK which mainly for on-board peripherals access such as GPIO, UART, SPI and I2C etc.
+This Nuclei SDK is built based on the [**NMSIS**][7] framework, user can access all the APIs provided by **NMSIS** and also the APIs that provided by Nuclei SDK which mainly for on-board peripherals access such as GPIO, UART, SPI and I2C etc.
 
-This Nuclei SDK can support various compiler such as Nuclei riscv gcc/clang, IAR compiler and Terapines ZCC.
+This Nuclei SDK can support various compiler such as [Nuclei RISC-V GCC/Clang][4], [IAR compiler][5] and [Terapines ZCC][6].
 
 We also integrated many RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII**, **RTThread** and **ThreadX**, you can easily find it in the *OS* folder.
 
@@ -29,10 +29,10 @@ Wanner to take a try with **Nuclei N100 SDK for Nuclei 100 series CPU**, click [
 
 ## Requirements
 
-* Ubuntu Linux >=20.04 LTS or Windows >=7
+* Ubuntu Linux >=20.04 LTS or Windows >=10
   - **Linux**: GNU Make >= 3.82
   - **Windows**: [Windows Build Tools](https://nucleisys.com/download.php)
-* [Nuclei Studio >= 2024.06](https://nucleisys.com/download.php)
+* [Nuclei Studio >= 2025.02](https://nucleisys.com/download.php)
   - Nuclei Studio can support import Nuclei SDK NPK package to provide IDE project wizard create/build/debug.
   - Nuclei Studio also contains same release of Nuclei Toolchain/QEMU/OpenOCD, so just download IDE is enough.
 
@@ -293,3 +293,9 @@ changed from `riscv-nuclei-elf-` to `riscv64-unknown-elf-`.
 
 
 [1]: https://doc.nucleisys.com/nuclei_sdk/design/app.html#cpuinfo
+[2]: https://github.com/Nuclei-Software/nuclei-sdk/tree/master_n100
+[3]: https://github.com/Nuclei-Software/nuclei-sdk/tree/develop_n100
+[4]: https://nucleisys.com/download.php#tools
+[5]: https://iar.com/riscv
+[6]: https://www.terapines.com/products/zcc
+[7]: https://doc.nucleisys.com/nmsis
