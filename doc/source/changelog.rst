@@ -33,6 +33,10 @@ This is release version of ``0.8.1`` of Nuclei SDK.
 
   - Fix profiling component to support gcc 14.x
 
+* Tools
+
+  - Update demo_pma case nsdk_cli checker to match its design
+
 V0.8.0
 ------
 
