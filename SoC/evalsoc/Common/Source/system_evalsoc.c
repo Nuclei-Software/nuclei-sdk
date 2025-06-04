@@ -423,6 +423,7 @@ void Interrupt_Init(void)
 int32_t IRQC_Register_IRQ(IRQn_Type IRQn, void* handler)
 {
     if (IRQn >= SOC_INT_MAX) {
+        return -1;
     }
     if (handler != NULL) {
         IRQC_SetVector(IRQn, (rv_csr_t)handler);
