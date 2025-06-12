@@ -143,7 +143,7 @@ if build_download_mode_upper == "FLASH":
     CPPDEFINES.extend(['-DVECTOR_TABLE_REMAPPED'])
 
 extra_flags = build_core_options
-extra_lflags = "{} -T {}".format(build_core_options, build_ldscript)
+extra_lflags = "{} -L {} -T {}".format(build_core_options, os.path.dirname(build_ldscript), build_ldscript)
 
 # rtconfig.CFLAGS = "{} {}".format(build_core_options, rtconfig.CFLAGS)
 # rtconfig.AFLAGS = "{} {}".format(build_core_options, rtconfig.AFLAGS)
