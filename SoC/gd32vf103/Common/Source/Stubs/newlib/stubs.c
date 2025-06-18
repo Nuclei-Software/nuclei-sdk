@@ -1,9 +1,4 @@
 /* See LICENSE of license details. */
-// If you want to enable GNU extensions, please define _GNU_SOURCE
-// Enable POSIX-1.2008 with BSD and SVr4 extensions via _DEFAULT_SOURCE
-#ifndef _DEFAULT_SOURCE
-#define _DEFAULT_SOURCE
-#endif
 #include <stdint.h>
 #include <errno.h>
 #include <unistd.h>
@@ -262,7 +257,8 @@ __WEAK int clock_gettime(clockid_t clock_id, struct timespec* tp)
 
     retval = _gettimeofday(&tv, NULL);
     if (retval == 0) {
-        TIMEVAL_TO_TIMESPEC(&tv, tp);
+        (tp)->tv_sec = (&tv)->tv_sec;
+        (tp)->tv_nsec = (&tv)->tv_usec * 1000;
     }
 
     return retval;
