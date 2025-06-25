@@ -1,4 +1,4 @@
-TARGET := whetstone
+TARGET := whetstone_v1.2
 
 NUCLEI_SDK_ROOT = ../../../..
 TOOLCHAIN ?= nuclei_gnu
