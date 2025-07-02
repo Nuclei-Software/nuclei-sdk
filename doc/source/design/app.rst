@@ -2126,10 +2126,11 @@ because cache will bypass when run in ilm, data in dlm(private resource for cpu)
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Feb 14 2023, 18:14:18
-    Download Mode: SRAM
-    CPU Frequency 100605952 Hz
+    Nuclei SDK Build Time: Jul 22 2025, 18:05:53
+    Download Mode: DDR
+    CPU Frequency 49993154 Hz
     CPU HartID: 0
+    Benchmark initialized
     DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
 
     array_test 10 * 64 bytes
@@ -2137,12 +2138,15 @@ because cache will bypass when run in ilm, data in dlm(private resource for cpu)
     ------Update array in memory------
 
     ------Update array to all 0xab in cache: array_update_by_row------
+    CSV, array_update_by_row_cycle, 766
 
     -------Keep DCache valid, do array_update_by_row again-------
+    CSV, array_update_by_row_cycle, 136
 
     -------Invalidate all the Dcache-------
 
     ------Update array to all 0xab in cache: array_update_by_col ------
+    CSV, array_update_by_col_cycle, 441
     Read out array_test[0][0] 0xab in cache, then disable DCache
 
     ------Init array in memory to all 0x34------
@@ -2159,13 +2163,13 @@ then disable DCache, init array_test just in memory to all 0x34, **after cache f
 again**, ``array_test`` now (all 0x34) differs with cached array_test (all 0xab) after DCache enabled.
 
 
-**Expected output(DISABLE_NMSIS_HPM undefined) as below:**
+**Expected output(DISABLE_NMSIS_HPM undefined and CFG_HAS_HPM defined in cpufeature.h) as below:**
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Dec 27 2024, 11:07:56
+    Nuclei SDK Build Time: Jul 22 2025, 17:42:24
     Download Mode: DDR
-    CPU Frequency 50002001 Hz
+    CPU Frequency 49993154 Hz
     CPU HartID: 0
     Benchmark initialized
     DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
@@ -2176,20 +2180,20 @@ again**, ``array_test`` now (all 0x34) differs with cached array_test (all 0xab)
     High performance monitor initialized
 
     ------Update array to all 0xab in cache: array_update_by_row------
-    CSV, array_update_by_row_cycle, 15544
-    HPM4:0xf0000021, array_update_by_row_dcache_miss, 21
-    HPM3:0xf0000011, array_update_by_row_icache_miss, 60
+    CSV, array_update_by_row_cycle, 809
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 19
+    HPM3:0xf0000011, array_update_by_row_icache_miss, 36
 
     -------Keep DCache valid, do array_update_by_row again-------
-    CSV, array_update_by_row_cycle, 15164
-    HPM4:0xf0000021, array_update_by_row_dcache_miss, 3
-    HPM3:0xf0000011, array_update_by_row_icache_miss, 26
+    CSV, array_update_by_row_cycle, 147
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 0
+    HPM3:0xf0000011, array_update_by_row_icache_miss, 3
 
     -------Invalidate all the Dcache-------
 
     ------Update array to all 0xab in cache: array_update_by_col ------
-    CSV, array_update_by_col_cycle, 16194
-    HPM4:0xf0000021, array_update_by_col_dcache_miss, 22
+    CSV, array_update_by_col_cycle, 436
+    HPM4:0xf0000021, array_update_by_col_dcache_miss, 19
     Read out array_test[0][0] 0xab in cache, then disable DCache
 
     ------Init array in memory to all 0x34------
@@ -2199,7 +2203,7 @@ again**, ``array_test`` now (all 0x34) differs with cached array_test (all 0xab)
     ------Again init array in memory to all 0x34, then enable DCache------
     Read out array_test[0][0] 0x34 in memory
     Read out array_test[0][0] 0xab in cache, when mapped value in memory has changed
-    HPM4:0xf0000021, dcachemiss_readonebyte, 4
+    HPM4:0xf0000021, dcachemiss_readonebyte, 0
 
 From output, ``HPM`` is enabled, cache miss is counted and ``array_test`` size is 10 * 64 bytes.
 **At first, DCache is invalid**, the first time ``array_test`` update by row has 10 miss(HPM4 shows more,
@@ -2208,13 +2212,13 @@ cache miss decreases rapidly, which means ``array_test`` has already cached;
 **Then invalidate all the Dcache**, array_test update by col seems has the same cache miss as update by row.
 
 
-**Expected output(BIG_ROW_SIZE defined, DISABLE_NMSIS_HPM undefined) as below:**
+**Expected output(BIG_ROW_SIZE defined, DISABLE_NMSIS_HPM undefined and CFG_HAS_HPM defined in cpufeature.h) as below:**
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Dec 27 2024, 11:07:28
+    Nuclei SDK Build Time: Jul 22 2025, 17:50:49
     Download Mode: DDR
-    CPU Frequency 50002001 Hz
+    CPU Frequency 50000363 Hz
     CPU HartID: 0
     Benchmark initialized
     DCache Linesize is 64 bytes, ways is 2, setperway is 512, total size is 65536 bytes
@@ -2225,20 +2229,20 @@ cache miss decreases rapidly, which means ``array_test`` has already cached;
     High performance monitor initialized
 
     ------Update array to all 0xab in cache: array_update_by_row------
-    CSV, array_update_by_row_cycle, 3166169
-    HPM4:0xf0000021, array_update_by_row_dcache_miss, 2076
-    HPM3:0xf0000011, array_update_by_row_icache_miss, 58
+    CSV, array_update_by_row_cycle, 155917
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 2068
+    HPM3:0xf0000011, array_update_by_row_icache_miss, 37
 
     -------Keep DCache valid, do array_update_by_row again-------
-    CSV, array_update_by_row_cycle, 3195588
-    HPM4:0xf0000021, array_update_by_row_dcache_miss, 2058
-    HPM3:0xf0000011, array_update_by_row_icache_miss, 27
+    CSV, array_update_by_row_cycle, 187584
+    HPM4:0xf0000021, array_update_by_row_dcache_miss, 2068
+    HPM3:0xf0000011, array_update_by_row_icache_miss, 4
 
     -------Invalidate all the Dcache-------
 
     ------Update array to all 0xab in cache: array_update_by_col ------
-    CSV, array_update_by_col_cycle, 5091193
-    HPM4:0xf0000021, array_update_by_col_dcache_miss, 130975
+    CSV, array_update_by_col_cycle, 620971
+    HPM4:0xf0000021, array_update_by_col_dcache_miss, 16405
     Read out array_test[0][0] 0xab in cache, then disable DCache
 
     ------Init array in memory to all 0x34------
@@ -2248,10 +2252,10 @@ cache miss decreases rapidly, which means ``array_test`` has already cached;
     ------Again init array in memory to all 0x34, then enable DCache------
     Read out array_test[0][0] 0x34 in memory
     Read out array_test[0][0] 0xab in cache, when mapped value in memory has changed
-    HPM4:0xf0000021, dcachemiss_readonebyte, 4
+    HPM4:0xf0000021, dcachemiss_readonebyte, 0
 
 From output, ``array_test`` size is enlarged to ``2048 * 64`` bytes, which is **two times the size of DCache (1024 * 64 bytes)**.
-Cache miss brought by ``HPM`` itself ignored, array update by col has **63 times cache miss(130975) as the array update by row has(2076)**.
+Cache miss brought by ``HPM`` itself ignored, array update by col has **8 times cache miss(16405) as the array update by row has(2068)**.
 That's because when first byte access brings one cache misse, **one cache line(64 bytes in this demo) is fetched to cache**,
 and it works best if other 63 cached bytes can be accessed before getting dirty as soon as possible, as update by row does, so the cache miss
 equals nearly to ``ROW_SIZE``, while when updated by col, every byte in ``ROW_SIZE`` * ``COL_SIZE`` will cause a cache miss! which is cache-unfriendly.

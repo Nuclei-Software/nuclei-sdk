@@ -6,8 +6,7 @@ SRCDIRS = . src
 
 INCDIRS = . inc
 
-# different optimization level such as -O2 effects cache miss
-COMMON_FLAGS := -O0
+COMMON_FLAGS := -O2
 
 # DOWNLOAD mode must be a mode
 # such as external ddr/sram, core local ilm is not ok which will bypass cache

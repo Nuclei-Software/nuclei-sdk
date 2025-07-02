@@ -11,6 +11,7 @@ This is release version of ``0.8.1`` of Nuclei SDK.
 * Application
 
   - Remove ``-ffast-math`` for clang based toolchain since it is deprecated
+  - Update ``demo_cache`` optimization level to ``-O2`` and update its doc
 
 * NMSIS
 
