@@ -36,6 +36,8 @@ static int test_decrypt_ecb(void);
 #define AES_DEBUG(fmt, ...)
 #endif
 
+// TODO: Please use this example in Nuclei Studio IDE, never use it in command line
+// see https://doc.nucleisys.com/nuclei_sdk/design/app.html#demo-profiling
 int main(void)
 {
     int exit = 0;

@@ -1,3 +1,5 @@
+# Please use it in Nuclei Studio IDE not in command line
+# see https://doc.nucleisys.com/nuclei_sdk/design/app.html#demo-profiling
 TARGET = demo_profiling
 
 MIDDLEWARE := profiling

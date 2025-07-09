@@ -249,7 +249,7 @@ We need to build application for this board :ref:`design_board_gd32vf103v_rvstar
 
 .. note::
 
-    * If you want to run on Nuclei Evaluation SoC, see :ref:`design_soc_evalsoc`, recommend to run :ref:`design_app_cpuinfo` 
+    * If you want to run on Nuclei Evaluation SoC, see :ref:`design_soc_evalsoc`, recommend to run :ref:`design_app_cpuinfo`
     * Since below steps are taking gd32vf103 SoC based board **gd32vf103v_rvstar** to do demostration,
       and when you pass ``SOC=gd32vf103``, the default BOARD will be ``gd32vf103v_rvstar``, so
       do you don't need to pass ``BOARD=gd32vf103v_rvstar``
@@ -599,7 +599,8 @@ For more advanced usage, please follow the items as below:
 
       2. Now **Terapines ZCC Lite** is deeply integrated in **Nuclei Studio >= 2024.06**, so you just need to
          follow :ref:`quickstart_get_set_nuclei_sdk` to setup PATH for Terapines ZCC, and in Nuclei SDK,
-         you can just pass **TOOCHAIN=terapines** during make to take a try with Terapines ZCC.
+         you can just pass **TOOCHAIN=terapines** during make to take a try with Terapines ZCC, please use
+         latest Terapines ZCC from its website https://www.terapines.com/.
          From 0.7.0 release, you can create project in Nuclei Studio >= 2024.06 using Terapines ZCC, see
          `Using Terapines ZCC Toolchain in Nuclei Studio`_.
 

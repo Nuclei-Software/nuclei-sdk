@@ -1691,14 +1691,15 @@ console when main part code is executed.
 
 .. note::
 
-    * Introduced in Nuclei SDK 0.5.1, worked with Nuclei Studio >= 2024.02
+    * **WARNING** GCC 14 with nuclei sdk code coverage not working, need to modify ``Components/profiling/gcov.c``, changes need to be made like this https://github.com/Nuclei-Software/nuclei-sdk/commit/5aaae0d5a7
+    * Introduced in Nuclei SDK 0.6.0, worked with Nuclei Studio >= 2024.02
     * Using gprof or gcov introduces instrument code into the original program,
       necessitating additional memory to store the collected data. This results in
       a slight increase in the program's memory footprint compared to its uninstrumented counterpart.
     * It cannot be directly used in command line mode, you should use it in Nuclei Studio.
     * Please check ``README.md`` about gcov and gprof support in https://github.com/Nuclei-Software/nuclei-sdk/tree/master/Components/profiling
 
-Import or download Nuclei SDK 0.5.1 or later release NPK in Nuclei Studio, and then create a
+Import or download Nuclei SDK 0.6.0 or later release NPK in Nuclei Studio, and then create a
 project called ``demo_profiling`` based on ``app-nsdk_demo_profiling`` using
 ``Create Nuclei RISC-V C/C++ Project`` Wizard as below:
 
@@ -1712,6 +1713,7 @@ it is the core algorithm of this example, then you just need to do the following
 
 - Right click on the ``application`` folder, and click ``Properities``, and add extra options
   in ``C/C++ Build`` -> ``Settings`` -> ``GNU RISC-V Cross C Compiler`` -> ``Miscellaneous`` -> ``Other compiler flags``.
+
   - If you want to do gprof, you need to add ``-pg`` option.
   - If you want to do gcov, you need to add ``-coverage`` option.
 - Open ``main.c``, and find ``TODO`` item, and comment ``gprof_collect(2);`` or ``gcov_collect(2);`` based on
