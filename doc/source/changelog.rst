@@ -3,6 +3,16 @@
 Changelog
 =========
 
+V0.8.1
+------
+
+This is release version of ``0.8.1`` of Nuclei SDK.
+
+* NMSIS
+
+  - Replace ``__ASSEMBLY__`` with ``__ASSEMBLER__`` to match with gcc predefined asm macro
+
+
 V0.8.0
 ------
 

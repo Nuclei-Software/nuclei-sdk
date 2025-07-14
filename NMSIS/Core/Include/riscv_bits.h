@@ -69,14 +69,14 @@
 #define __RV_EXTRACT_FIELD(val, which)                  (((val) & (which)) / ((which) & ~((which)-1)))
 #define __RV_INSERT_FIELD(val, which, fieldval)         (((val) & ~(which)) | ((fieldval) * ((which) & ~((which)-1))))
 
-#ifdef __ASSEMBLY__
+#ifdef __ASSEMBLER__
 #define _AC(X,Y)                X
 #define _AT(T,X)                X
 #else
 #define __AC(X,Y)               (X##Y)
 #define _AC(X,Y)                __AC(X,Y)
 #define _AT(T,X)                ((T)(X))
-#endif /* __ASSEMBLY__ */
+#endif /* __ASSEMBLER__ */
 
 #define _UL(x)                  (_AC(x, UL))
 #define _ULL(x)                 (_AC(x, ULL))

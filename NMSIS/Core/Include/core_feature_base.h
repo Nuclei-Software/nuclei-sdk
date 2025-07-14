@@ -607,7 +607,7 @@ typedef union {
  */
 
 
-#ifndef __ASSEMBLY__
+#ifndef __ASSEMBLER__
 
 #ifndef __ICCRISCV__
 
@@ -753,7 +753,7 @@ typedef union {
 
 #endif /* __ICCRISCV__ */
 
-#endif /* __ASSEMBLY__ */
+#endif /* __ASSEMBLER__ */
 
 /**
  * \brief switch privilege from machine mode to others.
