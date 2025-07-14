@@ -8,10 +8,25 @@ V0.8.1
 
 This is release version of ``0.8.1`` of Nuclei SDK.
 
+* Application
+
+  - Remove ``-ffast-math`` for clang based toolchain since it is deprecated
+
 * NMSIS
 
   - Replace ``__ASSEMBLY__`` with ``__ASSEMBLER__`` to match with gcc predefined asm macro
 
+* SoC
+
+  - Update evalsoc linker script files to support RT-Thread v5.x
+  - Update SConscript to support RT-Thread v5.x
+  - Fix zcmt jvt section alignment and section name in evalsoc linker script files
+  - Fix evalsoc stubs.c compile fail in RT-Thread
+  - Fix evalsoc linker options in RT-Thread SConscript to fix link issue
+
+* Components
+
+  - Fix profiling component to support gcc 14.x
 
 V0.8.0
 ------
