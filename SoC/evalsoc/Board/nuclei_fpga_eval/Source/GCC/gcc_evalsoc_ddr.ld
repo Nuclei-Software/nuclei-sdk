@@ -60,9 +60,6 @@ SECTIONS
   {
     *(.text.unlikely .text.unlikely.*)
     *(.text.startup .text.startup.*)
-    /* https://github.com/riscv-non-isa/riscv-elf-psabi-doc/pull/349 */
-    PROVIDE( __jvt_base$ = ALIGN(64) );
-    *(.riscv.jvt .riscv.jvt.*)
     *(.text .text.*)
     *(.gnu.linkonce.t.*)
     /* .fini */
@@ -102,6 +99,12 @@ SECTIONS
     KEEP (*(.dtors))
   } >ROM AT>ROM
 
+  .riscv.jvt  :
+  {
+    /* https://github.com/riscv-non-isa/riscv-elf-psabi-doc/pull/349 */
+    PROVIDE( __jvt_base$ = ALIGN(64) );
+    *(.riscv.jvt .riscv.jvt.*)
+  } >ROM AT>ROM
 
   PROVIDE( _ilm_lma = LOADADDR(.text) );
   PROVIDE( _ilm = ADDR(.text) );
