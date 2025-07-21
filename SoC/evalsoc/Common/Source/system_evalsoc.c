@@ -177,8 +177,9 @@ static const __fp vector_base[__IRQC_INTNUM] __USED __attribute__((section (".mi
  * - This SystemExceptionHandlers are used to store all the handlers for all
  * the exception codes Nuclei N100 core provided.
  * - Exception code 0 - 11, totally 12 exceptions are mapped to SystemExceptionHandlers[0:11]
+ * - Exception code 0xFFF, represent NMI, mapped to SystemExceptionHandlers[12]
  */
-static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
+static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM + 1];
 
 /**
  * \brief      Exception Handler Function Typedef
@@ -240,7 +241,7 @@ void Exception_Init(void)
 #endif
 #endif
 
-    for (int i = 0; i < MAX_SYSTEM_EXCEPTION_NUM; i++) {
+    for (int i = 0; i < (MAX_SYSTEM_EXCEPTION_NUM + 1); i++) {
         SystemExceptionHandlers[i] = (unsigned long)system_default_exception_handler;
     }
 #endif
@@ -293,6 +294,8 @@ void Exception_Register_EXC(uint32_t EXCn, unsigned long exc_handler)
 #else
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         SystemExceptionHandlers[EXCn] = exc_handler;
+    } else if (EXCn == 0xFFF) {
+        SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] = exc_handler;
     }
 #endif
 }
@@ -311,6 +314,8 @@ unsigned long Exception_Get_EXC(uint32_t EXCn)
 #else
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         return SystemExceptionHandlers[EXCn];
+    } else if (EXCn == 0xFFF) {
+        return SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
     }
 #endif
     return 0;
@@ -334,11 +339,13 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
 #if defined(CODESIZE) && (CODESIZE == 1)
     while(1);
 #else
-    uint32_t EXCn = (uint32_t)(mcause & 0X00000fff);
+    uint32_t EXCn = (uint32_t)(mcause & 0x00000fff);
     EXC_HANDLER exc_handler;
 
     if (EXCn < MAX_SYSTEM_EXCEPTION_NUM) {
         exc_handler = (EXC_HANDLER)SystemExceptionHandlers[EXCn];
+    } else if (EXCn == 0xFFF) {
+        exc_handler = (EXC_HANDLER)SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM];
     } else {
         exc_handler = (EXC_HANDLER)system_default_exception_handler;
     }
