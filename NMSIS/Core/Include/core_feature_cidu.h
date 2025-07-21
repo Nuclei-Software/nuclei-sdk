@@ -183,7 +183,7 @@ __STATIC_FORCEINLINE uint32_t CIDU_GetBroadcastModeStatus(uint32_t int_id)
  * - \ref CIDU_BroadcastExtInterrupt
  * - \ref CIDU_ResetFirstClaimMode
 */
-__STATIC_FORCEINLINE long CIDU_SetFirstClaimMode(uint32_t int_id, uint32_t core_id)
+__STATIC_INLINE long CIDU_SetFirstClaimMode(uint32_t int_id, uint32_t core_id)
 {
     uint32_t val = 0;
     uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(int_id);
@@ -359,7 +359,7 @@ __STATIC_FORCEINLINE uint32_t CIDU_GetSemaphoreStatus(uint32_t semph_n)
  * - \ref CIDU_GetSemaphoreStatus
  * - \ref CIDU_ReleaseSemaphore
 */
-__STATIC_FORCEINLINE long CIDU_CheckSemaphoreAcquired(uint32_t semph_n, uint32_t core_id)
+__STATIC_INLINE long CIDU_CheckSemaphoreAcquired(uint32_t semph_n, uint32_t core_id)
 {
     uint32_t val;
     val = CIDU_GetSemaphoreStatus(semph_n);
@@ -383,7 +383,7 @@ __STATIC_FORCEINLINE long CIDU_CheckSemaphoreAcquired(uint32_t semph_n, uint32_t
  * - \ref CIDU_CheckSemaphoreAcquired
  * - \ref CIDU_ReleaseSemaphore
 */
-__STATIC_FORCEINLINE long CIDU_AcquireSemaphore(uint32_t semph_n, uint32_t core_id)
+__STATIC_INLINE long CIDU_AcquireSemaphore(uint32_t semph_n, uint32_t core_id)
 {
     long semaphore_status = -1;
     uint32_t* addr = (uint32_t*)CIDU_SEMAPHORE_ADDR(semph_n);
@@ -405,7 +405,7 @@ __STATIC_FORCEINLINE long CIDU_AcquireSemaphore(uint32_t semph_n, uint32_t core_
  * - \ref CIDU_AcquireSemaphore
  * - \ref CIDU_ReleaseSemaphore
 */
-__STATIC_FORCEINLINE void CIDU_AcquireSemaphore_Block(uint32_t semph_n, uint32_t core_id)
+__STATIC_INLINE void CIDU_AcquireSemaphore_Block(uint32_t semph_n, uint32_t core_id)
 {
     int32_t semaphore_status = -1;
 

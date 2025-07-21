@@ -763,7 +763,7 @@ typedef union {
  * \param stack   predefined stack, size should set enough
  * \param entry_point   a function pointer to execute
  */
-__STATIC_FORCEINLINE void __switch_mode(uint8_t mode, uintptr_t stack, void(*entry_point)(void))
+__STATIC_INLINE void __switch_mode(uint8_t mode, uintptr_t stack, void(*entry_point)(void))
 {
     unsigned long val = 0;
 
@@ -1055,7 +1055,7 @@ __STATIC_FORCEINLINE void __clear_core_irq_pending_s(uint32_t irq)
  * \return  The whole 64 bits value of MCYCLE
  * \remarks It will work for both RV32 and RV64 to get full 64bits value of MCYCLE
  */
-__STATIC_FORCEINLINE uint64_t __get_rv_cycle(void)
+__STATIC_INLINE uint64_t __get_rv_cycle(void)
 {
 #if __RISCV_XLEN == 32
     volatile uint32_t high0, low, high;
@@ -1099,7 +1099,7 @@ __STATIC_FORCEINLINE void __set_rv_cycle(uint64_t cycle)
  * \return  The whole 64 bits value of MINSTRET
  * \remarks It will work for both RV32 and RV64 to get full 64bits value of MINSTRET
  */
-__STATIC_FORCEINLINE uint64_t __get_rv_instret(void)
+__STATIC_INLINE uint64_t __get_rv_instret(void)
 {
 #if __RISCV_XLEN == 32
     volatile uint32_t high0, low, high;
@@ -1144,7 +1144,7 @@ __STATIC_FORCEINLINE void __set_rv_instret(uint64_t instret)
  * \remarks It will work for both RV32 and RV64 to get full 64bits value of TIME
  * \attention only available when user mode available
  */
-__STATIC_FORCEINLINE uint64_t __get_rv_time(void)
+__STATIC_INLINE uint64_t __get_rv_time(void)
 {
 #if __RISCV_XLEN == 32
     volatile uint32_t high0, low, high;
@@ -1530,7 +1530,7 @@ __STATIC_FORCEINLINE void __disable_all_counter(void)
  * \details
  * Set event for high performance monitor event register
  */
-__STATIC_FORCEINLINE void __set_hpm_event(unsigned long idx, unsigned long event)
+__STATIC_INLINE void __set_hpm_event(unsigned long idx, unsigned long event)
 {
     switch (idx) {
         case 3: __RV_CSR_WRITE(CSR_MHPMEVENT3, event); break;
@@ -1574,7 +1574,7 @@ __STATIC_FORCEINLINE void __set_hpm_event(unsigned long idx, unsigned long event
  * Get high performance monitor event register value
  * \return               HPMEVENTx Register value
  */
-__STATIC_FORCEINLINE unsigned long __get_hpm_event(unsigned long idx)
+__STATIC_INLINE unsigned long __get_hpm_event(unsigned long idx)
 {
     switch (idx) {
         case 3: return __RV_CSR_READ(CSR_MHPMEVENT3);
@@ -1617,7 +1617,7 @@ __STATIC_FORCEINLINE unsigned long __get_hpm_event(unsigned long idx)
  * \details
  * Set value for high performance monitor couner register
  */
-__STATIC_FORCEINLINE void __set_hpm_counter(unsigned long idx, uint64_t value)
+__STATIC_INLINE void __set_hpm_counter(unsigned long idx, uint64_t value)
 {
     switch (idx) {
 #if __RISCV_XLEN == 32
@@ -1753,7 +1753,7 @@ __STATIC_FORCEINLINE void __set_hpm_counter(unsigned long idx, uint64_t value)
  * Get high performance monitor counter register value
  * \return               HPMCOUNTERx Register value
  */
-__STATIC_FORCEINLINE uint64_t __get_hpm_counter(unsigned long idx)
+__STATIC_INLINE uint64_t __get_hpm_counter(unsigned long idx)
 {
 #if __RISCV_XLEN == 32
     volatile uint32_t high0, low, high;
@@ -1957,7 +1957,7 @@ __STATIC_FORCEINLINE uint64_t __get_hpm_counter(unsigned long idx)
  *          32 bits when XLEN=32
  * \return               HPMCOUNTERx Register value
  */
-__STATIC_FORCEINLINE unsigned long __read_hpm_counter(unsigned long idx)
+__STATIC_INLINE unsigned long __read_hpm_counter(unsigned long idx)
 {
     switch (idx) {
         case 0: return __read_cycle_csr();
@@ -2180,7 +2180,7 @@ __STATIC_FORCEINLINE void __SD(volatile void *addr, uint64_t val)
  * \param [in]    newval    New value to be stored into the address
  * \return  return the initial value in memory
  */
-__STATIC_FORCEINLINE uint32_t __CAS_W(volatile uint32_t *addr, uint32_t oldval, uint32_t newval)
+__STATIC_INLINE uint32_t __CAS_W(volatile uint32_t *addr, uint32_t oldval, uint32_t newval)
 {
     uint32_t result;
     uint32_t rc;
@@ -2353,7 +2353,7 @@ __STATIC_FORCEINLINE int32_t __AMOMIN_W(volatile int32_t *addr, int32_t value)
  * \param [in]    newval    New value to be stored into the address
  * \return  return the initial value in memory
  */
-__STATIC_FORCEINLINE uint64_t __CAS_D(volatile uint64_t *addr, uint64_t oldval, uint64_t newval)
+__STATIC_INLINE uint64_t __CAS_D(volatile uint64_t *addr, uint64_t oldval, uint64_t newval)
 {
     uint64_t result;
     uint64_t rc;

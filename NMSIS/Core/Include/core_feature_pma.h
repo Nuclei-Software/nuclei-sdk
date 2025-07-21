@@ -45,7 +45,7 @@
  * And correspondingly, the whole memory region are split into three regions: DEV Region/NC Region/CA Region
  *
  * Hardware provide some software CSR to set the pma by mattri(n)_base/mattri(n)_mask/sattri(n)_base/sattri(n)_mask
- * 
+ *
  * Hardware defined PMA regions(up to 8 DEV/NC/CA regions) can be disable or enable by CSR mmacro_dev_en/mmacro_noc_en/mmacro_ca_en
  *   @{
  */
@@ -96,7 +96,7 @@ typedef struct PMA_CONFIG {
  * - The regions can be overlapped as the prority: Non-Cacheable > Cacheable > Device, but especially be careful not to
  *   overlap software's instruction/data sections by Device, or overlap Device(like uart) memory by Cacheable
  */
-__STATIC_FORCEINLINE long PMA_SetRegion(unsigned long entry_idx, pma_config *pma_cfg)
+__STATIC_INLINE long PMA_SetRegion(unsigned long entry_idx, pma_config *pma_cfg)
 {
     // 4KB aligned
     unsigned long size = (pma_cfg->region_size >> 12) << 12;
@@ -136,7 +136,7 @@ __STATIC_FORCEINLINE long PMA_SetRegion(unsigned long entry_idx, pma_config *pma
      Nuclei ISA specifications
  * - Not all the entry_idx(0-n) could set to all the types freely, refer to Nuclei ISA specifications
  */
-__STATIC_FORCEINLINE long PMA_GetRegion(unsigned long entry_idx, pma_config *pma_cfg)
+__STATIC_INLINE long PMA_GetRegion(unsigned long entry_idx, pma_config *pma_cfg)
 {
     rv_csr_t mask, base;
     uint32_t mpasize = *(uint32_t *)__IINFO_MPASIZE_ADDR;
@@ -178,7 +178,7 @@ __STATIC_FORCEINLINE long PMA_GetRegion(unsigned long entry_idx, pma_config *pma
  * - Region granularity is 4KB, so the low 12-bits of sattri(n)_mask must be 0, which the api takes care of
  * - Unlike mattri(n)_base, there's no DEV Region/NC Region/CA Region type
  */
-__STATIC_FORCEINLINE long PMA_SetRegion_S(unsigned long entry_idx, pma_config *pma_cfg)
+__STATIC_INLINE long PMA_SetRegion_S(unsigned long entry_idx, pma_config *pma_cfg)
 {
     // 4KB aligned
     unsigned long size = (pma_cfg->region_size >> 12) << 12;
@@ -216,7 +216,7 @@ __STATIC_FORCEINLINE long PMA_SetRegion_S(unsigned long entry_idx, pma_config *p
  * \remark
  * - Unlike mattri(n)_base, there's no DEV Region/NC Region/CA Region type
  */
-__STATIC_FORCEINLINE long PMA_GetRegion_S(unsigned long entry_idx, pma_config *pma_cfg)
+__STATIC_INLINE long PMA_GetRegion_S(unsigned long entry_idx, pma_config *pma_cfg)
 {
     rv_csr_t mask, base;
     uint32_t mpasize = *(uint32_t *)__IINFO_MPASIZE_ADDR;

@@ -175,7 +175,7 @@ __STATIC_FORCEINLINE void FlushPipeCCM(void)
  * - Please make sure the version of your nuclei processor contain ICACHE bit in mcfg_info
  * \return 1 if present otherwise 0
 */
-__STATIC_FORCEINLINE int32_t ICachePresent(void)
+__STATIC_INLINE int32_t ICachePresent(void)
 {
     if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_ICACHE) {
         return 1;
@@ -254,7 +254,7 @@ __STATIC_FORCEINLINE void DisableICacheECC(void)
  * \sa
  * - \ref GetDCacheInfo
  */
-__STATIC_FORCEINLINE int32_t GetICacheInfo(CacheInfo_Type *info)
+__STATIC_INLINE int32_t GetICacheInfo(CacheInfo_Type *info)
 {
     if (info == NULL) {
         return -1;
@@ -282,7 +282,7 @@ __STATIC_FORCEINLINE int32_t GetICacheInfo(CacheInfo_Type *info)
  * This function must be executed in M-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void MInvalICacheLine(unsigned long addr)
+__STATIC_INLINE void MInvalICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_INVAL);
@@ -301,7 +301,7 @@ __STATIC_FORCEINLINE void MInvalICacheLine(unsigned long addr)
  * \param [in]    addr    start address to be invalidated
  * \param [in]    cnt     count of cache lines to be invalidated
  */
-__STATIC_FORCEINLINE void MInvalICacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void MInvalICacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -324,7 +324,7 @@ __STATIC_FORCEINLINE void MInvalICacheLines(unsigned long addr, unsigned long cn
  * This function must be executed in M/S-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void SInvalICacheLine(unsigned long addr)
+__STATIC_INLINE void SInvalICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_INVAL);
@@ -343,7 +343,7 @@ __STATIC_FORCEINLINE void SInvalICacheLine(unsigned long addr)
  * \param [in]    addr    start address to be invalidated
  * \param [in]    cnt     count of cache lines to be invalidated
  */
-__STATIC_FORCEINLINE void SInvalICacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void SInvalICacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -366,7 +366,7 @@ __STATIC_FORCEINLINE void SInvalICacheLines(unsigned long addr, unsigned long cn
  * This function must be executed in M/S/U-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void UInvalICacheLine(unsigned long addr)
+__STATIC_INLINE void UInvalICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_INVAL);
@@ -385,7 +385,7 @@ __STATIC_FORCEINLINE void UInvalICacheLine(unsigned long addr)
  * \param [in]    addr    start address to be invalidated
  * \param [in]    cnt     count of cache lines to be invalidated
  */
-__STATIC_FORCEINLINE void UInvalICacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void UInvalICacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -408,7 +408,7 @@ __STATIC_FORCEINLINE void UInvalICacheLines(unsigned long addr, unsigned long cn
  * \param [in]    addr    start address to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long MLockICacheLine(unsigned long addr)
+__STATIC_INLINE unsigned long MLockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_LOCK);
@@ -429,7 +429,7 @@ __STATIC_FORCEINLINE unsigned long MLockICacheLine(unsigned long addr)
  * \param [in]    cnt     count of cache lines to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long MLockICacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE unsigned long MLockICacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -458,7 +458,7 @@ __STATIC_FORCEINLINE unsigned long MLockICacheLines(unsigned long addr, unsigned
  * \param [in]    addr    start address to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long SLockICacheLine(unsigned long addr)
+__STATIC_INLINE unsigned long SLockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_LOCK);
@@ -479,7 +479,7 @@ __STATIC_FORCEINLINE unsigned long SLockICacheLine(unsigned long addr)
  * \param [in]    cnt     count of cache lines to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long SLockICacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE unsigned long SLockICacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -508,7 +508,7 @@ __STATIC_FORCEINLINE unsigned long SLockICacheLines(unsigned long addr, unsigned
  * \param [in]    addr    start address to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long ULockICacheLine(unsigned long addr)
+__STATIC_INLINE unsigned long ULockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_LOCK);
@@ -529,7 +529,7 @@ __STATIC_FORCEINLINE unsigned long ULockICacheLine(unsigned long addr)
  * \param [in]    cnt     count of cache lines to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long ULockICacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE unsigned long ULockICacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -557,7 +557,7 @@ __STATIC_FORCEINLINE unsigned long ULockICacheLines(unsigned long addr, unsigned
  * This function must be executed in M-Mode only.
  * \param [in]    addr    start address to be unlocked
  */
-__STATIC_FORCEINLINE void MUnlockICacheLine(unsigned long addr)
+__STATIC_INLINE void MUnlockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_UNLOCK);
@@ -576,7 +576,7 @@ __STATIC_FORCEINLINE void MUnlockICacheLine(unsigned long addr)
  * \param [in]    addr    start address to be unlocked
  * \param [in]    cnt     count of cache lines to be unlocked
  */
-__STATIC_FORCEINLINE void MUnlockICacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void MUnlockICacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -598,7 +598,7 @@ __STATIC_FORCEINLINE void MUnlockICacheLines(unsigned long addr, unsigned long c
  * This function must be executed in M/S-Mode only.
  * \param [in]    addr    start address to be unlocked
  */
-__STATIC_FORCEINLINE void SUnlockICacheLine(unsigned long addr)
+__STATIC_INLINE void SUnlockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_UNLOCK);
@@ -617,7 +617,7 @@ __STATIC_FORCEINLINE void SUnlockICacheLine(unsigned long addr)
  * \param [in]    addr    start address to be unlocked
  * \param [in]    cnt     count of cache lines to be unlocked
  */
-__STATIC_FORCEINLINE void SUnlockICacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void SUnlockICacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -639,7 +639,7 @@ __STATIC_FORCEINLINE void SUnlockICacheLines(unsigned long addr, unsigned long c
  * This function must be executed in M/S/U-Mode only.
  * \param [in]    addr    start address to be unlocked
  */
-__STATIC_FORCEINLINE void UUnlockICacheLine(unsigned long addr)
+__STATIC_INLINE void UUnlockICacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_UNLOCK);
@@ -658,7 +658,7 @@ __STATIC_FORCEINLINE void UUnlockICacheLine(unsigned long addr)
  * \param [in]    addr    start address to be unlocked
  * \param [in]    cnt     count of cache lines to be unlocked
  */
-__STATIC_FORCEINLINE void UUnlockICacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void UUnlockICacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -680,7 +680,7 @@ __STATIC_FORCEINLINE void UUnlockICacheLines(unsigned long addr, unsigned long c
  * This function must be executed in M-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void MInvalICache(void)
+__STATIC_INLINE void MInvalICache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_INVAL_ALL);
     FlushPipeCCM();
@@ -696,7 +696,7 @@ __STATIC_FORCEINLINE void MInvalICache(void)
  * This function must be executed in M/S-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void SInvalICache(void)
+__STATIC_INLINE void SInvalICache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_INVAL_ALL);
     FlushPipeCCM();
@@ -712,7 +712,7 @@ __STATIC_FORCEINLINE void SInvalICache(void)
  * This function must be executed in M/S/U-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void UInvalICache(void)
+__STATIC_INLINE void UInvalICache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_INVAL_ALL);
     FlushPipeCCM();
@@ -739,7 +739,7 @@ __STATIC_FORCEINLINE void UInvalICache(void)
  * - Please make sure the version of your nuclei processor contain DCACHE bit in mcfg_info
  * \return 1 if present otherwise 0
 */
-__STATIC_FORCEINLINE int32_t DCachePresent(void)
+__STATIC_INLINE int32_t DCachePresent(void)
 {
     if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_DCACHE) {
         return 1;
@@ -818,7 +818,7 @@ __STATIC_FORCEINLINE void DisableDCacheECC(void)
  * \sa
  * - \ref GetICacheInfo
  */
-__STATIC_FORCEINLINE int32_t GetDCacheInfo(CacheInfo_Type *info)
+__STATIC_INLINE int32_t GetDCacheInfo(CacheInfo_Type *info)
 {
     if (info == NULL) {
         return -1;
@@ -846,7 +846,7 @@ __STATIC_FORCEINLINE int32_t GetDCacheInfo(CacheInfo_Type *info)
  * This function must be executed in M-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void MInvalDCacheLine(unsigned long addr)
+__STATIC_INLINE void MInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_INVAL);
@@ -865,7 +865,7 @@ __STATIC_FORCEINLINE void MInvalDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be invalidated
  * \param [in]    cnt     count of cache lines to be invalidated
  */
-__STATIC_FORCEINLINE void MInvalDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void MInvalDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -888,7 +888,7 @@ __STATIC_FORCEINLINE void MInvalDCacheLines(unsigned long addr, unsigned long cn
  * This function must be executed in M/S-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void SInvalDCacheLine(unsigned long addr)
+__STATIC_INLINE void SInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_INVAL);
@@ -907,7 +907,7 @@ __STATIC_FORCEINLINE void SInvalDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be invalidated
  * \param [in]    cnt     count of cache lines to be invalidated
  */
-__STATIC_FORCEINLINE void SInvalDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void SInvalDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -930,7 +930,7 @@ __STATIC_FORCEINLINE void SInvalDCacheLines(unsigned long addr, unsigned long cn
  * This function must be executed in M/S/U-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void UInvalDCacheLine(unsigned long addr)
+__STATIC_INLINE void UInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_INVAL);
@@ -949,7 +949,7 @@ __STATIC_FORCEINLINE void UInvalDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be invalidated
  * \param [in]    cnt     count of cache lines to be invalidated
  */
-__STATIC_FORCEINLINE void UInvalDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void UInvalDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -971,7 +971,7 @@ __STATIC_FORCEINLINE void UInvalDCacheLines(unsigned long addr, unsigned long cn
  * This function must be executed in M-Mode only.
  * \param [in]    addr    start address to be flushed
  */
-__STATIC_FORCEINLINE void MFlushDCacheLine(unsigned long addr)
+__STATIC_INLINE void MFlushDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WB);
@@ -990,7 +990,7 @@ __STATIC_FORCEINLINE void MFlushDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be flushed
  * \param [in]    cnt     count of cache lines to be flushed
  */
-__STATIC_FORCEINLINE void MFlushDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void MFlushDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1012,7 +1012,7 @@ __STATIC_FORCEINLINE void MFlushDCacheLines(unsigned long addr, unsigned long cn
  * This function must be executed in M/S-Mode only.
  * \param [in]    addr    start address to be flushed
  */
-__STATIC_FORCEINLINE void SFlushDCacheLine(unsigned long addr)
+__STATIC_INLINE void SFlushDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WB);
@@ -1031,7 +1031,7 @@ __STATIC_FORCEINLINE void SFlushDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be flushed
  * \param [in]    cnt     count of cache lines to be flushed
  */
-__STATIC_FORCEINLINE void SFlushDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void SFlushDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1053,7 +1053,7 @@ __STATIC_FORCEINLINE void SFlushDCacheLines(unsigned long addr, unsigned long cn
  * This function must be executed in M/S/U-Mode only.
  * \param [in]    addr    start address to be flushed
  */
-__STATIC_FORCEINLINE void UFlushDCacheLine(unsigned long addr)
+__STATIC_INLINE void UFlushDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WB);
@@ -1072,7 +1072,7 @@ __STATIC_FORCEINLINE void UFlushDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be flushed
  * \param [in]    cnt     count of cache lines to be flushed
  */
-__STATIC_FORCEINLINE void UFlushDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void UFlushDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1094,7 +1094,7 @@ __STATIC_FORCEINLINE void UFlushDCacheLines(unsigned long addr, unsigned long cn
  * This function must be executed in M-Mode only.
  * \param [in]    addr    start address to be flushed and invalidated
  */
-__STATIC_FORCEINLINE void MFlushInvalDCacheLine(unsigned long addr)
+__STATIC_INLINE void MFlushInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WBINVAL);
@@ -1113,7 +1113,7 @@ __STATIC_FORCEINLINE void MFlushInvalDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be flushed and invalidated
  * \param [in]    cnt     count of cache lines to be flushed and invalidated
  */
-__STATIC_FORCEINLINE void MFlushInvalDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void MFlushInvalDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1135,7 +1135,7 @@ __STATIC_FORCEINLINE void MFlushInvalDCacheLines(unsigned long addr, unsigned lo
  * This function must be executed in M/S-Mode only.
  * \param [in]    addr    start address to be flushed and invalidated
  */
-__STATIC_FORCEINLINE void SFlushInvalDCacheLine(unsigned long addr)
+__STATIC_INLINE void SFlushInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WBINVAL);
@@ -1154,7 +1154,7 @@ __STATIC_FORCEINLINE void SFlushInvalDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be flushed and invalidated
  * \param [in]    cnt     count of cache lines to be flushed and invalidated
  */
-__STATIC_FORCEINLINE void SFlushInvalDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void SFlushInvalDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1176,7 +1176,7 @@ __STATIC_FORCEINLINE void SFlushInvalDCacheLines(unsigned long addr, unsigned lo
  * This function must be executed in M/S/U-Mode only.
  * \param [in]    addr    start address to be flushed and invalidated
  */
-__STATIC_FORCEINLINE void UFlushInvalDCacheLine(unsigned long addr)
+__STATIC_INLINE void UFlushInvalDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WBINVAL);
@@ -1195,7 +1195,7 @@ __STATIC_FORCEINLINE void UFlushInvalDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be flushed and invalidated
  * \param [in]    cnt     count of cache lines to be flushed and invalidated
  */
-__STATIC_FORCEINLINE void UFlushInvalDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void UFlushInvalDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1218,7 +1218,7 @@ __STATIC_FORCEINLINE void UFlushInvalDCacheLines(unsigned long addr, unsigned lo
  * \param [in]    addr    start address to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long MLockDCacheLine(unsigned long addr)
+__STATIC_INLINE unsigned long MLockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_LOCK);
@@ -1239,7 +1239,7 @@ __STATIC_FORCEINLINE unsigned long MLockDCacheLine(unsigned long addr)
  * \param [in]    cnt     count of cache lines to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long MLockDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE unsigned long MLockDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1268,7 +1268,7 @@ __STATIC_FORCEINLINE unsigned long MLockDCacheLines(unsigned long addr, unsigned
  * \param [in]    addr    start address to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long SLockDCacheLine(unsigned long addr)
+__STATIC_INLINE unsigned long SLockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_LOCK);
@@ -1289,7 +1289,7 @@ __STATIC_FORCEINLINE unsigned long SLockDCacheLine(unsigned long addr)
  * \param [in]    cnt     count of cache lines to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long SLockDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE unsigned long SLockDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1318,7 +1318,7 @@ __STATIC_FORCEINLINE unsigned long SLockDCacheLines(unsigned long addr, unsigned
  * \param [in]    addr    start address to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long ULockDCacheLine(unsigned long addr)
+__STATIC_INLINE unsigned long ULockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_LOCK);
@@ -1339,7 +1339,7 @@ __STATIC_FORCEINLINE unsigned long ULockDCacheLine(unsigned long addr)
  * \param [in]    cnt     count of cache lines to be locked
  * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
  */
-__STATIC_FORCEINLINE unsigned long ULockDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE unsigned long ULockDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1367,7 +1367,7 @@ __STATIC_FORCEINLINE unsigned long ULockDCacheLines(unsigned long addr, unsigned
  * This function must be executed in M-Mode only.
  * \param [in]    addr    start address to be unlocked
  */
-__STATIC_FORCEINLINE void MUnlockDCacheLine(unsigned long addr)
+__STATIC_INLINE void MUnlockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_UNLOCK);
@@ -1386,7 +1386,7 @@ __STATIC_FORCEINLINE void MUnlockDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be unlocked
  * \param [in]    cnt     count of cache lines to be unlocked
  */
-__STATIC_FORCEINLINE void MUnlockDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void MUnlockDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1408,7 +1408,7 @@ __STATIC_FORCEINLINE void MUnlockDCacheLines(unsigned long addr, unsigned long c
  * This function must be executed in M/S-Mode only.
  * \param [in]    addr    start address to be unlocked
  */
-__STATIC_FORCEINLINE void SUnlockDCacheLine(unsigned long addr)
+__STATIC_INLINE void SUnlockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_UNLOCK);
@@ -1427,7 +1427,7 @@ __STATIC_FORCEINLINE void SUnlockDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be unlocked
  * \param [in]    cnt     count of cache lines to be unlocked
  */
-__STATIC_FORCEINLINE void SUnlockDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void SUnlockDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1449,7 +1449,7 @@ __STATIC_FORCEINLINE void SUnlockDCacheLines(unsigned long addr, unsigned long c
  * This function must be executed in M/S/U-Mode only.
  * \param [in]    addr    start address to be unlocked
  */
-__STATIC_FORCEINLINE void UUnlockDCacheLine(unsigned long addr)
+__STATIC_INLINE void UUnlockDCacheLine(unsigned long addr)
 {
     __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_UNLOCK);
@@ -1468,7 +1468,7 @@ __STATIC_FORCEINLINE void UUnlockDCacheLine(unsigned long addr)
  * \param [in]    addr    start address to be unlocked
  * \param [in]    cnt     count of cache lines to be unlocked
  */
-__STATIC_FORCEINLINE void UUnlockDCacheLines(unsigned long addr, unsigned long cnt)
+__STATIC_INLINE void UUnlockDCacheLines(unsigned long addr, unsigned long cnt)
 {
     if (cnt > 0) {
         unsigned long i;
@@ -1490,7 +1490,7 @@ __STATIC_FORCEINLINE void UUnlockDCacheLines(unsigned long addr, unsigned long c
  * This function must be executed in M-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void MInvalDCache(void)
+__STATIC_INLINE void MInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_INVAL_ALL);
     FlushPipeCCM();
@@ -1506,7 +1506,7 @@ __STATIC_FORCEINLINE void MInvalDCache(void)
  * This function must be executed in M/S-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void SInvalDCache(void)
+__STATIC_INLINE void SInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_INVAL_ALL);
     FlushPipeCCM();
@@ -1524,7 +1524,7 @@ __STATIC_FORCEINLINE void SInvalDCache(void)
  * This function must be executed in M/S/U-Mode only.
  * \param [in]    addr    start address to be invalidated
  */
-__STATIC_FORCEINLINE void UInvalDCache(void)
+__STATIC_INLINE void UInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_INVAL_ALL);
     FlushPipeCCM();
@@ -1540,7 +1540,7 @@ __STATIC_FORCEINLINE void UInvalDCache(void)
  * This function must be executed in M-Mode only.
  * \param [in]    addr    start address to be flushed
  */
-__STATIC_FORCEINLINE void MFlushDCache(void)
+__STATIC_INLINE void MFlushDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WB_ALL);
     FlushPipeCCM();
@@ -1556,7 +1556,7 @@ __STATIC_FORCEINLINE void MFlushDCache(void)
  * This function must be executed in M/S-Mode only.
  * \param [in]    addr    start address to be flushed
  */
-__STATIC_FORCEINLINE void SFlushDCache(void)
+__STATIC_INLINE void SFlushDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WB_ALL);
     FlushPipeCCM();
@@ -1572,7 +1572,7 @@ __STATIC_FORCEINLINE void SFlushDCache(void)
  * This function must be executed in M/S/U-Mode only.
  * \param [in]    addr    start address to be flushed
  */
-__STATIC_FORCEINLINE void UFlushDCache(void)
+__STATIC_INLINE void UFlushDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WB_ALL);
     FlushPipeCCM();
@@ -1588,7 +1588,7 @@ __STATIC_FORCEINLINE void UFlushDCache(void)
  * This function must be executed in M-Mode only.
  * \param [in]    addr    start address to be flushed and locked
  */
-__STATIC_FORCEINLINE void MFlushInvalDCache(void)
+__STATIC_INLINE void MFlushInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WBINVAL_ALL);
     FlushPipeCCM();
@@ -1604,7 +1604,7 @@ __STATIC_FORCEINLINE void MFlushInvalDCache(void)
  * This function must be executed in M/S-Mode only.
  * \param [in]    addr    start address to be flushed and locked
  */
-__STATIC_FORCEINLINE void SFlushInvalDCache(void)
+__STATIC_INLINE void SFlushInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WBINVAL_ALL);
     FlushPipeCCM();
@@ -1620,7 +1620,7 @@ __STATIC_FORCEINLINE void SFlushInvalDCache(void)
  * This function must be executed in M/S/U-Mode only.
  * \param [in]    addr    start address to be flushed and locked
  */
-__STATIC_FORCEINLINE void UFlushInvalDCache(void)
+__STATIC_INLINE void UFlushInvalDCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WBINVAL_ALL);
     FlushPipeCCM();

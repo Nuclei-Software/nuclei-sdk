@@ -640,7 +640,7 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetCtrlIRQ(IRQn_Type IRQn)
  * \sa
  * - \ref ECLIC_GetLevelIRQ
  */
-__STATIC_FORCEINLINE void __ECLIC_SetLevelIRQ(IRQn_Type IRQn, uint8_t lvl_abs)
+__STATIC_INLINE void __ECLIC_SetLevelIRQ(IRQn_Type IRQn, uint8_t lvl_abs)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = (uint8_t)__ECLIC_INTCTLBITS;
@@ -674,7 +674,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetLevelIRQ(IRQn_Type IRQn, uint8_t lvl_abs)
  * \sa
  * - \ref ECLIC_SetLevelIRQ
  */
-__STATIC_FORCEINLINE uint8_t __ECLIC_GetLevelIRQ(IRQn_Type IRQn)
+__STATIC_INLINE uint8_t __ECLIC_GetLevelIRQ(IRQn_Type IRQn)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = (uint8_t)__ECLIC_INTCTLBITS;
@@ -705,7 +705,7 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetLevelIRQ(IRQn_Type IRQn)
  * \sa
  * - \ref ECLIC_GetPriorityIRQ
  */
-__STATIC_FORCEINLINE void __ECLIC_SetPriorityIRQ(IRQn_Type IRQn, uint8_t pri)
+__STATIC_INLINE void __ECLIC_SetPriorityIRQ(IRQn_Type IRQn, uint8_t pri)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = (uint8_t)__ECLIC_INTCTLBITS;
@@ -735,7 +735,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetPriorityIRQ(IRQn_Type IRQn, uint8_t pri)
  * \sa
  * - \ref ECLIC_SetPriorityIRQ
  */
-__STATIC_FORCEINLINE uint8_t __ECLIC_GetPriorityIRQ(IRQn_Type IRQn)
+__STATIC_INLINE uint8_t __ECLIC_GetPriorityIRQ(IRQn_Type IRQn)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = (uint8_t)__ECLIC_INTCTLBITS;
@@ -766,7 +766,7 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetPriorityIRQ(IRQn_Type IRQn)
  * \sa
  * - \ref ECLIC_GetVector
  */
-__STATIC_FORCEINLINE void __ECLIC_SetVector(IRQn_Type IRQn, rv_csr_t vector)
+__STATIC_INLINE void __ECLIC_SetVector(IRQn_Type IRQn, rv_csr_t vector)
 {
     volatile unsigned long vec_base;
     vec_base = ((unsigned long)__RV_CSR_READ(CSR_MTVT));
@@ -997,7 +997,7 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetCtrlIRQ_S(IRQn_Type IRQn)
  * \sa
  * - \ref ECLIC_GetLevelIRQ_S
  */
-__STATIC_FORCEINLINE void __ECLIC_SetLevelIRQ_S(IRQn_Type IRQn, uint8_t lvl_abs)
+__STATIC_INLINE void __ECLIC_SetLevelIRQ_S(IRQn_Type IRQn, uint8_t lvl_abs)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = (uint8_t)__ECLIC_INTCTLBITS;
@@ -1032,7 +1032,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetLevelIRQ_S(IRQn_Type IRQn, uint8_t lvl_abs)
  * \sa
  * - \ref ECLIC_SetLevelIRQ_S
  */
-__STATIC_FORCEINLINE uint8_t __ECLIC_GetLevelIRQ_S(IRQn_Type IRQn)
+__STATIC_INLINE uint8_t __ECLIC_GetLevelIRQ_S(IRQn_Type IRQn)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = (uint8_t)__ECLIC_INTCTLBITS;
@@ -1063,7 +1063,7 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetLevelIRQ_S(IRQn_Type IRQn)
  * \sa
  * - \ref ECLIC_GetPriorityIRQ_S
  */
-__STATIC_FORCEINLINE void __ECLIC_SetPriorityIRQ_S(IRQn_Type IRQn, uint8_t pri)
+__STATIC_INLINE void __ECLIC_SetPriorityIRQ_S(IRQn_Type IRQn, uint8_t pri)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = (uint8_t)__ECLIC_INTCTLBITS;
@@ -1093,7 +1093,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetPriorityIRQ_S(IRQn_Type IRQn, uint8_t pri)
  * \sa
  * - \ref ECLIC_SetPriorityIRQ_S
  */
-__STATIC_FORCEINLINE uint8_t __ECLIC_GetPriorityIRQ_S(IRQn_Type IRQn)
+__STATIC_INLINE uint8_t __ECLIC_GetPriorityIRQ_S(IRQn_Type IRQn)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
     uint8_t intctlbits = (uint8_t)__ECLIC_INTCTLBITS;
@@ -1173,7 +1173,7 @@ __STATIC_FORCEINLINE void __ECLIC_DisableIRQ_S(IRQn_Type IRQn)
  * \sa
  * - \ref ECLIC_GetVector_S
  */
-__STATIC_FORCEINLINE void __ECLIC_SetVector_S(IRQn_Type IRQn, rv_csr_t vector)
+__STATIC_INLINE void __ECLIC_SetVector_S(IRQn_Type IRQn, rv_csr_t vector)
 {
     volatile unsigned long vec_base;
     vec_base = ((unsigned long)__RV_CSR_READ(CSR_STVT));
@@ -1264,7 +1264,7 @@ __STATIC_FORCEINLINE rv_csr_t __get_exc_entry(void)
  * \sa
  * - \ref __get_nonvec_entry
  */
-__STATIC_FORCEINLINE void __set_nonvec_entry(rv_csr_t addr)
+__STATIC_INLINE void __set_nonvec_entry(rv_csr_t addr)
 {
     if (__RV_CSR_READ(CSR_MTVT2) & 0x1) {
         __RV_CSR_WRITE(CSR_MTVT2, addr | 0x01);
@@ -1286,7 +1286,7 @@ __STATIC_FORCEINLINE void __set_nonvec_entry(rv_csr_t addr)
  * \sa
  * - \ref __set_nonvec_entry
  */
-__STATIC_FORCEINLINE rv_csr_t __get_nonvec_entry(void)
+__STATIC_INLINE rv_csr_t __get_nonvec_entry(void)
 {
     if (__RV_CSR_READ(CSR_MTVT2) & 0x1) {
         return __RV_CSR_READ(CSR_MTVT2) & (~(rv_csr_t)(0x1));

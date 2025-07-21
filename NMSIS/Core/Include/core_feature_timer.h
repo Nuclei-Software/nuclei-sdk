@@ -146,7 +146,7 @@ typedef struct {
  * - Load value is 64bits wide.
  * - \ref SysTimer_GetLoadValue
  */
-__STATIC_FORCEINLINE void SysTimer_SetLoadValue(uint64_t value)
+__STATIC_INLINE void SysTimer_SetLoadValue(uint64_t value)
 {
 #if __RISCV_XLEN == 32
     uint8_t *addr;
@@ -168,7 +168,7 @@ __STATIC_FORCEINLINE void SysTimer_SetLoadValue(uint64_t value)
  * - Load value is 64bits wide.
  * - \ref SysTimer_SetLoadValue
  */
-__STATIC_FORCEINLINE uint64_t SysTimer_GetLoadValue(void)
+__STATIC_INLINE uint64_t SysTimer_GetLoadValue(void)
 {
 #if __RISCV_XLEN == 32
     volatile uint32_t high0, low, high;
@@ -203,7 +203,7 @@ __STATIC_FORCEINLINE uint64_t SysTimer_GetLoadValue(void)
  * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * - \ref SysTimer_GetHartCompareValue
  */
-__STATIC_FORCEINLINE void SysTimer_SetHartCompareValue(uint64_t value, unsigned long hartid)
+__STATIC_INLINE void SysTimer_SetHartCompareValue(uint64_t value, unsigned long hartid)
 {
     if (hartid == 0) {
 #if __RISCV_XLEN == 32
@@ -256,7 +256,7 @@ __STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
  * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * - \ref SysTimer_SetHartCompareValue
  */
-__STATIC_FORCEINLINE uint64_t SysTimer_GetHartCompareValue(unsigned long hartid)
+__STATIC_INLINE uint64_t SysTimer_GetHartCompareValue(unsigned long hartid)
 {
     if (hartid == 0) {
         return SysTimer->MTIMERCMP;
@@ -506,7 +506,7 @@ __STATIC_FORCEINLINE void SysTimer_SetMsipValue(uint32_t msip)
  * - Modify the load value or compare value less to clear the interrupt.
  * - \ref SysTimer_GetCompareValue_S
  */
-__STATIC_FORCEINLINE void SysTimer_SetCompareValue_S(uint64_t value)
+__STATIC_INLINE void SysTimer_SetCompareValue_S(uint64_t value)
 {
 #if __RISCV_XLEN == 32
     __RV_CSR_WRITE(CSR_STIMECMP, -1U);      // prevent load > timecmp
@@ -526,7 +526,7 @@ __STATIC_FORCEINLINE void SysTimer_SetCompareValue_S(uint64_t value)
  * - Compare value is 64bits wide.
  * - \ref SysTimer_SetCompareValue_S
  */
-__STATIC_FORCEINLINE uint64_t SysTimer_GetCompareValue_S(void)
+__STATIC_INLINE uint64_t SysTimer_GetCompareValue_S(void)
 {
     uint64_t full;
 #if __RISCV_XLEN == 32
@@ -907,7 +907,7 @@ __STATIC_INLINE uint32_t SysTick_HartConfig(uint64_t ticks, unsigned long hartid
  * - \ref SysTimer_SetCompareValue
  * - \ref SysTimer_SetLoadValue
  */
-__STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
+__STATIC_INLINE uint32_t SysTick_Reload(uint64_t ticks)
 {
     uint64_t cur_ticks = SysTimer_GetLoadValue();
 
@@ -943,7 +943,7 @@ __STATIC_FORCEINLINE uint32_t SysTick_Reload(uint64_t ticks)
  * - \ref SysTimer_SetCompareValue
  * - \ref SysTimer_SetLoadValue
  */
-__STATIC_FORCEINLINE uint32_t SysTick_HartReload(uint64_t ticks, unsigned long hartid)
+__STATIC_INLINE uint32_t SysTick_HartReload(uint64_t ticks, unsigned long hartid)
 {
     uint64_t cur_ticks = SysTimer_GetLoadValue();
     uint64_t reload_ticks = ticks + cur_ticks;
@@ -987,7 +987,7 @@ __STATIC_INLINE uint32_t SysTick_Config_S(uint64_t ticks)
  * \return          0  Function succeeded.
  * \return          1  Function failed.
  */
-__STATIC_FORCEINLINE uint32_t SysTick_Reload_S(uint64_t ticks)
+__STATIC_INLINE uint32_t SysTick_Reload_S(uint64_t ticks)
 {
     uint64_t cur_ticks = __get_rv_time();
 

@@ -72,7 +72,7 @@
 #if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
 #define __SSAT(val, sat)          __RV_SCLIP32((val), (sat-1))
 #else
-__STATIC_FORCEINLINE int32_t __SSAT(int32_t val, uint32_t sat)
+__STATIC_INLINE int32_t __SSAT(int32_t val, uint32_t sat)
 {
     if ((sat >= 1U) && (sat <= 32U)) {
         const int32_t max = (int32_t)((1U << (sat - 1U)) - 1U);
@@ -97,7 +97,7 @@ __STATIC_FORCEINLINE int32_t __SSAT(int32_t val, uint32_t sat)
 #if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
 #define __USAT(val, sat)        __RV_UCLIP32((val), (sat))
 #else
-__STATIC_FORCEINLINE uint32_t __USAT(int32_t val, uint32_t sat)
+__STATIC_INLINE uint32_t __USAT(int32_t val, uint32_t sat)
 {
     if (sat <= 31U) {
         const uint32_t max = ((1U << sat) - 1U);
@@ -188,7 +188,7 @@ __STATIC_FORCEINLINE uint32_t __ROR(uint32_t op1, uint32_t op2)
  * \param [in]    op2  Number of Bits to rotate
  * \return        Rotated value([63:32] | [31:0])
  */
-__STATIC_FORCEINLINE uint64_t __ROR64(uint64_t op1, uint32_t op2)
+__STATIC_INLINE uint64_t __ROR64(uint64_t op1, uint32_t op2)
 {
     op2 = op2 & 0x1F;
     if (op2 == 0U) {
@@ -209,7 +209,7 @@ __STATIC_FORCEINLINE uint64_t __ROR64(uint64_t op1, uint32_t op2)
 #if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
 #define __RBIT(value)           __RV_BITREVI((value), 31)
 #else
-__STATIC_FORCEINLINE uint32_t __RBIT(uint32_t value)
+__STATIC_INLINE uint32_t __RBIT(uint32_t value)
 {
     uint32_t result;
     uint32_t s = (4U /*sizeof(v)*/ * 8U) - 1U; /* extra shift needed at end */
@@ -234,7 +234,7 @@ __STATIC_FORCEINLINE uint32_t __RBIT(uint32_t value)
 #if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
 #define __CLZ(data)         __RV_CLZ32(data)
 #else
-__STATIC_FORCEINLINE uint8_t __CLZ(uint32_t data)
+__STATIC_INLINE uint8_t __CLZ(uint32_t data)
 {
     uint8_t ret = 0;
     uint32_t temp = ~data;
@@ -254,7 +254,7 @@ __STATIC_FORCEINLINE uint8_t __CLZ(uint32_t data)
  * \remark
  * - The value mustn't be 0, or else it will spin here
  */
-__STATIC_FORCEINLINE unsigned long __CTZ(unsigned long data)
+__STATIC_INLINE unsigned long __CTZ(unsigned long data)
 {
     unsigned long ret = 0;
 

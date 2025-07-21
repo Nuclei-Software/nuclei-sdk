@@ -348,7 +348,7 @@ __STATIC_FORCEINLINE void PLIC_CompleteContextInterrupt(uint32_t ctxid, uint32_t
  * * Disable all interrupts
  * * Set priority threshold to value specified by thresh
  */
-__STATIC_FORCEINLINE void PLIC_Context_Init(uint32_t ctxid, uint32_t num_sources, uint32_t enable, uint32_t thresh)
+__STATIC_INLINE void PLIC_Context_Init(uint32_t ctxid, uint32_t num_sources, uint32_t enable, uint32_t thresh)
 {
     uint32_t i;
 
