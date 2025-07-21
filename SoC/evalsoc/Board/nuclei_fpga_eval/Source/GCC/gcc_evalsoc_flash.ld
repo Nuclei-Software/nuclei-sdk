@@ -59,6 +59,12 @@ SECTIONS
     *(.text.vtable_s)
     *(.text.unlikely .text.unlikely.*)
     *(.text.startup .text.startup.*)
+
+    /* NOTE: in flash mode, jvt section could not be a single section due to lma/vma mis-align */
+    /* https://github.com/riscv-non-isa/riscv-elf-psabi-doc/pull/349 */
+    PROVIDE( __jvt_base$ = ALIGN(64) );
+    *(.riscv.jvt .riscv.jvt.*)
+
     *(.text .text.*)
     *(.gnu.linkonce.t.*)
     /* .fini */
@@ -98,13 +104,6 @@ SECTIONS
     KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .dtors))
     KEEP (*(SORT(.dtors.*)))
     KEEP (*(.dtors))
-  } >CODERAM AT>ROM
-
-  .riscv.jvt  :
-  {
-    /* https://github.com/riscv-non-isa/riscv-elf-psabi-doc/pull/349 */
-    PROVIDE( __jvt_base$ = ALIGN(64) );
-    *(.riscv.jvt .riscv.jvt.*)
   } >CODERAM AT>ROM
 
   PROVIDE( _ilm_lma = LOADADDR(.text) );
