@@ -1444,12 +1444,12 @@ void _premain_init(void)
     if ( (hartid == BOOT_HARTID) && ((mcfginfo & (0x1 << 11)) && (SMP_CTRLREG(__SMPCC_BASEADDR, 0x4) & 0x1)) ) { // L2 Cache present
 #if RUNMODE_L2_EN == 1
         // Enable L2, disable cluster local memory
-        SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) = 0x1;
+        SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) |= 0x1;
         SMP_CTRLREG(__SMPCC_BASEADDR, 0xd8) = 0x0;
         __SMP_RWMB();
 #else
         // Disable L2, enable cluster local memory
-        SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) = 0x0;
+        SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) &= ~0x1;
         // use as clm or cache, when l2 disable, the affect to ddr is the same, l2 is really disabled
         SMP_CTRLREG(__SMPCC_BASEADDR, 0xd8) = 0;//0xFFFFFFFF;
         __SMP_RWMB();
