@@ -3,6 +3,15 @@
 Changelog
 =========
 
+V0.2.1
+-------
+
+* SoC
+
+  - Fix missing return for IRQC_Register_IRQ for evalsoc
+  - Add NMI exception support for evalsoc, exception code is ``0xFFF``
+
+
 V0.2.0
 -------
 

@@ -69,6 +69,7 @@ SoC_Common = 'SoC/{}/Common'.format(build_soc)
 SoC_Board = 'SoC/{}/Board/{}'.format(build_soc, build_board)
 
 build_core_options = " -march=%s -mabi=%s -mcmodel=%s " % (build_march, build_mabi, build_mcmodel)
+rtconfig.DEVICE = build_core_options
 
 rtconfig.NUCLEI_SDK_OPENOCD_CFG = os.path.join(FRAMEWORK_DIR, \
     "SoC", build_soc, "Board", build_board, "openocd_{}.cfg".format(build_soc))
