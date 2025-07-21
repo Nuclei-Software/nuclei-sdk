@@ -10,6 +10,7 @@ V0.2.1
 
   - Fix missing return for IRQC_Register_IRQ for evalsoc
   - Add NMI exception support for evalsoc, exception code is ``0xFFF``
+  - Support ``zcmt`` extension in evalsoc linker script file
 
 
 V0.2.0

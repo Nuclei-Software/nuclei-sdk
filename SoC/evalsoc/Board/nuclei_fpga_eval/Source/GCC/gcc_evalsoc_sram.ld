@@ -63,9 +63,6 @@ SECTIONS
   {
     *(.text.unlikely .text.unlikely.*)
     *(.text.startup .text.startup.*)
-    . = ALIGN(8);
-    PROVIDE( __jvt_base$ = . );
-    *(.text.tbljal .text.tbljal.*)
     *(.text .text.*)
     *(.gnu.linkonce.t.*)
     /* .fini */
@@ -103,6 +100,13 @@ SECTIONS
     KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .dtors))
     KEEP (*(SORT(.dtors.*)))
     KEEP (*(.dtors))
+  } >ROM AT>ROM
+
+  .riscv.jvt  :
+  {
+    /* https://github.com/riscv-non-isa/riscv-elf-psabi-doc/pull/349 */
+    PROVIDE( __jvt_base$ = ALIGN(64) );
+    *(.riscv.jvt .riscv.jvt.*)
   } >ROM AT>ROM
 
   PROVIDE( _text_lma = LOADADDR(.text) );
