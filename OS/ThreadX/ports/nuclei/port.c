@@ -128,6 +128,13 @@ UINT _tx_thread_interrupt_control(UINT new_posture)
 // _tx_thread_schedule function implemented in context.S
 // _tx_thread_system_return implemented in tx_port.h
 
+VOID _tx_thread_exit(VOID)
+{
+    while (1) {
+        __WFI();
+    }
+}
+
 VOID _tx_thread_stack_build(TX_THREAD *thread_ptr, VOID (*function_ptr)(VOID))
 {
 
@@ -146,6 +153,7 @@ VOID _tx_thread_stack_build(TX_THREAD *thread_ptr, VOID (*function_ptr)(VOID))
     }
 
     frame->epc     = (unsigned long)function_ptr;
+    frame->ra     = (unsigned long)_tx_thread_exit;
     frame->mstatus = THREAD_INITIAL_MSTATUS;
 
     thread_ptr -> tx_thread_stack_ptr = stk;
