@@ -1,0 +1,29 @@
+{
+    "build_config": {
+        "CPU_SERIES": "900"
+    },
+    "build_configs": {
+        "rv32imac": {"CORE":"n900"},
+        "rv32imacb": {"CORE":"n900", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imacbp": {"CORE":"n900", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafc": {"CORE":"n900f", "ARCH_EXT":""},
+        "rv32imafcb": {"CORE":"n900f", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imafcp": {"CORE":"n900f", "ARCH_EXT":"_xxldspn1x"},
+        "rv32imafcbp": {"CORE":"n900f", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32imafdc": {"CORE":"n900fd", "ARCH_EXT":""},
+        "rv32imafdcb": {"CORE":"n900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv32imafdcp": {"CORE":"n900fd", "ARCH_EXT":"_xxldspn1x"},
+        "rv32imafdcbp": {"CORE":"n900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldspn1x"},
+        "rv32ima_xlcz": {"CORE":"n900", "ARCH_EXT":"_zca_zcb_zcmp_zcmt_xxlcz"},
+        "rv32imab_xlcz": {"CORE":"n900", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt_xxlcz"},
+        "rv32imabp_xlcz": {"CORE":"n900", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt_xxlcz_xxldspn1x"},
+        "rv32imaf_xlcz": {"CORE":"n900f", "ARCH_EXT":"_zca_zcb_zcf_zcmp_zcmt_xxlcz"},
+        "rv32imafb_xlcz": {"CORE":"n900f", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt_xxlcz"},
+        "rv32imafp_xlcz": {"CORE":"n900f", "ARCH_EXT":"_zca_zcb_zcf_zcmp_zcmt_xxlcz_xxldspn1x"},
+        "rv32imafbp_xlcz": {"CORE":"n900f", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt_xxlcz_xxldspn1x"},
+        "rv32imafd_xlcz": {"CORE":"n900fd", "ARCH_EXT":"_zca_zcb_zcf_zcmp_zcmt_xxlcz"},
+        "rv32imafdb_xlcz": {"CORE":"n900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt_xxlcz"},
+        "rv32imafdp_xlcz": {"CORE":"n900fd", "ARCH_EXT":"_zca_zcb_zcf_zcmp_zcmt_xxlcz_xxldspn1x"},
+        "rv32imafdbp_xlcz": {"CORE":"n900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt_xxlcz_xxldspn1x"}
+    }
+}
