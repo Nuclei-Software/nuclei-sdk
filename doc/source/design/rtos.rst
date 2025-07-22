@@ -205,6 +205,7 @@ And in your application code, you need to do the following things:
 
 .. note::
 
+    * ThreadX itself doesn't have a idle task, see https://github.com/eclipse-threadx/threadx/blob/acf2e57606361f3fa95cc5f9bf8c0370f2c4b898/utility/rtos_compatibility_layers/FreeRTOS/readme.md?plain=1#L113-L114
     * You can check the ``application\threadx\`` for threadx application reference
     * Currently we only support single core version, the SMP version is not yet supported.
 

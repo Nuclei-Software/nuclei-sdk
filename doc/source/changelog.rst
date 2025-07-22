@@ -24,6 +24,11 @@ This is release version of ``0.8.1`` of Nuclei SDK.
   - Fix evalsoc stubs.c compile fail in RT-Thread
   - Fix evalsoc linker options in RT-Thread SConscript to fix link issue
 
+* OS
+
+  - Add ilde task support in ThreadX when no thread is available, by default threadx dont have a idle task
+  - Set threadx ``ra`` with proper routine when thread terminated
+
 * Components
 
   - Fix profiling component to support gcc 14.x
