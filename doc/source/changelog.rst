@@ -24,6 +24,7 @@ This is release version of ``0.8.1`` of Nuclei SDK.
   - Fix zcmt jvt section alignment and section name in evalsoc linker script files
   - Fix evalsoc stubs.c compile fail in RT-Thread
   - Fix evalsoc linker options in RT-Thread SConscript to fix link issue
+  - Fix instruction fetch not updated via fence.i after text section copied to cached area when program run in flash download mode
 
 * OS
 

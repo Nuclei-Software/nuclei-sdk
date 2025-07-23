@@ -306,6 +306,8 @@ __init_common:
     addi a0, a0, 4
     addi a1, a1, 4
     bltu a1, a2, 1b
+    /* execute fence.i to make sure cpu can see updated code */
+    fence.i
 2:
     /* Load data section */
     la a0, _data_lma
