@@ -685,7 +685,7 @@ Currently it has these cores supported as described in table
 .. _table_dev_buildsystem_6:
 
 .. table:: Supported Nuclei Processor cores
-   :widths: 20 20 20
+   :widths: 20 20 20 30
    :align: center
 
    ========  ========== =======  ====================

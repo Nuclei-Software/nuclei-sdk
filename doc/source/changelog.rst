@@ -38,6 +38,10 @@ This is release version of ``0.8.1`` of Nuclei SDK.
 
   - Update demo_pma case nsdk_cli checker to match its design
 
+* Documentation
+
+  - Fix build system :ref:`develop_buildsystem_var_core` support table format error
+
 V0.8.0
 ------
 
