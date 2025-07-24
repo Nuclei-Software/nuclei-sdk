@@ -989,6 +989,11 @@ class nsdk_runner(nsdk_builder):
         apps_config = copy.deepcopy(config)
         for appdir in apps_config:
             appconfig = apps_config[appdir]
+            # Used to filter application with certain pattern not acceptable
+            filtered, reason = filter_app_config(appconfig)
+            if filtered:
+                print("INFO: Ignore this app config %s for application %s" % (reason, appdir))
+                continue
             applogs = appconfig.get("logs", dict())
             app_buildlogfile = applogs.get("build", None)
             app_runlogfile = applogs.get("run", None)
@@ -1023,6 +1028,11 @@ class nsdk_runner(nsdk_builder):
             app_allconfigs = appconfigs["configs"]
             for cfgname in app_allconfigs:
                 appconfig = app_allconfigs[cfgname] # get configuration for each case for single app
+                # Used to filter application with certain pattern not acceptable
+                filtered, reason = filter_app_config(appconfig)
+                if filtered:
+                    print("INFO: Ignore this app config %s for application %s" % (reason, appdir))
+                    continue
                 applogs = appconfig.get("logs", dict())
                 app_buildlogfile = applogs.get("build", None)
                 app_runlogfile = applogs.get("run", None)

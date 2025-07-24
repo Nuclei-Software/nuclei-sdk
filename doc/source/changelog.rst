@@ -12,6 +12,9 @@ V0.2.1
   - Add NMI exception support for evalsoc, exception code is ``0xFFF``
   - Support ``zcmt`` extension in evalsoc linker script file
 
+* Tools
+
+  - Add filter configuration feature in nsdk_cli tools, you can filter certain arches which you dont want to run via ``SDK_IGNORED_EXTS`` environment variable
 
 V0.2.0
 -------
