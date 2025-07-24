@@ -12,6 +12,7 @@ This is release version of ``0.8.1`` of Nuclei SDK.
 
   - Remove ``-ffast-math`` for clang based toolchain since it is deprecated
   - Update ``demo_cache`` optimization level to ``-O2`` and update its doc
+  - Fix ``demo_stack_check`` via modify evalsoc correct max exception number ``MAX_SYSTEM_EXCEPTION_NUM``
 
 * NMSIS
 
@@ -25,6 +26,7 @@ This is release version of ``0.8.1`` of Nuclei SDK.
   - Fix evalsoc stubs.c compile fail in RT-Thread
   - Fix evalsoc linker options in RT-Thread SConscript to fix link issue
   - Fix instruction fetch not updated via fence.i after text section copied to cached area when program run in flash download mode
+  - Fix ``MAX_SYSTEM_EXCEPTION_NUM`` for evalsoc, it should be 26 not 19, which will fix ``demo_stack_check`` case
 
 * OS
 
