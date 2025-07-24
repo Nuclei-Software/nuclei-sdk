@@ -18,6 +18,7 @@ try:
     import serial.tools.list_ports
     import tempfile
     import collections
+    from collections import OrderedDict
     from threading import Thread
     import subprocess
     import asyncio
@@ -197,6 +198,51 @@ def get_sdk_uploaderr_maxcnt():
         num = SDK_GLOBAL_VARIABLES.get("sdk_uploaderr_maxcnt")
 
     return num
+
+def filter_app_config(appconfig):
+    if not isinstance(appconfig, dict):
+        return False, ""
+
+    try:
+        build_config = appconfig.get("build_config", None)
+        if build_config is None or len(build_config) == 0:
+            return False, ""
+        archext = build_config.get("ARCH_EXT", None)
+        if archext is None or archext.strip() == "":
+            return False, ""
+
+        # example ignore pattern: export SDK_IGNORED_EXTS="v_zc_zv"
+        ignored_exts = os.environ.get("SDK_IGNORED_EXTS")
+        if ignored_exts is None:
+            return False, ""
+        unique_exts = list(
+            OrderedDict.fromkeys(part.strip() for part in ignored_exts.split('_'))
+        )
+        if len(unique_exts) == 1 and unique_exts[0] == "":
+            return False, ""
+        first_part = None
+        rest_part = None
+        if archext.startswith("_") == False:
+            if "_" in archext:
+                first_part, rest_part = archext.split("_", 1)
+            else:
+                first_part = archext
+        else:
+            rest_part = archext
+        for ext in unique_exts:
+            if len(ext) == 0:
+                continue
+            if len(ext) == 1:
+                # handle single letter
+                if first_part and ext in first_part:
+                    return True, "Filtered by %s extension" %(ext)
+            else:
+                # handle multi letter
+                if rest_part and ext in rest_part:
+                    return True, "Filtered by %s extension" % (ext)
+    except:
+        pass
+    return False, ""
 
 class NThread(Thread):
     def __init__(self, func, args):

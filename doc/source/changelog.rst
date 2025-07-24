@@ -39,7 +39,8 @@ This is release version of ``0.8.1`` of Nuclei SDK.
 
 * Tools
 
-  - Update demo_pma case nsdk_cli checker to match its design
+  - Update ``demo_pma`` case nsdk_cli checker to match its design
+  - Add filter configuration feature in nsdk_cli tools, you can filter certain arches which you dont want to run via ``SDK_IGNORED_EXTS`` environment variable
 
 * Documentation
 
