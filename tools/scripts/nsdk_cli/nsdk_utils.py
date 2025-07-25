@@ -26,7 +26,8 @@ try:
     import json
     import yaml
     import importlib.util
-    import fcntl
+    if sys.platform != "win32":
+        import fcntl
     import stat
 except Exception as exc:
     print("Import Error: %s" % (exc))
@@ -199,7 +200,221 @@ def get_sdk_uploaderr_maxcnt():
 
     return num
 
+
+def parse_riscv_arch(arch_str):
+    """Parse RISC-V architecture string to standardized format"""
+    if not arch_str:
+        return None
+    arch_str = arch_str.lower()
+    if not arch_str.startswith('rv32') and not arch_str.startswith('rv64'):
+        return None
+
+    features = {
+        'xlen': arch_str[:4],
+        'base': '',
+        'exts': set()
+    }
+
+    # Parse standard ISA string
+    std_isa = arch_str[4:].split('_')[0]
+    for c in std_isa:
+        if c in 'iemafdcbpkv':
+            # don't add b k p into base architecture
+            if c == 'b':
+                # for nuclei b extension contains zba/zbb/zbc/zbs
+                features['exts'].add('zba')
+                features['exts'].add('zbb')
+                features['exts'].add('zbc')
+                features['exts'].add('zbs')
+            elif c == 'k':
+                # for nuclei k extension contains zba/zbb/zbc/zbs
+                features['exts'].add('zk') # zk -> zkn zkr zkt
+                features['exts'].add('zks') # zks -> zbkb-sc zbkc-sc zbkx-sc zksed zksh
+                features['exts'].add('zkn') # zkn -> zbkb-sc zbkc-sc zbkx-sc zkne zknd zknh
+                features['exts'].add('zkr')
+                features['exts'].add('zkt')
+                features['exts'].add('zkne')
+                features['exts'].add('zknd')
+                features['exts'].add('zknh')
+                features['exts'].add('zksed')
+                features['exts'].add('zksh')
+                features['exts'].add('zbkb-sc')
+                features['exts'].add('zbkc-sc')
+                features['exts'].add('zbkx-sc')
+            elif c == 'v':
+                features['exts'].add('zve64d')
+                features['exts'].add('zvl128b')
+                features['base'] += 'v'
+            elif c == 'p':
+                features['exts'].add('xxldsp')
+            else:
+                features['base'] += c
+
+    # when base architecture has i extension, then e extension is implied
+    if 'i' in features['base']:
+        features['base'] += 'e'
+
+    # Parse extensions
+    if '_' in arch_str:
+        exts = arch_str.split('_')[1:]
+        for ext in exts:
+            ext = ext.strip()
+            if ext == "":
+                continue
+            if ext in ('zvl128', 'zvl256', 'zvl512', 'zvl1024'):
+                ext = ext + 'b'
+            elif ext in ('zvb', 'zvk', 'zc'):
+                ext = ext + '*'
+            elif ext in ('dsp'):
+                ext = 'xxl' + ext
+            elif ext in ('dspn1', 'dspn2', 'dspn3'):
+                ext = 'xxl' + ext + 'x'
+            features['exts'].add(ext)
+    # For nuclei zc* can also configured as c extension via mmisc_ctl csr ZCMT_ZCMP_EN bit
+    if 'zc*' in features['exts']:
+        features['base'] += 'c'
+    # For nuclei cpu, zifencei and zicsr are implied
+    features['exts'].add('zicsr')
+    features['exts'].add('zifencei')
+    # zve64d imply zve64f, zve64f imply zve64x and zve32f
+    # zve64x imply zve32x, zve32f imply zve32x
+    if 'zve64d' in features['exts']:
+        features['exts'].add('zve64f')
+    if 'zve64f' in features['exts']:
+        features['exts'].add('zve32f')
+        features['exts'].add('zve64x')
+    if 'zve64x' in features['exts']:
+        features['exts'].add('zve32x')
+    if 'zve32f' in features['exts']:
+        features['exts'].add('zve32x')
+    if 'xxldspn3x' in features['exts']:
+        features['exts'].add('xxldspn2x')
+    if 'xxldspn2x' in features['exts']:
+        features['exts'].add('xxldspn1x')
+    if 'xxldspn1x' in features['exts']:
+        features['exts'].add('xxldsp')
+    if 'zvl1024b' in features['exts']:
+        features['exts'].add('zvl512b')
+    if 'zvl512b' in features['exts']:
+        features['exts'].add('zvl256b')
+    if 'zvl256b' in features['exts']:
+        features['exts'].add('zvl128b')
+
+    if 'zve64d' in features['exts'] and 'zvl128b' in features['exts']:
+        features['base'] += 'v'
+
+    return features
+
+def get_nuclei_sdk_root():
+    sdk_root = os.environ.get("NUCLEI_SDK_ROOT")
+    if not sdk_root:
+        sdk_root = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "..", ".."))
+    return sdk_root
+
+def parse_makefile_core():
+    sdk_root = get_nuclei_sdk_root()
+    makefile_core = os.path.join(sdk_root, "Build", "Makefile.core")
+    core_archs = {}
+
+    if not os.path.exists(makefile_core):
+        return core_archs
+
+    with open(makefile_core, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            if '_CORE_ARCH_ABI' in line:
+                parts = line.split('=')
+                if len(parts) == 2:
+                    core_name = parts[0].split('_CORE_ARCH_ABI')[0].lower()
+                    arch_parts = parts[1].strip().split()
+                    if len(arch_parts) >= 2:
+                        core_archs[core_name] = arch_parts[0]
+    return core_archs
+
+def check_arch_compatibility(core_arch, arch_ext, supported_arch):
+    """Check if core architecture with extensions is compatible with supported architecture"""
+    if not supported_arch:
+        return True
+
+    supported = parse_riscv_arch(supported_arch)
+    if not supported:
+        return True
+
+    # Combine core_arch with arch_ext
+    full_arch = core_arch
+    if arch_ext:
+        full_arch += arch_ext
+
+    current = parse_riscv_arch(full_arch)
+    if not current:
+        return False
+
+    # Check XLEN compatibility
+    if current['xlen'] != supported['xlen']:
+        return False
+
+    # Check base ISA compatibility
+    for c in current['base']:
+        if c not in supported['base']:
+            return False
+
+    # Check extensions compatibility
+    # For current['exts'] containing extensions (no * suffix)
+    # For supported['exts'] containing extensions (may have * suffix)
+    # Extension matching should handle wildcards (*) in supported extensions
+    for ext in current['exts']:
+        found_match = False
+        for supported_ext in supported['exts']:
+            if supported_ext.endswith('*'):
+                # Handle wildcard matching
+                if ext.startswith(supported_ext[:-1]):
+                    found_match = True
+                    break
+            elif ext == supported_ext:
+                # Handle exact matching
+                found_match = True
+                break
+        if not found_match:
+            return False
+
+    return True
 def filter_app_config(appconfig):
+    """
+    Filter application configurations based on architecture and extension compatibility.
+
+    This function examines the build configuration of an application and determines if it should
+    be filtered out based on architecture support and extension compatibility.
+
+    Parameters:
+        appconfig (dict): A dictionary containing application configuration.
+                         Expected to have a 'build_config' key with CORE, ARCH_EXT details.
+
+    Returns:
+        tuple: A pair of (bool, str) where:
+            - bool: True if the configuration should be filtered out, False otherwise
+            - str: A message explaining why the configuration was filtered (empty if not filtered)
+
+    Environment Variables Used:
+        - SDK_SUPPORT_ARCH: Supported architecture specifications
+        - SDK_IGNORED_EXTS: Underscore-separated list of extensions to ignore
+
+    Example:
+        >>> config = {
+        ...     "build_config": {
+        ...         "CORE": "n307",
+        ...         "ARCH_EXT": "p_zfh"
+        ...     }
+        ... }
+        >>> filter_app_config(config)
+        (False, "")
+
+    Notes:
+        - The function handles both single-letter and multi-letter extensions
+        - Architecture extensions can be specified with or without leading underscore
+        - Returns (False, "") if any required configuration is missing or in case of errors
+    """
     if not isinstance(appconfig, dict):
         return False, ""
 
@@ -207,11 +422,35 @@ def filter_app_config(appconfig):
         build_config = appconfig.get("build_config", None)
         if build_config is None or len(build_config) == 0:
             return False, ""
+
+        # Check SDK_SUPPORT_ARCH compatibility
+        core = build_config.get("CORE", "").lower()
+        arch_ext = build_config.get("ARCH_EXT", "")
+        supported_arch = os.environ.get("SDK_SUPPORT_ARCH")
+
+        if core and supported_arch:
+            core_archs = parse_makefile_core()
+            if core in core_archs:
+                core_arch = core_archs[core]
+                if not check_arch_compatibility(core_arch, arch_ext, supported_arch):
+                    return True, f"Core {core} with extensions {arch_ext} not supported by {supported_arch}"
+
+        # Continue with existing extension filtering
         archext = build_config.get("ARCH_EXT", None)
         if archext is None or archext.strip() == "":
             return False, ""
-
-        # example ignore pattern: export SDK_IGNORED_EXTS="v_zc_zv"
+        first_part = None
+        rest_part = None
+        if archext.startswith("_") == False:
+            if "_" in archext:
+                first_part, rest_part = archext.split("_", 1)
+            else:
+                if archext.startswith("z"):
+                    rest_part = archext
+                else:
+                    first_part = archext
+        else:
+            rest_part = archext
         ignored_exts = os.environ.get("SDK_IGNORED_EXTS")
         if ignored_exts is None:
             return False, ""
@@ -220,15 +459,6 @@ def filter_app_config(appconfig):
         )
         if len(unique_exts) == 1 and unique_exts[0] == "":
             return False, ""
-        first_part = None
-        rest_part = None
-        if archext.startswith("_") == False:
-            if "_" in archext:
-                first_part, rest_part = archext.split("_", 1)
-            else:
-                first_part = archext
-        else:
-            rest_part = archext
         for ext in unique_exts:
             if len(ext) == 0:
                 continue
