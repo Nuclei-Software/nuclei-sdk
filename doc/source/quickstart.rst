@@ -19,6 +19,9 @@ Use Nuclei SDK in Nuclei Studio
    For **Nuclei SDK 0.6.0** version and later ones, please use `Nuclei Studio 2024.06`_ or
    Nuclei RISC-V Toolchain/OpenOCD/QEMU 2024.06.
 
+   For **Nuclei SDK 0.8.0** version and later ones, please use `Nuclei Studio 2025.02`_ or
+   Nuclei RISC-V Toolchain/OpenOCD/QEMU 2025.02.
+
 From `Nuclei Toolchain 2023.10`_, both gnu and llvm toolchain are provided, and toolchain
 prefix changed from ``riscv-nuclei-elf-`` to ``riscv64-unknown-elf-``, and 0.5.0 SDK release
 will only support this ``2023.10`` or later toolchain.
@@ -100,8 +103,8 @@ The source code of Nuclei SDK is maintained in |github| and |gitee|.
 
   .. note::
 
-    If you want to use **Terapines ZCC** toolchain, you can download it from https://www.terapines.com/, or use
-    **Nuclei Studio >= 2024.06**, a **Terapines ZCC Lite** version is integrated in **<NucleiStudio>/toolchain/zcc** folder,
+    If you want to use **Terapines ZCC** toolchain, you can download latest version from https://www.terapines.com/, or use
+    **Nuclei Studio >= 2024.06**, a **Terapines ZCC Community** version is integrated in **<NucleiStudio>/toolchain/zcc** folder,
     and you also need to add extra **PATH** into your environment, like this:
 
     - **Windows**: execute ``set PATH=\path\to\zcc\bin;%PATH%`` in windows cmd terminal before run Nuclei SDK
@@ -597,7 +600,7 @@ For more advanced usage, please follow the items as below:
          for more details, please click `Nuclei Tools`_ to download Nuclei Studio IDE, and refer to
          the `Nuclei Studio and Nuclei Tools User Guide`_ for how to use it.
 
-      2. Now **Terapines ZCC Lite** is deeply integrated in **Nuclei Studio >= 2024.06**, so you just need to
+      2. Now **Terapines ZCC Community** is deeply integrated in **Nuclei Studio >= 2024.06**, so you just need to
          follow :ref:`quickstart_get_set_nuclei_sdk` to setup PATH for Terapines ZCC, and in Nuclei SDK,
          you can just pass **TOOCHAIN=terapines** during make to take a try with Terapines ZCC, please use
          latest Terapines ZCC from its website https://www.terapines.com/.
@@ -618,6 +621,14 @@ For more advanced usage, please follow the items as below:
       6. You can also use source code in Nuclei SDK as base, and easily integrate with other IDE tools,
          such as `ZStudio IDE`_, `Compiler IDE`_ and others.
 
+      7. If you want to evaluate RT-Thread instead of RT-Thread Nano, please check https://github.com/riscv-mcu/rt-thread/issues/1, SMP version also supported
+
+      8. If you want to evalute OpenHarmony LiteOS-M, please check https://github.com/riscv-mcu/kernel_liteos_m/tree/nuclei/OpenHarmony-3.0-LTS/targets/riscv_nuclei_evalsoc_gcc
+
+      9. If you want to evaluate Nuttx based RTOS such as Xiaomi Openvela, LiAuto HaloOS, please check https://github.com/riscv-mcu/nuttx/tree/nuclei_trunk/Documentation/platforms/risc-v/nuclei-evalsoc/boards/nuclei-fpga-eval
+
+      10. If you want to evaluate Zephyr RTOS, please check https://github.com/riscv-mcu/zephyr/blob/nuclei/4.1-branch/boards/nuclei/fpga_eval/doc/index.rst, SMP version also supported
+
 
 .. _GDB User Manual: https://www.gnu.org/software/gdb/documentation/
 .. _Nuclei Tools: https://nucleisys.com/download.php
@@ -628,6 +639,7 @@ For more advanced usage, please follow the items as below:
 .. _Nuclei Toolchain 2023.10: https://github.com/riscv-mcu/riscv-gnu-toolchain/releases/tag/nuclei-2023.10
 .. _ideprojects/iar/README.md: https://github.com/Nuclei-Software/nuclei-sdk/blob/master/ideprojects/iar/README.md
 .. _Nuclei Studio 2024.06: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2024.06
+.. _Nuclei Studio 2025.02: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2025.02
 .. _Using Terapines ZCC Toolchain in Nuclei Studio: https://1nfinite.ai/t/nuclei-studio-2024-06-ide-terapines-zcc/113
 .. _ZStudio IDE: https://1nfinite.ai/t/zstudio-ide-risc-v/71
 .. _Compiler IDE: https://www.compiler-dev.com/
