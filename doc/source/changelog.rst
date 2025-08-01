@@ -14,6 +14,7 @@ This is release version of ``0.8.1`` of Nuclei SDK.
   - Update ``demo_cache`` optimization level to ``-O2`` and update its doc
   - Fix ``demo_stack_check`` via modify evalsoc correct max exception number ``MAX_SYSTEM_EXCEPTION_NUM``
   - Fix freertos demo case build fail when SMP=2 passed
+  - Fix CIDU/Vector/SMP information display in ``cpuinfo`` application
 
 * NMSIS
 

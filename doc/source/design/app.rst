@@ -162,7 +162,7 @@ You can also use openocd to probe the cpu feature, see https://doc.nucleisys.com
                     SMP         64KB        0x18040000
                     CIDU        64KB        0x18050000
                     PLIC        64MB        0x1c000000
-            SMP_CFG: CC_PRESENT=1 SMP_CORE_NUM=7 IOCP_NUM=0 PMON_NUM=4
+            SMP_CFG: CC_PRESENT=1 SMP_NUM=8 IOCP_NUM=0 PMON_NUM=4
             ECLIC: VERSION=0x0 NUM_INTERRUPT=71 CLICINTCTLBITS=3 MTH=0 NLBITS=3
             L2CACHE: 2 MB(set=2048,way=16,lsize=64,ecc=0)
         INFO-Detail:
