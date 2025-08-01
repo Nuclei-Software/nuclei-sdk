@@ -251,7 +251,7 @@ void nuclei_cpuinfo(void)
         printf("         IREGION:");
         iregion_base = csr_mirgb & (~0x3FF);
         printf(" %#lx", iregion_base);
-        print_size(POWER_FOR_TWO(__RV_EXTRACT_FIELD(csr_mirgb, 0x1F << 1) - 1) * KB);
+        print_size(POWER_FOR_TWO(__RV_EXTRACT_FIELD(csr_mirgb, 0x3F << 1) - 1) * KB);
         printf("\r\n");
         printf("                  Unit        Size        Address\r\n");
         printf("                  INFO        64KB        %#lx\r\n", iregion_base + IREGION_IINFO_OFS);
