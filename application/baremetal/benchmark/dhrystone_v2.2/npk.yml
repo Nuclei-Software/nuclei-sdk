@@ -45,4 +45,4 @@ buildconfig:
     common_flags: # flags need to be combined together across all packages
       - flags: -O3 -Wno-implicit-int -Wno-implicit-function-declaration
     ldflags:
-      - flags: -Wl,-mllvm,--align-all-nofallthru-blocks=2 -fuse-size-lib
+      - flags: -Wl,-mllvm,--align-all-nofallthru-blocks=2
