@@ -6,6 +6,14 @@ Changelog
 V0.2.1
 -------
 
+.. note::
+
+    - Please use Nuclei N100 SDK with **Nuclei Studio 2025.02**, get it from https://nucleisys.com/download.php#tools
+    - For Terapines ZCC toolchain, please download it from https://www.terapines.com/products/zcc and replace
+     Nuclei Studio IDE ``toolchain/zcc`` folder existing content
+
+This is release version ``0.2.1`` of N100 SDK.
+
 * SoC
 
   - Fix missing return for IRQC_Register_IRQ for evalsoc
