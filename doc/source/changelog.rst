@@ -19,6 +19,7 @@ This is release version ``0.2.1`` of N100 SDK.
   - Fix missing return for IRQC_Register_IRQ for evalsoc
   - Add NMI exception support for evalsoc, exception code is ``0xFFF``
   - Support ``zcmt`` extension in evalsoc linker script file
+  - Fix wrong npk dependency described in ``npk.yml`` file which cause wrongly depends on nuclei sdk
 
 * Tools
 

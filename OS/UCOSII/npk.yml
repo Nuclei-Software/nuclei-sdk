@@ -12,7 +12,7 @@ homepage: https://github.com/SiliconLabs/uC-OS2
 
 ## Package Dependency
 dependencies:
-  - name: sdk-nuclei_sdk
+  - name: sdk-n100_sdk
     version:
 
 ## Package Configurations
