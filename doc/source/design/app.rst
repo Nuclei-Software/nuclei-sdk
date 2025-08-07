@@ -592,7 +592,7 @@ smphello
 
 This `smphello application`_ is used to demonstrate how to use baremetal SMP feature.
 
-This demo requests the SMP cores share the same RAM and ROM, for example, in current
+This demo requires the SMP cores share the same RAM and ROM, for example, in current
 evalsoc system, ilm/dlm are private resource for cpu, only the DDR/SRAM memory are shared
 resource for all the cpu.
 
@@ -1908,7 +1908,7 @@ This `demo_cidu application`_ is used to demonstrate External Interrupt Distribu
 (external interrupt broadcast/first come first claim), Inter Core interrupt and Semaphore
 of Cluster Interrupt Distribution Unit (CIDU).
 
-This demo requests the SMP cores share the same RAM and ROM, for example, in current
+This demo requires the SMP cores share the same RAM and ROM, for example, in current
 evalsoc/demosoc system, ilm/dlm are private resource for cpu, only the DDR/SRAM memory are shared resource
 for all the cpu.
 
@@ -2080,7 +2080,7 @@ demo_cache
 
 This `demo_cache application`_ is used to demonstrate how to understand cache mechanism.
 
-This demo requests DCache, ICache and CCM(Cache Control and Maintenance), and needs to run in DDR/SRAM memory,
+This demo requires DCache, ICache and CCM(Cache Control and Maintenance), and needs to run in DDR/SRAM memory,
 because cache will bypass when run in ilm, data in dlm(private resource for cpu).
 
 .. note::
