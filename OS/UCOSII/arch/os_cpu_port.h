@@ -38,7 +38,13 @@ typedef uint64_t TickType_t;
 
 /* Architecture specifics. */
 #define portTICK_PERIOD_MS          ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
-#define portBYTE_ALIGNMENT          8
+#ifndef __riscv_32e
+/* The stack grows downwards (towards lower addresses) and the stack pointer shall be aligned to a 128-bit boundary upon procedure entry. */
+#define portBYTE_ALIGNMENT          16
+#else
+/* ILP32E calling convention The stack pointer need only be aligned to a 32-bit boundary */
+#define portBYTE_ALIGNMENT          4
+#endif
 /*-----------------------------------------------------------*/
 
 /* Scheduler utilities. */

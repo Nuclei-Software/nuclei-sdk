@@ -119,7 +119,13 @@ rt_uint8_t* rt_hw_stack_init(void*       tentry,
     int                i;
 
     stk  = stack_addr + sizeof(rt_ubase_t);
-    stk  = (rt_uint8_t*)RT_ALIGN_DOWN((rt_ubase_t)stk, REGBYTES);
+    /* https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-cc.adoc */
+    /* 32-bit boundary for ilp32e, and 128-bit boundary for others */
+#ifndef __riscv_32e
+    stk  = (rt_uint8_t*)RT_ALIGN_DOWN((rt_ubase_t)stk, 16);
+#else
+    stk  = (rt_uint8_t*)RT_ALIGN_DOWN((rt_ubase_t)stk, 4);
+#endif
     stk -= sizeof(struct rt_hw_stack_frame);
 
     frame = (struct rt_hw_stack_frame*)stk;

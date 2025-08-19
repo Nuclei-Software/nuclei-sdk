@@ -169,7 +169,13 @@ VOID _tx_thread_stack_build(TX_THREAD *thread_ptr, VOID (*function_ptr)(VOID))
     int i;
 
     stk  = thread_ptr -> tx_thread_stack_end;
-    stk  = (uint8_t *)(((unsigned long)stk) & (~(unsigned long)(sizeof(ALIGN_TYPE) - 1)));
+    /* https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-cc.adoc */
+    /* 32-bit boundary for ilp32e, and 128-bit boundary for others */
+#ifndef __riscv_32e
+    stk  = (uint8_t *)(((unsigned long)stk) & (~(unsigned long)(16 - 1)));
+#else
+    stk  = (uint8_t *)(((unsigned long)stk) & (~(unsigned long)(4 - 1)));
+#endif
     stk -= sizeof(struct thread_stack_frame);
 
     frame = (struct thread_stack_frame*)stk;
