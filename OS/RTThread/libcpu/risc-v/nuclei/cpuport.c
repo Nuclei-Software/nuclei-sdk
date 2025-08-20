@@ -64,6 +64,7 @@ volatile rt_ubase_t  rt_interrupt_to_thread   = 0;
 volatile rt_ubase_t rt_thread_switch_interrupt_flag = 0;
 void SysTick_Handler(void);
 
+/* Stack frame size 32 REGBYTES(4/8) for most cases, but for ilp32e mode, it's 14 REGBYTES(4) */
 struct rt_hw_stack_frame {
     rt_ubase_t epc;        /* epc - epc    - program counter                     */
     rt_ubase_t ra;         /* x1  - ra     - return address for jumps            */
@@ -95,6 +96,8 @@ struct rt_hw_stack_frame {
     rt_ubase_t t4;         /* x29 - t4     - temporary register 4                */
     rt_ubase_t t5;         /* x30 - t5     - temporary register 5                */
     rt_ubase_t t6;         /* x31 - t6     - temporary register 6                */
+    rt_ubase_t rsv0;       /* reserved 0   - reserved to make space              */
+    rt_ubase_t rsv1;       /* reserved 1   - reserved to make space              */
 #endif
     rt_ubase_t xstatus;    /*              - m/s status register             */
 };

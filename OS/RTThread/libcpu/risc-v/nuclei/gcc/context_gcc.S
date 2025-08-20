@@ -10,9 +10,12 @@
 
 #include "riscv_encoding.h"
 
+/* see https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-cc.adoc */
 #ifndef __riscv_32e
-#define portRegNum          30
+/* Make sure the stack pointer is 16-byte aligned when calling c function */
+#define portRegNum          32
 #else
+/* Make sure the stack pointer is 4-byte aligned when calling c function for ilp32e */
 #define portRegNum          14
 #endif
 
@@ -21,10 +24,7 @@
     .extern rt_interrupt_from_thread
     .extern rt_interrupt_to_thread
 
-
 .section    .text
-
-
 
 /*
  * void rt_hw_context_switch_to(rt_ubase_t to);
@@ -48,14 +48,14 @@ rt_hw_context_switch_to:
     csrw CSR_XSCRATCH, t0
     LOAD sp, 0x0(a0)                /* Read sp from first TCB member(a0) */
 
-    /* Pop PC from stack and set MEPC */
+    /* Pop PC from stack and set XEPC */
     LOAD t0,  0  * REGBYTES(sp)
     csrw CSR_XEPC, t0
-    /* Pop mstatus from stack and set it */
+    /* Pop xstatus from stack and set it */
     LOAD t0,  (portRegNum - 1)  * REGBYTES(sp)
     csrw CSR_XSTATUS, t0
     /* Interrupt still disable here */
-    /* Restore Registers from Stack */
+    /* Restore registers from stack */
     LOAD x1,  1  * REGBYTES(sp)    /* RA */
     LOAD x5,  2  * REGBYTES(sp)
     LOAD x6,  3  * REGBYTES(sp)
@@ -128,7 +128,7 @@ eclic_xsip_handler:
     STORE x30, 27 * REGBYTES(sp)
     STORE x31, 28 * REGBYTES(sp)
 #endif
-    /* Push mstatus to stack */
+    /* Push xstatus to stack */
     csrr t0, CSR_XSTATUS
     STORE t0,  (portRegNum - 1)  * REGBYTES(sp)
 
@@ -147,16 +147,16 @@ eclic_xsip_handler:
     LOAD t0, rt_interrupt_to_thread
     LOAD sp, 0x0(t0)
 
-    /* Pop PC from stack and set MEPC */
+    /* Pop PC from stack and set XEPC */
     LOAD t0,  0  * REGBYTES(sp)
     csrw CSR_XEPC, t0
     /* Pop additional registers */
 
-    /* Pop mstatus from stack and set it */
+    /* Pop xstatus from stack and set it */
     LOAD t0,  (portRegNum - 1)  * REGBYTES(sp)
     csrw CSR_XSTATUS, t0
     /* Interrupt still disable here */
-    /* Restore Registers from Stack */
+    /* Restore registers from stack */
     LOAD x1,  1  * REGBYTES(sp)    /* RA */
     LOAD x5,  2  * REGBYTES(sp)
     LOAD x6,  3  * REGBYTES(sp)
