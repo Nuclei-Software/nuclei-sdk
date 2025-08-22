@@ -3,6 +3,12 @@
 Changelog
 =========
 
+V0.2.2-dev
+----------
+
+This is release version ``0.2.2`` of N100 SDK, which is still in development.
+
+
 V0.2.1
 -------
 
