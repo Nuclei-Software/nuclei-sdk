@@ -58,6 +58,8 @@ struct rt_hw_stack_frame {
     rt_ubase_t t4;         /* x29 - t4     - temporary register 4                */
     rt_ubase_t t5;         /* x30 - t5     - temporary register 5                */
     rt_ubase_t t6;         /* x31 - t6     - temporary register 6                */
+    rt_ubase_t rsv0;       /* reserved 0   - reserved to make space              */
+    rt_ubase_t rsv1;       /* reserved 1   - reserved to make space              */
 #endif
     rt_ubase_t mstatus;    /*              - machine status register             */
 };
@@ -82,7 +84,11 @@ rt_uint8_t* rt_hw_stack_init(void*       tentry,
     int                i;
 
     stk  = stack_addr + sizeof(rt_ubase_t);
-    stk  = (rt_uint8_t*)RT_ALIGN_DOWN((rt_ubase_t)stk, REGBYTES);
+#ifndef __riscv_32e
+   stk  = (rt_uint8_t*)RT_ALIGN_DOWN((rt_ubase_t)stk, 16);
+#else
+   stk  = (rt_uint8_t*)RT_ALIGN_DOWN((rt_ubase_t)stk, 4);
+#endif
     stk -= sizeof(struct rt_hw_stack_frame);
 
     frame = (struct rt_hw_stack_frame*)stk;

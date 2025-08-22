@@ -171,6 +171,8 @@ static TickType_t ulStoppedTimerCompensation = 0;
  *
  * mstatus
  * #ifndef __riscv_32e
+ * rsv1
+ * rsv0
  * x31
  * x30
  * x29
@@ -214,7 +216,7 @@ StackType_t* pxPortInitialiseStack(StackType_t* pxTopOfStack, TaskFunction_t pxC
 
     /* Save code space by skipping register initialisation. */
 #ifndef __riscv_32e
-    pxTopOfStack -= 22;    /* X11 - X31. */
+    pxTopOfStack -= 24;    /* X11 - X31 + 2 reserved. */
 #else
     pxTopOfStack -= 6;    /* X11 - X15. */
 #endif

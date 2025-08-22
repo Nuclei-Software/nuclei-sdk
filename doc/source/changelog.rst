@@ -8,6 +8,13 @@ V0.2.2-dev
 
 This is release version ``0.2.2`` of N100 SDK, which is still in development.
 
+.. note::
+
+   - Fix bug in RTOS porting for task sp alignment requirement
+
+* OS
+
+  - Bugfix for correct task stack pointer alignment(16 bytes for non-ilp32e, and 4 bytes for ilp32e) on FreeRTOS/UCOSII/RT-Thread RTOS porting, see https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/301374e92976e298e676e7129a6212926b2299ce/riscv-cc.adoc?plain=1#L245-L259
 
 V0.2.1
 -------

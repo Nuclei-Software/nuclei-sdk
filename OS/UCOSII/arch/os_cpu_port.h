@@ -38,7 +38,11 @@ typedef uint32_t TickType_t;
 
 /* Architecture specifics. */
 #define portTICK_PERIOD_MS          ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
-#define portBYTE_ALIGNMENT          8
+#ifndef __riscv_32e
+#define portBYTE_ALIGNMENT          16
+#else
+#define portBYTE_ALIGNMENT          4
+#endif
 /*-----------------------------------------------------------*/
 
 /* Scheduler utilities. */

@@ -156,6 +156,8 @@ uint8_t uxMaxSysCallMTH = 255;
  *
  * mstatus
  * #ifndef __riscv_32e
+ * rsv1
+ * rsv0
  * x31
  * x30
  * x29
@@ -201,7 +203,7 @@ OS_STK* OSTaskStkInit(void (*task)(void* pd), void* pdata, OS_STK* ptos, INT16U 
 
     /* Save code space by skipping register initialisation. */
 #ifndef __riscv_32e
-    pxTopOfStack -= 22;    /* X11 - X31. */
+    pxTopOfStack -= 24;    /* X11 - X31. + 2 reserved */
 #else
     pxTopOfStack -= 6;    /* X11 - X15. */
 #endif
