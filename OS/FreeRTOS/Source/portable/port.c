@@ -248,6 +248,8 @@ static volatile unsigned long ulSchedulerReady = 0;
  *
  * mstatus
  * #ifndef __riscv_32e
+ * rsv1
+ * rsv0
  * x31
  * x30
  * x29
@@ -284,6 +286,7 @@ StackType_t* pxPortInitialiseStack(StackType_t* pxTopOfStack, TaskFunction_t pxC
     /* Simulate the stack frame as it would be created by a context switch
     interrupt. */
 
+    /* Stack frame size 32 REGBYTES(4/8) for most cases, but for ilp32e mode, it's 14 REGBYTES(4) */
     /* Offset added to account for the way the MCU uses the stack on entry/exit
     of interrupts, and to ensure alignment. */
     pxTopOfStack--;
@@ -291,7 +294,7 @@ StackType_t* pxPortInitialiseStack(StackType_t* pxTopOfStack, TaskFunction_t pxC
 
     /* Save code space by skipping register initialisation. */
 #ifndef __riscv_32e
-    pxTopOfStack -= 22;    /* X11 - X31. */
+    pxTopOfStack -= 24;    /* X11 - X31, and 2 reserved regs space. */
 #else
     pxTopOfStack -= 6;    /* X11 - X15. */
 #endif

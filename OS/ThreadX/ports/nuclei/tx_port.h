@@ -347,6 +347,8 @@ struct thread_stack_frame {
     unsigned long t4;         /* x29 - t4     - temporary register 4                */
     unsigned long t5;         /* x30 - t5     - temporary register 5                */
     unsigned long t6;         /* x31 - t6     - temporary register 6                */
+    unsigned long rsv0;       /* reserved 0   - reserved to make space              */
+    unsigned long rsv1;       /* reserved 1   - reserved to make space              */
 #endif
     unsigned long mstatus;    /*              - machine status register             */
 };
