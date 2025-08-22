@@ -3,6 +3,20 @@
 Changelog
 =========
 
+V0.8.2-dev
+----------
+
+This is release version of ``0.8.2`` of Nuclei SDK, which is still under development.
+
+* OS
+
+  - Bugfix for FreeRTOS/UCOSII/RT-Thread/ThreadX task stack sp alignment to match 16 bytes
+    alignment requirement, see https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/301374e92976e298e676e7129a6212926b2299ce/riscv-cc.adoc?plain=1#L245-L259
+
+* Documentation
+
+  - Fix typo ``reuqests`` to ``requires`` in ``app.rst``
+
 V0.8.1
 ------
 
