@@ -18,18 +18,18 @@ ifneq ($(findstring newlib,$(STDCLIB)),)
 ifeq ($(STDCLIB),newlib_full)
 LDLIBS += -lc -lclang_rt.builtins
 else ifeq ($(STDCLIB),newlib_fast)
-LDLIBS += -lc_nano -lclang_rt.builtins
+LDLIBS += -lc_small -lclang_rt.builtins_small
 STDCLIB_LDFLAGS += -u _printf_float -u _scanf_float
 else ifeq ($(STDCLIB),newlib_small)
-LDLIBS += -lc_nano -lclang_rt.builtins
+LDLIBS += -lc_small -lclang_rt.builtins_small
 STDCLIB_LDFLAGS += -u _printf_float
 else ifeq ($(STDCLIB),newlib_nano)
-LDLIBS += -lc_nano -lclang_rt.builtins
+LDLIBS += -lc_nano -lclang_rt.builtins_nano
 # work around for relocation R_RISCV_PCREL_HI20 out of range: -524289 is not in [-524288, 524287]; references _printf_float when compile with rv64
 # If it report above error, you can add -u _printf_float
 STDCLIB_LDFLAGS += #-u _printf_float
 else
-LDLIBS += -lc_nano -lclang_rt.builtins
+LDLIBS +=  -lc_small -lclang_rt.builtins_small
 STDCLIB_LDFLAGS += #-u _printf_float
 endif
 ###
@@ -47,7 +47,7 @@ else ifeq ($(STDCLIB),nospec)
 COMMON_FLAGS +=
 ###
 else
-LDLIBS += -lc_nano -lclang_rt.builtins
+LDLIBS += -lc_small -lclang_rt.builtins_small
 STDCLIB_LDFLAGS += -u _printf_float
 ###
 endif
