@@ -377,8 +377,8 @@ _save_fp_stack:
     LOAD t1, 1 * REGBYTES(sp)
     addi sp, sp, (2 * REGBYTES)
 
-    /* Save fp registers and fcsr */
-    addi sp, sp, -(2 * REGBYTES)
+    /* Save fp registers and fcsr and 3 reserved reg space, make sure 16 bytes aligned */
+    addi sp, sp, -(5 * REGBYTES)
     STORE t0,   0 * REGBYTES(sp)
     csrr  t0, CSR_FCSR
     STORE t0,   1 * REGBYTES(sp)
@@ -649,7 +649,7 @@ _restore_fp_stack:
     LOAD t1, 1 * REGBYTES(sp)
     addi sp, sp, (2 * REGBYTES)
 
-    /* Save fp registers and fcsr */
+    /* Restore fp registers and fcsr and 3 reserved reg space */
     FPLOAD f0 , 0  * FPREGBYTES(sp)
     FPLOAD f1 , 1  * FPREGBYTES(sp)
     FPLOAD f2 , 2  * FPREGBYTES(sp)
@@ -689,7 +689,7 @@ _restore_fp_stack:
     LOAD  t0,   1 * REGBYTES(sp)
     csrw  CSR_FCSR, t0
     LOAD t0,   0 * REGBYTES(sp)
-    addi sp, sp, (2 * REGBYTES)
+    addi sp, sp, (5 * REGBYTES)
 #endif
 
 #if defined(__riscv_flen) || defined(__riscv_vector)
