@@ -1284,7 +1284,7 @@ void __sync_harts(void)
     if (hartid == BOOT_HARTID) { // boot hart
         // Enaable L2, disable cluster local memory
         if (SMP_CTRLREG(smp_base, 0x4) & 0x1) {
-            SMP_CTRLREG(smp_base, 0x10) = 0x1;
+            SMP_CTRLREG(smp_base, 0x10) |= 0x1;
             SMP_CTRLREG(smp_base, 0xd8) = 0x0;
         }
         // Enable SMP
