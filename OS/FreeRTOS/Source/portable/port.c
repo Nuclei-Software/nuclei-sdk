@@ -176,42 +176,53 @@ spin_lock_t hw_sync_locks[portRTOS_SPINLOCK_COUNT] = {0, 0};
 * uxAcquire, and the compiler should do the right thing! */
 void vPortRecursiveLock(unsigned long ulLockNum, spin_lock_t *pxSpinLock, BaseType_t uxAcquire)
 {
+    /* Track, per-core, which locks this core currently owns.          */
     static uint8_t ucOwnedByCore[portMAX_CORE_COUNT];
+    /* Track, per-lock, how many times it has been recursively taken.  */
     static uint8_t ucRecursionCountByLock[portRTOS_SPINLOCK_COUNT];
 
     configASSERT(ulLockNum < portRTOS_SPINLOCK_COUNT);
-    unsigned long ulCoreNum = __get_hart_index();
-    unsigned long ulLockBit = 1u << ulLockNum;
+    unsigned long ulCoreNum = __get_hart_index();   /* ID of current hart  */
+    unsigned long ulLockBit = 1u << ulLockNum;      /* Bit mask for lock   */
     configASSERT(ulLockBit < 256u);
 
-    if (uxAcquire) {
+    if (uxAcquire) {    /* ACQUIRE PATH */
+        /* Case 1: lock already held by THIS core -> pure recursion.  */
         if ((!*pxSpinLock == 0)) {
             if (ucOwnedByCore[ulCoreNum] & ulLockBit) {
                 configASSERT(ucRecursionCountByLock[ulLockNum] != 255u);
                 ucRecursionCountByLock[ulLockNum]++;
                 return;
             }
-
-            while ((!*pxSpinLock == 0)) {
-            }
         }
 
+        /* Case 2: lock not held (or held by another core).           */
         do {
-            if (__AMOSWAP_W(pxSpinLock, 1) == 0) {
-                break;
+            /* Spin-wait until the lock appears free.                 */
+            while ((!*pxSpinLock == 0)) {
+                __NOP();
+            }
+            /* Atomically attempt to take the lock.                   */
+            if (__AMOSWAP_W(pxSpinLock, 1) == 0) {  /* success        */
+                __RWMB();                           /* mem-barrier    */
+                break;                              /* lock taken     */
             }
         } while (1);
 
+        /* First successful take on THIS core -> init recursion state.*/
         configASSERT(ucRecursionCountByLock[ulLockNum] == 0);
         ucRecursionCountByLock[ulLockNum] = 1;
-        ucOwnedByCore[ulCoreNum] |= ulLockBit;
-    } else {
+        ucOwnedByCore[ulCoreNum] |= ulLockBit;      /* mark ownership */
+    } else {    /* RELEASE PATH */
         configASSERT((ucOwnedByCore[ulCoreNum] & ulLockBit) != 0);
         configASSERT(ucRecursionCountByLock[ulLockNum] != 0);
 
+        /* Decrease recursion counter.                                */
         if (!--ucRecursionCountByLock[ulLockNum]) {
+            /* Last release -> clear ownership and unlock.            */
             ucOwnedByCore[ulCoreNum] &= ~ulLockBit;
-            *pxSpinLock = 0;
+            __RWMB();                  /* ensure prior stores visible */
+            *pxSpinLock = 0;           /* hand the lock back          */
         }
     }
 }
