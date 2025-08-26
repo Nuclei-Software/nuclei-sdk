@@ -1,0 +1,34 @@
+{
+    "build_config": {
+        "CPU_SERIES": "600"
+    },
+    "build_configs": {
+        "rv64imac": {"CORE":"ux600"},
+        "rv64imacb": {"CORE":"ux600", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv64imacp": {"CORE":"ux600", "ARCH_EXT":"_xxldsp"},
+        "rv64imacbp": {"CORE":"ux600", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
+        "rv64imafc": {"CORE":"ux600f", "ARCH_EXT":""},
+        "rv64imafcb": {"CORE":"ux600f", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv64imafcp": {"CORE":"ux600f", "ARCH_EXT":"_xxldsp"},
+        "rv64imafcbp": {"CORE":"ux600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
+        "rv64imafdc": {"CORE":"ux600fd", "ARCH_EXT":""},
+        "rv64imafdcb": {"CORE":"ux600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
+        "rv64imafdcp": {"CORE":"ux600fd", "ARCH_EXT":"_xxldsp"},
+        "rv64imafdcbp": {"CORE":"ux600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
+        "rv64imafdcbp_zicond": {"CORE":"ux600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldsp"},
+        "rv64ima_zc": {"CORE":"ux600", "ARCH_EXT": "_zca_zcb_zcmp_zcmt"},
+        "rv64imab_zc": {"CORE":"ux600", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt"},
+        "rv64imap_zc": {"CORE":"ux600", "ARCH_EXT":"_zca_zcb_zcmp_zcmt_xxldsp"},
+        "rv64imabp_zc": {"CORE":"ux600", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt_xxldsp"},
+        "rv64imaf_zc": {"CORE":"ux600f", "ARCH_EXT":"_zca_zcb_zcmp_zcmt"},
+        "rv64imafb_zc": {"CORE":"ux600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt"},
+        "rv64imafp_zc": {"CORE":"ux600f", "ARCH_EXT":"_zca_zcb_zcmp_zcmt_xxldsp"},
+        "rv64imafbp_zc": {"CORE":"ux600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt_xxldsp"},
+        "rv64imafbp_zc_zicond": {"CORE":"ux600f", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcmp_zcmt_zicond_xxldsp"},
+        "rv64imafd_zc": {"CORE":"ux600fd", "ARCH_EXT":"_zca_zcb_zcd"},
+        "rv64imafdb_zc": {"CORE":"ux600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcd"},
+        "rv64imafdp_zc": {"CORE":"ux600fd", "ARCH_EXT":"_zca_zcb_zcd_xxldsp"},
+        "rv64imafdbp_zc": {"CORE":"ux600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcd_xxldsp"},
+        "rv64imafdbp_zc_zicond": {"CORE":"ux600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcd_zicond_xxldsp"}
+    }
+}

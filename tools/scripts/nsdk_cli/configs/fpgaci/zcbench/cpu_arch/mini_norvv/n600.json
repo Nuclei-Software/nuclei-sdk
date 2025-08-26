@@ -1,0 +1,9 @@
+{
+    "build_config": {
+        "CPU_SERIES": "600"
+    },
+    "build_configs": {
+        "rv32imafdcbp_zicond": {"CORE":"n600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldspn1x"},
+        "rv32imafdbp_zc_zicond": {"CORE":"n600fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zca_zcb_zcf_zcmp_zcmt_zicond_xxldspn1x"}
+    }
+}

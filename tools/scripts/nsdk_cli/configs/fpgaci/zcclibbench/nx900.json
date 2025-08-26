@@ -1,0 +1,5 @@
+{
+    "matrix": {
+        "newlib_small": {"STDCLIB": "newlib_small"}
+    }
+}
