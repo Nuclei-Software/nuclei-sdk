@@ -177,9 +177,9 @@ spin_lock_t hw_sync_locks[portRTOS_SPINLOCK_COUNT] = {0, 0};
 void vPortRecursiveLock(unsigned long ulLockNum, spin_lock_t *pxSpinLock, BaseType_t uxAcquire)
 {
     /* Track, per-core, which locks this core currently owns.          */
-    static uint8_t ucOwnedByCore[portMAX_CORE_COUNT];
+    static volatile uint8_t ucOwnedByCore[portMAX_CORE_COUNT];
     /* Track, per-lock, how many times it has been recursively taken.  */
-    static uint8_t ucRecursionCountByLock[portRTOS_SPINLOCK_COUNT];
+    static volatile uint8_t ucRecursionCountByLock[portRTOS_SPINLOCK_COUNT];
 
     configASSERT(ulLockNum < portRTOS_SPINLOCK_COUNT);
     unsigned long ulCoreNum = __get_hart_index();   /* ID of current hart  */
