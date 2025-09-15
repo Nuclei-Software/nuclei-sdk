@@ -3,15 +3,24 @@
 Changelog
 =========
 
-V0.8.2-dev
+V0.9.0-dev
 ----------
 
-This is release version of ``0.8.2`` of Nuclei SDK, which is still under development.
+This is release version of ``0.9.0`` of Nuclei SDK, which is still under development.
 
 * OS
 
   - Bugfix for FreeRTOS/UCOSII/RT-Thread/ThreadX task stack sp alignment to match 16 bytes
     alignment requirement, see https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/301374e92976e298e676e7129a6212926b2299ce/riscv-cc.adoc?plain=1#L245-L259
+  - Bugfix and optimize FreeRTOS SMP spinlock implementation
+
+* Build System
+
+  - Add new ``n300e`` CPU core support in build system and npk.yml for evalsoc
+
+* SoC
+
+  - Only enable/disable L2 cache enable bit during pre-main initialization
 
 * Documentation
 
