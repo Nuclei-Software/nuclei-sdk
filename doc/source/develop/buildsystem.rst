@@ -699,6 +699,7 @@ Currently it has these cores supported as described in table
    n203      rv32imac   ilp32    nuclei-200-series
    n203e     rv32emac   ilp32e   nuclei-200-series
    n300      rv32imac   ilp32    nuclei-300-series
+   n300e     rv32emac   ilp32e   nuclei-300-series
    n300f     rv32imafc  ilp32f   nuclei-300-series
    n300fd    rv32imafdc ilp32d   nuclei-300-series
    n600      rv32imac   ilp32    nuclei-600-series
@@ -744,6 +745,9 @@ you can run :ref:`design_app_cpuinfo` example to confirm it.
 
     * ``n205/n205e/n305/n307/n307fd`` CORE are removed in Nuclei SDK 0.7.0
     * ``n200e/n202/n202e`` CORE are added in Nuclei SDK 0.7.0
+    * ``n300e`` CORE is added in Nuclei SDK 0.9.0
+    * If you want to use ``zfinx``, ``zdinx`` and ``zhinx`` extension, you can pass it via :ref:`develop_buildsystem_var_archext`,
+      eg. ``ARCH_EXT=_zfinx``
     * In Nuclei SDK, this **CORE** variable is just a **shorthand** to find a suitable **ARCH**,
       **ABI** and **TUNE** for target SoC to pass to the compiler as described in above table.
       So for example, **CORE=n600fd** equals **CORE=u600fd**, **CORE=n900fd** equals **CORE=u900fd**

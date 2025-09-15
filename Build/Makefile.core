@@ -12,6 +12,7 @@ N203_CORE_ARCH_ABI = rv32imac ilp32 nuclei-200-series
 N203E_CORE_ARCH_ABI = rv32emac ilp32e nuclei-200-series
 N205_CORE_ARCH_ABI = rv32imac ilp32 nuclei-200-series
 N205E_CORE_ARCH_ABI = rv32emac ilp32e nuclei-200-series
+N300E_CORE_ARCH_ABI = rv32emac ilp32e nuclei-300-series
 N300_CORE_ARCH_ABI = rv32imac ilp32 nuclei-300-series
 N300F_CORE_ARCH_ABI = rv32imafc ilp32f nuclei-300-series
 N300FD_CORE_ARCH_ABI = rv32imafdc ilp32d nuclei-300-series
@@ -53,7 +54,7 @@ UX1000FD_CORE_ARCH_ABI = rv64imafdc lp64d nuclei-1000-series
 # if you add a new NXXX_CORE_ARCH_ABI above
 SUPPORTED_CORES = n200 n200e n201 n201e n202 n202e \
 		n203 n203e n205 n205e \
-		n300 n300f n300fd n305 n307 n307fd \
+		n300e n300 n300f n300fd n305 n307 n307fd \
 		n600 n600f n600fd \
 		u600 u600f u600fd \
 		nx600 nx600f nx600fd \

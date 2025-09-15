@@ -92,6 +92,12 @@ configuration:
         cmodel: medlow
         tune: nuclei-300-series
         description: N300 Core(ARCH=rv32imac, ABI=ilp32)
+      - name: n300e
+        arch: rv32emac
+        abi: ilp32e
+        cmodel: medlow
+        tune: nuclei-300-series
+        description: N300E Core(ARCH=rv32emac, ABI=ilp32e)
       - name: n300f
         arch: rv32imafc
         abi: ilp32f
