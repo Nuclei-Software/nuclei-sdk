@@ -428,6 +428,10 @@ typedef CSR_MDCFGINFO_Type CSR_MDCFG_INFO_Type;
 
 /**
  * \brief  Union type to access MTLBCFG_INFO CSR register.
+ * NOTE: the MTLBCFG_INFO CSR supports two different mapping layouts.
+ * Use the `b.mapping` or `nb.mapping` field to determine the active
+ * mapping type. If `mapping` field is set, use the `nb` structure for
+ * field access. Otherwise, use the `b` structure for field access.
  */
 typedef union {
     struct {
@@ -439,8 +443,20 @@ typedef union {
         rv_csr_t _reserved1:4;                  /*!< bit: 12..15  Reserved 0 */
         rv_csr_t i_size:3;                      /*!< bit: 16..18  ITLB size */
         rv_csr_t d_size:3;                      /*!< bit: 19..21  DTLB size */
-        rv_csr_t _reserved2:__RISCV_XLEN-22;    /*!< bit: 22..XLEN-1  Reserved 0 */
+        rv_csr_t _reserved2:__RISCV_XLEN-23;    /*!< bit: 22..XLEN-2  Reserved 0 */
+        rv_csr_t mapping:1;                     /*!< bit: XLEN-1 mapping type */
     } b;                                        /*!< Structure used for bit  access */
+    struct {
+        rv_csr_t set:4;                         /*!< bit: 0..3  Main TLB entry per way */
+        rv_csr_t way:3;                         /*!< bit: 4..6  Main TLB ways */
+        rv_csr_t lsize:3;                       /*!< bit: 7..9  Main TLB line size or Reserved */
+        rv_csr_t ecc:1;                         /*!< bit: 10  Main TLB supports ECC or not */
+        rv_csr_t napot:1;                       /*!< bit: 11  TLB supports Svnapot or not */
+        rv_csr_t i_size:7;                      /*!< bit: 12..18  ITLB size */
+        rv_csr_t d_size:8;                      /*!< bit: 19..26  DTLB size */
+        rv_csr_t _reserved0:__RISCV_XLEN-28;    /*!< bit: 27..XLEN-2  Reserved 0 */
+        rv_csr_t mapping:1;                     /*!< bit: XLEN-1  TLB mapping type */
+    } nb;                                       /*!< Structure used for new mapping bit access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MTLBCFGINFO_Type;
 

@@ -15,6 +15,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add comments for updating ECLIC threshold MTH setting recommendations in ``core_feature_eclic.h``
   - Fix **HDBG** bit position in SysTimer **MTIMECTL** from 4 to 3 in ``core_feature_timer.h``
   - Add **MTIME_SRC** bit position and update SRW control handling in ``core_feature_timer.h``
+  - Add new field mapping of ``CSR_MTLBCFGINFO_Type`` CSR structure in ``core_feature_base.h``
 
 * Application
 
