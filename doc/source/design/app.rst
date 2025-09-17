@@ -427,6 +427,52 @@ the ECLIC API and Interrupt is working in ECLIC interrupt mode.
     [IN SOFTWARE INTERRUPT]software interrupt hit 3 times
     [IN SOFTWARE INTERRUPT]software interrupt end
 
+.. _design_app_demo_eclic_umode:
+
+demo_eclic_umode
+~~~~~~~~~~~~~~~~
+
+This `demo_eclic_umode application`_ demonstrates how to switch from machine mode to user mode on Nuclei RISC-V processors.
+It showcases the usage of PMP (Physical Memory Protection) configuration, ECLIC (Enhanced Core-Local Interrupt Controller)
+interrupt handling, and SysTimer functionality.
+
+The application initializes a timer interrupt, configures PMP/SMPU(if present) protection, and then switches to user mode
+where it waits for timer interrupt to occur. When the interrupt is triggered and handled in machine mode, the user mode
+application detects this event and confirms successful mode switching and interrupt handling.
+
+.. note::
+
+    This demo requires M/S/U mode, ECLIC, PMP, and optional SMPU to be present.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_eclic_umode directory
+    cd application/baremetal/demo_eclic_umode
+    # Clean the application first
+    # Assume you are running on evalsoc with U900 CORE
+    # with ECLIC M/S/U mode present
+    make SOC=evalsoc CORE=u900 clean
+    # Build and upload the application
+    make SOC=evalsoc CORE=u900 upload
+
+**Expected output(SWIRQ_INTLEVEL_HIGHER=1) as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Sep 16 2025, 17:13:10
+    Download Mode: ILM
+    CPU Frequency 16167731 Hz
+    CPU HartID: 0
+    Configure SMPU due to TEE Present
+    Initialize timer and start timer interrupt
+    switch to user mode successfully
+    Enter to SysTimer M-Mode interrupt handler
+    go back to user mode from SysTimer IRQ handler
+    [SUCCESS] Test M-mode drop to U-mode passed!
+
 .. _design_app_demo_plic:
 
 demo_plic
@@ -2908,6 +2954,7 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx demo`` applicati
 .. _rt-thread msh application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/msh
 .. _threadx demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/threadx/demo
 .. _demo_smode_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_eclic
+.. _demo_eclic_umode application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic_umode
 .. _demo_smode_plic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_plic
 .. _demo_sstc application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_sstc
 .. _demo_spmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_spmp

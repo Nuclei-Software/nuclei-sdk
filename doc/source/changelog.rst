@@ -8,6 +8,10 @@ V0.9.0-dev
 
 This is release version of ``0.9.0`` of Nuclei SDK, which is still under development.
 
+* Application
+
+  - Add new application :ref:`design_app_demo_eclic_umode` to show how to use U-Mode with ECLIC running in M-Mode
+
 * OS
 
   - Bugfix for FreeRTOS/UCOSII/RT-Thread/ThreadX task stack sp alignment to match 16 bytes
