@@ -762,8 +762,8 @@ class nsdk_runner(nsdk_builder):
                 verchk = "xl_cpumodel Version"
                 ret, verstr = check_tool_version(vercmd, verchk)
                 if ret:
-                    command = "%s %s -M %s --cpu=%s %s %s" \
-                        % (xlmodel_exe, xlmodel_extraopt, xlmodel_machine, xlmodel_sel_cpu, xlmodel_archext_opt, build_objects["elf"])
+                    command = "%s %s -M %s --cpu=%s %s --download=%s %s" \
+                        % (xlmodel_exe, xlmodel_extraopt, xlmodel_machine, xlmodel_sel_cpu, xlmodel_archext_opt, build_download.lower(), build_objects["elf"])
                     print("Run command: %s" %(command))
                     runner = {"cmd": command, "version": verstr}
                     cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
