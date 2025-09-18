@@ -386,6 +386,9 @@ __STATIC_FORCEINLINE uint32_t __ECLIC_GetInfoNum(void)
  * \brief  Set Machine Mode Interrupt Level Threshold
  * \details
  * This function sets machine mode interrupt level threshold.
+ * This threshold is not effective immediately, if you want to safely
+ * change it, you need to disable all interrupts first, and then change it,
+ * and do fence and then enable all interrupts.
  * \param [in]  mth       Interrupt Level Threshold.
  * \sa
  * - \ref ECLIC_GetMth
@@ -842,6 +845,8 @@ __STATIC_FORCEINLINE void __ECLIC_SetModeIRQ(IRQn_Type IRQn, uint32_t mode)
  * \remarks
  * - S-mode ECLIC region sintthresh'sth is a mirror to M-mode ECLIC region's mintthresh.sth,
  *   and will be updated synchronously, here operate on mintthresh.sth.
+ * - Similiar to \ref ECLIC_SetMth, also recommended to disable interrupts before
+ *   setting interrupt level threshold.
  * \sa
  * - \ref ECLIC_GetSth
  */
