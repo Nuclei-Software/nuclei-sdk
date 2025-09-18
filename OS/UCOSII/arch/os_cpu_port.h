@@ -84,18 +84,22 @@ extern uint8_t uxMaxSysCallMTH;
 /*-----------------------------------------------------------*/
 portFORCE_INLINE static void vPortRaiseBASEPRI(void)
 {
+    unsigned long saved_status = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
     ECLIC_SetMth(uxMaxSysCallMTH);
     __RWMB();
+    __RV_CSR_WRITE(CSR_MSTATUS, saved_status);
 }
 
 /*-----------------------------------------------------------*/
 portFORCE_INLINE static uint8_t ulPortRaiseBASEPRI(void)
 {
     uint8_t ulOriginalBASEPRI;
+    unsigned long saved_status = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
 
     ulOriginalBASEPRI = ECLIC_GetMth();
     ECLIC_SetMth(uxMaxSysCallMTH);
     __RWMB();
+    __RV_CSR_WRITE(CSR_MSTATUS, saved_status);
 
     /* This return might not be reached but is necessary to prevent compiler
     warnings. */
@@ -105,8 +109,10 @@ portFORCE_INLINE static uint8_t ulPortRaiseBASEPRI(void)
 
 portFORCE_INLINE static void vPortSetBASEPRI(uint8_t ulNewMaskValue)
 {
+    unsigned long saved_status = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
     ECLIC_SetMth(ulNewMaskValue);
     __RWMB();
+    __RV_CSR_WRITE(CSR_MSTATUS, saved_status);
 }
 /*-----------------------------------------------------------*/
 
