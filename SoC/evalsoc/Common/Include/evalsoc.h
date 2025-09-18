@@ -405,9 +405,18 @@ extern volatile unsigned long CpuIRegionBase;
 #ifdef CFG_HAS_TEE
 #define __TEE_PRESENT               1
 #define __SPMP_PRESENT              1
+#if CFG_PMP_ENTRY_NUM > 16
+#define __SPMP_ENTRY_NUM            16
+#else
 #define __SPMP_ENTRY_NUM            CFG_PMP_ENTRY_NUM
+#endif
 #ifdef CFG_HAS_SMPU
 #define __SMPU_PRESENT              1
+#if CFG_PMP_ENTRY_NUM > 16
+#define __SMPU_ENTRY_NUM            16
+#else
+#define __SMPU_ENTRY_NUM            CFG_PMP_ENTRY_NUM
+#endif
 #define __SMPU_ENTRY_NUM            __SPMP_ENTRY_NUM
 #endif
 #else
