@@ -311,6 +311,7 @@
  * switch performing interrupts.  Not supported by all FreeRTOS ports.  See
  * https://www.freertos.org/RTOS-Cortex-M3-M4.html for information specific to
  * ARM Cortex-M devices. */
+/* Please dont change this, our timer tick and software irq must be lowest priority interrupt handler */
 #define configKERNEL_INTERRUPT_PRIORITY          0
 
 /* configMAX_SYSCALL_INTERRUPT_PRIORITY sets the interrupt priority above which
@@ -319,7 +320,13 @@
  * highest interrupt priority (0).  Not supported by all FreeRTOS ports.
  * See https://www.freertos.org/RTOS-Cortex-M3-M4.html for information specific to
  * ARM Cortex-M devices. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY     3
+/* TODO and NOTE:
+ * - When configMAX_SYSCALL_INTERRUPT_PRIORITY >= 255, it will use mstatus.mie to disable/enable interrupt
+ * - When configMAX_SYSCALL_INTERRUPT_PRIORITY < 255, it will use eclic.mth to mask interrupt lower than configMAX_SYSCALL_INTERRUPT_PRIORITY
+ * - If you want to let all interrupts be masked when FreeRTOS kernel enter to critical section, please set configMAX_SYSCALL_INTERRUPT_PRIORITY to 255
+ * For details, please see our portable code comments
+ */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY     255
 
 /* Another name for configMAX_SYSCALL_INTERRUPT_PRIORITY - the name used depends
  * on the FreeRTOS port. */

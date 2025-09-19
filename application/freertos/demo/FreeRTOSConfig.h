@@ -129,8 +129,15 @@ your application. */
 #define configTIMER_QUEUE_LENGTH                5
 #define configTIMER_TASK_STACK_DEPTH            512
 
+/* Please dont change this, our timer tick and software irq must be lowest priority interrupt handler */
 #define configKERNEL_INTERRUPT_PRIORITY         0
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    7
+/* TODO and NOTE:
+ * - When configMAX_SYSCALL_INTERRUPT_PRIORITY >= 255, it will use mstatus.mie to disable/enable interrupt
+ * - When configMAX_SYSCALL_INTERRUPT_PRIORITY < 255, it will use eclic.mth to mask interrupt lower than configMAX_SYSCALL_INTERRUPT_PRIORITY
+ * - If you want to let all interrupts be masked when FreeRTOS kernel enter to critical section, please set configMAX_SYSCALL_INTERRUPT_PRIORITY to 255
+ * For details, please see our portable code comments
+ */
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
 
 /* Define to trap errors during development. */
 #define configASSERT( x ) if( ( x ) == 0 ) {taskDISABLE_INTERRUPTS(); for( ;; );}

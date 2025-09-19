@@ -67,6 +67,19 @@ typedef unsigned long UBaseType_t;
 #define configTICK_TYPE_WIDTH_IN_BITS TICK_TYPE_WIDTH_32_BITS
 #endif
 
+/* TODO If you dont want features provided by configMAX_SYSCALL_INTERRUPT_PRIORITY */
+/* If configMAX_SYSCALL_INTERRUPT_PRIORITY >= 255, interrupt disable/enable will use MSTATUS.MIE,
+ * otherwise interrupt disable/enable will use ECLIC.MTH to control interrupt threshold,
+ * this will make Interrupts that do not call API functions can execute at priorities above configMAX_SYSCALL_INTERRUPT_PRIORITY
+ * and therefore never be delayed by the RTOS kernel execution.
+ * For configMAX_SYSCALL_INTERRUPT_PRIORITY set value, please see port.c for details
+ * About FreeRTOS configuration, see see https://www.freertos.org/zh-cn-cmn-s/Documentation/02-Kernel/03-Supported-devices/02-Customization
+ */
+#ifndef configMAX_SYSCALL_INTERRUPT_PRIORITY
+// See function prvCheckMaxSysCallPrio and prvCalcMaxSysCallMTH
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
+#endif
+
 // configTICK_TYPE_WIDTH_IN_BITS
 // see https://github.com/FreeRTOS/FreeRTOS-Kernel/blob/03db672b8f45db24aa99f12051f7cf86746b9ed9/examples/template_configuration/FreeRTOSConfig.h#L124-L139
 #if ( configTICK_TYPE_WIDTH_IN_BITS == TICK_TYPE_WIDTH_16_BITS )
@@ -108,11 +121,17 @@ typedef uint64_t TickType_t;
 #define portYIELD_FROM_ISR( x )                     portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
 
-
+#if configMAX_SYSCALL_INTERRUPT_PRIORITY >= 255
+#define portSET_INTERRUPT_MASK_FROM_ISR()       __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE)
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)    __RV_CSR_WRITE(CSR_MSTATUS, (x))
+#define portDISABLE_INTERRUPTS()                __RV_CSR_CLEAR(CSR_MSTATUS, MSTATUS_MIE)
+#define portENABLE_INTERRUPTS()                 __RV_CSR_SET(CSR_MSTATUS, MSTATUS_MIE)
+#else
 #define portSET_INTERRUPT_MASK_FROM_ISR()       ulPortRaiseBASEPRI()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)    vPortSetBASEPRI(x)
 #define portDISABLE_INTERRUPTS()                vPortRaiseBASEPRI()
 #define portENABLE_INTERRUPTS()                 vPortSetBASEPRI(0)
+#endif
 
 /*-----------------------------------------------------------*/
 
@@ -146,6 +165,7 @@ extern void vPortValidateInterruptPriority(void);
 #define portFORCE_INLINE            inline __attribute__(( always_inline))
 #endif
 
+#if configMAX_SYSCALL_INTERRUPT_PRIORITY < 255
 /* This variable should not be set in any of the FreeRTOS application
   only used internal of FreeRTOS Port code */
 extern uint8_t uxMaxSysCallMTH;
@@ -185,6 +205,8 @@ portFORCE_INLINE static void vPortSetBASEPRI(uint8_t ulNewMaskValue)
     __RWMB();
     __RV_CSR_WRITE(CSR_MSTATUS, saved_status);
 }
+#endif
+
 /*-----------------------------------------------------------*/
 
 #define portMEMORY_BARRIER()                            __asm volatile( "" ::: "memory" )
@@ -206,10 +228,10 @@ portFORCE_INLINE static void vPortSetBASEPRI(uint8_t ulNewMaskValue)
     #define portGET_CORE_ID()                           __get_hart_index()
 
     /* Set the interrupt mask. */
-    #define portSET_INTERRUPT_MASK()                    ulPortRaiseBASEPRI()
+    #define portSET_INTERRUPT_MASK()                    portSET_INTERRUPT_MASK_FROM_ISR()
 
     /* Clear the interrupt mask. */
-    #define portCLEAR_INTERRUPT_MASK( x )               vPortSetBASEPRI(x)
+    #define portCLEAR_INTERRUPT_MASK( x )               portCLEAR_INTERRUPT_MASK_FROM_ISR(x)
 
     /* Request the core ID x to yield. */
     #define portYIELD_CORE( x )              \

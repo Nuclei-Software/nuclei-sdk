@@ -50,11 +50,6 @@
 #define configKERNEL_INTERRUPT_PRIORITY         0
 #endif
 
-#ifndef configMAX_SYSCALL_INTERRUPT_PRIORITY
-// See function prvCheckMaxSysCallPrio and prvCalcMaxSysCallMTH
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY    255
-#endif
-
 /* Constants required to check the validity of an interrupt priority. */
 #define portFIRST_USER_INTERRUPT_NUMBER ( 18 )
 
@@ -118,7 +113,7 @@ UBaseType_t uxCriticalNesting = 0xaaaaaaaa;
 UBaseType_t uxCriticalNestings[ configNUMBER_OF_CORES ] = { 0 };
 #endif /* #if ( configNUMBER_OF_CORES == 1 ) */
 
-
+#if configMAX_SYSCALL_INTERRUPT_PRIORITY < 255
 /*
  * Record the real MTH calculated by the configMAX_SYSCALL_INTERRUPT_PRIORITY
  * The configMAX_SYSCALL_INTERRUPT_PRIORITY is not the left-aligned level value,
@@ -134,6 +129,7 @@ UBaseType_t uxCriticalNestings[ configNUMBER_OF_CORES ] = { 0 };
  * See function prvCheckMaxSysCallPrio and prvCalcMaxSysCallMTH
  */
 uint8_t uxMaxSysCallMTH = 255;
+#endif
 
 /*
  * The number of SysTick increments that make up one tick period.
@@ -164,7 +160,9 @@ static TickType_t ulStoppedTimerCompensation = 0;
  * a priority above configMAX_SYSCALL_INTERRUPT_PRIORITY.
  */
 #if( configASSERT_DEFINED == 1 )
+#if configMAX_SYSCALL_INTERRUPT_PRIORITY < 255
 static uint8_t ucMaxSysCallPriority = 0;
+#endif
 #endif /* configASSERT_DEFINED */
 
 #if ( configNUMBER_OF_CORES > 1 )
@@ -345,7 +343,7 @@ static void prvTaskExitError(void)
     }
 }
 /*-----------------------------------------------------------*/
-
+#if configMAX_SYSCALL_INTERRUPT_PRIORITY < 255
 static uint8_t prvCheckMaxSysCallPrio(uint8_t max_syscall_prio)
 {
     uint8_t nlbits = __ECLIC_GetCfgNlbits();
@@ -390,12 +388,14 @@ static uint8_t prvCalcMaxSysCallMTH(uint8_t max_syscall_prio)
 
     return maxsyscallmth;
 }
+#endif
 
 /*
  * See header file for description.
  */
 BaseType_t xPortStartScheduler(void)
 {
+#if configMAX_SYSCALL_INTERRUPT_PRIORITY < 255
     /* configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0. */
     configASSERT(configMAX_SYSCALL_INTERRUPT_PRIORITY);
 
@@ -410,6 +410,7 @@ BaseType_t xPortStartScheduler(void)
         FREERTOS_PORT_DEBUG("Max SysCall Priority is set to %d\n", ucMaxSysCallPriority);
     }
 #endif /* conifgASSERT_DEFINED */
+#endif
 
     __disable_irq();
 
@@ -429,8 +430,10 @@ BaseType_t xPortStartScheduler(void)
     /* Initialise the critical nesting count ready for the first task. */
     portSET_CRITICAL_NESTING_COUNT(0);
 
+#if configMAX_SYSCALL_INTERRUPT_PRIORITY < 255
     /* Initialise base priority to zero. */
     vPortSetBASEPRI(0);
+#endif
 
     /* Start the first task. */
     prvPortStartFirstTask();
@@ -466,6 +469,7 @@ void vPortEnterCritical(void)
     portDISABLE_INTERRUPTS();
     portINCREMENT_CRITICAL_NESTING_COUNT();
 
+#if configMAX_SYSCALL_INTERRUPT_PRIORITY < 255
     /* This is not the interrupt safe version of the enter critical function so
     assert() if it is being called from an interrupt context.  Only API
     functions that end in "FromISR" can be used in an interrupt.  Only assert if
@@ -474,6 +478,7 @@ void vPortEnterCritical(void)
     if (portGET_CRITICAL_NESTING_COUNT() == 1) {
         configASSERT((__ECLIC_GetMth() & portMTH_MASK) == uxMaxSysCallMTH);
     }
+#endif
 }
 /*-----------------------------------------------------------*/
 
@@ -752,6 +757,7 @@ __attribute__((weak)) void vPortSetupTimerInterrupt(void)
 
 void vPortValidateInterruptPriority(void)
 {
+#if configMAX_SYSCALL_INTERRUPT_PRIORITY < 255
     uint32_t ulCurrentInterrupt;
     uint8_t ucCurrentPriority;
 
@@ -791,6 +797,7 @@ void vPortValidateInterruptPriority(void)
             configASSERT(ucCurrentPriority <= ucMaxSysCallPriority);
         }
     }
+#endif
 }
 
 #endif /* configASSERT_DEFINED */
