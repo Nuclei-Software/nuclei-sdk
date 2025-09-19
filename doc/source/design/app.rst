@@ -130,7 +130,7 @@ You can also use openocd to probe the cpu feature, see https://doc.nucleisys.com
     # Assume that you can set up the Tools and Nuclei SDK environment
     # cd to the helloworld directory
     cd application/baremetal/cpuinfo
-    # Assume to run on UX900 SMPx8 CPU
+    # Assume to run on UX1030 SMPx1 RVA23 CPU
     # Clean the application first
     make SOC=evalsoc DOWNLOAD=sram clean
     # Build and upload the application
@@ -140,33 +140,99 @@ You can also use openocd to probe the cpu feature, see https://doc.nucleisys.com
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: May 28 2024, 13:36:12
+    Nuclei SDK Build Time: Sep 23 2025, 09:41:30
     Download Mode: SRAM
-    CPU Frequency 50322800 Hz
+    CPU Frequency 50327388 Hz
     CPU HartID: 0
 
     -----Nuclei RISC-V CPU Configuration Information-----
-            MARCHID: 0x900
-            MIMPID: 0x30900
-                ISA: RV64 A B C D F I M S U Zc Xxlcz
-                MCFG: ECLIC PLIC ICACHE DCACHE SMP ZC_XLCZ_EXT IREGION No-Safety-Mechanism DLEN=VLEN/2
-            ICACHE: 64 KB(set=512,way=2,lsize=64,ecc=0)
-            DCACHE: 64 KB(set=512,way=2,lsize=64,ecc=0)
-                TLB: MainTLB(set=256,way=4,entry=1,ecc=0) ITLB(entry=16) DTLB(entry=16)
-            IREGION: 0x18000000 128 MB
-                    Unit        Size        Address
-                    INFO        64KB        0x18000000
-                    DEBUG       64KB        0x18010000
-                    ECLIC       64KB        0x18020000
-                    TIMER       64KB        0x18030000
-                    SMP         64KB        0x18040000
-                    CIDU        64KB        0x18050000
-                    PLIC        64MB        0x1c000000
-            SMP_CFG: CC_PRESENT=1 SMP_NUM=8 IOCP_NUM=0 PMON_NUM=4
-            ECLIC: VERSION=0x0 NUM_INTERRUPT=71 CLICINTCTLBITS=3 MTH=0 NLBITS=3
-            L2CACHE: 2 MB(set=2048,way=16,lsize=64,ecc=0)
-        INFO-Detail:
-                    mpasize : 32
+             MARCHID: 0x1000
+              MIMPID: 0x10300
+                 ISA: RV64 A B C D F H I M S U V
+                MCFG: ECLIC PLIC ICACHE DCACHE SMP IREGION SSTC No-Safety-Mechanism DLEN=VLEN
+              ICACHE: 128 KB(set=512,way=4,lsize=64,ecc=0)
+              DCACHE: 128 KB(set=1024,way=2,lsize=64,ecc=0)
+                 TLB: MainTLB(entry=256,way=4,ecc=0) ITLB(entry=16) DTLB(entry=16)
+             IREGION: 0x18000000 128 MB
+                      Unit        Size        Address
+                      INFO        64KB        0x18000000
+                      DEBUG       64KB        0x18010000
+                      ECLIC       64KB        0x18020000
+                      TIMER       64KB        0x18030000
+                      SMP         64KB        0x18040000
+                      PLIC        64MB        0x1c000000
+             SMP_CFG: CC_PRESENT=1 SMP_NUM=1 IOCP_NUM=0 PMON_NUM=4
+               ECLIC: VERSION=0x1 NUM_INTERRUPT=147 CLICINTCTLBITS=3 MTH=0 NLBITS=3
+             L2CACHE: 2 MB(set=2048,way=16,lsize=64,ecc=0)
+         INFO-Detail:
+                      mpasize : 35
+                      prefetch: present
+                          prefetch_mode: normal
+                          status: disable
+                          version=4
+                          l2_pf_lbuf_num=10
+                          l2_pf_dbuf_num=2
+                          l1d_ena=1
+                          cc_ena=1
+                          scalar_ena=1
+                          vector_ena=1
+                          write_pref_ena=1
+                          cross_page_pref_ena=1
+                          pref_conflict_stop_th=1
+                          pref_conflict_decr_sel=2
+                          degree_incr_th=0
+                          degree_decr_th=0
+                          next_line_ena_th=5
+                          write_noalloc_l1_th=0
+                          write_noalloc_l2_th=0
+                          max_stream_l1_degree=6
+                          max_stream_l2_degree=16
+                          max_stride_cplx_l1_degree=3
+                          max_stride_cplx_l2_degree=8
+                      isa supported: present
+                          extension_list: vector smepmp sscofpmf zfh zfa svnapot svpbmt svinval bf16 zimop zcmop zicond zihintntl zihintpause zihpm smcntrpmf zicntr zawrs
+                      vpu: present
+                          vpu_extension_list: vector_b zve64f zve64d zvfh
+                          noseg_noshuf=0
+                          elen64=1
+                      vlm: absent
+                      flash bus: absent
+                      mem_region0: absent
+                      mem_region1: absent
+                      cppi: absent
+                      cmo: present
+                          cbozero_size: 64 Bytes
+                          cmo_size: 64 Bytes
+                          cmo_prefetch=1
+                      hw performance: present
+                          bus: ICB
+                          fpu_cycle=5
+                          high_div=1
+                          dcache_2stage=1
+                          delay_branch_flush=0
+                          dual_issue=0
+                          cross_4k=0
+                          dlm_2stage=0
+                          lsu_cut_fwd=0
+                          dsp_cycle=0
+                          ifu_cut_timing=0
+                          mem_cut_timing=0
+                          dcache_prefetch=0
+                          dcache_lbuf_num=4
+                          mul_cyc=3
+                          vfpu_cyc=4
+                          bht_entry_width=2
+                          high_performance=1
+                          agu_quick_forward=1
+                          cau_fwd=0
+                          hpm_ver=2
+                      misc:
+                          ws_tmout_max=767
+                          nc_tmout_max=0
+                          dev_store_early_ret=0
+                          pf_access=0
+                          cache_csr_access=0
+                          pma_csr_access=0
     -----End of Nuclei CPU INFO-----
 
 .. _design_app_demo_timer:

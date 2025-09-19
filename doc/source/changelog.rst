@@ -21,6 +21,8 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
 
   - Add new application :ref:`design_app_demo_eclic_umode` to show how to use U-Mode with ECLIC running in M-Mode
   - For FreeRTOS demo/smpdemo, now default use MSTATUS.MIE to do interrupt masking since default ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` set to 255
+  - Update ``cpuinfo`` to display additional CPU features, including prefetch capabilities, hardware performance configirations, supported ISAs, and more. See :ref:`design_app_cpuinfo`.
+  - Add ``get_basic_cpuinfo`` in ``cpuinfo`` to get basic CPU information in a single string.
 
 * OS
 
@@ -49,6 +51,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
 
   - Fix typo ``reuqests`` to ``requires`` in ``app.rst``
   - Update ``rtos.rst`` to mention about recent bugfix for RTOS porting, and other RTOSes supported but not in Nuclei SDK
+  - Update the expected output of ``cpuinfo`` in ``app.rst``
 
 * Tools
 
