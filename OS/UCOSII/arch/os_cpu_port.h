@@ -57,14 +57,10 @@ typedef uint64_t TickType_t;
         __RWMB();                                                                   \
     }
 
-/* Critical section management. */
-extern void vPortEnterCritical(void);
-extern void vPortExitCritical(void);
-
-#define portDISABLE_INTERRUPTS()            vPortRaiseBASEPRI()
-#define portENABLE_INTERRUPTS()             vPortSetBASEPRI(0)
-#define portENTER_CRITICAL()                vPortEnterCritical()
-#define portEXIT_CRITICAL()                 vPortExitCritical()
+#define portDISABLE_INTERRUPTS()            __RV_CSR_CLEAR(CSR_MSTATUS, MSTATUS_MIE)
+#define portENABLE_INTERRUPTS()             __RV_CSR_SET(CSR_MSTATUS, MSTATUS_MIE)
+#define portENTER_CRITICAL()                portDISABLE_INTERRUPTS()
+#define portEXIT_CRITICAL()                 portENABLE_INTERRUPTS()
 
 /*-----------------------------------------------------------*/
 
@@ -74,47 +70,8 @@ extern void vPortExitCritical(void);
 #define portINLINE                          __inline
 
 #ifndef portFORCE_INLINE
-#define portFORCE_INLINE                inline __attribute__(( always_inline))
+#define portFORCE_INLINE                    inline __attribute__(( always_inline))
 #endif
-
-/* This variable should not be set in any of the RTOS application
-  only used internal of RTOS Port code */
-extern uint8_t uxMaxSysCallMTH;
-
-/*-----------------------------------------------------------*/
-portFORCE_INLINE static void vPortRaiseBASEPRI(void)
-{
-    unsigned long saved_status = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
-    ECLIC_SetMth(uxMaxSysCallMTH);
-    __RWMB();
-    __RV_CSR_WRITE(CSR_MSTATUS, saved_status);
-}
-
-/*-----------------------------------------------------------*/
-portFORCE_INLINE static uint8_t ulPortRaiseBASEPRI(void)
-{
-    uint8_t ulOriginalBASEPRI;
-    unsigned long saved_status = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
-
-    ulOriginalBASEPRI = ECLIC_GetMth();
-    ECLIC_SetMth(uxMaxSysCallMTH);
-    __RWMB();
-    __RV_CSR_WRITE(CSR_MSTATUS, saved_status);
-
-    /* This return might not be reached but is necessary to prevent compiler
-    warnings. */
-    return ulOriginalBASEPRI;
-}
-/*-----------------------------------------------------------*/
-
-portFORCE_INLINE static void vPortSetBASEPRI(uint8_t ulNewMaskValue)
-{
-    unsigned long saved_status = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
-    ECLIC_SetMth(ulNewMaskValue);
-    __RWMB();
-    __RV_CSR_WRITE(CSR_MSTATUS, saved_status);
-}
-/*-----------------------------------------------------------*/
 
 #define portMEMORY_BARRIER()                __asm volatile( "" ::: "memory" )
 

@@ -141,11 +141,11 @@ typedef  uint32_t         OS_CPU_SR;        /* Define size of Machine status reg
 
 #ifndef OS_TICKS_PER_SEC
 #warning "Use default OS_TICKS_PER_SEC=100"
-#define OS_TICKS_PER_SEC            100
+#define OS_TICKS_PER_SEC        100
 #endif
 
 #ifndef configTICK_RATE_HZ
-#define configTICK_RATE_HZ  OS_TICKS_PER_SEC
+#define configTICK_RATE_HZ      OS_TICKS_PER_SEC
 #endif
 
 /*
