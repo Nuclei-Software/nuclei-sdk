@@ -75,47 +75,128 @@ typedef struct PMP_CONFIG {
 } pmp_config;
 
 /**
- * \brief   Get PMPCFGx Register by csr index
- * \details Return the content of the PMPCFGx Register.
- * \param [in]    csr_idx    PMPCFG CSR index(0-3)
- * \return                   PMPCFGx Register value
- * \remark
- * - For RV64, only csr_idx = 0 and csr_idx = 2 is allowed.
- *   pmpcfg0 and pmpcfg2 hold the configurations
- *   for the 16 PMP entries, pmpcfg1 and pmpcfg3 are illegal
- * - For RV32, pmpcfg0–pmpcfg3, hold the configurations
- *   pmp0cfg–pmp15cfg for the 16 PMP entries
+ * @brief PMPCFG list for RV32 (indices 0-7)
+ *
+ * For RV32, each PMPCFG register holds 4 PMP entries.
+ * This list covers the first 32 entries (registers 0-7).
+ */
+#define PMPCFG_LIST_RV32_0_7 \
+    X(0) X(1) X(2) X(3) X(4) X(5) X(6) X(7)
+
+/**
+ * @brief PMPCFG list for RV32 (indices 8-15)
+ *
+ * For RV32, each PMPCFG register holds 4 PMP entries.
+ * This list covers entries 33-64 (registers 8-15).
+ */
+#define PMPCFG_LIST_RV32_8_15 \
+    X(8) X(9) X(10) X(11) X(12) X(13) X(14) X(15)
+
+/**
+ * @brief PMPCFG list for RV64 (even indices 0-6)
+ *
+ * For RV64, each PMPCFG register holds 8 PMP entries.
+ * This list covers the first 32 entries (registers 0,2,4,6).
+ */
+#define PMPCFG_LIST_RV64_0_6 \
+    X(0) X(2) X(4) X(6)
+
+/**
+ * @brief PMPCFG list for RV64 (even indices 8-14)
+ *
+ * For RV64, each PMPCFG register holds 8 PMP entries.
+ * This list covers entries 33-64 (registers 8,10,12,14).
+ */
+#define PMPCFG_LIST_RV64_8_14 \
+    X(8) X(10) X(12) X(14)
+
+/**
+ * @brief Select appropriate PMPCFG list based on architecture and PMP entry count
+ *
+ * This macro defines the complete PMPCFG list according to:
+ * - RISC-V architecture (RV32/RV64)
+ * - Number of PMP entries (__PMP_ENTRY_NUM)
+ *
+ * @note Valid indices depend on configuration:
+ * - RV32:
+ *   - <=32 entries: indices 0-7
+ *   - <=64 entries: indices 0-15
+ * - RV64:
+ *   - <=32 entries: indices 0,2,4,6
+ *   - <=64 entries: indices 0,2,4,6,8,10,12,14
+ */
+#if __RISCV_XLEN == 32
+    #if __PMP_ENTRY_NUM <= 32
+        #define PMPCFG_LIST PMPCFG_LIST_RV32_0_7
+    #elif __PMP_ENTRY_NUM <= 64
+        #define PMPCFG_LIST PMPCFG_LIST_RV32_0_7 PMPCFG_LIST_RV32_8_15
+    #else
+        #error "Unsupported PMP_ENTRY_NUM value for RV32"
+    #endif
+#elif __RISCV_XLEN == 64
+    #if __PMP_ENTRY_NUM <= 32
+        #define PMPCFG_LIST PMPCFG_LIST_RV64_0_6
+    #elif __PMP_ENTRY_NUM <= 64
+        #define PMPCFG_LIST PMPCFG_LIST_RV64_0_6 PMPCFG_LIST_RV64_8_14
+    #else
+        #error "Unsupported PMP_ENTRY_NUM value for RV64"
+    #endif
+#else
+    #error "Unsupported RISC-V architecture"
+#endif
+
+/**
+ * @brief   Get PMPCFGx Register by CSR index
+ * @details Return the content of the PMPCFGx Register.
+ * @param [in]    csr_idx    PMPCFG CSR index (0-15 for RV32, 0,2,4,6,8,10,12,14 for RV64)
+ * @return        PMPCFGx Register value
+ *
+ * @note Architecture-specific behavior:
+ * - RV32:
+ *   - Each register holds 4 PMP entries
+ *   - Valid indices: 0 to ceil(__PMP_ENTRY_NUM/4)-1
+ *   - 64 entries require indices 0-15
+ * - RV64:
+ *   - Each register holds 8 PMP entries
+ *   - Only even indices are valid
+ *   - 64 entries require indices 0,2,4,6,8,10,12,14
+ *
+ * @remark The function returns 0 for invalid indices to prevent illegal accesses.
  */
 __STATIC_INLINE rv_csr_t __get_PMPCFGx(uint32_t csr_idx)
 {
     switch (csr_idx) {
-        case 0: return __RV_CSR_READ(CSR_PMPCFG0);
-        case 1: return __RV_CSR_READ(CSR_PMPCFG1);
-        case 2: return __RV_CSR_READ(CSR_PMPCFG2);
-        case 3: return __RV_CSR_READ(CSR_PMPCFG3);
+    #define X(n) case n: return __RV_CSR_READ(CSR_PMPCFG##n);
+        PMPCFG_LIST
+    #undef X
         default: return 0;
     }
 }
 
 /**
- * \brief   Set PMPCFGx by csr index
- * \details Write the given value to the PMPCFGx Register.
- * \param [in]    csr_idx      PMPCFG CSR index(0-3)
- * \param [in]    pmpcfg       PMPCFGx Register value to set
- * \remark
- * - For RV64, only csr_idx = 0 and csr_idx = 2 is allowed.
- *   pmpcfg0 and pmpcfg2 hold the configurations
- *   for the 16 PMP entries, pmpcfg1 and pmpcfg3 are illegal
- * - For RV32, pmpcfg0–pmpcfg3, hold the configurations
- *   pmp0cfg–pmp15cfg for the 16 PMP entries
+ * @brief   Set PMPCFGx by CSR index
+ * @details Write the given value to the PMPCFGx Register.
+ * @param [in]    csr_idx    PMPCFG CSR index (0-15 for RV32, 0,2,4,6,8,10,12,14 for RV64)
+ * @param [in]    pmpcfg     PMPCFGx Register value to set
+ *
+ * @note Architecture-specific behavior:
+ * - RV32:
+ *   - Each register holds 4 PMP entries
+ *   - Valid indices: 0 to ceil(__PMP_ENTRY_NUM/4)-1
+ *   - 64 entries require indices 0-15
+ * - RV64:
+ *   - Each register holds 8 PMP entries
+ *   - Only even indices are valid
+ *   - 64 entries require indices 0,2,4,6,8,10,12,14
+ *
+ * @remark The function does nothing for invalid indices to prevent illegal accesses.
  */
 __STATIC_INLINE void __set_PMPCFGx(uint32_t csr_idx, rv_csr_t pmpcfg)
 {
     switch (csr_idx) {
-        case 0: __RV_CSR_WRITE(CSR_PMPCFG0, pmpcfg); break;
-        case 1: __RV_CSR_WRITE(CSR_PMPCFG1, pmpcfg); break;
-        case 2: __RV_CSR_WRITE(CSR_PMPCFG2, pmpcfg); break;
-        case 3: __RV_CSR_WRITE(CSR_PMPCFG3, pmpcfg); break;
+    #define X(n) case n: __RV_CSR_WRITE(CSR_PMPCFG##n, pmpcfg); break;
+        PMPCFG_LIST
+    #undef X
         default: return;
     }
 }
@@ -123,7 +204,7 @@ __STATIC_INLINE void __set_PMPCFGx(uint32_t csr_idx, rv_csr_t pmpcfg)
 /**
  * \brief   Get 8bit PMPxCFG Register by PMP entry index
  * \details Return the content of the PMPxCFG Register.
- * \param [in]    entry_idx    PMP region index(0-15)
+ * \param [in]    entry_idx    PMP region index(0-63)
  * \return               PMPxCFG Register value
  */
 __STATIC_INLINE uint8_t __get_PMPxCFG(uint32_t entry_idx)
@@ -140,7 +221,8 @@ __STATIC_INLINE uint8_t __get_PMPxCFG(uint32_t entry_idx)
     csr_idx = entry_idx >> 2;
 #elif __RISCV_XLEN == 64
     csr_cfg_num = 8;
-    /* For RV64, pmpcfg0 and pmpcfg2 each hold 8 PMP entries, align by 2 */
+    /* For RV64, each PMPCFG register (pmpcfg0, pmpcfg2, etc.) holds 8 PMP entries */
+    /* Only even-numbered CSRs are used, so we align the index by clearing the LSB */
     csr_idx = (entry_idx >> 2) & ~1;
 #else
     // TODO Add RV128 Handling
@@ -160,7 +242,7 @@ __STATIC_INLINE uint8_t __get_PMPxCFG(uint32_t entry_idx)
 /**
  * \brief   Set 8bit PMPxCFG by pmp entry index
  * \details Set the given pmpxcfg value to the PMPxCFG Register.
- * \param [in]    entry_idx      PMPx region index(0-15)
+ * \param [in]    entry_idx      PMPx region index(0-63)
  * \param [in]    pmpxcfg  PMPxCFG register value to set
  * \remark
  * - For RV32, 4 pmpxcfgs are densely packed into one CSR in order
@@ -198,30 +280,69 @@ __STATIC_INLINE void __set_PMPxCFG(uint32_t entry_idx, uint8_t pmpxcfg)
 }
 
 /**
+ * @brief Base PMPADDR list (indices 0-7)
+ */
+#define PMPADDR_LIST_BASE \
+    X(0) X(1) X(2) X(3) X(4) X(5) X(6) X(7)
+
+/**
+ * @brief Extended PMPADDR list (indices 8-15)
+ */
+#define PMPADDR_LIST_8_15 \
+    X(8) X(9) X(10) X(11) X(12) X(13) X(14) X(15)
+
+/**
+ * @brief Extended PMPADDR list (indices 16-31)
+ */
+#define PMPADDR_LIST_16_31 \
+    X(16) X(17) X(18) X(19) X(20) X(21) X(22) X(23) \
+    X(24) X(25) X(26) X(27) X(28) X(29) X(30) X(31)
+
+/**
+ * @brief Extended PMPADDR list (indices 32-63)
+ */
+#define PMPADDR_LIST_32_63 \
+    X(32) X(33) X(34) X(35) X(36) X(37) X(38) X(39) \
+    X(40) X(41) X(42) X(43) X(44) X(45) X(46) X(47) \
+    X(48) X(49) X(50) X(51) X(52) X(53) X(54) X(55) \
+    X(56) X(57) X(58) X(59) X(60) X(61) X(62) X(63)
+
+/**
+ * @brief Select appropriate PMPADDR list based on PMP_ENTRY_NUM
+ *
+ * This macro defines the complete PMPADDR list by combining base and
+ * extended lists according to the configured number of PMP entries.
+ *
+ * @note The actual list is determined by the __PMP_ENTRY_NUM configuration:
+ * - <=8: Only base list (0-7)
+ * - <=16: Base + 8-15
+ * - <=32: Base + 8-15 + 16-31
+ * - <=64: Base + 8-15 + 16-31 + 32-63
+ */
+#if __PMP_ENTRY_NUM <= 8
+#define PMPADDR_LIST PMPADDR_LIST_BASE
+#elif __PMP_ENTRY_NUM <= 16
+#define PMPADDR_LIST PMPADDR_LIST_BASE PMPADDR_LIST_8_15
+#elif __PMP_ENTRY_NUM <= 32
+#define PMPADDR_LIST PMPADDR_LIST_BASE PMPADDR_LIST_8_15 PMPADDR_LIST_16_31
+#elif __PMP_ENTRY_NUM <= 64
+#define PMPADDR_LIST PMPADDR_LIST_BASE PMPADDR_LIST_8_15 PMPADDR_LIST_16_31 PMPADDR_LIST_32_63
+#else
+#error "Unsupported PMP_ENTRY_NUM value"
+#endif
+
+/**
  * \brief   Get PMPADDRx Register by CSR index
  * \details Return the content of the PMPADDRx Register.
- * \param [in]    csr_idx    PMP region CSR index(0-15)
+ * \param [in]    csr_idx    PMP region CSR index(0-63)
  * \return        PMPADDRx Register value
  */
 __STATIC_INLINE rv_csr_t __get_PMPADDRx(uint32_t csr_idx)
 {
     switch (csr_idx) {
-        case 0: return __RV_CSR_READ(CSR_PMPADDR0);
-        case 1: return __RV_CSR_READ(CSR_PMPADDR1);
-        case 2: return __RV_CSR_READ(CSR_PMPADDR2);
-        case 3: return __RV_CSR_READ(CSR_PMPADDR3);
-        case 4: return __RV_CSR_READ(CSR_PMPADDR4);
-        case 5: return __RV_CSR_READ(CSR_PMPADDR5);
-        case 6: return __RV_CSR_READ(CSR_PMPADDR6);
-        case 7: return __RV_CSR_READ(CSR_PMPADDR7);
-        case 8: return __RV_CSR_READ(CSR_PMPADDR8);
-        case 9: return __RV_CSR_READ(CSR_PMPADDR9);
-        case 10: return __RV_CSR_READ(CSR_PMPADDR10);
-        case 11: return __RV_CSR_READ(CSR_PMPADDR11);
-        case 12: return __RV_CSR_READ(CSR_PMPADDR12);
-        case 13: return __RV_CSR_READ(CSR_PMPADDR13);
-        case 14: return __RV_CSR_READ(CSR_PMPADDR14);
-        case 15: return __RV_CSR_READ(CSR_PMPADDR15);
+    #define X(n) case n: return __RV_CSR_READ(CSR_PMPADDR##n);
+        PMPADDR_LIST
+    #undef X
         default: return 0;
     }
 }
@@ -229,28 +350,15 @@ __STATIC_INLINE rv_csr_t __get_PMPADDRx(uint32_t csr_idx)
 /**
  * \brief   Set PMPADDRx by CSR index
  * \details Write the given value to the PMPADDRx Register.
- * \param [in]    csr_idx  PMP region CSR index(0-15)
+ * \param [in]    csr_idx  PMP region CSR index(0-63)
  * \param [in]    pmpaddr  PMPADDRx Register value to set
  */
 __STATIC_INLINE void __set_PMPADDRx(uint32_t csr_idx, rv_csr_t pmpaddr)
 {
     switch (csr_idx) {
-        case 0: __RV_CSR_WRITE(CSR_PMPADDR0, pmpaddr); break;
-        case 1: __RV_CSR_WRITE(CSR_PMPADDR1, pmpaddr); break;
-        case 2: __RV_CSR_WRITE(CSR_PMPADDR2, pmpaddr); break;
-        case 3: __RV_CSR_WRITE(CSR_PMPADDR3, pmpaddr); break;
-        case 4: __RV_CSR_WRITE(CSR_PMPADDR4, pmpaddr); break;
-        case 5: __RV_CSR_WRITE(CSR_PMPADDR5, pmpaddr); break;
-        case 6: __RV_CSR_WRITE(CSR_PMPADDR6, pmpaddr); break;
-        case 7: __RV_CSR_WRITE(CSR_PMPADDR7, pmpaddr); break;
-        case 8: __RV_CSR_WRITE(CSR_PMPADDR8, pmpaddr); break;
-        case 9: __RV_CSR_WRITE(CSR_PMPADDR9, pmpaddr); break;
-        case 10: __RV_CSR_WRITE(CSR_PMPADDR10, pmpaddr); break;
-        case 11: __RV_CSR_WRITE(CSR_PMPADDR11, pmpaddr); break;
-        case 12: __RV_CSR_WRITE(CSR_PMPADDR12, pmpaddr); break;
-        case 13: __RV_CSR_WRITE(CSR_PMPADDR13, pmpaddr); break;
-        case 14: __RV_CSR_WRITE(CSR_PMPADDR14, pmpaddr); break;
-        case 15: __RV_CSR_WRITE(CSR_PMPADDR15, pmpaddr); break;
+    #define X(n) case n: __RV_CSR_WRITE(CSR_PMPADDR##n, pmpaddr); break;
+        PMPADDR_LIST
+    #undef X
         default: return;
     }
 }
@@ -258,7 +366,7 @@ __STATIC_INLINE void __set_PMPADDRx(uint32_t csr_idx, rv_csr_t pmpaddr)
 /**
  * \brief   Set PMP entry by entry idx
  * \details Write the given value to the PMPxCFG Register and PMPADDRx.
- * \param [in]    entry_idx    PMP entry index(0-15)
+ * \param [in]    entry_idx    PMP entry index(0-63)
  * \param [in]    pmp_cfg      structure of L, X, W, R field of PMP configuration register, memory region base address
  *                and size of memory region as power of 2
  * \remark
@@ -319,7 +427,7 @@ __STATIC_INLINE void __set_PMPENTRYx(uint32_t entry_idx, const pmp_config *pmp_c
 /**
  * \brief   Get PMP entry by entry idx
  * \details Write the given value to the PMPxCFG Register and PMPADDRx.
- * \param [in]     entry_idx     PMP entry index(0-15)
+ * \param [in]     entry_idx     PMP entry index(0-63)
  * \param [out]    pmp_cfg       structure of L, X, W, R, A field of PMP configuration register, memory region base
  *                 address and size of memory region as power of 2
  * \return  -1 failure, else 0 success
@@ -344,7 +452,7 @@ __STATIC_INLINE int __get_PMPENTRYx(unsigned int entry_idx, pmp_config *pmp_cfg)
     csr_cfg_num = 8;
     cfg_csr_idx = (entry_idx>> 2) & ~1;
 #else
-// TODO Add RV128 Handling
+    // TODO Add RV128 Handling
     return -1;
 #endif
 
