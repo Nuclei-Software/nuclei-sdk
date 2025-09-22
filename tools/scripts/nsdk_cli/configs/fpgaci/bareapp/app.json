@@ -114,6 +114,12 @@
                 "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "[ERROR]__TEE_PRESENT"]
             }
         },
+        "application/baremetal/demo_eclic_umode": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[SUCCESS] Test M-mode drop to U-mode passed", "not present"]
+            }
+        },
         "application/baremetal/demo_spmp": {
             "build_config" : {},
             "checks": {
