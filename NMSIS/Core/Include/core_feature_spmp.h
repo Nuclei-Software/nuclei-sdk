@@ -97,8 +97,10 @@ __STATIC_INLINE rv_csr_t __get_sPMPCFGx(uint32_t csr_idx)
     switch (csr_idx) {
         case 0: return __RV_CSR_READ(CSR_SPMPCFG0);
         case 1: return __RV_CSR_READ(CSR_SPMPCFG1);
+#if __SPMP_ENTRY_NUM > 8
         case 2: return __RV_CSR_READ(CSR_SPMPCFG2);
         case 3: return __RV_CSR_READ(CSR_SPMPCFG3);
+#endif
         default: return 0;
     }
 }
@@ -120,8 +122,10 @@ __STATIC_INLINE void __set_sPMPCFGx(uint32_t csr_idx, rv_csr_t spmpcfg)
     switch (csr_idx) {
         case 0: __RV_CSR_WRITE(CSR_SPMPCFG0, spmpcfg); break;
         case 1: __RV_CSR_WRITE(CSR_SPMPCFG1, spmpcfg); break;
+#if __SPMP_ENTRY_NUM > 8
         case 2: __RV_CSR_WRITE(CSR_SPMPCFG2, spmpcfg); break;
         case 3: __RV_CSR_WRITE(CSR_SPMPCFG3, spmpcfg); break;
+#endif
         default: return;
     }
 }
@@ -220,6 +224,7 @@ __STATIC_INLINE rv_csr_t __get_sPMPADDRx(uint32_t csr_idx)
         case 5: return __RV_CSR_READ(CSR_SPMPADDR5);
         case 6: return __RV_CSR_READ(CSR_SPMPADDR6);
         case 7: return __RV_CSR_READ(CSR_SPMPADDR7);
+#if __SPMP_ENTRY_NUM > 8
         case 8: return __RV_CSR_READ(CSR_SPMPADDR8);
         case 9: return __RV_CSR_READ(CSR_SPMPADDR9);
         case 10: return __RV_CSR_READ(CSR_SPMPADDR10);
@@ -228,6 +233,7 @@ __STATIC_INLINE rv_csr_t __get_sPMPADDRx(uint32_t csr_idx)
         case 13: return __RV_CSR_READ(CSR_SPMPADDR13);
         case 14: return __RV_CSR_READ(CSR_SPMPADDR14);
         case 15: return __RV_CSR_READ(CSR_SPMPADDR15);
+#endif
         default: return 0;
     }
 }
@@ -249,6 +255,7 @@ __STATIC_INLINE void __set_sPMPADDRx(uint32_t csr_idx, rv_csr_t spmpaddr)
         case 5: __RV_CSR_WRITE(CSR_SPMPADDR5, spmpaddr); break;
         case 6: __RV_CSR_WRITE(CSR_SPMPADDR6, spmpaddr); break;
         case 7: __RV_CSR_WRITE(CSR_SPMPADDR7, spmpaddr); break;
+#if __SPMP_ENTRY_NUM > 8
         case 8: __RV_CSR_WRITE(CSR_SPMPADDR8, spmpaddr); break;
         case 9: __RV_CSR_WRITE(CSR_SPMPADDR9, spmpaddr); break;
         case 10: __RV_CSR_WRITE(CSR_SPMPADDR10, spmpaddr); break;
@@ -257,6 +264,7 @@ __STATIC_INLINE void __set_sPMPADDRx(uint32_t csr_idx, rv_csr_t spmpaddr)
         case 13: __RV_CSR_WRITE(CSR_SPMPADDR13, spmpaddr); break;
         case 14: __RV_CSR_WRITE(CSR_SPMPADDR14, spmpaddr); break;
         case 15: __RV_CSR_WRITE(CSR_SPMPADDR15, spmpaddr); break;
+#endif
         default: return;
     }
 }
