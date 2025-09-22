@@ -2107,7 +2107,7 @@ __STATIC_FORCEINLINE uint32_t __LW(volatile void *addr)
     return result;
 }
 
-#if __RISCV_XLEN != 32
+#if (__RISCV_XLEN != 32) || defined(__riscv_zilsd)
 /**
  * \brief  Load 64bit value from address (64 bit)
  * \details Load 64 bit value.
@@ -2156,7 +2156,7 @@ __STATIC_FORCEINLINE void __SW(volatile void *addr, uint32_t val)
     __ASM volatile ("sw %0, 0(%1)" : : "r" (val), "r" (addr));
 }
 
-#if __RISCV_XLEN != 32
+#if (__RISCV_XLEN != 32) || defined(__riscv_zilsd)
 /**
  * \brief  Write 64bit value to address (64 bit)
  * \details Write 64 bit value.
