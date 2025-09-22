@@ -65,9 +65,39 @@ static __attribute__((aligned(0x1000))) void user_mode_entry_point(void)
     }
 }
 
+void illegal_instruction_handler(unsigned long mcause, unsigned long sp)
+{
+    // Check whether PMP is present via illegal instruction check
+    printf("PMP is not present, will not run this example\r\n");
+#ifdef CFG_SIMULATION
+    // directly exit if in nuclei internally simulation
+    SIMULATION_EXIT(0);
+#endif
+    while (1);
+}
+
 int main(int argc, char** argv)
 {
     int32_t returnCode;
+    CSR_MCFGINFO_Type mcfg_info;
+    CSR_MISA_Type misa;
+
+    misa.d = __RV_CSR_READ(CSR_MISA);
+    mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+
+    if (mcfg_info.b.clic == 0) {
+        printf("ECLIC is not present, will not run this example!\r\n");
+        return 0;
+    }
+
+    if (misa.b.u == 0) {
+        printf("U-Mode is not present, will not run this example!\r\n");
+        return 0;
+    }
+
+    // Register illegal instruction handler to check whether PMP present
+    // If not present, configure PMP CSR will cause illegal instruction exception
+    Exception_Register_EXC(IlleIns_EXCn, (unsigned long)illegal_instruction_handler);
 
     pmp_config pmp_cfg = {
         /* M mode grants S and U mode with full permission of the whole address range */
@@ -80,10 +110,7 @@ int main(int argc, char** argv)
     __set_PMPENTRYx(0, &pmp_cfg);
 
 #if defined(__SMPU_PRESENT) && (__SMPU_PRESENT == 1)
-    unsigned long mcfg_info;
-    mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
-
-    if (mcfg_info & MCFG_INFO_TEE) {
+    if (mcfg_info.b.tee == 1) {
         printf("Configure SMPU due to TEE Present\r\n");
         /* Configuration of execution region*/
         smpu_config smpu_config = {
@@ -101,6 +128,9 @@ int main(int argc, char** argv)
         __set_SMPUSWITCHx(0x1);
     }
 #endif
+
+    // Restore illegal instruction handler as NULL which will go to default exception handler
+    Exception_Register_EXC(IlleIns_EXCn, (unsigned long)NULL);
 
     // initialize timer
     setup_timer();
