@@ -8,15 +8,27 @@ V0.9.0-dev
 
 This is release version of ``0.9.0`` of Nuclei SDK, which is still under development.
 
+* NMSIS
+
+  - Change ``core_feature_pmp.h`` to support more PMP entries, changed from 16 to 64 now
+  - Enable __LD/__SD macro when Zilsd extension present for rv32 in ``core_feature_base.h``
+  - Add comments for updating ECLIC threshold MTH setting recommendations in ``core_feature_eclic.h``
+
+
 * Application
 
   - Add new application :ref:`design_app_demo_eclic_umode` to show how to use U-Mode with ECLIC running in M-Mode
+  - For FreeRTOS demo/smpdemo, now default use MSTATUS.MIE to do interrupt masking since default ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` set to 255
 
 * OS
 
   - Bugfix for FreeRTOS/UCOSII/RT-Thread/ThreadX task stack sp alignment to match 16 bytes
     alignment requirement, see https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/301374e92976e298e676e7129a6212926b2299ce/riscv-cc.adoc?plain=1#L245-L259
   - Bugfix and optimize FreeRTOS SMP spinlock implementation
+  - Bugfix for FreeRTOS interrupt masking related API implementation when using ECLIC MTH, when set MTH, we need to disable interrupt and then set MTH,
+    and then do fence, then enable interrupt
+  - Add new interrupt masking feature for FreeRTOS porting, when ``configMAX_SYSCALL_INTERRUPT_PRIORITY >= 255``, it will use MSTATUS.MIE to do interrupt masking
+  - Bugfix for UCOSII interrupt masking related API implementation, now optimize the implementation to use MSTATUS.MIE only to do interrupt masking
 
 * Build System
 
@@ -25,10 +37,15 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
 * SoC
 
   - Only enable/disable L2 cache enable bit during pre-main initialization
+  - Limit sPMP/sMPU entry numbers to 16 event PMP entries are 64 for evalsoc to match Nuclei CPU design
 
 * Documentation
 
   - Fix typo ``reuqests`` to ``requires`` in ``app.rst``
+
+* Tools
+
+  - Add ``demo_eclic_umode`` nsdk_cli run configuration for daily ci running
 
 V0.8.1
 ------
