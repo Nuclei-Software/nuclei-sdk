@@ -14,7 +14,6 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Enable __LD/__SD macro when Zilsd extension present for rv32 in ``core_feature_base.h``
   - Add comments for updating ECLIC threshold MTH setting recommendations in ``core_feature_eclic.h``
 
-
 * Application
 
   - Add new application :ref:`design_app_demo_eclic_umode` to show how to use U-Mode with ECLIC running in M-Mode
@@ -42,6 +41,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
 * Documentation
 
   - Fix typo ``reuqests`` to ``requires`` in ``app.rst``
+  - Update ``rtos.rst`` to mention about recent bugfix for RTOS porting, and other RTOSes supported but not in Nuclei SDK
 
 * Tools
 

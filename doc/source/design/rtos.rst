@@ -9,7 +9,7 @@ Overview
 --------
 
 In Nuclei SDK, we have support four most-used RTOSes in the world,
-**FreeRTOS**, **UCOSII**, **ThreadX** and **RT-Thread from China**.
+**FreeRTOS**, **UCOSII**, **ThreadX** and **RT-Thread Nano**.
 
 Our RTOS port require Nuclei ECLIC interrupt controller, please make sure
 your Nuclei CPU is configured with ECLIC present.
@@ -19,9 +19,11 @@ of the supported RTOSes.
 
 .. note::
 
-    When you want to develop RTOS application in Nuclei SDK, please
-    don't reconfigure ``SysTimer`` and ``SysTimer Software Interrupt``,
-    since it is already used by RTOS portable code.
+    - From 0.9.0, we have fixed task stack alignment to match psABI requirement,
+      please see changes happened in ``RTOS`` folder in git repo.
+    - When you want to develop RTOS application in Nuclei SDK, please
+      don't reconfigure ``SysTimer`` and ``SysTimer Software Interrupt``,
+      since it is already used by RTOS portable code.
 
 .. _design_rtos_freertos:
 
@@ -44,7 +46,7 @@ In our FreeRTOS porting, we also allow FreeRTOS configuration variable
 The ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` should be set to be a
 absolute interrupt level range from 1 to (2^lvlbits-1) while ``lvlbits = min(nlbits, CLICINTCTLBITS)``.
 
-If you set configMAX_SYSCALL_INTERRUPT_PRIORITY to value above the accepted
+If you set ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` to value above the accepted
 value range, it will use the max value.
 
 If you want to learn about how to use FreeRTOS APIs, you need to go to
@@ -70,6 +72,8 @@ for details, please check ``OS/FreeRTOS/build.mk``.
 
 .. note::
 
+    * From 0.9.0, when ``configMAX_SYSCALL_INTERRUPT_PRIORITY >= 255``, the FreeRTOS interrupt masking will
+      use MSTATUS.MIE to disable/enable interrupts, otherwise it will use ECLIC MTH as before.
     * You can check the ``application\freertos\`` for freertos application reference
     * From Nuclei SDK 0.6.0, we introduced FreeRTOS SMP support, both Nuclei RV32 and RV64 processors are supported.
     * Current version of FreeRTOS used in Nuclei SDK is ``V11.1.0``
@@ -106,6 +110,8 @@ And in your application code, you need to do the following things:
 
 .. note::
 
+    * From 0.9.0, we have fixed UCOS-II interrupt masking to use MSTATUS.MIE only,
+      no longer mess up with ECLIC MTH.
     * You can check the ``application\ucosii\`` for ucosii application reference
     * The UCOS-II application configuration template files can also be found in
       https://github.com/SiliconLabs/uC-OS2/tree/master/Cfg/Template
@@ -208,6 +214,19 @@ And in your application code, you need to do the following things:
     * ThreadX itself doesn't have a idle task, see https://github.com/eclipse-threadx/threadx/blob/acf2e57606361f3fa95cc5f9bf8c0370f2c4b898/utility/rtos_compatibility_layers/FreeRTOS/readme.md?plain=1#L113-L114
     * You can check the ``application\threadx\`` for threadx application reference
     * Currently we only support single core version, the SMP version is not yet supported.
+
+.. _design_rtos_others:
+
+Others
+------
+
+We also support other RTOSes, but not maintained in Nuclei SDK, please see following links:
+
+- **OpenHarmony LiteOS-M**: https://github.com/riscv-mcu/kernel_liteos_m/tree/nuclei/OpenHarmony-3.0-LTS/targets/riscv_nuclei_evalsoc_gcc
+- **RT-Thread**: https://github.com/riscv-mcu/rt-thread/issues/1
+- **Nuttx variants such Appache NuttX, Xiaomi Vela, LiAuto HaloOS**: https://github.com/riscv-mcu/nuttx/tree/nuclei_trunk/Documentation/platforms/risc-v/nuclei-evalsoc/boards/nuclei-fpga-eval
+- **Zephyr RTOS**: https://github.com/riscv-mcu/zephyr/blob/nuclei/4.1-branch/boards/nuclei/fpga_eval/doc/index.rst
+- **Little Kernel**: https://github.com/littlekernel/lk/pull/281
 
 .. _FreeRTOS: https://www.freertos.org/
 .. _UCOSII: https://www.micrium.com/
