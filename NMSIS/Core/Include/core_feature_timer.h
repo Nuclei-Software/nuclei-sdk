@@ -70,7 +70,7 @@ typedef struct {
 #define SysTimer_MTIMECTL_CMPCLREN_Msk      (1UL << SysTimer_MTIMECTL_CMPCLREN_Pos)     /*!< SysTick Timer MTIMECTL: CMPCLREN Mask */
 #define SysTimer_MTIMECTL_CLKSRC_Pos        2U                                          /*!< SysTick Timer MTIMECTL: CLKSRC bit Position */
 #define SysTimer_MTIMECTL_CLKSRC_Msk        (1UL << SysTimer_MTIMECTL_CLKSRC_Pos)       /*!< SysTick Timer MTIMECTL: CLKSRC Mask */
-#define SysTimer_MTIMECTL_HDBG_Pos          4U                                          /*!< SysTick Timer MTIMECTL: HDBG bit Position */
+#define SysTimer_MTIMECTL_HDBG_Pos          3U                                          /*!< SysTick Timer MTIMECTL: HDBG bit Position */
 #define SysTimer_MTIMECTL_HDBG_Msk          (1UL << SysTimer_MTIMECTL_HDBG_Pos)         /*!< SysTick Timer MTIMECTL: HDBG Mask */
 
 

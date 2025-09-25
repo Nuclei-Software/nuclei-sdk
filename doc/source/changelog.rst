@@ -13,6 +13,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Change ``core_feature_pmp.h`` to support more PMP entries, changed from 16 to 64 now
   - Enable __LD/__SD macro when Zilsd extension present for rv32 in ``core_feature_base.h``
   - Add comments for updating ECLIC threshold MTH setting recommendations in ``core_feature_eclic.h``
+  - Fix **HDBG** bit position in SysTimer **MTIMECTL** from 4 to 3 in ``core_feature_timer.h``
 
 * Application
 
