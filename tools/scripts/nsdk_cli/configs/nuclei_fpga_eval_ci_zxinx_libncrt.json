@@ -1,0 +1,145 @@
+{
+    "run_config": {
+        "target" : "qemu",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 240
+        },
+        "qemu" : {
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "evalsoc",
+        "BOARD": "nuclei_fpga_eval",
+        "STDCLIB": "libncrt_small"
+    },
+    "build_configs": {
+        "rv32emc_zfinx-sram": {
+            "DOWNLOAD": "sram",
+            "CORE": "n200e",
+            "RISCV_ARCH": "rv32emc_zfinx",
+            "RISCV_ABI": "ilp32e",
+            "ARCH_EXT": "_zfinx"
+        },
+        "rv32emc_zdinx-ilm": {
+            "DOWNLOAD": "ilm",
+            "CORE": "n200e",
+            "RISCV_ARCH": "rv32emc_zdinx",
+            "RISCV_ABI": "ilp32e",
+            "ARCH_EXT": "_zfinx_zdinx"
+        },
+        "rv32emac_zfinx-flash": {
+            "DOWNLOAD": "flash",
+            "CORE": "n203e",
+            "RISCV_ARCH": "rv32emac_zfinx",
+            "RISCV_ABI": "ilp32e",
+            "ARCH_EXT": "_zfinx"
+        },
+        "rv32emac_zdinx-sram": {
+            "DOWNLOAD": "sram",
+            "CORE": "n203e",
+            "RISCV_ARCH": "rv32emac_zdinx",
+            "RISCV_ABI": "ilp32e",
+            "ARCH_EXT": "_zfinx_zdinx"
+        },
+        "rv32imc_zfinx-sram": {
+            "DOWNLOAD": "sram",
+            "CORE": "n200",
+            "RISCV_ARCH": "rv32imc_zfinx",
+            "RISCV_ABI": "ilp32",
+            "ARCH_EXT": "_zfinx"
+        },
+        "rv32imc_zdinx-flashxip": {
+            "DOWNLOAD": "flashxip",
+            "CORE": "n200",
+            "RISCV_ARCH": "rv32imc_zdinx",
+            "RISCV_ABI": "ilp32",
+            "ARCH_EXT": "_zfinx_zdinx"
+        },
+        "rv32em_zfinx_zca_zcb_zcmp-sram": {
+            "DOWNLOAD": "sram",
+            "CORE": "n200e",
+            "RISCV_ARCH": "rv32em_zfinx_zca_zcb_zcmp",
+            "RISCV_ABI": "ilp32e",
+            "ARCH_EXT": "_zfinx_zca_zcb_zcmp"
+        },
+        "rv32em_zdinx_zca_zcb_zcmp-ilm": {
+            "DOWNLOAD": "ilm",
+            "CORE": "n200e",
+            "RISCV_ARCH": "rv32em_zdinx_zca_zcb_zcmp",
+            "RISCV_ABI": "ilp32e",
+            "ARCH_EXT": "_zfinx_zdinx_zca_zcb_zcmp"
+        },
+        "rv32ema_zfinx_zca_zcb_zcmp-ilm": {
+            "DOWNLOAD": "ilm",
+            "CORE": "n203e",
+            "RISCV_ARCH": "rv32ema_zfinx_zca_zcb_zcmp",
+            "RISCV_ABI": "ilp32e",
+            "ARCH_EXT": "_zfinx_zca_zcb_zcmp"
+        },
+        "rv32ema_zdinx_zca_zcb_zcmp-flash": {
+            "DOWNLOAD": "flash",
+            "CORE": "n203e",
+            "RISCV_ARCH": "rv32ema_zdinx_zca_zcb_zcmp",
+            "RISCV_ABI": "ilp32e",
+            "ARCH_EXT": "_zfinx_zdinx_zca_zcb_zcmp"
+        },
+        "rv32im_zfinx_zca_zcb_zcmp-sram": {
+            "DOWNLOAD": "sram",
+            "CORE": "n200",
+            "RISCV_ARCH": "rv32im_zfinx_zca_zcb_zcmp",
+            "RISCV_ABI": "ilp32",
+            "ARCH_EXT": "_zfinx_zca_zcb_zcmp"
+        },
+        "rv32im_zdinx_zca_zcb_zcmp-flash": {
+            "DOWNLOAD": "flash",
+            "CORE": "n200",
+            "RISCV_ARCH": "rv32im_zdinx_zca_zcb_zcmp",
+            "RISCV_ABI": "ilp32",
+            "ARCH_EXT": "_zfinx_zdinx_zca_zcb_zcmp"
+        },
+        "rv32imac_zfinx-sram": {
+            "DOWNLOAD": "sram",
+            "CORE": "n300",
+            "RISCV_ARCH": "rv32imac_zfinx",
+            "RISCV_ABI": "ilp32",
+            "ARCH_EXT": "_zfinx"
+        },
+        "rv32imac_zdinx-sram": {
+            "DOWNLOAD": "sram",
+            "CORE": "n300",
+            "RISCV_ARCH": "rv32imac_zdinx",
+            "RISCV_ABI": "ilp32",
+            "ARCH_EXT": "_zfinx_zdinx"
+        },
+        "rv32ima_zfinx_zca_zcb_zcmp-flashxip": {
+            "DOWNLOAD": "flashxip",
+            "CORE": "n300",
+            "RISCV_ARCH": "rv32ima_zfinx_zca_zcb_zcmp",
+            "RISCV_ABI": "ilp32",
+            "ARCH_EXT": "_zfinx_zca_zcb_zcmp"
+        },
+        "rv32ima_zdinx_zca_zcb_zcmp-flash": {
+            "DOWNLOAD": "flash",
+            "CORE": "n300",
+            "RISCV_ARCH": "rv32ima_zdinx_zca_zcb_zcmp",
+            "RISCV_ABI": "ilp32",
+            "ARCH_EXT": "_zfinx_zdinx_zca_zcb_zcmp"
+        }
+    },
+    "appconfig": {
+    },
+    "expected": {
+        "application/baremetal/demo_nice" : {
+            "run": true,
+            "build": true
+        },
+        "application/baremetal/demo_dsp" : {
+            "run": false,
+            "build": false
+        }
+    }
+}

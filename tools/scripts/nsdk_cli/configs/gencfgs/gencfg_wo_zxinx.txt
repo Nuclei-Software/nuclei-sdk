@@ -1,0 +1,13 @@
+rv32emc/ilp32e
+rv32emac/ilp32e
+rv32em_zca_zcb_zcmp/ilp32e
+rv32ema_zca_zcb_zcmp/ilp32e
+rv32imac/ilp32
+rv32imafc/ilp32f
+rv32imafdc/ilp32d
+rv32ima_zca_zcb_zcmp/ilp32
+rv32imaf_zca_zcb_zcf_zcmp/ilp32f
+rv32imafd_zca_zcb_zcf_zcmp/ilp32d
+rv64imac/lp64
+rv64imafc/lp64f
+rv64imafdc/lp64d
