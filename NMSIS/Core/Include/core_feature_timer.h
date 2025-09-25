@@ -72,13 +72,17 @@ typedef struct {
 #define SysTimer_MTIMECTL_CLKSRC_Msk        (1UL << SysTimer_MTIMECTL_CLKSRC_Pos)       /*!< SysTick Timer MTIMECTL: CLKSRC Mask */
 #define SysTimer_MTIMECTL_HDBG_Pos          3U                                          /*!< SysTick Timer MTIMECTL: HDBG bit Position */
 #define SysTimer_MTIMECTL_HDBG_Msk          (1UL << SysTimer_MTIMECTL_HDBG_Pos)         /*!< SysTick Timer MTIMECTL: HDBG Mask */
-
+#define SysTimer_MTIMECTL_MTIME_SRC_Pos     4U                                          /*!< SysTick Timer MTIMECTL: MTIME_SRC bit Position */
+#define SysTimer_MTIMECTL_MTIME_SRC_Msk     (1UL << SysTimer_MTIMECTL_MTIME_SRC_Pos)    /*!< SysTick Timer MTIMECTL: MTIME_SRC Mask */
 
 #define SysTimer_MSIP_MSIP_Pos              0U                                          /*!< SysTick Timer MSIP: MSIP bit Position */
 #define SysTimer_MSIP_MSIP_Msk              (1UL << SysTimer_MSIP_MSIP_Pos)             /*!< SysTick Timer MSIP: MSIP Mask */
 
 #define SysTimer_SSIP_SSIP_Pos              0U                                          /*!< SysTick Timer SSIP: SSIP bit Position */
 #define SysTimer_SSIP_SSIP_Msk              (1UL << SysTimer_SSIP_SSIP_Pos)             /*!< SysTick Timer SSIP: SSIP Mask */
+
+#define SysTimer_MTIME_SRW_CTRL_SRW_Pos     0U                                          /*!< SysTick Timer MTIME_SRW_CTRL: SRW bit Position */
+#define SysTimer_MTIME_SRW_CTRL_SRW_Msk     (1UL << SysTimer_MTIME_SRW_CTRL_SRW_Pos)    /*!< SysTick Timer MTIME_SRW_CTRL: SRW Mask */
 
 #define SysTimer_MTIMER_Msk                 (0xFFFFFFFFFFFFFFFFULL)                     /*!< SysTick Timer MTIMER value Mask */
 #define SysTimer_MTIMERCMP_Msk              (0xFFFFFFFFFFFFFFFFULL)                     /*!< SysTick Timer MTIMERCMP value Mask */
@@ -791,7 +795,7 @@ __STATIC_FORCEINLINE void SysTimer_ClearIPI(unsigned long hartid)
  */
 __STATIC_FORCEINLINE void SysTimer_EnableSAccess(void)
 {
-    SysTimer->MTIME_SRW_CTRL = 0;
+    SysTimer->MTIME_SRW_CTRL &= ~SysTimer_MTIME_SRW_CTRL_SRW_Msk;
 }
 
 /**
@@ -802,7 +806,7 @@ __STATIC_FORCEINLINE void SysTimer_EnableSAccess(void)
  */
 __STATIC_FORCEINLINE void SysTimer_DisableSAccess(void)
 {
-    SysTimer->MTIME_SRW_CTRL = 1;
+    SysTimer->MTIME_SRW_CTRL |= SysTimer_MTIME_SRW_CTRL_SRW_Msk;
 }
 
 #if defined (__Vendor_SysTickConfig) && (__Vendor_SysTickConfig == 0U)
