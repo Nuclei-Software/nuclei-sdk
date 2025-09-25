@@ -111,17 +111,17 @@ __STATIC_INLINE long PMA_SetRegion(unsigned long entry_idx, pma_config *pma_cfg)
 
     switch (entry_idx) {
         // Bit[MXLEN-1:PA_SIZE] of mattri(n)_mask is reserved 0
-        case 0: __RV_CSR_WRITE(CSR_MATTRI0_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI0_BASE, base); break;
-        case 1: __RV_CSR_WRITE(CSR_MATTRI1_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI1_BASE, base); break;
-        case 2: __RV_CSR_WRITE(CSR_MATTRI2_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI2_BASE, base); break;
-        case 3: __RV_CSR_WRITE(CSR_MATTRI3_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI3_BASE, base); break;
-        case 4: __RV_CSR_WRITE(CSR_MATTRI4_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI4_BASE, base); break;
-        case 5: __RV_CSR_WRITE(CSR_MATTRI5_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI5_BASE, base); break;
-        case 6: __RV_CSR_WRITE(CSR_MATTRI6_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI6_BASE, base); break;
-        case 7: __RV_CSR_WRITE(CSR_MATTRI7_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI7_BASE, base); break;
+        case 0: __RV_CSR_WRITE(CSR_MATTRI0_BASE, 0); __RV_CSR_WRITE(CSR_MATTRI0_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI0_BASE, base); break;
+        case 1: __RV_CSR_WRITE(CSR_MATTRI1_BASE, 0); __RV_CSR_WRITE(CSR_MATTRI1_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI1_BASE, base); break;
+        case 2: __RV_CSR_WRITE(CSR_MATTRI2_BASE, 0); __RV_CSR_WRITE(CSR_MATTRI2_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI2_BASE, base); break;
+        case 3: __RV_CSR_WRITE(CSR_MATTRI3_BASE, 0); __RV_CSR_WRITE(CSR_MATTRI3_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI3_BASE, base); break;
+        case 4: __RV_CSR_WRITE(CSR_MATTRI4_BASE, 0); __RV_CSR_WRITE(CSR_MATTRI4_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI4_BASE, base); break;
+        case 5: __RV_CSR_WRITE(CSR_MATTRI5_BASE, 0); __RV_CSR_WRITE(CSR_MATTRI5_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI5_BASE, base); break;
+        case 6: __RV_CSR_WRITE(CSR_MATTRI6_BASE, 0); __RV_CSR_WRITE(CSR_MATTRI6_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI6_BASE, base); break;
+        case 7: __RV_CSR_WRITE(CSR_MATTRI7_BASE, 0); __RV_CSR_WRITE(CSR_MATTRI7_MASK, mask); __RV_CSR_WRITE(CSR_MATTRI7_BASE, base); break;
         default: return -1;
     }
-
+    __FENCE_I();
     return 0;
 }
 
