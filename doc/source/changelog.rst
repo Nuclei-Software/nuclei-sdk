@@ -49,6 +49,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
 * Tools
 
   - Add ``demo_eclic_umode`` nsdk_cli run configuration for daily ci running
+  - Support ``matrix`` field in ``appcfg`` or ``hwcfg`` for ``nsdk_bench.py``
 
 V0.8.1
 ------

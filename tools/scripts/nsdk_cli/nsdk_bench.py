@@ -257,6 +257,18 @@ if __name__ == '__main__':
     ret, hwcfg = load_json(args.hwcfg)
     # Merge appcfg and hwcfg, hwcfg has higher priority
     config = merge_config(appcfg, hwcfg)
+    # matrix merge into build_configs
+    bcfgs = config.get("build_configs", dict())
+    matrixcfgs = config.get("matrix", None)
+    if matrixcfgs is not None:
+        newcfgs = dict()
+        for bkey in bcfgs:
+            for key in matrixcfgs:
+                cfgkey = "%s-%s" % (bkey, key)
+                newcfgs[cfgkey] = merge_two_config(bcfgs[bkey], matrixcfgs[key])
+        if len(newcfgs) > 1:
+            bcfgs = newcfgs
+    config["build_configs"] = bcfgs
     if args.ncycm and os.path.isfile(args.ncycm) == False:
         print("ERROR: cycle model %s doesn't exist, please check!" % (args.ncycm))
         sys.exit(0)
