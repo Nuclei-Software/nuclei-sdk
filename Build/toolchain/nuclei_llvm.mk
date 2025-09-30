@@ -43,6 +43,8 @@ LDLIBS += -l$(patsubst lib%,%,$(STDCLIB))
 ifneq ($(NCRTHEAP),)
 LDLIBS += -lheapops_$(NCRTHEAP)
 endif
+# https://github.com/llvm/llvm-project/pull/82084/files#r2387373311
+COMMON_FLAGS += -isystem=/include/libncrt
 ###
 else ifeq ($(STDCLIB),nostd)
 ### Handle cases when no standard system directories for header files
