@@ -37,6 +37,8 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add new ``n300e`` CPU core support in build system and npk.yml for evalsoc
   - Add ``-isystem=/include/libncrt`` for nuclei llvm toolchain when using libncrt_xxx library, but ``-isystem=`` feature is not
     the same as gcc, see report here https://github.com/llvm/llvm-project/pull/82084#discussion_r2387373311, so when you use libncrt library with llvm toolchain, the header file could be wrongly included using newlib ones
+  - Recommend ``-fno-strict-aliasing`` as common compiler options should be passed, see :ref:`develop_buildsystem_var_common_flags``
+  - Must pass ``-fomit-frame-pointer`` when using ``Zc`` extension to generate push/pop instructions, see https://github.com/riscvarchive/riscv-code-size-reduction/issues/194
 
 * SoC
 

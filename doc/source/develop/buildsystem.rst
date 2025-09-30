@@ -841,6 +841,7 @@ Here are several examples when using **ARCH_EXT** for Nuclei RISC-V Processors:
   - If you want to use with n300fd/n900fd, you can pass **ARCH_EXT=_zca_zcb_zcf_zcmp_zcmt**
   - If you want to use with n300fd/n900fd without zcmp/zcmt, you can pass **ARCH_EXT=_zca_zcb_zcf_zcd**
   - If you want to use with extra Nuclei Code Size Reduction extension called Xxlcz, you can add extra ``_xxlcz`` in **ARCH_EXT**, eg. for n300, you can pass **ARCH_EXT=_zca_zcb_zcmp_zcmt_xxlcz**
+  - If you want to generate Zc related instructions especially the push/pop instructions, extra options ``-fomit-frame-pointer`` are required, for details please check https://github.com/riscvarchive/riscv-code-size-reduction/issues/194
 
 * When using customized extensions such as Xxldsp/Xxldspn1x/Xxldspn2x/Xxldspn3x/Xxlcz, the isa string must be placed after all ``_z`` started isa strings, here is an legal string such as ``rv32imafd_zca_zcb_zcf_zcmp_zcmt_zba_zbb_zbc_zbs_zk_zks_xxlcz_xxldspn3x`` for rv32 with imafd + Zc + B + K + Xxldspn3x + Xxlcz
 
@@ -1775,6 +1776,18 @@ in your application Makefile and these options will be passed to C/ASM/CPP compi
 
 This variable should be defined in Makefile.
 
+We recommend you to add ``-fno-strict-aliasing`` to avoid unmatched behavior in different optimization level such O0/O1
+is correct, but O2/O3/Ofast/Os not correct.
+
+You should use the ``-fno-strict-aliasing`` option when your code contains pointer type conversions
+(such as converting an int to a float to access data), processes binary data, uses unions for type conversion,
+or when you are unsure whether the code complies with the strict-aliasing rules.
+
+This option disables optimizations based on strict aliasing, preventing undefined behaviors caused by violations of the rules.
+It is particularly suitable for handling legacy code, third-party libraries, or applications where performance is not critical,
+ensuring that the code behaves consistently across different optimization levels.
+
+See gcc ``-fstrict-aliasing`` option documentation here https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-fstrict-aliasing
 
 .. _develop_buildsystem_var_cflags:
 
