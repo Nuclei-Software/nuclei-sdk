@@ -21,6 +21,7 @@ int main(void)
     memset(&csrs, 0, sizeof(csrs)); // clear the struct
 
     csrs.marchid.d = (uint32_t)__RV_CSR_READ(CSR_MARCHID);
+    csrs.mhartid = (uint32_t)__RV_CSR_READ(CSR_MHARTID);
     csrs.mimpid.d = (uint32_t)__RV_CSR_READ(CSR_MIMPID);
     csrs.misa.d = (uint32_t)__RV_CSR_READ(CSR_MISA);
     U32_CSR_MCFG_INFO_Type mcfg;

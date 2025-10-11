@@ -45,7 +45,7 @@
         }                                                                      \
     } while (0)
 
-#define BASIC_CPUINFO_FMT "Nuclei CPU Detected: marchid-0x%04x v%d.%d.%d, ISA: %s"
+#define BASIC_CPUINFO_FMT "Nuclei CPU Detected: mhartid-0x%x marchid-0x%04x v%d.%d.%d, ISA: %s"
 
 /** `BUF_SIZE` is the size of string buffer in `get_basic_cpuinfo`
  */
@@ -93,6 +93,7 @@ void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_CSR_Group *csrs)
 
     /* ID and version */
     CIF_PRINTF("         MARCHID: 0x%04x\r\n", csrs->marchid.d);
+    CIF_PRINTF("         MHARTID: 0x%x\r\n", csrs->mhartid);
     CIF_PRINTF("          MIMPID: 0x%06x\r\n", csrs->mimpid.d);
 
     /* ISA */
@@ -133,7 +134,7 @@ int get_basic_cpuinfo(const CPU_CSR_Group *csrs, char *str, unsigned long len)
     isa[pos] = '\0';
 
     if (!csrs->mcfg_exist) {
-        return snprintf(str, len, BASIC_CPUINFO_FMT, csrs->marchid.d,
+        return snprintf(str, len, BASIC_CPUINFO_FMT, csrs->mhartid, csrs->marchid.d,
                         csrs->mimpid.b.first_vernum, csrs->mimpid.b.mid_vernum,
                         csrs->mimpid.b.last_vernum, isa);
     }
@@ -189,7 +190,7 @@ int get_basic_cpuinfo(const CPU_CSR_Group *csrs, char *str, unsigned long len)
         buf[strlen(buf) - 2] = '\0';
     }
 
-    return snprintf(str, len, BASIC_CPUINFO_FMT ", Feature: %s",
+    return snprintf(str, len, BASIC_CPUINFO_FMT ", Feature: %s", csrs->mhartid,
                     csrs->marchid.d, csrs->mimpid.b.first_vernum,
                     csrs->mimpid.b.mid_vernum, csrs->mimpid.b.last_vernum, isa,
                     buf);

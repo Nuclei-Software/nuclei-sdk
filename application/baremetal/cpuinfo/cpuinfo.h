@@ -272,6 +272,7 @@ typedef struct {
  */
 typedef struct {
     U32_CSR_MARCHID_Type marchid;
+    uint32_t mhartid;
     U32_CSR_MIMPID_Type mimpid;
     U32_CSR_MISA_Type misa;
     uint32_t mcfg_exist;
