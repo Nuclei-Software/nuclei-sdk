@@ -3,6 +3,8 @@
  */
 #include "cpuinfo.h"
 
+#include <string.h>
+
 #define BIT(ofs) (0x1U << (ofs))
 #define EXTENSION_NUM (26)
 #define POW2(n) (1U << (n))
@@ -33,6 +35,24 @@
 #define SHOW_VALUE(reg, field)                                                 \
     CIF_PRINTF("                      %s=%u\r\n", #field, reg.b.field);
 
+#define STRCAT_BUF(buf, fmt, ...)                                              \
+    snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), fmt, ##__VA_ARGS__)
+
+#define CHECK_STRCAT_BUF(reg, field, buf, fmt, ...)                            \
+    do {                                                                       \
+        if (reg.b.field) {                                                     \
+            STRCAT_BUF(buf, fmt, ##__VA_ARGS__);                               \
+        }                                                                      \
+    } while (0)
+
+#define BASIC_CPUINFO_FMT "Nuclei CPU Detected: marchid-0x%04x v%d.%d.%d, ISA: %s"
+
+/** `BUF_SIZE` is the size of string buffer in `get_basic_cpuinfo`
+ */
+#ifndef BUF_SIZE
+#define BUF_SIZE (1024)
+#endif
+
 static void show_isa(CIF_XLEN_Type xlen, U32_CSR_MISA_Type misa,
                      U32_CSR_MCFG_INFO_Type mcfg);
 static void show_mcfg(const CPU_CSR_Group *csrs);
@@ -57,7 +77,13 @@ static void show_cmo(IINFO_Type *iinfo);
 static void show_performance_cfg(IINFO_Type *iinfo);
 static void show_misc_cfg(IINFO_Type *iinfo);
 
-static char *cvt_size(uint32_t size);
+/** 
+ * Convert to human readable size with option
+ * \param size: size in bytes
+ * \param lite: !=0 for lite version
+ */
+static char *cvt_size_opt(uint32_t size, int lite);
+#define cvt_size(size) cvt_size_opt(size, 0)
 static void show_cache_info(uint32_t set, uint32_t way, uint32_t lsize,
                             uint32_t ecc);
 
@@ -85,6 +111,88 @@ void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_CSR_Group *csrs)
     show_iregion(csrs);
 
     CIF_PRINTF("-----End of Nuclei CPU INFO-----\r\n");
+}
+
+int get_basic_cpuinfo(const CPU_CSR_Group *csrs, char *str, unsigned long len)
+{
+    if (str == NULL) {
+        return -1;
+    }
+
+    static char buf[BUF_SIZE] = {0}; // features string buffer
+    buf[0] = '\0'; // clear the buffer each time call this function
+    char isa[EXTENSION_NUM + 1];
+
+    /* construct ISA string */
+    int pos = 0;
+    for (int i = 0; i < EXTENSION_NUM; ++i) {
+        if (csrs->misa.d & BIT(i)) {
+            isa[pos++] = 'A' + i;
+        }
+    }
+    isa[pos] = '\0';
+
+    if (!csrs->mcfg_exist) {
+        return snprintf(str, len, BASIC_CPUINFO_FMT, csrs->marchid.d,
+                        csrs->mimpid.b.first_vernum, csrs->mimpid.b.mid_vernum,
+                        csrs->mimpid.b.last_vernum, isa);
+    }
+
+    /* construct features string */
+    U32_CSR_MCFG_INFO_Type mcfg = csrs->mcfginfo;
+    CHECK_STRCAT_BUF(mcfg, plic, buf, "MMU, PLIC, ");
+    CHECK_STRCAT_BUF(mcfg, eclic, buf, "ECLIC, ");
+    CHECK_STRCAT_BUF(mcfg, fio, buf, "FIO, ");
+    CHECK_STRCAT_BUF(mcfg, ppi, buf, "PPI, ");
+    CHECK_STRCAT_BUF(mcfg, nice, buf, "NICE, ");
+    CHECK_STRCAT_BUF(mcfg, vnice, buf, "VNICE, ");
+    CHECK_STRCAT_BUF(mcfg, etrace, buf, "ETRACE, ");
+    CHECK_STRCAT_BUF(mcfg, ecc, buf, "ECC, ");
+    CHECK_STRCAT_BUF(mcfg, tee, buf, "TEE, ");
+    CHECK_STRCAT_BUF(mcfg, sec_mode, buf, "SMWG, ");
+
+    IINFO_ISA_SUPPORT0_Type isa_support0;
+    isa_support0.d = csrs->iinfo->isa_support0;
+    CHECK_STRCAT_BUF(isa_support0, svpbmt, buf, "Svpbmt, ");
+
+    IINFO_MCMO_INFO_Type cmo;
+    cmo.d = csrs->iinfo->cmo_info;
+    CHECK_STRCAT_BUF(cmo, cmo_cfg, buf, "CMO, ");
+
+    if (mcfg.b.smp) {
+        unsigned long iregion_base = csrs->mirgbinfo.d & (~0x3FF);
+        U32_CSR_SMP_CFG_Type smp_cfg =
+            *(U32_CSR_SMP_CFG_Type *)(iregion_base + IREGION_SMP_OFS + 4);
+        STRCAT_BUF(buf, "SMPx%d, ", smp_cfg.b.smp_core_num + 1);
+    }
+
+    /* show local memory and cache info */
+    U32_CSR_MICFG_INFO_Type micfg = csrs->micfginfo;
+    U32_CSR_MDCFG_INFO_Type mdcfg = csrs->mdcfginfo;
+    CHECK_STRCAT_BUF(mcfg, ilm, buf, "ILM-%s, ",
+                     cvt_size_opt(POW2(micfg.b.lm_size + 7), 1));
+    CHECK_STRCAT_BUF(mcfg, dlm, buf, "DLM-%s, ",
+                     cvt_size_opt(POW2(mdcfg.b.lm_size + 7), 1));
+    CHECK_STRCAT_BUF(
+        mcfg, icache, buf, "IC-%s, ",
+        cvt_size_opt(POW2(micfg.b.set + 3) * POW2(micfg.b.lsize + 2) *
+                         (micfg.b.way + 1),
+                     1));
+    CHECK_STRCAT_BUF(
+        mcfg, dcache, buf, "DC-%s, ",
+        cvt_size_opt(POW2(mdcfg.b.set + 3) * POW2(mdcfg.b.lsize + 2) *
+                         (mdcfg.b.way + 1),
+                     1));
+
+    /* remove the comma at the end */
+    if (strlen(buf) > 0 && buf[strlen(buf) - 2] == ',') {
+        buf[strlen(buf) - 2] = '\0';
+    }
+
+    return snprintf(str, len, BASIC_CPUINFO_FMT ", Feature: %s",
+                    csrs->marchid.d, csrs->mimpid.b.first_vernum,
+                    csrs->mimpid.b.mid_vernum, csrs->mimpid.b.last_vernum, isa,
+                    buf);
 }
 
 static void show_isa(CIF_XLEN_Type xlen, U32_CSR_MISA_Type misa,
@@ -650,8 +758,7 @@ static void show_misc_cfg(IINFO_Type *iinfo)
     SHOW_VALUE(access_ctrl, pma_csr_access);
 }
 
-/* Convert to human readable size */
-static char *cvt_size(uint32_t size)
+static char *cvt_size_opt(uint32_t size, int lite)
 {
     static char buf[32];
     char units[] = {'B', 'K', 'M', 'G'};
@@ -660,7 +767,11 @@ static char *cvt_size(uint32_t size)
         size >>= 10;
         i++;
     }
-    sprintf(buf, "%u %c%s", size, units[i], i > 0 ? "B" : "");
+    if (lite) {
+        sprintf(buf, "%u%c", size, units[i]);
+    } else {
+        sprintf(buf, "%u %c%s", size, units[i], i > 0 ? "B" : "");
+    }
     return buf;
 }
 
