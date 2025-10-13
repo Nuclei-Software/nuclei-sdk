@@ -1269,6 +1269,12 @@ def parse_benchmark_runlog(lines, lgf=""):
             index = find_index("Test", appnormdirs)
             if index >= 0:
                 subtype = appnormdirs[index + 1]
+        elif "DSP/Benchmark" in lgf:
+            program_type, result = parse_benchmark_baremetal_csv(lines)
+            program_type = "nmsis_dsp_benchmark"
+            index = find_index("Benchmark", appnormdirs)
+            if index >= 0:
+                subtype = appnormdirs[index + 1]
         elif "NN/Examples/RISCV" in lgf:
             program_type, result = parse_benchmark_baremetal_csv(lines)
             program_type = "nmsis_nn_example"
@@ -1285,6 +1291,12 @@ def parse_benchmark_runlog(lines, lgf=""):
                 index = find_index("percase", appnormdirs)
                 if index >= 0:
                     subtype = appnormdirs[index + 1]
+        elif "NN/Benchmark" in lgf:
+            program_type, result = parse_benchmark_baremetal_csv(lines)
+            program_type = "nmsis_nn_benchmark"
+            index = find_index("Benchmark", appnormdirs)
+            if index >= 0:
+                subtype = appnormdirs[index + 1]
         else:
             program_type, subtype, result = parse_benchmark_compatiable(lines)
     return program_type, subtype, result
