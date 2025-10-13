@@ -580,16 +580,16 @@ buildconfig:
         condition: $( startswith(${stdclib}, "newlib") )
       - flags: -lc -lclang_rt.builtins
         condition: $( ${stdclib} == "newlib_full" )
-      - flags: -lc_nano -lclang_rt.builtins -u _printf_float -u _scanf_float
+      - flags: -lc_small -lclang_rt.builtins_small
         condition: $( ${stdclib} == "newlib_fast" )
-      - flags: -lc_nano -lclang_rt.builtins -u _printf_float
+      - flags: -lc_small -lclang_rt.builtins_small
         condition: $( ${stdclib} == "newlib_small" )
-      - flags: -lc_nano -lclang_rt.builtins -u _printf_float
+      - flags: -lc_small -lclang_rt.builtins_small
         condition: $( startswith(${stdclib}, "libncrt") )
       - flags: -fuse-ld=lld
       - flags: -u __on_exit_args
         condition: $( startswith(${stdclib}, "newlib") )
-      - flags: -lc_nano -lclang_rt.builtins
+      - flags: -lc_nano -lclang_rt.builtins_nano
         condition: $( ${stdclib} == "newlib_nano" )
       - flags: -lsemihost
         condition: $( ${semihost} == 1 )
