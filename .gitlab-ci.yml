@@ -444,6 +444,7 @@ run_on_ncycm:
 sdk_gen_benchmark:
   timeout: 4h
   <<: *job_template_default
+  when: manual
   script:
     - export LOGROOT=gen
     - export RUNTARGET=
