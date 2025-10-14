@@ -23,6 +23,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - For FreeRTOS demo/smpdemo, now default use MSTATUS.MIE to do interrupt masking since default ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` set to 255
   - Update ``cpuinfo`` to display additional CPU features, including prefetch capabilities, hardware performance configirations, supported ISAs, and more. See :ref:`design_app_cpuinfo`.
   - Add ``get_basic_cpuinfo`` in ``cpuinfo`` to get basic CPU information in a single string.
+  - Add ``CHK_MODE`` makefile variable to select different check mode for ``demo_pmp`` and ``demo_spmu`` applications.
 
 * OS
 

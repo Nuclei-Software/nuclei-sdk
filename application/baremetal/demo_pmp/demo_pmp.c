@@ -16,7 +16,11 @@
 #define RUN_WITH_NO_PMP_CHECK          3
 
 /* Just choose one from above defines to test PMP */
+#ifndef CHK_MODE
 #define TRIGGER_PMP_VIOLATION_MODE     RUN_WITH_NO_PMP_CHECK
+#else
+#define TRIGGER_PMP_VIOLATION_MODE     CHK_MODE
+#endif
 
 volatile uint8_t protected_data[0x2000] __attribute__((aligned(0x2000))) = \
 {0xaa, 0x1, 0x02, 0x03, 0x04, 0x05, 0x06, 0xaa};

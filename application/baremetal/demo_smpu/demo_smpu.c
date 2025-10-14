@@ -33,7 +33,11 @@
 #define RUN_WITH_ENTRY_INACTIVE                     6
 
 /* Just choose one from above defines to test smpu */
+#ifndef CHK_MODE
 #define TRIGGER_SMPU_VIOLATION_MODE                 RUN_WITH_ENTRY_INACTIVE
+#else
+#define TRIGGER_SMPU_VIOLATION_MODE                 CHK_MODE
+#endif
 
 // 2048 is enough
 #define SMODE_STACK_SIZE      2048
