@@ -75,7 +75,7 @@ static void show_cmo(IINFO_Type *iinfo);
 static void show_performance_cfg(IINFO_Type *iinfo);
 static void show_misc_cfg(IINFO_Type *iinfo);
 
-/** 
+/**
  * Convert to human readable size with option
  * \param size: size in bytes
  * \param lite: !=0 for lite version
@@ -353,7 +353,7 @@ static void show_iregion(const CPU_CSR_Group *csrs)
     CIF_PRINTF(" %#lx", iregion_base);
     CIF_PRINTF(" %s\r\n", cvt_size(POW2(mirgb.b.iregion_size + 9)));
     CIF_PRINTF("                  Unit        Size        Address\r\n");
-    CIF_PRINTF("                  INFO        64KB        %#lx\r\n",
+    CIF_PRINTF("                  IINFO       64KB        0x%lx\r\n",
                iregion_base + IREGION_IINFO_OFS);
     CIF_PRINTF("                  DEBUG       64KB        %#lx\r\n",
                iregion_base + IREGION_DEBUG_OFS);
