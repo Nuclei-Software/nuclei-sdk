@@ -1,3 +1,5 @@
+# Required Version: ZCC Toolchain Version >= 4.1.2
+# If the zcc toolchain version is less than 4.1.2, use nuclei-sdk v0.8.0
 CC      := zcc
 CXX     := z++
 OBJDUMP := llvm-objdump

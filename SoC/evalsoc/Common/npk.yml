@@ -566,7 +566,7 @@ buildconfig:
         condition: $( startswith(${stdclib}, "newlib") && ${semihost} == 1 )
 
   - type: zcc
-    description: Terapines ZCC Toolchain
+    description: Terapines ZCC Toolchain  # Required Version: ZCC Toolchain Version >= 4.1.2
     toolchain_name: Terapines ZCC
     common_flags: # flags need to be combined together across all packages
       # Enable experimental extensions for zcc
