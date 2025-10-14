@@ -7,13 +7,6 @@ extern "C" {
 
 #include <stdint.h>
 
-/* NOTE: You can define your own printf function by define `CIF_PRINTF`
- * before include this header file. */
-#ifndef CIF_PRINTF
-#include <stdio.h>
-#define CIF_PRINTF(fmt, ...) printf(fmt, ##__VA_ARGS__)
-#endif
-
 /* NOTE: The CSR register length various between 32-bit and 64-bit
  * but usually the effective data is in the lower 32 bits. So we
  * use 32-bit data type to represent most of these registers. */

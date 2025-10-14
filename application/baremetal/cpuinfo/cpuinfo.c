@@ -1,7 +1,5 @@
-/* NOTE: Predefine macro `CIF_PRINTF` before include `cpuinfo.h`
- * to replace the default `CIF_PRINTF` function.
- */
 #include "cpuinfo.h"
+#include "cpuinfo_cfg.h"
 
 #include <string.h>
 
