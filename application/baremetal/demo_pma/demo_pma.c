@@ -141,6 +141,8 @@ int main(void)
     HPM_START(4, array_read_by_row_dcache_miss_cacheable, HPM_EVENT4);
     array_read_by_row();
     HPM_END(4, array_read_by_row_dcache_miss_cacheable, HPM_EVENT4);
+
+    printf("\r\nPMA Test finished\r\n");
 #else
     printf("[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!\r\n");
 #endif
