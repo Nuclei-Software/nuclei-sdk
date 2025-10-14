@@ -72,6 +72,12 @@
                 "PASS": ["MTimer msip and mtip interrupt test finish and pass"]
             }
         },
+        "application/baremetal/demo_profiling": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Dump profiling data finished"]
+            }
+        },
         "application/baremetal/demo_clint_timer": {
             "build_config" : {},
             "checks": {
