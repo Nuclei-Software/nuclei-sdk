@@ -27,6 +27,7 @@ This is release version ``0.3.0`` of N100 SDK.
   - Fix gdb not correct when toolchain choose Terapines ZCC
   - Bump CI to use 2025.10 tools
   - Bump sdkbuild podman image to 2025.10
+  - Update to support Zcc version 4.1.2 and above as well as the new C library configuration
 
 * Documentation
 

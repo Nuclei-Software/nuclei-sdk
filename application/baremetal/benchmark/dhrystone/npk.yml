@@ -96,4 +96,4 @@ buildconfig:
 
         condition: $( ${dhry_mode} == 'best' )
     ldflags:
-      - flags: -Wl,-mllvm,--align-all-nofallthru-blocks=2 -fuse-size-lib
+      - flags: -Wl,-mllvm,--align-all-nofallthru-blocks=2
