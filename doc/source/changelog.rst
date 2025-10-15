@@ -112,6 +112,11 @@ This is release version of ``0.8.1`` of Nuclei SDK.
 
   - Fix build system :ref:`develop_buildsystem_var_core` support table format error
 
+* Build System
+
+  - Update to support Zcc version 4.1.2 and above as well as the new C library configuration
+
+
 V0.8.0
 ------
 

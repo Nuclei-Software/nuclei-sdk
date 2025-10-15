@@ -5,4 +5,4 @@ BENCH_FLAGS ?= -O3 -ffast-math -flto -finline -fno-builtin-printf -funroll-loops
 else ifeq ($(DHRY_MODE),inline)
 BENCH_FLAGS ?= -O3 -flto -finline -fno-builtin-printf -funroll-loops -falign-functions=4 -falign-loops=4 -finline-functions -flate-loop-unroll -malign-branch
 endif
-LDFLAGS += -Wl,-mllvm,--align-all-nofallthru-blocks=2 -fuse-size-lib
+LDFLAGS += -Wl,-mllvm,--align-all-nofallthru-blocks=2
