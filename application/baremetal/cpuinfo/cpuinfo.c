@@ -53,13 +53,13 @@
 
 static void show_isa(CIF_XLEN_Type xlen, U32_CSR_MISA_Type misa,
                      U32_CSR_MCFG_INFO_Type mcfg);
-static void show_mcfg(const CPU_CSR_Group *csrs);
+static void show_mcfg(const CPU_INFO_Group *csrs);
 static void show_micfg_mdcfg(U32_CSR_MCFG_INFO_Type mcfg,
                              U32_CSR_MICFG_INFO_Type micfg,
                              U32_CSR_MDCFG_INFO_Type mdcfg);
 static void show_mtlbcfg(U32_CSR_MCFG_INFO_Type mcfg,
                          U32_CSR_MTLBCFG_INFO_Type mtlbcfg);
-static void show_iregion(const CPU_CSR_Group *csrs);
+static void show_iregion(const CPU_INFO_Group *csrs);
 static void show_mfiocfg(U32_CSR_MCFG_INFO_Type mcfg,
                          U64_CSR_MFIOCFG_INFO_Type mfiocfg);
 static void show_mppicfg(U32_CSR_MCFG_INFO_Type mcfg,
@@ -85,7 +85,7 @@ static char *cvt_size_opt(uint32_t size, int lite);
 static void show_cache_info(uint32_t set, uint32_t way, uint32_t lsize,
                             uint32_t ecc);
 
-void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_CSR_Group *csrs)
+void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_INFO_Group *csrs)
 {
     CIF_PRINTF("\r\n-----Nuclei RISC-V CPU Configuration Information-----\r\n");
 
@@ -112,7 +112,7 @@ void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_CSR_Group *csrs)
     CIF_PRINTF("-----End of Nuclei CPU INFO-----\r\n");
 }
 
-int get_basic_cpuinfo(const CPU_CSR_Group *csrs, char *str, unsigned long len)
+int get_basic_cpuinfo(const CPU_INFO_Group *csrs, char *str, unsigned long len)
 {
     if (str == NULL) {
         return -1;
@@ -228,7 +228,7 @@ static void show_isa(CIF_XLEN_Type xlen, U32_CSR_MISA_Type misa,
     CIF_PRINTF("\r\n");
 }
 
-static void show_mcfg(const CPU_CSR_Group *csrs)
+static void show_mcfg(const CPU_INFO_Group *csrs)
 {
     if (!csrs->mcfg_exist) {
         return;
@@ -340,7 +340,7 @@ static void show_mtlbcfg(U32_CSR_MCFG_INFO_Type mcfg,
     }
 }
 
-static void show_iregion(const CPU_CSR_Group *csrs)
+static void show_iregion(const CPU_INFO_Group *csrs)
 {
     U32_CSR_MCFG_INFO_Type mcfg = csrs->mcfginfo;
     if (!mcfg.b.iregion) {

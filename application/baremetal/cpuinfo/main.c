@@ -17,7 +17,7 @@ int main(void)
 #endif
 
     CIF_XLEN_Type xlen;
-    CPU_CSR_Group csrs;
+    CPU_INFO_Group csrs;
     memset(&csrs, 0, sizeof(csrs)); // clear the struct
 
     csrs.marchid.d = (uint32_t)__RV_CSR_READ(CSR_MARCHID);

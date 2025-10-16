@@ -277,7 +277,7 @@ typedef struct {
     U64_CSR_MPPICFG_INFO_Type mppicfginfo;
     U64_CSR_MFIOCFG_INFO_Type mfiocfginfo;
     IINFO_Type *iinfo;                           /*!< IREGION INFO memory pointer */
-} CPU_CSR_Group;
+} CPU_INFO_Group;
 
 typedef enum {
     CIF_XLEN_32 = 0, /* 0 */
@@ -627,7 +627,7 @@ typedef uint32_t IINFO_MCPPI_CFG_HI_Type;
  * \param xlen: XLEN
  * \param csrs: pointer to CPU_CSR_Group
  */
-void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_CSR_Group *csrs);
+void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_INFO_Group *csrs);
 
 /**
  * \brief Get basic CPU information in a single line.
@@ -639,7 +639,7 @@ void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_CSR_Group *csrs);
  * \return actual length of result string or '-1' for `str == NULL`,
  *         it is same as the return value of `snprintf`
  */
-int get_basic_cpuinfo(const CPU_CSR_Group *csrs, char *str, unsigned long len);
+int get_basic_cpuinfo(const CPU_INFO_Group *csrs, char *str, unsigned long len);
 
 #ifdef __cplusplus
 }
