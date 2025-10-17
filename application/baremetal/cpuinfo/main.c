@@ -56,7 +56,7 @@ int main(void)
     }
     if (mcfg.b.iregion) {
         cpuinfo.mirgbinfo.d = (uint64_t)__RV_CSR_READ(CSR_MIRGB_INFO);
-        unsigned long iregion_base = cpuinfo.mirgbinfo.d & (~0x3FF);
+        unsigned long iregion_base = cpuinfo.mirgbinfo.d & (~0x3FFULL);
         cpuinfo.iinfo = (IINFO_Type *)iregion_base;
         if (mcfg.b.smp) {
             cpuinfo.smpcfg.d =

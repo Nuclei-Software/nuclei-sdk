@@ -424,7 +424,7 @@ static void show_mfiocfg(U32_CSR_MCFG_INFO_Type mcfg,
 {
     if (mcfg.b.fio) {
         CIF_PRINTF("             FIO:");
-        CIF_PRINTF(" %#lx", (unsigned long)mfiocfg.d & (~0x3FF));
+        CIF_PRINTF(" %#lx", (unsigned long)mfiocfg.d & (~0x3FFUL));
         CIF_PRINTF(" %s\r\n", cvt_size(POW2(mfiocfg.b.fio_size + 9)));
     }
 }
@@ -434,7 +434,7 @@ static void show_mppicfg(U32_CSR_MCFG_INFO_Type mcfg,
 {
     if (mcfg.b.ppi) {
         CIF_PRINTF("             PPI:");
-        CIF_PRINTF(" %#lx", (unsigned long)mppicfg.d & (~0x3FF));
+        CIF_PRINTF(" %#lx", (unsigned long)mppicfg.d & (~0x3FFUL));
         CIF_PRINTF(" %s\r\n", cvt_size(POW2(mppicfg.b.ppi_size + 9)));
     }
 }
@@ -580,7 +580,7 @@ static void show_mvlm_cfg(IINFO_Type *iinfo)
         CIF_PRINTF("                  vlm: present\r\n");
         IINFO_MVLM_CFG_HI_Type mvlm_cfg_hi = iinfo->mvlm_cfg_hi;
         unsigned long vlm_base =
-            (uint64_t)mvlm_cfg_hi << 32 | (mvlm_cfg_lo.d & (~0x3FF));
+            (uint64_t)mvlm_cfg_hi << 32 | (mvlm_cfg_lo.d & (~0x3FFULL));
         CIF_PRINTF("                      base=0x%lx\r\n", vlm_base);
         CIF_PRINTF("                      size=%s\r\n",
                    cvt_size(POW2(mvlm_cfg_lo.b.vlm_size + 9)));
@@ -597,7 +597,7 @@ static void show_flash_bus(IINFO_Type *iinfo)
         CIF_PRINTF("                  flash bus: present\r\n");
         IINFO_FLASH_BASE_ADDR_HI_Type addr_hi = iinfo->flash_base_addr_hi;
         unsigned long flash_base =
-            (uint64_t)addr_hi << 32 | (addr_lo.d & (~0x3FF));
+            (uint64_t)addr_hi << 32 | (addr_lo.d & (~0x3FFULL));
         CIF_PRINTF("                      base=0x%lx\r\n", flash_base);
         CIF_PRINTF("                      size=%s\r\n",
                    cvt_size(addr_lo.b.flash_size + 9));
@@ -614,7 +614,7 @@ static void show_mem_region_cfg(IINFO_Type *iinfo)
         CIF_PRINTF("                  mem_region0: present\r\n");
         IINFO_MEM_REGION_CFG_HI_Type region_hi = iinfo->mem_region0_cfg_hi;
         unsigned long region_base =
-            (uint64_t)region_hi << 32 | (region_lo.d & (~0x3FF));
+            (uint64_t)region_hi << 32 | (region_lo.d & (~0x3FFULL));
         if (region_lo.b.mem_region_ena) {
             CIF_PRINTF("                      status: enable\r\n");
         } else {
@@ -631,7 +631,7 @@ static void show_mem_region_cfg(IINFO_Type *iinfo)
         CIF_PRINTF("                  mem_region1: present\r\n");
         IINFO_MEM_REGION_CFG_HI_Type region_hi = iinfo->mem_region1_cfg_hi;
         unsigned long region_base =
-            (uint64_t)region_hi << 32 | (region_lo.d & (~0x3FF));
+            (uint64_t)region_hi << 32 | (region_lo.d & (~0x3FFULL));
         if (region_lo.b.mem_region_ena) {
             CIF_PRINTF("                      status: enable\r\n");
         } else {
@@ -653,7 +653,7 @@ static void show_mcppi_cfg(IINFO_Type *iinfo)
         CIF_PRINTF("                  cppi: present\r\n");
         IINFO_MCPPI_CFG_HI_Type mcppi_hi = iinfo->mcppi_cfg_hi;
         unsigned long mcppi_base =
-            (uint64_t)mcppi_hi << 32 | (mcppi_lo.d & (~0x3FF));
+            (uint64_t)mcppi_hi << 32 | (mcppi_lo.d & (~0x3FFULL));
         if (mcppi_lo.b.cppi_ena) {
             CIF_PRINTF("                      status: enable\r\n");
         } else {
