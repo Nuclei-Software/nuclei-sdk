@@ -626,21 +626,21 @@ typedef uint32_t IINFO_MCPPI_CFG_HI_Type;
 /**
  * \brief Show full CPU information about ISA, ILD/DLM, I/D cache, etc.
  * \param xlen: XLEN
- * \param csrs: pointer to CPU_CSR_Group
+ * \param cpuinfo: pointer to CPU_INFO_Group
  */
-void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_INFO_Group *csrs);
+void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_INFO_Group *cpuinfo);
 
 /**
  * \brief Get basic CPU information in a single line.
  *        This function is **not reentrant** because it uses
  *        a shared static buffer.
- * \param csrs: pointer to CPU_CSR_Group
+ * \param cpuinfo: pointer to CPU_INFO_Group
  * \param str: pointer to string buffer
  * \param len: length of string buffer
  * \return actual length of result string or '-1' for `str == NULL`,
  *         it is same as the return value of `snprintf`
  */
-int get_basic_cpuinfo(const CPU_INFO_Group *csrs, char *str, unsigned long len);
+int get_basic_cpuinfo(const CPU_INFO_Group *cpuinfo, char *str, unsigned long len);
 
 #ifdef __cplusplus
 }
