@@ -29,11 +29,6 @@ int main(void)
     cpuinfo.mcfg_exist = 1;
     cpuinfo.mcfginfo = mcfg;
 
-    /**
-     * mtlbcfginfo has a `mapping` field at the highest bit.
-     * For RV64, move the bit 63 to bit 31 to use the common
-     * struct as RV32.
-     */
     if (__RISCV_XLEN == 32) {
         xlen = CIF_XLEN_32;
         if (mcfg.b.plic) {
@@ -41,6 +36,11 @@ int main(void)
         }
     } else {
         xlen = CIF_XLEN_64;
+        /**
+         * mtlbcfginfo has a `mapping` field at the highest bit.
+         * For RV64, move the bit 63 to bit 31 to use the common
+         * struct as RV32.
+         */
         if (mcfg.b.plic) {
             uint64_t mtlbcfginfo = __RV_CSR_READ(CSR_MTLBCFG_INFO);
             cpuinfo.mtlbcfginfo.d =
