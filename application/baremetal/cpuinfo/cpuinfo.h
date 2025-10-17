@@ -153,7 +153,7 @@ typedef union {
 
 /**
  * \brief  Union type to access low 26 bits of MISA CSR register.
- * 
+ *
  */
 typedef union {
     struct {
@@ -328,7 +328,7 @@ typedef struct {
 } ECLIC_Type;
 
 /**
- * \brief  CPU CSR bundles
+ * \brief  CPU INFO Structure
  */
 typedef struct {
     U32_CSR_MARCHID_Type marchid;
@@ -628,6 +628,15 @@ typedef union {
 } IINFO_MCPPI_CFG_LO_Type;
 
 typedef uint32_t IINFO_MCPPI_CFG_HI_Type;
+
+/**
+ * \brief  Nuclei CPU INFO Structure For OpenOCD Usage
+ */
+typedef struct {
+    CPU_INFO_Group cpuinfo;
+    IINFO_Type iinfo;
+    ECLIC_Type eclic;
+} NUCLEI_CPUINFO;
 
 /**
  * \brief Show full CPU information about ISA, ILD/DLM, I/D cache, etc.
