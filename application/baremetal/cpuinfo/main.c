@@ -27,8 +27,13 @@ int main(void)
     cpuinfo.mimpid.d = (uint32_t)__RV_CSR_READ(CSR_MIMPID);
     cpuinfo.misa.d = (uint32_t)__RV_CSR_READ(CSR_MISA);
     U32_CSR_MCFG_INFO_Type mcfg;
-    mcfg.d = (uint32_t)__RV_CSR_READ(CSR_MCFG_INFO);
-    cpuinfo.mcfg_exist = 1;
+    if (cpuinfo.marchid.d == 0x80000022U && cpuinfo.mimpid.d == 0x100U) {
+        cpuinfo.mcfg_exist = 0;
+        mcfg.d = 0;
+    } else {
+        cpuinfo.mcfg_exist = 1;
+        mcfg.d = (uint32_t)__RV_CSR_READ(CSR_MCFG_INFO);
+    }
     cpuinfo.mcfginfo = mcfg;
 
     if (__RISCV_XLEN == 32) {
