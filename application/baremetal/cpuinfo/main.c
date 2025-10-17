@@ -56,19 +56,19 @@ int main(void)
     }
     if (mcfg.b.iregion) {
         cpuinfo.mirgbinfo.d = (uint64_t)__RV_CSR_READ(CSR_MIRGB_INFO);
-        unsigned long iregion_base = cpuinfo.mirgbinfo.d & (~0x3FFULL);
-        cpuinfo.iinfo = (IINFO_Type *)iregion_base;
+        uint64_t iregion_base = cpuinfo.mirgbinfo.d & (~0x3FFULL);
+        cpuinfo.iinfo = (IINFO_Type *)((unsigned long)iregion_base);
         cpuinfo.iregion_base = iregion_base;
         if (mcfg.b.smp) {
             cpuinfo.smpcfg.d =
-                *(uint32_t *)(iregion_base + CPUINFO_IRG_SMP_OFS + 0x4);
+                *(uint32_t *)((unsigned long)(iregion_base + CPUINFO_IRG_SMP_OFS + 0x4));
         }
         if (cpuinfo.smpcfg.b.cc) {
             cpuinfo.cccfg.d =
-                *(uint32_t *)(iregion_base + CPUINFO_IRG_SMP_OFS + 0x8);
+                *(uint32_t *)((unsigned long)(iregion_base + CPUINFO_IRG_SMP_OFS + 0x8));
         }
         if (mcfg.b.eclic) {
-            cpuinfo.eclic = (ECLIC_Type *)(iregion_base + CPUINFO_IRG_ECLIC_OFS);
+            cpuinfo.eclic = (ECLIC_Type *)((unsigned long)(iregion_base + CPUINFO_IRG_ECLIC_OFS));
         }
     }
     if (mcfg.b.ppi) {
