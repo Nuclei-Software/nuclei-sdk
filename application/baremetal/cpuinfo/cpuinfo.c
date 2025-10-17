@@ -335,7 +335,7 @@ static void show_iregion(const CPU_INFO_Group *cpuinfo)
 
     CIF_PRINTF("         IREGION:");
     U64_CSR_MIRGB_INFO_Type mirgb = cpuinfo->mirgbinfo;
-    unsigned long iregion_base = mirgb.d & (~0x3FF);
+    unsigned long iregion_base = cpuinfo->iregion_base;
     CIF_PRINTF(" %#lx", iregion_base);
     CIF_PRINTF(" %s\r\n", cvt_size(POW2(mirgb.b.iregion_size + 9)));
     CIF_PRINTF("                  Unit        Size        Address\r\n");

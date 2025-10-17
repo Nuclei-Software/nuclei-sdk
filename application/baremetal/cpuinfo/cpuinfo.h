@@ -348,6 +348,7 @@ typedef struct {
     U32_CSR_MDCFG_INFO_Type mdcfginfo;
     U32_CSR_MTLBCFG_INFO_Type mtlbcfginfo;
     U64_CSR_MIRGB_INFO_Type mirgbinfo;
+    uint64_t iregion_base;
     U64_CSR_MPPICFG_INFO_Type mppicfginfo;
     U64_CSR_MFIOCFG_INFO_Type mfiocfginfo;
     IINFO_Type *iinfo;                           /*!< IREGION INFO memory pointer */
