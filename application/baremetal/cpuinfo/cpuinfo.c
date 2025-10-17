@@ -8,17 +8,6 @@
 #define POW2(n) (1U << (n))
 #define LINESZ(n) ((n) > 0U ? POW2((n) - 1) : 0)
 
-/* IREGION Offsets */
-#define IREGION_IINFO_OFS (0x0)
-#define IREGION_DEBUG_OFS (0x10000)
-#define IREGION_ECLIC_OFS (0x20000)
-#define IREGION_TIMER_OFS (0x30000)
-#define IREGION_SMP_OFS (0x40000)
-#define IREGION_IDU_OFS (0x50000)
-#define IREGION_PL2_OFS (0x60000)
-#define IREGION_DPREFETCH_OFS (0x70000)
-#define IREGION_PLIC_OFS (0x4000000)
-
 /* Check register field with default field name print */
 #define CHECK_FIELD_DFT(reg, field)                                            \
     if (reg.b.field) {                                                         \
@@ -352,29 +341,29 @@ static void show_iregion(const CPU_INFO_Group *cpuinfo)
     CIF_PRINTF(" %s\r\n", cvt_size(POW2(mirgb.b.iregion_size + 9)));
     CIF_PRINTF("                  Unit        Size        Address\r\n");
     CIF_PRINTF("                  IINFO       64KB        0x%lx\r\n",
-               iregion_base + IREGION_IINFO_OFS);
+               iregion_base + CPUINFO_IRG_IINFO_OFS);
     CIF_PRINTF("                  DEBUG       64KB        %#lx\r\n",
-               iregion_base + IREGION_DEBUG_OFS);
+               iregion_base + CPUINFO_IRG_DEBUG_OFS);
     if (mcfg.b.eclic) {
         CIF_PRINTF("                  ECLIC       64KB        %#lx\r\n",
-                   iregion_base + IREGION_ECLIC_OFS);
+                   iregion_base + CPUINFO_IRG_ECLIC_OFS);
     }
     CIF_PRINTF("                  TIMER       64KB        %#lx\r\n",
-               iregion_base + IREGION_TIMER_OFS);
+               iregion_base + CPUINFO_IRG_TIMER_OFS);
     if (mcfg.b.smp) {
         CIF_PRINTF("                  SMP         64KB        %#lx\r\n",
-                   iregion_base + IREGION_SMP_OFS);
+                   iregion_base + CPUINFO_IRG_SMP_OFS);
     }
     U32_SMP_CFG_Type smp_cfg = cpuinfo->smpcfg;
     /* If has eclic and has equal or more than 1 core, CIDU will present
      * The actual core number is `smp_core_num + 1` */
     if (mcfg.b.eclic && (smp_cfg.b.smp_core_num >= 1)) {
         CIF_PRINTF("                  CIDU        64KB        %#lx\r\n",
-                   iregion_base + IREGION_IDU_OFS);
+                   iregion_base + CPUINFO_IRG_IDU_OFS);
     }
     if (mcfg.b.plic) {
         CIF_PRINTF("                  PLIC        64MB        %#lx\r\n",
-                   iregion_base + IREGION_PLIC_OFS);
+                   iregion_base + CPUINFO_IRG_PLIC_OFS);
     }
     /* SMP */
     if (mcfg.b.smp) {
@@ -405,7 +394,7 @@ static void show_iregion(const CPU_INFO_Group *cpuinfo)
                         POW2(cc_cfg.b.lsize + 2), cc_cfg.b.ecc);
     }
     /* IREGION INFO */
-    unsigned long iinfo_base = iregion_base + IREGION_IINFO_OFS;
+    unsigned long iinfo_base = iregion_base + CPUINFO_IRG_IINFO_OFS;
     CIF_PRINTF("     INFO-Detail:\r\n");
     /* MPASIZE */
     uint32_t mpasize = cpuinfo->iinfo->mpasize;

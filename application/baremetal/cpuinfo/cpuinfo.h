@@ -7,6 +7,17 @@ extern "C" {
 
 #include <stdint.h>
 
+/* IREGION Offsets */
+#define CPUINFO_IRG_IINFO_OFS (0x0)
+#define CPUINFO_IRG_DEBUG_OFS (0x10000)
+#define CPUINFO_IRG_ECLIC_OFS (0x20000)
+#define CPUINFO_IRG_TIMER_OFS (0x30000)
+#define CPUINFO_IRG_SMP_OFS (0x40000)
+#define CPUINFO_IRG_IDU_OFS (0x50000)
+#define CPUINFO_IRG_PL2_OFS (0x60000)
+#define CPUINFO_IRG_DPREFETCH_OFS (0x70000)
+#define CPUINFO_IRG_PLIC_OFS (0x4000000)
+
 /* NOTE: The CSR register length various between 32-bit and 64-bit
  * but usually the effective data is in the lower 32 bits. So we
  * use 32-bit data type to represent most of these registers. */
