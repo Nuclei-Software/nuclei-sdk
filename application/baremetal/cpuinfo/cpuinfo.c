@@ -148,7 +148,6 @@ int get_basic_cpuinfo(const CPU_INFO_Group *cpuinfo, char *str, unsigned long le
     CHECK_STRCAT_BUF(cmo, cmo_cfg, buf, "CMO, ");
 
     if (mcfg.b.smp) {
-        unsigned long iregion_base = cpuinfo->mirgbinfo.d & (~0x3FF);
         STRCAT_BUF(buf, "SMPx%d, ", cpuinfo->smpcfg.b.smp_core_num + 1);
     }
 
@@ -394,7 +393,6 @@ static void show_iregion(const CPU_INFO_Group *cpuinfo)
                         POW2(cc_cfg.b.lsize + 2), cc_cfg.b.ecc);
     }
     /* IREGION INFO */
-    unsigned long iinfo_base = iregion_base + CPUINFO_IRG_IINFO_OFS;
     CIF_PRINTF("     INFO-Detail:\r\n");
     /* MPASIZE */
     uint32_t mpasize = cpuinfo->iinfo->mpasize;
