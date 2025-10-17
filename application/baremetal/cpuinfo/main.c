@@ -4,8 +4,11 @@
 #include "cpuinfo.h"
 #include "nuclei_sdk_soc.h"
 
+#define BUFSIZE     2048
+
 int main(void)
 {
+    static char cpufeatbuf[BUFSIZE];
 #ifdef CFG_CPU_NAME
     printf("CPU NAME: %s\n", CFG_CPU_NAME);
 #endif
@@ -16,7 +19,6 @@ int main(void)
     printf("CPU ISA: %s\n", CPU_ISA);
 #endif
 
-    CIF_XLEN_Type xlen;
     CPU_INFO_Group cpuinfo;
     memset(&cpuinfo, 0, sizeof(cpuinfo)); // clear the struct
 
@@ -30,12 +32,12 @@ int main(void)
     cpuinfo.mcfginfo = mcfg;
 
     if (__RISCV_XLEN == 32) {
-        xlen = CIF_XLEN_32;
+        cpuinfo.xlen = 32;
         if (mcfg.b.plic) {
             cpuinfo.mtlbcfginfo.d = (uint32_t)__RV_CSR_READ(CSR_MTLBCFG_INFO);
         }
     } else {
-        xlen = CIF_XLEN_64;
+        cpuinfo.xlen = 64;
         /**
          * mtlbcfginfo has a `mapping` field at the highest bit.
          * For RV64, move the bit 63 to bit 31 to use the common
@@ -78,7 +80,10 @@ int main(void)
         cpuinfo.mfiocfginfo.d = (uint64_t)__RV_CSR_READ(CSR_MFIOCFG_INFO);
     }
 
-    show_cpuinfo(xlen, &cpuinfo);
+    if (get_basic_cpuinfo(&cpuinfo, cpufeatbuf, BUFSIZE) > 0) {
+        printf("%s\r\n", cpufeatbuf);
+    }
+    show_cpuinfo(&cpuinfo);
 
     return 0;
 }

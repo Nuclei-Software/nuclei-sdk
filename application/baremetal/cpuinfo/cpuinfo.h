@@ -271,13 +271,6 @@ typedef struct {
     uint32_t crc_fp0;                            /*!< offset 0x01A0 */
 } IINFO_Type;
 
-typedef enum {
-    CIF_XLEN_32 = 0, /* 0 */
-    CIF_XLEN_64,     /* 1 */
-    CIF_XLEN_128,    /* 2 */
-    MAX_CIF_XLEN     /* 3 */
-} CIF_XLEN_Type;
-
 /**
  * \brief  Union type to access SMP_CFG register.
  */
@@ -351,9 +344,10 @@ typedef struct {
     uint64_t iregion_base;
     U64_CSR_MPPICFG_INFO_Type mppicfginfo;
     U64_CSR_MFIOCFG_INFO_Type mfiocfginfo;
-    IINFO_Type *iinfo;                           /*!< IREGION INFO memory pointer */
     U32_SMP_CFG_Type smpcfg;
     U32_CC_CFG_Type cccfg;
+    uint32_t xlen;
+    IINFO_Type *iinfo;                           /*!< IREGION INFO memory pointer */
     ECLIC_Type *eclic;                           /*!< ECLIC memory pointer */
 } CPU_INFO_Group;
 /**
@@ -637,10 +631,9 @@ typedef uint32_t IINFO_MCPPI_CFG_HI_Type;
 
 /**
  * \brief Show full CPU information about ISA, ILD/DLM, I/D cache, etc.
- * \param xlen: XLEN
  * \param cpuinfo: pointer to CPU_INFO_Group
  */
-void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_INFO_Group *cpuinfo);
+void show_cpuinfo(const CPU_INFO_Group *cpuinfo);
 
 /**
  * \brief Get basic CPU information in a single line.

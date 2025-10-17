@@ -32,7 +32,7 @@
         }                                                                      \
     } while (0)
 
-#define BASIC_CPUINFO_FMT "Nuclei CPU Detected: mhartid-0x%x marchid-0x%04x v%d.%d.%d, ISA: %s"
+#define BASIC_CPUINFO_FMT "Nuclei CPU Detected: mhartid-0x%x marchid-0x%04x v%d.%d.%d, ISA: RV%d%s"
 
 /** `BUF_SIZE` is the size of string buffer in `get_basic_cpuinfo`
  */
@@ -40,7 +40,7 @@
 #define BUF_SIZE (1024)
 #endif
 
-static void show_isa(CIF_XLEN_Type xlen, U32_CSR_MISA_Type misa,
+static void show_isa(uint32_t xlen, U32_CSR_MISA_Type misa,
                      U32_CSR_MCFG_INFO_Type mcfg);
 static void show_mcfg(const CPU_INFO_Group *cpuinfo);
 static void show_micfg_mdcfg(U32_CSR_MCFG_INFO_Type mcfg,
@@ -74,8 +74,11 @@ static char *cvt_size_opt(uint32_t size, int lite);
 static void show_cache_info(uint32_t set, uint32_t way, uint32_t lsize,
                             uint32_t ecc);
 
-void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_INFO_Group *cpuinfo)
+void show_cpuinfo(const CPU_INFO_Group *cpuinfo)
 {
+    if (cpuinfo == NULL) {
+        return;
+    }
     CIF_PRINTF("\r\n-----Nuclei RISC-V CPU Configuration Information-----\r\n");
 
     /* ID and version */
@@ -84,7 +87,7 @@ void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_INFO_Group *cpuinfo)
     CIF_PRINTF("          MIMPID: 0x%06x\r\n", cpuinfo->mimpid.d);
 
     /* ISA */
-    show_isa(xlen, cpuinfo->misa, cpuinfo->mcfginfo);
+    show_isa(cpuinfo->xlen, cpuinfo->misa, cpuinfo->mcfginfo);
     /* Support */
     show_mcfg(cpuinfo);
     /* ILM, DLM, I/D Cache */
@@ -103,7 +106,7 @@ void show_cpuinfo(CIF_XLEN_Type xlen, const CPU_INFO_Group *cpuinfo)
 
 int get_basic_cpuinfo(const CPU_INFO_Group *cpuinfo, char *str, unsigned long len)
 {
-    if (str == NULL) {
+    if (str == NULL || cpuinfo == NULL) {
         return -1;
     }
 
@@ -123,7 +126,7 @@ int get_basic_cpuinfo(const CPU_INFO_Group *cpuinfo, char *str, unsigned long le
     if (!cpuinfo->mcfg_exist) {
         return snprintf(str, len, BASIC_CPUINFO_FMT, cpuinfo->mhartid, cpuinfo->marchid.d,
                         cpuinfo->mimpid.b.first_vernum, cpuinfo->mimpid.b.mid_vernum,
-                        cpuinfo->mimpid.b.last_vernum, isa);
+                        cpuinfo->mimpid.b.last_vernum, cpuinfo->xlen, isa);
     }
 
     /* construct features string */
@@ -176,21 +179,15 @@ int get_basic_cpuinfo(const CPU_INFO_Group *cpuinfo, char *str, unsigned long le
 
     return snprintf(str, len, BASIC_CPUINFO_FMT ", Feature: %s", cpuinfo->mhartid,
                     cpuinfo->marchid.d, cpuinfo->mimpid.b.first_vernum,
-                    cpuinfo->mimpid.b.mid_vernum, cpuinfo->mimpid.b.last_vernum, isa,
-                    buf);
+                    cpuinfo->mimpid.b.mid_vernum, cpuinfo->mimpid.b.last_vernum,
+                    cpuinfo->xlen, isa, buf);
 }
 
-static void show_isa(CIF_XLEN_Type xlen, U32_CSR_MISA_Type misa,
+static void show_isa(uint32_t xlen, U32_CSR_MISA_Type misa,
                      U32_CSR_MCFG_INFO_Type mcfg)
 {
     CIF_PRINTF("             ISA:");
-    if (xlen == CIF_XLEN_32) {
-        CIF_PRINTF(" RV32");
-    } else if (xlen == CIF_XLEN_64) {
-        CIF_PRINTF(" RV64");
-    } else {
-        CIF_PRINTF(" Unknown");
-    }
+    CIF_PRINTF(" RV%d", xlen);
     for (int i = 0; i < EXTENSION_NUM; i++) {
         if (misa.d & BIT(i)) {
             if ('X' == ('A' + i)) {
