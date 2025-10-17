@@ -260,6 +260,69 @@ typedef struct {
     uint32_t crc_fp0;                            /*!< offset 0x01A0 */
 } IINFO_Type;
 
+typedef enum {
+    CIF_XLEN_32 = 0, /* 0 */
+    CIF_XLEN_64,     /* 1 */
+    CIF_XLEN_128,    /* 2 */
+    MAX_CIF_XLEN     /* 3 */
+} CIF_XLEN_Type;
+
+/**
+ * \brief  Union type to access SMP_CFG register.
+ */
+typedef union {
+    struct {
+        u32_csr_t cc:1;                          /*!< bit: 0 Cluster Cache present */
+        u32_csr_t smp_core_num:6;                /*!< bit: 1..6 smp core number */
+        u32_csr_t iocp_num:6;                    /*!< bit: 7..12 IO Coherency port number */
+        u32_csr_t pmon_num:6;                    /*!< bit: 13..18 performance monitor number */
+        u32_csr_t :13;                           /*!< bit: 19..31 Reserved 0 */
+    } b;                                         /*!< Structure used for bit access */
+    u32_csr_t d;                                 /*!< Type      used for register data access */
+} U32_SMP_CFG_Type;
+
+/**
+ * \brief  Union type to access CC_CFG register.
+ */
+typedef union {
+    struct {
+        u32_csr_t set:4;                         /*!< bit: 0..3 Cluster cache set number */
+        u32_csr_t way:4;                         /*!< bit: 4..7 Cluster cache way number */
+        u32_csr_t lsize:3;                       /*!< bit: 8..10 Cluster cache line size */
+        u32_csr_t ecc:1;                         /*!< bit: 11   Cluster cache ECC support */
+        u32_csr_t tcycle:3;                      /*!< bit: 12..14 Tag ram access cycle */
+        u32_csr_t dcycle:3;                      /*!< bit: 15..17 Data ram access cycle */
+        u32_csr_t :14;                           /*!< bit: 18..31 Reserved */
+    } b;                                         /*!< Structure used for bit access */
+    u32_csr_t d;                                 /*!< Type      used for register data access */
+} U32_CC_CFG_Type;
+
+/**
+ * \brief  Union type to access ECLIC_INFO register.
+ */
+typedef union {
+    struct {
+        u32_csr_t num_interrupt:13;              /*!< bit: 0..12 interrupt source number */
+        u32_csr_t version:8;                     /*!< bit: 13..20 version number */
+        u32_csr_t clicintctlbits:4;              /*!< bit: 21..24 clicintctl register bit-width */
+        u32_csr_t :7;                            /*!< bit: 25..31 Reserved 0 */
+    } b;                                         /*!< Structure used for bit access */
+    u32_csr_t d;                                 /*!< Type      used for register data access */
+} U32_ECLIC_INFO_Type;
+
+/**
+ * \brief Access to the structure of ECLIC Memory Map, which is compatible with TEE.
+ */
+typedef struct {
+    uint8_t cfg;                                 /*!< Offset: 0x000 (R/W)  CLIC configuration register */
+    uint8_t reserved0[3];
+    U32_ECLIC_INFO_Type info;                    /*!< Offset: 0x004 (R/ )  CLIC information register */
+    uint8_t reserved1;
+    uint8_t reserved2;
+    uint8_t reserved3;
+    uint8_t mth;                                 /*!< Offset: 0x00B(R/W)  CLIC machine mode interrupt-level threshold */
+} ECLIC_Type;
+
 /**
  * \brief  CPU CSR bundles
  */
@@ -277,72 +340,10 @@ typedef struct {
     U64_CSR_MPPICFG_INFO_Type mppicfginfo;
     U64_CSR_MFIOCFG_INFO_Type mfiocfginfo;
     IINFO_Type *iinfo;                           /*!< IREGION INFO memory pointer */
+    U32_SMP_CFG_Type smpcfg;
+    U32_CC_CFG_Type cccfg;
+    ECLIC_Type *eclic;                           /*!< ECLIC memory pointer */
 } CPU_INFO_Group;
-
-typedef enum {
-    CIF_XLEN_32 = 0, /* 0 */
-    CIF_XLEN_64,     /* 1 */
-    CIF_XLEN_128,    /* 2 */
-    MAX_CIF_XLEN     /* 3 */
-} CIF_XLEN_Type;
-
-/**
- * \brief  Union type to access SMP_CFG CSR register.
- */
-typedef union {
-    struct {
-        u32_csr_t cc:1;                          /*!< bit: 0 Cluster Cache present */
-        u32_csr_t smp_core_num:6;                /*!< bit: 1..6 smp core number */
-        u32_csr_t iocp_num:6;                    /*!< bit: 7..12 IO Coherency port number */
-        u32_csr_t pmon_num:6;                    /*!< bit: 13..18 performance monitor number */
-        u32_csr_t :13;                           /*!< bit: 19..31 Reserved 0 */
-    } b;                                         /*!< Structure used for bit access */
-    u32_csr_t d;                                 /*!< Type      used for csr data access */
-} U32_CSR_SMP_CFG_Type;
-
-/**
- * \brief  Union type to access SMP_CFG CSR register.
- */
-typedef union {
-    struct {
-        u32_csr_t set:4;                         /*!< bit: 0..3 Cluster cache set number */
-        u32_csr_t way:4;                         /*!< bit: 4..7 Cluster cache way number */
-        u32_csr_t lsize:3;                       /*!< bit: 8..10 Cluster cache line size */
-        u32_csr_t ecc:1;                         /*!< bit: 11   Cluster cache ECC support */
-        u32_csr_t tcycle:3;                      /*!< bit: 12..14 Tag ram access cycle */
-        u32_csr_t dcycle:3;                      /*!< bit: 15..17 Data ram access cycle */
-        u32_csr_t :14;                           /*!< bit: 18..31 Reserved */
-    } b;                                         /*!< Structure used for bit access */
-    u32_csr_t d;                                 /*!< Type      used for csr data access */
-} U32_CSR_CC_CFG_Type;
-
-/**
- * \brief  Union type to access SMP_CFG CSR register.
- */
-typedef union {
-    struct {
-        u32_csr_t num_interrupt:13;              /*!< bit: 0..12 interrupt source number */
-        u32_csr_t version:8;                     /*!< bit: 13..20 version number */
-        u32_csr_t clicintctlbits:4;              /*!< bit: 21..24 clicintctl register bit-width */
-        u32_csr_t :7;                            /*!< bit: 25..31 Reserved 0 */
-    } b;                                         /*!< Structure used for bit access */
-    u32_csr_t d;                                 /*!< Type      used for csr data access */
-} U32_CSR_ECLIC_INFO_Type;
-
-/**
- * \brief Access to the structure of ECLIC Memory Map, which is compatible with TEE.
- */
-typedef struct {
-    uint8_t cfg;                                 /*!< Offset: 0x000 (R/W)  CLIC configuration register */
-    uint8_t reserved0[3];
-    U32_CSR_ECLIC_INFO_Type info;                /*!< Offset: 0x004 (R/ )  CLIC information register */
-    uint8_t reserved1;
-    uint8_t reserved2;
-    uint8_t reserved3;
-    uint8_t mth;                                 /*!< Offset: 0x00B(R/W)  CLIC machine mode interrupt-level threshold */
-} ECLIC_Type;
-
-
 /**
  * \brief  Union type to access MVLM_CFG_LO register.
  */

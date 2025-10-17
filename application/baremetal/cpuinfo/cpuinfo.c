@@ -160,9 +160,7 @@ int get_basic_cpuinfo(const CPU_INFO_Group *csrs, char *str, unsigned long len)
 
     if (mcfg.b.smp) {
         unsigned long iregion_base = csrs->mirgbinfo.d & (~0x3FF);
-        U32_CSR_SMP_CFG_Type smp_cfg =
-            *(U32_CSR_SMP_CFG_Type *)(iregion_base + IREGION_SMP_OFS + 4);
-        STRCAT_BUF(buf, "SMPx%d, ", smp_cfg.b.smp_core_num + 1);
+        STRCAT_BUF(buf, "SMPx%d, ", csrs->smpcfg.b.smp_core_num + 1);
     }
 
     /* show local memory and cache info */
@@ -367,8 +365,7 @@ static void show_iregion(const CPU_INFO_Group *csrs)
         CIF_PRINTF("                  SMP         64KB        %#lx\r\n",
                    iregion_base + IREGION_SMP_OFS);
     }
-    U32_CSR_SMP_CFG_Type smp_cfg =
-        *(U32_CSR_SMP_CFG_Type *)(iregion_base + IREGION_SMP_OFS + 4);
+    U32_SMP_CFG_Type smp_cfg = csrs->smpcfg;
     /* If has eclic and has equal or more than 1 core, CIDU will present
      * The actual core number is `smp_core_num + 1` */
     if (mcfg.b.eclic && (smp_cfg.b.smp_core_num >= 1)) {
@@ -390,8 +387,8 @@ static void show_iregion(const CPU_INFO_Group *csrs)
     }
     /* ECLIC */
     if (mcfg.b.eclic) {
-        ECLIC_Type *eclic = (ECLIC_Type *)(iregion_base + IREGION_ECLIC_OFS);
-        U32_CSR_ECLIC_INFO_Type eclic_info = eclic->info;
+        ECLIC_Type *eclic = csrs->eclic;
+        U32_ECLIC_INFO_Type eclic_info = eclic->info;
         CIF_PRINTF("           ECLIC:");
         CIF_PRINTF(" VERSION=0x%x", eclic_info.b.version);
         CIF_PRINTF(" NUM_INTERRUPT=%u", eclic_info.b.num_interrupt);
@@ -402,8 +399,7 @@ static void show_iregion(const CPU_INFO_Group *csrs)
     }
     /* L2CACHE */
     if (smp_cfg.b.cc) {
-        U32_CSR_CC_CFG_Type cc_cfg =
-            *(U32_CSR_CC_CFG_Type *)(iregion_base + IREGION_SMP_OFS + 8);
+        U32_CC_CFG_Type cc_cfg = csrs->cccfg;
         CIF_PRINTF("         L2CACHE:");
         show_cache_info(POW2(cc_cfg.b.set), cc_cfg.b.way + 1,
                         POW2(cc_cfg.b.lsize + 2), cc_cfg.b.ecc);

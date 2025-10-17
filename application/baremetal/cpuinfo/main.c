@@ -58,6 +58,15 @@ int main(void)
         csrs.mirgbinfo.d = (uint64_t)__RV_CSR_READ(CSR_MIRGB_INFO);
         unsigned long iregion_base = csrs.mirgbinfo.d & (~0x3FF);
         csrs.iinfo = (IINFO_Type *)iregion_base;
+        if (mcfg.b.smp) {
+            csrs.smpcfg.d = *(uint32_t *)(iregion_base + IREGION_SMP_OFS + 0x4);
+        }
+        if (csrs.smpcfg.b.cc) {
+            csrs.cccfg.d = *(uint32_t *)(iregion_base + IREGION_SMP_OFS + 0x8);
+        }
+        if (mcfg.b.eclic) {
+            csrs.eclic = (ECLIC_Type *)(iregion_base + IREGION_ECLIC_OFS);
+        }
     }
     if (mcfg.b.ppi) {
         csrs.mppicfginfo.d = (uint64_t)__RV_CSR_READ(CSR_MPPICFG_INFO);
