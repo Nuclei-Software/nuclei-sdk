@@ -95,6 +95,7 @@
     },
     "expected": {
         "test/core": {"build": true, "run": true},
+        "application/baremetal/cpuinfo": {"build": true, "run": false},
         "application/baremetal/demo_spmp": {"build": true, "run": true},
         "application/baremetal/demo_smpu": {"build": true, "run": true},
         "application/baremetal/demo_smode_eclic": {"build": true, "run": true},
