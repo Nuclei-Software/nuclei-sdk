@@ -79,6 +79,10 @@ void show_cpuinfo(const CPU_INFO_Group *cpuinfo)
     if (cpuinfo == NULL) {
         return;
     }
+    if (cpuinfo->misa.d == 0) {
+        CIF_PRINTF("\r\n-----Invalid RISC-V MISA CSR found, no CPU Information could be dumped-----\r\n");
+        return;
+    }
     CIF_PRINTF("\r\n-----Nuclei RISC-V CPU Configuration Information-----\r\n");
 
     /* ID and version */
@@ -107,6 +111,9 @@ void show_cpuinfo(const CPU_INFO_Group *cpuinfo)
 int get_basic_cpuinfo(const CPU_INFO_Group *cpuinfo, char *str, unsigned long len)
 {
     if (str == NULL || cpuinfo == NULL) {
+        return -1;
+    }
+    if (cpuinfo->misa.d == 0) {
         return -1;
     }
 
