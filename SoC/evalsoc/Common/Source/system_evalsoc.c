@@ -1293,6 +1293,11 @@ void __sync_harts(void)
         // L1 I/D Cache Enable is done in _premain_init
         // clear msip pending
         for (int i = 0; i < SMP_CPU_CNT; i ++) {
+            // NOTE: Here you must make sure other harts are bringup, otherwise main
+            // hart will wait it here, so banner will be print
+            if (i != hartid) { // wait for other harts software pending bit set
+                while (CLINT_MSIP(clint_base, i) == 0);
+            }
             CLINT_MSIP(clint_base, i) = 0;
         }
         __SMP_RWMB();
