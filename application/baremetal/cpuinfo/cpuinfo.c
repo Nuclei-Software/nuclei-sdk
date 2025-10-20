@@ -340,32 +340,32 @@ static void show_iregion(const CPU_INFO_Group *cpuinfo)
     CIF_PRINTF("         IREGION:");
     U64_CSR_MIRGB_INFO_Type mirgb = cpuinfo->mirgbinfo;
     uint64_t iregion_base = cpuinfo->iregion_base;
-    CIF_PRINTF(" %#lx", (addr_t)iregion_base);
+    CIF_PRINTF(" %#" CIF_PRIxADDR "", (addr_t)iregion_base);
     CIF_PRINTF(" %s\r\n", cvt_size(POW2(mirgb.b.iregion_size + 9)));
     CIF_PRINTF("                  Unit        Size        Address\r\n");
-    CIF_PRINTF("                  IINFO       64KB        0x%lx\r\n",
+    CIF_PRINTF("                  IINFO       64KB        0x%" CIF_PRIxADDR "\r\n",
                (addr_t)iregion_base + CPUINFO_IRG_IINFO_OFS);
-    CIF_PRINTF("                  DEBUG       64KB        %#lx\r\n",
+    CIF_PRINTF("                  DEBUG       64KB        %#" CIF_PRIxADDR "\r\n",
                (addr_t)iregion_base + CPUINFO_IRG_DEBUG_OFS);
     if (mcfg.b.eclic) {
-        CIF_PRINTF("                  ECLIC       64KB        %#lx\r\n",
+        CIF_PRINTF("                  ECLIC       64KB        %#" CIF_PRIxADDR "\r\n",
                    (addr_t)iregion_base + CPUINFO_IRG_ECLIC_OFS);
     }
-    CIF_PRINTF("                  TIMER       64KB        %#lx\r\n",
+    CIF_PRINTF("                  TIMER       64KB        %#" CIF_PRIxADDR "\r\n",
                (addr_t)iregion_base + CPUINFO_IRG_TIMER_OFS);
     if (mcfg.b.smp) {
-        CIF_PRINTF("                  SMP         64KB        %#lx\r\n",
+        CIF_PRINTF("                  SMP         64KB        %#" CIF_PRIxADDR "\r\n",
                    (addr_t)iregion_base + CPUINFO_IRG_SMP_OFS);
     }
     U32_SMP_CFG_Type smp_cfg = cpuinfo->smpcfg;
     /* If has eclic and has equal or more than 1 core, CIDU will present
      * The actual core number is `smp_core_num + 1` */
     if (mcfg.b.eclic && (smp_cfg.b.smp_core_num >= 1)) {
-        CIF_PRINTF("                  CIDU        64KB        %#lx\r\n",
+        CIF_PRINTF("                  CIDU        64KB        %#" CIF_PRIxADDR "\r\n",
                    (addr_t)iregion_base + CPUINFO_IRG_IDU_OFS);
     }
     if (mcfg.b.plic) {
-        CIF_PRINTF("                  PLIC        64MB        %#lx\r\n",
+        CIF_PRINTF("                  PLIC        64MB        %#" CIF_PRIxADDR "\r\n",
                    (addr_t)iregion_base + CPUINFO_IRG_PLIC_OFS);
     }
     /* SMP */
@@ -426,7 +426,7 @@ static void show_mfiocfg(U32_CSR_MCFG_INFO_Type mcfg,
 {
     if (mcfg.b.fio) {
         CIF_PRINTF("             FIO:");
-        CIF_PRINTF(" %#lx", (addr_t)((uint64_t)mfiocfg.d & (~0x3FFULL)));
+        CIF_PRINTF(" %#" CIF_PRIxADDR "", (addr_t)((uint64_t)mfiocfg.d & (~0x3FFULL)));
         CIF_PRINTF(" %s\r\n", cvt_size(POW2(mfiocfg.b.fio_size + 9)));
     }
 }
@@ -436,7 +436,7 @@ static void show_mppicfg(U32_CSR_MCFG_INFO_Type mcfg,
 {
     if (mcfg.b.ppi) {
         CIF_PRINTF("             PPI:");
-        CIF_PRINTF(" %#lx", (addr_t)((uint64_t)mppicfg.d & (~0x3FFULL)));
+        CIF_PRINTF(" %#" CIF_PRIxADDR "", (addr_t)((uint64_t)mppicfg.d & (~0x3FFULL)));
         CIF_PRINTF(" %s\r\n", cvt_size(POW2(mppicfg.b.ppi_size + 9)));
     }
 }
@@ -583,7 +583,7 @@ static void show_mvlm_cfg(IINFO_Type *iinfo)
         IINFO_MVLM_CFG_HI_Type mvlm_cfg_hi = iinfo->mvlm_cfg_hi;
         uint64_t vlm_base =
             (uint64_t)mvlm_cfg_hi << 32 | (mvlm_cfg_lo.d & (~0x3FFULL));
-        CIF_PRINTF("                      base=0x%lx\r\n", (addr_t)vlm_base);
+        CIF_PRINTF("                      base=0x%" CIF_PRIxADDR "\r\n", (addr_t)vlm_base);
         CIF_PRINTF("                      size=%s\r\n",
                    cvt_size(POW2(mvlm_cfg_lo.b.vlm_size + 9)));
     } else {
@@ -600,7 +600,7 @@ static void show_flash_bus(IINFO_Type *iinfo)
         IINFO_FLASH_BASE_ADDR_HI_Type addr_hi = iinfo->flash_base_addr_hi;
         uint64_t flash_base =
             (uint64_t)addr_hi << 32 | (addr_lo.d & (~0x3FFULL));
-        CIF_PRINTF("                      base=0x%lx\r\n", (addr_t)flash_base);
+        CIF_PRINTF("                      base=0x%" CIF_PRIxADDR "\r\n", (addr_t)flash_base);
         CIF_PRINTF("                      size=%s\r\n",
                    cvt_size(addr_lo.b.flash_size + 9));
     } else {
@@ -622,7 +622,7 @@ static void show_mem_region_cfg(IINFO_Type *iinfo)
         } else {
             CIF_PRINTF("                      status: disable\r\n");
         }
-        CIF_PRINTF("                      base=0x%lx\r\n", (addr_t)region_base);
+        CIF_PRINTF("                      base=0x%" CIF_PRIxADDR "\r\n", (addr_t)region_base);
         CIF_PRINTF("                      size=%s\r\n",
                    cvt_size(region_lo.b.mem_region_size + 9));
     } else {
@@ -638,7 +638,7 @@ static void show_mem_region_cfg(IINFO_Type *iinfo)
         } else {
             CIF_PRINTF("                      status: disable\r\n");
         }
-        CIF_PRINTF("                      base=0x%lx\r\n", (addr_t)region_base);
+        CIF_PRINTF("                      base=0x%" CIF_PRIxADDR "\r\n", (addr_t)region_base);
         CIF_PRINTF("                      size=%s\r\n",
                    cvt_size(region_lo.b.mem_region_size + 9));
     } else {
@@ -660,7 +660,7 @@ static void show_mcppi_cfg(IINFO_Type *iinfo)
         } else {
             CIF_PRINTF("                      status: disable\r\n");
         }
-        CIF_PRINTF("                      base=0x%lx\r\n", (addr_t)mcppi_base);
+        CIF_PRINTF("                      base=0x%" CIF_PRIxADDR "\r\n", (addr_t)mcppi_base);
         CIF_PRINTF("                      size=%s\r\n",
                    cvt_size(mcppi_lo.b.cppi_size + 9));
     } else {

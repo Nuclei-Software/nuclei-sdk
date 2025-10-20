@@ -6,5 +6,6 @@
 #define CIF_PRINTF(fmt, ...) printf(fmt, ##__VA_ARGS__)
 
 typedef unsigned long addr_t;
+#define CIF_PRIxADDR "lx"
 
 #endif
