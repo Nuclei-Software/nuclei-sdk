@@ -1243,6 +1243,7 @@ volatile unsigned long CpuIRegionBase = 0xFFFFFFFF;
 
 #define CLINT_MSIP(base, hartid)    (*(volatile uint32_t *)((uintptr_t)((base) + ((hartid) * 4))))
 #define SMP_CTRLREG(base, ofs)      (*(volatile uint32_t *)((uintptr_t)((base) + (ofs))))
+#define MAX_SYNC_HARTS_WAITCNT      10000
 
 void __sync_harts(void) __attribute__((section(".text.init")));
 /**
@@ -1265,6 +1266,7 @@ void __sync_harts(void)
     unsigned long tmr_hartid = __get_hart_index();
     unsigned long clint_base, irgb_base, smp_base;
     unsigned long mcfg_info;
+    volatile unsigned long cnt = 0;
 
     // NOTE: we should avoid to use global variable such as CpuIRegionBase before smp cpu are configured
     mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
@@ -1296,7 +1298,13 @@ void __sync_harts(void)
             // NOTE: Here you must make sure other harts are bringup, otherwise main
             // hart will wait it here, so banner will be print
             if (i != hartid) { // wait for other harts software pending bit set
-                while (CLINT_MSIP(clint_base, i) == 0);
+                do {
+                    cnt += 1;
+                    if (cnt > MAX_SYNC_HARTS_WAITCNT) {
+                        __NOP();
+                        break;
+                    }
+                } while (CLINT_MSIP(clint_base, i) == 0);
             }
             CLINT_MSIP(clint_base, i) = 0;
         }
