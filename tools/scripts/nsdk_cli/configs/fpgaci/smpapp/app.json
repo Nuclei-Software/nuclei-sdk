@@ -3,7 +3,7 @@
         "target" : "hardware",
         "hardware" : {
             "baudrate": 115200,
-            "timeout": 60
+            "timeout": 120
         },
         "qemu": {
             "qemu32": "qemu-system-riscv32",
@@ -39,7 +39,7 @@
         "application/freertos/smpdemo": {
             "build_config" : {},
             "checks": {
-                "PASS": ["timers Callback 3 on hart"]
+                "PASS": ["timers Callback 500 on hart"]
             }
         },
         "application/baremetal/smphello": {
