@@ -1297,6 +1297,7 @@ void __sync_harts(void)
         for (int i = 0; i < SMP_CPU_CNT; i ++) {
             // NOTE: Here you must make sure other harts are bringup, otherwise main
             // hart will wait it here, so banner will be print
+            cnt = 0;
             if (i != hartid) { // wait for other harts software pending bit set
                 do {
                     cnt += 1;
