@@ -49,6 +49,10 @@ absolute interrupt level range from 1 to (2^lvlbits-1) while ``lvlbits = min(nlb
 If you set ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` to value above the accepted
 value range, it will use the max value.
 
+To avoid **DEAD LOCK** in FreeRTOS SMP, we recommended when there is no idle priority(0) application task
+created for each CORE, ``configIDLE_SHOULD_YIELD`` must be set to ``0``, and to stay low power for
+idle task with nothing to do, it is recommend to execute ``__WFI()`` in background.
+
 If you want to learn about how to use FreeRTOS APIs, you need to go to
 its website to learn the FreeRTOS documentation in its website.
 

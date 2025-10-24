@@ -266,4 +266,10 @@ void vApplicationIdleHook(void)
     if there is a lot of heap remaining unallocated then
     the value of configTOTAL_HEAP_SIZE in FreeRTOSConfig.h can be
     reduced accordingly. */
+    __WFI(); // Enter to low power
+}
+
+void vApplicationPassiveIdleHook(void)
+{
+    __WFI(); // Enter to low power
 }

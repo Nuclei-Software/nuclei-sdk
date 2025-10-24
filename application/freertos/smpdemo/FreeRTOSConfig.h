@@ -141,7 +141,7 @@
  * application task if there is an Idle priority (priority 0) application task that
  * can run.  Set to 0 to have the Idle task use all of its timeslice.  Default to 1
  * if left undefined. */
-#define configIDLE_SHOULD_YIELD                    1
+#define configIDLE_SHOULD_YIELD                    0
 
 /* Each task has an array of task notifications.
  * configTASK_NOTIFICATION_ARRAY_ENTRIES sets the number of indexes in the array.
@@ -340,7 +340,7 @@
  * functionality in the build.  Set to 0 to exclude the hook functionality from the
  * build.  The application writer is responsible for providing the hook function
  * for any set to 1.  See https://www.freertos.org/a00016.html. */
-#define configUSE_IDLE_HOOK                   0
+#define configUSE_IDLE_HOOK                   1
 #define configUSE_TICK_HOOK                   0
 #define configUSE_MALLOC_FAILED_HOOK          0
 #define configUSE_DAEMON_TASK_STARTUP_HOOK    0
@@ -546,7 +546,7 @@
  * configUSE_PASSIVE_IDLE_HOOK to 1 to allow the application writer to use
  * the passive idle task hook to add background functionality without the overhead
  * of a separate task. Defaults to 0 if left undefined. */
-#define configUSE_PASSIVE_IDLE_HOOK               0
+#define configUSE_PASSIVE_IDLE_HOOK               1
 
 /* When using SMP (i.e. configNUMBER_OF_CORES is greater than one),
  * configTIMER_SERVICE_TASK_CORE_AFFINITY allows the application writer to set

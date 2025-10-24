@@ -24,6 +24,13 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Update ``cpuinfo`` to display additional CPU features, including prefetch capabilities, hardware performance configirations, supported ISAs, and more. See :ref:`design_app_cpuinfo`.
   - Add ``get_basic_cpuinfo`` in ``cpuinfo`` to get basic CPU information in a single string.
   - Add ``CHK_MODE`` makefile variable to select different check mode for ``demo_pmp`` and ``demo_spmu`` applications.
+  - Fix FreeRTOS SMP ``smpdemo`` via ``configIDLE_SHOULD_YIELD`` should set to ``0`` when no idle priority(0) application
+    task in main.c to avoid idle task trigger task switch frequently via ``taskYIELD()``, when freertos smp run on more than 2 COREs, it will
+    make CORE 0 not able to acquire lock with interrupt disabled, since other COREs are acquire and release locks, then CORE
+    0 timer tick will not be able to be active since interrupt is disabled, then higher priority tasks in other COREs will
+    not able to be wake up even time delay reached, so to fix this issue, we need to set ``configIDLE_SHOULD_YIELD`` to ``0``.
+    To stay lowpower, we also enable ``configUSE_PASSIVE_IDLE_HOOK`` and ``configUSE_IDLE_HOOK`` to ``1`` and in hook code,
+    we let it execute ``wfi``.
 
 * OS
 
