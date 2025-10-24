@@ -82,7 +82,7 @@
 /* The period of the example software timer, specified in milliseconds, and
 converted to ticks using the pdMS_TO_TICKS() macro. */
 #define mainSOFTWARE_TIMER_PERIOD_MS    pdMS_TO_TICKS(500)
-#define TASKDLYMS                       pdMS_TO_TICKS(100)
+#define TASKDLYMS                       pdMS_TO_TICKS(15)
 #define mainQUEUE_LENGTH                (1)
 
 static void prvSetupHardware(void);

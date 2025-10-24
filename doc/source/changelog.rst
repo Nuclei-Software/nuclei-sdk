@@ -31,6 +31,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
     not able to be wake up even time delay reached, so to fix this issue, we need to set ``configIDLE_SHOULD_YIELD`` to ``0``.
     To stay lowpower, we also enable ``configUSE_PASSIVE_IDLE_HOOK`` and ``configUSE_IDLE_HOOK`` to ``1`` and in hook code,
     we let it execute ``wfi``.
+  - Change FreeRTOS SMP ``smpdemo`` task delay time from 500 to 15 ms to make it possible to let different tasks run on different CORE.
 
 * OS
 
