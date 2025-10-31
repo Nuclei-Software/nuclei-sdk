@@ -131,9 +131,7 @@ int get_basic_cpuinfo(const CPU_INFO_Group *cpuinfo, char *str, unsigned long le
     isa[pos] = '\0';
 
     if (!cpuinfo->mcfg_exist) {
-        return snprintf(str, len, BASIC_CPUINFO_FMT, cpuinfo->mhartid, cpuinfo->marchid.d,
-                        cpuinfo->mimpid.b.first_vernum, cpuinfo->mimpid.b.mid_vernum,
-                        cpuinfo->mimpid.b.last_vernum, cpuinfo->xlen, isa);
+        goto simple;
     }
 
     /* construct features string */
@@ -183,11 +181,19 @@ int get_basic_cpuinfo(const CPU_INFO_Group *cpuinfo, char *str, unsigned long le
     if (strlen(buf) > 0 && buf[strlen(buf) - 2] == ',') {
         buf[strlen(buf) - 2] = '\0';
     }
+    /* Feature name must have at least 2 chars */
+    if (strlen(buf) < 2) {
+        goto simple;
+    }
 
     return snprintf(str, len, BASIC_CPUINFO_FMT ", Feature: %s", cpuinfo->mhartid,
                     cpuinfo->marchid.d, cpuinfo->mimpid.b.first_vernum,
                     cpuinfo->mimpid.b.mid_vernum, cpuinfo->mimpid.b.last_vernum,
                     cpuinfo->xlen, isa, buf);
+simple:
+    return snprintf(str, len, BASIC_CPUINFO_FMT, cpuinfo->mhartid, cpuinfo->marchid.d,
+                    cpuinfo->mimpid.b.first_vernum, cpuinfo->mimpid.b.mid_vernum,
+                    cpuinfo->mimpid.b.last_vernum, cpuinfo->xlen, isa);
 }
 
 static void show_isa(uint32_t xlen, U32_CSR_MISA_Type misa,
