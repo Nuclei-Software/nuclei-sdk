@@ -37,8 +37,12 @@
 #if defined(__DSP_PRESENT) && (__DSP_PRESENT == 1)
 
 #if defined(__INC_INTRINSIC_API) && (__INC_INTRINSIC_API == 1)
-#ifndef __ICCRISCV__
+#if defined(__zcc__)
 #include <rvp_intrinsic.h>
+#else
+#if !defined(__ICCRISCV__) && !defined(__llvm__)
+#include <rvp_intrinsic.h>
+#endif
 #endif
 #endif
 
