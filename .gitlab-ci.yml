@@ -43,11 +43,8 @@ build_doc:
       - doc/build
     expire_in: 2 day
   before_script:
-    - apt update
-    - apt install -y lftp python3 make latexmk texlive-base texlive-latex-extra python3-pip
-    - pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-    - python3 -m pip install --upgrade pip
-    - pip3 install -r doc/requirements.txt
+    - python3 --version
+    - pip3 --version
   script:
     - cd doc
     - make clean
@@ -101,12 +98,6 @@ deploy_website:
   interruptible: true
   stage: build
   before_script:
-    - apt update
-    # install libncursesw5 for ubuntu 20.04 and later for libtinfo.so.5 missing
-    - apt install -y python3 make python3-pip libncursesw5
-    - pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-    - python3 -m pip install --upgrade pip
-    - pip3 install -r tools/scripts/requirements.txt
     - which riscv64-unknown-elf-gcc && riscv64-unknown-elf-gcc --version
     - which riscv64-unknown-elf-clang && riscv64-unknown-elf-clang --version
     - which qemu-system-riscv32 && qemu-system-riscv32 --version
