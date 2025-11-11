@@ -59,12 +59,18 @@ debugconfig:
   - type: openocd
     description: Nuclei OpenOCD
     configs:
+      - key: DEBUG_NAME
+        value: "${eclipse_home}toolchain/gcc/bin/riscv64-unknown-elf-gdb"
+        condition: $( ${buildconfig.type} == "zcc"  )
       - key: config
         value: "openocd_evalsoc.cfg"
 
   - type: jlink
     description: Segger Jlink
     configs:
+       - key: DEBUG_NAME
+         value: "${eclipse_home}toolchain/gcc/bin/riscv64-unknown-elf-gdb"
+         condition: $( ${buildconfig.type} == "zcc"  )
        - key: device_name
          value: # if leave empty, it will try riscv_arch conversion, otherwise it will directly using this value
        - key: riscv_arch
@@ -78,6 +84,9 @@ debugconfig:
   - type: qemu
     description: Nuclei QEMU
     configs:
+       - key: DEBUG_NAME
+         value: "${eclipse_home}toolchain/gcc/bin/riscv64-unknown-elf-gdb"
+         condition: $( ${buildconfig.type} == "zcc"  )
        - key: nuclei_core
          value: ${nuclei_core}
        - key: nuclei_archext
