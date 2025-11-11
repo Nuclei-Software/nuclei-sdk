@@ -82,6 +82,11 @@ which is only supported in Linux.
 toolchain
 ~~~~~~~~~
 
+.. note::
+
+    - Since Nuclei SDK 0.9.0 release, the support for Terapines ZCC toolchain required Zcc 4.1.7 release.
+    - Zcc 4.1.7 release is integrated in Nuclei Studio 2025.10.
+
 The **toolchain** directory contains different toolchain support makefiles,
 such as Nuclei GNU toolchain, Nuclei LLVM toolchain and Terapines toolchain,
 if you want to add a different toolchain support, you also need to add a new

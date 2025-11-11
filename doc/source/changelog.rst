@@ -6,6 +6,10 @@ Changelog
 V0.9.0-dev
 ----------
 
+.. note::
+
+    - Please use ``Nuclei Studio 2025.10`` with v0.9.0 and later version.
+
 This is release version of ``0.9.0`` of Nuclei SDK, which is still under development.
 
 * NMSIS
@@ -50,6 +54,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
     the same as gcc, see report here https://github.com/llvm/llvm-project/pull/82084#discussion_r2387373311, so when you use libncrt library with llvm toolchain, the header file could be wrongly included using newlib ones
   - Recommend ``-fno-strict-aliasing`` as common compiler options should be passed, see :ref:`develop_buildsystem_var_common_flags``
   - Must pass ``-fomit-frame-pointer`` when using ``Zc`` extension to generate push/pop instructions, see https://github.com/riscvarchive/riscv-code-size-reduction/issues/194
+  - Toolchain Terapines ZCC support is updated to match latest ZCC 4.1.7 release which is integrated with Nuclei Studio 2025.10
 
 * SoC
 
