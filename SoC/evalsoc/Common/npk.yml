@@ -440,6 +440,10 @@ debugconfig:
     description: Nuclei QEMU
     svd: evalsoc.svd
 
+  - type: nucleimodel
+    description: Nuclei CPU Model
+    svd: evalsoc.svd
+
   - type: jlink
     description: Segger Jlink
     svd: evalsoc.svd

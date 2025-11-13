@@ -106,13 +106,45 @@ debugconfig:
        - key: smp
          value: ${nuclei_smp}
          condition: $( ${nuclei_smp} > 1 )
-       # TODO: need arithop support in npk
+       # NOTE: need arithop support in npk
        - key: smp
          value: $( arithop(${boothartid} + 1) )
          condition: $( ${nuclei_smp} <= 1 )
        - key: enableSemihosting
          value: true
          condition: $( ${semihost} == 1 )
+       - key: doDebugInRam
+         value: true
+
+  - type: nucleimodel
+    description: Nuclei CPU Model
+    configs:
+       - key: DEBUG_NAME
+         value: "${eclipse_home}toolchain/gcc/bin/riscv64-unknown-elf-gdb"
+         condition: $( ${buildconfig.type} == "zcc" )
+       - key: nuclei_core
+         value: ${nuclei_core}
+       - key: nuclei_archext
+         value: ${nuclei_archext}
+       - key: download_mode
+         value: ${download_mode}
+       - key: riscv_arch
+         value: ${nuclei_core.arch}
+       # TODO: current nuclei model 2025.10 dont support smp debug
+       - key: smp
+         value: $( arithop(${boothartid} + 1) )
+         condition: $( ${nuclei_smp} <= 1 )
+       # by default, enable profiling *.gmon and flame graph *.gtef
+       - key: gdbServerOther
+         value: --gprof=1 --flame=1
+       - key: doDebugInRam
+         value: true
+       - key: nucleiModelTracePath
+         value: Debug/cpu.rvtrace
+       - key: gdbClientOtherCommands
+         # workaround: set remotetimeout 250 will make some debug fail
+         # need to be fixed by nuclei model in future
+         value: "set mem inaccessible-by-default off"
 
   - type: jlink
     description: Segger Jlink
