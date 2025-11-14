@@ -10,17 +10,20 @@ Use Nuclei SDK in Nuclei Studio
 
 .. caution::
 
-   If you are looking for Nuclei 100 series such as N100 support, you need to switch to
-   **master_n100** or **nuclei_n100** branch of this repository to try it out.
+   - If you are looking for Nuclei 100 series such as N100 support, you need to switch to
+     **master_n100** or **nuclei_n100** branch of this repository to try it out.
 
-   If you are evaluating Nuclei CPU, in future released **nuclei_gen**, you will be able
+   - If you are evaluating Nuclei CPU, in future released **nuclei_gen**, you will be able
    to use the generated Nuclei SDK, please see :ref:`design_soc_evalsoc_usage`.
 
-   For **Nuclei SDK 0.6.0** version and later ones, please use `Nuclei Studio 2024.06`_ or
-   Nuclei RISC-V Toolchain/OpenOCD/QEMU 2024.06.
+   - For **Nuclei SDK 0.6.0** version and later ones, please use `Nuclei Studio 2024.06`_ or
+     Nuclei RISC-V Toolchain/OpenOCD/QEMU 2024.06.
 
-   For **Nuclei SDK 0.8.0** version and later ones, please use `Nuclei Studio 2025.02`_ or
-   Nuclei RISC-V Toolchain/OpenOCD/QEMU 2025.02.
+   - For **Nuclei SDK 0.8.0** version and later ones, please use `Nuclei Studio 2025.02`_ or
+     Nuclei RISC-V Toolchain/OpenOCD/QEMU/CPUModel 2025.02.
+
+   - For **Nuclei SDK 0.9.0** version and later ones, please use `Nuclei Studio 2025.10`_ or
+     Nuclei RISC-V Toolchain/OpenOCD/QEMU/CPUModel 2025.10.
 
 From `Nuclei Toolchain 2023.10`_, both gnu and llvm toolchain are provided, and toolchain
 prefix changed from ``riscv-nuclei-elf-`` to ``riscv64-unknown-elf-``, and 0.5.0 SDK release
@@ -63,10 +66,10 @@ no need to do the following steps below, the prebuilt tools are already included
 
 For example:
 
-* In Windows, if you have extracted the Nuclei Studio IDE to ``D:\Software\NucleiStudio_IDE_202406``,
-  then you can find the prebuilt tools in ``D:\Software\NucleiStudio_IDE_202406\NucleiStudio\toolchain``.
-* In Linux, if you have extracted the Nuclei Studio IDE to ``/home/labdev/NucleiStudio_IDE_202406``,
-  then you can find the prebuilt tools in ``/home/labdev/NucleiStudio_IDE_202406/NucleiStudio/toolchain``.
+* In Windows, if you have extracted the Nuclei Studio IDE to ``D:\Software\NucleiStudio_IDE_202510``,
+  then you can find the prebuilt tools in ``D:\Software\NucleiStudio_IDE_202510\NucleiStudio\toolchain``.
+* In Linux, if you have extracted the Nuclei Studio IDE to ``/home/labdev/NucleiStudio_IDE_202510``,
+  then you can find the prebuilt tools in ``/home/labdev/NucleiStudio_IDE_202510/NucleiStudio/toolchain``.
 
 You can also update tools located in the Nuclei Studio prebuilt tools ``toolchain`` by downloading newer version
 from `Nuclei Tools`_ and replace it.
@@ -115,32 +118,32 @@ The source code of Nuclei SDK is maintained in |github| and |gitee|.
      create ``setup_config.bat`` in ``nuclei-sdk`` folder, and open this file
      your editor, and paste the following content, assuming you followed
      :ref:`quickstart_setup_tools_env`, and prebuilt tools located in
-     ``D:\Software\NucleiStudio_IDE_202406\NucleiStudio\toolchain``,
+     ``D:\Software\NucleiStudio_IDE_202510\NucleiStudio\toolchain``,
      otherwise please use your correct tool root path.
 
      .. code-block:: bat
 
-        set NUCLEI_TOOL_ROOT=D:\Software\NucleiStudio_IDE_202406\NucleiStudio\toolchain
+        set NUCLEI_TOOL_ROOT=D:\Software\NucleiStudio_IDE_202510\NucleiStudio\toolchain
 
      If you want to use Nuclei SDK in **Windows PowerShell** terminal, you need to create
      a ``setup_config.ps1`` in ``nuclei-sdk`` folder, and edit this file with content below
-     if your prebuilt tools are located in ``D:\Software\NucleiStudio_IDE_202406\NucleiStudio\toolchain``:
+     if your prebuilt tools are located in ``D:\Software\NucleiStudio_IDE_202510\NucleiStudio\toolchain``:
 
      .. code-block:: ps1
 
-        $NUCLEI_TOOL_ROOT="D:\Software\NucleiStudio_IDE_202406\NucleiStudio\toolchain"
+        $NUCLEI_TOOL_ROOT="D:\Software\NucleiStudio_IDE_202510\NucleiStudio\toolchain"
 
 
   - **Linux**
      Create ``setup_config.sh`` in ``nuclei-sdk`` folder, and open this file
      your editor, and paste the following content, assuming you followed
      :ref:`quickstart_setup_tools_env` and prebuilt tools located in
-     ``/home/labdev/NucleiStudio_IDE_202406/NucleiStudio/toolchain``,
+     ``/home/labdev/NucleiStudio_IDE_202510/NucleiStudio/toolchain``,
      otherwise please use your correct tool root path.
 
      .. code-block:: shell
 
-        NUCLEI_TOOL_ROOT=/home/labdev/NucleiStudio_IDE_202406/NucleiStudio/toolchain
+        NUCLEI_TOOL_ROOT=/home/labdev/NucleiStudio_IDE_202510/NucleiStudio/toolchain
 
 
 .. _quickstart_buildrundebug_app:
