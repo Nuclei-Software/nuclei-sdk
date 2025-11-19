@@ -63,6 +63,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Optimize SMP bringup process, boot hart should wait for other harts software pending bit be set, mainly to be suitable
     for Nuclei Qemu 2025.10, the other harts run slow than main harts
   - Enable nuclei cpu model debug configuration generation using npk, which require Nuclei Studio and Model 2025.10 version, currently only non-smp debug is supported by Nuclei CPU Model
+  - Enable ``IC_CANCEL_EN`` in mcache_ctl when I-Cache present by default to prevent I-cache pipeline stalls on branch misprediction
 
 * Documentation
 

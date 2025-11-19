@@ -1424,6 +1424,8 @@ void _premain_init(void)
 #endif
 #endif
         EnableICache();
+        // Enable canceling previous accesses in icache e1 stage when change flow happens
+        __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_IC_PF_EN);
     }
 #endif
 #if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1)
