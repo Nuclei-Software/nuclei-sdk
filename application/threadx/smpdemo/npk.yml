@@ -1,0 +1,55 @@
+## Package Base Information
+name: app-nsdk_threadx_smpdemo
+owner: nuclei
+version:
+description: ThreadX SMP Task Demo
+type: app
+keywords:
+  - threadx
+  - task demo
+category: threadx application
+license: MIT
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+  - name: osp-nsdk_threadx
+    version:
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    value: -O2 -DTX_INCLUDE_USER_DEFINE_FILE
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+  - config: nuclei_smp
+    value: 2
+  - config: nuclei_core
+    value: nx900fd
+  - config: download_mode
+    value: sram
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
+  - type: gcc
+    common_flags:
+      # -fno-tree-tail-merge is required > O1 optimization level case
+      - flags: -fno-tree-tail-merge
