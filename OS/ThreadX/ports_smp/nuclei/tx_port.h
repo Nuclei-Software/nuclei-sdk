@@ -364,6 +364,9 @@ typedef struct TX_THREAD_SMP_PROTECT_STRUCT
 } TX_THREAD_SMP_PROTECT;
 
 
+extern void _tx_thread_smp_unprotect(UINT interrupt_save);
+extern UINT _tx_thread_smp_protect(void);
+
 /* Define ThreadX interrupt lockout and restore macros for protection on
    access of critical kernel information.  The restore interrupt macro must
    restore the interrupt posture of the running thread prior to the value
@@ -386,26 +389,8 @@ static inline UINT  _tx_thread_smp_core_get(void)
 #define TX_PORT_SPECIFIC_MEMORY_SYNCHRONIZATION    { __RWMB(); }
 
 /************* End ThreadX SMP data type and function prototype definitions.  *************/
-
-#ifndef TXM_MODULE
-static inline void _tx_thread_system_return(void)
-{
-   /* Set a software interrupt(SWI) request to request a context switch. */
-   SysTimer_SetSWIRQ();
-   /* Barriers are normally not required but do ensure the code is completely
-   within the specified behaviour for the architecture. */
-   __RWMB();
-}
-
-static inline void _tx_thread_smp_core_preempt(UINT core)
-{
-   /* Set a software interrupt(SWI) request to request a context switch. */
-   SysTimer_SetHartSWIRQ(core);
-   /* Barriers are normally not required but do ensure the code is completely
-   within the specified behaviour for the architecture. */
-   __RWMB();
-}
-#endif
+extern void _tx_thread_system_return(void);
+extern void _tx_thread_smp_core_preempt(UINT core);
 
 #define THREAD_INITIAL_MSTATUS      (MSTATUS_MPP | MSTATUS_MPIE | MSTATUS_FS_INITIAL | MSTATUS_VS_INITIAL)
 

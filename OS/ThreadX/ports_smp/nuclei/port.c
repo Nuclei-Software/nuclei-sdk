@@ -23,7 +23,7 @@ void SysTick_Handler(void)
 
     /* Get the protection.  */
     saved_posture = _tx_thread_smp_protect();
-    
+
     /* Increment the system active counter.  */
     _tx_timer_interrupt_active ++;
 
@@ -78,33 +78,57 @@ void PortThreadSwitch(void)
      * ThreadX don't have idle task, so _tx_thread_execute_ptr could be NULL
      * If it is NULL, it means it should goto idle state, and wait for interrupt
      */
-    // if (!_tx_thread_execute_ptr) {
-    //     /* mcause must be saved and restore if interrupt nested */
-    //     rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
-    //     /* increase the timer interrupt to higher priority to enable interrupt nesting */
-    //     ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY + 1);
-    //     /* swap task stack to interrupt stack to avoid interrupt nesting on task stack */
-    //     __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
-    //     __enable_irq();
-    //     /* If no ready task just go to idle and wait for interrupt */
-    //     while (!_tx_thread_execute_ptr) {
-    //         __WFI();
+    // if (!_tx_thread_execute_ptr[coreid]) {
+    //     while (!_tx_thread_execute_ptr[coreid]) {
+    //         __NOP();
     //     }
-    //     /* disable interrupt to avoid interrupt nesting since new task handle found */
-    //     __disable_irq();
-    //     /* swap interrupt stack back to task stack */
-    //     __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
-    //     /* restore timer interrupt to origin kernel interrupt priority */
-    //     ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
-    //     /* restore mcause which is necessary since interrupt nested manually by us */
-    //     __RV_CSR_WRITE(CSR_MCAUSE, mcause);
     // }
     /* Determine if the time-slice is active.  */
-    if (_tx_timer_time_slice[coreid] && !_tx_thread_current_ptr[coreid]) {
+    if (_tx_timer_time_slice[coreid] && _tx_thread_current_ptr[coreid]) {
         /* Preserve current remaining time-slice for the thread and clear the current time-slice.  */
         _tx_thread_current_ptr[coreid] -> tx_thread_time_slice = _tx_timer_time_slice[coreid];
         _tx_timer_time_slice[coreid] =  0;
     }
+    _tx_thread_current_ptr[coreid] =  TX_NULL;
+
+    if (!_tx_thread_execute_ptr[coreid]) {
+            /* mcause must be saved and restore if interrupt nested */
+            rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
+            if (coreid == 0) {
+                /* increase the timer interrupt to higher priority to enable interrupt nesting */
+                ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY + 1);
+                /* swap task stack to interrupt stack to avoid interrupt nesting on task stack */
+            }
+            __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
+            __enable_irq();
+            // SysTimer_ClearSWIRQ();
+            /* If no ready task just go to idle and wait for interrupt */
+            while (!_tx_thread_execute_ptr[coreid]) {
+                // if wfi here, it may not wakeup even swi is pending, since new swi could happen during eclic_msip_handler
+                // __WFI();
+                __NOP();
+                // Cannot clear swi here, otherwise 
+                // SysTimer_ClearSWIRQ();
+                __RWMB();
+            }
+            /* disable interrupt to avoid interrupt nesting since new task handle found */
+            __disable_irq();
+            /* swap interrupt stack back to task stack */
+            __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
+            /* restore timer interrupt to origin kernel interrupt priority */
+            if (coreid == 0) {
+                ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
+            }
+            /* restore mcause which is necessary since interrupt nested manually by us */
+            __RV_CSR_WRITE(CSR_MCAUSE, mcause);
+        // } else {
+        //     // /* If no ready task just go to idle and wait for interrupt */
+        //     // while (!_tx_thread_execute_ptr[coreid]) {
+        //     //     __WFI();
+        //     // }
+        // }
+    }
+    
     _tx_thread_current_ptr[coreid] = _tx_thread_execute_ptr[coreid];
     _tx_thread_current_ptr[coreid] -> tx_thread_run_count ++;
     /* Clear Software IRQ, A MUST */
@@ -115,7 +139,7 @@ void SetupSysTickInterrupt(void)
 {
     uint64_t ticks = SYSTICK_TICK_CONST;
 
-    if (_tx_thread_smp_core_get() == BOOT_HARTID) {
+    if (_tx_thread_smp_core_get() == 0) {
         /* Make SWI and SysTick the lowest priority interrupts. */
         /* Stop and clear the SysTimer. SysTimer as Non-Vector Interrupt */
         SysTick_Config(ticks);
@@ -158,6 +182,80 @@ UINT _tx_thread_interrupt_control(UINT new_posture)
     }
     return (UINT)temp;
 }
+
+/*    This function releases previously obtained protection. The supplied */
+/*    previous interrupt posture is restored.                             */
+void _tx_thread_smp_force_unprotect(UINT new_interrupt_posture)
+{
+    UINT core_id;
+
+    __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
+    core_id = _tx_thread_smp_core_get();
+    if (_tx_thread_smp_protection.tx_thread_smp_protect_core == core_id) {
+        // if (_tx_thread_smp_protection.tx_thread_smp_protect_count > 0) {
+            _tx_thread_smp_protection.tx_thread_smp_protect_count == 0;
+        // }
+        if ((_tx_thread_smp_protection.tx_thread_smp_protect_count == 0) && (_tx_thread_preempt_disable == 0)) {
+            _tx_thread_smp_protection.tx_thread_smp_protect_core = ((ULONG) 0xFFFFFFFFUL);
+            __RWMB();   /* ensure prior stores visible */
+            _tx_thread_smp_protection.tx_thread_smp_protect_in_force = 0;
+            __RWMB();
+        }
+    }
+    __RV_CSR_SET(CSR_MSTATUS, new_interrupt_posture);
+}
+
+extern volatile UINT _tx_thread_preempt_disable;
+#ifndef TXM_MODULE
+void _tx_thread_system_return(void)
+{
+    // UINT coreid = _tx_thread_smp_core_get();
+    // UINT old_preempt_disable = _tx_thread_preempt_disable;
+
+    _tx_thread_preempt_disable = 0;
+    _tx_thread_smp_force_unprotect(MSTATUS_MIE);
+
+    // while (_tx_thread_execute_ptr[coreid] == NULL) {
+        // __NOP();
+    // }
+    /* Set a software interrupt(SWI) request to request a context switch. */
+    SysTimer_SetSWIRQ();
+    /* Barriers are normally not required but do ensure the code is completely
+    within the specified behaviour for the architecture. */
+    __RWMB();
+    __NOP();
+    __NOP();
+    __NOP();
+
+    // __RWMB();
+    // _tx_thread_preempt_disable = old_preempt_disable;
+    // __RWMB();
+}
+
+void _tx_thread_smp_core_preempt(UINT core)
+{
+    // UINT old_preempt_disable = _tx_thread_preempt_disable;
+
+    // _tx_thread_preempt_disable = 0;
+    // _tx_thread_smp_unprotect(MSTATUS_MIE);
+
+    // while (_tx_thread_execute_ptr[core] == NULL) {
+    //     __NOP();
+    // }
+    /* Set a software interrupt(SWI) request to request a context switch. */
+    SysTimer_SetHartSWIRQ(core);
+    /* Barriers are normally not required but do ensure the code is completely
+    within the specified behaviour for the architecture. */
+    __RWMB();
+    __NOP();
+    __NOP();
+    __NOP();
+
+    // __RWMB();
+    // _tx_thread_preempt_disable = old_preempt_disable;
+    // __RWMB();
+}
+#endif
 
 // _tx_thread_schedule function implemented in context.S
 // _tx_thread_system_return implemented in tx_port.h
@@ -219,9 +317,8 @@ UINT _tx_thread_smp_protect(void)
         /* Atomically attempt to take the lock. */
         if (__AMOSWAP_W(&(_tx_thread_smp_protection.tx_thread_smp_protect_in_force), 1) == 0) {  /* success */
             __RWMB();   /* mem-barrier    */
-            _tx_thread_smp_protection.tx_thread_smp_protect_core = core_id;
             _tx_thread_smp_protection.tx_thread_smp_protect_count = 1;
-            __RWMB();   /* mem-barrier    */
+            _tx_thread_smp_protection.tx_thread_smp_protect_core = core_id;            __RWMB();   /* mem-barrier    */
             return old_posture;      /* lock taken */
         }
         __RV_CSR_SET(CSR_MSTATUS, old_posture);
@@ -274,32 +371,32 @@ void _tx_thread_smp_initialize_wait(void)
 {
     UINT core_id;
 
-    /* 
+    /*
      * 1. Lockout interrupts.
-     * We disable interrupts globally because the kernel is not yet ready 
+     * We disable interrupts globally because the kernel is not yet ready
      * to handle vectors on this core.
      */
     __disable_irq();
-    /* 
+    /*
      * 2. Pickup the CPU ID.
-     * We need to know which core we are to access the correct index in 
+     * We need to know which core we are to access the correct index in
      * the system state array.
      */
     core_id = _tx_thread_smp_core_get();
 
-    /* 
+    /*
      * 3. Barrier 1: Wait for initialization state.
-     * We wait until the Primary Core (Core 0) explicitly marks this core's 
-     * state as "IN_PROGRESS". This ensures the master knows we are alive 
+     * We wait until the Primary Core (Core 0) explicitly marks this core's
+     * state as "IN_PROGRESS". This ensures the master knows we are alive
      * and the memory structures are prepared.
      */
     while (_tx_thread_system_state[core_id] != TX_INITIALIZE_IN_PROGRESS) {
         __NOP();
     }
 
-    /* 
+    /*
      * 4. Barrier 2: Wait for the global release flag.
-     * The Primary Core sets this flag only AFTER it has finished initializing 
+     * The Primary Core sets this flag only AFTER it has finished initializing
      * all global kernel objects (timers, queues, etc.).
      * We cannot proceed until the kernel is fully built.
      */
@@ -309,19 +406,19 @@ void _tx_thread_smp_initialize_wait(void)
 
     SetupSysTickInterrupt();
 
-    /* 
+    /*
      * 5. Clear this core's system state variable.
-     * Setting the state to 0 indicates that this secondary core is now 
+     * Setting the state to 0 indicates that this secondary core is now
      * fully initialized and ready to execute threads.
      */
     _tx_thread_system_state[core_id] = 0;
 
     __RWMB();   /* mem-barrier    */
 
-    /* 
+    /*
      * 6. Barrier 3: Wait for Core 0 to finish.
-     * Even though Core 0 released us, it might not have cleared its own 
-     * state yet. We wait for Core 0's state to become 0 to ensure all 
+     * Even though Core 0 released us, it might not have cleared its own
+     * state yet. We wait for Core 0's state to become 0 to ensure all
      * cores enter the scheduler phase in sync.
      */
     while (_tx_thread_system_state[0] != 0)
@@ -329,7 +426,7 @@ void _tx_thread_smp_initialize_wait(void)
         __NOP();
     }
 
-    /* 
+    /*
      * 7. Initialize is complete, enter the scheduling loop!
      * Jump to the main thread scheduler to start running tasks.
      */

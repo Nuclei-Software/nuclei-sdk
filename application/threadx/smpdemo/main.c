@@ -6,7 +6,7 @@
 #include   <stdio.h>
 
 #define     DEMO_STACK_SIZE         1024
-#define     DEMO_BYTE_POOL_SIZE     9120
+#define     DEMO_BYTE_POOL_SIZE     10240
 #define     DEMO_BLOCK_POOL_SIZE    100
 #define     DEMO_QUEUE_SIZE         100
 
@@ -71,6 +71,13 @@ void smp_main(void)
     if (__get_hart_id() == 0 ) {
         main();
     } else {
+        // NOTE: just 2 cpu run
+        // if (__get_hart_id() > 1) {
+        //     while (1) {
+        //         __WFI();
+        //         __NOP();
+        //     }
+        // }
         _tx_thread_smp_initialize_wait();
     }
 }
@@ -222,6 +229,7 @@ UINT    status;
         if (status != TX_SUCCESS)
             break;
     }
+    while(1);
 }
 
 
@@ -248,6 +256,7 @@ UINT    status;
         /* Increment the message sent.  */
         thread_1_messages_sent++;
     }
+    while(1);
 }
 
 
@@ -275,6 +284,7 @@ UINT    status;
         /* Otherwise, all is okay.  Increment the received message count.  */
         thread_2_messages_received++;
     }
+    while(1);
 }
 
 
@@ -312,6 +322,7 @@ UINT    status;
         if (status != TX_SUCCESS)
             break;
     }
+    while(1);
 }
 
 
@@ -337,6 +348,7 @@ ULONG   actual_flags;
         if ((status != TX_SUCCESS) || (actual_flags != 0x1))
             break;
     }
+    while(1);
 }
 
 
@@ -391,4 +403,5 @@ UINT    status;
         if (status != TX_SUCCESS)
             break;
     }
+    while(1);
 }
