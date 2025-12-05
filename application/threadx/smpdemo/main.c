@@ -5,8 +5,8 @@
 #include   "tx_api.h"
 #include   <stdio.h>
 
-#define     DEMO_STACK_SIZE         1024
-#define     DEMO_BYTE_POOL_SIZE     10240
+#define     DEMO_STACK_SIZE         2048
+#define     DEMO_BYTE_POOL_SIZE     20480
 #define     DEMO_BLOCK_POOL_SIZE    100
 #define     DEMO_QUEUE_SIZE         100
 
@@ -226,8 +226,10 @@ UINT    status;
         status =  tx_event_flags_set(&event_flags_0, 0x1, TX_OR);
 
         /* Check status.  */
-        if (status != TX_SUCCESS)
+        if (status != TX_SUCCESS) {
+            printf("thread 0 tx_event_flags_set status = 0x%x\n", status);
             break;
+        }
     }
     while(1);
 }
@@ -250,8 +252,10 @@ UINT    status;
         status =  tx_queue_send(&queue_0, &thread_1_messages_sent, TX_WAIT_FOREVER);
 
         /* Check completion status.  */
-        if (status != TX_SUCCESS)
+        if (status != TX_SUCCESS) {
+            printf("thread 1 tx_queue_send status = 0x%x\n", status);
             break;
+        }
 
         /* Increment the message sent.  */
         thread_1_messages_sent++;
@@ -278,8 +282,10 @@ UINT    status;
 
         /* Check completion status and make sure the message is what we
            expected.  */
-        if ((status != TX_SUCCESS) || (received_message != thread_2_messages_received))
+        if ((status != TX_SUCCESS) || (received_message != thread_2_messages_received)) {
+            printf("thread 1 tx_queue_receive status = 0x%x, %d vs %d\n", status, received_message, thread_2_messages_received);
             break;
+        }
 
         /* Otherwise, all is okay.  Increment the received message count.  */
         thread_2_messages_received++;
@@ -309,8 +315,10 @@ UINT    status;
         status =  tx_semaphore_get(&semaphore_0, TX_WAIT_FOREVER);
 
         /* Check status.  */
-        if (status != TX_SUCCESS)
+        if (status != TX_SUCCESS) {
+            printf("thread %d tx_semaphore_get status = 0x%x\n", thread_input, status);
             break;
+        }
 
         /* Sleep for 2 ticks to hold the semaphore.  */
         tx_thread_sleep(2);
@@ -319,8 +327,10 @@ UINT    status;
         status =  tx_semaphore_put(&semaphore_0);
 
         /* Check status.  */
-        if (status != TX_SUCCESS)
+        if (status != TX_SUCCESS) {
+            printf("thread %d tx_semaphore_put status = 0x%x\n", thread_input, status);
             break;
+        }
     }
     while(1);
 }
@@ -345,8 +355,10 @@ ULONG   actual_flags;
                                                 &actual_flags, TX_WAIT_FOREVER);
 
         /* Check status.  */
-        if ((status != TX_SUCCESS) || (actual_flags != 0x1))
+        if ((status != TX_SUCCESS) || (actual_flags != 0x1)) {
+            printf("thread 5 tx_event_flags_get status = 0x%x, actual_flags = 0x%x\n", status, actual_flags);
             break;
+        }
     }
     while(1);
 }
@@ -373,8 +385,10 @@ UINT    status;
         status =  tx_mutex_get(&mutex_0, TX_WAIT_FOREVER);
 
         /* Check status.  */
-        if (status != TX_SUCCESS)
+        if (status != TX_SUCCESS) {
+            printf("thread %d tx_mutex_get 1 status = 0x%x\n", thread_input, status);
             break;
+        }
 
         /* Get the mutex again with suspension.  This shows
            that an owning thread may retrieve the mutex it
@@ -382,8 +396,10 @@ UINT    status;
         status =  tx_mutex_get(&mutex_0, TX_WAIT_FOREVER);
 
         /* Check status.  */
-        if (status != TX_SUCCESS)
+        if (status != TX_SUCCESS) {
+            printf("thread %d tx_mutex_get 2 status = 0x%x\n", thread_input, status);
             break;
+        }
 
         /* Sleep for 2 ticks to hold the mutex.  */
         tx_thread_sleep(2);
@@ -392,16 +408,20 @@ UINT    status;
         status =  tx_mutex_put(&mutex_0);
 
         /* Check status.  */
-        if (status != TX_SUCCESS)
+        if (status != TX_SUCCESS) {
+            printf("thread %d tx_mutex_put 1 status = 0x%x\n", thread_input, status);
             break;
+        }
 
         /* Release the mutex again.  This will actually
            release ownership since it was obtained twice.  */
         status =  tx_mutex_put(&mutex_0);
 
         /* Check status.  */
-        if (status != TX_SUCCESS)
+        if (status != TX_SUCCESS) {
+            printf("thread %d tx_mutex_put 2 status = 0x%x\n", thread_input, status);
             break;
+        }
     }
     while(1);
 }
