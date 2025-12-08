@@ -44,8 +44,9 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Bugfix and optimize FreeRTOS SMP spinlock implementation
   - Bugfix for FreeRTOS interrupt masking related API implementation when using ECLIC MTH, when set MTH, we need to disable interrupt and then set MTH,
     and then do fence, then enable interrupt
-  - Add new interrupt masking feature for FreeRTOS porting, when ``configMAX_SYSCALL_INTERRUPT_PRIORITY >= 255``, it will use MSTATUS.MIE to do interrupt masking
-  - Bugfix for UCOSII interrupt masking related API implementation, now optimize the implementation to use MSTATUS.MIE only to do interrupt masking
+  - Add new interrupt masking feature for FreeRTOS porting, when ``configMAX_SYSCALL_INTERRUPT_PRIORITY >= 255``, it will use ``MSTATUS.MIE`` to do interrupt masking
+  - Bugfix for UCOSII interrupt masking related API implementation, now optimize the implementation to use ``MSTATUS.MIE`` only to do interrupt masking
+  - Bugfix for ThreadX idle task emulation in ``eclic_msip_handler`` task switch function, both ``mcause`` and ``msubm`` need to be saved and restored correctly.
 
 * Build System
 

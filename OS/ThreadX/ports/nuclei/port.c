@@ -69,17 +69,18 @@ void PortThreadSwitch(void)
     _tx_execution_thread_exit();
 #endif
     /*
-     * Magic ilde task emulation for threadx
+     * Magic idle task emulation for threadx
      * ThreadX don't have idle task, so _tx_thread_execute_ptr could be NULL
      * If it is NULL, it means it should goto idle state, and wait for interrupt
      */
     if (!_tx_thread_execute_ptr) {
-        /* mcause must be saved and restore if interrupt nested */
-        rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
         /* increase the timer interrupt to higher priority to enable interrupt nesting */
         ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY + 1);
         /* swap task stack to interrupt stack to avoid interrupt nesting on task stack */
         __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
+        /* mcause and msubm must be saved and restore if interrupt nested */
+        rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
+        rv_csr_t msubm = __RV_CSR_READ(CSR_MSUBM);
         __enable_irq();
         /* If no ready task just go to idle and wait for interrupt */
         while (!_tx_thread_execute_ptr) {
@@ -87,15 +88,16 @@ void PortThreadSwitch(void)
         }
         /* disable interrupt to avoid interrupt nesting since new task handle found */
         __disable_irq();
+        /* restore mcause and msubm which is necessary since interrupt nested manually by us */
+        __RV_CSR_WRITE(CSR_MSUBM, msubm);
+        __RV_CSR_WRITE(CSR_MCAUSE, mcause);
         /* swap interrupt stack back to task stack */
         __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
         /* restore timer interrupt to origin kernel interrupt priority */
         ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
-        /* restore mcause which is necessary since interrupt nested manually by us */
-        __RV_CSR_WRITE(CSR_MCAUSE, mcause);
     }
     /* Determine if the time-slice is active.  */
-    if (_tx_timer_time_slice && !_tx_thread_current_ptr) {
+    if (_tx_timer_time_slice && _tx_thread_current_ptr) {
         /* Preserve current remaining time-slice for the thread and clear the current time-slice.  */
         _tx_thread_current_ptr -> tx_thread_time_slice = _tx_timer_time_slice;
         _tx_timer_time_slice =  0;
