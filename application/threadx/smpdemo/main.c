@@ -5,8 +5,8 @@
 #include   "tx_api.h"
 #include   <stdio.h>
 
-#define     DEMO_STACK_SIZE         2048
-#define     DEMO_BYTE_POOL_SIZE     20480
+#define     DEMO_STACK_SIZE         1024
+#define     DEMO_BYTE_POOL_SIZE     10240
 #define     DEMO_BLOCK_POOL_SIZE    100
 #define     DEMO_QUEUE_SIZE         100
 

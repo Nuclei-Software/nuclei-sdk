@@ -92,14 +92,15 @@ void PortThreadSwitch(void)
     _tx_thread_current_ptr[coreid] =  TX_NULL;
 
     if (!_tx_thread_execute_ptr[coreid]) {
-            /* mcause must be saved and restore if interrupt nested */
-            rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
             if (coreid == 0) {
                 /* increase the timer interrupt to higher priority to enable interrupt nesting */
                 ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY + 1);
                 /* swap task stack to interrupt stack to avoid interrupt nesting on task stack */
             }
             __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
+            /* mcause must be saved and restore if interrupt nested */
+            rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
+            rv_csr_t msubm = __RV_CSR_READ(CSR_MSUBM);
             __enable_irq();
             // SysTimer_ClearSWIRQ();
             /* If no ready task just go to idle and wait for interrupt */
@@ -107,20 +108,21 @@ void PortThreadSwitch(void)
                 // if wfi here, it may not wakeup even swi is pending, since new swi could happen during eclic_msip_handler
                 // __WFI();
                 __NOP();
-                // Cannot clear swi here, otherwise 
+                // Cannot clear swi here, otherwise
                 // SysTimer_ClearSWIRQ();
                 __RWMB();
             }
             /* disable interrupt to avoid interrupt nesting since new task handle found */
             __disable_irq();
+            /* restore mcause which is necessary since interrupt nested manually by us */
+            __RV_CSR_WRITE(CSR_MSUBM, msubm);
+            __RV_CSR_WRITE(CSR_MCAUSE, mcause);
             /* swap interrupt stack back to task stack */
             __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
             /* restore timer interrupt to origin kernel interrupt priority */
             if (coreid == 0) {
                 ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
             }
-            /* restore mcause which is necessary since interrupt nested manually by us */
-            __RV_CSR_WRITE(CSR_MCAUSE, mcause);
         // } else {
         //     // /* If no ready task just go to idle and wait for interrupt */
         //     // while (!_tx_thread_execute_ptr[coreid]) {
@@ -128,7 +130,7 @@ void PortThreadSwitch(void)
         //     // }
         // }
     }
-    
+
     _tx_thread_current_ptr[coreid] = _tx_thread_execute_ptr[coreid];
     _tx_thread_current_ptr[coreid] -> tx_thread_run_count ++;
     /* Clear Software IRQ, A MUST */
@@ -223,9 +225,9 @@ void _tx_thread_system_return(void)
     /* Barriers are normally not required but do ensure the code is completely
     within the specified behaviour for the architecture. */
     __RWMB();
-    __NOP();
-    __NOP();
-    __NOP();
+    // __NOP();
+    // __NOP();
+    // __NOP();
 
     // __RWMB();
     // _tx_thread_preempt_disable = old_preempt_disable;
@@ -247,9 +249,9 @@ void _tx_thread_smp_core_preempt(UINT core)
     /* Barriers are normally not required but do ensure the code is completely
     within the specified behaviour for the architecture. */
     __RWMB();
-    __NOP();
-    __NOP();
-    __NOP();
+    // __NOP();
+    // __NOP();
+    // __NOP();
 
     // __RWMB();
     // _tx_thread_preempt_disable = old_preempt_disable;
@@ -315,10 +317,11 @@ UINT _tx_thread_smp_protect(void)
             return old_posture;
         }
         /* Atomically attempt to take the lock. */
-        if (__AMOSWAP_W(&(_tx_thread_smp_protection.tx_thread_smp_protect_in_force), 1) == 0) {  /* success */
+        if (__AMOSWAP_W((volatile uint32_t *)(&(_tx_thread_smp_protection.tx_thread_smp_protect_in_force)), 1) == 0) {  /* success */
             __RWMB();   /* mem-barrier    */
             _tx_thread_smp_protection.tx_thread_smp_protect_count = 1;
-            _tx_thread_smp_protection.tx_thread_smp_protect_core = core_id;            __RWMB();   /* mem-barrier    */
+            _tx_thread_smp_protection.tx_thread_smp_protect_core = core_id;
+            __RWMB();   /* mem-barrier    */
             return old_posture;      /* lock taken */
         }
         __RV_CSR_SET(CSR_MSTATUS, old_posture);
