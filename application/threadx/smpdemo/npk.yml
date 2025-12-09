@@ -6,6 +6,7 @@ description: ThreadX SMP Task Demo
 type: app
 keywords:
   - threadx
+  - smp
   - task demo
 category: threadx application
 license: MIT

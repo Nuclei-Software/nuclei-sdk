@@ -43,7 +43,7 @@ ULONG           thread_6_counter;
 ULONG           thread_7_counter;
 
 // NOTE: Nuclei: This is an memory area used by ThreadX to allocate for task stacks and etc
-UCHAR                   memory_area[DEMO_BYTE_POOL_SIZE];
+UCHAR           memory_area[DEMO_BYTE_POOL_SIZE];
 
 
 /* Define thread prototypes.  */
@@ -62,22 +62,17 @@ int main()
 {
     /* Enter the ThreadX kernel.  */
     tx_kernel_enter();
+    return 0;
 }
 
-extern void        _tx_thread_smp_initialize_wait(void);
+// NOTE: Nuclei: This is required for ThreadX SMP other harts bringup
+extern void _tx_thread_smp_initialize_wait(void);
 
 void smp_main(void)
 {
     if (__get_hart_id() == 0 ) {
         main();
     } else {
-        // NOTE: just 2 cpu run
-        // if (__get_hart_id() > 1) {
-        //     while (1) {
-        //         __WFI();
-        //         __NOP();
-        //     }
-        // }
         _tx_thread_smp_initialize_wait();
     }
 }
