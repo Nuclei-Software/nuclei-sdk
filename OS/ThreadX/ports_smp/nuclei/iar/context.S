@@ -36,18 +36,19 @@ _tx_thread_schedule:
     /* get correct sp for each cpu
      * each stack size is __STACK_SIZE
      * defined in linker script */
+    EXTERN  __STACK_SIZE
     lui t1, %hi(__STACK_SIZE)
     addi t1, t1, %lo(__STACK_SIZE)
     la t0, CSTACK$$Limit
     csrr a0, CSR_MHARTID
     andi a0, a0, 0xFF
     li a1, 0
-1:
-    beq a0, a1, 2f
+_per_cpu_init_sp_cont:
+    beq a0, a1, _per_cpu_init_sp_fin
     sub t0, t0, t1
     addi a1, a1, 1
-    j 1b
-2:
+    j _per_cpu_init_sp_cont
+_per_cpu_init_sp_fin:
 #else
     la t0, CSTACK$$Limit
 #endif

@@ -1,7 +1,9 @@
 TARGET = threadx_smpdemo
 RTOS = ThreadX
 
-SMP := 2
+SMP ?= 2
+
+CORE ?= nx900fd
 
 DOWNLOAD ?= sram
 
