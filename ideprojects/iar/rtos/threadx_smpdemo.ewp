@@ -16,7 +16,7 @@
                 <debug>1</debug>
                 <option>
                     <name>GDeviceSelect</name>
-                    <state>N300	Nuclei N300</state>
+                    <state>NX900	Nuclei NX900</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -154,7 +154,7 @@
                 </option>
                 <option>
                     <name>GCoreDevice</name>
-                    <state>RV32IMAFDC</state>
+                    <state>RV64IMAFDC</state>
                 </option>
                 <option>
                     <name>RadioStdOutErr</name>
@@ -202,7 +202,7 @@
                 </option>
                 <option>
                     <name>GCodeModelSlave</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>GDeviceXCoDenseSlave</name>
@@ -366,6 +366,7 @@
                 <option>
                     <name>CCDefines</name>
                     <state>RTOS_THREADX</state>
+                    <state>SMP_CPU_CNT=2</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -436,9 +437,9 @@
                     <state>$PROJ_DIR$\..\..\..\NMSIS\Core\Include</state>
                     <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Include</state>
                     <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Include</state>
-                    <state>$PROJ_DIR$\..\..\..\application\threadx\demo</state>
-                    <state>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc</state>
-                    <state>$PROJ_DIR$\..\..\..\OS\ThreadX\ports\nuclei</state>
+                    <state>$PROJ_DIR$\..\..\..\application\threadx\smpdemo</state>
+                    <state>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc</state>
+                    <state>$PROJ_DIR$\..\..\..\OS\ThreadX\ports_smp\nuclei</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -557,7 +558,7 @@
                 </option>
                 <option>
                     <name>AsmDefines</name>
-                    <state></state>
+                    <state>SMP_CPU_CNT=2</state>
                 </option>
                 <option>
                     <name>PreInclude</name>
@@ -639,7 +640,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>threadx_demo.srec</state>
+                    <state>threadx_smpdemo.srec</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -694,7 +695,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>threadx_demo.out</state>
+                    <state>threadx_smpdemo.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -726,7 +727,7 @@
                 </option>
                 <option>
                     <name>IlinkConfigDefines</name>
-                    <state></state>
+                    <state>SMP_CPU_CNT=2</state>
                 </option>
                 <option>
                     <name>IlinkMapFile</name>
@@ -758,7 +759,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_ilm.icf</state>
+                    <state>$PROJ_DIR$\..\..\..\application\threadx\smpdemo\iar_evalsoc_smp.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -2096,10 +2097,10 @@
     <group>
         <name>application</name>
         <file>
-            <name>$PROJ_DIR$\..\..\..\application\threadx\demo\main.c</name>
+            <name>$PROJ_DIR$\..\..\..\application\threadx\smpdemo\main.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\application\threadx\demo\tx_user.h</name>
+            <name>$PROJ_DIR$\..\..\..\application\threadx\smpdemo\tx_user.h</name>
         </file>
     </group>
     <group>
@@ -2184,602 +2185,629 @@
             <group>
                 <name>ThreadX</name>
                 <group>
-                    <name>common</name>
+                    <name>common_smp</name>
                     <group>
                         <name>inc</name>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_api.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_api.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_block_pool.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_block_pool.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_byte_pool.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_byte_pool.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_event_flags.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_event_flags.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_initialize.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_initialize.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_mutex.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_mutex.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_queue.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_queue.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_semaphore.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_semaphore.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_thread.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_thread.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_timer.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_timer.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_trace.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_trace.h</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\inc\tx_user_sample.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\inc\tx_user_sample.h</name>
                         </file>
                     </group>
                     <group>
                         <name>src</name>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_block_allocate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_block_allocate.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_block_pool_cleanup.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_block_pool_cleanup.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_block_pool_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_block_pool_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_block_pool_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_block_pool_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_block_pool_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_block_pool_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_block_pool_initialize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_block_pool_initialize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_block_pool_performance_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_block_pool_performance_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_block_pool_performance_system_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_block_pool_performance_system_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_block_pool_prioritize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_block_pool_prioritize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_block_release.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_block_release.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_byte_allocate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_byte_allocate.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_byte_pool_cleanup.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_byte_pool_cleanup.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_byte_pool_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_byte_pool_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_byte_pool_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_byte_pool_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_byte_pool_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_byte_pool_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_byte_pool_initialize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_byte_pool_initialize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_byte_pool_performance_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_byte_pool_performance_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_byte_pool_performance_system_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_byte_pool_performance_system_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_byte_pool_prioritize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_byte_pool_prioritize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_byte_pool_search.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_byte_pool_search.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_byte_release.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_byte_release.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_event_flags_cleanup.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_event_flags_cleanup.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_event_flags_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_event_flags_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_event_flags_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_event_flags_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_event_flags_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_event_flags_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_event_flags_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_event_flags_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_event_flags_initialize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_event_flags_initialize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_event_flags_performance_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_event_flags_performance_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_event_flags_performance_system_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_event_flags_performance_system_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_event_flags_set.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_event_flags_set.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_event_flags_set_notify.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_event_flags_set_notify.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_initialize_high_level.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_initialize_high_level.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_initialize_kernel_enter.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_initialize_kernel_enter.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_initialize_kernel_setup.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_initialize_kernel_setup.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_misra.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_misra.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_mutex_cleanup.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_mutex_cleanup.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_mutex_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_mutex_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_mutex_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_mutex_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_mutex_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_mutex_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_mutex_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_mutex_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_mutex_initialize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_mutex_initialize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_mutex_performance_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_mutex_performance_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_mutex_performance_system_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_mutex_performance_system_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_mutex_prioritize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_mutex_prioritize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_mutex_priority_change.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_mutex_priority_change.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_mutex_put.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_mutex_put.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_cleanup.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_cleanup.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_flush.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_flush.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_front_send.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_front_send.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_initialize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_initialize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_performance_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_performance_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_performance_system_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_performance_system_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_prioritize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_prioritize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_receive.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_receive.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_send.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_send.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_queue_send_notify.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_queue_send_notify.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_ceiling_put.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_ceiling_put.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_cleanup.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_cleanup.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_initialize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_initialize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_performance_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_performance_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_performance_system_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_performance_system_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_prioritize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_prioritize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_put.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_put.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_semaphore_put_notify.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_semaphore_put_notify.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_entry_exit_notify.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_entry_exit_notify.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_identify.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_identify.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_initialize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_initialize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_performance_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_performance_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_performance_system_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_performance_system_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_preemption_change.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_preemption_change.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_priority_change.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_priority_change.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_relinquish.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_relinquish.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_reset.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_reset.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_resume.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_resume.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_shell_entry.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_shell_entry.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_sleep.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_sleep.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_stack_analyze.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_smp_core_exclude.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_stack_error_handler.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_smp_core_exclude_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_stack_error_notify.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_smp_current_state_set.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_suspend.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_smp_debug_entry_insert.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_system_preempt_check.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_smp_high_level_initialize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_system_resume.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_smp_rebalance_execute_list.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_system_suspend.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_smp_utilities.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_terminate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_stack_analyze.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_time_slice.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_stack_error_handler.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_time_slice_change.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_stack_error_notify.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_timeout.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_suspend.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_thread_wait_abort.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_system_preempt_check.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_time_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_system_resume.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_time_set.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_system_suspend.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_activate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_terminate.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_change.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_time_slice.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_time_slice_change.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_deactivate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_timeout.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_thread_wait_abort.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_expiration_process.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_time_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_time_set.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_initialize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_activate.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_performance_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_change.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_performance_system_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_system_activate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_deactivate.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_system_deactivate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_timer_thread_entry.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_expiration_process.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_buffer_full_notify.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_disable.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_initialize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_enable.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_performance_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_event_filter.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_performance_system_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_event_unfilter.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_smp_core_exclude.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_initialize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_smp_core_exclude_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_interrupt_control.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_system_activate.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_isr_enter_insert.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_system_deactivate.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_isr_exit_insert.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_timer_thread_entry.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_object_register.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_buffer_full_notify.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_object_unregister.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_disable.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\tx_trace_user_event_insert.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_enable.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_block_allocate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_event_filter.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_block_pool_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_event_unfilter.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_block_pool_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_initialize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_block_pool_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_interrupt_control.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_block_pool_prioritize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_isr_enter_insert.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_block_release.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_isr_exit_insert.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_byte_allocate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_object_register.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_byte_pool_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_object_unregister.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_byte_pool_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\tx_trace_user_event_insert.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_byte_pool_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_block_allocate.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_byte_pool_prioritize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_block_pool_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_byte_release.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_block_pool_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_event_flags_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_block_pool_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_event_flags_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_block_pool_prioritize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_event_flags_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_block_release.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_event_flags_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_byte_allocate.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_event_flags_set.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_byte_pool_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_event_flags_set_notify.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_byte_pool_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_mutex_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_byte_pool_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_mutex_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_byte_pool_prioritize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_mutex_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_byte_release.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_mutex_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_event_flags_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_mutex_prioritize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_event_flags_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_mutex_put.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_event_flags_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_queue_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_event_flags_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_queue_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_event_flags_set.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_queue_flush.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_event_flags_set_notify.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_queue_front_send.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_mutex_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_queue_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_mutex_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_queue_prioritize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_mutex_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_queue_receive.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_mutex_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_queue_send.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_mutex_prioritize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_queue_send_notify.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_mutex_put.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_semaphore_ceiling_put.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_queue_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_semaphore_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_queue_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_semaphore_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_queue_flush.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_semaphore_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_queue_front_send.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_semaphore_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_queue_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_semaphore_prioritize.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_queue_prioritize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_semaphore_put.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_queue_receive.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_semaphore_put_notify.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_queue_send.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_queue_send_notify.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_semaphore_ceiling_put.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_entry_exit_notify.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_semaphore_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_semaphore_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_preemption_change.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_semaphore_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_priority_change.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_semaphore_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_relinquish.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_semaphore_prioritize.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_reset.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_semaphore_put.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_resume.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_semaphore_put_notify.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_suspend.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_create.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_terminate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_delete.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_time_slice_change.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_entry_exit_notify.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_thread_wait_abort.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_info_get.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_timer_activate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_preemption_change.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_timer_change.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_priority_change.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_timer_create.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_relinquish.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_timer_deactivate.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_reset.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_timer_delete.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_resume.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common\src\txe_timer_info_get.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_suspend.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_terminate.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_time_slice_change.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_thread_wait_abort.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_timer_activate.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_timer_change.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_timer_create.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_timer_deactivate.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_timer_delete.c</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\common_smp\src\txe_timer_info_get.c</name>
                         </file>
                     </group>
                 </group>
@@ -2790,17 +2818,17 @@
                         <group>
                             <name>iar</name>
                             <file>
-                                <name>$PROJ_DIR$\..\..\..\OS\ThreadX\ports\nuclei\iar\context.S</name>
+                                <name>$PROJ_DIR$\..\..\..\OS\ThreadX\ports_smp\nuclei\iar\context.S</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\..\..\OS\ThreadX\ports\nuclei\iar\interrupt.S</name>
+                                <name>$PROJ_DIR$\..\..\..\OS\ThreadX\ports_smp\nuclei\iar\interrupt.S</name>
                             </file>
                         </group>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\ports\nuclei\port.c</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\ports_smp\nuclei\port.c</name>
                         </file>
                         <file>
-                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\ports\nuclei\tx_port.h</name>
+                            <name>$PROJ_DIR$\..\..\..\OS\ThreadX\ports_smp\nuclei\tx_port.h</name>
                         </file>
                     </group>
                 </group>
@@ -2826,7 +2854,7 @@
                         <group>
                             <name>IAR</name>
                             <file>
-                                <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Board\nuclei_fpga_eval\Source\IAR\iar_evalsoc_ilm.icf</name>
+                                <name>$PROJ_DIR$\..\..\..\application\threadx\smpdemo\iar_evalsoc_smp.icf</name>
                             </file>
                         </group>
                     </group>
@@ -2864,6 +2892,9 @@
                         <name>IAR</name>
                         <file>
                             <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Source\IAR\intexc_evalsoc.S</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Source\IAR\startup.S</name>
                         </file>
                         <file>
                             <name>$PROJ_DIR$\..\..\..\SoC\evalsoc\Common\Source\IAR\startup_evalsoc.c</name>

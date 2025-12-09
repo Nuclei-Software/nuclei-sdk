@@ -37,6 +37,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
     we let it execute ``wfi``.
   - Change FreeRTOS SMP ``smpdemo`` task delay time from 500 to 15 ms to make it possible to let different tasks run on different CORE.
   - Add ThreadX SMP ``smpdemo`` application to demostrate ThreadX SMP kernel feature on Nuclei RISC-V CPU.
+  - Add a prebuilt IAR project for ThreadX SMP Kernel.
 
 * OS
 

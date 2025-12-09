@@ -64,6 +64,9 @@
         <path>$WS_DIR$\rtos\threadx_demo.ewp</path>
     </project>
     <project>
+        <path>$WS_DIR$\rtos\threadx_smpdemo.ewp</path>
+    </project>
+    <project>
         <path>$WS_DIR$\rtos\ucosii_demo.ewp</path>
     </project>
     <project>
