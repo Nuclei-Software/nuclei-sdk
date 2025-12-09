@@ -33,6 +33,7 @@
         "application/baremetal/demo_vnice",
         "application/baremetal/dsp_examples",
         "application/freertos/smpdemo",
+        "application/threadx/smpdemo",
         "application/baremetal/Internal"
     ],
     "appconfig": {

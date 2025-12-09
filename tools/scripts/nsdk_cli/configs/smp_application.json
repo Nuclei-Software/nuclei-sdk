@@ -23,7 +23,8 @@
     "appdirs": [
         "application/baremetal/demo_cidu",
         "application/baremetal/smphello",
-        "application/freertos/smpdemo"
+        "application/freertos/smpdemo",
+        "application/threadx/smpdemo"
     ],
     "appdirs_ignore": [
     ],
@@ -44,6 +45,12 @@
             "build_config" : {},
             "checks": {
                 "PASS": ["All harts boot successfully!"]
+            }
+        },
+        "application/threadx/smpdemo": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["thread 0 events sent                    5, thread 0 cpu"]
             }
         }
     }
