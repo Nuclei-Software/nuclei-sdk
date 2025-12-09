@@ -68,7 +68,7 @@ _tx_thread_schedule_ready:
     /* Disable interrupt to load first thread */
     csrci CSR_MSTATUS, MSTATUS_MIE
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
-    la a1, _tx_thread_current_ptr  /* _tx_thread_current_ptr = _tx_thread_execute_ptr */
+    la a1, _tx_thread_current_ptr  /* _tx_thread_current_ptr[coreid] = _tx_thread_execute_ptr[coreid] */
     csrr t1, CSR_MHARTID
     slli t1, t1, LOG_REGBYTES
     add a1, a1, t1

@@ -32,18 +32,50 @@ _tx_thread_schedule:
        before the scheduler is started is
        no longer required after the scheduler is started.
        Interrupt stack pointer is stored in CSR_MSCRATCH */
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
+    /* get correct sp for each cpu
+     * each stack size is __STACK_SIZE
+     * defined in linker script */
+    lui t1, %hi(__STACK_SIZE)
+    addi t1, t1, %lo(__STACK_SIZE)
     la t0, CSTACK$$Limit
+    csrr a0, CSR_MHARTID
+    andi a0, a0, 0xFF
+    li a1, 0
+1:
+    beq a0, a1, 2f
+    sub t0, t0, t1
+    addi a1, a1, 1
+    j 1b
+2:
+#else
+    la t0, CSTACK$$Limit
+#endif
     csrw CSR_MSCRATCH, t0
     /* Enable interrupt to wait _tx_thread_execute_ptr is not null */
     csrsi CSR_MSTATUS, MSTATUS_MIE
 _tx_thread_schedule_loop:
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     la a0, _tx_thread_execute_ptr   /* Pick current thread to a0 */
+    csrr t1, CSR_MHARTID
+    slli t1, t1, LOG_REGBYTES
+    add a0, a0, t1
+#else
+    la a0, _tx_thread_execute_ptr   /* Pick current thread to a0 */
+#endif
     LOAD a0, 0(a0)
     beqz a0, _tx_thread_schedule_loop
 _tx_thread_schedule_ready:
     /* Disable interrupt to load first thread */
     csrci CSR_MSTATUS, MSTATUS_MIE
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
+    la a1, _tx_thread_current_ptr  /* _tx_thread_current_ptr[coreid] = _tx_thread_execute_ptr[coreid] */
+    csrr t1, CSR_MHARTID
+    slli t1, t1, LOG_REGBYTES
+    add a1, a1, t1
+#else
     la a1, _tx_thread_current_ptr  /* _tx_thread_current_ptr = _tx_thread_execute_ptr */
+#endif
     STORE a0, 0(a1)
     LOAD sp, 2  * REGBYTES(a0)      /* Read sp from _tx_thread_execute_ptr -> tx_thread_stack_ptr */
 
@@ -129,8 +161,15 @@ eclic_msip_handler:
 
     /* Push additional registers */
 
-    /* If _tx_thread_current_ptr is null, no sp need to be saved */
+    /* If _tx_thread_current_ptr[coreid] is null, no sp need to be saved */
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     la t0, _tx_thread_current_ptr
+    csrr t1, CSR_MHARTID
+    slli t1, t1, LOG_REGBYTES
+    add t0, t0, t1
+#else
+    la t0, _tx_thread_current_ptr
+#endif
     LOAD t0, 0(t0)
     beqz t0, _tx_thread_switch
     /* Store sp to task stack to _tx_thread_current_ptr -> tx_thread_stack_ptr */
@@ -142,8 +181,15 @@ eclic_msip_handler:
 _tx_thread_switch:
     jal PortThreadSwitch
 
-    /* Switch task context to _tx_thread_execute_ptr */
+    /* Switch task context to _tx_thread_execute_ptr[coreid] */
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     la t0, _tx_thread_execute_ptr
+    csrr t1, CSR_MHARTID
+    slli t1, t1, LOG_REGBYTES
+    add t0, t0, t1
+#else
+    la t0, _tx_thread_execute_ptr
+#endif
     LOAD t0, 0(t0)
     LOAD sp, 2 * REGBYTES(t0)
 
