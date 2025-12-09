@@ -36,6 +36,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
     To stay lowpower, we also enable ``configUSE_PASSIVE_IDLE_HOOK`` and ``configUSE_IDLE_HOOK`` to ``1`` and in hook code,
     we let it execute ``wfi``.
   - Change FreeRTOS SMP ``smpdemo`` task delay time from 500 to 15 ms to make it possible to let different tasks run on different CORE.
+  - Add ThreadX SMP ``smpdemo`` application to demostrate ThreadX SMP kernel feature on Nuclei RISC-V CPU.
 
 * OS
 
@@ -47,13 +48,15 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add new interrupt masking feature for FreeRTOS porting, when ``configMAX_SYSCALL_INTERRUPT_PRIORITY >= 255``, it will use ``MSTATUS.MIE`` to do interrupt masking
   - Bugfix for UCOSII interrupt masking related API implementation, now optimize the implementation to use ``MSTATUS.MIE`` only to do interrupt masking
   - Bugfix for ThreadX idle task emulation in ``eclic_msip_handler`` task switch function, both ``mcause`` and ``msubm`` need to be saved and restored correctly.
+  - Mention about other RTOSs Nuclei supported, but not in Nuclei SDK, see :ref:`design_rtos_others`
+  - Add support for **ThreadX SMP** kernel support for both Nuclei RISC-V RV32 and RV64 CPU with ECLIC feature enabled.
 
 * Build System
 
   - Add new ``n300e`` CPU core support in build system and npk.yml for evalsoc
   - Add ``-isystem=/include/libncrt`` for nuclei llvm toolchain when using libncrt_xxx library, but ``-isystem=`` feature is not
     the same as gcc, see report here https://github.com/llvm/llvm-project/pull/82084#discussion_r2387373311, so when you use libncrt library with llvm toolchain, the header file could be wrongly included using newlib ones
-  - Recommend ``-fno-strict-aliasing`` as common compiler options should be passed, see :ref:`develop_buildsystem_var_common_flags``
+  - Recommend ``-fno-strict-aliasing`` as common compiler options should be passed, see :ref:`develop_buildsystem_var_common_flags`
   - Must pass ``-fomit-frame-pointer`` when using ``Zc`` extension to generate push/pop instructions, see https://github.com/riscvarchive/riscv-code-size-reduction/issues/194
   - Toolchain Terapines ZCC support is updated to match latest ZCC 4.1.7 release which is integrated with Nuclei Studio 2025.10
 

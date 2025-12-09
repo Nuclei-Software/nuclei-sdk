@@ -3003,6 +3003,91 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx demo`` applicati
     thread 6_7 is running, current is 7, thread 6 counter 5, thread 7 counter 4
 
 
+
+.. _design_app_threadx_smpdemo:
+
+smpdemo
+~~~~~~~
+
+This `threadx smpdemo application`_ is show basic ThreadX-SMP thread functions.
+
+This threadx smp demo is modified based on https://github.com/eclipse-threadx/threadx/blob/v6.4.1_rel/ports_smp/linux/gnu/example_build/sample_threadx.c
+
+In Nuclei SDK, we provided code and Makefile for this ``threadx smpdemo`` application to demostrate ThreadX SMP Kernel ability.
+
+* **RTOS = ThreadX** is added in its Makefile to include ThreadX service
+* **SMP := 2**: it can be 2 or other smp cpu count number, such as 4, 8, etc.
+  **TX_THREAD_SMP_MAX_CORES** in ``OS/ThreadX/ports_smp/nuclei/tx_port.h`` will use this ``SMP_CPU_CNT`` defined via ``SoC/evalsoc/build.mk``
+  to control threadx smp max core numbers.
+* The **TX_INCLUDE_USER_DEFINE_FILE** macro is defined in Makefile, so you can include customized user configuration
+  file ``tx_user.h``
+
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the threadx smpdemo directory
+    cd application/threadx/smpdemo
+    # by default, it required ux900fd SMPx2 CPU with ECLIC
+    # Clean the application first
+    make SOC=evalsoc clean
+    # Build and upload the application
+    make SOC=evalsoc upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Dec  9 2025, 15:31:52
+    Download Mode: SRAM
+    CPU Frequency 50330009 Hz
+    CPU HartID: 0
+    **** ThreadX SMP Linux Demonstration **** (c) 1996-2020 Microsoft Corporation
+
+            thread 0 events sent                    1, thread 0 cpu 0
+            thread 1 messages sent:              1035, thread 1 cpu 1
+            thread 2 messages received:          1530, thread 2 cpu 1
+            thread 3 obtained semaphore:            2, thread 3 cpu 1
+            thread 4 obtained semaphore:            1, thread 4 cpu 1
+            thread 5 events received:               1, thread 5 cpu 1
+            thread 6 mutex obtained:                2, thread 6 cpu 1
+            thread 7 mutex obtained:                2, thread 7 cpu 1
+
+    **** ThreadX SMP Linux Demonstration **** (c) 1996-2020 Microsoft Corporation
+
+            thread 0 events sent                    2, thread 0 cpu 0
+            thread 1 messages sent:             10110, thread 1 cpu 1
+            thread 2 messages received:         10597, thread 2 cpu 1
+            thread 3 obtained semaphore:            5, thread 3 cpu 1
+            thread 4 obtained semaphore:            5, thread 4 cpu 1
+            thread 5 events received:               2, thread 5 cpu 1
+            thread 6 mutex obtained:                6, thread 6 cpu 1
+            thread 7 mutex obtained:                5, thread 7 cpu 1
+
+    **** ThreadX SMP Linux Demonstration **** (c) 1996-2020 Microsoft Corporation
+
+            thread 0 events sent                    3, thread 0 cpu 1
+            thread 1 messages sent:             19285, thread 1 cpu 0
+            thread 2 messages received:         19719, thread 2 cpu 0
+            thread 3 obtained semaphore:            9, thread 3 cpu 0
+            thread 4 obtained semaphore:            9, thread 4 cpu 0
+            thread 5 events received:               3, thread 5 cpu 0
+            thread 6 mutex obtained:               10, thread 6 cpu 0
+            thread 7 mutex obtained:                9, thread 7 cpu 0
+
+    **** ThreadX SMP Linux Demonstration **** (c) 1996-2020 Microsoft Corporation
+
+            thread 0 events sent                    4, thread 0 cpu 0
+            thread 1 messages sent:             28358, thread 1 cpu 1
+            thread 2 messages received:         28817, thread 2 cpu 1
+            thread 3 obtained semaphore:           13, thread 3 cpu 1
+            thread 4 obtained semaphore:           13, thread 4 cpu 1
+            thread 5 events received:               4, thread 5 cpu 1
+            thread 6 mutex obtained:               13, thread 6 cpu 1
+            thread 7 mutex obtained:               13, thread 7 cpu 1
+
 .. _helloworld application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/helloworld
 .. _cpuinfo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/cpuinfo
 .. _demo_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_timer
@@ -3026,6 +3111,7 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx demo`` applicati
 .. _rt-thread demo smode application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/demo_smode
 .. _rt-thread msh application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/rtthread/msh
 .. _threadx demo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/threadx/demo
+.. _threadx smpdemo application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/threadx/smpdemo
 .. _demo_smode_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_eclic
 .. _demo_eclic_umode application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic_umode
 .. _demo_smode_plic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_plic

@@ -172,6 +172,8 @@ And in your application code, you need to do the following things:
 
 .. note::
 
+    * We also maintained RT-Thread fork repo as described in https://github.com/riscv-mcu/rt-thread/issues/1,
+      which support RV32 and RV64 and also support SMP feature.
     * You can check the ``application\rtthread\`` for rtthread application reference
     * In RT-Thread, the ``main`` function is created as a RT-Thread thread,
       so you don't need to do any OS initialization work, it is done before ``main``
@@ -216,6 +218,7 @@ And in your application code, you need to do the following things:
 .. note::
 
     * ThreadX itself doesn't have a idle task, see https://github.com/eclipse-threadx/threadx/blob/acf2e57606361f3fa95cc5f9bf8c0370f2c4b898/utility/rtos_compatibility_layers/FreeRTOS/readme.md?plain=1#L113-L114
+    * From Nuclei SDK 0.9.0, we bring support for ThreadX SMP support, and also idle task is by default emulated in Nuclei RISC-V portable code now.
     * You can check the ``application\threadx\`` for threadx application reference
     * Currently we only support single core version, the SMP version is not yet supported.
 
@@ -237,4 +240,4 @@ We also support other RTOSes, but not maintained in Nuclei SDK, please see follo
 .. _RT_Thread: https://www.rt-thread.org/
 .. _RT-Thread Nano: https://github.com/RT-Thread/rtthread-nano
 .. _Eclipse ThreadX: https://github.com/eclipse-threadx/threadx
-.. _RT-Thread BSP For Nuclei: https://github.com/RT-Thread/rt-thread/tree/master/bsp/nuclei/
+.. _RT-Thread BSP For Nuclei: https://github.com/riscv-mcu/rt-thread/blob/nuclei/lts-v4.1.x/bsp/nuclei/nuclei_fpga_eval
