@@ -213,6 +213,7 @@ class nsdk_runner(object):
                 fpgaloc = self.runcfg["environment"]["fpgaloc"]
                 serport = runcfg["fpga"][fpga]["serial_port"]
                 openocdcfg = os.path.join(self.sdk, runcfg["fpga"][fpga]["openocd_cfg"])
+                board= runcfg["fpga"][fpga]["board"]
                 if fpga_serial == INVAILD_SERNO or ftdi_serial == INVAILD_SERNO:
                     print("Invalid fpga or ftdi serial, please check!")
                     continue
@@ -228,6 +229,8 @@ class nsdk_runner(object):
                     continue
                 # program fpga, retry 3 times, and wait for 30s * times for each retry
                 fpgadone = False
+                cmd = f"runboard --board {board} --op fpga,unknown --record"
+                os.system(cmd)
                 for i in range(3):
                     if program_fpga(bitstream, fpga_serial) == False:
                         print("Failed to program fpga using bit %s to target %s, retry times %d" % (bitstream, fpga_serial, i))
@@ -236,6 +239,8 @@ class nsdk_runner(object):
                         continue
                     else:
                         print("Successfully program fpga using bit %s to target %s" % (bitstream, fpga_serial))
+                        cmd = f"runboard --board {board} --op fpga,{os.path.basename(bitstream)} --record"
+                        os.system(cmd)
                         fpgadone = True
                         break
                 if fpgadone == False:
