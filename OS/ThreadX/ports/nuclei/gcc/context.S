@@ -42,10 +42,15 @@ _tx_thread_schedule_loop:
 _tx_thread_schedule_ready:
     /* Disable interrupt to load first thread */
     csrci CSR_MSTATUS, MSTATUS_MIE
-    la a1, _tx_thread_current_ptr  /* _tx_thread_current_ptr = _tx_thread_execute_ptr */
+    la a1, _tx_thread_current_ptr   /* _tx_thread_current_ptr = _tx_thread_execute_ptr */
     STORE a0, 0(a1)
-    LOAD sp, 2  * REGBYTES(a0)      /* Read sp from _tx_thread_execute_ptr -> tx_thread_stack_ptr */
+    /* Increment the run count for this thread.  */
+    /* _tx_thread_current_ptr -> tx_thread_run_count++;  */
+    LOAD  t0, 1  * REGBYTES(a0)
+    addi  t0, t0, 1
+    STORE t0, 1 * REGBYTES(a0)
 
+    LOAD sp, 2  * REGBYTES(a0)      /* Read sp from _tx_thread_execute_ptr -> tx_thread_stack_ptr */
     /* Pop PC from stack and set MEPC */
     LOAD t0,  0  * REGBYTES(sp)
     csrw CSR_MEPC, t0

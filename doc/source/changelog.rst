@@ -51,6 +51,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Bugfix for ThreadX idle task emulation in ``eclic_msip_handler`` task switch function, both ``mcause`` and ``msubm`` need to be saved and restored correctly.
   - Mention about other RTOSs Nuclei supported, but not in Nuclei SDK, see :ref:`design_rtos_others`
   - Add support for **ThreadX SMP** kernel support for both Nuclei RISC-V RV32 and RV64 CPU with ECLIC feature enabled.
+  - Fix issue where ``tx_thread_run_count`` was not incremented during task switches and initial task creation in the ThreadX kernel.
 
 * Build System
 

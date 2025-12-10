@@ -103,6 +103,8 @@ void PortThreadSwitch(void)
         _tx_timer_time_slice =  0;
     }
     _tx_thread_current_ptr = _tx_thread_execute_ptr;
+    /* Increment the run count for this thread.  */
+    _tx_thread_current_ptr -> tx_thread_run_count++;
     /* Clear Software IRQ, A MUST */
     SysTimer_ClearSWIRQ();
 }
