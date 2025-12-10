@@ -17,6 +17,7 @@ env:
   cfgloc: str()
 
 fpgarunner:
+  board: str()
   board_type: enum('ku060', 'ddr200t', 'mcu200t', 'vcu118', 'vu19p')
   fpga_serial: str()
   ftdi_serial: str()
@@ -27,6 +28,7 @@ ncycmrunner:
 
 config:
   bitstream: str()
+  board: str()
   fpga: enum('ku060', 'ddr200t', 'mcu200t', 'vcu118', 'vu19p')
   ncycm: str()
   openocd_cfg: str()

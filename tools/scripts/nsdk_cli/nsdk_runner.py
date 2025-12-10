@@ -107,6 +107,31 @@ class nsdk_runner(object):
             self.cpuruncfgs[key] = copy.deepcopy(self.get_runcfg(key))
         pass
 
+# runcfg is dict of gencfgs/core.yaml
+# configs:
+#     n300:
+#         appcfg: app.json
+#         bitstream: /home/xl_ci/bit_outside/cpu/weekly/xxxx.bit
+#         fpga: ddr200t
+#         hwcfg: hw.json
+#         ncycm: n300
+#         openocd_cfg: SoC/evalsoc/Board/nuclei_fpga_eval/openocd_evalsoc.cfg
+# environment:
+#     cfgloc: .
+#     fpgaloc: ''
+#     ncycmloc: ''
+# fpga_runners:
+#     n300:
+#         board_type: ddr200t
+#         board: 3_ddr200t
+#         fpga_serial: Digilent/21030W8J0J0C
+#         ftdi_serial: FT8V0Z1A
+#         serial_port: ''
+# ncycm_runners:
+#     n300:
+#         model: ''
+# runcfg:
+#     runner: fpga
     def get_runcfg(self, config):
         if config not in self.runcfg.get("configs", dict()):
             print("ERROR:  %s not found in runner yaml config" % (config))
