@@ -20,7 +20,7 @@
     },
     "checks": {
         "PASS": [],
-        "FAIL": ["MEPC"]
+        "FAIL": ["MEPC", "ERROR"]
     },
     "appdirs": [
         "application/baremetal/smphello",

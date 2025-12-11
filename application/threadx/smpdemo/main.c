@@ -222,7 +222,7 @@ UINT    status;
 
         /* Check status.  */
         if (status != TX_SUCCESS) {
-            printf("thread 0 tx_event_flags_set status = 0x%x\n", status);
+            printf("ERROR: thread 0 tx_event_flags_set status = 0x%x\n", status);
             break;
         }
     }
@@ -248,7 +248,7 @@ UINT    status;
 
         /* Check completion status.  */
         if (status != TX_SUCCESS) {
-            printf("thread 1 tx_queue_send status = 0x%x\n", status);
+            printf("ERROR: thread 1 tx_queue_send status = 0x%x\n", status);
             break;
         }
 
@@ -278,7 +278,7 @@ UINT    status;
         /* Check completion status and make sure the message is what we
            expected.  */
         if ((status != TX_SUCCESS) || (received_message != thread_2_messages_received)) {
-            printf("thread 1 tx_queue_receive status = 0x%x, %d vs %d\n", status, received_message, thread_2_messages_received);
+            printf("ERROR: thread 1 tx_queue_receive status = 0x%x, %d vs %d\n", status, received_message, thread_2_messages_received);
             break;
         }
 
@@ -311,7 +311,7 @@ UINT    status;
 
         /* Check status.  */
         if (status != TX_SUCCESS) {
-            printf("thread %d tx_semaphore_get status = 0x%x\n", thread_input, status);
+            printf("ERROR: thread %d tx_semaphore_get status = 0x%x\n", thread_input, status);
             break;
         }
 
@@ -323,7 +323,7 @@ UINT    status;
 
         /* Check status.  */
         if (status != TX_SUCCESS) {
-            printf("thread %d tx_semaphore_put status = 0x%x\n", thread_input, status);
+            printf("ERROR: thread %d tx_semaphore_put status = 0x%x\n", thread_input, status);
             break;
         }
     }
@@ -351,7 +351,7 @@ ULONG   actual_flags;
 
         /* Check status.  */
         if ((status != TX_SUCCESS) || (actual_flags != 0x1)) {
-            printf("thread 5 tx_event_flags_get status = 0x%x, actual_flags = 0x%x\n", status, actual_flags);
+            printf("ERROR: thread 5 tx_event_flags_get status = 0x%x, actual_flags = 0x%x\n", status, actual_flags);
             break;
         }
     }
@@ -381,7 +381,7 @@ UINT    status;
 
         /* Check status.  */
         if (status != TX_SUCCESS) {
-            printf("thread %d tx_mutex_get 1 status = 0x%x\n", thread_input, status);
+            printf("ERROR: thread %d tx_mutex_get 1 status = 0x%x\n", thread_input, status);
             break;
         }
 
@@ -392,7 +392,7 @@ UINT    status;
 
         /* Check status.  */
         if (status != TX_SUCCESS) {
-            printf("thread %d tx_mutex_get 2 status = 0x%x\n", thread_input, status);
+            printf("ERROR: thread %d tx_mutex_get 2 status = 0x%x\n", thread_input, status);
             break;
         }
 
@@ -404,7 +404,7 @@ UINT    status;
 
         /* Check status.  */
         if (status != TX_SUCCESS) {
-            printf("thread %d tx_mutex_put 1 status = 0x%x\n", thread_input, status);
+            printf("ERROR: thread %d tx_mutex_put 1 status = 0x%x\n", thread_input, status);
             break;
         }
 
@@ -414,7 +414,7 @@ UINT    status;
 
         /* Check status.  */
         if (status != TX_SUCCESS) {
-            printf("thread %d tx_mutex_put 2 status = 0x%x\n", thread_input, status);
+            printf("ERROR: thread %d tx_mutex_put 2 status = 0x%x\n", thread_input, status);
             break;
         }
     }
