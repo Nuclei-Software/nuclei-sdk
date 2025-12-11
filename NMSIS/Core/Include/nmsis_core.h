@@ -95,6 +95,8 @@
 #include "core_feature_cidu.h"
 /* Include core pma feature header file */
 #include "core_feature_pma.h"
+/* Include core smpcc feature header file */
+#include "core_feature_smpcc.h"
 /* Include compatiable functions header file */
 #include "core_compatiable.h"
 
