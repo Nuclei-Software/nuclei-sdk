@@ -771,7 +771,7 @@ __STATIC_INLINE uint8_t __ECLIC_GetPriorityIRQ(IRQn_Type IRQn)
  */
 __STATIC_INLINE void __ECLIC_SetVector(IRQn_Type IRQn, rv_csr_t vector)
 {
-    volatile unsigned long vec_base;
+    unsigned long vec_base;
     vec_base = ((unsigned long)__RV_CSR_READ(CSR_MTVT));
     vec_base += ((unsigned long)IRQn) * sizeof(unsigned long);
     (* (unsigned long *) vec_base) = vector;
