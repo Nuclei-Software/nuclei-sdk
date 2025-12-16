@@ -681,8 +681,17 @@ CORE
 **CORE** variable is used to declare the Nuclei processor core
 of the application.
 
-**NOTICE**: Nuclei 100 series such as N100 is not supported by normal Nuclei SDK, you need
-to switch to ``develop_n100`` branch to try it out.
+.. _n100_support_limitation:
+
+.. note::
+
+    * Nuclei 100 series now have two different interrupt controller called **ECLIC** and **IRQC**, you need to confirm which interrupt controller your CPU configured.
+
+      - About Nuclei N100 series CPU technical details, please refer to ``Nuclei_N100_Series_Databook.pdf``
+      - If configured with **ECLIC**, you can use Nuclei SDK >= 0.9.0 release(``develop`` or ``master`` branch)
+      - If configured with **IRQC**, you need to use Nuclei N100 SDK(``develop_n100`` or ``master_n100`` branch), see https://doc.nucleisys.com/nuclei_n100_sdk
+    * Nuclei 100 series without ECLIC such as N100 is not supported by normal Nuclei SDK, you need to switch to ``develop_n100`` branch to try it out.
+    * ``n100e/n100em/n100ezmmul/n100/n100m/n100zmmul`` 100 series CPU COREs with ECLIC present are supported from 0.9.0 release.
 
 Currently it has these cores supported as described in table
 :ref:`table_dev_buildsystem_6`.
@@ -693,51 +702,57 @@ Currently it has these cores supported as described in table
    :widths: 20 20 20 30
    :align: center
 
-   ========  ========== =======  ====================
-   **CORE**  **ARCH**   **ABI**       **TUNE**
-   n200      rv32imc    ilp32    nuclei-200-series
-   n200e     rv32emc    ilp32e   nuclei-200-series
-   n201      rv32iac    ilp32    nuclei-200-series
-   n201e     rv32eac    ilp32e   nuclei-200-series
-   n202      rv32ic     ilp32    nuclei-200-series
-   n202e     rv32ec     ilp32e   nuclei-200-series
-   n203      rv32imac   ilp32    nuclei-200-series
-   n203e     rv32emac   ilp32e   nuclei-200-series
-   n300      rv32imac   ilp32    nuclei-300-series
-   n300e     rv32emac   ilp32e   nuclei-300-series
-   n300f     rv32imafc  ilp32f   nuclei-300-series
-   n300fd    rv32imafdc ilp32d   nuclei-300-series
-   n600      rv32imac   ilp32    nuclei-600-series
-   n600f     rv32imafc  ilp32f   nuclei-600-series
-   n600fd    rv32imafdc ilp32d   nuclei-600-series
-   u600      rv32imac   ilp32    nuclei-600-series
-   u600f     rv32imafc  ilp32f   nuclei-600-series
-   u600fd    rv32imafdc ilp32d   nuclei-600-series
-   nx600     rv64imac   lp64     nuclei-600-series
-   nx600f    rv64imafc  lp64f    nuclei-600-series
-   nx600fd   rv64imafdc lp64d    nuclei-600-series
-   ux600     rv64imac   lp64     nuclei-600-series
-   ux600f    rv64imafc  lp64f    nuclei-600-series
-   ux600fd   rv64imafdc lp64d    nuclei-600-series
-   n900      rv32imac   ilp32    nuclei-900-series
-   n900f     rv32imafc  ilp32f   nuclei-900-series
-   n900fd    rv32imafdc ilp32d   nuclei-900-series
-   u900      rv32imac   ilp32    nuclei-900-series
-   u900f     rv32imafc  ilp32f   nuclei-900-series
-   u900fd    rv32imafdc ilp32d   nuclei-900-series
-   nx900     rv64imac   lp64     nuclei-900-series
-   nx900f    rv64imafc  lp64f    nuclei-900-series
-   nx900fd   rv64imafdc lp64d    nuclei-900-series
-   ux900     rv64imac   lp64     nuclei-900-series
-   ux900f    rv64imafc  lp64f    nuclei-900-series
-   ux900fd   rv64imafdc lp64d    nuclei-900-series
-   nx1000    rv64imac   lp64     nuclei-1000-series
-   nx1000f   rv64imafc  lp64f    nuclei-1000-series
-   nx1000fd  rv64imafdc lp64d    nuclei-1000-series
-   ux1000    rv64imac   lp64     nuclei-1000-series
-   ux1000f   rv64imafc  lp64f    nuclei-1000-series
-   ux1000fd  rv64imafdc lp64d    nuclei-1000-series
-   ========  ========== =======  ====================
+   ===========  ===============  =========  ====================
+   **CORE**     **ARCH**          **ABI**       **TUNE**
+   n100e         rv32ec           ilp32e     nuclei-100-series
+   n100em        rv32emc          ilp32e     nuclei-100-series
+   n100ezmmul    rv32ec_zmmul     ilp32e     nuclei-100-series
+   n100          rv32ic           ilp32      nuclei-100-series
+   n100m         rv32imc          ilp32      nuclei-100-series
+   n100zmmul     rv32ic_zmmul     ilp32      nuclei-100-series
+   n200          rv32imc          ilp32      nuclei-200-series
+   n200e         rv32emc          ilp32e     nuclei-200-series
+   n201          rv32iac          ilp32      nuclei-200-series
+   n201e         rv32eac          ilp32e     nuclei-200-series
+   n202          rv32ic           ilp32      nuclei-200-series
+   n202e         rv32ec           ilp32e     nuclei-200-series
+   n203          rv32imac         ilp32      nuclei-200-series
+   n203e         rv32emac         ilp32e     nuclei-200-series
+   n300          rv32imac         ilp32      nuclei-300-series
+   n300e         rv32emac         ilp32e     nuclei-300-series
+   n300f         rv32imafc        ilp32f     nuclei-300-series
+   n300fd        rv32imafdc       ilp32d     nuclei-300-series
+   n600          rv32imac         ilp32      nuclei-600-series
+   n600f         rv32imafc        ilp32f     nuclei-600-series
+   n600fd        rv32imafdc       ilp32d     nuclei-600-series
+   u600          rv32imac         ilp32      nuclei-600-series
+   u600f         rv32imafc        ilp32f     nuclei-600-series
+   u600fd        rv32imafdc       ilp32d     nuclei-600-series
+   nx600         rv64imac         lp64       nuclei-600-series
+   nx600f        rv64imafc        lp64f      nuclei-600-series
+   nx600fd       rv64imafdc       lp64d      nuclei-600-series
+   ux600         rv64imac         lp64       nuclei-600-series
+   ux600f        rv64imafc        lp64f      nuclei-600-series
+   ux600fd       rv64imafdc       lp64d      nuclei-600-series
+   n900          rv32imac         ilp32      nuclei-900-series
+   n900f         rv32imafc        ilp32f     nuclei-900-series
+   n900fd        rv32imafdc       ilp32d     nuclei-900-series
+   u900          rv32imac         ilp32      nuclei-900-series
+   u900f         rv32imafc        ilp32f     nuclei-900-series
+   u900fd        rv32imafdc       ilp32d     nuclei-900-series
+   nx900         rv64imac         lp64       nuclei-900-series
+   nx900f        rv64imafc        lp64f      nuclei-900-series
+   nx900fd       rv64imafdc       lp64d      nuclei-900-series
+   ux900         rv64imac         lp64       nuclei-900-series
+   ux900f        rv64imafc        lp64f      nuclei-900-series
+   ux900fd       rv64imafdc       lp64d      nuclei-900-series
+   nx1000        rv64imac         lp64       nuclei-1000-series
+   nx1000f       rv64imafc        lp64f      nuclei-1000-series
+   nx1000fd      rv64imafdc       lp64d      nuclei-1000-series
+   ux1000        rv64imac         lp64       nuclei-1000-series
+   ux1000f       rv64imafc        lp64f      nuclei-1000-series
+   ux1000fd      rv64imafdc       lp64d      nuclei-1000-series
+   ===========  ===============  =========  ====================
 
 When **CORE** is selected, the **ARCH**, **ABI** and **TUNE** (optional) are set,
 and it might affect the compiler options in combination with :ref:`develop_buildsystem_var_archext`

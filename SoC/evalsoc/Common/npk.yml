@@ -38,6 +38,43 @@ configuration:
     # tips introduced in Nuclei Studio 2023.10
     tips: "Select Nuclei Core to match basic RISC-V ARCH and ABI, used together with below Nuclei ARCH Extensions"
     choices:
+      # N100 support limitation: https://doc.nucleisys.com/nuclei_sdk/develop/buildsystem.html#n100-support-limitation
+      - name: n100
+        arch: rv32ic
+        abi: ilp32
+        cmodel: medlow
+        tune: nuclei-100-series
+        description: N100 Core with ECLIC(ARCH=rv32ic, ABI=ilp32)
+      - name: n100m
+        arch: rv32imc
+        abi: ilp32
+        cmodel: medlow
+        tune: nuclei-100-series
+        description: N100M Core with ECLIC(ARCH=rv32imc, ABI=ilp32)
+      - name: n100zmmul
+        arch: rv32ic_zmmul
+        abi: ilp32
+        cmodel: medlow
+        tune: nuclei-100-series
+        description: N100ZMMUL Core with ECLIC(ARCH=rv32ic_zmmul, ABI=ilp32)
+      - name: n100e
+        arch: rv32ec
+        abi: ilp32e
+        cmodel: medlow
+        tune: nuclei-100-series
+        description: N100E Core with ECLIC(ARCH=rv32ec, ABI=ilp32e)
+      - name: n100em
+        arch: rv32emc
+        abi: ilp32e
+        cmodel: medlow
+        tune: nuclei-100-series
+        description: N100EM Core with ECLIC(ARCH=rv32emc, ABI=ilp32e)
+      - name: n100ezmmul
+        arch: rv32ec_zmmul
+        abi: ilp32e
+        cmodel: medlow
+        tune: nuclei-100-series
+        description: N100EZMMUL Core with ECLIC(ARCH=rv32ec_zmmul, ABI=ilp32e)
       - name: n200
         arch: rv32imc
         abi: ilp32
@@ -415,6 +452,9 @@ setconfig:
   - config: nmsislibarch
     value: ${nuclei_arch}
   - config: cpu_series
+    value: 100
+    condition: $( contains(${nuclei_core}, "n100"))
+  - config: cpu_series
     value: 200
     condition: $( contains(${nuclei_core}, "20"))
   - config: cpu_series
@@ -478,6 +518,8 @@ buildconfig:
     common_defines:
       - defines: SMP_CPU_CNT=${nuclei_smp}
         condition: $( ${nuclei_smp} > 1 )
+      - defines: CPU_SERIES=${cpu_series}
+        condition: $( ${cpu_series} != "" )
       - defines: BOOT_HARTID=${boothartid}
       - defines: RUNMODE_IC_EN=1
         condition: $( contains(${nuclei_cache}, "ic"))

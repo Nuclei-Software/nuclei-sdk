@@ -9,6 +9,7 @@ V0.9.0-dev
 .. note::
 
     - Please use ``Nuclei Studio 2025.10`` with v0.9.0 and later version.
+    - **Nuclei N100 series with ECLIC configured** are supported, see :ref:`N100 support limitation <n100_support_limitation>`
 
 This is release version of ``0.9.0`` of Nuclei SDK, which is still under development.
 
@@ -61,6 +62,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Recommend ``-fno-strict-aliasing`` as common compiler options should be passed, see :ref:`develop_buildsystem_var_common_flags`
   - Must pass ``-fomit-frame-pointer`` when using ``Zc`` extension to generate push/pop instructions, see https://github.com/riscvarchive/riscv-code-size-reduction/issues/194
   - Toolchain Terapines ZCC support is updated to match latest ZCC 4.1.7 release which is integrated with Nuclei Studio 2025.10
+  - Nuclei **N100 series** CPU Core with **ECLIC** configured are supported, see :ref:`N100 support limitation <n100_support_limitation>`
 
 * SoC
 

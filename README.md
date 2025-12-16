@@ -5,7 +5,7 @@
 
 
 > [!NOTE]
-> If you want to build and run on Nuclei 100 series CPU, please switch to [**develop_n100**][3] or [**master_n100**][2] branch.
+> If you want to build and run on Nuclei 100 series CPU, please read [n100 support status](https://doc.nucleisys.com/nuclei_sdk/develop/buildsystem.html#n100-support-limitation) first.
 
 > Since 0.5.0 release, Nuclei Studio >= 2023.10 and Nuclei RISC-V Toolchain/Qemu/OpenOCD >= 2023.10 are required to build and run.
 
@@ -25,14 +25,12 @@ Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CP
 
 > If you want to check how to use with IAR compiler, please check [ideprojects/iar/README.md](ideprojects/iar/README.md).
 
-Wanner to take a try with **Nuclei N100 SDK for Nuclei 100 series CPU**, click [Quick Start with Nuclei N100 SDK](https://doc.nucleisys.com/nuclei_n100_sdk/quickstart.html) to start up.
-
 ## Requirements
 
 * Ubuntu Linux >=20.04 LTS or Windows >=10
   - **Linux**: GNU Make >= 3.82
   - **Windows**: [Windows Build Tools](https://nucleisys.com/download.php)
-* [Nuclei Studio >= 2025.02](https://nucleisys.com/download.php)
+* [Nuclei Studio >= 2025.10](https://nucleisys.com/download.php)
   - Nuclei Studio can support import Nuclei SDK NPK package to provide IDE project wizard create/build/debug.
   - Nuclei Studio also contains same release of Nuclei Toolchain/QEMU/OpenOCD, so just download IDE is enough.
 

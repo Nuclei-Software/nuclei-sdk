@@ -10,11 +10,10 @@ Use Nuclei SDK in Nuclei Studio
 
 .. caution::
 
-   - If you are looking for Nuclei 100 series such as N100 support, you need to switch to
-     **master_n100** or **nuclei_n100** branch of this repository to try it out.
+   - If you are looking for Nuclei 100 series support, please read :ref:`N100 support status <n100_support_limitation>`
 
    - If you are evaluating Nuclei CPU, in future released **nuclei_gen**, you will be able
-   to use the generated Nuclei SDK, please see :ref:`design_soc_evalsoc_usage`.
+     to use the generated Nuclei SDK, please see :ref:`design_soc_evalsoc_usage`.
 
    - For **Nuclei SDK 0.6.0** version and later ones, please use `Nuclei Studio 2024.06`_ or
      Nuclei RISC-V Toolchain/OpenOCD/QEMU 2024.06.
@@ -643,6 +642,7 @@ For more advanced usage, please follow the items as below:
 .. _ideprojects/iar/README.md: https://github.com/Nuclei-Software/nuclei-sdk/blob/master/ideprojects/iar/README.md
 .. _Nuclei Studio 2024.06: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2024.06
 .. _Nuclei Studio 2025.02: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2025.02
+.. _Nuclei Studio 2025.10: https://github.com/Nuclei-Software/nuclei-studio/releases/tag/2025.10
 .. _Using Terapines ZCC Toolchain in Nuclei Studio: https://1nfinite.ai/t/nuclei-studio-2024-06-ide-terapines-zcc/113
 .. _ZStudio IDE: https://1nfinite.ai/t/zstudio-ide-risc-v/71
 .. _Compiler IDE: https://www.compiler-dev.com/

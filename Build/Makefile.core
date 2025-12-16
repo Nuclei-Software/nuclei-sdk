@@ -2,6 +2,12 @@
 # NXXX_CORE_ARCH_ABI = ARCH ABI TUNE
 # ARCH ABI is a MUST, TUNE is optional
 # NOTE: n205/n205e/n305/n307/n307fd will be removed in future
+N100E_CORE_ARCH_ABI = rv32ec ilp32e nuclei-100-series
+N100EM_CORE_ARCH_ABI = rv32emc ilp32e nuclei-100-series
+N100EZMMUL_CORE_ARCH_ABI = rv32ec_zmmul ilp32e nuclei-100-series
+N100_CORE_ARCH_ABI = rv32ic ilp32 nuclei-100-series
+N100M_CORE_ARCH_ABI = rv32imc ilp32 nuclei-100-series
+N100ZMMUL_CORE_ARCH_ABI = rv32ic_zmmul ilp32 nuclei-100-series
 N200_CORE_ARCH_ABI = rv32imc ilp32 nuclei-200-series
 N200E_CORE_ARCH_ABI = rv32emc ilp32e nuclei-200-series
 N201_CORE_ARCH_ABI = rv32iac ilp32 nuclei-200-series
@@ -52,7 +58,9 @@ UX1000FD_CORE_ARCH_ABI = rv64imafdc lp64d nuclei-1000-series
 
 # Don't forget to add a new core below
 # if you add a new NXXX_CORE_ARCH_ABI above
-SUPPORTED_CORES = n200 n200e n201 n201e n202 n202e \
+SUPPORTED_CORES = n100e n100em n100ezmmul \
+		n100 n100m n100zmmul \
+		n200 n200e n201 n201e n202 n202e \
 		n203 n203e n205 n205e \
 		n300e n300 n300f n300fd n305 n307 n307fd \
 		n600 n600f n600fd \

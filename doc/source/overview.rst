@@ -15,7 +15,7 @@ Introduction
 
 .. note::
 
-    If you are looking for Nuclei N100 SDK for Nuclei 100 series CPU, please refer to https://doc.nucleisys.com/nuclei_n100_sdk
+    If you are looking for Nuclei N100 SDK for Nuclei 100 series CPU, please refer to :ref:`N100 support status <n100_support_limitation>`
 
 The **Nuclei Software Development Kit (SDK)** is an open-source software platform to
 speed up the software development of SoCs based on Nuclei Processor Cores.
