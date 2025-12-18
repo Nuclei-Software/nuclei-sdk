@@ -54,6 +54,13 @@
 /** \brief Type of Control and Status Register(CSR), depends on the XLEN defined in RISC-V */
 typedef unsigned long rv_csr_t;
 
+/** \brief Type of RISC-V Counter such as cycle, instret, time, depends on the XLEN defined in RISC-V, but for n100, it will be 32bit max */
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+typedef uint32_t rv_counter_t;
+#else
+typedef uint64_t rv_counter_t;
+#endif
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_Registers */
 /**
  * \defgroup NMSIS_Core_Base_Registers     Base Register Define and Type Definitions
@@ -1071,9 +1078,13 @@ __STATIC_FORCEINLINE void __clear_core_irq_pending_s(uint32_t irq)
  * \return  The whole 64 bits value of MCYCLE
  * \remarks It will work for both RV32 and RV64 to get full 64bits value of MCYCLE
  */
-__STATIC_INLINE uint64_t __get_rv_cycle(void)
+__STATIC_INLINE rv_counter_t __get_rv_cycle(void)
 {
 #if __RISCV_XLEN == 32
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    return __RV_CSR_READ(CSR_MCYCLE);
+#else
     volatile uint32_t high0, low, high;
     uint64_t full;
 
@@ -1085,6 +1096,8 @@ __STATIC_INLINE uint64_t __get_rv_cycle(void)
     }
     full = (((uint64_t)high) << 32) | low;
     return full;
+#endif
+
 #elif __RISCV_XLEN == 64
     return (uint64_t)__RV_CSR_READ(CSR_MCYCLE);
 #else // TODO Need cover for XLEN=128 case in future
@@ -1097,12 +1110,16 @@ __STATIC_INLINE uint64_t __get_rv_cycle(void)
  * \details This function will set the whole 64 bits of MCYCLE register
  * \remarks It will work for both RV32 and RV64 to set full 64bits value of MCYCLE
  */
-__STATIC_FORCEINLINE void __set_rv_cycle(uint64_t cycle)
+__STATIC_FORCEINLINE void __set_rv_cycle(rv_counter_t cycle)
 {
 #if __RISCV_XLEN == 32
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    __RV_CSR_WRITE(CSR_MCYCLE, (uint32_t)(cycle));
+#else
     __RV_CSR_WRITE(CSR_MCYCLE, 0); // prevent carry
     __RV_CSR_WRITE(CSR_MCYCLEH, (uint32_t)(cycle >> 32));
     __RV_CSR_WRITE(CSR_MCYCLE, (uint32_t)(cycle));
+#endif
 #elif __RISCV_XLEN == 64
     __RV_CSR_WRITE(CSR_MCYCLE, cycle);
 #else // TODO Need cover for XLEN=128 case in future
@@ -1115,9 +1132,12 @@ __STATIC_FORCEINLINE void __set_rv_cycle(uint64_t cycle)
  * \return  The whole 64 bits value of MINSTRET
  * \remarks It will work for both RV32 and RV64 to get full 64bits value of MINSTRET
  */
-__STATIC_INLINE uint64_t __get_rv_instret(void)
+__STATIC_INLINE rv_counter_t __get_rv_instret(void)
 {
 #if __RISCV_XLEN == 32
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    return __RV_CSR_READ(CSR_MINSTRET);
+#else
     volatile uint32_t high0, low, high;
     uint64_t full;
 
@@ -1129,6 +1149,7 @@ __STATIC_INLINE uint64_t __get_rv_instret(void)
     }
     full = (((uint64_t)high) << 32) | low;
     return full;
+#endif
 #elif __RISCV_XLEN == 64
     return (uint64_t)__RV_CSR_READ(CSR_MINSTRET);
 #else // TODO Need cover for XLEN=128 case in future
@@ -1141,12 +1162,16 @@ __STATIC_INLINE uint64_t __get_rv_instret(void)
  * \details This function will set the whole 64 bits of MINSTRET register
  * \remarks It will work for both RV32 and RV64 to set full 64bits value of MINSTRET
  */
-__STATIC_FORCEINLINE void __set_rv_instret(uint64_t instret)
+__STATIC_FORCEINLINE void __set_rv_instret(rv_counter_t instret)
 {
 #if __RISCV_XLEN == 32
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    __RV_CSR_WRITE(CSR_MINSTRET, (uint32_t)(instret));
+#else
     __RV_CSR_WRITE(CSR_MINSTRET, 0); // prevent carry
     __RV_CSR_WRITE(CSR_MINSTRETH, (uint32_t)(instret >> 32));
     __RV_CSR_WRITE(CSR_MINSTRET, (uint32_t)(instret));
+#endif
 #elif __RISCV_XLEN == 64
     __RV_CSR_WRITE(CSR_MINSTRET, instret);
 #else // TODO Need cover for XLEN=128 case in future
@@ -1160,9 +1185,16 @@ __STATIC_FORCEINLINE void __set_rv_instret(uint64_t instret)
  * \remarks It will work for both RV32 and RV64 to get full 64bits value of TIME
  * \attention only available when user mode available
  */
-__STATIC_INLINE uint64_t __get_rv_time(void)
+__STATIC_INLINE rv_counter_t __get_rv_time(void)
 {
 #if __RISCV_XLEN == 32
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+#if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
+    return *(uint32_t *) (__SYSTIMER_BASEADDR);
+#else
+    return 0;
+#endif
+#else
     volatile uint32_t high0, low, high;
     uint64_t full;
 
@@ -1174,6 +1206,7 @@ __STATIC_INLINE uint64_t __get_rv_time(void)
     }
     full = (((uint64_t)high) << 32) | low;
     return full;
+#endif
 #elif __RISCV_XLEN == 64
     return (uint64_t)__RV_CSR_READ(CSR_TIME);
 #else // TODO Need cover for XLEN=128 case in future
@@ -1189,7 +1222,7 @@ __STATIC_INLINE uint64_t __get_rv_time(void)
  *          64 bits value when XLEN=64
  *          TODO: XLEN=128 need to be supported
  */
-__STATIC_FORCEINLINE unsigned long __read_cycle_csr()
+__STATIC_FORCEINLINE unsigned long __read_cycle_csr(void)
 {
     return __RV_CSR_READ(CSR_CYCLE);
 }
@@ -1202,7 +1235,7 @@ __STATIC_FORCEINLINE unsigned long __read_cycle_csr()
  *          64 bits value when XLEN=64
  *          TODO: XLEN=128 need to be supported
  */
-__STATIC_FORCEINLINE unsigned long __read_instret_csr()
+__STATIC_FORCEINLINE unsigned long __read_instret_csr(void)
 {
     return __RV_CSR_READ(CSR_INSTRET);
 }
@@ -1215,7 +1248,7 @@ __STATIC_FORCEINLINE unsigned long __read_instret_csr()
  *          64 bits value when XLEN=64
  *          TODO: XLEN=128 need to be supported
  */
-__STATIC_FORCEINLINE unsigned long __read_time_csr()
+__STATIC_FORCEINLINE unsigned long __read_time_csr(void)
 {
     return __RV_CSR_READ(CSR_TIME);
 }
@@ -2055,7 +2088,10 @@ __STATIC_FORCEINLINE void __set_mideleg(unsigned long mask)
  */
 __STATIC_FORCEINLINE void __FENCE_I(void)
 {
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+#else
     __ASM volatile("fence.i");
+#endif
 }
 
 /** \brief Read & Write Memory barrier */

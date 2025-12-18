@@ -53,12 +53,19 @@ extern "C" {
  * - CMPCLREN and CLKSRC bit in MTIMECTL register is introduced in Nuclei N Core version 1.4(\ref __NUCLEI_N_REV >= 0x0104)
  */
 typedef struct {
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    __IOM uint32_t MTIMER;                  /*!< Offset: 0x000 (R/W)  System Timer current value 32bits Register for N100 */
+    __IOM uint32_t RESERVED1;               /*!< Offset: 0x004 (R/W)  Reserved, not available */
+    __IOM uint32_t MTIMERCMP;               /*!< Offset: 0x008 (R/W)  System Timer compare Value 32bits Register for N100 */
+    __IOM uint32_t RESERVED2;               /*!< Offset: 0x00C (R/W)  Reserved, not available */
+#else
     __IOM uint64_t MTIMER;                  /*!< Offset: 0x000 (R/W)  System Timer current value 64bits Register */
     __IOM uint64_t MTIMERCMP;               /*!< Offset: 0x008 (R/W)  System Timer compare Value 64bits Register */
+#endif
     __IOM uint32_t RESERVED0[0x3F7];        /*!< Offset: 0x010 - 0xFE8 Reserved */
-    __IOM uint32_t MTIME_SRW_CTRL;          /*!< Offset: 0xFEC (R/W)  Control S-mode can access this timer or not. */
+    __IOM uint32_t MTIME_SRW_CTRL;          /*!< Offset: 0xFEC (R/W)  Control S-mode can access this timer or not, not present in N100 */
     __IOM uint32_t MSFTRST;                 /*!< Offset: 0xFF0 (R/W)  System Timer Software Core Reset Register */
-    __IOM uint32_t SSIP;                    /*!< Offset: 0xFF4 (R/W)  S-Mode System Timer SW interrupt Register */
+    __IOM uint32_t SSIP;                    /*!< Offset: 0xFF4 (R/W)  S-Mode System Timer SW interrupt Register, not present in N100 */
     __IOM uint32_t MTIMECTL;                /*!< Offset: 0xFF8 (R/W)  System Timer Control Register, previously MSTOP register */
     __IOM uint32_t MSIP;                    /*!< Offset: 0xFFC (R/W)  M-Mode System Timer SW interrupt Register */
 } SysTimer_Type;
@@ -84,8 +91,13 @@ typedef struct {
 #define SysTimer_MTIME_SRW_CTRL_SRW_Pos     0U                                          /*!< SysTick Timer MTIME_SRW_CTRL: SRW bit Position */
 #define SysTimer_MTIME_SRW_CTRL_SRW_Msk     (1UL << SysTimer_MTIME_SRW_CTRL_SRW_Pos)    /*!< SysTick Timer MTIME_SRW_CTRL: SRW Mask */
 
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+#define SysTimer_MTIMER_Msk                 (0xFFFFFFFFUL)                              /*!< SysTick Timer MTIMER value Mask for N100 */
+#define SysTimer_MTIMERCMP_Msk              (0xFFFFFFFFUL)                              /*!< SysTick Timer MTIMERCMP value Mask for N100 */
+#else
 #define SysTimer_MTIMER_Msk                 (0xFFFFFFFFFFFFFFFFULL)                     /*!< SysTick Timer MTIMER value Mask */
 #define SysTimer_MTIMERCMP_Msk              (0xFFFFFFFFFFFFFFFFULL)                     /*!< SysTick Timer MTIMERCMP value Mask */
+#endif
 #define SysTimer_MTIMECTL_Msk               (0xFFFFFFFFUL)                              /*!< SysTick Timer MTIMECTL/MSTOP value Mask */
 #define SysTimer_MSIP_Msk                   (0xFFFFFFFFUL)                              /*!< SysTick Timer MSIP   value Mask */
 #define SysTimer_MSFTRST_Msk                (0xFFFFFFFFUL)                              /*!< SysTick Timer MSFTRST value Mask */
@@ -147,12 +159,12 @@ typedef struct {
  * This function set the system timer load value in MTIMER register.
  * \param [in]  value   value to set system timer MTIMER register.
  * \remarks
- * - Load value is 64bits wide.
+ * - Load value is 64bits wide for non-n100 cpu
  * - \ref SysTimer_GetLoadValue
  */
-__STATIC_INLINE void SysTimer_SetLoadValue(uint64_t value)
+__STATIC_INLINE void SysTimer_SetLoadValue(rv_counter_t value)
 {
-#if __RISCV_XLEN == 32
+#if (__RISCV_XLEN == 32) && !(defined(CPU_SERIES) && CPU_SERIES == 100)
     uint8_t *addr;
     addr = (uint8_t *)(&(SysTimer->MTIMER));
     __SW(addr, 0);      // prevent carry
@@ -172,9 +184,9 @@ __STATIC_INLINE void SysTimer_SetLoadValue(uint64_t value)
  * - Load value is 64bits wide.
  * - \ref SysTimer_SetLoadValue
  */
-__STATIC_INLINE uint64_t SysTimer_GetLoadValue(void)
+__STATIC_INLINE rv_counter_t SysTimer_GetLoadValue(void)
 {
-#if __RISCV_XLEN == 32
+#if (__RISCV_XLEN == 32) && !(defined(CPU_SERIES) && CPU_SERIES == 100)
     volatile uint32_t high0, low, high;
     uint64_t full;
     uint8_t *addr;
@@ -207,8 +219,11 @@ __STATIC_INLINE uint64_t SysTimer_GetLoadValue(void)
  * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * - \ref SysTimer_GetHartCompareValue
  */
-__STATIC_INLINE void SysTimer_SetHartCompareValue(uint64_t value, unsigned long hartid)
+__STATIC_INLINE void SysTimer_SetHartCompareValue(rv_counter_t value, unsigned long hartid)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    SysTimer->MTIMERCMP = value;
+#else
     if (hartid == 0) {
 #if __RISCV_XLEN == 32
         uint8_t *addr;
@@ -229,6 +244,7 @@ __STATIC_INLINE void SysTimer_SetHartCompareValue(uint64_t value, unsigned long 
         __SD(addr, value);
 #endif
     }
+#endif
 }
 
 /**
@@ -243,10 +259,14 @@ __STATIC_INLINE void SysTimer_SetHartCompareValue(uint64_t value, unsigned long 
  * - __get_hart_id function can only be accessed in machine mode, or else exception will occur.
  * - \ref SysTimer_GetCompareValue
  */
-__STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
+__STATIC_FORCEINLINE void SysTimer_SetCompareValue(rv_counter_t value)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    SysTimer->MTIMERCMP = value;
+#else
     unsigned long hartid = SysTimer_GetHartID();
     SysTimer_SetHartCompareValue(value, hartid);
+#endif
 }
 
 /**
@@ -260,8 +280,11 @@ __STATIC_FORCEINLINE void SysTimer_SetCompareValue(uint64_t value)
  * - In S-mode, hartid can't be get by using __get_hart_id function, so this api suits S-mode particularly.
  * - \ref SysTimer_SetHartCompareValue
  */
-__STATIC_INLINE uint64_t SysTimer_GetHartCompareValue(unsigned long hartid)
+__STATIC_INLINE rv_counter_t SysTimer_GetHartCompareValue(unsigned long hartid)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    return SysTimer->MTIMERCMP;
+#else
     if (hartid == 0) {
         return SysTimer->MTIMERCMP;
     } else {
@@ -279,6 +302,7 @@ __STATIC_INLINE uint64_t SysTimer_GetHartCompareValue(unsigned long hartid)
 #endif
         return full;
     }
+#endif
 }
 
 /**
@@ -290,10 +314,14 @@ __STATIC_INLINE uint64_t SysTimer_GetHartCompareValue(unsigned long hartid)
  * - Compare value is 64bits wide.
  * - \ref SysTimer_SetCompareValue
  */
-__STATIC_FORCEINLINE uint64_t SysTimer_GetCompareValue(void)
+__STATIC_FORCEINLINE rv_counter_t SysTimer_GetCompareValue(void)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    return SysTimer->MTIMERCMP;
+#else
     unsigned long hartid = SysTimer_GetHartID();
     return SysTimer_GetHartCompareValue(hartid);
+#endif
 }
 
 /**
@@ -835,9 +863,9 @@ __STATIC_FORCEINLINE void SysTimer_DisableSAccess(void)
  * \sa
  * - \ref SysTimer_SetCompareValue; SysTimer_SetLoadValue
  */
-__STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
+__STATIC_INLINE uint32_t SysTick_Config(rv_counter_t ticks)
 {
-    uint64_t loadticks = SysTimer_GetLoadValue();
+    rv_counter_t loadticks = SysTimer_GetLoadValue();
     SysTimer_SetCompareValue(ticks + loadticks);
 
 #if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
@@ -875,9 +903,9 @@ __STATIC_INLINE uint32_t SysTick_Config(uint64_t ticks)
  * \sa
  * - \ref SysTimer_SetCompareValue; SysTimer_SetLoadValue
  */
-__STATIC_INLINE uint32_t SysTick_HartConfig(uint64_t ticks, unsigned long hartid)
+__STATIC_INLINE uint32_t SysTick_HartConfig(rv_counter_t ticks, unsigned long hartid)
 {
-    uint64_t loadticks = SysTimer_GetLoadValue();
+    rv_counter_t loadticks = SysTimer_GetLoadValue();
     SysTimer_SetHartCompareValue(ticks + loadticks, hartid);
 
 #if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
@@ -911,11 +939,11 @@ __STATIC_INLINE uint32_t SysTick_HartConfig(uint64_t ticks, unsigned long hartid
  * - \ref SysTimer_SetCompareValue
  * - \ref SysTimer_SetLoadValue
  */
-__STATIC_INLINE uint32_t SysTick_Reload(uint64_t ticks)
+__STATIC_INLINE uint32_t SysTick_Reload(rv_counter_t ticks)
 {
-    uint64_t cur_ticks = SysTimer_GetLoadValue();
+    rv_counter_t cur_ticks = SysTimer_GetLoadValue();
 
-    uint64_t reload_ticks = ticks + cur_ticks;
+    rv_counter_t reload_ticks = ticks + cur_ticks;
 
     SysTimer_SetCompareValue(reload_ticks);
 
@@ -947,10 +975,10 @@ __STATIC_INLINE uint32_t SysTick_Reload(uint64_t ticks)
  * - \ref SysTimer_SetCompareValue
  * - \ref SysTimer_SetLoadValue
  */
-__STATIC_INLINE uint32_t SysTick_HartReload(uint64_t ticks, unsigned long hartid)
+__STATIC_INLINE uint32_t SysTick_HartReload(rv_counter_t ticks, unsigned long hartid)
 {
-    uint64_t cur_ticks = SysTimer_GetLoadValue();
-    uint64_t reload_ticks = ticks + cur_ticks;
+    rv_counter_t cur_ticks = SysTimer_GetLoadValue();
+    rv_counter_t reload_ticks = ticks + cur_ticks;
 
     SysTimer_SetHartCompareValue(reload_ticks, hartid);
 
@@ -968,9 +996,9 @@ __STATIC_INLINE uint32_t SysTick_HartReload(uint64_t ticks, unsigned long hartid
  * \param [in]  ticks  Number of ticks between two interrupts.
  * \return          0  Function succeeded.
  */
-__STATIC_INLINE uint32_t SysTick_Config_S(uint64_t ticks)
+__STATIC_INLINE uint32_t SysTick_Config_S(rv_counter_t ticks)
 {
-    uint64_t loadticks = __get_rv_time();
+    rv_counter_t loadticks = __get_rv_time();
     SysTimer_SetCompareValue_S(ticks + loadticks);
 
 #if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
@@ -991,11 +1019,11 @@ __STATIC_INLINE uint32_t SysTick_Config_S(uint64_t ticks)
  * \return          0  Function succeeded.
  * \return          1  Function failed.
  */
-__STATIC_INLINE uint32_t SysTick_Reload_S(uint64_t ticks)
+__STATIC_INLINE uint32_t SysTick_Reload_S(rv_counter_t ticks)
 {
-    uint64_t cur_ticks = __get_rv_time();
+    rv_counter_t cur_ticks = __get_rv_time();
 
-    uint64_t reload_ticks = ticks + cur_ticks;
+    rv_counter_t reload_ticks = ticks + cur_ticks;
 
     SysTimer_SetCompareValue_S(reload_ticks);
 

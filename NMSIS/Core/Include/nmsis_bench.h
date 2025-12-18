@@ -34,7 +34,11 @@
 #ifdef BENCH_XLEN_MODE
 typedef unsigned long Bench_Type;
 #else
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+typedef uint32_t Bench_Type;
+#else
 typedef uint64_t Bench_Type;
+#endif
 #endif
 
 /**
