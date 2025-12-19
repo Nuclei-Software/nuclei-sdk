@@ -391,12 +391,16 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetControlValue(void)
  */
 __STATIC_FORCEINLINE void SysTimer_SetHartSWIRQ(unsigned long hartid)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    SysTimer->MSIP |= SysTimer_MSIP_MSIP_Msk;
+#else
     if (hartid == 0) {
         SysTimer->MSIP |= SysTimer_MSIP_MSIP_Msk;
     } else {
         uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
         __SW(addr, SysTimer_MSIP_MSIP_Msk);
     }
+#endif
 }
 
 /**
@@ -410,8 +414,12 @@ __STATIC_FORCEINLINE void SysTimer_SetHartSWIRQ(unsigned long hartid)
  */
 __STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    SysTimer->MSIP |= SysTimer_MSIP_MSIP_Msk;
+#else
     unsigned long hartid = SysTimer_GetHartID();
     SysTimer_SetHartSWIRQ(hartid);
+#endif
 }
 
 /**
@@ -427,12 +435,16 @@ __STATIC_FORCEINLINE void SysTimer_SetSWIRQ(void)
  */
 __STATIC_FORCEINLINE void SysTimer_ClearHartSWIRQ(unsigned long hartid)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    SysTimer->MSIP &= ~SysTimer_MSIP_MSIP_Msk;
+#else
     if (hartid == 0) {
         SysTimer->MSIP &= ~SysTimer_MSIP_MSIP_Msk;
     } else {
         uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
         __SW(addr, 0);
     }
+#endif
 }
 
 /**
@@ -446,8 +458,12 @@ __STATIC_FORCEINLINE void SysTimer_ClearHartSWIRQ(unsigned long hartid)
  */
 __STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    SysTimer->MSIP &= ~SysTimer_MSIP_MSIP_Msk;
+#else
     unsigned long hartid = SysTimer_GetHartID();
     SysTimer_ClearHartSWIRQ(hartid);
+#endif
 }
 
 /**
@@ -466,12 +482,16 @@ __STATIC_FORCEINLINE void SysTimer_ClearSWIRQ(void)
  */
 __STATIC_FORCEINLINE uint32_t SysTimer_GetHartMsipValue(unsigned long hartid)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    return (uint32_t)(SysTimer->MSIP);
+#else
     if (hartid == 0) {
         return (uint32_t)(SysTimer->MSIP);
     } else {
         uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
         return __LW(addr);
     }
+#endif
 }
 
 /**
@@ -488,8 +508,12 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetHartMsipValue(unsigned long hartid)
  */
 __STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    return (uint32_t)(SysTimer->MSIP);
+#else
     unsigned long hartid = SysTimer_GetHartID();
     return SysTimer_GetHartMsipValue(hartid);
+#endif
 }
 
 /**
@@ -504,12 +528,16 @@ __STATIC_FORCEINLINE uint32_t SysTimer_GetMsipValue(void)
  */
 __STATIC_FORCEINLINE void SysTimer_SetHartMsipValue(uint32_t msip, unsigned long hartid)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    SysTimer->MSIP = (msip);
+#else
     if (hartid == 0) {
         SysTimer->MSIP = (msip);
     } else {
         uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
         __SW(addr, msip);
     }
+#endif
 }
 
 /**
@@ -521,8 +549,12 @@ __STATIC_FORCEINLINE void SysTimer_SetHartMsipValue(uint32_t msip, unsigned long
  */
 __STATIC_FORCEINLINE void SysTimer_SetMsipValue(uint32_t msip)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    SysTimer->MSIP = (msip);
+#else
     unsigned long hartid = SysTimer_GetHartID();
     SysTimer_SetHartMsipValue(msip, hartid);
+#endif
 }
 
 #if defined(__SSTC_PRESENT) && (__SSTC_PRESENT == 1)
@@ -799,8 +831,12 @@ __STATIC_FORCEINLINE void SysTimer_SoftwareReset(void)
  */
 __STATIC_FORCEINLINE void SysTimer_SendIPI(unsigned long hartid)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    SysTimer->MSIP = 1;
+#else
     uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
     __SW(addr, 1);
+#endif
 }
 
 /**
@@ -811,8 +847,12 @@ __STATIC_FORCEINLINE void SysTimer_SendIPI(unsigned long hartid)
  */
 __STATIC_FORCEINLINE void SysTimer_ClearIPI(unsigned long hartid)
 {
+#if (defined(CPU_SERIES) && CPU_SERIES == 100)
+    SysTimer->MSIP = 0;
+#else
     uint8_t *addr = (uint8_t *)(SysTimer_CLINT_MSIP_BASE(hartid));
     __SW(addr, 0);
+#endif
 }
 
 /**
