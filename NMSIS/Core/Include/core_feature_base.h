@@ -1189,6 +1189,10 @@ __STATIC_INLINE rv_counter_t __get_rv_time(void)
 {
 #if __RISCV_XLEN == 32
 #if defined(CPU_SERIES) && CPU_SERIES == 100
+    // NOTE: when CSR_MIRGB_INFO CSR exist and not zero, it means eclic and systimer present
+    if (__RV_CSR_READ(CSR_MIRGB_INFO) == 0) {
+        return __RV_CSR_READ(CSR_MTIME);
+    }
 #if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
     return *(uint32_t *) (__SYSTIMER_BASEADDR);
 #else

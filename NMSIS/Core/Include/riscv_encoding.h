@@ -1091,6 +1091,17 @@
 #define CSR_MWIDDELEG           0x738
 #define CSR_SLWID               0x190
 
+/* === Nuclei N100 CSRs only for IRQC and TIMER */
+/* === Nuclei N100 TIMER */
+#define CSR_MSIP                0xBD8
+#define CSR_MTIMECMP            0xBD9
+#define CSR_MTIME               0xBDA
+#define CSR_MSTOP               0xBDB
+
+/* === Nuclei N100 IRQC */
+#define CSR_IRQCIP              0xBD0
+#define CSR_IRQCIE              0xBD1
+
 /** @} */ /** End of Doxygen Group NMSIS_Core_CSR_Registers **/
 
 /* Exception Code in MCAUSE CSR */
