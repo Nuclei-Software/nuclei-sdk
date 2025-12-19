@@ -32,6 +32,10 @@
  * 3. __CCM_PRESENT:  Define whether Nuclei Cache Control and Maintainence(CCM) Unit is present or not.
  *   * 0: Not present
  *   * 1: Present
+ * 4. __SMPCC_PRESENT:  Define whether SMP & Cluster Cache Unit is present or not.
+ *   * 0: Not present
+ *   * 1: Present
+ * 5. __SMPCC_BASEADDR:  Base address of the SMP & Cluster Cache unit.
  */
 #ifdef __cplusplus
  extern "C" {
@@ -42,6 +46,71 @@
 
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
 
+#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1)
+/**
+ * \defgroup NMSIS_Core_CCache      Cluster-Cache Functions
+ * \ingroup  NMSIS_Core_Cache
+ * \brief    Functions that configure Cluster Cache by CCM
+ * @{
+ */
+
+/**
+ * \brief  Cluster Cache Control and Command Registers
+ * \remarks This structure only holds a part of SMPCC registers, which are related to
+ * Cluster Cache CCM operations. Other more registers of SMPCC are listed in core_feature_smpcc.h
+ */
+typedef struct {
+    __IM uint8_t RESERVED0[16];     /*!< 0x00~0x0F (R) Not shown here for these registers are not related with cache operation */
+    __IOM uint32_t CC_CTRL;         /*!< Offset: 0x10 (R/W) Cluster Cache Control Register */
+    __IOM uint32_t CC_mCMD;         /*!< Offset: 0x14 (R/W) Cluster Cache M-mode Command Register */
+    __IM uint8_t RESERVED1[168];    /*!< 0x18~0xBF (R) not shown here for these registers are not related with cache operation */
+    __IOM uint32_t CC_sCMD;         /*!< Offset: 0xC0 (R/W) Cluster Cache S-mode Command Register */  
+    __IOM uint32_t CC_uCMD;         /*!< Offset: 0xC4 (R/W) Cluster Cache U-mode Command Register */
+    __IM uint8_t RESERVED2[20];     /*!< 0xC8~0xDB (R) not shown here for these registers are not related with cache operation */
+    __IOM uint32_t CC_INVALID_ALL;  /*!< Offset: 0xDC (R/W) Cluster Cache Invalid All Register */
+} SMPCC_CMD_Type;
+
+#define SMPCC_CMD_CTRL_SUP_EN_Pos                   9U                                      /*!< SMPCC_CMD CC_CTRL SUP_EN Position */
+#define SMPCC_CMD_CTRL_SUP_EN_Msk                   (0x1UL << SMPCC_CMD_CTRL_SUP_EN_Pos)    /*!< SMPCC_CMD CC_CTRL SUP_EN Mask */
+#define SMPCC_CMD_CTRL_SUP_EN_ENABLE                1U                                      /*!< SMPCC_CMD CC_CTRL SUP_EN Enable */
+#define SMPCC_CMD_CTRL_SUP_EN_DISABLE               0U                                      /*!< SMPCC_CMD CC_CTRL SUP_EN Disable */
+
+#define SMPCC_CMD_CTRL_USE_EN_Pos                   10U                                     /*!< SMPCC_CMD CC_CTRL USE_EN Position */
+#define SMPCC_CMD_CTRL_USE_EN_Msk                   (0x1UL << SMPCC_CMD_CTRL_USE_EN_Pos)    /*!< SMPCC_CMD CC_CTRL USE_EN Mask */
+#define SMPCC_CMD_CTRL_USE_EN_ENABLE                1U                                      /*!< SMPCC_CMD CC_CTRL USE_EN Enable */ 
+#define SMPCC_CMD_CTRL_USE_EN_DISABLE               0U                                      /*!< SMPCC_CMD CC_CTRL USE_EN Disable */
+
+#define SMPCC_CMD_xCMD_CMD_Pos                      0U                                      /*!< SMPCC_CMD register xCMD field CMD Position */
+#define SMPCC_CMD_xCMD_CMD_Msk                      (0x1FUL << SMPCC_CMD_xCMD_CMD_Pos)      /*!< SMPCC_CMD register xCMD field CMD Mask */
+#define SMPCC_CMD_xCMD_CMD_WB_ALL                   0x7U                                    /*!< SMPCC_CMD xCMD CMD WB_ALL */
+#define SMPCC_CMD_xCMD_CMD_WBINVAL_ALL              0x6U                                    /*!< SMPCC_CMD xCMD CMD WBINVAL_ALL */
+
+#define SMPCC_CMD_xCMD_RESULT_Pos                   26U                                     /*!< SMPCC_CMD xCMD RESULT Position */
+#define SMPCC_CMD_xCMD_RESULT_Msk                   (0x1FUL << SMPCC_CMD_xCMD_RESULT_Pos)   /*!< SMPCC_CMD xCMD RESULT Mask */
+#define SMPCC_CMD_xCMD_RESULT_SUCCESS               0x0U                                    /*!< SMPCC_CMD xCMD RESULT Success */
+#define SMPCC_CMD_xCMD_RESULT_ENTRY_EXCEED_LIMIT    0x1U                                    /*!< SMPCC_CMD xCMD RESULT Exceed the upper entry num of lockable way */
+#define SMPCC_CMD_xCMD_RESULT_REFILL_BUS_ERROR      0x3U                                    /*!< SMPCC_CMD xCMD RESULT Refill Bus Error */
+#define SMPCC_CMD_xCMD_RESULT_ECC_ERROR             0x4U                                    /*!< SMPCC_CMD xCMD RESULT ECC Error */
+#define SMPCC_CMD_xCMD_RESULT_CPBACK_BUS_ERROR      0x5U                                    /*!< SMPCC_CMD xCMD RESULT Copy Back Bus Error */
+
+#define SMPCC_CMD_xCMD_COMPLETE_Pos                 31U                                     /*!< SMPCC_CMD xCMD COMPLETE Position */
+#define SMPCC_CMD_xCMD_COMPLETE_Msk                 (0x1UL << SMPCC_CMD_xCMD_COMPLETE_Pos)  /*!< SMPCC_CMD xCMD COMPLETE Mask */
+
+#define SMPCC_CMD_INVALID_ALL_Pos                   0U                                      /*!< SMPCC_CMD INVALID_ALL Position */
+#define SMPCC_CMD_INVALID_ALL_Msk                   (0x1UL << SMPCC_CMD_INVALID_ALL_Pos)    /*!< SMPCC_CMD INVALID_ALL Mask */
+
+#ifndef __SMPCC_BASEADDR
+/* Base address of SMPCC(__SMPCC_BASEADDR) should be defined in <Device.h> */
+#error "__SMPCC_BASEADDR is not defined, please check!"
+#endif
+
+/* SMPCC CMD registers Memory mapping of Device */
+#define SMPCC_CMD_BASE          __SMPCC_BASEADDR                    /*!< SMPCC CMD Base Address */
+#define SMPCC_CMD               ((SMPCC_CMD_Type *)SMPCC_CMD_BASE)  /*!< SMPCC CMD configuration struct */
+
+/** @} */ /* End of Doxygen Group NMSIS_Core_CCache */
+#endif /* #if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) */
+
 /* ##########################  Cache functions  #################################### */
 /**
  * \defgroup NMSIS_Core_Cache       Cache Functions
@@ -49,8 +118,8 @@
  * @{
  *
  * Nuclei provide Cache Control and Maintainence(CCM) for software to control and maintain
- * the internal L1 I/D Cache of the RISC-V Core, software can manage the cache flexibly to
- * meet the actual application scenarios.
+ * the internal L1 I/D Cache and Cluster Cache of the RISC-V Core, software can manage the
+ * cache flexibly to meet the actual application scenarios.
  *
  * The CCM operations have 3 types: by single address, by all and flush pipeline.
  * The CCM operations are done via CSR registers, M/S/U mode has its own CSR registers to
@@ -79,9 +148,9 @@ typedef enum CCM_OP_FINFO {
  * \brief Cache CCM Command Types
  */
 typedef enum CCM_CMD {
-    CCM_DC_INVAL = 0x0,                 /*!< Unlock and invalidate D-Cache line specified by CSR CCM_XBEGINADDR */
-    CCM_DC_WB = 0x1,                    /*!< Flush the specific D-Cache line specified by CSR CCM_XBEGINADDR */
-    CCM_DC_WBINVAL = 0x2,               /*!< Unlock, flush and invalidate the specific D-Cache line specified by CSR CCM_XBEGINADDR */
+    CCM_DC_INVAL = 0x0,                 /*!< Unlock and invalidate D-Cache line and Cluster Cache line specified by CSR CCM_XBEGINADDR */
+    CCM_DC_WB = 0x1,                    /*!< Flush the specific D-Cache line and Cluster Cache line specified by CSR CCM_XBEGINADDR */
+    CCM_DC_WBINVAL = 0x2,               /*!< Unlock, flush and invalidate the specific D-Cache line and Cluster Cache line specified by CSR CCM_XBEGINADDR */
     CCM_DC_LOCK = 0x3,                  /*!< Lock the specific D-Cache line specified by CSR CCM_XBEGINADDR */
     CCM_DC_UNLOCK = 0x4,                /*!< Unlock the specific D-Cache line specified by CSR CCM_XBEGINADDR */
     CCM_DC_WBINVAL_ALL = 0x6,           /*!< Unlock and flush and invalidate all the valid and dirty D-Cache lines */
@@ -90,7 +159,9 @@ typedef enum CCM_CMD {
     CCM_IC_INVAL = 0x8,                 /*!< Unlock and invalidate I-Cache line specified by CSR CCM_XBEGINADDR */
     CCM_IC_LOCK = 0xb,                  /*!< Lock the specific I-Cache line specified by CSR CCM_XBEGINADDR */
     CCM_IC_UNLOCK = 0xc,                /*!< Unlock the specific I-Cache line specified by CSR CCM_XBEGINADDR */
-    CCM_IC_INVAL_ALL = 0xd              /*!< Unlock and invalidate all the I-Cache lines */
+    CCM_IC_INVAL_ALL = 0xd,             /*!< Unlock and invalidate all the I-Cache lines */
+    CCM_CC_LOCK = 0x13,                 /*!< Lock the specific Cluster Cache line specified by CSR CCM_XBEGINADDR */
+    CCM_CC_UNLOCK = 0x12,               /*!< Unlock the specific Cluster Cache line specified by CSR CCM_XBEGINADDR */
 } CCM_CMD_Type;
 
 /**
@@ -114,7 +185,8 @@ typedef struct CacheInfo {
  * \details
  * This function enable CCM operation in Supervisor/User Mode.
  * If enabled, CCM operations in supervisor/user mode will
- * be allowed.
+ * be allowed. Besides CCM registers, CC_sCMD and CC_uCMD registers
+ * which belong to SMPCC module are also allowed.
  * \remarks
  * - This function can be called in M-Mode only.
  * \sa
@@ -123,6 +195,10 @@ typedef struct CacheInfo {
 __STATIC_FORCEINLINE void EnableSUCCM(void)
 {
     __RV_CSR_SET(CSR_CCM_SUEN, CCM_SUEN_SUEN_Msk);
+#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) 
+    SMPCC_CMD->CC_CTRL |= _VAL2FLD(SMPCC_CMD_CTRL_SUP_EN, SMPCC_CMD_CTRL_SUP_EN_ENABLE) |
+                          _VAL2FLD(SMPCC_CMD_CTRL_USE_EN, SMPCC_CMD_CTRL_USE_EN_ENABLE);
+#endif /* #if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) */
 }
 
 /**
@@ -130,7 +206,8 @@ __STATIC_FORCEINLINE void EnableSUCCM(void)
  * \details
  * This function disable CCM operation in Supervisor/User Mode.
  * If not enabled, CCM operations in supervisor/user mode will
- * trigger a *illegal intruction* exception.
+ * trigger a *illegal intruction* exception, access to CC_sCMD
+ * and CC_uCMD register is also forbidden.
  * \remarks
  * - This function can be called in M-Mode only.
  * \sa
@@ -139,6 +216,10 @@ __STATIC_FORCEINLINE void EnableSUCCM(void)
 __STATIC_FORCEINLINE void DisableSUCCM(void)
 {
     __RV_CSR_CLEAR(CSR_CCM_SUEN, CCM_SUEN_SUEN_Msk);
+#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) 
+    SMPCC_CMD->CC_CTRL &= ~_VAL2FLD(SMPCC_CMD_CTRL_SUP_EN, SMPCC_CMD_CTRL_SUP_EN_DISABLE) &
+                          ~_VAL2FLD(SMPCC_CMD_CTRL_USE_EN, SMPCC_CMD_CTRL_USE_EN_DISABLE);
+#endif /* #if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) */
 }
 
 /**
@@ -155,7 +236,290 @@ __STATIC_FORCEINLINE void FlushPipeCCM(void)
     __RV_CSR_WRITE(CSR_CCM_FPIPE, 0x1);
 }
 /** @} */ /* End of Doxygen Group NMSIS_Core_Cache */
-#endif
+
+#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1)
+/**
+ * \ingroup  NMSIS_Core_CCache
+ * @{
+ */
+
+/**
+ * \brief  Lock one Cluster Cache line specified by address in M-Mode
+ * \details
+ * This function lock one Cluster Cache line specified by the address.
+ * Command \ref CCM_CC_LOCK is written to CSR \ref CSR_CCM_MCOMMAND.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ * \param [in]    addr    start address to be locked
+ * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
+ */
+__STATIC_INLINE unsigned long MLockCCacheLine(unsigned long addr)
+{
+    __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
+    __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_CC_LOCK);
+    FlushPipeCCM();
+    __RWMB();
+    return __RV_CSR_READ(CSR_CCM_MDATA);
+}
+
+/**
+ * \brief  Lock several Cluster Cache lines specified by address in M-Mode
+ * \details
+ * This function lock several Cluster Cache lines specified by the address
+ * and line count.
+ * Command \ref CCM_CC_LOCK is written to CSR \ref CSR_CCM_MCOMMAND.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ * \param [in]    addr    start address to be locked
+ * \param [in]    cnt     count of cache lines to be locked
+ * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
+ */
+__STATIC_INLINE unsigned long MLockCCacheLines(unsigned long addr, unsigned long cnt)
+{
+    if (cnt > 0) {
+        unsigned long i;
+        unsigned long fail_info = CCM_OP_SUCCESS;
+        __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
+        for (i = 0; i < cnt; i++) {
+            __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_CC_LOCK);
+            FlushPipeCCM();
+            __RWMB();
+            fail_info = __RV_CSR_READ(CSR_CCM_MDATA);
+            if (CCM_OP_SUCCESS != fail_info) {
+                return fail_info;
+            }
+        }
+    }
+    return CCM_OP_SUCCESS;
+}
+
+/**
+ * \brief  Lock one Cluster Cache line specified by address in S-Mode
+ * \details
+ * This function lock one Cluster Cache line specified by the address.
+ * Command \ref CCM_CC_LOCK is written to CSR \ref CSR_CCM_SCOMMAND.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be locked
+ * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
+ */
+__STATIC_INLINE unsigned long SLockCCacheLine(unsigned long addr)
+{
+    __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
+    __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_CC_LOCK);
+    FlushPipeCCM();
+    __RWMB();
+    return __RV_CSR_READ(CSR_CCM_SDATA);
+}
+
+/**
+ * \brief  Lock several Cluster Cache lines specified by address in S-Mode
+ * \details
+ * This function lock several Cluster Cache lines specified by the address
+ * and line count.
+ * Command \ref CCM_CC_LOCK is written to CSR \ref CSR_CCM_SCOMMAND.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be locked
+ * \param [in]    cnt     count of cache lines to be locked
+ * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
+ */
+__STATIC_INLINE unsigned long SLockCCacheLines(unsigned long addr, unsigned long cnt)
+{
+    if (cnt > 0) {
+        unsigned long i;
+        unsigned long fail_info = CCM_OP_SUCCESS;
+        __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
+        for (i = 0; i < cnt; i++) {
+            __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_CC_LOCK);
+            FlushPipeCCM();
+            __RWMB();
+            fail_info = __RV_CSR_READ(CSR_CCM_SDATA);
+            if (CCM_OP_SUCCESS != fail_info) {
+                return fail_info;
+            }
+        }
+    }
+    return CCM_OP_SUCCESS;
+}
+
+/**
+ * \brief  Lock one Cluster Cache line specified by address in U-Mode
+ * \details
+ * This function lock one Cluster Cache line specified by the address.
+ * Command \ref CCM_CC_LOCK is written to CSR \ref CSR_CCM_UCOMMAND.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be locked
+ * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
+ */
+__STATIC_INLINE unsigned long ULockCCacheLine(unsigned long addr)
+{
+    __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
+    __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_CC_LOCK);
+    FlushPipeCCM();
+    __RWMB();
+    return __RV_CSR_READ(CSR_CCM_UDATA);
+}
+
+/**
+ * \brief  Lock several Cluster Cache lines specified by address in U-Mode
+ * \details
+ * This function lock several Cluster Cache lines specified by the address
+ * and line count.
+ * Command \ref CCM_CC_LOCK is written to CSR \ref CSR_CCM_UCOMMAND.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be locked
+ * \param [in]    cnt     count of cache lines to be locked
+ * \return result of CCM lock operation, see enum \ref CCM_OP_FINFO
+ */
+__STATIC_INLINE unsigned long ULockCCacheLines(unsigned long addr, unsigned long cnt)
+{
+    if (cnt > 0) {
+        unsigned long i;
+        unsigned long fail_info = CCM_OP_SUCCESS;
+        __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
+        for (i = 0; i < cnt; i++) {
+            __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_CC_LOCK);
+            FlushPipeCCM();
+            __RWMB();
+            fail_info = __RV_CSR_READ(CSR_CCM_UDATA);
+            if (CCM_OP_SUCCESS != fail_info) {
+                return fail_info;
+            }
+        }
+    }
+    return CCM_OP_SUCCESS;
+}
+
+/**
+ * \brief  Unlock one Cluster Cache line specified by address in M-Mode
+ * \details
+ * This function unlock one Cluster Cache line specified by the address.
+ * Command \ref CCM_CC_UNLOCK is written to CSR \ref CSR_CCM_MCOMMAND.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ * \param [in]    addr    start address to be unlocked
+ */
+__STATIC_INLINE void MUnlockCCacheLine(unsigned long addr)
+{
+    __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
+    __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_CC_UNLOCK);
+    FlushPipeCCM();
+    __RWMB();
+}
+
+/**
+ * \brief  Unlock several Cluster Cache lines specified by address in M-Mode
+ * \details
+ * This function unlock several Cluster Cache lines specified
+ * by the address and line count.
+ * Command \ref CCM_CC_UNLOCK is written to CSR \ref CSR_CCM_MCOMMAND.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ * \param [in]    addr    start address to be unlocked
+ * \param [in]    cnt     count of cache lines to be unlocked
+ */
+__STATIC_INLINE void MUnlockCCacheLines(unsigned long addr, unsigned long cnt)
+{
+    if (cnt > 0) {
+        unsigned long i;
+        __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
+        for (i = 0; i < cnt; i++) {
+            __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_CC_UNLOCK);
+        }
+        FlushPipeCCM();
+        __RWMB();
+    }
+}
+
+/**
+ * \brief  Unlock one Cluster Cache line specified by address in S-Mode
+ * \details
+ * This function unlock one Cluster Cache line specified by the address.
+ * Command \ref CCM_CC_UNLOCK is written to CSR \ref CSR_CCM_SCOMMAND.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be unlocked
+ */
+__STATIC_INLINE void SUnlockCCacheLine(unsigned long addr)
+{
+    __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
+    __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_CC_UNLOCK);
+    FlushPipeCCM();
+    __RWMB();
+}
+
+/**
+ * \brief  Unlock several Cluster Cache lines specified by address in S-Mode
+ * \details
+ * This function unlock several Cluster Cache lines specified
+ * by the address and line count.
+ * Command \ref CCM_CC_UNLOCK is written to CSR \ref CSR_CCM_SCOMMAND.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be unlocked
+ * \param [in]    cnt     count of cache lines to be unlocked
+ */
+__STATIC_INLINE void SUnlockCCacheLines(unsigned long addr, unsigned long cnt)
+{
+    if (cnt > 0) {
+        unsigned long i;
+        __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
+        for (i = 0; i < cnt; i++) {
+            __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_CC_UNLOCK);
+        }
+        FlushPipeCCM();
+        __RWMB();
+    }
+}
+
+/**
+ * \brief  Unlock one Cluster Cache line specified by address in U-Mode
+ * \details
+ * This function unlock one Cluster Cache line specified by the address.
+ * Command \ref CCM_CC_UNLOCK is written to CSR \ref CSR_CCM_UCOMMAND.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be unlocked
+ */
+__STATIC_INLINE void UUnlockCCacheLine(unsigned long addr)
+{
+    __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
+    __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_CC_UNLOCK);
+    FlushPipeCCM();
+    __RWMB();
+}
+
+/**
+ * \brief  Unlock several Cluster Cache lines specified by address in U-Mode
+ * \details
+ * This function unlock several Cluster Cache lines specified
+ * by the address and line count.
+ * Command \ref CCM_CC_UNLOCK is written to CSR \ref CSR_CCM_UCOMMAND.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be unlocked
+ * \param [in]    cnt     count of cache lines to be unlocked
+ */
+__STATIC_INLINE void UUnlockCCacheLines(unsigned long addr, unsigned long cnt)
+{
+    if (cnt > 0) {
+        unsigned long i;
+        __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
+        for (i = 0; i < cnt; i++) {
+            __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_CC_UNLOCK);
+        }
+        FlushPipeCCM();
+        __RWMB();
+    }
+}
+
+/** @} */ /* End of Doxygen Group NMSIS_Core_CCache */
+#endif /* defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) */
+
+#endif /* defined(__CCM_PRESENT) && (__CCM_PRESENT == 1) */
 
 #if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1)
 
@@ -397,6 +761,146 @@ __STATIC_INLINE void UInvalICacheLines(unsigned long addr, unsigned long cnt)
         __RWMB();
     }
 }
+
+#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1)
+/**
+ * \brief  Invalidate one I-Cache and Cluster Cache line specified by address in M-Mode
+ * \details
+ * This function unlock and invalidate one I-Cache line and corresponding Cluster Cache line
+ * specified by the address.
+ * Commands \ref CCM_IC_INVAL and \ref CCM_DC_INVAL are written to CSR \ref CSR_CCM_MCOMMAND.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ */
+__STATIC_INLINE void MInvalICacheCCacheLine(unsigned long addr)
+{
+    __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
+    __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_INVAL);
+    /* Trigger Cluster Cache invalidation by DC_INVAL */
+    __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_INVAL);
+    FlushPipeCCM();
+    __RWMB();
+}
+
+/**
+ * \brief  Invalidate several I-Cache and Cluster Cache lines specified by address in M-Mode
+ * \details
+ * This function unlock and invalidate several I-Cache lines and corresponding Cluster Cache lines
+ * specified by the address and line count.
+ * Commands \ref CCM_IC_INVAL and \ref CCM_DC_INVAL are written to CSR \ref CSR_CCM_MCOMMAND.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ * \param [in]    cnt     count of cache lines to be invalidated
+ */
+__STATIC_INLINE void MInvalICacheCCacheLines(unsigned long addr, unsigned long cnt)
+{
+    if (cnt > 0) {
+        unsigned long i;
+        __RV_CSR_WRITE(CSR_CCM_MBEGINADDR, addr);
+        for (i = 0; i < cnt; i++) {
+            __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_INVAL);
+            /* Trigger Cluster Cache invalidation by DC_INVAL */
+            __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_INVAL);
+        }
+        FlushPipeCCM();
+        __RWMB();
+    }
+}
+
+/**
+ * \brief  Invalidate one I-Cache and Cluster Cache line specified by address in S-Mode
+ * \details
+ * This function unlock and invalidate one I-Cache line and corresponding Cluster Cache line
+ * specified by the address.
+ * Commands \ref CCM_IC_INVAL and \ref CCM_DC_INVAL are written to CSR \ref CSR_CCM_SCOMMAND.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ */
+__STATIC_INLINE void SInvalICacheCCacheLine(unsigned long addr)
+{
+    __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
+    __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_INVAL);
+    /* Trigger Cluster Cache invalidation by DC_INVAL */
+    __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_INVAL);
+    FlushPipeCCM();
+    __RWMB();
+}
+
+/**
+ * \brief  Invalidate several I-Cache and Cluster Cache lines specified by address in S-Mode
+ * \details
+ * This function unlock and invalidate several I-Cache lines and corresponding Cluster Cache lines
+ * specified by the address and line count.
+ * Commands \ref CCM_IC_INVAL and \ref CCM_DC_INVAL are written to CSR \ref CSR_CCM_SCOMMAND.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ * \param [in]    cnt     count of cache lines to be invalidated
+ */
+__STATIC_INLINE void SInvalICacheCCacheLines(unsigned long addr, unsigned long cnt)
+{
+    if (cnt > 0) {
+        unsigned long i;
+        __RV_CSR_WRITE(CSR_CCM_SBEGINADDR, addr);
+        for (i = 0; i < cnt; i++) {
+            __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_INVAL);
+            /* Trigger Cluster Cache invalidation by DC_INVAL */
+            __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_INVAL);
+        }
+        FlushPipeCCM();
+        __RWMB();
+    }
+}
+
+/**
+ * \brief  Invalidate one I-Cache and Cluster Cache line specified by address in U-Mode
+ * \details
+ * This function unlock and invalidate one I-Cache line and corresponding Cluster Cache line
+ * specified by the address.
+ * Commands \ref CCM_IC_INVAL and \ref CCM_DC_INVAL are written to CSR \ref CSR_CCM_UCOMMAND.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ */
+__STATIC_INLINE void UInvalICacheCCacheLine(unsigned long addr)
+{
+    __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
+    __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_INVAL);
+    /* Trigger Cluster Cache invalidation by DC_INVAL */
+    __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_INVAL);
+    FlushPipeCCM();
+    __RWMB();
+}
+
+/**
+ * \brief  Invalidate several I-Cache and Cluster Cache lines specified by address in U-Mode
+ * \details
+ * This function unlock and invalidate several I-Cache lines and corresponding Cluster Cache lines
+ * specified by the address and line count.
+ * Commands \ref CCM_IC_INVAL and \ref CCM_DC_INVAL are written to CSR \ref CSR_CCM_UCOMMAND.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ * \param [in]    cnt     count of cache lines to be invalidated
+ */
+__STATIC_INLINE void UInvalICacheCCacheLines(unsigned long addr, unsigned long cnt)
+{
+    if (cnt > 0) {
+        unsigned long i;
+        __RV_CSR_WRITE(CSR_CCM_UBEGINADDR, addr);
+        for (i = 0; i < cnt; i++) {
+            __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_INVAL);
+            /* Trigger Cluster Cache invalidation by DC_INVAL */
+            __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_INVAL);
+        }
+        FlushPipeCCM();
+        __RWMB();
+    }
+}
+#endif /* #if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) */
 
 /**
  * \brief  Lock one I-Cache line specified by address in M-Mode
@@ -718,6 +1222,102 @@ __STATIC_INLINE void UInvalICache(void)
     FlushPipeCCM();
     __RWMB();
 }
+
+#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1)
+/**
+ * \brief  Invalidate all Cluster Cache in M-Mode
+ * \details
+ * This function invalidate all Cluster Cache.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ */
+__STATIC_INLINE void MInvalCCache(void)
+{
+    SMPCC_CMD->CC_INVALID_ALL = _VAL2FLD(SMPCC_CMD_INVALID_ALL, 1);
+    while(_FLD2VAL(SMPCC_CMD_INVALID_ALL, SMPCC_CMD->CC_INVALID_ALL));
+    __RWMB();
+}
+
+/**
+ * \brief  Invalidate all Cluster Cache in S-Mode
+ * \details
+ * This function invalidate all Cluster Cache.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ */
+__STATIC_INLINE void SInvalCCache(void)
+{
+    SMPCC_CMD->CC_INVALID_ALL = _VAL2FLD(SMPCC_CMD_INVALID_ALL, 1);
+    while(_FLD2VAL(SMPCC_CMD_INVALID_ALL, SMPCC_CMD->CC_INVALID_ALL));
+    __RWMB();
+}
+
+/**
+ * \brief  Invalidate all Cluster Cache in U-Mode
+ * \details
+ * This function invalidate all Cluster Cache.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ */
+__STATIC_INLINE void UInvalCCache(void)
+{
+    SMPCC_CMD->CC_INVALID_ALL = _VAL2FLD(SMPCC_CMD_INVALID_ALL, 1);
+    while(_FLD2VAL(SMPCC_CMD_INVALID_ALL, SMPCC_CMD->CC_INVALID_ALL));
+    __RWMB();
+}
+
+/**
+ * \brief  Invalidate all I-Cache and Cluster Cache in M-Mode
+ * \details
+ * This function unlock and invalidate all I-Cache and Cluster Cache.
+ * Command \ref CCM_IC_INVAL_ALL is written to CSR \ref CSR_CCM_MCOMMAND.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ */
+__STATIC_INLINE void MInvalICacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_IC_INVAL_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_INVALID_ALL = _VAL2FLD(SMPCC_CMD_INVALID_ALL, 1);
+    while(_FLD2VAL(SMPCC_CMD_INVALID_ALL, SMPCC_CMD->CC_INVALID_ALL));
+    __RWMB();
+}
+
+/**
+ * \brief  Invalidate all I-Cache and Cluster Cache in S-Mode
+ * \details
+ * This function unlock and invalidate all I-Cache and Cluster Cache.
+ * Command \ref CCM_IC_INVAL_ALL is written to CSR \ref CSR_CCM_SCOMMAND.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ */
+__STATIC_INLINE void SInvalICacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_IC_INVAL_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_INVALID_ALL = _VAL2FLD(SMPCC_CMD_INVALID_ALL, 1);
+    while(_FLD2VAL(SMPCC_CMD_INVALID_ALL, SMPCC_CMD->CC_INVALID_ALL));
+    __RWMB();
+}
+
+/**
+ * \brief  Invalidate all I-Cache and Cluster Cache in U-Mode
+ * \details
+ * This function unlock and invalidate all I-Cache and Cluster Cache.
+ * Command \ref CCM_IC_INVAL_ALL is written to CSR \ref CSR_CCM_UCOMMAND.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ */
+__STATIC_INLINE void UInvalICacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_IC_INVAL_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_INVALID_ALL = _VAL2FLD(SMPCC_CMD_INVALID_ALL, 1);
+    while(_FLD2VAL(SMPCC_CMD_INVALID_ALL, SMPCC_CMD->CC_INVALID_ALL));
+    __RWMB();
+}
+#endif /* #if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) */
+
 #endif /* defined(__CCM_PRESENT) && (__CCM_PRESENT == 1) */
 /** @} */ /* End of Doxygen Group NMSIS_Core_ICache */
 #endif /* defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1) */
@@ -1208,6 +1808,195 @@ __STATIC_INLINE void UFlushInvalDCacheLines(unsigned long addr, unsigned long cn
     }
 }
 
+#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1)
+/**
+ * \brief  Invalidate one D-Cache and Cluster Cache line specified by address in M-Mode
+ * \details
+ * This macro is an alias for MInvalDCacheLine. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ */
+#define MInvalDCacheCCacheLine(addr) MInvalDCacheLine(addr)
+
+/**
+ * \brief  Invalidate several D-Cache and Cluster Cache lines specified by address in M-Mode
+ * \details
+ * This macro is an alias for MInvalDCacheLines. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ * \param [in]    cnt     count of cache lines to be invalidated
+ */
+#define MInvalDCacheCCacheLines(addr, cnt) MInvalDCacheLines(addr, cnt)
+
+/**
+ * \brief  Invalidate one D-Cache and Cluster Cache line specified by address in S-Mode
+ * \details
+ * This macro is an alias for SInvalDCacheLine. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ */
+#define SInvalDCacheCCacheLine(addr) SInvalDCacheLine(addr)
+
+/**
+ * \brief  Invalidate several D-Cache and Cluster Cache lines specified by address in S-Mode
+ * \details
+ * This macro is an alias for SInvalDCacheLines. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ * \param [in]    cnt     count of cache lines to be invalidated
+ */
+#define SInvalDCacheCCacheLines(addr, cnt) SInvalDCacheLines(addr, cnt)
+
+/**
+ * \brief  Invalidate one D-Cache and Cluster Cache line specified by address in U-Mode
+ * \details
+ * This macro is an alias for UInvalDCacheLine. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ */
+#define UInvalDCacheCCacheLine(addr) UInvalDCacheLine(addr)
+
+/**
+ * \brief  Invalidate several D-Cache and Cluster Cache lines specified by address in U-Mode
+ * \details
+ * This macro is an alias for UInvalDCacheLines. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be invalidated
+ * \param [in]    cnt     count of cache lines to be invalidated
+ */
+#define UInvalDCacheCCacheLines(addr, cnt) UInvalDCacheLines(addr, cnt)
+/**
+ * \brief  Flush one D-Cache and Cluster Cache line specified by address in M-Mode
+ * \details
+ * This macro is an alias for MFlushDCacheLine. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M-Mode only.
+ * \param [in]    addr    start address to be flushed
+ */
+#define MFlushDCacheCCacheLine(addr) MFlushDCacheLine(addr)
+
+/**
+ * \brief  Flush several D-Cache and Cluster Cache lines specified by address in M-Mode
+ * \details
+ * This macro is an alias for MFlushDCacheLines. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M-Mode only.
+ * \param [in]    addr    start address to be flushed
+ * \param [in]    cnt     count of cache lines to be flushed
+ */
+#define MFlushDCacheCCacheLines(addr, cnt) MFlushDCacheLines(addr, cnt)
+
+/**
+ * \brief  Flush one D-Cache and Cluster Cache line specified by address in S-Mode
+ * \details
+ * This macro is an alias for SFlushDCacheLine. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be flushed
+ */
+#define SFlushDCacheCCacheLine(addr) SFlushDCacheLine(addr)
+
+/**
+ * \brief  Flush several D-Cache and Cluster Cache lines specified by address in S-Mode
+ * \details
+ * This macro is an alias for SFlushDCacheLines. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be flushed
+ * \param [in]    cnt     count of cache lines to be flushed
+ */
+#define SFlushDCacheCCacheLines(addr, cnt) SFlushDCacheLines(addr, cnt)
+
+/**
+ * \brief  Flush one D-Cache and Cluster Cache line specified by address in U-Mode
+ * \details
+ * This macro is an alias for UFlushDCacheLine. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be flushed
+ */
+#define UFlushDCacheCCacheLine(addr) UFlushDCacheLine(addr)
+
+/**
+ * \brief  Flush several D-Cache and Cluster Cache lines specified by address in U-Mode
+ * \details
+ * This macro is an alias for UFlushDCacheLines. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be flushed
+ * \param [in]    cnt     count of cache lines to be flushed
+ */
+#define UFlushDCacheCCacheLines(addr, cnt) UFlushDCacheLines(addr, cnt)
+/**
+ * \brief  Flush and invalidate one D-Cache and Cluster Cache line specified by address in M-Mode
+ * \details
+ * This macro is an alias for MFlushInvalDCacheLine. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M-Mode only.
+ * \param [in]    addr    start address to be flushed and invalidated
+ */
+#define MFlushInvalDCacheCCacheLine(addr) MFlushInvalDCacheLine(addr)
+
+/**
+ * \brief  Flush and invalidate several D-Cache and Cluster Cache lines specified by address in M-Mode
+ * \details
+ * This macro is an alias for MFlushInvalDCacheLines. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M-Mode only.
+ * \param [in]    addr    start address to be flushed and invalidated
+ * \param [in]    cnt     count of cache lines to be flushed and invalidated
+ */
+#define MFlushInvalDCacheCCacheLines(addr, cnt) MFlushInvalDCacheLines(addr, cnt)
+
+/**
+ * \brief  Flush and invalidate one D-Cache and Cluster Cache line specified by address in S-Mode
+ * \details
+ * This macro is an alias for SFlushInvalDCacheLine. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be flushed and invalidated
+ */
+#define SFlushInvalDCacheCCacheLine(addr) SFlushInvalDCacheLine(addr)
+
+/**
+ * \brief  Flush and invalidate several D-Cache and Cluster Cache lines specified by address in S-Mode
+ * \details
+ * This macro is an alias for SFlushInvalDCacheLines. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S-Mode only.
+ * \param [in]    addr    start address to be flushed and invalidated
+ * \param [in]    cnt     count of cache lines to be flushed and invalidated
+ */
+#define SFlushInvalDCacheCCacheLines(addr, cnt) SFlushInvalDCacheLines(addr, cnt)
+
+/**
+ * \brief  Flush and invalidate one D-Cache and Cluster Cache line specified by address in U-Mode
+ * \details
+ * This macro is an alias for UFlushInvalDCacheLine. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be flushed and invalidated
+ */
+#define UFlushInvalDCacheCCacheLine(addr) UFlushInvalDCacheLine(addr)
+
+/**
+ * \brief  Flush and invalidate several D-Cache and Cluster Cache lines specified by address in U-Mode
+ * \details
+ * This macro is an alias for UFlushInvalDCacheLines. D-Cache CCM operations are also effective for Cluster Cache.
+ * \remarks
+ * This macro must be executed in M/S/U-Mode only.
+ * \param [in]    addr    start address to be flushed and invalidated
+ * \param [in]    cnt     count of cache lines to be flushed and invalidated
+ */
+#define UFlushInvalDCacheCCacheLines(addr, cnt) UFlushInvalDCacheLines(addr, cnt)
+#endif /* #if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) */
+
 /**
  * \brief  Lock one D-Cache line specified by address in M-Mode
  * \details
@@ -1626,6 +2415,300 @@ __STATIC_INLINE void UFlushInvalDCache(void)
     FlushPipeCCM();
     __RWMB();
 }
+
+#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1)
+/**
+ * \brief  Flush all Cluster Cache in M-Mode
+ * \details
+ * This function flush all Cluster Cache.
+ * Command \ref SMPCC_CMD_WB_ALL is written to SMPCC CMD register.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t MFlushCCache(void)
+{
+    SMPCC_CMD->CC_mCMD = (SMPCC_CMD->CC_mCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_mCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_mCMD);
+    __RWMB();
+    return res;
+}
+
+/**
+ * \brief  Flush all Cluster Cache in S-Mode
+ * \details
+ * This function flush all Cluster Cache.
+ * Command \ref SMPCC_CMD_WB_ALL is written to SMPCC CMD register.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t SFlushCCache(void)
+{
+    SMPCC_CMD->CC_sCMD = (SMPCC_CMD->CC_sCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_sCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_sCMD);
+    __RWMB();
+    return res;
+}
+
+/**
+ * \brief  Flush all Cluster Cache in U-Mode
+ * \details
+ * This function flush all Cluster Cache.
+ * Command \ref SMPCC_CMD_WB_ALL is written to SMPCC CMD register.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t UFlushCCache(void)
+{
+    SMPCC_CMD->CC_uCMD = (SMPCC_CMD->CC_uCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_uCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_uCMD);
+    __RWMB();
+    return res;
+}
+
+/**
+ * \brief  Flush and invalidate all Cluster Cache in M-Mode
+ * \details
+ * This function flush and invalidate all Cluster Cache.
+ * Command \ref SMPCC_CMD_WBINVAL_ALL is written to SMPCC CMD register.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t MFlushInvalCCache(void)
+{
+    SMPCC_CMD->CC_mCMD = (SMPCC_CMD->CC_mCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_mCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_mCMD);
+    __RWMB();
+    return res;
+}
+
+/**
+ * \brief  Flush and invalidate all Cluster Cache in S-Mode
+ * \details
+ * This function flush and invalidate all Cluster Cache.
+ * Command \ref SMPCC_CMD_WBINVAL_ALL is written to SMPCC CMD register.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t SFlushInvalCCache(void)
+{
+    SMPCC_CMD->CC_sCMD = (SMPCC_CMD->CC_sCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_sCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_sCMD);
+    __RWMB();
+    return res;
+}
+
+/**
+ * \brief  Flush and invalidate all Cluster Cache in U-Mode
+ * \details
+ * This function flush and invalidate all Cluster Cache.
+ * Command \ref SMPCC_CMD_WBINVAL_ALL is written to SMPCC CMD register.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t UFlushInvalCCache(void)
+{
+    SMPCC_CMD->CC_uCMD = (SMPCC_CMD->CC_uCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_uCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_uCMD);
+    __RWMB();
+    return res;
+}
+
+/**
+ * \brief  Invalidate all D-Cache and Cluster Cache in M-Mode
+ * \details
+ * This function unlock and invalidate all D-Cache and Cluster Cache.
+ * Command \ref CCM_DC_INVAL_ALL is written to CSR \ref CSR_CCM_MCOMMAND.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ */
+__STATIC_INLINE void MInvalDCacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_INVAL_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_INVALID_ALL = _VAL2FLD(SMPCC_CMD_INVALID_ALL, 1);
+    while(_FLD2VAL(SMPCC_CMD_INVALID_ALL, SMPCC_CMD->CC_INVALID_ALL));
+    __RWMB();
+}
+
+/**
+ * \brief  Invalidate all D-Cache and Cluster Cache in S-Mode
+ * \details
+ * This function unlock and invalidate all D-Cache and Cluster Cache.
+ * Command \ref CCM_DC_INVAL_ALL is written to CSR \ref CSR_CCM_SCOMMAND.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ */
+__STATIC_INLINE void SInvalDCacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_INVAL_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_INVALID_ALL = _VAL2FLD(SMPCC_CMD_INVALID_ALL, 1);
+    while(_FLD2VAL(SMPCC_CMD_INVALID_ALL, SMPCC_CMD->CC_INVALID_ALL));
+    __RWMB();
+}
+
+/**
+ * \brief  Invalidate all D-Cache and Cluster Cache in U-Mode
+ * \details
+ * This function unlock and invalidate all D-Cache and Cluster Cache.
+ * Command \ref CCM_DC_INVAL_ALL is written to CSR \ref CSR_CCM_UCOMMAND.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ */
+__STATIC_INLINE void UInvalDCacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_INVAL_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_INVALID_ALL = _VAL2FLD(SMPCC_CMD_INVALID_ALL, 1);
+    while(_FLD2VAL(SMPCC_CMD_INVALID_ALL, SMPCC_CMD->CC_INVALID_ALL));
+    __RWMB();
+}
+
+/**
+ * \brief  Flush all D-Cache and Cluster Cache in M-Mode
+ * \details
+ * This function flush all D-Cache and Cluster Cache.
+ * Command \ref CCM_DC_WB_ALL is written to CSR \ref CSR_CCM_MCOMMAND.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t MFlushDCacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WB_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_mCMD = (SMPCC_CMD->CC_mCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_mCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_mCMD);
+    __RWMB();
+    return res;
+}
+
+/**
+ * \brief  Flush all D-Cache and Cluster Cache in S-Mode
+ * \details
+ * This function flush all D-Cache and Cluster Cache.
+ * Command \ref CCM_DC_WB_ALL is written to CSR \ref CSR_CCM_SCOMMAND.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t SFlushDCacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WB_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_sCMD = (SMPCC_CMD->CC_sCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_sCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_sCMD);
+    __RWMB();
+    return res;
+}
+
+/**
+ * \brief  Flush all D-Cache and Cluster Cache in U-Mode
+ * \details
+ * This function flush all D-Cache and Cluster Cache.
+ * Command \ref CCM_DC_WB_ALL is written to CSR \ref CSR_CCM_UCOMMAND.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t UFlushDCacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WB_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_uCMD = (SMPCC_CMD->CC_uCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_uCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_uCMD);
+    __RWMB();
+    return res;
+}
+
+/**
+ * \brief  Flush and invalidate all D-Cache and Cluster Cache in M-Mode
+ * \details
+ * This function flush and invalidate all D-Cache and Cluster Cache.
+ * Command \ref CCM_DC_WBINVAL_ALL is written to CSR \ref CSR_CCM_MCOMMAND.
+ * \remarks
+ * This function must be executed in M-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t MFlushInvalDCacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WBINVAL_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_mCMD = (SMPCC_CMD->CC_mCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_mCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_mCMD);
+    __RWMB();
+    return res;
+}
+
+/**
+ * \brief  Flush and invalidate all D-Cache and Cluster Cache in S-Mode
+ * \details
+ * This function flush and invalidate all D-Cache and Cluster Cache.
+ * Command \ref CCM_DC_WBINVAL_ALL is written to CSR \ref CSR_CCM_SCOMMAND.
+ * \remarks
+ * This function must be executed in M/S-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t SFlushInvalDCacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WBINVAL_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_sCMD = (SMPCC_CMD->CC_sCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_sCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_sCMD);
+    __RWMB();
+    return res;
+}
+
+/**
+ * \brief  Flush and invalidate all D-Cache and Cluster Cache in U-Mode
+ * \details
+ * This function flush and invalidate all D-Cache and Cluster Cache.
+ * Command \ref CCM_DC_WBINVAL_ALL is written to CSR \ref CSR_CCM_UCOMMAND.
+ * \remarks
+ * This function must be executed in M/S/U-Mode only.
+ * \return Operation result, see enum \ref SMPCC_CMD_RESULT
+ */
+__STATIC_INLINE int32_t UFlushInvalDCacheCCache(void)
+{
+    __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WBINVAL_ALL);
+    FlushPipeCCM();
+    SMPCC_CMD->CC_uCMD = (SMPCC_CMD->CC_uCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
+                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_uCMD) == 0);
+    int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_uCMD);
+    __RWMB();
+    return res;
+}
+#endif /* #if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) */
+
 #endif /* defined(__CCM_PRESENT) && (__CCM_PRESENT == 1) */
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_DCache */
