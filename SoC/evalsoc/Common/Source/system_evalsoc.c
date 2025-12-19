@@ -879,10 +879,21 @@ extern void exc_entry(void);
 void ECLIC_Interrupt_Init(void)
 {
 #if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+#if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
+    // NOTE: Workaround to make n100 software able to run on qemu and xlmodel
+    // TIMECMPH in n100 is zero, so we need to manually set high 32b of TIMECMP to 0
+    SysTimer->RESERVED2 = 0;
+    // NOTE: Workaround for Nuclei Qemu 2025.10, need to read higher 32b then it can be really clear to 0
+    SysTimer->MTIMERCMP = SysTimer->RESERVED2;
+    __RWMB();
+#endif
+    if (1) {
+#else
     unsigned long mcfg_info;
-
     mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
     if (mcfg_info & MCFG_INFO_CLIC) {
+#endif
         /* Set ECLIC vector interrupt base address to vector_base */
         __RV_CSR_WRITE(CSR_MTVT, (unsigned long)vector_base);
         /* Set ECLIC non-vector entry to irq_entry */
@@ -1355,6 +1366,18 @@ void _premain_init(void)
 #else
     // TODO to make it possible for configurable boot hartid
     unsigned long hartid = __get_hart_id();
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+#ifndef CFG_IREGION_BASE_ADDR       // Need to probe the cpu iregion base address
+    if (hartid == BOOT_HARTID) { // only done in boot hart
+        // IREGION INFO MUST BE AFTER L1/L2 Cache enabled and SMP enabled if SMP present
+        CpuIRegionBase = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
+    } else {
+        // wait for correct iregion base addr is set by boot hart
+        while (CpuIRegionBase == 0xFFFFFFFF);
+    }
+#endif
+#else
     unsigned long mcfginfo = __RV_CSR_READ(CSR_MCFG_INFO);
 
     /* TODO: Add your own initialization code here, called before main */
@@ -1485,6 +1508,7 @@ void _premain_init(void)
     // NOTE: CFG_HAS_SMODE and CFG_HAS_UMODE are defined in auto generated cpufeature.h if present in cpu
 #if defined(CFG_HAS_SMODE) || defined(CFG_HAS_UMODE)
     EnableSUCCM();
+#endif
 #endif
 #endif
 
