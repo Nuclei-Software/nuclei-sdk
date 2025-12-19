@@ -14,7 +14,7 @@
             "timeout": 1200
         }
     },
-    "copy_objects": true,
+    "copy_objects": false,
     "global_variables" : {
         "sdk_copy_objects": "elf,map"
     },

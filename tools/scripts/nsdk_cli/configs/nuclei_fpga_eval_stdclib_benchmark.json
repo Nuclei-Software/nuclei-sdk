@@ -10,7 +10,7 @@
         }
     },
     "parallel": "-j",
-    "copy_objects": true,
+    "copy_objects": false,
     "build_target": "clean all",
     "build_config": {
         "SOC": "evalsoc",
