@@ -206,6 +206,7 @@ _start:
     la sp, _sp
 #endif
 
+#if !(defined(CPU_SERIES) && CPU_SERIES == 100)
     /*
      * Set the the NMI base mnvec to share
      * with mtvec by setting CSR_MMISC_CTL
@@ -222,6 +223,7 @@ _start:
     csrs CSR_MMISC_CTL, t0
 #else
     csrc CSR_MMISC_CTL, t0
+#endif
 #endif
 
     /*
@@ -370,9 +372,11 @@ __skip_init:
      */
     call _premain_init
 
+#if !(defined(CPU_SERIES) && CPU_SERIES == 100)
     /* BPU cold bringup need time, so enable BPU before enter to main */
     li t0, MMISC_CTL_BPU
     csrs CSR_MMISC_CTL, t0
+#endif
 
     // Interrupt is still disabled here
     /* ===== Call SMP Main Function  ===== */

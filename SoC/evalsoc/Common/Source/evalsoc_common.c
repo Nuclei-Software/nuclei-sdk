@@ -5,6 +5,17 @@ __STATIC_FORCEINLINE uint64_t get_timer_freq(void)
     return (uint64_t)SOC_TIMER_FREQ;
 }
 
+__STATIC_FORCEINLINE uint32_t get_time(void)
+{
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    // NOTE: when CSR_MIRGB_INFO CSR exist and not zero, it means eclic and systimer present
+    if (__RV_CSR_READ(CSR_MIRGB_INFO) == 0) {
+        return __RV_CSR_READ(CSR_MTIME);
+    }
+#endif
+    return (uint32_t)SysTimer_GetLoadValue();
+}
+
 // optimize measure_cpu_freq function with Os/O0
 // to get a correct cpu frequency, which
 // is important for flashxip linker script
@@ -22,14 +33,14 @@ uint32_t measure_cpu_freq(uint32_t n)
     uint64_t mtime_freq = get_timer_freq();
 
     // Don't start measuruing until we see an mtime tick
-    uint32_t tmp = (uint32_t)SysTimer_GetLoadValue();
+    uint32_t tmp = (uint32_t)get_time();
     do {
-        start_mtime = (uint32_t)SysTimer_GetLoadValue();
+        start_mtime = (uint32_t)get_time();
         start_mcycle = __RV_CSR_READ(CSR_MCYCLE);
     } while (start_mtime == tmp);
 
     do {
-        delta_mtime = (uint32_t)SysTimer_GetLoadValue() - start_mtime;
+        delta_mtime = (uint32_t)get_time() - start_mtime;
         delta_mcycle = __RV_CSR_READ(CSR_MCYCLE) - start_mcycle;
     } while (delta_mtime < n);
 
@@ -75,10 +86,10 @@ void delay_1ms(uint32_t count)
     uint64_t delay_ticks = (SOC_TIMER_FREQ * (uint64_t)count) / 1000;
 
 #if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
-    start_mtime = SysTimer_GetLoadValue();
+    start_mtime = get_time();
 
     do {
-        delta_mtime = SysTimer_GetLoadValue() - start_mtime;
+        delta_mtime = get_time() - start_mtime;
     } while (delta_mtime < delay_ticks);
 #else
     #warning "delay_1ms function require system timer present, if you are using this, it will not work"

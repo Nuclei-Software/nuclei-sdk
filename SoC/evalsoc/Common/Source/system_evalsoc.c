@@ -880,15 +880,16 @@ void ECLIC_Interrupt_Init(void)
 {
 #if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
 #if defined(CPU_SERIES) && CPU_SERIES == 100
+    // NOTE: when CSR_MIRGB_INFO CSR exist and not zero, it means eclic and systimer present
+    if (__RV_CSR_READ(CSR_MIRGB_INFO)) {
 #if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
-    // NOTE: Workaround to make n100 software able to run on qemu and xlmodel
-    // TIMECMPH in n100 is zero, so we need to manually set high 32b of TIMECMP to 0
-    SysTimer->RESERVED2 = 0;
-    // NOTE: Workaround for Nuclei Qemu 2025.10, need to read higher 32b then it can be really clear to 0
-    SysTimer->MTIMERCMP = SysTimer->RESERVED2;
-    __RWMB();
+        // NOTE: Workaround to make n100 software able to run on qemu and xlmodel
+        // TIMECMPH in n100 is zero, so we need to manually set high 32b of TIMECMP to 0
+        SysTimer->RESERVED2 = 0;
+        // NOTE: Workaround for Nuclei Qemu 2025.10, need to read higher 32b then it can be really clear to 0
+        SysTimer->MTIMERCMP = SysTimer->RESERVED2;
+        __RWMB();
 #endif
-    if (1) {
 #else
     unsigned long mcfg_info;
     mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
