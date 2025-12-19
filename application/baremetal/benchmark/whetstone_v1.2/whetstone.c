@@ -48,7 +48,7 @@ C
 C     o	Final measurements are to be made with all
 C	WRITE statements and FORMAT sttements removed.
 C
-C**********************************************************************   
+C**********************************************************************
 */
 
 /* standard C library headers required */
@@ -136,6 +136,9 @@ main(void)
 	continuous = 0;
 
     printf("\n");
+#if defined(CPU_SERIES) && CPU_SERIES < 300
+    printf("100 and 200 series CPU have no FPU, running Whetstone is meaningless for these CPU.\n");
+#endif
     printf("##########################################\n");
     printf("%s Precision C Whetstone Benchmark Version 1.2	22 March 1998\n", Precision);
 

@@ -236,6 +236,9 @@ int main(void)
 #endif
 
     printf("\n");
+#if defined(CPU_SERIES) && CPU_SERIES < 300
+    printf("100 and 200 series CPU have no FPU, running Whetstone is meaningless for these CPU.\n");
+#endif
     printf("##########################################\n");
     printf("%s Precision C Whetstone Benchmark %s \n", Precision, Version);
 

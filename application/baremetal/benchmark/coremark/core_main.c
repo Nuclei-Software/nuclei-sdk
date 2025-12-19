@@ -137,7 +137,12 @@ MAIN_RETURN_TYPE main(int argc, char* argv[])
 #endif
 #ifdef CFG_SIMULATION
     // 2024.1.3: 6 iterations are enough for rtl simulation
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    results[0].iterations = 4;
+#else
     results[0].iterations = 6;
+#endif
+
 #else
     results[0].iterations = ITERATIONS;
 #endif

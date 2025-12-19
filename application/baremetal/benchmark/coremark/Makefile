@@ -5,7 +5,9 @@ NUCLEI_SDK_ROOT = ../../../..
 TOOLCHAIN ?= nuclei_gnu
 
 # Adjust CPU_SERIES according to passed CORE
-ifneq ($(findstring 20,$(CORE)),)
+ifneq ($(findstring n100,$(CORE)),)
+CPU_SERIES ?= 100
+else ifneq ($(findstring 20,$(CORE)),)
 CPU_SERIES ?= 200
 else ifneq ($(findstring 30,$(CORE)),)
 CPU_SERIES ?= 300
@@ -22,7 +24,13 @@ endif
 -include toolchain_$(TOOLCHAIN).mk
 
 COMMON_FLAGS := $(BENCH_FLAGS)
-COMMON_FLAGS += -DITERATIONS=800 -DPERFORMANCE_RUN=1
+ifeq ($(CPU_SERIES),100)
+# more iterations for n100 will make 24b cycle/instret counter overflow
+COMMON_FLAGS += -DITERATIONS=5
+else
+COMMON_FLAGS += -DITERATIONS=800
+endif
+COMMON_FLAGS += -DPERFORMANCE_RUN=1
 ifeq ($(TOOLCHAIN),terapines)
 COMMON_FLAGS +=
 else

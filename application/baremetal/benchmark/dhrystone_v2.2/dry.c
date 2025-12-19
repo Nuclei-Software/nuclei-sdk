@@ -202,7 +202,7 @@
  *	- Output says which sort of clock it is using, and the HZ value
  *	- You can use -DREG instead of the -DREG=register of previous versions
  *	- Some stylistic cleanups.
- *		
+ *
  ***************************************************************************
  *
  *  Compilation model and measurement (IMPORTANT):
@@ -433,7 +433,11 @@ struct tms      time_info;
 //for simulation we make it small
 #define NUMBER_OF_RUNS        200
 #else
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+#define NUMBER_OF_RUNS        1000 /* Default number of runs */
+#else
 #define NUMBER_OF_RUNS        50000 /* Default number of runs */
+#endif
 #endif
 
 #ifdef  NOSTRUCTASSIGN

@@ -53,7 +53,7 @@ BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-common -finline-functions -falign-
 	--param max-average-unrolled-insns=200 --param max-grow-copy-bb-insns=20 --param max-jump-thread-duplication-stmts=25 \
 	--param hot-bb-frequency-fraction=4
 else
-# Benchmark options for 200
+# Benchmark options for 200 and 100
 BENCH_FLAGS ?= -Ofast -fno-code-hoisting -fno-common -finline-functions -falign-functions=10 \
 	-falign-jumps=8 -falign-loops=8 -finline-limit=300 -fno-if-conversion -fno-if-conversion2 \
 	-fselective-scheduling -fno-tree-loop-distribute-patterns -funroll-loops -funroll-all-loops \

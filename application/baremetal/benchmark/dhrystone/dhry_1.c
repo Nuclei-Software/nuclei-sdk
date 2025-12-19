@@ -242,7 +242,11 @@ int main(void)
         //Bob: for simulation we make it small
         Number_Of_Runs = 200;
 #else
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+        Number_Of_Runs = 1000;
+#else
         Number_Of_Runs = 500000;
+#endif
 #endif
     }
 

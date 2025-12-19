@@ -38,7 +38,10 @@ buildconfig:
   - type: common
     cdefines:
       - defines: FLAGS_STR=\""See compiler options passed in IDE"\"
+      - defines: ITERATIONS=5
+        condition: $( ${cpu_series} == 100 )
       - defines: ITERATIONS=800
+        condition: $( ${cpu_series} != 100 )
       - defines: PERFORMANCE_RUN=1
   - type: gcc
     common_flags: # flags need to be combined together across all packages
@@ -49,7 +52,7 @@ buildconfig:
               -fno-delete-null-pointer-checks -mbranch-cost=1 --param fsm-scale-path-stmts=3
               --param max-average-unrolled-insns=400 --param max-grow-copy-bb-insns=20 --param max-jump-thread-duplication-stmts=26
               --param hot-bb-frequency-fraction=4 --param unroll-jam-min-percent=0
-        condition: $( ${cpu_series} == 200 )
+        condition: $( ${cpu_series} == 200 || ${cpu_series} == 100 )
       - flags: >-
               -Ofast -fno-code-hoisting -fno-common -finline-functions -falign-functions=6
               -falign-jumps=6 -falign-loops=4 -finline-limit=200 -fno-if-conversion -fno-if-conversion2
