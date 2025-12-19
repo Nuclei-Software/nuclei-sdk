@@ -78,10 +78,14 @@ static uint64_t start_instret, end_instret, used_instret;
 
 SPDP time(void)
 {
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    return (SPDP)__get_rv_time() / SOC_TIMER_FREQ;
+#else
 #if defined(__SYSTIMER_PRESENT) && (__SYSTIMER_PRESENT == 1)
     return (SPDP) SysTimer_GetLoadValue() / SOC_TIMER_FREQ;
 #else
 #error "This example require CPU System Timer feature"
+#endif
 #endif
 }
 
