@@ -316,6 +316,11 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
     if (PRV_M == mode) {
         /* msubm is exclusive to machine mode */
         NSDK_DEBUG("msubm: 0x%lx\n", exc_frame->msubm);
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+        if (exc_frame->msubm == 0 && __RV_CSR_READ(CSR_MIRGB_INFO) == 0) {
+            NSDK_DEBUG("ERROR: you are using nuclei sdk for n100 with IRQC controller, please use nuclei n100 sdk!\n");
+        }
+#endif
     }
 #endif
 }
@@ -571,6 +576,9 @@ unsigned long Exception_Get_EXC(uint32_t EXCn)
 #endif
 }
 
+// NOTE: _sp is top of stack
+extern char _sp[];
+
 /**
  * \brief      Initialize all the default core exception handlers
  * \details
@@ -595,6 +603,8 @@ static void Exception_Init(void)
     }
     SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] = (unsigned long)system_default_exception_handler;
 #endif
+    // NOTE: setup mscratch csr to _sp in case of interrupt or exception stack for rtos not yet setup
+    __RV_CSR_WRITE(CSR_MSCRATCH, (unsigned long)_sp);
 }
 
 #if (defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1))
