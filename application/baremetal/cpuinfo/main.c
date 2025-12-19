@@ -4,7 +4,7 @@
 #include "cpuinfo.h"
 #include "nuclei_sdk_soc.h"
 
-#define BUFSIZE     2048
+#define BUFSIZE 2048
 
 int main(void)
 {
@@ -34,8 +34,23 @@ int main(void)
         cpuinfo.mcfg_exist = 1;
         mcfg.d = (uint32_t)__RV_CSR_READ(CSR_MCFG_INFO);
     }
-    cpuinfo.mcfginfo = mcfg;
 
+    // NOTE: workaround for n100, since the CSR mcfg_info not present in n100,
+    // but eclic and iregion present
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    mcfg.d = 0;
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
+    // mirgb_info csr present for n100 with eclic, this csr will not be zero
+    if (__RV_CSR_READ(CSR_MIRGB_INFO) != 0) {
+        mcfg.b.iregion = 1;
+        mcfg.b.eclic = 1;
+    } else {
+        cpuinfo.mcfg_exist = 0;
+    }
+#endif
+#endif
+
+    cpuinfo.mcfginfo = mcfg;
     if (__RISCV_XLEN == 32) {
         cpuinfo.xlen = 32;
         if (mcfg.b.plic) {
@@ -67,15 +82,16 @@ int main(void)
         cpuinfo.iinfo = (IINFO_Type *)((unsigned long)iregion_base);
         cpuinfo.iregion_base = iregion_base;
         if (mcfg.b.smp) {
-            cpuinfo.smpcfg.d =
-                *(uint32_t *)((unsigned long)(iregion_base + CPUINFO_IRG_SMP_OFS + 0x4));
+            cpuinfo.smpcfg.d = *(uint32_t *)((
+                unsigned long)(iregion_base + CPUINFO_IRG_SMP_OFS + 0x4));
         }
         if (cpuinfo.smpcfg.b.cc) {
-            cpuinfo.cccfg.d =
-                *(uint32_t *)((unsigned long)(iregion_base + CPUINFO_IRG_SMP_OFS + 0x8));
+            cpuinfo.cccfg.d = *(uint32_t *)((
+                unsigned long)(iregion_base + CPUINFO_IRG_SMP_OFS + 0x8));
         }
         if (mcfg.b.eclic) {
-            cpuinfo.eclic = (ECLIC_Type *)((unsigned long)(iregion_base + CPUINFO_IRG_ECLIC_OFS));
+            cpuinfo.eclic = (ECLIC_Type *)((
+                unsigned long)(iregion_base + CPUINFO_IRG_ECLIC_OFS));
         }
     }
     if (mcfg.b.ppi) {

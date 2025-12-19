@@ -402,6 +402,12 @@ static void show_iregion(const CPU_INFO_Group *cpuinfo)
         show_cache_info(POW2(cc_cfg.b.set), cc_cfg.b.way + 1,
                         POW2(cc_cfg.b.lsize + 2), cc_cfg.b.ecc);
     }
+
+    // NOTE: mpasize always have, and is PA_SIZE of RTL configuration
+    // if it is 0, it means it dont have IINFO region
+    if (cpuinfo->iinfo->mpasize == 0) {
+        return;
+    }
     /* IREGION INFO */
     CIF_PRINTF("     INFO-Detail:\r\n");
     /* MPASIZE */
