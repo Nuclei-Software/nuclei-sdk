@@ -227,7 +227,17 @@ int main(void)
 {
     int count = 10, calibrate = 1;
     long xtra = 1;
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    long x100 = 10;
+#else
     long x100 = 100;
+
+    //NOTE: when no fpu present, use less passes
+#ifndef __riscv_flen
+    x100 = x100 >> 2;
+#endif
+#endif
 
 #if CFG_SIMULATION
     int duration = 1;
@@ -247,15 +257,19 @@ int main(void)
         TimeUsed = 0;
 
         whetstones(xtra, x100, calibrate);
-        printf("%11.2f Seconds %10.0lf   Passes (x 100)\n", TimeUsed,
-               (SPDP)(xtra));
+        printf("%11.2f Seconds %10.0lf   Passes (x %d)\n", TimeUsed,
+               (SPDP)(xtra), x100);
         calibrate++;
         count--;
 
 #if CFG_SIMULATION
         if (TimeUsed > 0.02)
 #else
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+        if (TimeUsed > 0.1)
+#else
         if (TimeUsed > 0.2)
+#endif
 #endif
         {
             count = 0;
@@ -273,7 +287,7 @@ int main(void)
 
     calibrate = 0;
 
-    printf("\nUse %u  passes (x 100)\n", (uint32_t)xtra);
+    printf("\nUse %u  passes (x %d)\n", (uint32_t)xtra, x100);
     printf("\n          %s Precision C/C++ Whetstone Benchmark", Precision);
 
 #ifdef PRECOMP

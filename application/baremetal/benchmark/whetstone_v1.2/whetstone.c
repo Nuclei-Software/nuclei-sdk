@@ -137,7 +137,12 @@ main(void)
     loopstart = 500;   /* when no fpu present, run less loops */
 #endif
 #endif
-	continuous = 0;
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    loopstart = loopstart >> 3;
+#endif
+
+    continuous = 0;
 
     printf("\n");
 #if defined(CPU_SERIES) && CPU_SERIES < 300
