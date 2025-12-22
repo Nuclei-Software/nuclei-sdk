@@ -1,0 +1,11 @@
+{
+    "matrix": {
+    },
+    "expected": {
+    },
+    "expecteds": {
+        "application/baremetal/demo_dsp" : {
+            "rv32emc": { "build": false, "run": false }
+        }
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "build_config": {
+        "CPU_SERIES": "100"
+    },
+    "build_configs": {
+        "rv32imc_zicond": {"CORE":"n100m", "ARCH_EXT":"_zicond"},
+        "rv32im_zc_zicond": {"CORE":"n100m", "ARCH_EXT":"_zca_zcb_zcmp_zcmt_zicond"}
+    }
+}
