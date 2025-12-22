@@ -1,4 +1,25 @@
 {
+    "appdirs_ignore": [
+        "application/baremetal/demo_cidu",
+        "application/baremetal/demo_cache",
+        "application/baremetal/demo_clint_timer",
+        "application/baremetal/demo_dsp",
+        "application/baremetal/demo_eclic_umode",
+        "application/baremetal/demo_plic",
+        "application/baremetal/demo_pma",
+        "application/baremetal/demo_smode_eclic",
+        "application/baremetal/demo_smpu",
+        "application/baremetal/demo_sstc",
+        "application/baremetal/demo_stack_check",
+        "application/baremetal/demo_vnice",
+        "application/baremetal/demo_nice",
+        "application/baremetal/demo_profiling",
+        "application/baremetal/smphello",
+        "application/baremetal/lowpower",
+        "application/freertos/smpdemo",
+        "application/rtthread/demo_smode",
+        "application/threadx/smpdemo"
+    ],
     "build_config": {
         "CPU_SERIES": "100"
     },
