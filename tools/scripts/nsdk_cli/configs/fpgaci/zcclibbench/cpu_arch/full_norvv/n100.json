@@ -6,7 +6,7 @@
         "rv32emc_zicond": {"CORE":"n100em", "ARCH_EXT":"_zicond"},
         "rv32ec_zmmul": {"CORE":"n100ezmmul", "ARCH_EXT":""},
         "rv32imc_zicond": {"CORE":"n100m", "ARCH_EXT":"_zicond"},
-        "rv32ic_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":"",
+        "rv32ic_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":""},
         "rv32em_zc_zicond": {"CORE":"n100em", "ARCH_EXT":"_zca_zcb_zcmp_zcmt_zicond"},
         "rv32e_zc_zmmul": {"CORE":"n100ezmmul", "ARCH_EXT":"_zca_zcb_zcmp_zcmt"},
         "rv32im_zc_zicond": {"CORE":"n100m", "ARCH_EXT":"_zca_zcb_zcmp_zcmt_zicond"},
