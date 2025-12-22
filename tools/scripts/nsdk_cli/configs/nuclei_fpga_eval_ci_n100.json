@@ -26,11 +26,12 @@
         "application/baremetal/demo_sstc",
         "application/baremetal/demo_stack_check",
         "application/baremetal/demo_vnice",
+        "application/baremetal/demo_profiling",
         "application/baremetal/smphello",
         "application/baremetal/lowpower",
         "application/freertos/smpdemo",
         "application/rtthread/demo_smode",
-        "application/threadx/demosmp"
+        "application/threadx/smpdemo"
     ],
     "build_configs": {
         "n100e": {"CORE": "n100e"},
