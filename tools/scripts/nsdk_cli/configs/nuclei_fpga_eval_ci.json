@@ -14,6 +14,7 @@
         "ARCH_EXT": ""
     },
     "build_configs": {
+        "n100-sram": {"CORE": "n100", "DOWNLOAD": "sram"},
         "n201-ilm": {"DOWNLOAD": "ilm", "CORE": "n201"},
         "n201-flash": {"DOWNLOAD": "flash", "CORE": "n201"},
         "n201-flashxip": {"DOWNLOAD": "flashxip", "CORE": "n201"},
@@ -64,6 +65,7 @@
     },
     "expecteds": {
         "application/baremetal/demo_dsp" : {
+            "n100-sram": { "build": false, "run": false },
             "n201-ilm": { "build": false, "run": false },
             "n201-flash": { "build": false, "run": false },
             "n201-flashxip": { "build": false, "run": false },

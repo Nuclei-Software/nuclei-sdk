@@ -1,0 +1,47 @@
+{
+    "run_config": {
+        "target" : "hardware",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 240
+        }
+    },
+    "parallel": "-j",
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "evalsoc",
+        "BOARD": "nuclei_fpga_eval",
+        "ARCH_EXT": ""
+    },
+    "appdirs_ignore": [
+        "application/baremetal/demo_cidu",
+        "application/baremetal/demo_cache",
+        "application/baremetal/demo_clint_timer",
+        "application/baremetal/demo_dsp",
+        "application/baremetal/demo_eclic_umode",
+        "application/baremetal/demo_plic",
+        "application/baremetal/demo_pma",
+        "application/baremetal/demo_smode_eclic",
+        "application/baremetal/demo_smpu",
+        "application/baremetal/demo_sstc",
+        "application/baremetal/demo_stack_check",
+        "application/baremetal/demo_vnice",
+        "application/baremetal/smphello",
+        "application/baremetal/lowpower",
+        "application/freertos/smpdemo",
+        "application/rtthread/demo_smode",
+        "application/threadx/demosmp"
+    ],
+    "build_configs": {
+        "n100e": {"CORE": "n100e"},
+        "n100em": {"CORE": "n100em"},
+        "n100ezmmul": {"CORE": "n100ezmmul"},
+        "n100": {"CORE": "n100"},
+        "n100m": {"CORE": "n100m"},
+        "n100zmmul": {"CORE": "n100zmmul"}
+    },
+    "appconfig": {
+    },
+    "expecteds": {
+    }
+}
