@@ -83,7 +83,12 @@ int main(int argc, char** argv)
     CSR_MISA_Type misa;
 
     misa.d = __RV_CSR_READ(CSR_MISA);
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    mcfg_info.b.clic = 1;
+#else
     mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+#endif
 
     if (mcfg_info.b.clic == 0) {
         printf("ECLIC is not present, will not run this example!\r\n");
@@ -110,6 +115,8 @@ int main(int argc, char** argv)
     __set_PMPENTRYx(0, &pmp_cfg);
 
 #if defined(__SMPU_PRESENT) && (__SMPU_PRESENT == 1)
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+#else
     if (mcfg_info.b.tee == 1) {
         printf("Configure SMPU due to TEE Present\r\n");
         /* Configuration of execution region*/
@@ -127,6 +134,7 @@ int main(int argc, char** argv)
         // enable smpu entry0
         __set_SMPUSWITCHx(0x1);
     }
+#endif
 #endif
 
     // Restore illegal instruction handler as NULL which will go to default exception handler

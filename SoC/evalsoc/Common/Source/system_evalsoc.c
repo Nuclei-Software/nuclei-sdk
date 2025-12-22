@@ -918,6 +918,8 @@ void ECLIC_Interrupt_Init(void)
         ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+#else
         if (mcfg_info & MCFG_INFO_TEE) {
             /*
              * Intialize ECLIC supervisor mode vector interrupt
@@ -938,6 +940,7 @@ void ECLIC_Interrupt_Init(void)
             /* Global Configuration about STH */
             ECLIC_SetSth(0);
         }
+#endif
 #endif
     } else {
         /* Set as CLINT interrupt mode */
