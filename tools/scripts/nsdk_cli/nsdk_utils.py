@@ -1047,6 +1047,12 @@ def merge_two_config(appcfg, hwcfg):
     dict_merge(merged_appcfg, hwcfg)
     return merged_appcfg
 
+def update_list_items(list1, list2):
+    for i in range(0, len(list2)):
+        if list2[i] not in list1:
+            list1.append(list2[i])
+    return list1
+
 def set_global_variables(config):
     global SDK_GLOBAL_VARIABLES
     if isinstance(config, dict) == False:
@@ -1449,14 +1455,14 @@ def gen_runcfg(cpucfg, runcfg, buildconfig=dict()):
     matrixcfgs = runcfgdict.get("matrix", None)
     expectedcfg = runcfgdict.get("expected", dict())
     expectedscfg = runcfgdict.get("expecteds", dict())
-    appdirs_ignore = runcfgdict.get("appdirs_ignore", dict())
+    appdirs_ignore = runcfgdict.get("appdirs_ignore", [])
     finalruncfg = copy.deepcopy(cpucfgdict)
     # merge buildconfig
     finalruncfg["build_config"] = merge_two_config(finalruncfg.get("build_config", dict()), buildconfig)
     finalruncfg["expected"] = merge_two_config(finalruncfg.get("expected", dict()), expectedcfg)
     finalruncfg["expecteds"] = merge_two_config(finalruncfg.get("expecteds", dict()), expectedscfg)
     # allow pass core related ignore cases
-    finalruncfg["appdirs_ignore"] = merge_two_config(finalruncfg.get("appdirs_ignore", dict()), appdirs_ignore)
+    finalruncfg["appdirs_ignore"] = update_list_items(finalruncfg.get("appdirs_ignore", []), appdirs_ignore)
     if matrixcfgs is None:
         return finalruncfg
     bcfgs = cpucfgdict.get("build_configs", dict())

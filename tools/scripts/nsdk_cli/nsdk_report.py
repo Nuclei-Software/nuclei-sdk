@@ -479,12 +479,6 @@ def is_bench_result(result):
 
     return check
 
-def update_list_items(list1, list2):
-    for i in range(0, len(list2)):
-        if list2[i] not in list1:
-            list1.append(list2[i])
-    return list1
-
 def merge_runconfig(all_mergedcfg, config, reldir):
     if "run_config" not in all_mergedcfg:
         all_mergedcfg["run_config"] = config["run_config"]
