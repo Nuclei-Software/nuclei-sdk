@@ -24,6 +24,6 @@
         "CPU_SERIES": "100"
     },
     "build_configs": {
-        "rv32imc": {"CORE":"n100m"}
+        "rv32ic_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":""}
     }
 }
