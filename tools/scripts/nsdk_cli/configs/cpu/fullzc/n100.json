@@ -24,13 +24,13 @@
         "CPU_SERIES": "100"
     },
     "build_configs": {
-        "rv32ec": {"CORE":"n100e"},
-        "rv32ec_zmmul": {"CORE":"n100ezmmul", "ARCH_EXT":""},
-        "rv32ic": {"CORE":"n100"},
-        "rv32ic_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":""},
-        "rv32e_zc": {"CORE":"n100e", "ARCH_EXT": "_zca_zcb_zcmp_zcmt"},
-        "rv32e_zc_zmmul": {"CORE":"n100ezmmul", "ARCH_EXT": "_zca_zcb_zcmp_zcmt"},
-        "rv32i_zc": {"CORE":"n100", "ARCH_EXT": "_zca_zcb_zcmp_zcmt"},
-        "rv32i_zc_zmmul": {"CORE":"n100zmmul", "ARCH_EXT": "_zca_zcb_zcmp_zcmt"}
+        "rv32ec": {"CORE":"n100e", "ARCH_EXT":"_zicond"},
+        "rv32ec_zmmul": {"CORE":"n100ezmmul", "ARCH_EXT":"_zicond"},
+        "rv32ic": {"CORE":"n100", "ARCH_EXT":"_zicond"},
+        "rv32ic_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":"_zicond"},
+        "rv32e_zc": {"CORE":"n100e", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zicond"},
+        "rv32e_zc_zmmul": {"CORE":"n100ezmmul", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zicond"},
+        "rv32i_zc": {"CORE":"n100", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zicond"},
+        "rv32i_zc_zmmul": {"CORE":"n100zmmul", "ARCH_EXT": "_zca_zcb_zcmp_zcmt_zicond"}
     }
 }

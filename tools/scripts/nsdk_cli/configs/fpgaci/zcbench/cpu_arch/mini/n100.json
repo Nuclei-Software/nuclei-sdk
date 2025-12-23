@@ -3,7 +3,7 @@
         "CPU_SERIES": "100"
     },
     "build_configs": {
-        "rv32ic_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":""},
-        "rv32i_zc_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":"_zca_zcb_zcmp_zcmt"}
+        "rv32ic_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":"_zicond"},
+        "rv32i_zc_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":"_zca_zcb_zcmp_zcmt_zicond"}
     }
 }

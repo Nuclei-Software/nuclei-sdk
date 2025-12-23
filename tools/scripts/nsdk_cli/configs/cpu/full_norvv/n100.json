@@ -24,13 +24,13 @@
         "CPU_SERIES": "100"
     },
     "build_configs": {
-        "rv32ec": {"CORE":"n100e"},
-        "rv32emc": {"CORE":"n100em"},
+        "rv32ec": {"CORE":"n100e", "ARCH_EXT": "_zicond"},
+        "rv32emc": {"CORE":"n100em", "ARCH_EXT": "_zicond"},
         "rv32emc_zicond": {"CORE":"n100em", "ARCH_EXT":"_zicond"},
-        "rv32ec_zmmul": {"CORE":"n100ezmmul", "ARCH_EXT":""},
-        "rv32ic": {"CORE":"n100"},
-        "rv32imc": {"CORE":"n100m"},
+        "rv32ec_zmmul": {"CORE":"n100ezmmul", "ARCH_EXT":"_zicond"},
+        "rv32ic": {"CORE":"n100", "ARCH_EXT": "_zicond"},
+        "rv32imc": {"CORE":"n100m", "ARCH_EXT": "_zicond"},
         "rv32imc_zicond": {"CORE":"n100m", "ARCH_EXT":"_zicond"},
-        "rv32ic_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":""}
+        "rv32ic_zmmul": {"CORE":"n100zmmul", "ARCH_EXT":"_zicond"}
     }
 }
