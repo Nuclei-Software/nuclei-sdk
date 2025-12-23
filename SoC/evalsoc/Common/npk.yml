@@ -468,7 +468,7 @@ setconfig:
     condition: $( contains(${nuclei_core}, "90"))
   - config: cpu_series
     value: 1000
-    condition: $( contains(${nuclei_core}, "100"))
+    condition: $( contains(${nuclei_core}, "1000"))
 
 ## Debug Configuration for this SoC
 debugconfig:
@@ -495,6 +495,9 @@ buildconfig:
       - flags: -g -fno-common -ffunction-sections -fdata-sections
       - flags: -march=${nuclei_arch} -mabi=${nuclei_core.abi}
       - flags: -mcmodel=${nuclei_core.cmodel}
+      # For N100, access must be strict alignment, unaligned access is not supported
+      - flags: -mstrict-align
+        condition: $( ${cpu_series} == 100 )
       - flags: -nostdinc
         condition: $( ${stdclib} == "nostd" )
       - flags:
