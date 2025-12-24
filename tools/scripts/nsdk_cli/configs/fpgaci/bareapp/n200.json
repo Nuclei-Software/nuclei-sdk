@@ -11,6 +11,7 @@
         "application/baremetal/demo_stack_check": {"build": true, "run": false},
         "application/baremetal/demo_cache": {"build": true, "run": false},
         "application/baremetal/demo_pma": {"build": true, "run": false},
+        "application/baremetal/demo_smpcc": {"build": true, "run": false},
         "test/core": {"build": true, "run": true}
     },
     "expecteds": {

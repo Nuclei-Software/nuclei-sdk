@@ -54,6 +54,10 @@
         "application/baremetal/demo_pma": {
             "run": false,
             "build": false
+        },
+        "application/baremetal/demo_smpcc": {
+            "run": false,
+            "build": false
         }
     }
 }

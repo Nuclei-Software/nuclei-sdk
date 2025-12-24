@@ -25,6 +25,7 @@
     "appdirs": [
         "application/baremetal/smphello",
         "application/baremetal/demo_cidu",
+        "application/baremetal/demo_smpcc",
         "application/freertos/smpdemo",
         "application/threadx/smpdemo"
     ],
@@ -53,6 +54,26 @@
             "build_config" : {},
             "checks": {
                 "PASS": ["All harts boot successfully!"]
+            }
+        },
+        "application/baremetal/demo_smpcc": {
+            "build_config": {
+                "MAX_L2_SIZE_KB": "4096",
+                "CCM_EN": "1",
+                "XLCFG_HPM": "1",
+                "DOWNLOAD": "ddr"
+            },
+            "checks": {
+                "PASS": [
+                    "End of SMPCC demo!",
+                    "SMP feature is not supported!",
+                    "There is no L2 cache or you may run on QEMU!",
+                    "L2 cache is larger than"
+                ],
+                "FAIL": [
+                    "MEPC",
+                    "L2 cache size is not a power of 2!"
+                ]
             }
         }
     }

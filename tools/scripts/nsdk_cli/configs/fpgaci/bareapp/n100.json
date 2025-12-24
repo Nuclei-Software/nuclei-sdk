@@ -6,6 +6,9 @@
     "expecteds": {
         "application/baremetal/demo_dsp" : {
             "rv32emc": { "build": false, "run": false }
+        },
+        "application/baremetal/demo_smpcc" : {
+            "rv32emc": { "build": false, "run": false }
         }
     }
 }
