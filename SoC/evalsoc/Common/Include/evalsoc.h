@@ -495,6 +495,13 @@ extern volatile unsigned long CpuIRegionBase;
 #define __VNICE_PRESENT             0
 #endif
 
+// Physical Address Size (PASIZE) Configuration
+#ifdef CFG_PA_SIZE
+#define __CPU_PA_SIZE               CFG_PA_SIZE
+#else
+#define __CPU_PA_SIZE               32
+#endif
+
 #ifndef __INC_INTRINSIC_API
 #define __INC_INTRINSIC_API         0                     /*!< Set to 1 if intrinsic api header files need to be included */
 #endif
