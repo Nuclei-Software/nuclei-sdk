@@ -2545,6 +2545,97 @@ So ``array_read_by_row_dcache_miss_cacheable`` minus ``array_read_by_row_dcache_
       So this demo first covers original attribute by ``NonCacheable``, then ``Cacheable`` (that's recovered)
     * As the prority: ``Non-Cacheable`` > ``Cacheable`` > ``Device``, it can't cover original attribute(``Cacheable``) by ``Device``!
 
+.. _design_app_demo_smpcc:
+
+demo_smpcc
+~~~~~~~~~~
+
+This `demo_smpcc application`_ is used to demonstrate how to fetch SMP-related information, how to use
+cluster cache as cluster-local memory, and how to monitor cluster cache performance metrics (cache hit/miss rates, etc.)
+
+This demo can be divided into 4 parts:
+
+- **Part1**: Fetch SMP-related information
+- **Part2**: Perform memory traversal on continuous DDR memory and calculate the consumed cycles.
+  Compare performance with and without Cluster Cache enabled.
+- **Part3**: Configure a portion of Cluster Cache as CLM (Cluster Local Memory),
+  and perform the same memory traversal test on CLM.
+- **Part4**: Calculate the hit and miss counts for the cluster cache during memory traversal.
+
+.. note::
+    * We declare an array to perform memory traversal tests, and the array size is related to the cluster cache size.
+      The default max cluster cache size is 1MB; if your CPU cache is larger than 1MB, you should pass ``MAX_L2_SIZE_KB`` to adjust.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei ux900 Core RISC-V processor as example
+    # And assume that the L2 cache of your CPU in not larger than 1MB
+    # cd to the demo_smpcc directory
+    cd application/baremetal/demo_smpcc
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=ddr CCM_EN=1 clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=ddr CCM_EN=1 upload
+    # If the L2 cache size is larger than 1MB, you can pass the ``MAX_L2_SIZE_KB`` make variable in the make command
+    # e.g., to set the L2 cache size to 2MB
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=ddr CCM_EN=1 MAX_L2_SIZE_KB=2048 all
+
+**Expected output as below:**
+
+Here is the result run on legacy Nuclei UX900 Core.
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Dec 24 2025, 17:18:43
+    Download Mode: DDR
+    CPU Frequency 50001346 Hz
+    CPU HartID: 0
+    SMPCC version is 1.0.1
+    SMP & Cluster Cache Information:
+        SMP_CFG: CC_PRESENT=1 SMP_NUM=1 IOCP_NUM=0 PMON_NUM=4
+        L2CACHE: 2 MB(set=2048,way=16,lsize=64,ecc=0)
+    CSV, mem_traverse_wo_ccache, 188078
+    CSV, mem_traverse_with_ccache, 102482
+    CSV, mem_traverse_with_clm, 102504
+    Test with CCache flushed:
+    CSV, Data Read Count, 8194
+    CSV, Data Read Hit Count, 0
+    CSV, Data Read Miss Count, 8194
+    Test with CCache pre-filled:
+    CSV, Data Read Count, 8194
+    CSV, Data Read Hit Count, 8194
+    CSV, Data Read Miss Count, 0
+    End of SMPCC demo!
+
+For the result run on recent Nuclei UX900 Core, L2 cache performance
+has been monitored by PMUv2, the output is as below:
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Dec 26 2025, 18:13:43
+    Download Mode: DDR
+    CPU Frequency 50322800 Hz
+    CPU HartID: 0
+    SMPCC version is 1.0.1
+    SMP & Cluster Cache Information:
+        SMP_CFG: CC_PRESENT=1 SMP_NUM=1 IOCP_NUM=0 PMON_NUM=4
+        L2CACHE: 2 MB(set=2048,way=16,lsize=64,ecc=1)
+    CSV, mem_traverse_wo_ccache, 149901
+    CSV, mem_traverse_with_ccache, 103487
+    CSV, mem_traverse_with_clm, 103523
+    Cluster Cache performance has been monitored by PMUv2!
+    High performance monitor initialized
+    Test with L2 Cache flushed:
+    HPM4:0xf00000b3, L2_read_miss, 8192
+    HPM3:0xf00000a3, L2_read_count, 8217
+    Test with L2 Cache pre-filled:
+    HPM4:0xf00000b3, L2_read_miss, 1
+    HPM3:0xf00000a3, L2_read_count, 8215
+    End of SMPCC demo!
+
 FreeRTOS applications
 ---------------------
 
@@ -3124,4 +3215,5 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx smpdemo`` applic
 .. _demo_cache application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cache
 .. _demo_stack_check application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_stack_check
 .. _demo_pma application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pma
+.. _demo_smpcc application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smpcc
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html
