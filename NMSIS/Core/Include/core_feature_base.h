@@ -779,6 +779,53 @@ typedef union {
 #endif /* __ASSEMBLER__ */
 
 /**
+ * \brief Execute fence instruction, p -> pred, s -> succ
+ * \details
+ * the FENCE instruction ensures that all memory accesses from instructions preceding
+ * the fence in program order (the `predecessor set`) appear earlier in the global memory order than
+ * memory accesses from instructions appearing after the fence in program order (the `successor set`).
+ * For details, please refer to The RISC-V Instruction Set Manual
+ * \param p     predecessor set, such as iorw, rw, r, w
+ * \param s     successor set, such as iorw, rw, r, w
+ **/
+#define __FENCE(p, s) __ASM volatile ("fence " #p "," #s : : : "memory")
+
+/**
+ * \brief   Fence.i Instruction
+ * \details
+ * The FENCE.I instruction is used to synchronize the instruction
+ * and data streams.
+ */
+__STATIC_FORCEINLINE void __FENCE_I(void)
+{
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+#else
+    __ASM volatile("fence.i");
+#endif
+}
+
+/** \brief Read & Write Memory barrier */
+#define __RWMB()        __FENCE(iorw,iorw)
+
+/** \brief Read Memory barrier */
+#define __RMB()         __FENCE(ir,ir)
+
+/** \brief Write Memory barrier */
+#define __WMB()         __FENCE(ow,ow)
+
+/** \brief SMP Read & Write Memory barrier */
+#define __SMP_RWMB()    __FENCE(rw,rw)
+
+/** \brief SMP Read Memory barrier */
+#define __SMP_RMB()     __FENCE(r,r)
+
+/** \brief SMP Write Memory barrier */
+#define __SMP_WMB()     __FENCE(w,w)
+
+/** \brief CPU relax for busy loop */
+#define __CPU_RELAX()   __ASM volatile ("" : : : "memory")
+
+/**
  * \brief switch privilege from machine mode to others.
  * \details
  *  Execute into \ref entry_point in \ref mode(supervisor or user) with given stack
@@ -1080,6 +1127,7 @@ __STATIC_FORCEINLINE void __clear_core_irq_pending_s(uint32_t irq)
  */
 __STATIC_INLINE rv_counter_t __get_rv_cycle(void)
 {
+    __RWMB();   // Make sure previous memory and io operation finished
 #if __RISCV_XLEN == 32
 
 #if defined(CPU_SERIES) && CPU_SERIES == 100
@@ -1134,6 +1182,7 @@ __STATIC_FORCEINLINE void __set_rv_cycle(rv_counter_t cycle)
  */
 __STATIC_INLINE rv_counter_t __get_rv_instret(void)
 {
+    __RWMB();   // Make sure previous memory and io operation finished
 #if __RISCV_XLEN == 32
 #if defined(CPU_SERIES) && CPU_SERIES == 100
     return __RV_CSR_READ(CSR_MINSTRET);
@@ -1187,6 +1236,7 @@ __STATIC_FORCEINLINE void __set_rv_instret(rv_counter_t instret)
  */
 __STATIC_INLINE rv_counter_t __get_rv_time(void)
 {
+    __RWMB();   // Make sure previous memory and io operation finished
 #if __RISCV_XLEN == 32
 #if defined(CPU_SERIES) && CPU_SERIES == 100
     // NOTE: when CSR_MIRGB_INFO CSR exist and not zero, it means eclic and systimer present
@@ -1228,6 +1278,7 @@ __STATIC_INLINE rv_counter_t __get_rv_time(void)
  */
 __STATIC_FORCEINLINE unsigned long __read_cycle_csr(void)
 {
+    __RWMB();   // Make sure previous memory and io operation finished
     return __RV_CSR_READ(CSR_CYCLE);
 }
 
@@ -1241,6 +1292,7 @@ __STATIC_FORCEINLINE unsigned long __read_cycle_csr(void)
  */
 __STATIC_FORCEINLINE unsigned long __read_instret_csr(void)
 {
+    __RWMB();   // Make sure previous memory and io operation finished
     return __RV_CSR_READ(CSR_INSTRET);
 }
 
@@ -1254,6 +1306,7 @@ __STATIC_FORCEINLINE unsigned long __read_instret_csr(void)
  */
 __STATIC_FORCEINLINE unsigned long __read_time_csr(void)
 {
+    __RWMB();   // Make sure previous memory and io operation finished
     return __RV_CSR_READ(CSR_TIME);
 }
 
@@ -1808,6 +1861,7 @@ __STATIC_INLINE void __set_hpm_counter(unsigned long idx, uint64_t value)
  */
 __STATIC_INLINE uint64_t __get_hpm_counter(unsigned long idx)
 {
+    __RWMB();   // Make sure previous memory and io operation finished
 #if __RISCV_XLEN == 32
     volatile uint32_t high0, low, high;
     uint64_t full;
@@ -2071,54 +2125,6 @@ __STATIC_FORCEINLINE void __set_mideleg(unsigned long mask)
 {
     __RV_CSR_WRITE(CSR_MIDELEG, mask);
 }
-
-/**
- * \brief Execute fence instruction, p -> pred, s -> succ
- * \details
- * the FENCE instruction ensures that all memory accesses from instructions preceding
- * the fence in program order (the `predecessor set`) appear earlier in the global memory order than
- * memory accesses from instructions appearing after the fence in program order (the `successor set`).
- * For details, please refer to The RISC-V Instruction Set Manual
- * \param p     predecessor set, such as iorw, rw, r, w
- * \param s     successor set, such as iorw, rw, r, w
- **/
-#define __FENCE(p, s) __ASM volatile ("fence " #p "," #s : : : "memory")
-
-/**
- * \brief   Fence.i Instruction
- * \details
- * The FENCE.I instruction is used to synchronize the instruction
- * and data streams.
- */
-__STATIC_FORCEINLINE void __FENCE_I(void)
-{
-#if defined(CPU_SERIES) && CPU_SERIES == 100
-#else
-    __ASM volatile("fence.i");
-#endif
-}
-
-/** \brief Read & Write Memory barrier */
-#define __RWMB()        __FENCE(iorw,iorw)
-
-/** \brief Read Memory barrier */
-#define __RMB()         __FENCE(ir,ir)
-
-/** \brief Write Memory barrier */
-#define __WMB()         __FENCE(ow,ow)
-
-/** \brief SMP Read & Write Memory barrier */
-#define __SMP_RWMB()    __FENCE(rw,rw)
-
-/** \brief SMP Read Memory barrier */
-#define __SMP_RMB()     __FENCE(r,r)
-
-/** \brief SMP Write Memory barrier */
-#define __SMP_WMB()     __FENCE(w,w)
-
-/** \brief CPU relax for busy loop */
-#define __CPU_RELAX()   __ASM volatile ("" : : : "memory")
-
 
 /* ===== Load/Store Operations ===== */
 /**

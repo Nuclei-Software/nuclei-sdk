@@ -23,6 +23,8 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add new field mapping of ``CSR_MTLBCFGINFO_Type`` CSR structure in ``core_feature_base.h``
   - Introduced ``rv_counter_t`` type to support n100 time/cycle/instret counter since it is only 24 bit but other cpu is 64 bit
   - Update ``core_feature_timer.h``, ``core_feature_base.h`` and ``nmsis_bench.h`` for n100 cpu
+  - Add RISC-V fence barrier before CSR read such as ``cycle/instret/time/hpmcounter`` to ensure ordering with prior memory/IO operations in ``core_feature_base.h``
+  - Relocate fence-related definitions to a more logical position in the header file ``core_feature_base.h``
 
 * Application
 
