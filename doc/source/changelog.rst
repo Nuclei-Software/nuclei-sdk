@@ -25,6 +25,9 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Update ``core_feature_timer.h``, ``core_feature_base.h`` and ``nmsis_bench.h`` for n100 cpu
   - Add RISC-V fence barrier before CSR read such as ``cycle/instret/time/hpmcounter`` to ensure ordering with prior memory/IO operations in ``core_feature_base.h``
   - Relocate fence-related definitions to a more logical position in the header file ``core_feature_base.h``
+  - Add new APIs to maintain Cluster Cache coherency in ``core_feature_cache.h``
+  - Add ``core_feature_smpcc.h`` to support SMP and Cluster Cache Related operations.
+  - Correct the L2 cache read/write hit event definitions in ``nmsis_bench.h`` to match the true hardware behavior.
 
 * Application
 
@@ -44,6 +47,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add ThreadX SMP ``smpdemo`` application to demostrate ThreadX SMP kernel feature on Nuclei RISC-V CPU.
   - Add a prebuilt IAR project for ThreadX SMP ``smpdemo`` application.
   - Optimize benchmark cases and cpuinfo case for n100 cpu with eclic.
+  - Add :ref:`design_app_demo_smpcc` to demonstrate SMP Cluster Cache feature on Nuclei RISC-V CPU.
 
 * OS
 
@@ -78,6 +82,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Enable nuclei cpu model debug configuration generation using npk, which require Nuclei Studio and Model 2025.10 version, currently only non-smp debug is supported by Nuclei CPU Model
   - Enable ``IC_CANCEL_EN`` in mcache_ctl when I-Cache present by default to prevent I-cache pipeline stalls on branch misprediction
   - Optimize evalsoc startup code for n100 cpu since n100 dont have many cpu features, so many initialization can be simplified
+  - Add ``__CPU_PA_SIZE`` macro to identify the Physical Address size (PASIZE).
 
 * Documentation
 
@@ -85,6 +90,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Update ``rtos.rst`` to mention about recent bugfix for RTOS porting, and other RTOSes supported but not in Nuclei SDK
   - Update the expected output of ``cpuinfo`` in ``app.rst``
   - Update documentation about n100 with eclic is now supported in Nuclei SDK
+  - Add ``demo_smpcc`` application documentation in ``app.rst``
 
 * Tools
 
@@ -97,6 +103,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add more ci jobs to cover zfinx/zdinx/zcmt usage and optimize ci jobs without download apt/pip package since bumped sdkbuild to 2025.10
   - ``nsdk_runcpu.py`` cpu json configuration now can add ``appdirs_ignore`` key to specified cases to be ignored, mainly introduced for n100 cpu, since many cases could not run on n100
   - Add n100 cpu nsdk_cli configurations for qemu and fpga benchmark
+  - Add new ci configuration for ``demo_smpcc`` daily ci running
 
 V0.8.1
 ------
