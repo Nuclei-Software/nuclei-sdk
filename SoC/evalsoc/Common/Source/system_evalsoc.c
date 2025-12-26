@@ -317,7 +317,7 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
         /* msubm is exclusive to machine mode */
         NSDK_DEBUG("msubm: 0x%lx\n", exc_frame->msubm);
 #if defined(CPU_SERIES) && CPU_SERIES == 100
-        if (exc_frame->msubm == 0 && __RV_CSR_READ(CSR_MIRGB_INFO) == 0) {
+        if (__RV_CSR_READ(CSR_MTIME) != 0 && __RV_CSR_READ(CSR_MIRGB_INFO) == 0) {
             NSDK_DEBUG("ERROR: you are using nuclei sdk for n100 with IRQC controller, please use nuclei n100 sdk!\n");
         }
 #endif
