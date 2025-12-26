@@ -310,9 +310,9 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #define EVENT_TYPE_3_ICACHE_READ                                                6
 #define EVENT_TYPE_3_ICACHE_PREFETCH                                            8
 #define EVENT_TYPE_3_ICACHE_PREFETCH_MISS                                       9
-#define EVENT_TYPE_3_L2_CACHE_READ_HIT                                          10
+#define EVENT_TYPE_3_L2_CACHE_READ                                              10
 #define EVENT_TYPE_3_L2_CACHE_READ_MISS                                         11
-#define EVENT_TYPE_3_L2_CACHE_WRITE_HIT                                         12
+#define EVENT_TYPE_3_L2_CACHE_WRITE                                             12
 #define EVENT_TYPE_3_L2_CACHE_WRITE_MISS                                        13
 #define EVENT_TYPE_3_L2_CACHE_PREFETCH_HIT                                      14
 #define EVENT_TYPE_3_L2_CACHE_PREFETCH_MISS                                     15
