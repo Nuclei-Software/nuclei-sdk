@@ -97,6 +97,8 @@
 #include "core_feature_pma.h"
 /* Include core smpcc feature header file */
 #include "core_feature_smpcc.h"
+/* Include core ecc feature header file */
+#include "core_feature_ecc.h"
 /* Include compatiable functions header file */
 #include "core_compatiable.h"
 
