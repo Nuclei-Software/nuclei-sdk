@@ -554,7 +554,11 @@ typedef union {
         rv_csr_t ramid:5;                       /*!< bit: 16..20 The ID of RAM that has 2bit ECC error, software can clear these bits */
         rv_csr_t _reserved1:3;                  /*!< bit: 21..23 Reserved 0 */
         rv_csr_t sramid:5;                      /*!< bit: 24..28 The ID of RAM that has 1bit ECC error, software can clear these bits */
-        rv_csr_t _reserved2:__RISCV_XLEN-29;    /*!< bit: 29..XLEN-1 Reserved 0 */
+        rv_csr_t _reserved2:2;                  /*!< bit: 29..30 Reserved 0 */
+        rv_csr_t ecc_inj_mode:1;                /*!< bit: 31 ECC injection mode */
+#if __RISCV_XLEN == 64
+        rv_csr_t _reserved3:__RISCV_XLEN-32;    /*!< bit: 32..XLEN-1 Reserved 0 */
+#endif
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MECCCODE_Type;
