@@ -257,6 +257,7 @@
 
 #define MDCAUSE_MDCAUSE             (0x7)
 
+#define MMISC_CTL_HW_AUTO_CONTEXT   (1<<21)
 #define MMISC_CTL_LDSPEC_ENABLE     (1<<12)
 #define MMISC_CTL_SIJUMP_ENABLE     (1<<11)
 #define MMISC_CTL_IMRETURN_ENABLE   (1<<10)
@@ -265,6 +266,14 @@
 #define MMISC_CTL_MISALIGN          (1<<6)
 #define MMISC_CTL_ZC                (1<<7)
 #define MMISC_CTL_BPU               (1<<3)
+
+#define MECLIC_CTL_SHADOW_EN        (1<<2)
+#define MECLIC_CTL_TSP_EN           (1<<1)
+#define MECLIC_CTL_FEAT_EN          (1<<0)
+
+#define SECLIC_CTL_SHADOW_EN        (1<<2)
+#define SECLIC_CTL_TSP_EN           (1<<1)
+#define SECLIC_CTL_FEAT_EN          (1<<0)
 
 #define MCACHE_CTL_IC_EN            (1<<0)
 #define MCACHE_CTL_IC_SCPD_MOD      (1<<1)
@@ -979,6 +988,7 @@
 #define CSR_MDCAUSE             0x7C9
 #define CSR_MCACHE_CTL          0x7CA
 #define CSR_MMISC_CTL           0x7D0
+#define CSR_MTSPCSW             0x7D5
 #define CSR_MSAVESTATUS         0x7D6
 #define CSR_MSAVEEPC1           0x7D7
 #define CSR_MSAVECAUSE1         0x7D8
@@ -991,6 +1001,10 @@
 #define CSR_MFP16MODE           0x7E2
 /* mfp16mode is renamed to mmisc_ctl1 */
 #define CSR_MMISC_CTL1          0x7E2
+#define CSR_MSHADGPRLVL0        0x7E3
+#define CSR_MSHADGPRLVL1        0x7E4
+#define CSR_MECLIC_CTL          0x7E5
+#define CSR_MTSP                0x7E6
 #define CSR_LSTEPFORC           0x7E9
 #define CSR_PUSHMSUBM           0x7EB
 #define CSR_MTVT2               0x7EC
@@ -1052,7 +1066,15 @@
 #define CSR_STVT2               0x948
 #define CSR_PUSHSCAUSE          0x949
 #define CSR_PUSHSEPC            0x94A
+#define CSR_PUSHSSUBM           0x94B
+#define CSR_POPXRET             0x94C
+#define CSR_STSPCSW             0x94D
 #define CSR_SDCAUSE             0x9C0
+#define CSR_SSUBM               0x9C4
+#define CSR_SSHADGPRLVL0        0x9E3
+#define CSR_SSHADGPRLVL1        0x9E4
+#define CSR_SECLIC_CTL          0x9E5
+#define CSR_STSP                0x9E6
 #define CSR_MICFG_INFO          0xFC0
 #define CSR_MDCFG_INFO          0xFC1
 #define CSR_MCFG_INFO           0xFC2
@@ -1155,6 +1177,7 @@
 #define CSR_XSCRATCH                CSR_SSCRATCH
 #define CSR_XEPC                    CSR_SEPC
 #define CSR_XCAUSE                  CSR_SCAUSE
+#define CSR_XSUBM                   CSR_SSUBM
 #define CSR_XTVAL                   CSR_STVAL
 #define CSR_XENVCFG                 CSR_SENVCFG
 #define CSR_XTVT                    CSR_STVT
