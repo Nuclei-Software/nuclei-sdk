@@ -49,6 +49,8 @@
 */
 /* Save caller registers */
 .macro SAVE_CONTEXT
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     /* Allocate stack space for context saving */
 #ifndef __riscv_32e
     addi sp, sp, -20*REGBYTES
@@ -75,6 +77,7 @@
     STORE x30, 18*REGBYTES(sp)
     STORE x31, 19*REGBYTES(sp)
 #endif /* __riscv_32e */
+#endif
 .endm
 
 /**
@@ -87,6 +90,8 @@
  */
 /* Restore caller registers */
 .macro RESTORE_CONTEXT
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     LOAD x1, 0*REGBYTES(sp)
     LOAD x4, 1*REGBYTES(sp)
     LOAD x5, 2*REGBYTES(sp)
@@ -112,6 +117,7 @@
     /* De-allocate the stack space */
     addi sp, sp, 14*REGBYTES
 #endif /* __riscv_32e */
+#endif
 .endm
 
 /**
@@ -120,6 +126,8 @@
  * This macro store SCAUSE, SEPC to stack.
  */
 .macro SAVE_CSR_CONTEXT_S
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
 #ifdef CFG_HAS_CLIC
     /* Store CSR scause to stack using pushscause */
     csrrwi  x0, CSR_PUSHSCAUSE, 11
@@ -131,6 +139,7 @@
     csrr x5, CSR_SCAUSE
     STORE x5,  11*REGBYTES(sp)
 #endif
+#endif
 .endm
 
 /**
@@ -139,10 +148,13 @@
  * This macro restore SEPC, SCAUSE from stack.
  */
 .macro RESTORE_CSR_CONTEXT_S
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     LOAD x5,  12*REGBYTES(sp)
     csrw CSR_SEPC, x5
     LOAD x5,  11*REGBYTES(sp)
     csrw CSR_SCAUSE, x5
+#endif
 .endm
 
 /**
@@ -187,7 +199,11 @@ exc_entry_s:
     RESTORE_CONTEXT
 
     /* Return to regular code */
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    csrrwi x0, CSR_POPXRET, 0
+#else
     sret
+#endif
 
     .size exc_entry_s, . - exc_entry_s
 
@@ -231,6 +247,10 @@ irq_entry_s:
     RESTORE_CONTEXT
 
     /* Return to regular code */
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    csrrwi x0, CSR_POPXRET, 0
+#else
     sret
+#endif
 
     .size irq_entry_s, . - irq_entry_s

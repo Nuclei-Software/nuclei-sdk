@@ -333,6 +333,11 @@ extern volatile unsigned long CpuIRegionBase;
 #define __ECLIC_INTCTLBITS          CFG_CLICINTCTLBITS
 #endif
 #define __ECLIC_INTNUM              (CFG_IRQ_NUM + SOC_EXTERNAL_MAP_TO_ECLIC_IRQn_OFFSET)
+#if defined(CFG_HAS_ECLICV2)
+#define __ECLIC_VER                 2
+#else
+#define __ECLIC_VER                 1
+#endif
 #else
 #define __ECLIC_PRESENT             0
 #endif

@@ -223,6 +223,11 @@ ifneq ($(CODESIZE),)
 COMMON_FLAGS += -DCODESIZE=$(CODESIZE)
 endif
 
+# If ECLIC_HWCTX is 1, define ECLIC_HW_CTX_AUTO
+ifeq ($(ECLIC_HWCTX),1)
+COMMON_FLAGS += -DECLIC_HW_CTX_AUTO
+endif
+
 ##### Put your Source code Management configurations below #####
 
 INCDIRS += $(NUCLEI_SDK_SOC_COMMON)/Include

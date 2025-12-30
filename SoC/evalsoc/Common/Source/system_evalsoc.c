@@ -873,6 +873,8 @@ extern void irq_entry(void);
 #endif
 extern void exc_entry(void);
 
+// NOTE: _sp is top of stack, it will be used as interrupt stack when OS started
+extern char _sp[];
 /**
  * \brief Do ECLIC Interrupt configuration
  * \details
@@ -917,6 +919,16 @@ void ECLIC_Interrupt_Init(void)
         ECLIC_SetMth(0);
         ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
 
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+        __RV_CSR_WRITE(CSR_MTSP, _sp);
+        /* Enable Hardware Auto Save Context */
+        __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_HW_AUTO_CONTEXT);
+
+        /* Enable ECLIC Hardware Acceleration */
+        /* Enable Interrupt and Exception Auto Save, and Shadow GPR, dont swap stack */
+        __RV_CSR_WRITE(CSR_MECLIC_CTL, MECLIC_CTL_SHADOW_EN);
+#endif
+
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
 #if defined(CPU_SERIES) && CPU_SERIES == 100
 #else
@@ -939,6 +951,9 @@ void ECLIC_Interrupt_Init(void)
             __RV_CSR_WRITE(CSR_STVEC, (unsigned long)exc_entry_s);
             /* Global Configuration about STH */
             ECLIC_SetSth(0);
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+        __RV_CSR_WRITE(CSR_SECLIC_CTL, SECLIC_CTL_SHADOW_EN);
+#endif
         }
 #endif
 #endif
