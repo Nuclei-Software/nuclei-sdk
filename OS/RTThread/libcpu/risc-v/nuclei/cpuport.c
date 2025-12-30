@@ -278,7 +278,7 @@ void rt_hw_board_init()
 
     // Enable interrupt and task sp swap
 #if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
-    __RV_CSR_SET(CSR_MECLIC_CTL, MECLIC_CTL_TSP_EN);
+    __RV_CSR_SET(CSR_XECLIC_CTL, XECLIC_CTL_TSP_EN);
 #endif
 }
 

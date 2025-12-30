@@ -1192,6 +1192,7 @@
 #define CSR_XSCRATCHCSWL            CSR_SSCRATCHCSWL
 #define CSR_XSCRATCHCSW             CSR_SSCRATCHCSW
 #define CSR_XDCAUSE                 CSR_SDCAUSE
+#define CSR_XECLIC_CTL              CSR_SECLIC_CTL
 #define CSR_JALXNXTI                CSR_JALSNXTI
 #define CSR_XINTSTATUS              CSR_SINTSTATUS
 #define CSR_XNXTI                   CSR_SNXTI
@@ -1201,6 +1202,7 @@
 #define eclic_xsip_handler          eclic_ssip_handler
 #define eclic_xtip_handler          eclic_stip_handler
 #define XSTATUS_XIE                 SSTATUS_SIE
+#define XECLIC_CTL_TSP_EN           SECLIC_CTL_TSP_EN
 #define x_exc_entry                 exc_entry_s
 #define x_irq_entry                 irq_entry_s
 #else
@@ -1220,6 +1222,7 @@
 #define CSR_XSCRATCHCSWL            CSR_MSCRATCHCSWL
 #define CSR_XSCRATCHCSW             CSR_MSCRATCHCSW
 #define CSR_XDCAUSE                 CSR_MDCAUSE
+#define CSR_XECLIC_CTL              CSR_MECLIC_CTL
 #define CSR_JALXNXTI                CSR_JALMNXTI
 #define CSR_XINTSTATUS              CSR_MINTSTATUS
 #define CSR_XNXTI                   CSR_MNXTI
@@ -1229,6 +1232,7 @@
 #define eclic_xsip_handler          eclic_msip_handler
 #define eclic_xtip_handler          eclic_mtip_handler
 #define XSTATUS_XIE                 MSTATUS_MIE
+#define XECLIC_CTL_TSP_EN           MECLIC_CTL_TSP_EN
 #define x_exc_entry                 exc_entry
 #define x_irq_entry                 irq_entry
 #endif
