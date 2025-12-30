@@ -10,6 +10,7 @@ V0.9.0-dev
 
     - Please use ``Nuclei Studio 2025.10`` with v0.9.0 and later version.
     - **Nuclei N100 series with ECLIC configured** are supported, see :ref:`N100 support limitation <n100_support_limitation>`
+    - ECLIC v2 hardware feature is supported, see :ref:`design_soc_evalsoc_eclicv2`
 
 This is release version of ``0.9.0`` of Nuclei SDK, which is still under development.
 
@@ -18,6 +19,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Change ``core_feature_pmp.h`` to support more PMP entries, changed from 16 to 64 now
   - Enable __LD/__SD macro when Zilsd extension present for rv32 in ``core_feature_base.h``
   - Add comments for updating ECLIC threshold MTH setting recommendations in ``core_feature_eclic.h``
+  - Add ECLICv2 related CSR and bit macros in ``riscv_encoding.h`` to support ECLICv2 hardware context auto-save feature
   - Fix **HDBG** bit position in SysTimer **MTIMECTL** from 4 to 3 in ``core_feature_timer.h``
   - Add **MTIME_SRC** bit position and update SRW control handling in ``core_feature_timer.h``
   - Add new field mapping of ``CSR_MTLBCFGINFO_Type`` CSR structure in ``core_feature_base.h``
@@ -62,6 +64,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Mention about other RTOSs Nuclei supported, but not in Nuclei SDK, see :ref:`design_rtos_others`
   - Add support for **ThreadX SMP** kernel support for both Nuclei RISC-V RV32 and RV64 CPU with ECLIC feature enabled.
   - Fix issue where ``tx_thread_run_count`` was not incremented during task switches and initial task creation in the ThreadX kernel.
+  - Add ECLICv2 hardware context auto-save support for all RTOS including FreeRTOS, RT-Thread, ThreadX and UCOSII when ``ECLIC_HWCTX=1`` and ``XLCFG_ECLIC=2``
 
 * Build System
 
@@ -83,6 +86,8 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Enable ``IC_CANCEL_EN`` in mcache_ctl when I-Cache present by default to prevent I-cache pipeline stalls on branch misprediction
   - Optimize evalsoc startup code for n100 cpu since n100 dont have many cpu features, so many initialization can be simplified
   - Add ``__CPU_PA_SIZE`` macro to identify the Physical Address size (PASIZE).
+  - Add ECLICv2 support with hardware context auto-save feature in evalsoc, including conditional compilation guards and ECLIC version definitions
+  - Add ``XLCFG_ECLIC=2`` support in evalsoc to enable ECLICv2 configuration, see :ref:`design_soc_evalsoc_eclicv2`
 
 * Documentation
 

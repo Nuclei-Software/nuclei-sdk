@@ -100,6 +100,8 @@ Extra make variables supported only in this SoC and used internally only by Nucl
   * **QEMU_CPU_EXTOPT** is used to pass extra options to Nuclei Qemu ``-cpu`` cpu options for evalsoc,
     please dont pass any extra ``,`` to this make variable, you can pass such as ``QEMU_CPU_EXTOPT=vlen=512`` but
     not pass ``QEMU_CPU_EXTOPT=,vlen=512``
+  * **XLCFG_ECLIC**: it is used to control ECLIC configuration, when ``XLCFG_ECLIC=0`` it will undefine ``CFG_HAS_CLIC``, when ``XLCFG_ECLIC=1`` it will define ``CFG_HAS_CLIC``, and when ``XLCFG_ECLIC=2`` it will define both ``CFG_HAS_ECLICV2`` and ``CFG_HAS_CLIC`` for ECLICv2 support, introduced in 0.9.0 release.
+  * **ECLIC_HWCTX**: it is used to enable ECLIC hardware context auto-save feature, when ``ECLIC_HWCTX=1`` it will define ``ECLIC_HW_CTX_AUTO`` macro, introduced in 0.9.0 release.
 
 .. code-block:: shell
 
@@ -110,6 +112,42 @@ Extra make variables supported only in this SoC and used internally only by Nucl
     make SOC=evalsoc info # you can check current working SDK configuration information
     make SOC=evalsoc clean
     make SOC=evalsoc all
+
+.. _design_soc_evalsoc_eclicv2:
+
+ECLICv2 Support
+---------------
+
+Starting from version 0.9.0, Nuclei EvalSoC provides support for ECLICv2 with hardware context auto-save feature.
+
+**Features:**
+
+* Hardware context auto-save/restore for non-vector interrupt and exception handlers
+* Automatic task stack pointer switching
+* Support for both M-mode and S-mode operation
+* Conditional compilation for backward compatibility
+
+**Configuration:**
+
+To enable ECLICv2 support with hardware context auto-save:
+
+* **MUST**: Nuclei RISC-V CPU must have ECLICv2 feature configured
+* Set ``XLCFG_ECLIC=2`` to enable ECLICv2 configuration or ``cpufeature.h`` contains ``CFG_HAS_ECLICV2`` macro
+* Set ``ECLIC_HWCTX=1`` to enable hardware context auto-save feature
+* When both options are enabled, the hardware will automatically save/restore context and handle stack pointer switching
+
+**Example:**
+
+.. code-block:: shell
+
+    # Enable ECLICv2 with hardware context auto-save
+    # eg. you are running on Nuclei N300 RISC-V CPU with ECLICv2 feature present
+    # Test baremetal eclic v2 auto-save/restore feature, trap sp auto switch not enabled
+    cd application/baremetal/demo_eclic
+    # Test freertos eclic v2 auto-save/restore feature, trap sp auto switch enabled, since interrupt/exception need seperated stack besides task stack
+    # cd application/freertos/demo
+    make SOC=evalsoc CORE=n300 XLCFG_ECLIC=2 ECLIC_HWCTX=1 clean
+    make SOC=evalsoc CORE=n300 XLCFG_ECLIC=2 ECLIC_HWCTX=1 all
 
 
 .. _Nuclei: https://nucleisys.com/
