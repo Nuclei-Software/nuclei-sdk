@@ -34,6 +34,8 @@
 */
 /* Save caller registers */
 .macro SAVE_CONTEXT
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     csrrw sp, CSR_XSCRATCHCSWL, sp
     /* Allocate stack space for context saving */
 #ifndef __riscv_32e
@@ -61,6 +63,7 @@
     STORE x30, 18*REGBYTES(sp)
     STORE x31, 19*REGBYTES(sp)
 #endif /* __riscv_32e */
+#endif
 .endm
 
 /**
@@ -73,6 +76,8 @@
  */
 /* Restore caller registers */
 .macro RESTORE_CONTEXT
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     LOAD x1, 0*REGBYTES(sp)
     LOAD x4, 1*REGBYTES(sp)
     LOAD x5, 2*REGBYTES(sp)
@@ -99,6 +104,7 @@
     addi sp, sp, 14*REGBYTES
 #endif /* __riscv_32e */
     csrrw sp, CSR_XSCRATCHCSWL, sp
+#endif
 .endm
 
 /**
@@ -107,6 +113,8 @@
  * This macro store MCAUSE, MEPC, MSUBM to stack.
  */
 .macro SAVE_CSR_CONTEXT
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     /* Store CSR mcause to stack using pushmcause */
     csrrwi  x0, CSR_PUSHXCAUSE, 11
     /* Store CSR mepc to stack using pushmepc */
@@ -114,6 +122,7 @@
 #ifndef SMODE_RTOS
     /* Store CSR msub to stack using pushmsub */
     csrrwi  x0, CSR_PUSHMSUBM, 13
+#endif
 #endif
 .endm
 
@@ -123,6 +132,8 @@
  * This macro restore MSUBM, MEPC, MCAUSE from stack.
  */
 .macro RESTORE_CSR_CONTEXT
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
 #ifndef SMODE_RTOS
     LOAD x5,  13*REGBYTES(sp)
     csrw CSR_XSUBM, x5
@@ -131,6 +142,7 @@
     csrw CSR_XEPC, x5
     LOAD x5,  11*REGBYTES(sp)
     csrw CSR_XCAUSE, x5
+#endif
 .endm
 
 /**
@@ -173,7 +185,11 @@ x_exc_entry:
     RESTORE_CONTEXT
 
     /* Return to regular code */
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    csrrwi x0, CSR_POPXRET, 0
+#else
     XRET
+#endif
 
     .size x_exc_entry, . - x_exc_entry
 
@@ -215,7 +231,11 @@ x_irq_entry:
     RESTORE_CONTEXT
 
     /* Return to regular code */
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    csrrwi x0, CSR_POPXRET, 0
+#else
     XRET
+#endif
 
     .size x_irq_entry, . - x_irq_entry
 

@@ -24,6 +24,8 @@
 */
 /* Save caller registers */
 .macro SAVE_CONTEXT
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     csrrw sp, CSR_MSCRATCHCSWL, sp
     /* Allocate stack space for context saving */
 #ifndef __riscv_32e
@@ -51,6 +53,7 @@
     STORE x30, 18*REGBYTES(sp)
     STORE x31, 19*REGBYTES(sp)
 #endif /* __riscv_32e */
+#endif
 .endm
 
 /**
@@ -63,6 +66,8 @@
  */
 /* Restore caller registers */
 .macro RESTORE_CONTEXT
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     LOAD x1, 0*REGBYTES(sp)
     LOAD x4, 1*REGBYTES(sp)
     LOAD x5, 2*REGBYTES(sp)
@@ -89,6 +94,7 @@
     addi sp, sp, 14*REGBYTES
 #endif /* __riscv_32e */
     csrrw sp, CSR_MSCRATCHCSWL, sp
+#endif
 .endm
 
 /**
@@ -97,12 +103,15 @@
  * This macro store MCAUSE, MEPC, MSUBM to stack.
  */
 .macro SAVE_CSR_CONTEXT
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     /* Store CSR mcause to stack using pushmcause */
     csrrwi  x0, CSR_PUSHMCAUSE, 11
     /* Store CSR mepc to stack using pushmepc */
     csrrwi  x0, CSR_PUSHMEPC, 12
     /* Store CSR msub to stack using pushmsub */
     csrrwi  x0, CSR_PUSHMSUBM, 13
+#endif
 .endm
 
 /**
@@ -111,12 +120,15 @@
  * This macro restore MSUBM, MEPC, MCAUSE from stack.
  */
 .macro RESTORE_CSR_CONTEXT
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     LOAD x5,  13*REGBYTES(sp)
     csrw CSR_MSUBM, x5
     LOAD x5,  12*REGBYTES(sp)
     csrw CSR_MEPC, x5
     LOAD x5,  11*REGBYTES(sp)
     csrw CSR_MCAUSE, x5
+#endif
 .endm
 
 /**
@@ -159,7 +171,11 @@ exc_entry:
     RESTORE_CONTEXT
 
     /* Return to regular code */
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    csrrwi x0, CSR_POPXRET, 0
+#else
     mret
+#endif
 
     .size exc_entry, . - exc_entry
 
@@ -201,7 +217,11 @@ irq_entry:
     RESTORE_CONTEXT
 
     /* Return to regular code */
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    csrrwi x0, CSR_POPXRET, 0
+#else
     mret
+#endif
 
     .size irq_entry, . - irq_entry
 

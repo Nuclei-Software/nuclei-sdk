@@ -398,6 +398,11 @@ void _tx_thread_smp_initialize_wait(void)
         __NOP();
     }
 
+    // Enable interrupt and task sp swap
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    __RV_CSR_SET(CSR_MECLIC_CTL, MECLIC_CTL_TSP_EN);
+#endif
+
     /*
      * 7. Initialize is complete, enter the scheduling loop!
      * Jump to the main thread scheduler to start running tasks.

@@ -140,6 +140,11 @@ VOID _tx_initialize_low_level(VOID)
     _tx_initialize_unused_memory = NULL;
     SetupSysTickInterrupt();
     _tx_thread_interrupt_control(0);
+
+    // Enable interrupt and task sp swap
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    __RV_CSR_SET(CSR_MECLIC_CTL, MECLIC_CTL_TSP_EN);
+#endif
 }
 
 UINT _tx_thread_interrupt_control(UINT new_posture)
