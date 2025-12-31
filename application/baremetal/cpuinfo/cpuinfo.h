@@ -347,6 +347,7 @@ typedef struct {
     U32_SMP_CFG_Type smpcfg;
     U32_CC_CFG_Type cccfg;
     uint32_t xlen;
+    uint32_t vlenb;
     IINFO_Type *iinfo;                           /*!< IREGION INFO memory pointer */
     ECLIC_Type *eclic;                           /*!< ECLIC memory pointer */
 } CPU_INFO_Group;

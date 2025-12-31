@@ -101,6 +101,18 @@ int main(void)
         cpuinfo.mfiocfginfo.d = (uint64_t)__RV_CSR_READ(CSR_MFIOCFG_INFO);
     }
 
+    IINFO_ISA_SUPPORT0_Type isa_support0;
+    isa_support0.d = cpuinfo.iinfo->isa_support0;
+    /* The init value of vlenb is 0, indicating that the vector extension is not supported */
+    cpuinfo.vlenb = 0;
+    /* misa.V only valid when the full vector extension is supported.
+     * Judge vector extension existence from isa_support0.vector is more reliable */
+    if (cpuinfo.misa.b.V || (isa_support0.b.exist && isa_support0.b.vector)) {
+        /* Set mstatus.vs to enable vector extension, then read vlenb */
+        __RV_CSR_SET(CSR_MSTATUS, MSTATUS_VS_INITIAL);
+        cpuinfo.vlenb = __RV_CSR_READ(CSR_VLENB);
+    }
+
     if (get_basic_cpuinfo(&cpuinfo, cpufeatbuf, BUFSIZE) > 0) {
         printf("%s\r\n", cpufeatbuf);
     }

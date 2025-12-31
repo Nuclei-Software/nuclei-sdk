@@ -50,6 +50,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add a prebuilt IAR project for ThreadX SMP ``smpdemo`` application.
   - Optimize benchmark cases and cpuinfo case for n100 cpu with eclic.
   - Add :ref:`design_app_demo_smpcc` to demonstrate SMP Cluster Cache feature on Nuclei RISC-V CPU.
+  - Probe and show vlenb in ``cpuinfo`` application.
 
 * OS
 

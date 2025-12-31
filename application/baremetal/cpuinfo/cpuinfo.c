@@ -265,7 +265,7 @@ static void show_mcfg(const CPU_INFO_Group *cpuinfo)
         default:
             break;
     }
-    if (cpuinfo->misa.b.V) {
+    if (cpuinfo->vlenb >0) {
         switch (mcfg.b.vpu_degree) {
             case 0b00:
                 CIF_PRINTF(" DLEN=VLEN/2");
@@ -276,6 +276,7 @@ static void show_mcfg(const CPU_INFO_Group *cpuinfo)
             default:
                 break;
         }
+        CIF_PRINTF(" VLEN=%u", cpuinfo->vlenb * 8);
     }
     CIF_PRINTF("\r\n");
 }

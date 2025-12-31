@@ -156,7 +156,7 @@ You can also use openocd to probe the cpu feature, see https://doc.nucleisys.com
              MARCHID: 0x1000
               MIMPID: 0x10300
                  ISA: RV64 A B C D F H I M S U V
-                MCFG: ECLIC PLIC ICACHE DCACHE SMP IREGION SSTC No-Safety-Mechanism DLEN=VLEN
+                MCFG: ECLIC PLIC ICACHE DCACHE SMP IREGION SSTC No-Safety-Mechanism DLEN=VLEN VLEN=128
               ICACHE: 128 KB(set=512,way=4,lsize=64,ecc=0)
               DCACHE: 128 KB(set=1024,way=2,lsize=64,ecc=0)
                  TLB: MainTLB(entry=256,way=4,ecc=0) ITLB(entry=16) DTLB(entry=16)
