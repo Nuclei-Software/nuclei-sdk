@@ -46,14 +46,14 @@ typedef void(*__fp)(void);
  * if you want to register vector interrupt with new entry,
  * you need to place it in writable section or create a ram vector
  * after bootup.
- * TODO: This data_alignment is set to 512 byte for up to 128 interrupts,
+ * TODO: This data_alignment is set to 512(rv32) or 1024(rv64) byte for up to 128 interrupts,
  * If you have more interrupts, you need to adjust the data_alignment
  * to other value, for details, please check mtvt csr documented
  * in Nuclei RISC-V ISA Spec
  */
-// TODO: change the data_alignment = 512 to match mtvt alignment requirement according to your eclic max interrupt number
+// TODO: change the data_alignment = 1024 to match mtvt alignment requirement according to your eclic max interrupt number
 // TODO: place your interrupt handler into this vector table, important if your vector table is in flash
-#pragma data_alignment = 512
+#pragma data_alignment = 1024
 const __fp vector_base[SOC_INT_MAX] __attribute__((section (".mintvec"))) = {
     default_intexc_handler,
     default_intexc_handler,
@@ -77,13 +77,13 @@ const __fp vector_base[SOC_INT_MAX] __attribute__((section (".mintvec"))) = {
 };
 
 #if defined(FLASH_RAM_VECTOR)
-// TODO: change the data_alignment = 512 to match mtvt alignment requirement according to your eclic max interrupt number
-#pragma data_alignment = 512
+// TODO: change the data_alignment = 1024 to match mtvt alignment requirement according to your eclic max interrupt number
+#pragma data_alignment = 1024
 static __fp vector_base_ram[SOC_INT_MAX] __attribute__((section (".mintvec_rw")));
 
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-// TODO: change the data_alignment = 512 to match stvt alignment requirement according to your eclic max interrupt number
-#pragma data_alignment = 512
+// TODO: change the data_alignment = 1024 to match stvt alignment requirement according to your eclic max interrupt number
+#pragma data_alignment = 1024
 static unsigned long vector_base_s_ram[SOC_INT_MAX] __attribute__((section (".sintvec_rw")));
 extern const unsigned long vector_table_s[SOC_INT_MAX];
 #endif

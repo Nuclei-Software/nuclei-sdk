@@ -100,21 +100,22 @@ __WEAK __SUPERVISOR_INTERRUPT void eclic_ssip_handler(void) { }
 __WEAK __SUPERVISOR_INTERRUPT __WEAK void eclic_stip_handler(void)  { }
 #endif
 
-// TODO: change the aligned(512) to match stvt alignment requirement according to your eclic max interrupt number
+// TODO: change the aligned(1024) to match stvt alignment requirement according to your eclic max interrupt number
 // TODO: place your interrupt handler into this vector table, important if your vector table is in flash
 #ifndef __ICCRISCV__
-#define __SMODE_VECTOR_ATTR   __attribute__((section (".text.vtable_s"), aligned(512)))
+#define __SMODE_VECTOR_ATTR   __attribute__((section (".text.vtable_s"), aligned(1024)))
 #else
-#define __SMODE_VECTOR_ATTR   __attribute__((section (".sintvec"), aligned(512)))
+#define __SMODE_VECTOR_ATTR   __attribute__((section (".sintvec"), aligned(1024)))
 #endif
 /**
  * \var unsigned long vector_table_s[SOC_INT_MAX]
  * \brief vector interrupt storing ISRs for supervisor mode
  * \details
  *  vector_table_s is hold by stvt register, the address must align according
- *  to actual interrupt numbers as below, now align to 512 bytes considering we put up to 128 interrupts here
+ *  to actual interrupt numbers as below, now align to 512(rv32) or 1024(rv64) bytes considering we put up to 128 interrupts here
  *  alignment must comply to table below if you increase or decrease vector interrupt number
- *  interrupt number      alignment
+ *  rv64 alignment is double of rv32 alignment
+ *  interrupt number      rv32 alignment
  *    0 to 16               64-byte
  *    17 to 32              128-byte
  *    33 to 64              256-byte
@@ -263,6 +264,17 @@ static unsigned long SystemCoreInterruptHandlers[SYSTEM_CORE_INTNUM];
 
 uint32_t core_exception_handler(unsigned long mcause, unsigned long sp);
 static INT_HANDLER system_core_interrupt_handler = NULL;
+
+// NOTE: define top of stack, it will be used as non-vector interrupt/exception stack when OS started
+#ifndef __ICCRISCV__
+// _sp is defined in linker script such as gcc_evalsoc_ilm.ld
+extern char _sp[];
+#define __TOP_OF_STACK  (_sp)
+#else
+// CSTACK$$Limit is defined in iar linker script such iar_evalsoc_ilm.icf
+extern char CSTACK$$Limit[];
+#define __TOP_OF_STACK  (CSTACK$$Limit)
+#endif
 
 /**
  * \brief      Store the exception handlers for each exception ID in supervisor mode
@@ -576,9 +588,6 @@ unsigned long Exception_Get_EXC(uint32_t EXCn)
 #endif
 }
 
-// NOTE: _sp is top of stack
-extern char _sp[];
-
 /**
  * \brief      Initialize all the default core exception handlers
  * \details
@@ -603,8 +612,8 @@ static void Exception_Init(void)
     }
     SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM] = (unsigned long)system_default_exception_handler;
 #endif
-    // NOTE: setup mscratch csr to _sp in case of interrupt or exception stack for rtos not yet setup
-    __RV_CSR_WRITE(CSR_MSCRATCH, (unsigned long)_sp);
+    // NOTE: setup mscratch csr to __TOP_OF_STACK in case of interrupt or exception stack for rtos not yet setup
+    __RV_CSR_WRITE(CSR_MSCRATCH, (unsigned long)__TOP_OF_STACK);
 }
 
 #if (defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1))
@@ -873,8 +882,6 @@ extern void irq_entry(void);
 #endif
 extern void exc_entry(void);
 
-// NOTE: _sp is top of stack, it will be used as interrupt stack when OS started
-extern char _sp[];
 /**
  * \brief Do ECLIC Interrupt configuration
  * \details
@@ -920,7 +927,7 @@ void ECLIC_Interrupt_Init(void)
         ECLIC_SetCfgNlbits(__ECLIC_INTCTLBITS);
 
 #if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
-        __RV_CSR_WRITE(CSR_MTSP, _sp);
+        __RV_CSR_WRITE(CSR_MTSP, (unsigned long)__TOP_OF_STACK);
         /* Enable Hardware Auto Save Context */
         __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_HW_AUTO_CONTEXT);
 
