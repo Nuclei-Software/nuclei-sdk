@@ -31,6 +31,8 @@ DISABLE_SIE MACRO
   ENDM
 
 SAVE_CONTEXT MACRO
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
 #ifndef __riscv_32e
     addi sp, sp, -20*REGBYTES
 #else
@@ -56,9 +58,12 @@ SAVE_CONTEXT MACRO
     STORE x30, 18*REGBYTES(sp)
     STORE x31, 19*REGBYTES(sp)
 #endif /* __riscv_32e */
+#endif
   ENDM
 
 RESTORE_CONTEXT MACRO
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     LOAD x1, 0*REGBYTES(sp)
     LOAD x4, 1*REGBYTES(sp)
     LOAD x5, 2*REGBYTES(sp)
@@ -84,21 +89,27 @@ RESTORE_CONTEXT MACRO
     /* De-allocate the stack space */
     addi sp, sp, 14*REGBYTES
 #endif /* __riscv_32e */
-
+#endif
   ENDM
 
 SAVE_CSR_CONTEXT_S MACRO
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     /* Store CSR scause to stack using pushscause */
     csrrwi  x0, CSR_PUSHSCAUSE, 11
     /* Store CSR sepc to stack using pushsepc */
     csrrwi  x0, CSR_PUSHSEPC, 12
+#endif
   ENDM
 
 RESTORE_CSR_CONTEXT_S MACRO
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+#else
     LOAD x5,  12*REGBYTES(sp)
     csrw CSR_SEPC, x5
     LOAD x5,  11*REGBYTES(sp)
     csrw CSR_SCAUSE, x5
+#endif
   ENDM
 
     PUBWEAK exc_entry_s, irq_entry_s
@@ -134,7 +145,11 @@ exc_entry_s:
     RESTORE_CONTEXT
 
     /* Return to regular code */
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    csrrwi x0, CSR_POPXRET, 0
+#else
     sret
+#endif
 
     ALIGN 2
 irq_entry_s:
@@ -159,6 +174,10 @@ irq_entry_s:
     RESTORE_CONTEXT
 
     /* Return to regular code */
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    csrrwi x0, CSR_POPXRET, 0
+#else
     sret
+#endif
 
     END
