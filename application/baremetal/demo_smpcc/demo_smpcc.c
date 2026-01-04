@@ -213,7 +213,7 @@ int main(void)
 
     SMP_VER_Type smp_ver = SMPCC_GetVersion();
     printf("SMPCC version is %d.%d.%d\r\n", smp_ver.b.maj_ver,
-           smp_ver.b.mic_ver, smp_ver.b.min_ver);
+           smp_ver.b.min_ver, smp_ver.b.mic_ver);
 
     /* Part 1: Show SMPCC information */
     int cc_size = show_smpcc_info();
