@@ -414,6 +414,10 @@ BaseType_t xPortStartScheduler(void)
 
     __disable_irq();
 
+    /* Start the timer that generates the tick ISR.  Interrupts are disabled
+    here already. */
+    vPortSetupTimerInterrupt();
+
 #if ( configNUMBER_OF_CORES > 1 )
     if (__get_hart_index() == BOOT_HARTID) {
         ulSchedulerReady = 1;
@@ -423,12 +427,10 @@ BaseType_t xPortStartScheduler(void)
     }
 #endif
 
-    /* Start the timer that generates the tick ISR.  Interrupts are disabled
-    here already. */
-    vPortSetupTimerInterrupt();
-
     /* Initialise the critical nesting count ready for the first task. */
     portSET_CRITICAL_NESTING_COUNT(0);
+
+    __RWMB();
 
 #if configMAX_SYSCALL_INTERRUPT_PRIORITY < 255
     /* Initialise base priority to zero. */
