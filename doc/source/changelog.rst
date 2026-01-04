@@ -65,6 +65,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add support for **ThreadX SMP** kernel support for both Nuclei RISC-V RV32 and RV64 CPU with ECLIC feature enabled.
   - Fix issue where ``tx_thread_run_count`` was not incremented during task switches and initial task creation in the ThreadX kernel.
   - Add ECLICv2 hardware context auto-save support for all RTOS including FreeRTOS, RT-Thread, ThreadX and UCOSII when ``ECLIC_HWCTX=1`` and ``XLCFG_ECLIC=2``
+  - Fix FreeRTOS task switch ``xPortTaskSwitch`` function, interrupt should be disabled during task switch
 
 * Build System
 

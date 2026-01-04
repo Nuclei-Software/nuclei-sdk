@@ -519,7 +519,6 @@ void vPortAssert(int32_t x)
 
 void xPortTaskSwitch(void)
 {
-    portDISABLE_INTERRUPTS();
     /* Clear Software IRQ, A MUST */
     SysTimer_ClearSWIRQ();
 #if ( configNUMBER_OF_CORES > 1 )
@@ -527,7 +526,6 @@ void xPortTaskSwitch(void)
 #else
     vTaskSwitchContext();
 #endif
-    portENABLE_INTERRUPTS();
 }
 /*-----------------------------------------------------------*/
 
