@@ -2322,7 +2322,7 @@ again**, ``array_test`` now (all 0x34) differs with cached array_test (all 0xab)
     ------Again init array in memory to all 0x34, then enable DCache------
     Read out array_test[0][0] 0x34 in memory
     Read out array_test[0][0] 0xab in cache, when mapped value in memory has changed
-    HPM4:0xf0000021, dcachemiss_readonebyte, 0
+    HPM4:0xf0000021, dcachemiss_readonebyte, 1
 
 From output, ``HPM`` is enabled, cache miss is counted and ``array_test`` size is 10 * 64 bytes.
 **At first, DCache is invalid**, the first time ``array_test`` update by row has 10 miss(HPM4 shows more,
@@ -2371,7 +2371,7 @@ cache miss decreases rapidly, which means ``array_test`` has already cached;
     ------Again init array in memory to all 0x34, then enable DCache------
     Read out array_test[0][0] 0x34 in memory
     Read out array_test[0][0] 0xab in cache, when mapped value in memory has changed
-    HPM4:0xf0000021, dcachemiss_readonebyte, 0
+    HPM4:0xf0000021, dcachemiss_readonebyte, 1
 
 From output, ``array_test`` size is enlarged to ``2048 * 64`` bytes, which is **two times the size of DCache (1024 * 64 bytes)**.
 Cache miss brought by ``HPM`` itself ignored, array update by col has **8 times cache miss(16405) as the array update by row has(2068)**.
