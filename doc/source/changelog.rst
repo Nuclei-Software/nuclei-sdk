@@ -67,6 +67,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Fix issue where ``tx_thread_run_count`` was not incremented during task switches and initial task creation in the ThreadX kernel.
   - Add ECLICv2 hardware context auto-save support for all RTOS including FreeRTOS, RT-Thread, ThreadX and UCOSII when ``ECLIC_HWCTX=1`` and ``XLCFG_ECLIC=2``
   - Fix FreeRTOS task switch ``xPortTaskSwitch`` function, interrupt should be disabled during task switch
+  - Fix FreeRTOS timer setup ``vPortSetupTimerInterrupt`` call location in ``xPortStartScheduler`` function to ensure proper initialization order
 
 * Build System
 
@@ -90,6 +91,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add ``__CPU_PA_SIZE`` macro to identify the Physical Address size (PASIZE).
   - Add ECLICv2 support with hardware context auto-save feature in evalsoc, including conditional compilation guards and ECLIC version definitions
   - Add ``XLCFG_ECLIC=2`` support in evalsoc to enable ECLICv2 configuration, see :ref:`design_soc_evalsoc_eclicv2`
+  - Add ``nuclei_eclic`` configuration option in ``npk.yml`` to select ECLIC version (v1/v2) with conditional compilation flags for ECLICv2 features
 
 * Documentation
 
