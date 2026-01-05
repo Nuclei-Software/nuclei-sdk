@@ -20,6 +20,8 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Enable __LD/__SD macro when Zilsd extension present for rv32 in ``core_feature_base.h``
   - Add comments for updating ECLIC threshold MTH setting recommendations in ``core_feature_eclic.h``
   - Add ECLICv2 related CSR and bit macros in ``riscv_encoding.h`` to support ECLICv2 hardware context auto-save feature
+  - Add ECLICv2 shadow register level APIs ``ECLIC_SetShadowLevel`` and ``ECLIC_GetShadowLevel`` in ``core_feature_eclic.h``
+  - Add ECLICv2 s-mode shadow register level APIs ``ECLIC_SetShadowLevel_S`` and ``ECLIC_GetShadowLevel_S`` for TEE in ``core_feature_eclic.h``
   - Fix **HDBG** bit position in SysTimer **MTIMECTL** from 4 to 3 in ``core_feature_timer.h``
   - Add **MTIME_SRC** bit position and update SRW control handling in ``core_feature_timer.h``
   - Add new field mapping of ``CSR_MTLBCFGINFO_Type`` CSR structure in ``core_feature_base.h``

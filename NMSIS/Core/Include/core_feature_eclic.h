@@ -262,6 +262,10 @@ typedef enum IRQn {
     #define ECLIC_GetLevelIRQ             __ECLIC_GetLevelIRQ
     #define ECLIC_SetPriorityIRQ          __ECLIC_SetPriorityIRQ
     #define ECLIC_GetPriorityIRQ          __ECLIC_GetPriorityIRQ
+#if __ECLIC_VER == 2
+    #define ECLIC_SetShadowLevel          __ECLIC_SetShadowLevel
+    #define ECLIC_GetShadowLevel          __ECLIC_GetShadowLevel
+#endif
 
     /* For TEE */
 #if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
@@ -281,6 +285,10 @@ typedef enum IRQn {
     #define ECLIC_EnableIRQ_S             __ECLIC_EnableIRQ_S
     #define ECLIC_GetEnableIRQ_S          __ECLIC_GetEnableIRQ_S
     #define ECLIC_DisableIRQ_S            __ECLIC_DisableIRQ_S
+#if __ECLIC_VER == 2
+    #define ECLIC_SetShadowLevel_S        __ECLIC_SetShadowLevel_S
+    #define ECLIC_GetShadowLevel_S        __ECLIC_GetShadowLevel_S
+#endif
 
 #endif
 #endif /* NMSIS_ECLIC_VIRTUAL */
@@ -753,6 +761,128 @@ __STATIC_INLINE uint8_t __ECLIC_GetPriorityIRQ(IRQn_Type IRQn)
     }
 }
 
+#if __ECLIC_VER == 2
+/**
+ * \brief  Set Shadow Register Level for a specific shadow register
+ * \details
+ * This function sets the interrupt level for a specific shadow register \em idx.
+ * It configures CSR_MSHADGPRLVL0 and CSR_MSHADGPRLVL1 registers.
+ * \param [in]      idx   Shadow register index (0-7)
+ * \param [in]      level Interrupt level to set for the shadow register
+ * \remarks
+ * - API only available for ECLIC v2
+ * - For RV64, all 8 shadow registers are configured in CSR_MSHADGPRLVL0
+ * - For RV32, shadow registers 0-3 are in lower 32 bits of CSR_MSHADGPRLVL0,
+ *   and shadow registers 4-7 are in CSR_MSHADGPRLVL1
+ * \sa
+ * - \ref ECLIC_GetShadowLevel
+ */
+__STATIC_INLINE void __ECLIC_SetShadowLevel(unsigned long idx, uint8_t level)
+{
+    /* Check if idx is valid (0-7) */
+    if (idx > 7) {
+        return;
+    }
+
+    uint8_t nlbits = (uint8_t)__ECLIC_GetCfgNlbits();
+    /* Limit the level value to the available number of bits */
+    uint8_t max_level = (1U << nlbits) - 1;
+    if (level > max_level) {
+        level = max_level;
+    }
+
+    /* Position the level value in the upper nlbits of the 8-bit field */
+    uint8_t level_shifted = (uint8_t)(level << (8 - nlbits));
+
+#if __RISCV_XLEN == 64
+    /* For RV64, all 8 shadow registers are in CSR_MSHADGPRLVL0 */
+    /* Calculate the bit position for the 8-bit field of the specified index */
+    uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
+    /* Create mask to clear the 8-bit field for the specified index */
+    uint64_t mask = (uint64_t)0xFFUL << bit_pos;
+    /* Read, modify, and write the CSR register */
+    uint64_t current_val = __RV_CSR_READ(CSR_MSHADGPRLVL0);
+    current_val = (current_val & ~mask) | (((uint64_t)level_shifted) << bit_pos);
+    __RV_CSR_WRITE(CSR_MSHADGPRLVL0, current_val);
+#else
+    /* For RV32, calculate bit position and select appropriate register */
+    if (idx < 4) {
+        /* Shadow registers 0-3 are in CSR_MSHADGPRLVL0 */
+        uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
+        uint32_t mask = 0xFFUL << bit_pos;
+        uint32_t current_val = __RV_CSR_READ(CSR_MSHADGPRLVL0);
+        current_val = (current_val & ~mask) | (((uint32_t)level_shifted) << bit_pos);
+        __RV_CSR_WRITE(CSR_MSHADGPRLVL0, current_val);
+    } else {
+        /* Shadow registers 4-7 are in CSR_MSHADGPRLVL1 */
+        uint32_t bit_pos = (idx - 4) << 3;  /* (idx - 4) * 8 using bit shift */
+        uint32_t mask = 0xFFUL << bit_pos;
+        uint32_t current_val = __RV_CSR_READ(CSR_MSHADGPRLVL1);
+        current_val = (current_val & ~mask) | (((uint32_t)level_shifted) << bit_pos);
+        __RV_CSR_WRITE(CSR_MSHADGPRLVL1, current_val);
+    }
+#endif
+}
+
+/**
+ * \brief  Get Shadow Register Level for a specific shadow register
+ * \details
+ * This function gets the interrupt level for a specific shadow register \em idx.
+ * It reads CSR_MSHADGPRLVL0 and CSR_MSHADGPRLVL1 registers.
+ * \param [in]      idx   Shadow register index (0-7)
+ * \return              Interrupt level of the shadow register
+ * \remarks
+ * - API only available for ECLIC v2
+ * - For RV64, all 8 shadow registers are configured in CSR_MSHADGPRLVL0
+ * - For RV32, shadow registers 0-3 are in lower 32 bits of CSR_MSHADGPRLVL0,
+ *   and shadow registers 4-7 are in CSR_MSHADGPRLVL1
+ * \sa
+ * - \ref ECLIC_SetShadowLevel
+ */
+__STATIC_INLINE uint8_t __ECLIC_GetShadowLevel(unsigned long idx)
+{
+    /* Check if idx is valid (0-7) */
+    if (idx > 7) {
+        return 0;
+    }
+
+    uint8_t nlbits = (uint8_t)__ECLIC_GetCfgNlbits();
+
+#if __RISCV_XLEN == 64
+    /* For RV64, all 8 shadow registers are in CSR_MSHADGPRLVL0 */
+    /* Calculate the bit position for the 8-bit field of the specified index */
+    uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
+    /* Read the CSR register and extract the 8-bit field */
+    uint64_t current_val = __RV_CSR_READ(CSR_MSHADGPRLVL0);
+    uint8_t extracted_val = (uint8_t)((current_val >> bit_pos) & 0xFF);
+    /* Extract the level from the upper nlbits of the 8-bit field */
+    uint8_t level = (extracted_val >> (8 - nlbits));
+    return level;
+#else
+    /* For RV32, calculate bit position and select appropriate register */
+    if (idx < 4) {
+        /* Shadow registers 0-3 are in CSR_MSHADGPRLVL0 */
+        uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
+        /* Read the CSR register and extract the 8-bit field */
+        uint32_t current_val = __RV_CSR_READ(CSR_MSHADGPRLVL0);
+        uint8_t extracted_val = (uint8_t)((current_val >> bit_pos) & 0xFF);
+        /* Extract the level from the upper nlbits of the 8-bit field */
+        uint8_t level = (extracted_val >> (8 - nlbits));
+        return level;
+    } else {
+        /* Shadow registers 4-7 are in CSR_MSHADGPRLVL1 */
+        uint32_t bit_pos = (idx - 4) << 3;  /* (idx - 4) * 8 using bit shift */
+        /* Read the CSR register and extract the 8-bit field */
+        uint32_t current_val = __RV_CSR_READ(CSR_MSHADGPRLVL1);
+        uint8_t extracted_val = (uint8_t)((current_val >> bit_pos) & 0xFF);
+        /* Extract the level from the upper nlbits of the 8-bit field */
+        uint8_t level = (extracted_val >> (8 - nlbits));
+        return level;
+    }
+#endif
+}
+#endif
+
 /**
  * \brief  Set Interrupt Vector of a specific interrupt
  * \details
@@ -1221,6 +1351,127 @@ __STATIC_FORCEINLINE rv_csr_t __ECLIC_GetVector_S(IRQn_Type IRQn)
 #endif
 }
 
+#if __ECLIC_VER == 2
+/**
+ * \brief  Set Shadow Register Level for a specific shadow register in supervisor mode
+ * \details
+ * This function sets the interrupt level for a specific shadow register \em idx in supervisor mode.
+ * It configures CSR_SSHADGPRLVL0 and CSR_SSHADGPRLVL1 registers.
+ * \param [in]      idx   Shadow register index (0-7)
+ * \param [in]      level Interrupt level to set for the shadow register
+ * \remarks
+ * - API only available for ECLIC v2
+ * - For RV64, all 8 shadow registers are configured in CSR_SSHADGPRLVL0
+ * - For RV32, shadow registers 0-3 are in lower 32 bits of CSR_SSHADGPRLVL0,
+ *   and shadow registers 4-7 are in CSR_SSHADGPRLVL1
+ * \sa
+ * - \ref ECLIC_GetShadowLevel_S
+ */
+__STATIC_INLINE void __ECLIC_SetShadowLevel_S(unsigned long idx, uint8_t level)
+{
+    /* Check if idx is valid (0-7) */
+    if (idx > 7) {
+        return;
+    }
+
+    uint8_t nlbits = (uint8_t)__ECLIC_GetCfgNlbits();
+    /* Limit the level value to the available number of bits */
+    uint8_t max_level = (1U << nlbits) - 1;
+    if (level > max_level) {
+        level = max_level;
+    }
+
+    /* Position the level value in the upper nlbits of the 8-bit field */
+    uint8_t level_shifted = (uint8_t)(level << (8 - nlbits));
+
+#if __RISCV_XLEN == 64
+    /* For RV64, all 8 shadow registers are in CSR_SSHADGPRLVL0 */
+    /* Calculate the bit position for the 8-bit field of the specified index */
+    uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
+    /* Create mask to clear the 8-bit field for the specified index */
+    uint64_t mask = (uint64_t)0xFFUL << bit_pos;
+    /* Read, modify, and write the CSR register */
+    uint64_t current_val = __RV_CSR_READ(CSR_SSHADGPRLVL0);
+    current_val = (current_val & ~mask) | (((uint64_t)level_shifted) << bit_pos);
+    __RV_CSR_WRITE(CSR_SSHADGPRLVL0, current_val);
+#else
+    /* For RV32, calculate bit position and select appropriate register */
+    if (idx < 4) {
+        /* Shadow registers 0-3 are in CSR_SSHADGPRLVL0 */
+        uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
+        uint32_t mask = 0xFFUL << bit_pos;
+        uint32_t current_val = __RV_CSR_READ(CSR_SSHADGPRLVL0);
+        current_val = (current_val & ~mask) | (((uint32_t)level_shifted) << bit_pos);
+        __RV_CSR_WRITE(CSR_SSHADGPRLVL0, current_val);
+    } else {
+        /* Shadow registers 4-7 are in CSR_SSHADGPRLVL1 */
+        uint32_t bit_pos = (idx - 4) << 3;  /* (idx - 4) * 8 using bit shift */
+        uint32_t mask = 0xFFUL << bit_pos;
+        uint32_t current_val = __RV_CSR_READ(CSR_SSHADGPRLVL1);
+        current_val = (current_val & ~mask) | (((uint32_t)level_shifted) << bit_pos);
+        __RV_CSR_WRITE(CSR_SSHADGPRLVL1, current_val);
+    }
+#endif
+}
+
+/**
+ * \brief  Get Shadow Register Level for a specific shadow register in supervisor mode
+ * \details
+ * This function gets the interrupt level for a specific shadow register \em idx in supervisor mode.
+ * It reads CSR_SSHADGPRLVL0 and CSR_SSHADGPRLVL1 registers.
+ * \param [in]      idx   Shadow register index (0-7)
+ * \return              Interrupt level of the shadow register
+ * \remarks
+ * - API only available for ECLIC v2
+ * - For RV64, all 8 shadow registers are configured in CSR_SSHADGPRLVL0
+ * - For RV32, shadow registers 0-3 are in lower 32 bits of CSR_SSHADGPRLVL0,
+ *   and shadow registers 4-7 are in CSR_SSHADGPRLVL1
+ * \sa
+ * - \ref ECLIC_SetShadowLevel_S
+ */
+__STATIC_INLINE uint8_t __ECLIC_GetShadowLevel_S(unsigned long idx)
+{
+    /* Check if idx is valid (0-7) */
+    if (idx > 7) {
+        return 0;
+    }
+
+    uint8_t nlbits = (uint8_t)__ECLIC_GetCfgNlbits();
+
+#if __RISCV_XLEN == 64
+    /* For RV64, all 8 shadow registers are in CSR_SSHADGPRLVL0 */
+    /* Calculate the bit position for the 8-bit field of the specified index */
+    uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
+    /* Read the CSR register and extract the 8-bit field */
+    uint64_t current_val = __RV_CSR_READ(CSR_SSHADGPRLVL0);
+    uint8_t extracted_val = (uint8_t)((current_val >> bit_pos) & 0xFF);
+    /* Extract the level from the upper nlbits of the 8-bit field */
+    uint8_t level = (extracted_val >> (8 - nlbits));
+    return level;
+#else
+    /* For RV32, calculate bit position and select appropriate register */
+    if (idx < 4) {
+        /* Shadow registers 0-3 are in CSR_SSHADGPRLVL0 */
+        uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
+        /* Read the CSR register and extract the 8-bit field */
+        uint32_t current_val = __RV_CSR_READ(CSR_SSHADGPRLVL0);
+        uint8_t extracted_val = (uint8_t)((current_val >> bit_pos) & 0xFF);
+        /* Extract the level from the upper nlbits of the 8-bit field */
+        uint8_t level = (extracted_val >> (8 - nlbits));
+        return level;
+    } else {
+        /* Shadow registers 4-7 are in CSR_SSHADGPRLVL1 */
+        uint32_t bit_pos = (idx - 4) << 3;  /* (idx - 4) * 8 using bit shift */
+        /* Read the CSR register and extract the 8-bit field */
+        uint32_t current_val = __RV_CSR_READ(CSR_SSHADGPRLVL1);
+        uint8_t extracted_val = (uint8_t)((current_val >> bit_pos) & 0xFF);
+        /* Extract the level from the upper nlbits of the 8-bit field */
+        uint8_t level = (extracted_val >> (8 - nlbits));
+        return level;
+    }
+#endif
+}
+#endif
 #endif /* defined(__TEE_PRESENT) && (__TEE_PRESENT == 1) */
 
 /**
