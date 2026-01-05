@@ -64,6 +64,10 @@
         "application/baremetal/demo_smpcc": {
             "run": false,
             "build": false
+        },
+        "application/baremetal/demo_ecc": {
+            "run": false,
+            "build": false
         }
     }
 }
