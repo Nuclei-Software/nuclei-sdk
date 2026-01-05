@@ -265,12 +265,40 @@ typedef union
         __IOM uint32_t inj_data:1;              /*!< bit:     0 ECC error injection to data ram */
         __IOM uint32_t inj_tag:1;               /*!< bit:     1 ECC error injection to tag ram */
         __IOM uint32_t inj_clm:1;               /*!< bit:     2 ECC error injection to clm ram */
-        __IOM uint32_t inj_mode:1;              /*!< bit:     3 ECC error injection mode: 0-every access, 1-one shot */
+        __IOM uint32_t inj_mode:1;              /*!< bit:     3 ECC error injection mode: 0-direct write mode, 1-xor write mode */
         __IM uint32_t _reserved0:20;            /*!< bit:     4..23 reserved */
-        __IOM uint32_t int_ecc_code:8;          /*!< bit:     24..31 ECC code for injection */
+        /** \brief 24..32 ECC code for injection 
+         * \details Write to this bit field may use `sb` instruction (write only one byte),
+         * which is not allowed for SMPCC registers. So this bit field is read-only here,
+         * but actually it can be written. To write this bit field, you should write the
+         * whole 32-bit register */
+        __IM uint32_t inj_ecc_code:8;
     } b;                                        /*!< Structure used for bit  access */
     uint32_t w;                                 /*!< Type      used for word access */
 } CC_ERR_INJ_Type;
+
+#define SMPCC_ERR_INJ_INJDATA_Pos             0U                                          /*!< SMPCC CC_ERR_INJ INJDATA Position */
+#define SMPCC_ERR_INJ_INJDATA_Msk             (0x1UL << SMPCC_ERR_INJ_INJDATA_Pos)        /*!< SMPCC CC_ERR_INJ INJDATA Mask */
+#define SMPCC_ERR_INJ_INJDATA_ENABLE          1U                                          /*!< SMPCC CC_ERR_INJ INJDATA Enable */
+#define SMPCC_ERR_INJ_INJDATA_DISABLE         0U                                          /*!< SMPCC CC_ERR_INJ INJDATA Disable */
+
+#define SMPCC_ERR_INJ_INJTAG_Pos              1U                                          /*!< SMPCC CC_ERR_INJ INJTAG Position */
+#define SMPCC_ERR_INJ_INJTAG_Msk              (0x1UL << SMPCC_ERR_INJ_INJTAG_Pos)         /*!< SMPCC CC_ERR_INJ INJTAG Mask */
+#define SMPCC_ERR_INJ_INJTAG_ENABLE           1U                                          /*!< SMPCC CC_ERR_INJ INJTAG Enable */
+#define SMPCC_ERR_INJ_INJTAG_DISABLE          0U                                          /*!< SMPCC CC_ERR_INJ INJTAG Disable */
+
+#define SMPCC_ERR_INJ_INJCLM_Pos              2U                                          /*!< SMPCC CC_ERR_INJ INJCLM Position */
+#define SMPCC_ERR_INJ_INJCLM_Msk              (0x1UL << SMPCC_ERR_INJ_INJCLM_Pos)         /*!< SMPCC CC_ERR_INJ INJCLM Mask */
+#define SMPCC_ERR_INJ_INJCLM_ENABLE           1U                                          /*!< SMPCC CC_ERR_INJ INJCLM Enable */
+#define SMPCC_ERR_INJ_INJCLM_DISABLE          0U                                          /*!< SMPCC CC_ERR_INJ INJCLM Disable */
+
+#define SMPCC_ERR_INJ_INJMODE_Pos             3U                                          /*!< SMPCC CC_ERR_INJ INJMODE Position */
+#define SMPCC_ERR_INJ_INJMODE_Msk             (0x1UL << SMPCC_ERR_INJ_INJMODE_Pos)        /*!< SMPCC CC_ERR_INJ INJMODE Mask */
+#define SMPCC_ERR_INJ_INJMODE_DIRECT          0U                                          /*!< SMPCC CC_ERR_INJ INJMODE Direct write mode */
+#define SMPCC_ERR_INJ_INJMODE_XOR             1U                                          /*!< SMPCC CC_ERR_INJ INJMODE XOR write mode */
+
+#define SMPCC_ERR_INJ_INJECCCODE_Pos          24U                                         /*!< SMPCC CC_ERR_INJ INJECCCODE Position */
+#define SMPCC_ERR_INJ_INJECCCODE_Msk          (0xFFUL << SMPCC_ERR_INJ_INJECCCODE_Pos)    /*!< SMPCC CC_ERR_INJ INJECCCODE Mask */
 
 /**
  * \brief  Union type to access CC_RECV_CNT register.
@@ -651,6 +679,16 @@ typedef struct {
 #define SMPCC_BASE          __SMPCC_BASEADDR             /*!< SMPCC Base Address */
 #define SMPCC               ((SMPCC_Type *)SMPCC_BASE)   /*!< SMPCC configuration struct */
 
+/** @} */ /* end of group NMSIS_Core_SMPCC_Registers */
+
+/**
+ * \defgroup NMSIS_Core_SMPCC_Functions SMPCC Functions
+ * \ingroup  NMSIS_Core
+ * \brief SMPCC related functions
+ *
+ *   @{
+ */
+
 /**
  * \brief  Get the SMP version number
  * \details
@@ -972,7 +1010,7 @@ __STATIC_FORCEINLINE uint32_t SMPCC_GetCCacheControl(void)
 /**
  * \brief  Enable Cluster Cache ECC
  * \details
- * This function enables ECC (Error Correction Code) functionality for the cluster cache.
+ * This function enables ECC functionality for the cluster cache.
  * \sa
  * - \ref SMPCC_DisableCCacheECC
 */
@@ -984,7 +1022,7 @@ __STATIC_FORCEINLINE void SMPCC_EnableCCacheECC(void)
 /**
  * \brief  Disable Cluster Cache ECC
  * \details
- * This function disables ECC (Error Correction Code) functionality for the cluster cache.
+ * This function disables ECC functionality for the cluster cache.
  * \sa
  * - \ref SMPCC_EnableCCacheECC
 */
@@ -998,9 +1036,9 @@ __STATIC_FORCEINLINE void SMPCC_DisableCCacheECC(void)
  * \details
  * This function enables ECC exception handling for the cluster cache.
  * \sa
- * - \ref SMPCC_DisableCCacheECCExcept
+ * - \ref SMPCC_DisableCCacheECCExcp
 */
-__STATIC_FORCEINLINE void SMPCC_EnableCCacheECCExcept(void)
+__STATIC_FORCEINLINE void SMPCC_EnableCCacheECCExcp(void)
 {
      SMPCC->CC_CTRL.b.ecc_excp_en = SMPCC_CTRL_CC_ECC_EXCP_EN_ENABLE;
 }
@@ -1010,9 +1048,9 @@ __STATIC_FORCEINLINE void SMPCC_EnableCCacheECCExcept(void)
  * \details
  * This function disables ECC exception handling for the cluster cache.
  * \sa
- * - \ref SMPCC_EnableCCacheECCExcept
+ * - \ref SMPCC_EnableCCacheECCExcp
 */
-__STATIC_FORCEINLINE void SMPCC_DisableCCacheECCExcept(void)
+__STATIC_FORCEINLINE void SMPCC_DisableCCacheECCExcp(void)
 {
      SMPCC->CC_CTRL.b.ecc_excp_en = SMPCC_CTRL_CC_ECC_EXCP_EN_DISABLE;
 }
@@ -1226,9 +1264,9 @@ __STATIC_FORCEINLINE void SMPCC_EnableCLMECCCheck(void)
  * \details
  * This function disables ECC check functionality for the Cluster Local Memory.
  * \sa
- * - \ref SMPCC_EnableCLMCCCheck
+ * - \ref SMPCC_EnableCLMECCCheck
 */
-__STATIC_FORCEINLINE void SMPCC_DisableCLMCCCheck(void)
+__STATIC_FORCEINLINE void SMPCC_DisableCLMECCCheck(void)
 {
      SMPCC->CC_CTRL.b.clm_ecc_chk_en = SMPCC_CTRL_CLM_ECC_CHK_EN_DISABLE;
 }
@@ -1238,9 +1276,9 @@ __STATIC_FORCEINLINE void SMPCC_DisableCLMCCCheck(void)
  * \details
  * This function enables ECC exception handling for the Cluster Local Memory.
  * \sa
- * - \ref SMPCC_DisableCLMECCExcept
+ * - \ref SMPCC_DisableCLMECCExcp
 */
-__STATIC_FORCEINLINE void SMPCC_EnableCLMECCExcept(void)
+__STATIC_FORCEINLINE void SMPCC_EnableCLMECCExcp(void)
 {
      SMPCC->CC_CTRL.b.clm_excp_en = SMPCC_CTRL_CLM_EXCEP_EN_ENABLE;
 }
@@ -1250,9 +1288,9 @@ __STATIC_FORCEINLINE void SMPCC_EnableCLMECCExcept(void)
  * \details
  * This function disables ECC exception handling for the Cluster Local Memory.
  * \sa
- * - \ref SMPCC_EnableCLMECCExcept
+ * - \ref SMPCC_EnableCLMECCExcp
 */
-__STATIC_FORCEINLINE void SMPCC_DisableCLMECCExcept(void)
+__STATIC_FORCEINLINE void SMPCC_DisableCLMECCExcp(void)
 {
      SMPCC->CC_CTRL.b.clm_excp_en = SMPCC_CTRL_CLM_EXCEP_EN_DISABLE;
 }
@@ -1771,7 +1809,111 @@ __STATIC_FORCEINLINE void SMPCC_MaskClientCCacheWays(uint8_t client_id, uint32_t
     SMPCC->CLIENT_WAY_MASK[client_id].w = way_msk;
 }
 
-#endif
+/**
+ * \brief   Check if ECC error injection mode is XOR mode
+ * \details This function checks which ECC error injection mode is supported.
+ *          Returns 1 if XOR mode is supported, 0 if direct write mode is supported.
+ * \return  1 if XOR mode is supported, 0 if direct write mode is supported
+ */
+__STATIC_FORCEINLINE int32_t SMPCC_IsXorErrorInjectMode(void)
+{
+    return SMPCC->CC_ERR_INJ.b.inj_mode;
+}
+
+/**
+ * \brief   Set ECC code for error injection
+ * \details This function sets the ECC code to be used for error injection.
+ * \param   ecc_code  ECC code to be set for error injection
+ * \return  None
+ */
+__STATIC_FORCEINLINE void SMPCC_SetECCCode(uint32_t ecc_code)
+{
+    SMPCC->CC_ERR_INJ.w = (SMPCC->CC_ERR_INJ.w & ~SMPCC_ERR_INJ_INJECCCODE_Msk) |
+                          _VAL2FLD(SMPCC_ERR_INJ_INJECCCODE, ecc_code);
+}
+
+#if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
+/**
+ * \brief   Inject ECC error to cluster cache tag RAM
+ * \details This function injects an ECC error into the cluster cache tag RAM at the specified address.
+ * \param   ecc_code  ECC code to be injected
+ * \param   addr      Address where the error should be injected
+ * \return  None
+ */
+__STATIC_FORCEINLINE void SMPCC_CCacheTramErrInject(uint32_t ecc_code, void *addr)
+{
+    SMPCC_SetECCCode(ecc_code);
+    SMPCC_DisableCCacheECCCheck();
+    MInvalICacheLine((unsigned long)addr);
+    MFlushInvalDCacheCCacheLine((unsigned long)addr);
+    __RWMB();
+    SMPCC->CC_ERR_INJ.b.inj_tag = SMPCC_ERR_INJ_INJTAG_ENABLE;
+    MLockCCacheLine((unsigned long)addr);
+    SMPCC->CC_ERR_INJ.b.inj_tag = SMPCC_ERR_INJ_INJTAG_DISABLE;
+    __RWMB();
+    SMPCC_EnableCCacheECCCheck();
+}
+
+/**
+ * \brief   Inject ECC error to cluster cache data RAM
+ * \details This function injects an ECC error into the cluster cache data RAM at the specified address.
+ * \param   ecc_code  ECC code to be injected
+ * \param   addr      Address where the error should be injected
+ * \return  None
+ */
+__STATIC_FORCEINLINE void SMPCC_CCacheDramErrInject(uint32_t ecc_code, void *addr)
+{
+    SMPCC_SetECCCode(ecc_code);
+    SMPCC_DisableCCacheECCCheck();
+    MInvalICacheLine((unsigned long)addr);
+    MFlushInvalDCacheCCacheLine((unsigned long)addr);
+    __RWMB();
+    SMPCC->CC_ERR_INJ.b.inj_data = SMPCC_ERR_INJ_INJDATA_ENABLE;
+    MLockCCacheLine((unsigned long)addr);
+    SMPCC->CC_ERR_INJ.b.inj_data = SMPCC_ERR_INJ_INJDATA_DISABLE;
+    __RWMB();
+    SMPCC_EnableCCacheECCCheck();
+}
+
+/**
+ * \brief   Inject ECC error to CLM (Cluster Local Memory)
+ * \details This function injects an ECC error into the CLM at the specified address.
+ * Only the ecc code can be injected, the data will keep as it is.
+ * \param   ecc_code  ECC code to be injected
+ * \param   addr      Address where the error should be injected
+ * \return  None
+ */
+__STATIC_FORCEINLINE void SMPCC_CLMErrInject(uint32_t ecc_code, void *addr)
+{
+    SMPCC_SetECCCode(ecc_code);
+    SMPCC_DisableCLMECCCheck();
+    register uint32_t val = __LW(addr);
+    __RWMB();
+    SMPCC->CC_ERR_INJ.b.inj_clm = SMPCC_ERR_INJ_INJCLM_ENABLE;
+    __SW(addr, val);
+    SMPCC->CC_ERR_INJ.b.inj_clm = SMPCC_ERR_INJ_INJCLM_DISABLE;
+    __RWMB();
+    SMPCC_EnableCLMECCCheck();
+}
+
+/**
+ * \brief   Restore cluster cache after error injection
+ * \details This function restores the cluster cache after an error injection operation.
+ * \param   addr      Address to be restored
+ * \return  None
+ */
+__STATIC_FORCEINLINE void SMPCC_CCacheErrRestore(void *addr)
+{
+    SMPCC_DisableCCacheECCCheck();
+    MInvalICacheLine((unsigned long)addr);
+    MFlushInvalDCacheCCacheLine((unsigned long)addr);
+    MLockCCacheLine((unsigned long)addr);
+    SMPCC_EnableCCacheECCCheck();
+}
+#endif /* #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1) */
+
+/** @} */ /* End of Doxygen Group NMSIS_Core_SMPCC_Functions */
+#endif /* #if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) */
 
 #ifdef __cplusplus
 }
