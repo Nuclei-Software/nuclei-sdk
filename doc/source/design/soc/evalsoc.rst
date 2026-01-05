@@ -149,5 +149,58 @@ To enable ECLICv2 support with hardware context auto-save:
     make SOC=evalsoc CORE=n300 XLCFG_ECLIC=2 ECLIC_HWCTX=1 clean
     make SOC=evalsoc CORE=n300 XLCFG_ECLIC=2 ECLIC_HWCTX=1 all
 
+.. _design_soc_evalsoc_ecc:
+
+ECC Error Injection
+-------------------
+
+The ECC (Error Checking and Correction) mechanism supports:
+
+- Detection and correction of **single-bit errors**,
+- Raising an exception upon detection of a **double-bit error**,
+- **No guarantee** of correct behavior when **three or more bits** are corrupted.
+
+To verify ECC functionality, ECC error injection is used to simulate memory errors.
+This technique bypasses the hardware-generated ECC code and instead writes a deliberately
+corrupted ECC code into memory.
+
+Depending on the hardware implementation, **only one** of the following two injection methods is
+supported. This choice is **fixed in hardware** and **not configurable by software**.
+Therefore, before performing ECC error injection tests, you must determine which method your target
+hardware supports.
+
+**Supported Injection Modes:**
+
+1. **Direct Write Mode (Legacy)**
+
+   Manually compute the full ECC code, including intentional errors, and write the complete data+ECC word directly to memory.
+
+2. **XOR Mode (New)**
+
+   Provide an **ECC mask** instead of a full ECC code. The hardware automatically XORs this mask with the correct (golden) ECC code to flip the specified bits, thereby injecting errors.
+
+**Configuration:**
+
+To run applications with appropriate injection mode:
+
+- Use **Direct Write Mode** if: ``XLCFG_ECC=1`` is set, **or** ``cpufeature.h`` defines ``CFG_HAS_ECC`` but **does not define** ``CFG_ECC_CODE_XOR``.
+- Use **XOR Mode** if: ``XLCFG_ECC=2`` is set, **or** ``cpufeature.h`` defines both ``CFG_HAS_ECC`` and ``CFG_ECC_CODE_XOR``.
+
+**Example:**
+
+For more information, refer to the :ref:`design_app_demo_ecc` application.
+
+.. code-block:: shell
+
+    # change to application/baremetal/demo_ecc
+    cd application/baremetal/demo_ecc
+    # Example 1: Test ECC error injection on ILM/DLM using Direct Write Mode
+    # (e.g., N300 core with legacy ECC support)
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n300 DOWNLOAD=ilm XLCFG_ECC=1 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=n300 DOWNLOAD=ilm XLCFG_ECC=1 all
+    # Example 2: Test ECC error injection on cache using XOR Mode
+    # (e.g., UX900 core with modern ECC support)
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=ddr CCM_EN=1 XLCFG_ECC=2 clean
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=ddr CCM_EN=1 XLCFG_ECC=2 all
 
 .. _Nuclei: https://nucleisys.com/

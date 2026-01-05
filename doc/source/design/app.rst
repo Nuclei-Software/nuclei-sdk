@@ -2636,6 +2636,85 @@ has been monitored by PMUv2, the output is as below:
     HPM3:0xf00000a3, L2_read_count, 8215
     End of SMPCC demo!
 
+.. _design_app_demo_ecc:
+
+demo_ecc
+~~~~~~~~
+
+This `demo_ecc application`_ demonstrates the ECC functionality of Nuclei RISC-V CPUs.
+The ECC functionality supports detection and correction of single-bit errors, and raises an exception when a double-bit
+error is detected. When error bits are 3 or more, the result is not guaranteed.
+
+This demo tests different memory types based on the ``DOWNLOAD`` parameter in the ``make`` command. When ``DOWNLOAD=ilm``,
+the demo tests ECC error injection on local memory; when ``DOWNLOAD=ddr`` or ``DOWNLOAD=sram``, the demo tests
+ECC error injection on cache memory (L1 I/D Cache and L2 Cache if present).
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei ux900 Core RISC-V processor as example
+    # cd to the demo_ecc directory
+    cd application/baremetal/demo_ecc
+    # To inject ecc error into cache memory, you should test with DOWNLOAD=ddr or Download=sram
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=ddr CCM_EN=1 clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=ddr CCM_EN=1 upload
+    # If you want to test ecc error injection on local memory, you should test with DOWNLOAD=ilm
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 DOWNLOAD=ilm upload
+
+**Expected output as below:**
+
+Here is the result when ``DOWNLOAD=ddr``. (The result of ``DOWNLOAD=sram`` is similar)
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jan  8 2026, 15:56:56
+    Download Mode: DDR
+    CPU Frequency 50322800 Hz
+    CPU HartID: 0
+    ECC supported:
+        ICache ECC: yes
+        DCache ECC: yes
+           ILM ECC: yes
+           DLM ECC: yes
+        CCache ECC: yes
+    ECC single bit error has occured on ICache Data RAM!
+    ECC double bit error has occured on ICache Data RAM!
+    ECC single bit error has occured on ICache Tag RAM!
+    ECC double bit error has occured on ICache Tag RAM!
+    ECC single bit error has occured on DCache Data RAM!
+    ECC double bit error has occured on DCache Data RAM!
+    ECC single bit error has occured on DCache Tag RAM!
+    ECC double bit error has occured on DCache Tag RAM!
+    ECC single bit error has occured on CCache Data RAM!
+    ECC double bit error has occured on CCache Data RAM!
+    ECC single bit error has occured on CCache Tag RAM!
+    ECC double bit error has occured on CCache Tag RAM!
+    ECC demo passed.
+
+Here is the result when ``DOWNLOAD=ilm``.
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jan  8 2026, 15:56:49
+    Download Mode: ILM
+    CPU Frequency 50322800 Hz
+    CPU HartID: 0
+    ECC supported:
+        ICache ECC: yes
+        DCache ECC: yes
+           ILM ECC: yes
+           DLM ECC: yes
+        CCache ECC: yes
+    ECC single bit error has occured on ILM!
+    ECC double bit error has occured on ILM!
+    ECC single bit error has occured on DLM!
+    ECC double bit error has occured on DLM!
+    ECC demo passed.
+
 FreeRTOS applications
 ---------------------
 
@@ -3216,4 +3295,5 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx smpdemo`` applic
 .. _demo_stack_check application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_stack_check
 .. _demo_pma application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pma
 .. _demo_smpcc application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smpcc
+.. _demo_ecc application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_ecc
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html
