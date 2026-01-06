@@ -40,6 +40,9 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Update ``CSR_MILMCTL_Type`` structure in ``core_feature_base.h`` with ``dis_lsu_ilm`` field
   - Update ``CSR_MECC_CTL_Type`` structure in ``core_feature_base.h`` with ``io_prot_chk_en`` field and 64-bit support
   - Add new CSR bit field definitions for ``MSUBM``/``SSUBM`` in ``riscv_encoding.h``
+  - Update ``CSR_MDLMCTL_Type`` structure in ``core_feature_base.h`` with ``dlm_va_en`` and ``dis_lsu_dlm`` field
+  - Add bit mask of ``CSR_MCACHE_CTL`` and ``CSR_MECC_CODE`` in ``riscv_encoding.h``
+  - Add ``core_feature_ecc.h`` and update ``core_feature_smpcc.h`` to support ECC related operations.
 
 * Application
 
@@ -61,6 +64,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Optimize benchmark cases and cpuinfo case for n100 cpu with eclic.
   - Add :ref:`design_app_demo_smpcc` to demonstrate SMP Cluster Cache feature on Nuclei RISC-V CPU.
   - Probe and show vlenb in ``cpuinfo`` application.
+  - Add :ref:`design_app_demo_ecc` to demonstrate ECC error injection feature on Nuclei RISC-V CPU.
 
 * OS
 
@@ -102,6 +106,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add ECLICv2 support with hardware context auto-save feature in evalsoc, including conditional compilation guards and ECLIC version definitions
   - Add ``XLCFG_ECLIC=2`` support in evalsoc to enable ECLICv2 configuration, see :ref:`design_soc_evalsoc_eclicv2`
   - Add ``nuclei_eclic`` configuration option in ``npk.yml`` to select ECLIC version (v1/v2) with conditional compilation flags for ECLICv2 features
+  - Add ``XLCFG_ECC`` support in evalsoc to support different ECC error injection mode, see :ref:`design_soc_evalsoc_ecc`
 
 * Documentation
 
@@ -109,7 +114,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Update ``rtos.rst`` to mention about recent bugfix for RTOS porting, and other RTOSes supported but not in Nuclei SDK
   - Update the expected output of ``cpuinfo`` in ``app.rst``
   - Update documentation about n100 with eclic is now supported in Nuclei SDK
-  - Add ``demo_smpcc`` application documentation in ``app.rst``
+  - Add ``demo_smpcc`` and ``demo_ecc`` application documentation in ``app.rst``
 
 * Tools
 
@@ -122,7 +127,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add more ci jobs to cover zfinx/zdinx/zcmt usage and optimize ci jobs without download apt/pip package since bumped sdkbuild to 2025.10
   - ``nsdk_runcpu.py`` cpu json configuration now can add ``appdirs_ignore`` key to specified cases to be ignored, mainly introduced for n100 cpu, since many cases could not run on n100
   - Add n100 cpu nsdk_cli configurations for qemu and fpga benchmark
-  - Add new ci configuration for ``demo_smpcc`` daily ci running
+  - Add new ci configuration for ``demo_smpcc`` and ``demo_ecc`` daily ci running
 
 V0.8.1
 ------
