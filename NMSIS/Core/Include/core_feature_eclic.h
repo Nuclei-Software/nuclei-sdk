@@ -70,9 +70,10 @@ typedef union
 typedef union {
     struct {
         __IM uint32_t numint:13;               /*!< bit:  0..12   number of maximum interrupt inputs supported */
-        __IM uint32_t version:8;               /*!< bit:  13..20  20:17 for architecture version,16:13 for implementation version */
+        __IM uint32_t version:8;               /*!< bit:  13..20  Hardware implementation version number. 1: version 1. 2: version 2, support hardware context saving and restoring. */
         __IM uint32_t intctlbits:4;            /*!< bit:  21..24  specifies how many hardware bits are actually implemented in the clicintctl registers */
-        __IM uint32_t _reserved0:7;            /*!< bit:  25..31  Reserved */
+        __IM uint32_t shd_num:4;               /*!< bit:  25..28  number of shadow register groups for single mode(M/S mode) */
+        __IM uint32_t _reserved0:3;            /*!< bit:  29..31  Reserved */
     } b;                                       /*!< Structure used for bit  access */
     __IM uint32_t w;                           /*!< Type      used for word access */
 } CLICINFO_Type;
@@ -126,8 +127,11 @@ typedef struct {
 #define CLIC_CLICINFO_VER_Pos                  13U                                      /*!< CLIC CLICINFO: VERSION Position */
 #define CLIC_CLICINFO_VER_Msk                  (0xFFUL << CLIC_CLICINFO_VER_Pos)        /*!< CLIC CLICINFO: VERSION Mask */
 
-#define CLIC_CLICINFO_NUM_Pos                  0U                                       /*!< CLIC CLICINFO: NUM Position */
-#define CLIC_CLICINFO_NUM_Msk                  (0x1FFFUL << CLIC_CLICINFO_NUM_Pos)      /*!< CLIC CLICINFO: NUM Mask */
+#define CLIC_CLICINFO_NUM_Pos                  0U                                       /*!< CLIC CLICINFO: NUM_INTERRUPT Position */
+#define CLIC_CLICINFO_NUM_Msk                  (0x1FFFUL << CLIC_CLICINFO_NUM_Pos)      /*!< CLIC CLICINFO: NUM_INTERRUPT Mask */
+
+#define CLIC_CLICINFO_SHD_NUM_Pos              25U                                      /*!< CLIC CLICINFO: SHD_NUM Position */
+#define CLIC_CLICINFO_SHD_NUM_Msk              (0xFUL << CLIC_CLICINFO_SHD_NUM_Pos)     /*!< CLIC CLICINFO: SHD_NUM Mask */
 
 #define CLIC_INTIP_IP_Pos                      0U                                       /*!< CLIC INTIP: IP Position */
 #define CLIC_INTIP_IP_Msk                      (0x1UL << CLIC_INTIP_IP_Pos)             /*!< CLIC INTIP: IP Mask */
@@ -244,6 +248,7 @@ typedef enum IRQn {
     #define ECLIC_GetInfoVer              __ECLIC_GetInfoVer
     #define ECLIC_GetInfoCtlbits          __ECLIC_GetInfoCtlbits
     #define ECLIC_GetInfoNum              __ECLIC_GetInfoNum
+    #define ECLIC_GetInfoShadowNum        __ECLIC_GetInfoShadowNum
     #define ECLIC_SetMth                  __ECLIC_SetMth
     #define ECLIC_GetMth                  __ECLIC_GetMth
     #define ECLIC_EnableIRQ               __ECLIC_EnableIRQ
@@ -263,6 +268,8 @@ typedef enum IRQn {
     #define ECLIC_SetPriorityIRQ          __ECLIC_SetPriorityIRQ
     #define ECLIC_GetPriorityIRQ          __ECLIC_GetPriorityIRQ
 #if __ECLIC_VER == 2
+    #define ECLIC_EnableShadow            __ECLIC_EnableShadow
+    #define ECLIC_DisableShadow           __ECLIC_DisableShadow
     #define ECLIC_SetShadowLevel          __ECLIC_SetShadowLevel
     #define ECLIC_GetShadowLevel          __ECLIC_GetShadowLevel
 #endif
@@ -286,6 +293,8 @@ typedef enum IRQn {
     #define ECLIC_GetEnableIRQ_S          __ECLIC_GetEnableIRQ_S
     #define ECLIC_DisableIRQ_S            __ECLIC_DisableIRQ_S
 #if __ECLIC_VER == 2
+    #define ECLIC_EnableShadow_S          __ECLIC_EnableShadow_S
+    #define ECLIC_DisableShadow_S         __ECLIC_DisableShadow_S
     #define ECLIC_SetShadowLevel_S        __ECLIC_SetShadowLevel_S
     #define ECLIC_GetShadowLevel_S        __ECLIC_GetShadowLevel_S
 #endif
@@ -388,6 +397,25 @@ __STATIC_FORCEINLINE uint32_t __ECLIC_GetInfoCtlbits(void)
 __STATIC_FORCEINLINE uint32_t __ECLIC_GetInfoNum(void)
 {
     return ((uint32_t)((ECLIC->INFO & CLIC_CLICINFO_NUM_Msk) >> CLIC_CLICINFO_NUM_Pos));
+}
+
+/**
+ * \brief  Get number of shadow register groups
+ * \details
+ * This function gets the number of shadow register groups from the CLICINFO register.
+ * This includes both the first-come-first-served dedicated interrupt shadow registers
+ * and the shadow registers designed for different interrupt levels.
+ * This number represents the total count for M mode; if S Mode is present, the number is the same as M Mode.
+ * \return  number of shadow register groups from the CLICINFO register.
+ * \remarks
+ * - This function is only valid for ECLICv2
+ * - This function gets the number of shadow register groups from the CLICINFO register.
+ * \sa
+ * - \ref ECLIC_GetInfoNum
+ */
+__STATIC_FORCEINLINE uint32_t __ECLIC_GetInfoShadowNum(void)
+{
+    return ((uint32_t)((ECLIC->INFO & (CLIC_CLICINFO_SHD_NUM_Msk)) >> CLIC_CLICINFO_SHD_NUM_Pos));
 }
 
 /**
@@ -762,6 +790,38 @@ __STATIC_INLINE uint8_t __ECLIC_GetPriorityIRQ(IRQn_Type IRQn)
 }
 
 #if __ECLIC_VER == 2
+/**
+ * \brief  Enable ECLIC Shadow Register Function (Machine Mode)
+ * \details
+ * This function enables the shadow register function for ECLIC in Machine Mode.
+ * It sets the MECLIC_CTL_SHADOW_EN bit in the CSR_MECLIC_CTL CSR.
+ * This function is only valid for ECLIC version 2 and above.
+ * \remarks
+ * - API only available for ECLIC v2
+ * \sa
+ * - \ref __ECLIC_DisableShadow
+ */
+__STATIC_FORCEINLINE void __ECLIC_EnableShadow(void)
+{
+    __RV_CSR_SET(CSR_MECLIC_CTL, MECLIC_CTL_SHADOW_EN);
+}
+
+/**
+ * \brief  Disable ECLIC Shadow Register Function (Machine Mode)
+ * \details
+ * This function disables the shadow register function for ECLIC in Machine Mode.
+ * It clears the MECLIC_CTL_SHADOW_EN bit in the CSR_MECLIC_CTL CSR.
+ * This function is only valid for ECLIC version 2 and above.
+ * \remarks
+ * - API only available for ECLIC v2
+ * \sa
+ * - \ref __ECLIC_EnableShadow
+ */
+__STATIC_FORCEINLINE void __ECLIC_DisableShadow(void)
+{
+    __RV_CSR_CLEAR(CSR_MECLIC_CTL, MECLIC_CTL_SHADOW_EN);
+}
+
 /**
  * \brief  Set Shadow Register Level for a specific shadow register
  * \details
@@ -1352,6 +1412,38 @@ __STATIC_FORCEINLINE rv_csr_t __ECLIC_GetVector_S(IRQn_Type IRQn)
 }
 
 #if __ECLIC_VER == 2
+/**
+ * \brief  Enable ECLIC Shadow Register Function (Supervisor Mode)
+ * \details
+ * This function enables the shadow register function for ECLIC in Supervisor Mode.
+ * It sets the SECLIC_CTL_SHADOW_EN bit in the CSR_SECLIC_CTL CSR.
+ * This function is only valid for ECLIC version 2 and above in TEE environments.
+ * \remarks
+ * - API only available for ECLIC v2
+ * \sa
+ * - \ref __ECLIC_DisableShadow_S
+ */
+__STATIC_FORCEINLINE void __ECLIC_EnableShadow_S(void)
+{
+    __RV_CSR_SET(CSR_SECLIC_CTL, SECLIC_CTL_SHADOW_EN);
+}
+
+/**
+ * \brief  Disable ECLIC Shadow Register Function (Supervisor Mode)
+ * \details
+ * This function disables the shadow register function for ECLIC in Supervisor Mode.
+ * It clears the SECLIC_CTL_SHADOW_EN bit in the CSR_SECLIC_CTL CSR.
+ * This function is only valid for ECLIC version 2 and above in TEE environments.
+ * \remarks
+ * - API only available for ECLIC v2
+ * \sa
+ * - \ref __ECLIC_EnableShadow_S
+ */
+__STATIC_FORCEINLINE void __ECLIC_DisableShadow_S(void)
+{
+    __RV_CSR_CLEAR(CSR_SECLIC_CTL, SECLIC_CTL_SHADOW_EN);
+}
+
 /**
  * \brief  Set Shadow Register Level for a specific shadow register in supervisor mode
  * \details
