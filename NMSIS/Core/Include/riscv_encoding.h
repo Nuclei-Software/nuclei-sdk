@@ -252,8 +252,15 @@
 #define MDLM_CTL_DLM_ECC_EN         (1<<1)
 #define MDLM_CTL_DLM_EN             (1<<0)
 
+#define MSUBM_PGPRIDX               (0x1F<<15)
+#define MSUBM_GPRIDX                (0x1F<<10)
 #define MSUBM_PTYP                  (0x3<<8)
 #define MSUBM_TYP                   (0x3<<6)
+
+#define SSUBM_PGPRIDX               (0x1F<<15)
+#define SSUBM_GPRIDX                (0x1F<<10)
+#define SSUBM_PTYP                  (0x3<<8)
+#define SSUBM_TYP                   (0x3<<6)
 
 #define MDCAUSE_MDCAUSE             (0x7)
 

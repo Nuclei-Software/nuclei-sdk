@@ -222,10 +222,20 @@ typedef union {
  */
 typedef union {
     struct {
-        rv_csr_t _reserved0:6;                  /*!< bit: 0..5   Reserved */
-        rv_csr_t typ:2;                         /*!< bit: 6..7   current trap type */
-        rv_csr_t ptyp:2;                        /*!< bit: 8..9   previous trap type */
-        rv_csr_t _reserved1:__RISCV_XLEN-10;    /*!< bit: 10..XLEN-1 Reserved */
+        rv_csr_t _reserved0:6;                  /*!< bit: 0..5    Reserved 0 */
+        rv_csr_t typ:2;                         /*!< bit: 6..7    Current sub-mode:
+                                                       0: Normal Machine Mode;
+                                                       1: Interrupt Handling Mode;
+                                                       2: Exception Handing Mode;
+                                                       3: NMI Handing Mode. */
+        rv_csr_t ptyp:2;                        /*!< bit: 8..9    sub-mode before entering the trap:
+                                                       0: Normal Machine Mode;
+                                                       1: Interrupt Handling Mode;
+                                                       2: Exception Handing Mode;
+                                                       3: NMI Handing Mode. */
+        rv_csr_t gpridx:5;                      /*!< bit: 10..14  Current Register Group Select */
+        rv_csr_t pgpridx:5;                     /*!< bit: 15..19  Previous Register Group Select */
+        rv_csr_t _reserved1:__RISCV_XLEN-20;    /*!< bit: 20..XLEN-1 Reserved 0 */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MSUBM_Type;
@@ -252,7 +262,7 @@ typedef union {
         rv_csr_t bpu:1;                         /*!< bit: 3     dynamic prediction enable flag */
         rv_csr_t _reserved2:2;                  /*!< bit: 4..5  Reserved */
         rv_csr_t misalign:1;                    /*!< bit: 6     misaligned access support flag */
-        rv_csr_t zcmt_zcmp:1;                   /*!< bit: 7     Zc Ext uses the cfdsp of D Ext’s encoding or not */
+        rv_csr_t zcmt_zcmp:1;                   /*!< bit: 7     Zc Ext uses the cfdsp of D Ext's encoding or not */
         rv_csr_t core_buserr:1;                 /*!< bit: 8     core bus error exception or interrupt */
         rv_csr_t nmi_cause:1;                   /*!< bit: 9     mnvec control and nmi mcase exccode */
         rv_csr_t imreturn_en:1;                 /*!< bit: 10    IMRETURN mode of trace */
@@ -262,13 +272,33 @@ typedef union {
         rv_csr_t dbg_sec:1;                     /*!< bit: 14    debug access mode, removed in latest releases */
         rv_csr_t _reserved4:2;                  /*!< bit: 15..16 Reserved */
         rv_csr_t csr_excl_enable:1;             /*!< bit: 17    Exclusive instruction(lr,sc) on Non-cacheable/Device memory can send exclusive flag in memory bus */
-        rv_csr_t _reserved5:__RISCV_XLEN-18;    /*!< bit: 18..XLEN-1 Reserved */
+        rv_csr_t _reserved5:2;                  /*!< bit: 18..19 Reserved */
+        rv_csr_t lsu_allow_diff_en:1;           /*!< bit: 20    LSU access allows the next operation can outstanding transactions when the current transaction has not been completed */
+        rv_csr_t hw_auto_context:1;             /*!< bit: 21    Hardware auto context saving and restoring enable */
+        rv_csr_t _reserved6:__RISCV_XLEN-22;    /*!< bit: 22..XLEN-1 Reserved */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MMISCCTRL_Type;
 
 typedef CSR_MMISCCTRL_Type CSR_MMISCCTL_Type;
 typedef CSR_MMISCCTRL_Type CSR_MMISC_CTL_Type;
+
+/**
+ * \brief  Union type to access MMISC_CTL1 CSR register.
+ */
+typedef union {
+    struct {
+        rv_csr_t fp16mode:1;                    /*!< bit: 0     16 bit float precision mode */
+        rv_csr_t vlsu_ooo_4k_mode:1;            /*!< bit: 1     Control the size of address check region for vlsu ooo */
+        rv_csr_t vlsu_ooo_force_va_4k:1;        /*!< bit: 2     Control the size of virtual address check region for vlsu ooo */
+        rv_csr_t vlsu_ooo_en:1;                 /*!< bit: 3     Control the enable of vlsu ooo feature */
+        rv_csr_t vlsu_cof_en:1;                 /*!< bit: 4     Control the enable of vlsu check-only first feature */
+        rv_csr_t vlm_path_en:1;                 /*!< bit: 5     Control vlm dedicated path enable */
+        rv_csr_t rvv_v1_0_cmpt:1;               /*!< bit: 6     Control some vpu instruction behaviour is compatible with rvv1.0 */
+        rv_csr_t _reserved0:__RISCV_XLEN-7;     /*!< bit: 7..XLEN-1 Reserved */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MMISC_CTL1_Type;
 
 /**
  * \brief  Union type to access MCACHE_CTL CSR register.
@@ -331,8 +361,9 @@ typedef union {
         rv_csr_t ilm_rwecc:1;                   /*!< bit: 3 Control mecc_code write to ilm, simulate error injection */
         rv_csr_t ilm_ecc_chk_en:1;              /*!< bit: 4 ILM check ECC codes enable */
         rv_csr_t ilm_va_en:1;                   /*!< bit: 5 Using virtual address to judge ILM access */
-        rv_csr_t _reserved0:4;                  /*!< bit: 6..9 Reserved */
-        rv_csr_t ilm_bpa:__RISCV_XLEN-10;       /*!< bit: 10..XLEN-1 ILM base address */
+        rv_csr_t dis_lsu_ilm:1;                 /*!< bit: 6     Disable lsu access ILM */
+        rv_csr_t _reserved0:3;                  /*!< bit: 7..9  Reserved */
+        rv_csr_t ilm_bpa:__RISCV_XLEN-10;       /*!< bit: 10..XLEN-1 ILM base physical address */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MILMCTL_Type;
@@ -545,7 +576,11 @@ typedef union {
         rv_csr_t ic_ccm_msk:1;                  /*!< bit: 7 Write 1 to disable aggregate ICache CCM ECC fatal error to safety_error output */
         rv_csr_t dc_ccm_msk:1;                  /*!< bit: 8 Write 1 to disable aggregate DCache CCM ECC fatal error to safety_error output */
         rv_csr_t dc_cpbk_msk:1;                 /*!< bit: 9 Write 1 to disable aggregate DCache CPBK ECC fatal error to safety_error output */
-        rv_csr_t _reserved0:__RISCV_XLEN-10;    /*!< bit: 10..XLEN-1 Reserved 0 */
+        rv_csr_t _reserved0:21;                 /*!< bit: 10..30 Reserved 0 */
+        rv_csr_t io_prot_chk_en:1;              /*!< bit: 31    Controls to check the IO interface */
+#if defined(__RISCV_XLEN) && __RISCV_XLEN == 64
+        rv_csr_t _reserved1:__RISCV_XLEN-32;    /*!< bit: 32..63 Reserved 0 */
+#endif
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MECC_CTL_Type;

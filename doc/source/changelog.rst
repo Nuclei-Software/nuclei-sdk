@@ -32,6 +32,12 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add new APIs to maintain Cluster Cache coherency in ``core_feature_cache.h``
   - Add ``core_feature_smpcc.h`` to support SMP and Cluster Cache Related operations.
   - Correct the L2 cache read/write hit event definitions in ``nmsis_bench.h`` to match the true hardware behavior.
+  - Update ``CSR_MSUBM_Type`` structure in ``core_feature_base.h`` with detailed sub-mode descriptions and new ``gpridx``/``pgpridx`` fields
+  - Add new ``CSR_MMISC_CTL1_Type`` union in ``core_feature_base.h`` to support FP16 mode and VLSU features
+  - Update ``CSR_MMISCCTRL_Type`` structure in ``core_feature_base.h`` with ``lsu_allow_diff_en`` and ``hw_auto_context`` fields
+  - Update ``CSR_MILMCTL_Type`` structure in ``core_feature_base.h`` with ``dis_lsu_ilm`` field
+  - Update ``CSR_MECC_CTL_Type`` structure in ``core_feature_base.h`` with ``io_prot_chk_en`` field and 64-bit support
+  - Add new CSR bit field definitions for ``MSUBM``/``SSUBM`` in ``riscv_encoding.h``
 
 * Application
 
