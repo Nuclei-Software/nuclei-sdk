@@ -272,6 +272,8 @@ typedef enum IRQn {
     #define ECLIC_DisableShadow           __ECLIC_DisableShadow
     #define ECLIC_SetShadowLevel          __ECLIC_SetShadowLevel
     #define ECLIC_GetShadowLevel          __ECLIC_GetShadowLevel
+    #define ECLIC_SetShadowLevelReg       __ECLIC_SetShadowLevelReg
+    #define ECLIC_GetShadowLevelReg       __ECLIC_GetShadowLevelReg
 #endif
 
     /* For TEE */
@@ -297,6 +299,8 @@ typedef enum IRQn {
     #define ECLIC_DisableShadow_S         __ECLIC_DisableShadow_S
     #define ECLIC_SetShadowLevel_S        __ECLIC_SetShadowLevel_S
     #define ECLIC_GetShadowLevel_S        __ECLIC_GetShadowLevel_S
+    #define ECLIC_SetShadowLevelReg_S     __ECLIC_SetShadowLevelReg_S
+    #define ECLIC_GetShadowLevelReg_S     __ECLIC_GetShadowLevelReg_S
 #endif
 
 #endif
@@ -374,7 +378,7 @@ __STATIC_FORCEINLINE uint32_t __ECLIC_GetInfoVer(void)
  * \remarks
  * - In the CLICINTCTL[i] registers, with 2 <= CLICINTCTLBITS <= 8.
  * - The implemented bits are kept left-justified in the most-significant bits of each 8-bit
- *   CLICINTCTL[I] register, with the lower unimplemented bits treated as hardwired to 1.
+ *   CLICINTCTL[I] register, with the lower unimplemented bits hardwired to 1.
  * \sa
  * - \ref ECLIC_GetInfoNum
  */
@@ -406,6 +410,7 @@ __STATIC_FORCEINLINE uint32_t __ECLIC_GetInfoNum(void)
  * This includes both the first-come-first-served dedicated interrupt shadow registers
  * and the shadow registers designed for different interrupt levels.
  * This number represents the total count for M mode; if S Mode is present, the number is the same as M Mode.
+ * Note that shadow register 0 is fixed for first-come-first-served m/s-mode interrupt and cannot be configured.
  * \return  number of shadow register groups from the CLICINFO register.
  * \remarks
  * - This function is only valid for ECLICv2
@@ -823,17 +828,20 @@ __STATIC_FORCEINLINE void __ECLIC_DisableShadow(void)
 }
 
 /**
- * \brief  Set Shadow Register Level for a specific shadow register
+ * \brief  Set Shadow Register Interrupt Level for a specific m-mode shadow register
  * \details
- * This function sets the interrupt level for a specific shadow register \em idx.
+ * This function sets the interrupt level for a specific m-mode shadow register \em idx + 1.
  * It configures CSR_MSHADGPRLVL0 and CSR_MSHADGPRLVL1 registers.
- * \param [in]      idx   Shadow register index (0-7)
+ * \param [in]      idx   Shadow register index (0-7), corresponding to shadow registers 1-8
+ *                        (Note: shadow register 0 is fixed for first-come-first-served m-mode
+ *                         interrupt and cannot be configured)
  * \param [in]      level Interrupt level to set for the shadow register
  * \remarks
  * - API only available for ECLIC v2
+ * - idx = 0 means set SHAD1_CFG, which configures the shadow register 1
  * - For RV64, all 8 shadow registers are configured in CSR_MSHADGPRLVL0
- * - For RV32, shadow registers 0-3 are in lower 32 bits of CSR_MSHADGPRLVL0,
- *   and shadow registers 4-7 are in CSR_MSHADGPRLVL1
+ * - For RV32, shadow registers 1-4 are in lower 32 bits of CSR_MSHADGPRLVL0,
+ *   and shadow registers 5-8 are in CSR_MSHADGPRLVL1
  * \sa
  * - \ref ECLIC_GetShadowLevel
  */
@@ -851,8 +859,8 @@ __STATIC_INLINE void __ECLIC_SetShadowLevel(unsigned long idx, uint8_t level)
         level = max_level;
     }
 
-    /* Position the level value in the upper nlbits of the 8-bit field */
-    uint8_t level_shifted = (uint8_t)(level << (8 - nlbits));
+    /* Position the level value in the upper nlbits of the 8-bit field and set the low (8-nlbits) bits to 1 */
+    uint8_t level_shifted = (uint8_t)((level << (8 - nlbits)) | ((1U << (8 - nlbits)) - 1));
 
 #if __RISCV_XLEN == 64
     /* For RV64, all 8 shadow registers are in CSR_MSHADGPRLVL0 */
@@ -867,14 +875,14 @@ __STATIC_INLINE void __ECLIC_SetShadowLevel(unsigned long idx, uint8_t level)
 #else
     /* For RV32, calculate bit position and select appropriate register */
     if (idx < 4) {
-        /* Shadow registers 0-3 are in CSR_MSHADGPRLVL0 */
+        /* Shadow registers 1-4 are in CSR_MSHADGPRLVL0 */
         uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
         uint32_t mask = 0xFFUL << bit_pos;
         uint32_t current_val = __RV_CSR_READ(CSR_MSHADGPRLVL0);
         current_val = (current_val & ~mask) | (((uint32_t)level_shifted) << bit_pos);
         __RV_CSR_WRITE(CSR_MSHADGPRLVL0, current_val);
     } else {
-        /* Shadow registers 4-7 are in CSR_MSHADGPRLVL1 */
+        /* Shadow registers 5-8 are in CSR_MSHADGPRLVL1 */
         uint32_t bit_pos = (idx - 4) << 3;  /* (idx - 4) * 8 using bit shift */
         uint32_t mask = 0xFFUL << bit_pos;
         uint32_t current_val = __RV_CSR_READ(CSR_MSHADGPRLVL1);
@@ -885,17 +893,20 @@ __STATIC_INLINE void __ECLIC_SetShadowLevel(unsigned long idx, uint8_t level)
 }
 
 /**
- * \brief  Get Shadow Register Level for a specific shadow register
+ * \brief  Get Shadow Register Interrupt Level for a specific m-mode shadow register
  * \details
- * This function gets the interrupt level for a specific shadow register \em idx.
+ * This function gets the interrupt level for a specific m-mode shadow register \em idx + 1.
  * It reads CSR_MSHADGPRLVL0 and CSR_MSHADGPRLVL1 registers.
- * \param [in]      idx   Shadow register index (0-7)
+ * \param [in]      idx   Shadow register index (0-7), corresponding to shadow registers 1-8
+ *                        (Note: shadow register 0 is fixed for first-come-first-served m-mode
+ *                         interrupt and cannot be configured)
  * \return              Interrupt level of the shadow register
  * \remarks
  * - API only available for ECLIC v2
+ * - idx = 0 means set SHAD1_CFG, which configures the shadow register 1
  * - For RV64, all 8 shadow registers are configured in CSR_MSHADGPRLVL0
- * - For RV32, shadow registers 0-3 are in lower 32 bits of CSR_MSHADGPRLVL0,
- *   and shadow registers 4-7 are in CSR_MSHADGPRLVL1
+ * - For RV32, shadow registers 1-4 are in lower 32 bits of CSR_MSHADGPRLVL0,
+ *   and shadow registers 5-8 are in CSR_MSHADGPRLVL1
  * \sa
  * - \ref ECLIC_SetShadowLevel
  */
@@ -921,7 +932,7 @@ __STATIC_INLINE uint8_t __ECLIC_GetShadowLevel(unsigned long idx)
 #else
     /* For RV32, calculate bit position and select appropriate register */
     if (idx < 4) {
-        /* Shadow registers 0-3 are in CSR_MSHADGPRLVL0 */
+        /* Shadow registers 1-4 are in CSR_MSHADGPRLVL0 */
         uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
         /* Read the CSR register and extract the 8-bit field */
         uint32_t current_val = __RV_CSR_READ(CSR_MSHADGPRLVL0);
@@ -930,7 +941,7 @@ __STATIC_INLINE uint8_t __ECLIC_GetShadowLevel(unsigned long idx)
         uint8_t level = (extracted_val >> (8 - nlbits));
         return level;
     } else {
-        /* Shadow registers 4-7 are in CSR_MSHADGPRLVL1 */
+        /* Shadow registers 5-8 are in CSR_MSHADGPRLVL1 */
         uint32_t bit_pos = (idx - 4) << 3;  /* (idx - 4) * 8 using bit shift */
         /* Read the CSR register and extract the 8-bit field */
         uint32_t current_val = __RV_CSR_READ(CSR_MSHADGPRLVL1);
@@ -939,6 +950,58 @@ __STATIC_INLINE uint8_t __ECLIC_GetShadowLevel(unsigned long idx)
         uint8_t level = (extracted_val >> (8 - nlbits));
         return level;
     }
+#endif
+}
+
+/**
+ * \brief  Set Shadow Register Level Register for m-mode
+ * \details
+ * This function sets the entire shadow register level register for m-mode.
+ * It writes directly to CSR_MSHADGPRLVL0 register (and CSR_MSHADGPRLVL1 for RV32).
+ * \param [in]      value   64-bit value to set for the shadow register level register
+ * \remarks
+ * - API only available for ECLIC v2
+ * - For RV64, all 8 shadow registers are configured in CSR_MSHADGPRLVL0
+ * - For RV32, shadow registers 1-4 are in lower 32 bits of CSR_MSHADGPRLVL0,
+ *   and shadow registers 5-8 are in CSR_MSHADGPRLVL1
+ * - Note: shadow register 0 is fixed for first-come-first-served m-mode interrupt and cannot be configured
+ * \sa
+ * - \ref ECLIC_GetShadowLevelReg
+ */
+__STATIC_INLINE void __ECLIC_SetShadowLevelReg(uint64_t value)
+{
+#if __RISCV_XLEN == 64
+    __RV_CSR_WRITE(CSR_MSHADGPRLVL0, value);
+#else
+    __RV_CSR_WRITE(CSR_MSHADGPRLVL0, (uint32_t)value);
+    __RV_CSR_WRITE(CSR_MSHADGPRLVL1, (uint32_t)(value >> 32));
+#endif
+}
+
+/**
+ * \brief  Get Shadow Register Level Register for m-mode
+ * \details
+ * This function gets the entire shadow register level register for m-mode.
+ * It reads from CSR_MSHADGPRLVL0 register (and CSR_MSHADGPRLVL1 for RV32) and combines them.
+ * \return              64-bit value of the shadow register level register
+ * \remarks
+ * - API only available for ECLIC v2
+ * - For RV64, all 8 shadow registers are configured in CSR_MSHADGPRLVL0
+ * - For RV32, shadow registers 1-4 are in lower 32 bits of CSR_MSHADGPRLVL0,
+ *   and shadow registers 5-8 are in CSR_MSHADGPRLVL1
+ * - Note: shadow register 0 is fixed for first-come-first-served m-mode interrupt and cannot be configured
+ * \sa
+ * - \ref ECLIC_SetShadowLevelReg
+ */
+__STATIC_INLINE uint64_t __ECLIC_GetShadowLevelReg(void)
+{
+#if __RISCV_XLEN == 64
+    return __RV_CSR_READ(CSR_MSHADGPRLVL0);
+#else
+    uint64_t value = __RV_CSR_READ(CSR_MSHADGPRLVL1);
+    value <<= 32;
+    value |= __RV_CSR_READ(CSR_MSHADGPRLVL0);
+    return value;
 #endif
 }
 #endif
@@ -1445,17 +1508,20 @@ __STATIC_FORCEINLINE void __ECLIC_DisableShadow_S(void)
 }
 
 /**
- * \brief  Set Shadow Register Level for a specific shadow register in supervisor mode
+ * \brief  Set Shadow Register Interrupt Level for a specific s-mode shadow register
  * \details
- * This function sets the interrupt level for a specific shadow register \em idx in supervisor mode.
+ * This function sets the interrupt level for a specific s-mode shadow register \em idx + 1.
  * It configures CSR_SSHADGPRLVL0 and CSR_SSHADGPRLVL1 registers.
- * \param [in]      idx   Shadow register index (0-7)
+ * \param [in]      idx   Shadow register index (0-7), corresponding to shadow registers 1-8
+ *                        (Note: shadow register 0 is fixed for first-come-first-served s-mode
+ *                         interrupt and cannot be configured)
  * \param [in]      level Interrupt level to set for the shadow register
  * \remarks
  * - API only available for ECLIC v2
+ * - idx = 0 means set SHAD1_CFG, which configures the shadow register 1
  * - For RV64, all 8 shadow registers are configured in CSR_SSHADGPRLVL0
- * - For RV32, shadow registers 0-3 are in lower 32 bits of CSR_SSHADGPRLVL0,
- *   and shadow registers 4-7 are in CSR_SSHADGPRLVL1
+ * - For RV32, shadow registers 1-4 are in lower 32 bits of CSR_SSHADGPRLVL0,
+ *   and shadow registers 5-8 are in CSR_SSHADGPRLVL1
  * \sa
  * - \ref ECLIC_GetShadowLevel_S
  */
@@ -1473,8 +1539,8 @@ __STATIC_INLINE void __ECLIC_SetShadowLevel_S(unsigned long idx, uint8_t level)
         level = max_level;
     }
 
-    /* Position the level value in the upper nlbits of the 8-bit field */
-    uint8_t level_shifted = (uint8_t)(level << (8 - nlbits));
+    /* Position the level value in the upper nlbits of the 8-bit field and set the low (8-nlbits) bits to 1 */
+    uint8_t level_shifted = (uint8_t)((level << (8 - nlbits)) | ((1U << (8 - nlbits)) - 1));
 
 #if __RISCV_XLEN == 64
     /* For RV64, all 8 shadow registers are in CSR_SSHADGPRLVL0 */
@@ -1489,14 +1555,14 @@ __STATIC_INLINE void __ECLIC_SetShadowLevel_S(unsigned long idx, uint8_t level)
 #else
     /* For RV32, calculate bit position and select appropriate register */
     if (idx < 4) {
-        /* Shadow registers 0-3 are in CSR_SSHADGPRLVL0 */
+        /* Shadow registers 1-4 are in CSR_SSHADGPRLVL0 */
         uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
         uint32_t mask = 0xFFUL << bit_pos;
         uint32_t current_val = __RV_CSR_READ(CSR_SSHADGPRLVL0);
         current_val = (current_val & ~mask) | (((uint32_t)level_shifted) << bit_pos);
         __RV_CSR_WRITE(CSR_SSHADGPRLVL0, current_val);
     } else {
-        /* Shadow registers 4-7 are in CSR_SSHADGPRLVL1 */
+        /* Shadow registers 5-8 are in CSR_SSHADGPRLVL1 */
         uint32_t bit_pos = (idx - 4) << 3;  /* (idx - 4) * 8 using bit shift */
         uint32_t mask = 0xFFUL << bit_pos;
         uint32_t current_val = __RV_CSR_READ(CSR_SSHADGPRLVL1);
@@ -1507,17 +1573,20 @@ __STATIC_INLINE void __ECLIC_SetShadowLevel_S(unsigned long idx, uint8_t level)
 }
 
 /**
- * \brief  Get Shadow Register Level for a specific shadow register in supervisor mode
+ * \brief  Get Shadow Register Interrupt Level for a specific s-mode shadow register
  * \details
- * This function gets the interrupt level for a specific shadow register \em idx in supervisor mode.
+ * This function gets the interrupt level for a specific s-mode shadow register \em idx + 1.
  * It reads CSR_SSHADGPRLVL0 and CSR_SSHADGPRLVL1 registers.
- * \param [in]      idx   Shadow register index (0-7)
+ * \param [in]      idx   Shadow register index (0-7), corresponding to shadow registers 1-8
+ *                        (Note: shadow register 0 is fixed for first-come-first-served s-mode
+ *                         interrupt and cannot be configured)
  * \return              Interrupt level of the shadow register
  * \remarks
  * - API only available for ECLIC v2
+ * - idx = 0 means set SHAD1_CFG, which configures the shadow register 1
  * - For RV64, all 8 shadow registers are configured in CSR_SSHADGPRLVL0
- * - For RV32, shadow registers 0-3 are in lower 32 bits of CSR_SSHADGPRLVL0,
- *   and shadow registers 4-7 are in CSR_SSHADGPRLVL1
+ * - For RV32, shadow registers 1-4 are in lower 32 bits of CSR_SSHADGPRLVL0,
+ *   and shadow registers 5-8 are in CSR_SSHADGPRLVL1
  * \sa
  * - \ref ECLIC_SetShadowLevel_S
  */
@@ -1543,7 +1612,7 @@ __STATIC_INLINE uint8_t __ECLIC_GetShadowLevel_S(unsigned long idx)
 #else
     /* For RV32, calculate bit position and select appropriate register */
     if (idx < 4) {
-        /* Shadow registers 0-3 are in CSR_SSHADGPRLVL0 */
+        /* Shadow registers 1-4 are in CSR_SSHADGPRLVL0 */
         uint32_t bit_pos = idx << 3;  /* idx * 8 using bit shift */
         /* Read the CSR register and extract the 8-bit field */
         uint32_t current_val = __RV_CSR_READ(CSR_SSHADGPRLVL0);
@@ -1552,7 +1621,7 @@ __STATIC_INLINE uint8_t __ECLIC_GetShadowLevel_S(unsigned long idx)
         uint8_t level = (extracted_val >> (8 - nlbits));
         return level;
     } else {
-        /* Shadow registers 4-7 are in CSR_SSHADGPRLVL1 */
+        /* Shadow registers 5-8 are in CSR_SSHADGPRLVL1 */
         uint32_t bit_pos = (idx - 4) << 3;  /* (idx - 4) * 8 using bit shift */
         /* Read the CSR register and extract the 8-bit field */
         uint32_t current_val = __RV_CSR_READ(CSR_SSHADGPRLVL1);
@@ -1563,6 +1632,59 @@ __STATIC_INLINE uint8_t __ECLIC_GetShadowLevel_S(unsigned long idx)
     }
 #endif
 }
+
+/**
+ * \brief  Set Shadow Register Level Register for s-mode
+ * \details
+ * This function sets the entire shadow register level register for s-mode.
+ * It writes directly to CSR_SSHADGPRLVL0 register (and CSR_SSHADGPRLVL1 for RV32).
+ * \param [in]      value   64-bit value to set for the shadow register level register
+ * \remarks
+ * - API only available for ECLIC v2
+ * - For RV64, all 8 shadow registers are configured in CSR_SSHADGPRLVL0
+ * - For RV32, shadow registers 1-4 are in lower 32 bits of CSR_SSHADGPRLVL0,
+ *   and shadow registers 5-8 are in CSR_SSHADGPRLVL1
+ * - Note: shadow register 0 is fixed for first-come-first-served s-mode interrupt and cannot be configured
+ * \sa
+ * - \ref ECLIC_GetShadowLevelReg_S
+ */
+__STATIC_INLINE void __ECLIC_SetShadowLevelReg_S(uint64_t value)
+{
+#if __RISCV_XLEN == 64
+    __RV_CSR_WRITE(CSR_SSHADGPRLVL0, value);
+#else
+    __RV_CSR_WRITE(CSR_SSHADGPRLVL0, (uint32_t)value);
+    __RV_CSR_WRITE(CSR_SSHADGPRLVL1, (uint32_t)(value >> 32));
+#endif
+}
+
+/**
+ * \brief  Get Shadow Register Level Register for s-mode
+ * \details
+ * This function gets the entire shadow register level register for s-mode.
+ * It reads from CSR_SSHADGPRLVL0 register (and CSR_SSHADGPRLVL1 for RV32) and combines them.
+ * \return              64-bit value of the shadow register level register
+ * \remarks
+ * - API only available for ECLIC v2
+ * - For RV64, all 8 shadow registers are configured in CSR_SSHADGPRLVL0
+ * - For RV32, shadow registers 1-4 are in lower 32 bits of CSR_SSHADGPRLVL0,
+ *   and shadow registers 5-8 are in CSR_SSHADGPRLVL1
+ * - Note: shadow register 0 is fixed for first-come-first-served s-mode interrupt and cannot be configured
+ * \sa
+ * - \ref ECLIC_SetShadowLevelReg_S
+ */
+__STATIC_INLINE uint64_t __ECLIC_GetShadowLevelReg_S(void)
+{
+#if __RISCV_XLEN == 64
+    return __RV_CSR_READ(CSR_SSHADGPRLVL0);
+#else
+    uint64_t value = __RV_CSR_READ(CSR_SSHADGPRLVL1);
+    value <<= 32;
+    value |= __RV_CSR_READ(CSR_SSHADGPRLVL0);
+    return value;
+#endif
+}
+
 #endif
 #endif /* defined(__TEE_PRESENT) && (__TEE_PRESENT == 1) */
 
