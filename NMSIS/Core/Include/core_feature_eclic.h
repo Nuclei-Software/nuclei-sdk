@@ -281,6 +281,9 @@ typedef enum IRQn {
     #define ECLIC_SetModeIRQ              __ECLIC_SetModeIRQ
     #define ECLIC_SetSth                  __ECLIC_SetSth
     #define ECLIC_GetSth                  __ECLIC_GetSth
+    #define ECLIC_SetPendingIRQ_S         __ECLIC_SetPendingIRQ_S
+    #define ECLIC_GetPendingIRQ_S         __ECLIC_GetPendingIRQ_S
+    #define ECLIC_ClearPendingIRQ_S       __ECLIC_ClearPendingIRQ_S
     #define ECLIC_SetTrigIRQ_S            __ECLIC_SetTrigIRQ_S
     #define ECLIC_GetTrigIRQ_S            __ECLIC_GetTrigIRQ_S
     #define ECLIC_SetShvIRQ_S             __ECLIC_SetShvIRQ_S
@@ -1125,6 +1128,58 @@ __STATIC_FORCEINLINE uint8_t __ECLIC_GetSth(void)
 }
 
 /**
+ * \brief  Set a specific interrupt to pending in supervisor mode
+ * \details
+ * This function sets the pending bit for the specific interrupt \em IRQn in supervisor mode.
+ * \param [in]      IRQn  Interrupt number
+ * \remarks
+ * - IRQn must not be negative.
+ * \sa
+ * - \ref ECLIC_GetPendingIRQ_S
+ * - \ref ECLIC_ClearPendingIRQ_S
+ */
+__STATIC_FORCEINLINE void __ECLIC_SetPendingIRQ_S(IRQn_Type IRQn)
+{
+    ECLIC->SCTRL[IRQn].INTIP |= CLIC_INTIP_IP_Msk;
+}
+
+/**
+ * \brief  Get the pending specific interrupt in supervisor mode
+ * \details
+ * This function returns the pending status of the specific interrupt \em IRQn in supervisor mode.
+ * \param [in]      IRQn  Interrupt number
+ * \returns
+ * - 0  Interrupt is not pending
+ * - 1  Interrupt is pending
+ * \remarks
+ * - IRQn must not be negative.
+ * \sa
+ * - \ref ECLIC_SetPendingIRQ_S
+ * - \ref ECLIC_ClearPendingIRQ_S
+ */
+__STATIC_FORCEINLINE int32_t __ECLIC_GetPendingIRQ_S(IRQn_Type IRQn)
+{
+    return ((uint32_t)(ECLIC->SCTRL[IRQn].INTIP) & CLIC_INTIP_IP_Msk);
+}
+
+/**
+ * \brief  Clear a specific interrupt from pending in supervisor mode
+ * \details
+ * This function removes the pending state of the specific interrupt \em IRQn in supervisor mode.
+ * \em IRQn cannot be a negative number.
+ * \param [in]      IRQn  Interrupt number
+ * \remarks
+ * - IRQn must not be negative.
+ * \sa
+ * - \ref ECLIC_SetPendingIRQ_S
+ * - \ref ECLIC_GetPendingIRQ_S
+ */
+__STATIC_FORCEINLINE void __ECLIC_ClearPendingIRQ_S(IRQn_Type IRQn)
+{
+    ECLIC->SCTRL[IRQn].INTIP &= ~CLIC_INTIP_IP_Msk;
+}
+
+/**
  * \brief  Set trigger mode and polarity for a specific interrupt in supervisor mode
  * \details
  * This function set trigger mode and polarity of the specific interrupt \em IRQn.
@@ -1686,6 +1741,7 @@ __STATIC_INLINE uint64_t __ECLIC_GetShadowLevelReg_S(void)
 }
 
 #endif
+
 #endif /* defined(__TEE_PRESENT) && (__TEE_PRESENT == 1) */
 
 /**
