@@ -208,8 +208,7 @@ int main(void)
     }
 
     /* Disable all prefetch to accurately measure L2 cache miss/hit rates */
-    uint32_t *pfl1dctrl1 = (uint32_t *)(__IINFO_BASEADDR + 0x100);
-    *pfl1dctrl1 = 0; /* Disable all prefetch */
+    IINFO_SetPrefetchLevel(IINFO_PFL1DCTRL1_DISABLE);
 
     SMP_VER_Type smp_ver = SMPCC_GetVersion();
     printf("SMPCC version is %d.%d.%d\r\n", smp_ver.b.maj_ver,
@@ -270,12 +269,9 @@ int main(void)
     BENCH_END(mem_traverse_with_clm);
     SMPCC_SetCLMNoWay(); /* Use CLM as Cluster Cache */
 
-    /* Part 4: CCache performance monitor demo */
-    /* 0x94 is the offset for performance configuration register */
-    const uint32_t *performance_cfg1 = (const uint32_t *)(__IINFO_BASEADDR + 0x94);
-    uint32_t hpm_exist = *performance_cfg1 & 0x1;      /* Bit 0: HPM existence flag */
-    uint32_t hpm_ver = (*performance_cfg1 & 0xC000) >> 14;  /* Bits 15:14: HPM version */
-    if (hpm_exist && hpm_ver == 2) {  /* Check if HPMv2 is available */
+    /* Part 4: CCache performance monitor demo */ 
+    /* Check if HPMv2 is available */
+    if (IINFO_GetHPMVersion() == IINFO_HPM_VER_2) {
         printf("Cluster Cache performance has been monitored by PMUv2!\r\n");
         CCachePerformanceMonitorTestWithPMUv2();
     } else {
