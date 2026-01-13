@@ -10,6 +10,12 @@ Nuclei Eval SoC
 
     Nuclei DemoSoC is now removed in 0.5.0 release, and please use evalsoc now.
 
+.. caution::
+
+   Now Nuclei N100 CPU can be configured with IRQC or ECLIC interrupt controller,
+   this N100 SDK only suppport IRQC controller, please switch to Nuclei SDK >= 0.9.0
+   for N100 with ECLIC interrupt controller.
+
 Nuclei Eval SoC is an evaluation FPGA SoC from Nuclei
 for customer to evaluate Nuclei RISC-V Process Core, and it is a successor for Demo SoC.
 

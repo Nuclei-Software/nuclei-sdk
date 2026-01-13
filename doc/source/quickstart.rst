@@ -3,12 +3,17 @@
 Quick Startup
 =============
 
+.. caution::
+
+   - This Nuclei N100 SDK is only for Nuclei N100 with IRQC interrupt controller,
+     if you are using Nuclei N100 CPU with ECLIC, please switch to Nuclei SDK >= 0.9.0
+
 .. _quickstart_using_nside:
 
 Use Nuclei N100 SDK in Nuclei Studio
 ------------------------------------
 
-You can download **Nuclei Studio IDE >= 2025.02** from |nuclei_download_center|, and follow
+You can download **Nuclei Studio IDE >= 2025.10** from |nuclei_download_center|, and follow
 `Nuclei Studio and Nuclei Tools User Guide`_ to learn how to use it.
 
 But if you want to use latest source code of Nuclei N100 SDK, please follow the rest
@@ -32,10 +37,10 @@ no need to do the following steps below, the prebuilt tools are already included
 
 For example:
 
-* In Windows, if you have extracted the Nuclei Studio IDE to ``D:\Software\NucleiStudio_IDE_202502``,
-  then you can find the prebuilt tools in ``D:\Software\NucleiStudio_IDE_202502\NucleiStudio\toolchain``.
-* In Linux, if you have extracted the Nuclei Studio IDE to ``/home/labdev/NucleiStudio_IDE_202502``,
-  then you can find the prebuilt tools in ``/home/labdev/NucleiStudio_IDE_202502/NucleiStudio/toolchain``.
+* In Windows, if you have extracted the Nuclei Studio IDE to ``D:\Software\NucleiStudio_IDE_202510``,
+  then you can find the prebuilt tools in ``D:\Software\NucleiStudio_IDE_202510\NucleiStudio\toolchain``.
+* In Linux, if you have extracted the Nuclei Studio IDE to ``/home/labdev/NucleiStudio_IDE_202510``,
+  then you can find the prebuilt tools in ``/home/labdev/NucleiStudio_IDE_202510/NucleiStudio/toolchain``.
 
 You can also update tools located in the Nuclei Studio prebuilt tools ``toolchain`` by downloading newer version
 from `Nuclei Tools`_ and replace it.
@@ -88,32 +93,32 @@ The source code of Nuclei N100 SDK is maintained in |github| and |gitee|.
      create ``setup_config.bat`` in ``nuclei-n100-sdk`` folder, and open this file
      your editor, and paste the following content, assuming you followed
      :ref:`quickstart_setup_tools_env`, and prebuilt tools located in
-     ``D:\Software\NucleiStudio_IDE_202502\NucleiStudio\toolchain``,
+     ``D:\Software\NucleiStudio_IDE_202510\NucleiStudio\toolchain``,
      otherwise please use your correct tool root path.
 
      .. code-block:: bat
 
-        set NUCLEI_TOOL_ROOT=D:\Software\NucleiStudio_IDE_202502\NucleiStudio\toolchain
+        set NUCLEI_TOOL_ROOT=D:\Software\NucleiStudio_IDE_202510\NucleiStudio\toolchain
 
      If you want to use Nuclei N100 SDK in **Windows PowerShell** terminal, you need to create
      a ``setup_config.ps1`` in ``nuclei-n100-sdk`` folder, and edit this file with content below
-     if your prebuilt tools are located in ``D:\Software\NucleiStudio_IDE_202502\NucleiStudio\toolchain``:
+     if your prebuilt tools are located in ``D:\Software\NucleiStudio_IDE_202510\NucleiStudio\toolchain``:
 
      .. code-block:: ps1
 
-        $NUCLEI_TOOL_ROOT="D:\Software\NucleiStudio_IDE_202502\NucleiStudio\toolchain"
+        $NUCLEI_TOOL_ROOT="D:\Software\NucleiStudio_IDE_202510\NucleiStudio\toolchain"
 
 
   - **Linux**
      Create ``setup_config.sh`` in ``nuclei-n100-sdk`` folder, and open this file
      your editor, and paste the following content, assuming you followed
      :ref:`quickstart_setup_tools_env` and prebuilt tools located in
-     ``/home/labdev/NucleiStudio_IDE_202502/NucleiStudio/toolchain``,
+     ``/home/labdev/NucleiStudio_IDE_202510/NucleiStudio/toolchain``,
      otherwise please use your correct tool root path.
 
      .. code-block:: shell
 
-        NUCLEI_TOOL_ROOT=/home/labdev/NucleiStudio_IDE_202502/NucleiStudio/toolchain
+        NUCLEI_TOOL_ROOT=/home/labdev/NucleiStudio_IDE_202510/NucleiStudio/toolchain
 
 
 .. _quickstart_buildrundebug_app:

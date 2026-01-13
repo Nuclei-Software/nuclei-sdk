@@ -586,6 +586,12 @@ currently it has these modes supported as described in table
 CORE
 ~~~~
 
+.. caution::
+
+   Now Nuclei N100 CPU can be configured with IRQC or ECLIC interrupt controller,
+   this N100 SDK only suppport IRQC controller, please switch to Nuclei SDK >= 0.9.0
+   for N100 with ECLIC interrupt controller.
+
 **CORE** variable is used to declare the Nuclei processor core
 of the application.
 

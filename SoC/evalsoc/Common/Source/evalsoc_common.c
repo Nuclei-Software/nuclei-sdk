@@ -16,6 +16,8 @@ __STATIC_FORCEINLINE uint64_t get_timer_freq(void)
 #endif
 uint32_t measure_cpu_freq(uint32_t n)
 {
+    // NOTE: If you are stuck here, please check whether your N100 CPU is configured with IRQC interrupt controller.
+    // If not, please switch to Nuclei SDK >= 0.9.0 for N100 CPU with ECLIC configured
 #if defined(__TIMER_PRESENT) && (__TIMER_PRESENT == 1) && defined(__PMON_PRESENT) && (__PMON_PRESENT == 1)
     uint32_t start_mcycle, delta_mcycle;
     uint32_t start_mtime, delta_mtime;

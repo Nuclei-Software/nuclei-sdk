@@ -10,11 +10,11 @@ Introduction
 
 .. note::
 
-    This is Nuclei N100 SDK which is modified based on **Nuclei SDK 0.5.0** to support Nuclei 100 series CPU.
+    This is Nuclei N100 SDK which is modified based on **Nuclei SDK 0.5.0** to support Nuclei 100 series CPU with IRQC Interrupt controller, if your N100 CPU configured with ECLIC, please use **Nuclei SDK >= 0.9.0**.
 
-    If you are looking for Nuclei SDK for Nuclei **200/300/600/900/1000** CPU, please refer to https://doc.nucleisys.com/nuclei_sdk
+    If you are looking for Nuclei SDK for Nuclei **100(with ECLIC)/200/300/600/900/1000** CPU, please refer to https://doc.nucleisys.com/nuclei_sdk
 
-    Please use **Nuclei Studio >= 2025.02** with this Nuclei N100 SDK.
+    Please use **Nuclei Studio >= 2025.10** with this Nuclei N100 SDK.
 
 The **Nuclei N100 Software Development Kit (SDK)** is an open-source software platform to
 speed up the software development of SoCs based on Nuclei Processor 100 series Cores.

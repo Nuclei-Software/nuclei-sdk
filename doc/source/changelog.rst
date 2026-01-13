@@ -11,10 +11,25 @@ This is release version ``0.3.0`` of N100 SDK, which is still in development.
 .. note::
 
    - Fix bug in RTOS porting for task sp alignment requirement
+   - This N100 SDK only support N100 with IRQC interrupt controller,
+     if your N100 CPU configured with ECLIC, please use Nuclei SDK >= 0.9.0
+   - Please use Nuclei N100 SDK with **Nuclei Studio >= 2025.10**, get it from https://nucleisys.com/download.php#tools
 
 * OS
 
   - Bugfix for correct task stack pointer alignment(16 bytes for non-ilp32e, and 4 bytes for ilp32e) on FreeRTOS/UCOSII/RT-Thread RTOS porting, see https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/301374e92976e298e676e7129a6212926b2299ce/riscv-cc.adoc?plain=1#L245-L259
+
+* Build
+
+  - Fix gdb not correct when toolchain choose Terapines ZCC
+  - Bump CI to use 2025.10 tools
+  - Bump sdkbuild podman image to 2025.10
+
+* Documentation
+
+  - Clarify N100 SDK support for IRQC vs ECLIC interrupt controllers
+  - Update documentation to indicate that N100 SDK is only for Nuclei N100 CPU with IRQC interrupt controller
+  - Update toolchain version references from 2025.02 to 2025.10
 
 V0.2.1
 -------

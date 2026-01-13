@@ -1,7 +1,8 @@
 # N100 Software Development Kit
 
 > [!NOTE]
-> If you want to develop and run program on Nuclei **200/300/600/900/1000 series** RISC-V CPU, please switch to [**develop**][1] or [**master**][2] branch.
+> - This N100 SDK is only for Nuclei N100 CPU with IRQC interrupt controller, please switch to Nuclei SDK >= 0.9.0, if your N100 CPU is configured with ECLIC interrupt controller.
+> - If you want to develop and run program on Nuclei **100(with ECLIC)/200/300/600/900/1000 series** RISC-V CPU, please switch to [**develop**][1] or [**master**][2] branch.
 
 This **N100 SDK** is **modified** based on the **Nuclei SDK** framework, **NMSIS** is also a **modified** version to support limited feature provided by Nuclei 100 series processor.
 
@@ -14,16 +15,16 @@ We also integrated some RTOSes into Nuclei SDK, which are **FreeRTOS**, **UCOSII
 
 ## Quick Startup
 
-Wanner to take a try with **Nuclei N100 SDK for Nuclei 100 series CPU**, click [Quick Start with Nuclei N100 SDK](https://doc.nucleisys.com/nuclei_n100_sdk/quickstart.html) to start up.
+Wanner to take a try with **Nuclei N100 SDK for Nuclei 100 series CPU with IRQC controller**, click [Quick Start with Nuclei N100 SDK](https://doc.nucleisys.com/nuclei_n100_sdk/quickstart.html) to start up.
 
-Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CPU**, click [Quick Start with Nuclei SDK](https://doc.nucleisys.com/nuclei_sdk/quickstart.html) to start up.
+Wanner to take a try with **Nuclei SDK for Nuclei 100(with ECLIC)/200/300/600/900/1000 series CPU**, click [Quick Start with Nuclei SDK](https://doc.nucleisys.com/nuclei_sdk/quickstart.html) to start up.
 
 ## Requirements
 
 * Ubuntu Linux >=20.04 LTS or Windows >=10
   - **Linux**: GNU Make >= 3.82
   - **Windows**: [Windows Build Tools](https://nucleisys.com/download.php)
-* [Nuclei Studio >= 2025.02](https://nucleisys.com/download.php)
+* [Nuclei Studio >= 2025.10](https://nucleisys.com/download.php)
   - Nuclei Studio can support import Nuclei SDK NPK package to provide IDE project wizard create/build/debug.
   - Nuclei Studio also contains same release of Nuclei Toolchain/QEMU/OpenOCD, so just download IDE is enough.
 
@@ -68,7 +69,7 @@ Wanner to take a try with **Nuclei SDK for Nuclei 200/300/600/900/1000 series CP
 
 ## Knowledge book
 
-* N100 SDK only support **Nuclei RISC-V Toolchain >= 2025.02**, and toolchain prefix is `riscv64-unknown-elf-`.
+* N100 SDK only support **Nuclei RISC-V Toolchain >= 2025.10**, and toolchain prefix is `riscv64-unknown-elf-`.
 
 * N100 SDK is modified based on Nuclei SDK, so the user experience are similiar to Nuclei SDK, and directory structure is also similar,
   if you have experience in using Nuclei SDK, it will be easy to use N100 SDK.
