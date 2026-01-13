@@ -48,6 +48,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Extend ``CSR_MCFG_INFO`` bit definitions with new feature flags including ``ZC_XLCZ_EXT``, ``SEC_MODE``, ``ETRACE``,
     ``SAFETY_MECHANISM``, ``VNICE``, ``XLCZ``, ``ZILSD``, and ``SSTC`` in ``riscv_encoding.h``
   - Add ``CSR_PUSHXSUBM`` macro definition in ``riscv_encoding.h`` for ECLICv2 SUBM register handling in interrupt context
+  - Add ``core_feature_iinfo.h`` to support IREGION INFO related operations.
 
 * Application
 
