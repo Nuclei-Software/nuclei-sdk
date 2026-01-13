@@ -2618,6 +2618,138 @@ __STATIC_FORCEINLINE int64_t __AMOMIN_D(volatile int64_t *addr, int64_t value)
 }
 #endif /* __RISCV_XLEN == 64  */
 
+/**
+ * \brief   Enable ICache prefetch
+ * \details Set the IC_PF_EN bit in the MCACHE_CTL CSR to enable
+ *          ICache prefetch.
+ */
+__STATIC_FORCEINLINE void __enable_ic_prefetch(void)
+{
+    __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_IC_PF_EN);
+}
+
+/**
+ * \brief   Disable ICache prefetch
+ * \details Clear the IC_PF_EN bit in the MCACHE_CTL CSR to disable
+ *          ICache prefetch.
+ */
+__STATIC_FORCEINLINE void __disable_ic_prefetch(void)
+{
+    __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_IC_PF_EN);
+}
+
+/**
+ * \brief   Enable ICache CMO prefetch
+ * \details Set the IC_CMO_PF_EN bit in the MCACHE_CTL CSR to enable
+ *          ICache prefetch.
+ */
+__STATIC_FORCEINLINE void __enable_ic_cmo_prefetch(void)
+{
+    __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_IC_CMO_PF_EN);
+}
+
+/**
+ * \brief   Disable ICache CMO prefetch
+ * \details Clear the IC_CMO_PF_EN bit in the MCACHE_CTL CSR to disable
+ *          ICache prefetch.
+ */
+__STATIC_FORCEINLINE void __disable_ic_cmo_prefetch(void)
+{
+    __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_IC_CMO_PF_EN);
+}
+
+/**
+ * \brief   Enable DCache CMO prefetch
+ * \details Set the DC_CMO_PF_EN bit in the MCACHE_CTL CSR to enable
+ *          DCache prefetch.
+ */
+__STATIC_FORCEINLINE void __enable_dc_cmo_prefetch(void)
+{
+    __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_DC_CMO_PF_EN);
+}
+
+/**
+ * \brief   Disable DCache CMO prefetch
+ * \details Clear the DC_CMO_PF_EN bit in the MCACHE_CTL CSR to disable
+ *          DCache prefetch.
+ */
+__STATIC_FORCEINLINE void __disable_dc_cmo_prefetch(void)
+{
+    __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_DC_CMO_PF_EN);
+}
+
+/**
+ * \brief   Instruction prefetch operation
+ * \details Performs an instruction prefetch operation for the specified address
+ *          using the RISC-V prefetch.i instruction.
+ * \param[in]  addr  Address to prefetch
+ * \remarks Before calling this function, ensure that the hardware supports CMO prefetch
+ * and that the code is compiled with the `_zicbop` extension enabled.
+ * Here is a code example to check if CMO prefetch is supported:
+ *
+ * \code
+ *  if (IINFO_IsCMOPrefetchSupported()) {
+ *      __cmo_prefetch_i(func);
+ *  }
+ * \endcode
+ *
+ * \sa
+ * - \ref IINFO_IsCMOPrefetchSupported
+ *
+ */
+__STATIC_FORCEINLINE void __cmo_prefetch_i(const void *addr)
+{
+    __ASM volatile ("prefetch.i 0(%0)" : : "r" (addr) : "memory");
+}
+
+/**
+ * \brief   Read prefetch operation
+ * \details Performs a read prefetch operation for the specified address
+ *          using the RISC-V prefetch.r instruction.
+ * \param[in]  addr  Address to prefetch
+ * \remarks Before calling this function, ensure that the hardware supports CMO prefetch
+ * and that the code is compiled with the `_zicbop` extension enabled.
+ * Here is a code example to check if CMO prefetch is supported:
+ *
+ * \code
+ *  if (IINFO_IsCMOPrefetchSupported()) {
+ *      __cmo_prefetch_r(data);
+ *  }
+ * \endcode
+ *
+ * \sa
+ * - \ref IINFO_IsCMOPrefetchSupported
+ *
+ */
+__STATIC_FORCEINLINE void __cmo_prefetch_r(const void *addr)
+{
+    __ASM volatile ("prefetch.r 0(%0)" : : "r" (addr) : "memory");
+}
+
+/**
+ * \brief   Write prefetch operation
+ * \details Performs a write prefetch operation for the specified address
+ *          using the RISC-V prefetch.w instruction.
+ * \param[in]  addr  Address to prefetch
+ * \remarks Before calling this function, ensure that the hardware supports CMO prefetch
+ * and that the code is compiled with the `_zicbop` extension enabled.
+ * Here is a code example to check if CMO prefetch is supported:
+ *
+ * \code
+ *  if (IINFO_IsCMOPrefetchSupported()) {
+ *      __cmo_prefetch_w(data);
+ *  }
+ * \endcode
+ *
+ * \sa
+ * - \ref IINFO_IsCMOPrefetchSupported
+ *
+ */
+__STATIC_FORCEINLINE void __cmo_prefetch_w(const void *addr)
+{
+    __ASM volatile ("prefetch.w 0(%0)" : : "r" (addr) : "memory");
+}
+
 /** @} */ /* End of Doxygen Group NMSIS_Core_CPU_Intrinsic */
 
 #ifdef __cplusplus
