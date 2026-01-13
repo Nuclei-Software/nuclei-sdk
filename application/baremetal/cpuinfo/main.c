@@ -79,7 +79,7 @@ int main(void)
     if (mcfg.b.iregion) {
         cpuinfo.mirgbinfo.d = (uint64_t)__RV_CSR_READ(CSR_MIRGB_INFO);
         uint64_t iregion_base = cpuinfo.mirgbinfo.d & (~0x3FFULL);
-        cpuinfo.iinfo = (IINFO_Type *)((unsigned long)iregion_base);
+        cpuinfo.iinfo = (CIF_IINFO_Type *)((unsigned long)iregion_base);
         cpuinfo.iregion_base = iregion_base;
         if (mcfg.b.smp) {
             cpuinfo.smpcfg.d = *(uint32_t *)((
@@ -90,7 +90,7 @@ int main(void)
                 unsigned long)(iregion_base + CPUINFO_IRG_SMP_OFS + 0x8));
         }
         if (mcfg.b.eclic) {
-            cpuinfo.eclic = (ECLIC_Type *)((
+            cpuinfo.eclic = (CIF_ECLIC_Type *)((
                 unsigned long)(iregion_base + CPUINFO_IRG_ECLIC_OFS));
         }
     }
@@ -101,7 +101,7 @@ int main(void)
         cpuinfo.mfiocfginfo.d = (uint64_t)__RV_CSR_READ(CSR_MFIOCFG_INFO);
     }
 
-    IINFO_ISA_SUPPORT0_Type isa_support0;
+    CIF_IINFO_ISA_SUPPORT0_Type isa_support0;
     isa_support0.d = cpuinfo.iinfo->isa_support0;
     /* The init value of vlenb is 0, indicating that the vector extension is not supported */
     cpuinfo.vlenb = 0;

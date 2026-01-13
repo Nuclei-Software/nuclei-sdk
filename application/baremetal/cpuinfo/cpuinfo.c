@@ -54,15 +54,15 @@ static void show_mfiocfg(U32_CSR_MCFG_INFO_Type mcfg,
 static void show_mppicfg(U32_CSR_MCFG_INFO_Type mcfg,
                          U64_CSR_MPPICFG_INFO_Type mppicfg);
 
-static void show_prefetch_cfg(IINFO_Type *iinfo);
-static void show_isa_support(IINFO_Type *iinfo);
-static void show_mvlm_cfg(IINFO_Type *iinfo);
-static void show_flash_bus(IINFO_Type *iinfo);
-static void show_mem_region_cfg(IINFO_Type *iinfo);
-static void show_mcppi_cfg(IINFO_Type *iinfo);
-static void show_cmo(IINFO_Type *iinfo);
-static void show_performance_cfg(IINFO_Type *iinfo);
-static void show_misc_cfg(IINFO_Type *iinfo);
+static void show_prefetch_cfg(CIF_IINFO_Type *iinfo);
+static void show_isa_support(CIF_IINFO_Type *iinfo);
+static void show_mvlm_cfg(CIF_IINFO_Type *iinfo);
+static void show_flash_bus(CIF_IINFO_Type *iinfo);
+static void show_mem_region_cfg(CIF_IINFO_Type *iinfo);
+static void show_mcppi_cfg(CIF_IINFO_Type *iinfo);
+static void show_cmo(CIF_IINFO_Type *iinfo);
+static void show_performance_cfg(CIF_IINFO_Type *iinfo);
+static void show_misc_cfg(CIF_IINFO_Type *iinfo);
 
 /**
  * Convert to human readable size with option
@@ -147,11 +147,11 @@ int get_basic_cpuinfo(const CPU_INFO_Group *cpuinfo, char *str, unsigned long le
     CHECK_STRCAT_BUF(mcfg, tee, buf, "TEE, ");
     CHECK_STRCAT_BUF(mcfg, sec_mode, buf, "SMWG, ");
 
-    IINFO_ISA_SUPPORT0_Type isa_support0;
+    CIF_IINFO_ISA_SUPPORT0_Type isa_support0;
     isa_support0.d = cpuinfo->iinfo->isa_support0;
     CHECK_STRCAT_BUF(isa_support0, svpbmt, buf, "Svpbmt, ");
 
-    IINFO_MCMO_INFO_Type cmo;
+    CIF_IINFO_MCMO_INFO_Type cmo;
     cmo.d = cpuinfo->iinfo->cmo_info;
     CHECK_STRCAT_BUF(cmo, cmo_cfg, buf, "CMO, ");
 
@@ -386,7 +386,7 @@ static void show_iregion(const CPU_INFO_Group *cpuinfo)
     }
     /* ECLIC */
     if (mcfg.b.eclic) {
-        ECLIC_Type *eclic = cpuinfo->eclic;
+        CIF_ECLIC_Type *eclic = cpuinfo->eclic;
         U32_ECLIC_INFO_Type eclic_info = eclic->info;
         CIF_PRINTF("           ECLIC:");
         CIF_PRINTF(" VERSION=0x%x", eclic_info.b.version);
@@ -454,9 +454,9 @@ static void show_mppicfg(U32_CSR_MCFG_INFO_Type mcfg,
     }
 }
 
-static void show_prefetch_cfg(IINFO_Type *iinfo)
+static void show_prefetch_cfg(CIF_IINFO_Type *iinfo)
 {
-    IINFO_PFL1INFO_Type pfl1info;
+    CIF_IINFO_PFL1INFO_Type pfl1info;
     pfl1info.d = iinfo->pfl1info;
     if (pfl1info.b.pf_cfg) {
         CIF_PRINTF("                  prefetch: present\r\n");
@@ -476,9 +476,9 @@ static void show_prefetch_cfg(IINFO_Type *iinfo)
         }
 
         /* prefetch config */
-        IINFO_PFL1DCTRL1_Type pfl1dctrl1;
-        IINFO_PFL1DCTRL2_Type pfl1dctrl2;
-        IINFO_PFL1DCTRL3_Type pfl1dctrl3;
+        CIF_IINFO_PFL1DCTRL1_Type pfl1dctrl1;
+        CIF_IINFO_PFL1DCTRL2_Type pfl1dctrl2;
+        CIF_IINFO_PFL1DCTRL3_Type pfl1dctrl3;
         pfl1dctrl1.d = iinfo->pfl1dctrl1;
         pfl1dctrl2.d = iinfo->pfl1dctrl2;
         pfl1dctrl3.d = iinfo->pfl1dctrl3;
@@ -506,10 +506,10 @@ static void show_prefetch_cfg(IINFO_Type *iinfo)
     }
 }
 
-static void show_isa_support(IINFO_Type *iinfo)
+static void show_isa_support(CIF_IINFO_Type *iinfo)
 {
-    IINFO_ISA_SUPPORT0_Type isa_support0;
-    IINFO_ISA_SUPPORT1_Type isa_support1;
+    CIF_IINFO_ISA_SUPPORT0_Type isa_support0;
+    CIF_IINFO_ISA_SUPPORT1_Type isa_support1;
     isa_support0.d = iinfo->isa_support0;
     isa_support1.d = iinfo->isa_support1;
 
@@ -587,13 +587,13 @@ static void show_isa_support(IINFO_Type *iinfo)
     }
 }
 
-static void show_mvlm_cfg(IINFO_Type *iinfo)
+static void show_mvlm_cfg(CIF_IINFO_Type *iinfo)
 {
-    IINFO_MVLM_CFG_LO_Type mvlm_cfg_lo;
+    CIF_IINFO_MVLM_CFG_LO_Type mvlm_cfg_lo;
     mvlm_cfg_lo.d = iinfo->mvlm_cfg_lo;
     if (mvlm_cfg_lo.b.vlm) {
         CIF_PRINTF("                  vlm: present\r\n");
-        IINFO_MVLM_CFG_HI_Type mvlm_cfg_hi = iinfo->mvlm_cfg_hi;
+        CIF_IINFO_MVLM_CFG_HI_Type mvlm_cfg_hi = iinfo->mvlm_cfg_hi;
         uint64_t vlm_base =
             (uint64_t)mvlm_cfg_hi << 32 | (mvlm_cfg_lo.d & (~0x3FFULL));
         CIF_PRINTF("                      base=0x%" CIF_PRIxADDR "\r\n", (addr_t)vlm_base);
@@ -604,13 +604,13 @@ static void show_mvlm_cfg(IINFO_Type *iinfo)
     }
 }
 
-static void show_flash_bus(IINFO_Type *iinfo)
+static void show_flash_bus(CIF_IINFO_Type *iinfo)
 {
-    IINFO_FLASH_BASE_ADDR_LO_Type addr_lo;
+    CIF_IINFO_FLASH_BASE_ADDR_LO_Type addr_lo;
     addr_lo.d = iinfo->flash_base_addr_lo;
     if (addr_lo.b.flash) {
         CIF_PRINTF("                  flash bus: present\r\n");
-        IINFO_FLASH_BASE_ADDR_HI_Type addr_hi = iinfo->flash_base_addr_hi;
+        CIF_IINFO_FLASH_BASE_ADDR_HI_Type addr_hi = iinfo->flash_base_addr_hi;
         uint64_t flash_base =
             (uint64_t)addr_hi << 32 | (addr_lo.d & (~0x3FFULL));
         CIF_PRINTF("                      base=0x%" CIF_PRIxADDR "\r\n", (addr_t)flash_base);
@@ -621,14 +621,14 @@ static void show_flash_bus(IINFO_Type *iinfo)
     }
 }
 
-static void show_mem_region_cfg(IINFO_Type *iinfo)
+static void show_mem_region_cfg(CIF_IINFO_Type *iinfo)
 {
-    IINFO_MEM_REGION_CFG_LO_Type region_lo;
+    CIF_IINFO_MEM_REGION_CFG_LO_Type region_lo;
     uint64_t region_base;
     region_lo.d = iinfo->mem_region0_cfg_lo;
     if (region_lo.b.exist) {
         CIF_PRINTF("                  mem_region0: present\r\n");
-        IINFO_MEM_REGION_CFG_HI_Type region_hi = iinfo->mem_region0_cfg_hi;
+        CIF_IINFO_MEM_REGION_CFG_HI_Type region_hi = iinfo->mem_region0_cfg_hi;
         region_base = (uint64_t)region_hi << 32 | (region_lo.d & (~0x3FFULL));
         if (region_lo.b.mem_region_ena) {
             CIF_PRINTF("                      status: enable\r\n");
@@ -644,7 +644,7 @@ static void show_mem_region_cfg(IINFO_Type *iinfo)
     region_lo.d = iinfo->mem_region1_cfg_lo;
     if (region_lo.b.exist) {
         CIF_PRINTF("                  mem_region1: present\r\n");
-        IINFO_MEM_REGION_CFG_HI_Type region_hi = iinfo->mem_region1_cfg_hi;
+        CIF_IINFO_MEM_REGION_CFG_HI_Type region_hi = iinfo->mem_region1_cfg_hi;
         region_base = (uint64_t)region_hi << 32 | (region_lo.d & (~0x3FFULL));
         if (region_lo.b.mem_region_ena) {
             CIF_PRINTF("                      status: enable\r\n");
@@ -659,13 +659,13 @@ static void show_mem_region_cfg(IINFO_Type *iinfo)
     }
 }
 
-static void show_mcppi_cfg(IINFO_Type *iinfo)
+static void show_mcppi_cfg(CIF_IINFO_Type *iinfo)
 {
-    IINFO_MCPPI_CFG_LO_Type mcppi_lo;
+    CIF_IINFO_MCPPI_CFG_LO_Type mcppi_lo;
     mcppi_lo.d = iinfo->mcppi_cfg_lo;
     if (mcppi_lo.b.exist) {
         CIF_PRINTF("                  cppi: present\r\n");
-        IINFO_MCPPI_CFG_HI_Type mcppi_hi = iinfo->mcppi_cfg_hi;
+        CIF_IINFO_MCPPI_CFG_HI_Type mcppi_hi = iinfo->mcppi_cfg_hi;
         uint64_t mcppi_base =
             (uint64_t)mcppi_hi << 32 | (mcppi_lo.d & (~0x3FFULL));
         if (mcppi_lo.b.cppi_ena) {
@@ -681,9 +681,9 @@ static void show_mcppi_cfg(IINFO_Type *iinfo)
     }
 }
 
-static void show_cmo(IINFO_Type *iinfo)
+static void show_cmo(CIF_IINFO_Type *iinfo)
 {
-    IINFO_MCMO_INFO_Type cmo_info;
+    CIF_IINFO_MCMO_INFO_Type cmo_info;
     cmo_info.d = iinfo->cmo_info;
     if (cmo_info.b.cmo_cfg) {
         CIF_PRINTF("                  cmo: present\r\n");
@@ -698,10 +698,10 @@ static void show_cmo(IINFO_Type *iinfo)
     }
 }
 
-static void show_performance_cfg(IINFO_Type *iinfo)
+static void show_performance_cfg(CIF_IINFO_Type *iinfo)
 {
-    IINFO_PERFORMANCE_CFG0_Type performance_cfg0;
-    IINFO_PERFORMANCE_CFG1_Type performance_cfg1;
+    CIF_IINFO_PERFORMANCE_CFG0_Type performance_cfg0;
+    CIF_IINFO_PERFORMANCE_CFG1_Type performance_cfg1;
     performance_cfg0.d = iinfo->performance_cfg0;
     performance_cfg1.d = iinfo->performance_cfg1;
 
@@ -741,10 +741,10 @@ static void show_performance_cfg(IINFO_Type *iinfo)
     }
 }
 
-static void show_misc_cfg(IINFO_Type *iinfo)
+static void show_misc_cfg(CIF_IINFO_Type *iinfo)
 {
-    IINFO_MERGEL1DCTRL_Type mergel1dctrl;
-    IINFO_ACCESS_CTRL_Type access_ctrl;
+    CIF_IINFO_MERGEL1DCTRL_Type mergel1dctrl;
+    CIF_IINFO_ACCESS_CTRL_Type access_ctrl;
     mergel1dctrl.d = iinfo->mergel1dctrl;
     access_ctrl.d = iinfo->access_ctrl;
     CIF_PRINTF("                  misc: \r\n");

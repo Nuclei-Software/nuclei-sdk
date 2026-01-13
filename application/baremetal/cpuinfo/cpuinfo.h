@@ -269,7 +269,7 @@ typedef struct {
     uint32_t crc_rf0;                            /*!< offset 0x0198 */
     uint32_t crc_rf1;                            /*!< offset 0x019C */
     uint32_t crc_fp0;                            /*!< offset 0x01A0 */
-} IINFO_Type;
+} CIF_IINFO_Type;
 
 /**
  * \brief  Union type to access SMP_CFG register.
@@ -325,7 +325,7 @@ typedef struct {
     uint8_t reserved2;
     uint8_t reserved3;
     uint8_t mth;                                 /*!< Offset: 0x00B(R/W)  CLIC machine mode interrupt-level threshold */
-} ECLIC_Type;
+} CIF_ECLIC_Type;
 
 /**
  * \brief  CPU INFO Structure
@@ -348,11 +348,12 @@ typedef struct {
     U32_CC_CFG_Type cccfg;
     uint32_t xlen;
     uint32_t vlenb;
-    IINFO_Type *iinfo;                           /*!< IREGION INFO memory pointer */
-    ECLIC_Type *eclic;                           /*!< ECLIC memory pointer */
+    CIF_IINFO_Type *iinfo;                           /*!< IREGION INFO memory pointer */
+    CIF_ECLIC_Type *eclic;                           /*!< ECLIC memory pointer */
 } CPU_INFO_Group;
+
 /**
- * \brief  Union type to access MVLM_CFG_LO register.
+ * \brief  Union type to access MCMO_INFO register.
  */
 typedef union {
     struct {
@@ -360,10 +361,10 @@ typedef union {
         uint32_t cmo_pft:1;                      /*!< bit: 1 CMO has prefetch */
         uint32_t cmo_size:4;                     /*!< bit: 2..5 cache block size */
         uint32_t cbozero_size:4;                 /*!< bit: 6..9 cache block size of cbo.zero */
-        uint32_t vlm_base_lo:22;                 /*!< bit: 10..31 Reserved 0 */
+        uint32_t :22;                            /*!< bit: 10..31 Reserved 0 */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_MCMO_INFO_Type;
+} CIF_IINFO_MCMO_INFO_Type;
 
 /**
  * \brief  Union type to access MVLM_CFG_LO register.
@@ -376,9 +377,9 @@ typedef union {
         uint32_t vlm_base_lo:22;                 /*!< bit: 10..31 VLM base address */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_MVLM_CFG_LO_Type;
+} CIF_IINFO_MVLM_CFG_LO_Type;
 
-typedef uint32_t IINFO_MVLM_CFG_HI_Type;
+typedef uint32_t CIF_IINFO_MVLM_CFG_HI_Type;
 
 /**
  * \brief  Union type to access ISA_SUPPORT0 register.
@@ -415,10 +416,10 @@ typedef union {
         uint32_t smcntrpmf:1;                    /*!< bit: 27 support Smcntrpmf extension */
         uint32_t zicntr:1;                       /*!< bit: 28 support Zicntr extension */
         uint32_t zawrs:1;                        /*!< bit: 29 support Zawrs extension */
-        uint32_t :2;
+        uint32_t :2;                             /*!< bit: 30..31 reserved */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_ISA_SUPPORT0_Type;
+} CIF_IINFO_ISA_SUPPORT0_Type;
 
 /**
  * \brief  Union type to access ISA_SUPPORT1 register.
@@ -443,10 +444,10 @@ typedef union {
         uint32_t smcsrind:1;                     /*!< bit: 15 support Smcsrind extension */
         uint32_t sscsrind:1;                     /*!< bit: 16 support Sscsrind extension */
         uint32_t svadu:1;                        /*!< bit: 17 support Svadu extension */
-        uint32_t :14;
+        uint32_t :14;                            /*!< bit: 18..31 reserved */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_ISA_SUPPORT1_Type;
+} CIF_IINFO_ISA_SUPPORT1_Type;
 
 /**
  * \brief  Union type to access PERFORMANCE_CFG0 register.
@@ -469,10 +470,10 @@ typedef union {
         uint32_t dcache_prefetch:1;              /*!< bit: 22 dcache prefetch */
         uint32_t dcache_lbuf_num:5;              /*!< bit: 23..27 dcache line buffer number */
         uint32_t mul_cyc:3;                      /*!< bit: 28..30 multiplier cycle */
-        uint32_t :1;
+        uint32_t :1;                             /*!< bit: 31 reserved */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_PERFORMANCE_CFG0_Type;
+} CIF_IINFO_PERFORMANCE_CFG0_Type;
 
 /**
  * \brief  Union type to access PERFORMANCE_CFG1 register.
@@ -486,10 +487,10 @@ typedef union {
         uint32_t agu_quick_forward:1;            /*!< bit: 12 agu quick forward */
         uint32_t cau_fwd:1;                      /*!< bit: 13 crypto instruction forward */
         uint32_t hpm_ver:2;                      /*!< bit: 14..15 HPM version */
-        uint32_t :16;
+        uint32_t :16;                            /*!< bit: 16..31 reserved */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_PERFORMANCE_CFG1_Type;
+} CIF_IINFO_PERFORMANCE_CFG1_Type;
 
 /**
  * \brief  Union type to access PFL1INFO register.
@@ -502,7 +503,7 @@ typedef union {
         uint32_t pf_ver:8;                       /*!< bit: 24..31 prefetch version */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_PFL1INFO_Type;
+} CIF_IINFO_PFL1INFO_Type;
 
 /**
  * \brief  Union type to access PFL1DCTRL1 register.
@@ -518,10 +519,10 @@ typedef union {
         uint32_t :2;                             /*!< bit: 6..7 reserved */
         uint32_t pref_conflict_stop_th:4;        /*!< bit: 8..11 prefetch inc counter stop threshold */
         uint32_t pref_conflict_decr_sel:3;       /*!< bit: 12..14 prefetch num to dec counter */
-        uint32_t :16;                            /*!< bit: 15..31 reserved */
+        uint32_t :17;                            /*!< bit: 15..31 reserved */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_PFL1DCTRL1_Type;
+} CIF_IINFO_PFL1DCTRL1_Type;
 
 /**
  * \brief  Union type to access PFL1DCTRL2 register.
@@ -536,7 +537,7 @@ typedef union {
         uint32_t :12;                            /*!< bit: 20..31 reserved */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_PFL1DCTRL2_Type;
+} CIF_IINFO_PFL1DCTRL2_Type;
 
 /**
  * \brief  Union type to access PFL1DCTRL3 register.
@@ -553,7 +554,7 @@ typedef union {
         uint32_t :4;                             /*!< bit: 28..31 reserved */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_PFL1DCTRL3_Type;
+} CIF_IINFO_PFL1DCTRL3_Type;
 
 /**
  * \brief  Union type to access MERGEL1DCTRL register.
@@ -565,9 +566,9 @@ typedef union {
         uint32_t nc_tmout_max:8;                 /*!< bit: 16..23 non-cacheable tmout cnt max value */
         uint32_t dev_store_early_ret: 1;         /*!< bit: 24 whether device region store is blocking */
         uint32_t :7;                             /*!< bit: 25..31 reserved */
-    } b;                                            /*!< Structure used for bit access */
+    } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_MERGEL1DCTRL_Type;
+} CIF_IINFO_MERGEL1DCTRL_Type;
 
 /**
  * \brief  Union type to access ACCESS_CTRL register.
@@ -581,7 +582,7 @@ typedef union {
         uint32_t :28;                            /*!< bit: 4..31 reserved */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_ACCESS_CTRL_Type;
+} CIF_IINFO_ACCESS_CTRL_Type;
 
 /**
  * \brief  Union type to access FLASH_BASE_ADDR_LO register.
@@ -594,9 +595,9 @@ typedef union {
         uint32_t flash_base_lo:22;               /*!< bit: 10..31 flash base address low */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_FLASH_BASE_ADDR_LO_Type;
+} CIF_IINFO_FLASH_BASE_ADDR_LO_Type;
 
-typedef uint32_t IINFO_FLASH_BASE_ADDR_HI_Type;
+typedef uint32_t CIF_IINFO_FLASH_BASE_ADDR_HI_Type;
 
 /**
  * \brief  Union type to access MEM_REGION_CFG_LO register.
@@ -610,9 +611,9 @@ typedef union {
         uint32_t mem_region_base_lo:22;          /*!< bit: 10..31 mem region base address low */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_MEM_REGION_CFG_LO_Type;
+} CIF_IINFO_MEM_REGION_CFG_LO_Type;
 
-typedef uint32_t IINFO_MEM_REGION_CFG_HI_Type;
+typedef uint32_t CIF_IINFO_MEM_REGION_CFG_HI_Type;
 
 /**
  * \brief  Union type to access MCPPI_CFG_LO register.
@@ -626,17 +627,17 @@ typedef union {
         uint32_t cppi_base_lo:22;                /*!< bit: 10..31 cppi base address low */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
-} IINFO_MCPPI_CFG_LO_Type;
+} CIF_IINFO_MCPPI_CFG_LO_Type;
 
-typedef uint32_t IINFO_MCPPI_CFG_HI_Type;
+typedef uint32_t CIF_IINFO_MCPPI_CFG_HI_Type;
 
 /**
  * \brief  Nuclei CPU INFO Structure For OpenOCD Usage
  */
 typedef struct {
     CPU_INFO_Group cpuinfo;
-    IINFO_Type iinfo;
-    ECLIC_Type eclic;
+    CIF_IINFO_Type iinfo;
+    CIF_ECLIC_Type eclic;
 } NUCLEI_CPUINFO;
 
 /**
