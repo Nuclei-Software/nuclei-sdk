@@ -116,6 +116,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add ``nuclei_eclic`` configuration option in ``npk.yml`` to select ECLIC version (v1/v2) with conditional compilation flags for ECLICv2 features
   - Add ``XLCFG_ECC`` support in evalsoc to support different ECC error injection mode, see :ref:`design_soc_evalsoc_ecc`
   - Add ECLICv2 support in evalsoc interrupt context save/restore for S-Mode SUBM register handling when ``CFG_HAS_ECLICV2`` is defined
+  - Use ``IINFO_EnablePrefetchOverall()`` to enable prefetch overall by default in evalsoc.
 
 * Documentation
 

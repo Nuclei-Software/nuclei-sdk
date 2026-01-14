@@ -1534,6 +1534,9 @@ void _premain_init(void)
     }
 #endif
 
+    /* Enable prefetch overall */
+    IINFO_EnablePrefetchOverall();
+
 #if defined(RUNMODE_BPU_EN)
 #if RUNMODE_BPU_EN == 1
     __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_BPU);
