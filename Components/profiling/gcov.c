@@ -16,8 +16,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
 
 #include <stdio.h>
 
@@ -481,7 +479,6 @@ int gcov_collect(unsigned long interface)
     struct gcov_data *data;
     size_t sz = 0, count = 0;
     char *bufptr = NULL;
-    int fd = -1;
 
     // Make sure there are coverage information in it
     if (!gcov_info_head) {
@@ -512,11 +509,11 @@ int gcov_collect(unsigned long interface)
         convert_to_gcda(bufptr, info);
         gcov_data_link(data);
         if (interface == 1) {
-            fd = open(data->filename, O_CREAT | O_TRUNC | O_WRONLY, 0666);
-            if (fd > 0) {
+            FILE *fp = fopen(data->filename, "wb");
+            if (fp != NULL) {
                 printf("Create and store coverage data in %s file\n", data->filename);
-                write(fd, (const char*) data->buffer, (size_t)data->size);
-                close(fd);
+                fwrite(data->buffer, 1, (size_t)data->size, fp);
+                fclose(fp);
             } else {
                 printf("Unable to open %s file\n", data->filename);
             }

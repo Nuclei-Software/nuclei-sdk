@@ -129,6 +129,10 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add n100 cpu nsdk_cli configurations for qemu and fpga benchmark
   - Add new ci configuration for ``demo_smpcc`` and ``demo_ecc`` daily ci running
 
+* Components
+
+  - Support ``libncrt`` library for profiling component by replacing POSIX I/O with ANSI C I/O, which also fixed header file conflict issues when using ``libncrt`` library such as ``STDCLIB=libncrt_small``
+
 V0.8.1
 ------
 

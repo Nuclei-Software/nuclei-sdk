@@ -30,10 +30,8 @@
 // - https://github.com/bminor/newlib/blob/master/winsup/cygwin/gmon.c
 // - https://github.com/bminor/newlib/blob/master/winsup/cygwin/local_includes/gmon.h
 
-#include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdint.h>
 #include <string.h>
 #include "gprof_api.h"
@@ -171,7 +169,7 @@ struct gprofdata {
 #define GMON_PROF_ERROR         2
 #define GMON_PROF_OFF           3
 
-#define ERR(s)                  write(STDERR_FILENO, s, sizeof(s))
+#define ERR(s)                  fprintf(stderr, "%s", s)
 
 
 static struct gmonparam _gmonparam = { GMON_PROF_OFF, 0, NULL,
@@ -371,7 +369,7 @@ void _mcount(uint32_t *frompcindex)
     out: return; /* normal return restores saved registers */
     overflow: p->state++; /* halt further profiling */
 #define TOLIMIT         "mcount: tos overflow\n"
-    write(STDOUT_FILENO, TOLIMIT, sizeof(TOLIMIT));
+    printf("%s", TOLIMIT);
     goto out;
 }
 
@@ -397,7 +395,7 @@ static void hexdumpbuf(char *buf, unsigned long sz)
 long gprof_collect(unsigned long interface)
 {
     static const char gmon_out[] = "gmon.out";
-    int fd = -1;
+    FILE *fp = NULL;
     int hz;
     int fromindex;
     int endfrom;
@@ -431,8 +429,8 @@ long gprof_collect(unsigned long interface)
         bufptr = gprof_data.buf;
     } else if (interface == 1) {
         proffile = gmon_out;
-        fd = open(proffile, O_CREAT | O_TRUNC | O_WRONLY, 0666);
-        if (fd < 0) {
+        fp = fopen(proffile, "wb");
+        if (fp == NULL) {
             printf("Unable to open %s\n", proffile);
             return -1;
         }
@@ -443,7 +441,7 @@ long gprof_collect(unsigned long interface)
 #ifdef DEBUG
     len = sprintf(dbuf, "[mcleanup1] kcount 0x%x ssiz %d\n",
             p->kcount, p->kcountsize);
-    write(STDOUT_FILENO, dbuf, len);
+    printf("%s", dbuf);
 #endif
 
     hdr = (struct gmonhdr*) &gmonhdr;
@@ -458,8 +456,8 @@ long gprof_collect(unsigned long interface)
         memcpy(bufptr, (void*) p->kcount, p->kcountsize);
         bufptr += p->kcountsize;
     } else if (interface == 1) {
-        write(fd, (const char*) hdr, sizeof *hdr);
-        write(fd, (const char*) p->kcount, p->kcountsize);
+        fwrite((const char*) hdr, 1, sizeof *hdr, fp);
+        fwrite((const char*) p->kcount, 1, p->kcountsize, fp);
     } else {
         hexdumpbuf((char*) hdr, sizeof *hdr);
         hexdumpbuf((char *)p->kcount, (unsigned long)p->kcountsize);
@@ -468,7 +466,7 @@ long gprof_collect(unsigned long interface)
 #ifdef DEBUG
     len = sprintf(dbuf, "[mcleanup1] lowpc 0x%lx highpc 0x%lx ncnt %d\n",
                 hdr->lpc, hdr->hpc, hdr->ncnt);
-    write(STDOUT_FILENO, dbuf, len);
+    printf("%s", dbuf);
 #endif
     endfrom = p->fromssize / sizeof(*p->froms);
     for (fromindex = 0; fromindex < endfrom; fromindex++) {
@@ -484,7 +482,7 @@ long gprof_collect(unsigned long interface)
             "[mcleanup2] frompc 0x%x selfpc 0x%x count %d\n" ,
                 frompc, p->tos[toindex].selfpc,
                 p->tos[toindex].count);
-            write(STDOUT_FILENO, dbuf, len);
+            printf("%s", dbuf);
 #endif
             rawarc.raw_frompc = frompc;
             rawarc.raw_selfpc = p->tos[toindex].selfpc;
@@ -493,7 +491,7 @@ long gprof_collect(unsigned long interface)
                 memcpy(bufptr, (void*) &rawarc, sizeof rawarc);
                 bufptr += sizeof rawarc;
             } else if (interface == 1) {
-                write(fd, (const char*)&rawarc, sizeof rawarc);
+                fwrite((const char*)&rawarc, 1, sizeof rawarc, fp);
             } else {
                 hexdumpbuf((char *)(&rawarc), (unsigned long)(sizeof rawarc));
             }
@@ -503,7 +501,7 @@ long gprof_collect(unsigned long interface)
         gprof_data.size = bufptr - gprof_data.buf;
         printf("Collected gprof data @0x%lx, size %lu bytes\n", gprof_data.buf, gprof_data.size);
     } else if (interface == 1) {
-        close(fd);
+        fclose(fp);
         printf("Write %s done!\n", gmon_out);
     } else {
         printf("\nCREATE: %s\n", gmon_out);
