@@ -486,7 +486,7 @@ __STATIC_FORCEINLINE void ECC_ILMErrInject(uint32_t ecc_code, void *addr)
     /* Write ecc_code into mecc_code csr also clear all error status */
     __RV_CSR_WRITE(CSR_MECC_CODE, ecc_code);
     ECC_DisableILMECCCheck();
-    register uint32_t val = __LW(addr);
+    uint32_t val = __LW(addr);
     __RWMB();
     __RV_CSR_SET(CSR_MILM_CTL, MILM_CTL_ILM_ECC_INJ_EN);
     __SW(addr, val);
@@ -602,7 +602,7 @@ __STATIC_FORCEINLINE void ECC_DLMErrInject(uint32_t ecc_code, void *addr)
     /* Write ecc_code into mecc_code csr also clear all error status */
     __RV_CSR_WRITE(CSR_MECC_CODE, ecc_code);
     ECC_DisableDLMECCCheck();
-    register uint32_t val = __LW(addr);
+    uint32_t val = __LW(addr);
     __RWMB();
     __RV_CSR_SET(CSR_MDLM_CTL, MDLM_CTL_DLM_ECC_INJ_EN);
     __SW(addr, val);

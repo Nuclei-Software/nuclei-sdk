@@ -198,10 +198,10 @@ typedef union
 #define SMPCC_CTRL_CLM_ECC_EN_ENABLE         1U                                          /*!< SMPCC CC_CTRL CLM_ECC_EN Enable */
 #define SMPCC_CTRL_CLM_ECC_EN_DISABLE        0U                                          /*!< SMPCC CC_CTRL CLM_ECC_EN Disable */
 
-#define SMPCC_CTRL_CLM_EXCEP_EN_Pos          13U                                         /*!< SMPCC CC_CTRL CLM_EXCEP_EN Position */
-#define SMPCC_CTRL_CLM_EXCEP_EN_Msk          (0x1UL << SMPCC_CTRL_CLM_EXCEP_EN_Pos)      /*!< SMPCC CC_CTRL CLM_EXCEP_EN Mask */
-#define SMPCC_CTRL_CLM_EXCEP_EN_ENABLE       1U                                          /*!< SMPCC CC_CTRL CLM_EXCEP_EN Enable */
-#define SMPCC_CTRL_CLM_EXCEP_EN_DISABLE      0U                                          /*!< SMPCC CC_CTRL CLM_EXCEP_EN Disable */
+#define SMPCC_CTRL_CLM_EXCP_EN_Pos          13U                                         /*!< SMPCC CC_CTRL CLM_EXCP_EN Position */
+#define SMPCC_CTRL_CLM_EXCP_EN_Msk          (0x1UL << SMPCC_CTRL_CLM_EXCP_EN_Pos)      /*!< SMPCC CC_CTRL CLM_EXCP_EN Mask */
+#define SMPCC_CTRL_CLM_EXCP_EN_ENABLE       1U                                          /*!< SMPCC CC_CTRL CLM_EXCP_EN Enable */
+#define SMPCC_CTRL_CLM_EXCP_EN_DISABLE      0U                                          /*!< SMPCC CC_CTRL CLM_EXCP_EN Disable */
 
 #define SMPCC_CTRL_CLM_ECC_CHK_EN_Pos        14U                                         /*!< SMPCC CC_CTRL CLM_ECC_CHK_EN Position */
 #define SMPCC_CTRL_CLM_ECC_CHK_EN_Msk        (0x1UL << SMPCC_CTRL_CLM_ECC_CHK_EN_Pos)    /*!< SMPCC CC_CTRL CLM_ECC_CHK_EN Mask */
@@ -634,7 +634,7 @@ typedef union
  */
 #pragma pack(4)
 typedef struct {
-    __IM SMP_VER_Type SMP_VER;                          /*!< Offset: 0x000 (R)  SMP version register */
+    const SMP_VER_Type SMP_VER;                         /*!< Offset: 0x000 (R)  SMP version register */
     __IM SMP_CFG_Type SMP_CFG;                          /*!< Offset: 0x004 (R)  SMP Configuration register */
     __IM CC_CFG_Type CC_CFG;                            /*!< Offset: 0x008 (R)  CC config register */
     __IOM SMP_ENB_Type SMP_ENB;                         /*!< Offset: 0x00C (R/W)  SMP enable register */
@@ -1280,7 +1280,7 @@ __STATIC_FORCEINLINE void SMPCC_DisableCLMECCCheck(void)
 */
 __STATIC_FORCEINLINE void SMPCC_EnableCLMECCExcp(void)
 {
-     SMPCC->CC_CTRL.b.clm_excp_en = SMPCC_CTRL_CLM_EXCEP_EN_ENABLE;
+     SMPCC->CC_CTRL.b.clm_excp_en = SMPCC_CTRL_CLM_EXCP_EN_ENABLE;
 }
 
 /**
@@ -1292,7 +1292,7 @@ __STATIC_FORCEINLINE void SMPCC_EnableCLMECCExcp(void)
 */
 __STATIC_FORCEINLINE void SMPCC_DisableCLMECCExcp(void)
 {
-     SMPCC->CC_CTRL.b.clm_excp_en = SMPCC_CTRL_CLM_EXCEP_EN_DISABLE;
+     SMPCC->CC_CTRL.b.clm_excp_en = SMPCC_CTRL_CLM_EXCP_EN_DISABLE;
 }
 
 /**
@@ -1887,7 +1887,7 @@ __STATIC_FORCEINLINE void SMPCC_CLMErrInject(uint32_t ecc_code, void *addr)
 {
     SMPCC_SetECCCode(ecc_code);
     SMPCC_DisableCLMECCCheck();
-    register uint32_t val = __LW(addr);
+    uint32_t val = __LW(addr);
     __RWMB();
     SMPCC->CC_ERR_INJ.b.inj_clm = SMPCC_ERR_INJ_INJCLM_ENABLE;
     __SW(addr, val);
