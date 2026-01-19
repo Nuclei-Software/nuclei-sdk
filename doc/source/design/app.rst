@@ -237,6 +237,7 @@ You can also use openocd to probe the cpu feature, see https://doc.nucleisys.com
                           ws_tmout_max=767
                           nc_tmout_max=0
                           dev_store_early_ret=0
+                          reg_prot_chck_en=1
                           pf_access=0
                           cache_csr_access=0
                           pma_csr_access=0

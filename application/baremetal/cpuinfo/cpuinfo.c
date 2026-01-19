@@ -744,13 +744,16 @@ static void show_performance_cfg(CIF_IINFO_Type *iinfo)
 static void show_misc_cfg(CIF_IINFO_Type *iinfo)
 {
     CIF_IINFO_MERGEL1DCTRL_Type mergel1dctrl;
+    CIF_IINFO_SAFETY_CTRL_Type safety_ctrl;
     CIF_IINFO_ACCESS_CTRL_Type access_ctrl;
     mergel1dctrl.d = iinfo->mergel1dctrl;
+    safety_ctrl.d = iinfo->safety_ctrl;
     access_ctrl.d = iinfo->access_ctrl;
     CIF_PRINTF("                  misc: \r\n");
     SHOW_VALUE(mergel1dctrl, ws_tmout_max);
     SHOW_VALUE(mergel1dctrl, nc_tmout_max);
     SHOW_VALUE(mergel1dctrl, dev_store_early_ret);
+    SHOW_VALUE(safety_ctrl, reg_prot_chck_en);
     SHOW_VALUE(access_ctrl, pf_access);
     SHOW_VALUE(access_ctrl, cache_csr_access);
     SHOW_VALUE(access_ctrl, pma_csr_access);

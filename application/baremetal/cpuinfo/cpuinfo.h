@@ -259,7 +259,8 @@ typedef struct {
     uint32_t pfl1dctrl1;                         /*!< offset 0x0100 */
     uint32_t pfl1dctrl2;                         /*!< offset 0x0104 */
     uint32_t mergel1dctrl;                       /*!< offset 0x0108 */
-    uint32_t reserved6[2];                       /*!< offset 0x010C */
+    uint32_t reserved6;                          /*!< offset 0x010C */
+    uint32_t safety_ctrl;                        /*!< offset 0x0110 */
     uint32_t access_ctrl;                        /*!< offset 0x0114 */
     uint32_t reserved7[2];                       /*!< offset 0x0118 */
     uint32_t pfl1dctrl3;                         /*!< offset 0x0120 */
@@ -569,6 +570,17 @@ typedef union {
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
 } CIF_IINFO_MERGEL1DCTRL_Type;
+
+/**
+ * \brief  Union type to access SAFETY_CTRL register.
+ */
+typedef union {
+    struct {
+        uint32_t reg_prot_chck_en:2;            /*!< bit: 0..1 register protect check enable */
+        uint32_t :30;                           /*!< bit: 2..31 reserved */
+    } b;                                        /*!< Structure used for bit access */
+    uint32_t d;                                 /*!< Type      used for register data access */
+} CIF_IINFO_SAFETY_CTRL_Type;
 
 /**
  * \brief  Union type to access ACCESS_CTRL register.
