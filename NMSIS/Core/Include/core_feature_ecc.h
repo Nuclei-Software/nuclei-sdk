@@ -282,6 +282,7 @@ __STATIC_FORCEINLINE void ECC_DisableDCacheECCCheck(void)
 }
 
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
+#if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1)
 /**
  * \brief  Inject error into I-Cache Tag RAM
  * \details
@@ -334,7 +335,9 @@ __STATIC_FORCEINLINE void ECC_ICacheErrRestore(void *addr)
     MInvalICacheLine((unsigned long)addr);
     MLockICacheLine((unsigned long)addr);
 }
+#endif /* #if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1) */
 
+#if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1)
 /**
  * \brief  Inject error into D-Cache Tag RAM
  * \details
@@ -392,6 +395,7 @@ __STATIC_FORCEINLINE void ECC_DCacheErrRestore(void *addr)
     MLockDCacheLine((unsigned long)addr);
     ECC_EnableDCacheECCCheck();
 }
+#endif /* #if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1) */
 #endif /* #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1) */
 
 /**
