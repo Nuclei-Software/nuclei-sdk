@@ -1837,6 +1837,16 @@ __STATIC_FORCEINLINE rv_csr_t __get_nmi_entry(void)
     return __RV_CSR_READ(CSR_MNVEC);
 }
 
+/* NOTE: SSUBM CSR is introduced in ECLIC v2, without this the S_Mode vector interrupt nesting
+ * and non-vector interrupt nesting will not work properly */
+#if __ECLIC_VER == 2
+#define SAVE_SSUBM_VAR()        rv_csr_t __ssubm = __RV_CSR_READ(CSR_SSUBM);
+#define RESTORE_SSUBM_VAR()     __RV_CSR_WRITE(CSR_SSUBM, __ssubm);
+#else
+#define SAVE_SSUBM_VAR()
+#define RESTORE_SSUBM_VAR()
+#endif
+
 /**
  * \brief   Save necessary CSRs into variables for vector interrupt nesting
  * \details
@@ -1877,6 +1887,7 @@ __STATIC_FORCEINLINE rv_csr_t __get_nmi_entry(void)
 #define SAVE_IRQ_CSR_CONTEXT_S()                                            \
         rv_csr_t __scause = __RV_CSR_READ(CSR_SCAUSE);                      \
         rv_csr_t __sepc = __RV_CSR_READ(CSR_SEPC);                          \
+        SAVE_SSUBM_VAR();                                                   \
         __enable_irq_s();
 
 
@@ -1898,6 +1909,7 @@ __STATIC_FORCEINLINE rv_csr_t __get_nmi_entry(void)
 /*! Restore necessary CSRs from variables for vector interrupt nesting in supervisor mode */
 #define RESTORE_IRQ_CSR_CONTEXT_S()                                         \
         __disable_irq_s();                                                  \
+        RESTORE_SSUBM_VAR();                                                \
         __RV_CSR_WRITE(CSR_SEPC, __sepc);                                   \
         __RV_CSR_WRITE(CSR_SCAUSE, __scause);
 /** @} */ /* End of Doxygen Group NMSIS_Core_IntExc */

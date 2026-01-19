@@ -43,6 +43,10 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Update ``CSR_MDLMCTL_Type`` structure in ``core_feature_base.h`` with ``dlm_va_en`` and ``dis_lsu_dlm`` field
   - Add bit mask of ``CSR_MCACHE_CTL`` and ``CSR_MECC_CODE`` in ``riscv_encoding.h``
   - Add ``core_feature_ecc.h`` and update ``core_feature_smpcc.h`` to support ECC related operations.
+  - Add SSUBM CSR handling for ECLIC v2 to enable proper S-Mode vector interrupt nesting with ``SAVE_SSUBM_VAR()`` and
+    ``RESTORE_SSUBM_VAR()`` macros in ``core_feature_eclic.h``
+  - Extend ``CSR_MCFG_INFO`` bit definitions with new feature flags including ``ZC_XLCZ_EXT``, ``SEC_MODE``, ``ETRACE``,
+    ``SAFETY_MECHANISM``, ``VNICE``, ``XLCZ``, ``ZILSD``, and ``SSTC`` in ``riscv_encoding.h``
 
 * Application
 
