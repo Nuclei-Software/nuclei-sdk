@@ -46,6 +46,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
 
 * Application
 
+  - Add new application :ref:`design_app_demo_eclic_stress` to stress test ECLIC interrupt handling in both M-Mode and S-Mode with vector and non-vector interrupts, nesting, tail-chaining, and M-S mode interactions
   - Add new application :ref:`design_app_demo_eclic_umode` to show how to use U-Mode with ECLIC running in M-Mode
   - For FreeRTOS demo/smpdemo, now default use MSTATUS.MIE to do interrupt masking since default ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` set to 255
   - Update ``cpuinfo`` to display additional CPU features, including prefetch capabilities, hardware performance configirations, supported ISAs, and more. See :ref:`design_app_cpuinfo`.

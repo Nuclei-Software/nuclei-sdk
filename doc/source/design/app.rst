@@ -546,6 +546,179 @@ application detects this event and confirms successful mode switching and interr
     go back to user mode from SysTimer IRQ handler
     [SUCCESS] Test M-mode drop to U-mode passed!
 
+.. _design_app_demo_eclic_stress:
+
+demo_eclic_stress
+~~~~~~~~~~~~~~~~~
+
+This `demo_eclic_stress application`_ is used to validate the functionality of the Nuclei RISC-V processor's Enhanced Core Local Interrupt Controller (ECLIC) in both Machine Mode (M-Mode) and Supervisor Mode (S-Mode) environments. The test performs comprehensive stress validation of interrupt handling capabilities, focusing on:
+
+**M-Mode and S-Mode Interrupt Handling**: The application tests both timer interrupts (SysTimer_IRQn) with non-vector mode and software interrupts (SysTimerSW_IRQn) with vector mode, along with external interrupts (SOC_INT20_IRQn to SOC_INT39_IRQn) with mixed vector/non-vector modes.
+
+**Interrupt Nesting and Priority Handling**: The test validates different interrupt levels (0-4) to ensure proper handling of nested interrupts, where higher-level interrupts can preempt lower-level handlers with proper context restoration.
+
+**Cross-Mode Interrupt Scenarios**: The application verifies proper isolation and communication between M-Mode and S-Mode interrupt handling, ensuring both privilege levels function correctly under stress conditions.
+
+**Vector and Non-Vector Interrupt Testing**: The stress test comprehensively validates both vector and non-vector interrupt modes, including context saving/restoring for vector interrupts and proper handling of non-vector interrupts.
+
+**Advanced ECLIC Features**: The test validates level-triggered and edge-triggered interrupt configurations, interrupt pending/clear operations, CSR (Control and Status Register) context management, and ECLICv2 automatic stack switching when applicable.
+
+**Stress Testing**: The application continuously stresses the system with computation in interrupt handlers, background computation in main threads, and verification that all interrupt counters increment consistently to ensure reliable operation under heavy interrupt load.
+
+.. note::
+
+    - This demo requires ECLIC, System Timer, and optional TEE (Trusted Execution Environment) and SSTC extension to be present. When TEE and SSTC is present, both M-Mode and S-Mode interrupts are tested. When TEE is not present, only M-Mode interrupts are tested.
+    - It can also work with ECLICv2, see :ref:`design_soc_evalsoc_eclicv2`
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_eclic_stress directory
+    cd application/baremetal/demo_eclic_stress
+    # Clean the application first
+    # Assume you are running on evalsoc with ECLIC and System Timer, TEE and SSTC present
+    # If TEE and SSTC not present, just pass XLCFG_TEE=0 XLCFG_SSTC=0
+    # Refer to the Makefile in this folder
+    make SOC=evalsoc clean
+    # Build and upload the application
+    make SOC=evalsoc upload
+
+    # To test on ECLICv2, assume TEE and SSTC present
+    make SOC=evalsoc ECLIC_HWCTX=1 XLCFG_ECLIC=2 upload
+
+    # To enable separated interrupt/exception stack (only valid for ECLICv2)
+    make SOC=evalsoc INTSTACK=1 ECLIC_HWCTX=1 XLCFG_ECLIC=2 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jan 16 2026, 18:57:32
+    Download Mode: ILM
+    CPU Frequency 16009461 Hz
+    CPU HartID: 0
+    [M] Starting ECLIC Stress Test - M-Mode and S-Mode Integration
+    [M] Calculating expected computation results...
+    [M] Expected results for interrupt handlers:
+    [M] eclic_irq3_int_handler: 5666
+    [M] eclic_irq7_int_handler: 3729
+    [M] eclic_irq20_int_handler: 5666
+    [M] eclic_irq21_int_handler: 3729
+    [M] eclic_irq22_int_handler: 4086
+    [M] eclic_irq23_int_handler: 4088
+    [M] eclic_irq24_int_handler: 3456
+    [M] eclic_irq25_int_handler: 7414
+    [M] eclic_irq26_int_handler: 2736
+    [M] eclic_irq27_int_handler: 3206
+    [M] eclic_irq28_int_handler: 4046
+    [M] eclic_irq29_int_handler: 6859
+    [M] eclic_irq30_int_handler: 10120
+    [M] eclic_irq31_int_handler: 10941
+    [M] eclic_irq32_int_handler: 5634
+    [M] eclic_irq33_int_handler: 8516
+    [M] eclic_irq34_int_handler: 7574
+    [M] eclic_irq35_int_handler: 7352
+    [M] eclic_irq36_int_handler: 9256
+    [M] eclic_irq37_int_handler: 5195
+    [M] eclic_irq38_int_handler: 6629
+    [M] eclic_irq39_int_handler: 8119
+    [M] eclic_irq1_int_handler: 9538
+    [M] eclic_irq5_int_handler: 9538
+    [M] m-mode background computations: 11899
+    [M] s-mode background computations: 10538
+    [M] Calculation completed! Use these values to update the interrupt handlers if needed.
+    [M] ECLIC nlbits configuration: 3
+    [M] ECLIC Shadow Register Groups: 2
+    [M] Shadow Level Register: 0x000000000000005f
+    [M] Initialize timer and start timer interrupt 10 ms periodically in M-Mode
+    [M] Use separated interrupt stack for m-mode interrupt at 0x90004c70
+    [M] TEE is present, will run both S-Mode and M-Mode demos
+    [M] Current sp is 0x9000ff70, so it is in Machine Mode!
+    [M] Configuring SysTimerSW_S, SysTimer_S and SOC_INT30-39 to execute in S-Mode
+    [M] Dropping to S-Mode now
+    [S] Hello Supervisor Mode!!!
+    [S] Current sp is 0x90009c90, so it is in Supervisor Mode!
+    [S] Initialize timer and start timer interrupt 20 ms periodically in S-Mode
+    [S] ECLIC nlbits configuration: 3
+    [S] ECLIC Shadow Register Groups: 2
+    [S] Supervisor Shadow Level Register: 0x000000000000007f
+    [S] Use separated interrupt stack for s-mode interrupt at 0x90007470
+    [M] eclic_mtip_handler (level 0) triggered IRQ 20 (level 2, trigger counter: 100), msubm 0x440, mcause 0x90000007, mintstatus 0x1f000000
+    [M] eclic_int20_handler (level 2) triggered IRQ 21 (level 3, trigger counter: 100), msubm 0x8940, mcause 0xb81f0014, mintstatus 0x5f000000
+    [M] eclic_int21_handler (level 3) triggered IRQ 22 (level 3, trigger counter: 100), msubm 0x10140, mcause 0xb85f0015, mintstatus 0x7f000000
+    [M] eclic_int21_handler - non-vector (level 3) run 100 times done!
+    [M] eclic_int22_handler (level 3) triggered IRQ 23 (level 4, trigger counter: 100), msubm 0x10140, mcause 0xb85f0016, mintstatus 0x7f000000
+    [M] eclic_int23_handler (level 4) triggered IRQ 24 (level 2, trigger counter: 100), msubm 0x140, mcause 0xb87f0017, mintstatus 0x9f000000
+    [M] eclic_int23_handler - non-vector (level 4) run 100 times done!
+    [M] eclic_int22_handler - non-vector (level 3) run 100 times done!
+    [M] eclic_int20_handler - non-vector (level 2) run 100 times done!
+    [M] eclic_int24_handler (level 2) triggered IRQ 25 (level 1, trigger counter: 100), msubm 0x8940, mcause 0xb81f0018, mintstatus 0x5f000000
+    [M] eclic_int24_handler - non-vector (level 2) run 100 times done!
+    [M] eclic_int25_handler (level 1), run counter: 100, msubm 0x8940, mcause 0xb81f0019, mintstatus 0x3f000000
+    [M] eclic_int25_handler - non-vector (level 1) run 100 times done!
+    [M] eclic_msip_handler (level 0) triggered IRQ 26 (level 2, trigger counter: 100), msubm 0x8140, mcause 0xb81f0003, mintstatus 0x3f000000
+    [M] eclic_int26_handler (level 2) triggered IRQ 27 (level 3, trigger counter: 100), msubm 0x140, mcause 0xb83f001a, mintstatus 0x5f000000
+    [M] eclic_int27_handler (level 3) triggered IRQ 28 (level 2, trigger counter: 100), msubm 0x140, mcause 0xb85f001b, mintstatus 0x7f000000
+    [M] eclic_int27_handler - vector (level 3) run 100 times done!
+    [M] eclic_int26_handler - vector (level 2) run 100 times done!
+    [M] eclic_int28_handler (level 2) triggered IRQ 29 (level 4, trigger counter: 100), msubm 0x140, mcause 0xb83f001c, mintstatus 0x5f000000
+    [M] eclic_int29_handler (level 4), run counter: 100, msubm 0x140, mcause 0xb85f001d, mintstatus 0x9f000000
+    [M] eclic_int29_handler - vector (level 4) run 100 times done!
+    [M] eclic_int28_handler - vector (level 2) run 100 times done!
+    [M] eclic_msip_handler - vector (level 1) run 100 times done!
+    [M] eclic_mtip_handler - non-vector (level 0) run 100 times done!
+    [M] eclic_mtip_handler (level 0) triggered IRQ 20 (level 2, trigger counter: 200), msubm 0x440, mcause 0x90000007, mintstatus 0x1f000000
+    [M] eclic_int20_handler (level 2) triggered IRQ 21 (level 3, trigger counter: 200), msubm 0x8940, mcause 0xb81f0014, mintstatus 0x5f000000
+    [M] eclic_int21_handler (level 3) triggered IRQ 22 (level 3, trigger counter: 200), msubm 0x10140, mcause 0xb85f0015, mintstatus 0x7f000000
+    [M] eclic_int21_handler - non-vector (level 3) run 200 times done!
+    [M] eclic_int22_handler (level 3) triggered IRQ 23 (level 4, trigger counter: 200), msubm 0x10140, mcause 0xb85f0016, mintstatus 0x7f000000
+    [M] eclic_int23_handler (level 4) triggered IRQ 24 (level 2, trigger counter: 200), msubm 0x140, mcause 0xb87f0017, mintstatus 0x9f000000
+    [M] eclic_int23_handler - non-vector (level 4) run 200 times done!
+    [M] eclic_int22_handler - non-vector (level 3) run 200 times done!
+    [M] eclic_int20_handler - non-vector (level 2) run 200 times done!
+    [M] eclic_int24_handler (level 2) triggered IRQ 25 (level 1, trigger counter: 200), msubm 0x8940, mcause 0xb81f0018, mintstatus 0x5f000000
+    [M] eclic_int24_handler - non-vector (level 2) run 200 times done!
+    [M] eclic_int25_handler (level 1), run counter: 200, msubm 0x8940, mcause 0xb81f0019, mintstatus 0x3f000000
+    [M] eclic_int25_handler - non-vector (level 1) run 200 times done!
+    [M] eclic_msip_handler (level 0) triggered IRQ 26 (level 2, trigger counter: 200), msubm 0x8140, mcause 0xb81f0003, mintstatus 0x3f000000
+    [M] eclic_int26_handler (level 2) triggered IRQ 27 (level 3, trigger counter: 200), msubm 0x140, mcause 0xb83f001a, mintstatus 0x5f000000
+    [M] eclic_int27_handler (level 3) triggered IRQ 28 (level 2, trigger counter: 200), msubm 0x140, mcause 0xb85f001b, mintstatus 0x7f000000
+    [M] eclic_int27_handler - vector (level 3) run 200 times done!
+    [M] eclic_int26_handler - vector (level 2) run 200 times done!
+    [M] eclic_int28_handler (level 2) triggered IRQ 29 (level 4, trigger counter: 200), msubm 0x140, mcause 0xb83f001c, mintstatus 0x5f000000
+    [M] eclic_int29_handler (level 4), run counter: 200, msubm 0x140, mcause 0xb85f001d, mintstatus 0x9f000000
+    [M] eclic_int29_handler - vector (level 4) run 200 times done!
+    [M] eclic_int28_handler - vector (level 2) run 200 times done!
+    [M] eclic_msip_handler - vector (level 1) run 200 times done!
+    [M] eclic_mtip_handler - non-vector (level 0) run 200 times done!
+    [S] eclic_stip_handler (level 1) triggered IRQ 30 (level 3, trigger counter: 100), ssubm 0xc40, scause 0x98000005, sintstatus 0x3f00
+    [S] eclic_int30_handler (level 3) triggered IRQ 31 (level 3, trigger counter: 100), ssubm 0x19140, scause 0x983f001e, sintstatus 0x7f00
+    [S] eclic_int30_handler - non-vector (level 3) run 100 times done!
+    [S] eclic_int31_handler (level 3) triggered IRQ 32 (level 2, trigger counter: 100), ssubm 0x19140, scause 0x983f001f, sintstatus 0x7f00
+    [S] eclic_int31_handler - non-vector (level 3) run 100 times done!
+    [S] eclic_int32_handler (level 2) triggered IRQ 32 (level 2, trigger counter: 100), ssubm 0x19140, scause 0x983f0020, sintstatus 0x5f00
+    [S] eclic_int33_handler (level 4) triggered IRQ 34 (level 3, trigger counter: 100), ssubm 0x20140, scause 0x985f0021, sintstatus 0x9f00
+    [S] eclic_int33_handler - non-vector (level 4) run 100 times done!
+    [S] eclic_int34_handler (level 3) triggered IRQ 35 (level 2, trigger counter: 100), ssubm 0x20140, scause 0x985f0022, sintstatus 0x7f00
+    [S] eclic_int34_handler - non-vector (level 3) run 100 times done!
+    [S] eclic_int32_handler - non-vector (level 2) run 100 times done!
+    [S] eclic_int35_handler (level 2), run counter: 100, ssubm 0x18140, scause 0x983f0023, sintstatus 0x5f00
+    [S] eclic_int35_handler - non-vector (level 2) run 100 times done!
+    [S] eclic_ssip_handler (level 1) triggered IRQ 36 (level 3, trigger counter: 100), ssubm 0x18140, scause 0x983f0001, sintstatus 0x7f00
+    [S] eclic_ssip_handler - vector (level 3) run 100 times done!
+    [S] eclic_int36_handler (level 3) triggered IRQ 37 (level 1, trigger counter: 100), ssubm 0x18140, scause 0x983f0024, sintstatus 0x7f00
+    [S] eclic_int36_handler - vector (level 3) run 100 times done!
+    [S] eclic_stip_handler - non-vector (level 1) run 100 times done!
+    [S] eclic_int37_handler (level 1) triggered IRQ 38 (level 4, trigger counter: 100), ssubm 0x40, scause 0x98000025, sintstatus 0x3f00
+    [S] eclic_int38_handler (level 4) triggered IRQ 39 (level 2, trigger counter: 100), ssubm 0x140, scause 0x983f0026, sintstatus 0x9f00
+    [S] eclic_int38_handler - vector (level 4) run 100 times done!
+    [S] eclic_int39_handler (level 2), run counter: 100, ssubm 0x140, scause 0x983f0027, sintstatus 0x5f00
+    [S] eclic_int39_handler - vector (level 2) run 100 times done!
+    [S] eclic_int37_handler - vector (level 1) run 100 times done!
+    [S] PASS: All smode_eclic_int_cnt and mmode_eclic_int_cnt values are equal and greater than 100
+
 .. _design_app_demo_plic:
 
 demo_plic
@@ -3263,6 +3436,7 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx smpdemo`` applic
 .. _demo_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_timer
 .. _demo_clint_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_clint_timer
 .. _demo_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic
+.. _demo_eclic_stress application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic_stress
 .. _demo_plic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_plic
 .. _demo_dsp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_dsp
 .. _smphello application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/smphello

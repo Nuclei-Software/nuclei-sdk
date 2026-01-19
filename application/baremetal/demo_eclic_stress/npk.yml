@@ -1,0 +1,55 @@
+## Package Base Information
+name: app-nsdk_demo_eclic_stress
+owner: nuclei
+version:
+description: ECLIC Interrupt Stress Test Demo for Nuclei RISC-V processors
+type: app
+keywords:
+  - baremetal
+  - eclic
+category: baremetal application
+license: Apache-2.0
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    # require SSTC and TEE extension
+    value: "-O3 -flto -DCFG_HAS_ISA_SSTC -DCFG_HAS_TEE"
+    tips: "If you don't have TEE or SSTC, you can remove -DCFG_HAS_ISA_SSTC or -DCFG_HAS_TEE"
+    type: text
+    description: Application Compile Flags
+  intstack:
+    default_value: 0
+    type: checkbox
+    tips: "If enabled, it will enable separated interrupt/exception stack, only valid for ECLICv2"
+    description: Separated Trap Stack
+
+## Set Configuration for other packages
+setconfig:
+  - name: sdk-nuclei_sdk
+    config:
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
+    common_defines:
+      - defines: INTSTACK=1
+        condition: $( ${intstack} == 1 )
