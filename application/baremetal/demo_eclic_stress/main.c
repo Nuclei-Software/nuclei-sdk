@@ -1128,10 +1128,15 @@ int main(int argc, char** argv)
     ECLIC_SetModeIRQ(SOC_INT39_IRQn, PRV_S);
 
 #if defined(__SSTC_PRESENT) && (__SSTC_PRESENT == 1)
-    /* Disable S-mode access some system timer registers */
-    SysTimer_DisableSAccess();
-    /* Enable CY,TM,IR in CSR_MCOUNTEREN to allow S-mode access cycle,time,instret csr */
-    SysTimer_EnableSSTC();
+    if (__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_SSTC) {
+        /* Disable S-mode access some system timer registers */
+        SysTimer_DisableSAccess();
+        /* Enable CY,TM,IR in CSR_MCOUNTEREN to allow S-mode access cycle,time,instret csr */
+        SysTimer_EnableSSTC();
+    } else {
+        printf("[M] SSTC extension is not present, so will not run S-Mode demo!\n");
+        goto m_mode_bg;
+    }
 #else
     printf("[M] Warning: SSTC extension is required for S-Mode Timer Interrupt, so will not run S-Mode demo!\n");
     goto m_mode_bg;
@@ -1149,13 +1154,12 @@ int main(int argc, char** argv)
 
 m_mode_bg:
     unsigned long threshold = PRINT_LOOP_COUNT;
-    printf("[M] TEE not present, running M-Mode demo only\r\n");
+    printf("[M] S-Mode or SSTC not present, running M-Mode demo only\r\n");
     // Enable M-Mode interrupts if not drop to S-Mode
     __enable_irq();
     // Main loop for M-mode background computation
     while (1) {
         mmode_background_computation();
-#if !(defined(__TEE_PRESENT) && (__TEE_PRESENT == 1))
         if (check_interrupt_counters((volatile uint32_t*)mmode_eclic_int_cnt, threshold)) {
             test_passed += 1;
             printf("[M] PASS: All mmode_eclic_int_cnt values are equal and greater than %u\r\n", threshold);
@@ -1165,7 +1169,6 @@ m_mode_bg:
             SIMULATION_EXIT(0);
 #endif
         }
-#endif
     }
 
     return 0;
