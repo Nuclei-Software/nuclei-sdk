@@ -133,6 +133,10 @@
     csrrwi  x0, CSR_PUSHSCAUSE, 11
     /* Store CSR sepc to stack using pushsepc */
     csrrwi  x0, CSR_PUSHSEPC, 12
+#ifdef CFG_HAS_ECLICV2
+    /* Store CSR ssubm to stack using pushssubm */
+    csrrwi  x0, CSR_PUSHSSUBM, 13
+#endif
 #else
     csrr x5, CSR_SEPC
     STORE x5,  12*REGBYTES(sp)
@@ -150,6 +154,10 @@
 .macro RESTORE_CSR_CONTEXT_S
 #if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
 #else
+#ifdef CFG_HAS_ECLICV2
+    LOAD x5,  13*REGBYTES(sp)
+    csrw CSR_SSUBM, x5
+#endif
     LOAD x5,  12*REGBYTES(sp)
     csrw CSR_SEPC, x5
     LOAD x5,  11*REGBYTES(sp)

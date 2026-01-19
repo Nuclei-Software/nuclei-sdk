@@ -119,9 +119,9 @@
     csrrwi  x0, CSR_PUSHXCAUSE, 11
     /* Store CSR mepc to stack using pushmepc */
     csrrwi  x0, CSR_PUSHXEPC, 12
-#ifndef SMODE_RTOS
+#if (!defined(SMODE_RTOS)) || defined(CFG_HAS_ECLICV2)
     /* Store CSR msub to stack using pushmsub */
-    csrrwi  x0, CSR_PUSHMSUBM, 13
+    csrrwi  x0, CSR_PUSHXSUBM, 13
 #endif
 #endif
 .endm
@@ -134,7 +134,7 @@
 .macro RESTORE_CSR_CONTEXT
 #if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
 #else
-#ifndef SMODE_RTOS
+#if (!defined(SMODE_RTOS)) || defined(CFG_HAS_ECLICV2)
     LOAD x5,  13*REGBYTES(sp)
     csrw CSR_XSUBM, x5
 #endif

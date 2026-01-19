@@ -47,6 +47,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
     ``RESTORE_SSUBM_VAR()`` macros in ``core_feature_eclic.h``
   - Extend ``CSR_MCFG_INFO`` bit definitions with new feature flags including ``ZC_XLCZ_EXT``, ``SEC_MODE``, ``ETRACE``,
     ``SAFETY_MECHANISM``, ``VNICE``, ``XLCZ``, ``ZILSD``, and ``SSTC`` in ``riscv_encoding.h``
+  - Add ``CSR_PUSHXSUBM`` macro definition in ``riscv_encoding.h`` for ECLICv2 SUBM register handling in interrupt context
 
 * Application
 
@@ -87,6 +88,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add ECLICv2 hardware context auto-save support for all RTOS including FreeRTOS, RT-Thread, ThreadX and UCOSII when ``ECLIC_HWCTX=1`` and ``XLCFG_ECLIC=2``
   - Fix FreeRTOS task switch ``xPortTaskSwitch`` function, interrupt should be disabled during task switch
   - Fix FreeRTOS timer setup ``vPortSetupTimerInterrupt`` call location in ``xPortStartScheduler`` function to ensure proper initialization order
+  - Update RT-Thread interrupt handling to support ECLICv2 SUBM register handling with ``CSR_PUSHXSUBM`` when ``CFG_HAS_ECLICV2`` is defined
 
 * Build System
 
@@ -112,6 +114,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add ``XLCFG_ECLIC=2`` support in evalsoc to enable ECLICv2 configuration, see :ref:`design_soc_evalsoc_eclicv2`
   - Add ``nuclei_eclic`` configuration option in ``npk.yml`` to select ECLIC version (v1/v2) with conditional compilation flags for ECLICv2 features
   - Add ``XLCFG_ECC`` support in evalsoc to support different ECC error injection mode, see :ref:`design_soc_evalsoc_ecc`
+  - Add ECLICv2 support in evalsoc interrupt context save/restore for S-Mode SUBM register handling when ``CFG_HAS_ECLICV2`` is defined
 
 * Documentation
 

@@ -1218,6 +1218,7 @@
 #define CSR_XNXTI                   CSR_SNXTI
 #define CSR_PUSHXEPC                CSR_PUSHSEPC
 #define CSR_PUSHXCAUSE              CSR_PUSHSCAUSE
+#define CSR_PUSHXSUBM               CSR_PUSHSSUBM
 #define XRET                        sret
 #define eclic_xsip_handler          eclic_ssip_handler
 #define eclic_xtip_handler          eclic_stip_handler
@@ -1248,6 +1249,7 @@
 #define CSR_XNXTI                   CSR_MNXTI
 #define CSR_PUSHXEPC                CSR_PUSHMEPC
 #define CSR_PUSHXCAUSE              CSR_PUSHMCAUSE
+#define CSR_PUSHXSUBM               CSR_PUSHMSUBM
 #define XRET                        mret
 #define eclic_xsip_handler          eclic_msip_handler
 #define eclic_xtip_handler          eclic_mtip_handler
