@@ -20,7 +20,7 @@ dependencies:
 configuration:
   app_commonflags:
     # require SSTC and TEE extension
-    value: "-O3 -flto -DCFG_HAS_ISA_SSTC -DCFG_HAS_TEE"
+    value: "-O3 -DCFG_HAS_ISA_SSTC -DCFG_HAS_TEE"
     tips: "If you don't have TEE or SSTC, you can remove -DCFG_HAS_ISA_SSTC or -DCFG_HAS_TEE"
     type: text
     description: Application Compile Flags

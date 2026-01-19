@@ -2,7 +2,7 @@ TARGET = demo_eclic_stress
 
 NUCLEI_SDK_ROOT = ../../..
 
-COMMON_FLAGS := -O3 -flto
+COMMON_FLAGS := -O3
 
 # Require TEE & ECLIC & SSTC
 XLCFG_TEE := 1
