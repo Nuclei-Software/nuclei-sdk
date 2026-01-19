@@ -35,6 +35,10 @@
             "run": false,
             "build": true
         },
+        "application/baremetal/demo_eclic_stress": {
+            "run": false,
+            "build": false
+        },
         "application/baremetal/demo_sstc": {
             "run": false,
             "build": false

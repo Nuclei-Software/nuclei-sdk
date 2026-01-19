@@ -121,6 +121,12 @@
                 "PASS": ["[SUCCESS] Test M-mode drop to U-mode passed", "not present"]
             }
         },
+        "application/baremetal/demo_eclic_stress": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["PASS: All"]
+            }
+        },
         "application/baremetal/demo_spmp": {
             "build_config" : {},
             "checks": {

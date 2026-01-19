@@ -16,7 +16,7 @@
     },
     "checks": {
         "PASS": [],
-        "FAIL": ["MEPC"]
+        "FAIL": ["MEPC", "SEPC"]
     },
     "appdirs": [
         "application"
@@ -127,6 +127,12 @@
             "build_config" : {},
             "checks": {
                 "PASS": ["[SUCCESS] Test M-mode drop to U-mode passed", "not present"]
+            }
+        },
+        "application/baremetal/demo_eclic_stress": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["PASS: All"]
             }
         },
         "application/baremetal/demo_stack_check": {
