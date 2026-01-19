@@ -959,6 +959,8 @@ void ECLIC_Interrupt_Init(void)
             /* Global Configuration about STH */
             ECLIC_SetSth(0);
 #if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+        // NOTE: CSR_STSP is not yet set, please setup by yourself to your S-Mode stack pointer
+        /* Enable Interrupt and Exception Auto Save, and Shadow GPR, dont swap stack for S-Mode */
         __RV_CSR_WRITE(CSR_SECLIC_CTL, SECLIC_CTL_SHADOW_EN);
 #endif
         }

@@ -1212,6 +1212,7 @@
 #define CSR_XSCRATCHCSWL            CSR_SSCRATCHCSWL
 #define CSR_XSCRATCHCSW             CSR_SSCRATCHCSW
 #define CSR_XDCAUSE                 CSR_SDCAUSE
+#define CSR_XTSP                    CSR_STSP
 #define CSR_XECLIC_CTL              CSR_SECLIC_CTL
 #define CSR_JALXNXTI                CSR_JALSNXTI
 #define CSR_XINTSTATUS              CSR_SINTSTATUS
@@ -1243,6 +1244,7 @@
 #define CSR_XSCRATCHCSWL            CSR_MSCRATCHCSWL
 #define CSR_XSCRATCHCSW             CSR_MSCRATCHCSW
 #define CSR_XDCAUSE                 CSR_MDCAUSE
+#define CSR_XTSP                    CSR_MTSP
 #define CSR_XECLIC_CTL              CSR_MECLIC_CTL
 #define CSR_JALXNXTI                CSR_JALMNXTI
 #define CSR_XINTSTATUS              CSR_MINTSTATUS

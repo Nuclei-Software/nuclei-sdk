@@ -257,6 +257,16 @@ RT_WEAK void* rt_heap_end_get(void)
 }
 #endif
 
+// NOTE: define top of stack, it will be used as non-vector interrupt/exception stack when OS started
+#ifndef __ICCRISCV__
+// _sp is defined in linker script such as gcc_evalsoc_ilm.ld
+extern char _sp[];
+#define __RTT_INT_STACK  (_sp)
+#else
+// CSTACK$$Limit is defined in iar linker script such iar_evalsoc_ilm.icf
+extern char CSTACK$$Limit[];
+#define __RTT_INT_STACK  (CSTACK$$Limit)
+#endif
 /**
  * This function will initial your board.
  */
@@ -278,6 +288,9 @@ void rt_hw_board_init()
 
     // Enable interrupt and task sp swap
 #if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    // NOTE: setup interrupt stack pointer for CSR_MTSP or CSR_STSP depends on which mode RTT run on
+    __RV_CSR_WRITE(CSR_XTSP, (unsigned long)__RTT_INT_STACK);
+    // NOTE: enable trap sp auto swap
     __RV_CSR_SET(CSR_XECLIC_CTL, XECLIC_CTL_TSP_EN);
 #endif
 }
