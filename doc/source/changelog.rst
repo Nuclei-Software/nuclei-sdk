@@ -138,6 +138,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - ``nsdk_runcpu.py`` cpu json configuration now can add ``appdirs_ignore`` key to specified cases to be ignored, mainly introduced for n100 cpu, since many cases could not run on n100
   - Add n100 cpu nsdk_cli configurations for qemu and fpga benchmark
   - Add new ci configuration for ``demo_smpcc`` and ``demo_ecc`` daily ci running
+  - Add ``check_cppbuild.sh`` to check the C++ compatibility of NMSIS Core header files and add the corresponding ci job.
 
 * Components
 

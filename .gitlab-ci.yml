@@ -571,6 +571,15 @@ sdk_check_configfiles:
     - python3 tools/scripts/nsdk_cli/check_cfgfiles.py -d .
     - echo "config files in this folder all PASS"
 
+# Job used to check C++ compatibility
+sdk_check_cpp_build:
+  <<: *job_template_default
+  stage: check
+  script:
+    - echo "Validate C++ compatibility"
+    - bash tools/scripts/misc/check_cppbuild.sh
+    - echo "C++ compatibility PASS"
+
 sdk_sync_tools:
   stage: deploy
   interruptible: true
