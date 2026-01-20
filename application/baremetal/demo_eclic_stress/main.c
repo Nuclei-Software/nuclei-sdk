@@ -5,7 +5,20 @@
 /*
  * ECLIC (Enhanced Core Local Interrupt Controller) Stress Test Case
  *
- * This test case validates the functionality of the Nuclei RISC-V processor's
+ * USER GUIDE: This test case can be customized by adjusting interrupt levels and shadow levels
+ * to test different interrupt nesting and tail-chaining scenarios. Follow the TODO markers
+ * throughout this file to modify interrupt level configurations and shadow level settings
+ * for comprehensive stress testing of the ECLIC system.
+ *
+ * Key configurable aspects:
+ * 1. Interrupt Levels: Modify the level values in the #define statements marked with TODO
+ *    to test different interrupt priority scenarios and nesting behaviors.
+ * 2. Shadow Levels: Adjust shadow register configurations to test hardware context switching
+ *    with shadow register.
+ * 3. Tail-Chaining: Modify interrupt triggering patterns to test tail-chaining performance.
+ * 4. Nested Interrupts: Change level assignments to validate proper interrupt preemption.
+ *
+ * The test case validates the functionality of the Nuclei RISC-V processor's
  * Enhanced Core Local Interrupt Controller (ECLIC) in both Machine Mode (M-Mode)
  * and Supervisor Mode (S-Mode) environments. The test performs comprehensive
  * validation of interrupt handling capabilities including:
@@ -93,7 +106,13 @@
 #define M_BG_PARAMS             56, 4, 2, 3
 #define M_BG_EXPECTED_RESULT    11899
 
-// Define interrupt level ranges - individual macros for each interrupt level
+/*
+ * TODO: Define interrupt level ranges - individual macros for each interrupt level
+ * These levels can be adjusted to test interrupt nesting and tail-chaining functionality
+ * NOTE: The level values must be within the range 0 to (1<<nlbits)-1, where nlbits is obtained from ECLIC configuration
+ * Higher level numbers represent higher priority interrupts that can preempt lower level interrupts
+ * All level values below are USER ADJUSTABLE: Range 0->(1<<nlbits)-1
+ */
 #define SYSTIMER_SW_LEVEL    1    // Level for SysTimerSW_IRQn (non-vector software interrupt)
 #define SYSTIMER_LEVEL       0    // Level for SysTimer_IRQn (timer interrupt)
 #define INT20_LEVEL    2    // Level for interrupt 20 (non-vector)
@@ -136,6 +155,13 @@
 #define S_BG_PARAMS             56, 3, 2, 3
 #define S_BG_EXPECTED_RESULT    10538
 
+/*
+ * TODO: S-Mode interrupt level definitions
+ * These levels can also be adjusted to test interrupt nesting and tail-chaining in S-Mode
+ * NOTE: The level values must be within the range 0 to (1<<nlbits)-1, where nlbits is obtained from ECLIC configuration
+ * Higher level numbers represent higher priority interrupts that can preempt lower level interrupts
+ * All level values below are USER ADJUSTABLE: Range 0->(1<<nlbits)-1
+ */
 #define SYSTIMER_SW_S_LEVEL    3    // Level for SysTimerSW_IRQn (non-vector software interrupt)
 #define SYSTIMER_S_LEVEL       1    // Level for SysTimer_IRQn (timer interrupt)
 
@@ -884,8 +910,16 @@ static void supervisor_mode_entry_point(void)
 
     uint32_t nlbits = ECLIC_GetCfgNlbits();
 
+    // NOTE: nlbits determines the number of bits used for interrupt level encoding
+    // Valid interrupt levels are from 0 to (1<<nlbits)-1
+    // For example, if nlbits=3, valid levels are 0-7 (0 to 7)
     printf("[S] ECLIC nlbits configuration: %u\r\n", nlbits);
 #if __ECLIC_VER == 2
+    /*
+     * TODO: Shadow Level configuration - can be adjusted for different functionality testing
+     * The first parameter refers to the shadow register index (SHAD1_CFG, SHAD2_CFG, etc.)
+     * The second parameter sets the interrupt level threshold for shadow register group
+     */
     ECLIC_SetShadowLevel_S(0, 3);
     uint32_t shadow_num = ECLIC_GetInfoShadowNum();
     printf("[S] ECLIC Shadow Register Groups: %u\r\n", shadow_num);
@@ -959,9 +993,18 @@ int initialize_mmode_demo(void)
     int32_t returnCode;
 
     uint32_t nlbits = ECLIC_GetCfgNlbits();
+
+    // NOTE: nlbits determines the number of bits used for interrupt level encoding
+    // Valid interrupt levels are from 0 to (1<<nlbits)-1
+    // For example, if nlbits=3, valid levels are 0-7 (0 to 7)
     printf("[M] ECLIC nlbits configuration: %u\r\n", nlbits);
 
 #if __ECLIC_VER == 2
+    /*
+     * TODO: Shadow Level configuration - can be adjusted for different functionality testing
+     * The first parameter refers to the shadow register index (SHAD1_CFG, SHAD2_CFG, etc.)
+     * The second parameter sets the interrupt level threshold for shadow register group
+     */
     ECLIC_SetShadowLevel(0, 2);
     uint32_t shadow_num = ECLIC_GetInfoShadowNum();
     printf("[M] ECLIC Shadow Register Groups: %u\r\n", shadow_num);
