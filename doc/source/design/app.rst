@@ -2889,6 +2889,58 @@ Here is the result when ``DOWNLOAD=ilm``.
     ECC double bit error has occured on DLM!
     ECC demo passed.
 
+.. _design_app_demo_smode_clint:
+
+demo_smode_clint
+~~~~~~~~~~~~~~~~
+
+This `demo_smode_clint application`_ demonstrates timer interrupt and timer software interrupt handling in S-Mode with CLINT interrupt mode.
+
+* ``sstc`` extension for S-Mode timer interrupts is required.
+* Interrupt is set to working in CLINT interrupt mode.
+* Both interrupts are registered as core interrupt.
+* First the timer interrupt will run for 5 times.
+* Then the software timer interrupt will start to run for 5 times.
+* **NOTE**: not able to working in qemu, and only works for evalsoc.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei ux900 Core RISC-V processor as example
+    # cd to the demo_smode_clint directory
+    cd application/baremetal/demo_smode_clint
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Jan 26 2026, 16:54:46
+    Download Mode: ILM
+    CPU Frequency 49997086 Hz
+    CPU HartID: 0
+    Current sp is 0x9000ff60, so it is in Machine Mode!
+    Drop to S-Mode now
+    [IN S-MODE ENTRY POINT] Hello Supervisor Mode!!!
+    Current sp is 0x90001050, so it is in Supervisor Mode!
+    init timer and start
+    SysTimer IRQ handler 1
+    SysTimer IRQ handler 2
+    SysTimer IRQ handler 3
+    SysTimer IRQ handler 4
+    SysTimer IRQ handler 5
+    SysTimer SW IRQ handler 1
+    SysTimer SW IRQ handler 2
+    SysTimer SW IRQ handler 3
+    SysTimer SW IRQ handler 4
+    SysTimer SW IRQ handler 5
+    SysTimer STIP and SSIP CLINT interrupt test finish and pass
+
 FreeRTOS applications
 ---------------------
 
@@ -3471,4 +3523,5 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx smpdemo`` applic
 .. _demo_pma application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pma
 .. _demo_smpcc application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smpcc
 .. _demo_ecc application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_ecc
+.. _demo_smode_clint application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_clint
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html

@@ -83,6 +83,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Probe and show vlenb in ``cpuinfo`` application.
   - Add :ref:`design_app_demo_ecc` to demonstrate ECC error injection feature on Nuclei RISC-V CPU.
   - Disable ECLIC v2 hardware context auto save/restore feature in ``demo_clint_timer``, ``demo_plic`` and ``demo_smode_plic`` applications when using CLINT/PLIC interrupt modes to ensure proper interrupt handling
+  - Add :ref:`design_app_demo_smode_clint` to demonstrate timer interrupt handling in S-Mode with CLINT interrupt mode.
 
 * Build System
 
