@@ -68,8 +68,12 @@ extern "C" {
 #define CFG_HAS_DCACHE
 
 // When PLIC present or TEE present, S-Mode also present
-#if defined(CFG_HAS_PLIC) || defined(CFG_HAS_TEE) || defined(CFG_HAS_ISA_SSTC)
+#if defined(CFG_HAS_PLIC) || defined(CFG_HAS_TEE) || \
+    defined(CFG_HAS_SPMP) || defined(CFG_HAS_SMPU) || \
+    defined(CFG_HAS_ISA_SSTC)
+#ifndef CFG_HAS_SMODE
 #define CFG_HAS_SMODE
+#endif
 #endif
 
 // CCM default still set to 0, you can uncomment it when it really exist

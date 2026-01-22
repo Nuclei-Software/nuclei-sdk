@@ -49,6 +49,8 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
     ``SAFETY_MECHANISM``, ``VNICE``, ``XLCZ``, ``ZILSD``, and ``SSTC`` in ``riscv_encoding.h``
   - Add ``CSR_PUSHXSUBM`` macro definition in ``riscv_encoding.h`` for ECLICv2 SUBM register handling in interrupt context
   - Add ``core_feature_iinfo.h`` to support IREGION INFO related operations.
+  - Rename ``__TEE_PRESENT`` to ``__SMODE_PRESENT`` in ``core_feature_eclic.h`` and ``core_feature_timer.h`` to better reflect S-Mode support without implying TEE functionality
+  - Update ECLIC API comments in ``core_feature_eclic.h`` to refer to S-Mode instead of TEE
 
 * Application
 
@@ -117,6 +119,11 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add ``XLCFG_ECC`` support in evalsoc to support different ECC error injection mode, see :ref:`design_soc_evalsoc_ecc`
   - Add ECLICv2 support in evalsoc interrupt context save/restore for S-Mode SUBM register handling when ``CFG_HAS_ECLICV2`` is defined
   - Use ``IINFO_EnablePrefetchOverall()`` to enable prefetch overall by default in evalsoc.
+  - Update S-Mode configuration logic in ``cpufeature.h`` to properly define ``CFG_HAS_SMODE`` when PLIC, TEE, SPMP, SMPU, or SSTC features are present
+  - Add ``__UMODE_PRESENT`` macro definition in ``evalsoc.h`` to indicate U-Mode support availability when ``PMP`` present
+  - Update conditional compilation in ``system_evalsoc.h`` and ``startup_evalsoc.c`` to use ``__SMODE_PRESENT`` instead of ``__TEE_PRESENT``
+  - Update ECLIC interrupt initialization comments in ``system_evalsoc.c`` to refer to S-Mode instead of TEE
+  - Update CSR checking logic in ``system_evalsoc.c`` to check supervisor mode implementation via ``CSR_MISA`` instead of relying on TEE presence
 
 * Documentation
 

@@ -1042,7 +1042,7 @@ __STATIC_INLINE uint32_t SysTick_Config_S(rv_counter_t ticks)
     SysTimer_SetCompareValue_S(ticks + loadticks);
 
 #if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     ECLIC_SetShvIRQ_S(SysTimer_S_IRQn, ECLIC_NON_VECTOR_INTERRUPT);
     ECLIC_SetLevelIRQ_S(SysTimer_S_IRQn, 0);
     ECLIC_EnableIRQ_S(SysTimer_S_IRQn);

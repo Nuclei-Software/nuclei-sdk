@@ -399,9 +399,11 @@ extern volatile unsigned long CpuIRegionBase;
 #ifdef CFG_HAS_PMP
 #define __PMP_PRESENT               1
 #define __PMP_ENTRY_NUM             CFG_PMP_ENTRY_NUM
+#define __UMODE_PRESENT             1
 #else
 #define __PMP_PRESENT               0
 #define __PMP_ENTRY_NUM             0
+#define __UMODE_PRESENT             0
 #endif
 
 // TEE/sPMP Configuration
@@ -478,7 +480,7 @@ extern volatile unsigned long CpuIRegionBase;
 #define __HPM_VER                   CFG_HPM_VER
 #endif
 
-// SMODE Configuration
+// SMODE/UMODE Configuration
 // To enable S-Mode, just define macro CFG_HAS_SMODE in cpufeature.h
 #ifdef CFG_HAS_SMODE
 #define __SMODE_PRESENT             1

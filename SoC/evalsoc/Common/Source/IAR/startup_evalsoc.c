@@ -81,7 +81,7 @@ const __fp vector_base[SOC_INT_MAX] __attribute__((section (".mintvec"))) = {
 #pragma data_alignment = 1024
 static __fp vector_base_ram[SOC_INT_MAX] __attribute__((section (".mintvec_rw")));
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
 // TODO: change the data_alignment = 1024 to match stvt alignment requirement according to your eclic max interrupt number
 #pragma data_alignment = 1024
 static unsigned long vector_base_s_ram[SOC_INT_MAX] __attribute__((section (".sintvec_rw")));
@@ -110,7 +110,7 @@ static void prepare_ram_vector(void)
     copy_vector_table((void *)vector_base_ram, (const void *)vector_base, (size_t)(sizeof(__fp) * SOC_INT_MAX));
     __RV_CSR_WRITE(CSR_MTVT, (unsigned long)(&vector_base_ram));
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     copy_vector_table((void *)vector_base_s_ram, (const void *)vector_table_s, (size_t)(sizeof(unsigned long) * SOC_INT_MAX));
     __RV_CSR_WRITE(CSR_STVT, (unsigned long)(&vector_base_s_ram));
 #endif

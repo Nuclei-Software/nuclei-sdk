@@ -79,7 +79,7 @@ static void system_default_exception_handler_s(unsigned long scause, unsigned lo
 #endif
 static void system_default_exception_handler(unsigned long mcause, unsigned long sp);
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
 
 /* for the following variables, see intexc_evalsoc.S and intexc_evalsoc_s.S */
 /** default entry for s-mode non-vector irq entry */
@@ -890,10 +890,10 @@ extern void exc_entry(void);
  * - set vector interrupt table to vector_base
  * - set exception entry to exc_entry
  * - set eclic mth to 0, and nlbits to the bigest bits it supports
- * - set s-mode common non-vector entry to irq_entry_s if tee present
- * - set s-mode vector interrupt table to vector_base_s if tee present
- * - set s-mode exception entry to exc_entry_s if tee present
- * - set eclic sth to 0 if tee present
+ * - set s-mode common non-vector entry to irq_entry_s if s-mode present
+ * - set s-mode vector interrupt table to vector_base_s if s-mode present
+ * - set s-mode exception entry to exc_entry_s if s-mode present
+ * - set eclic sth to 0 if s-mode present
  */
 void ECLIC_Interrupt_Init(void)
 {
@@ -910,9 +910,9 @@ void ECLIC_Interrupt_Init(void)
         __RWMB();
 #endif
 #else
-    unsigned long mcfg_info;
-    mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
-    if (mcfg_info & MCFG_INFO_CLIC) {
+    unsigned long csr_val;
+    csr_val = __RV_CSR_READ(CSR_MCFG_INFO);
+    if (csr_val & MCFG_INFO_CLIC) {
 #endif
         /* Set ECLIC vector interrupt base address to vector_base */
         __RV_CSR_WRITE(CSR_MTVT, (unsigned long)vector_base);
@@ -936,10 +936,11 @@ void ECLIC_Interrupt_Init(void)
         __RV_CSR_WRITE(CSR_MECLIC_CTL, MECLIC_CTL_SHADOW_EN);
 #endif
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
 #if defined(CPU_SERIES) && CPU_SERIES == 100
 #else
-        if (mcfg_info & MCFG_INFO_TEE) {
+        csr_val = __RV_CSR_READ(CSR_MISA);
+        if (csr_val & (1 << 18)) { // Check whether supervisor mode implemented
             /*
              * Intialize ECLIC supervisor mode vector interrupt
              * base address stvt to vector_table_s
@@ -1240,7 +1241,7 @@ int32_t PLIC_Register_IRQ_S(uint32_t source, uint8_t priority, void *handler)
 #endif
 #endif
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
 /**
  * \brief  Initialize a specific IRQ and register the handler for supervisor mode
  * \details

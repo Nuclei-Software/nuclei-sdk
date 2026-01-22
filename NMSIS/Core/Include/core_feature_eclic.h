@@ -30,7 +30,7 @@
  * 3. __ECLIC_INTCTLBITS:  Optional, if defined, it should set to the value of ECLIC_GetInfoCtlbits(), define the number of hardware bits are actually implemented in the clicintctl registers.
  *   Valid number is 1 - 8.
  * 4. __ECLIC_INTNUM:  Define the external interrupt number of ECLIC Unit
- * 5. __TEE_PRESENT:  Define whether TEE feature present, if present, ECLIC will present with S-Mode ECLIC feature
+ * 5. __SMODE_PRESENT:  Define whether S-Mode present, if present, ECLIC will present with S-Mode ECLIC feature
  *   * 0: Not present
  *   * 1: Present
  *
@@ -89,14 +89,14 @@ typedef struct {
 } CLIC_CTRL_Type;
 
 /**
- * \brief Access to the structure of ECLIC Memory Map, which is compatible with TEE.
+ * \brief Access to the structure of ECLIC Memory Map.
  */
 typedef struct {
     __IOM uint8_t CFG;                         /*!< Offset: 0x000 (R/W)  CLIC configuration register */
     __IM uint8_t RESERVED0[3];
     __IM uint32_t INFO;                        /*!< Offset: 0x004 (R/ )  CLIC information register */
     __IM uint8_t RESERVED1;
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     __IOM uint8_t STH;                         /*!<  Offset: 0x009 (R/W )  CLIC supervisor mode interrupt-level threshold */
 #else
     __IM uint8_t RESERVED2;
@@ -104,7 +104,7 @@ typedef struct {
     __IM uint8_t RESERVED3;
     __IOM uint8_t MTH;                         /*!< Offset: 0x00B(R/W)  CLIC machine mode interrupt-level threshold */
     uint32_t RESERVED4[1021];
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     CLIC_CTRL_Type CTRL[1024];                 /*!< Offset: 0x1000 (R/W) CLIC machine mode register structure for INTIP, INTIE, INTATTR, INTCTL */
     __IM uint32_t RESERVED5[2];
     __IM uint8_t RESERVED6;
@@ -139,7 +139,7 @@ typedef struct {
 #define CLIC_INTIE_IE_Pos                      0U                                       /*!< CLIC INTIE: IE Position */
 #define CLIC_INTIE_IE_Msk                      (0x1UL << CLIC_INTIE_IE_Pos)             /*!< CLIC INTIE: IE Mask */
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
 #define CLIC_INTATTR_MODE_Pos                  6U                                       /*!< CLIC INTATTA: Mode Position */
 #define CLIC_INTATTR_MODE_Msk                  (0x3U << CLIC_INTATTR_MODE_Pos)          /*!< CLIC INTATTA: Mode Mask */
 #endif
@@ -276,8 +276,8 @@ typedef enum IRQn {
     #define ECLIC_GetShadowLevelReg       __ECLIC_GetShadowLevelReg
 #endif
 
-    /* For TEE */
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+    /* For S-Mode */
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     #define ECLIC_SetModeIRQ              __ECLIC_SetModeIRQ
     #define ECLIC_SetSth                  __ECLIC_SetSth
     #define ECLIC_GetSth                  __ECLIC_GetSth
@@ -318,7 +318,7 @@ typedef enum IRQn {
     #define ECLIC_SetVector              __ECLIC_SetVector
     #define ECLIC_GetVector              __ECLIC_GetVector
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     #define ECLIC_SetVector_S            __ECLIC_SetVector_S
     #define ECLIC_GetVector_S            __ECLIC_GetVector_S
 #endif
@@ -1068,7 +1068,7 @@ __STATIC_FORCEINLINE rv_csr_t __ECLIC_GetVector(IRQn_Type IRQn)
 #endif
 }
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
 /**
  * \brief  Set privilege mode of a specific interrupt
  * \details
@@ -1078,7 +1078,7 @@ __STATIC_FORCEINLINE rv_csr_t __ECLIC_GetVector(IRQn_Type IRQn)
  * \remarks
  * - IRQn must not be negative.
  * - mode must be 1(Supervisor Mode) or 3(Machine Mode), other values are ignored.
- * - M-mode can R/W this field, but S-mode can only read.And ECLIC with TEE does not
+ * - M-mode can R/W this field, but S-mode can only read. And ECLIC with S-Mode does not
  *   reply on CSR mideleg to delegate interrupts.
  * - Mode of S-mode ECLIC region's clicintattr can be omitted to set, which is mirror to M-mode ECLIC region's.
  *   Only the low 6 bits of clicintattr [i] can be written via the S-mode memory region.
@@ -1535,7 +1535,7 @@ __STATIC_FORCEINLINE rv_csr_t __ECLIC_GetVector_S(IRQn_Type IRQn)
  * \details
  * This function enables the shadow register function for ECLIC in Supervisor Mode.
  * It sets the SECLIC_CTL_SHADOW_EN bit in the CSR_SECLIC_CTL CSR.
- * This function is only valid for ECLIC version 2 and above in TEE environments.
+ * This function is only valid for ECLIC version 2 and above in S-Mode
  * \remarks
  * - API only available for ECLIC v2
  * \sa
@@ -1551,7 +1551,7 @@ __STATIC_FORCEINLINE void __ECLIC_EnableShadow_S(void)
  * \details
  * This function disables the shadow register function for ECLIC in Supervisor Mode.
  * It clears the SECLIC_CTL_SHADOW_EN bit in the CSR_SECLIC_CTL CSR.
- * This function is only valid for ECLIC version 2 and above in TEE environments.
+ * This function is only valid for ECLIC version 2 and above in S-Mode
  * \remarks
  * - API only available for ECLIC v2
  * \sa
@@ -1742,7 +1742,7 @@ __STATIC_INLINE uint64_t __ECLIC_GetShadowLevelReg_S(void)
 
 #endif
 
-#endif /* defined(__TEE_PRESENT) && (__TEE_PRESENT == 1) */
+#endif /* defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1) */
 
 /**
  * \brief  Set Exception entry address

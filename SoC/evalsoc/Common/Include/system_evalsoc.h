@@ -115,7 +115,7 @@ extern void ECLIC_Interrupt_Init(void);
  */
 extern int32_t ECLIC_Register_IRQ(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type trig_mode, uint8_t lvl, uint8_t priority, void* handler);
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
 /**
  * \brief  Initialize a specific IRQ and register the handler of supervisor mode
  * \details
