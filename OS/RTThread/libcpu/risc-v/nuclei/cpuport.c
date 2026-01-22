@@ -205,7 +205,7 @@ void vPortSetupTimerInterrupt(void)
 {
 #ifdef SMODE_RTOS
 
-#if defined(__TEE_PRESENT) && __TEE_PRESENT == 1
+#if defined(__SMODE_PRESENT) && __SMODE_PRESENT == 1
     SMODE_TICK_CONFIG();
     ECLIC_DisableIRQ_S(SMODE_TIMER_IRQ);
     ECLIC_SetLevelIRQ_S(SMODE_TIMER_IRQ, configKERNEL_INTERRUPT_PRIORITY);
@@ -219,7 +219,7 @@ void vPortSetupTimerInterrupt(void)
     ECLIC_SetVector_S(SMODE_SWI_IRQ, (rv_csr_t)eclic_ssip_handler);
     ECLIC_EnableIRQ_S(SMODE_SWI_IRQ);
 #else
-    #error "TEE feature is required for RT-Thread S-Mode support"
+    #error "S-Mode feature is required for RT-Thread S-Mode support"
 #endif
 
 #else
