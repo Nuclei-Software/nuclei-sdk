@@ -20,7 +20,8 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value: -DCFG_HAS_ISA_SSTC -DCFG_HAS_TEE
+    # Require SSTC extension
+    value: -DCFG_HAS_ISA_SSTC
     type: text
     description: Application Compile Flags
 

@@ -19,9 +19,9 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    # require SSTC and TEE extension
-    value: "-O3 -DCFG_HAS_ISA_SSTC -DCFG_HAS_TEE"
-    tips: "If you don't have TEE or SSTC, you can remove -DCFG_HAS_ISA_SSTC or -DCFG_HAS_TEE"
+    # require S-Mode and SSTC extension
+    value: "-O3 -DCFG_HAS_ISA_SSTC"
+    tips: "If you don't have S-Mode or SSTC, you can remove -DCFG_HAS_ISA_SSTC"
     type: text
     description: Application Compile Flags
   intstack:

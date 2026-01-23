@@ -3,12 +3,6 @@
 #include <string.h>
 #include "nuclei_sdk_soc.h"
 
-#if !defined(__TEE_PRESENT) || (__TEE_PRESENT != 1)
-/* __TEE_PRESENT should be defined in <Device>.h */
-#warning "__TEE_PRESENT is not defined or equal to 1, please check!"
-#warning "This example require CPU TEE feature!"
-#endif
-
 #if !defined(__SMPU_PRESENT) || (__SMPU_PRESENT != 1)
 /* __SMPU_PRESENT should be defined in <Device>.h */
 #warning "__SMPU_PRESENT is not defined or equal to 1, please check!"
@@ -113,6 +107,14 @@ static void supervisor_mode_entry_point(void)
 int main(void)
 {
 #if defined(__SMPU_PRESENT) && (__SMPU_PRESENT == 1)
+    CSR_MCFGINFO_Type mcfg_info;
+    mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+
+    if (mcfg_info.b.tee == 0) {
+        printf("TEE/sMPU extension is not present, so will not run this example!\n");
+        return 0;
+    }
+
     /* The SMPU is checked before the PMA checks and PMP checks */
     pmp_config pmp_cfg = {
         /* M mode grants S and U mode with full permission of the whole address range */
@@ -151,9 +153,7 @@ int main(void)
     __get_PMPENTRYx(0, &pmp_cfg);
     printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%lx, order_out: %lu\r\n", \
         0, pmp_cfg.protection, pmp_cfg.base_addr, pmp_cfg.order);
-#endif
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
     /* Enable corresponpding entrie 0 and 1*/
     __set_SMPUSWITCHx(0x3);
     /* Corresponding exceptions occurs in S/U-mode will be delegated to S-mode */
@@ -205,10 +205,10 @@ int main(void)
     /* Inaccessible region */
     smpu_config_x.protection = 0;
     smpu_config_rw.protection = 0;
+#endif
 
     /* But disable corresponpding entries*/
     __set_SMPUSWITCHx(0x0);
-#endif
 
     __set_SMPUENTRYx(0, &smpu_config_x);
     /* Verify the configuration takes effect */
@@ -228,8 +228,8 @@ int main(void)
     __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
     while(1);
 #else
-    printf("[ERROR]__TEE_PRESENT & __SMPU_PRESENT must be defined as 1 in <Device>.h!\r\n");
-#endif/* defined(__TEE_PRESENT) && (__TEE_PRESENT == 1) */
+    printf("[ERROR]__SMPU_PRESENT must be defined as 1 in <Device>.h!\r\n");
+#endif/* defined(__SMPU_PRESENT) && (__SMPU_PRESENT == 1) */
 
     return 0;
 }

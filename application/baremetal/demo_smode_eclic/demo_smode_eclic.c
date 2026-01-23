@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include "nuclei_sdk_soc.h"
 
-#if !defined(__TEE_PRESENT) || (__TEE_PRESENT != 1)
-/* __TEE_PRESENT should be defined in <Device>.h */
-#warning "__TEE_PRESENT is not defined or equal to 1, please check!"
-#warning "This example require CPU TEE feature!"
+#if !defined(__SMODE_PRESENT) || (__SMODE_PRESENT != 1)
+/* __SMODE_PRESENT should be defined in <Device>.h */
+#warning "__SMODE_PRESENT is not defined or equal to 1, please check!"
+#warning "This example require CPU S-Mode feature!"
 #endif
 
 #if !defined(__PMP_PRESENT) || (__PMP_PRESENT != 1)
@@ -111,7 +111,7 @@ __SUPERVISOR_INTERRUPT void eclic_ssip_handler(void)
 #define RUN_LOOPS   20
 #endif
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
 static void supervisor_mode_entry_point(void)
 {
     // setup timer and software interrupt , then register the S mode irq
@@ -183,7 +183,7 @@ int main(int argc, char** argv)
     print_sp_judge_privilege_mode();
 #endif
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     // before drop to S Mode, specifies in which privilege mode the interrupt should be taken
     ECLIC_SetModeIRQ(SysTimerSW_IRQn, PRV_S);
     ECLIC_SetModeIRQ(SysTimer_IRQn, PRV_S);
@@ -192,7 +192,7 @@ int main(int argc, char** argv)
     /* Drop to S mode */
     __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);
 #else
-    printf("[ERROR]__TEE_PRESENT & __PMP_PRESENT must be defined as 1 in <Device>.h!\r\n");
+    printf("[ERROR]__SMODE_PRESENT & __PMP_PRESENT must be defined as 1 in <Device>.h!\r\n");
 #endif
     return 0;
 }

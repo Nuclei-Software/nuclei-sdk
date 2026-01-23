@@ -9,13 +9,14 @@
  * 2020-03-26     Huaqi      the first version
  */
 
+#include "core_feature_base.h"
 #include "nuclei_sdk_soc.h"
 #include <rtthread.h>
 #include <stdio.h>
 
-#if !defined(__TEE_PRESENT) || (__TEE_PRESENT != 1)
-/* __TEE_PRESENT should be defined in <Device>.h */
-#error "This example require CPU TEE feature!"
+#if !defined(__SMODE_PRESENT) || (__SMODE_PRESENT != 1)
+/* __SMODE_PRESENT should be defined in <Device>.h */
+#error "This example require CPU S-MODE feature!"
 #endif
 
 #if !defined(__PMP_PRESENT) || (__PMP_PRESENT != 1)
@@ -103,12 +104,21 @@ uintptr_t smode_sp = (uintptr_t) (smode_stack + sizeof(smode_stack));
 int main_entry(void)
 {
     CSR_MCFGINFO_Type mcfg;
-    mcfg.d = __RV_CSR_READ(CSR_MCFG_INFO);
+    CSR_MISA_Type misa;
 
-    if ((mcfg.b.tee & mcfg.b.clic & mcfg.b.sstc) == 0) {
-        printf("INFO: TEE and ECLIC feature are required to run this SMode RT-Thread Demo\n");
+    mcfg.d = __RV_CSR_READ(CSR_MCFG_INFO);
+    misa.d = __RV_CSR_READ(CSR_MISA);
+
+    if ((mcfg.b.clic & misa.b.s) == 0) {
+        printf("INFO: S-Mode and ECLIC feature are required to run this SMode RT-Thread Demo\n");
         return 0;
     }
+#if defined(__SSTC_PRESENT) && __SSTC_PRESENT == 1
+    if (mcfg.b.sstc == 0) {
+        printf("INFO: SSTC feature are required to run this SMode RT-Thread Demo\n");
+        return 0;
+    }
+#endif
 
     // set pmp, S mode can access all address range
     pmp_config pmp_cfg = {

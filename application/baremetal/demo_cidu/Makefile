@@ -8,6 +8,12 @@ INCDIRS = .
 
 COMMON_FLAGS := -O2
 
+# Require CIDU and SMP feature
+# set to 1 to enable CIDU
+# and change the SMP value below
+# to match your cpu smp cnt
+XLCFG_CIDU :=
+
 # Per-Core HEAP and STACK Size Settings
 HEAPSZ ?= 2K
 STACKSZ ?= 2K

@@ -54,6 +54,14 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
 
 * Application
 
+  - Update ``demo_eclic_stress`` application to use ``__SMODE_PRESENT`` instead of ``__TEE_PRESENT`` and update npk.yml to remove TEE requirement
+  - Update ``demo_smode_eclic`` application to use ``__SMODE_PRESENT`` instead of ``__TEE_PRESENT`` and add ``XLCFG_SMODE`` configuration variable
+  - Update ``demo_sstc`` application to use ``__SMODE_PRESENT`` instead of ``__TEE_PRESENT`` and remove TEE requirement
+  - Update ``demo_smode_plic`` application to add ``XLCFG_PLIC`` configuration variable
+  - Update ``demo_plic`` application to add ``XLCFG_PLIC`` configuration variable
+  - Update ``demo_cidu`` application to add ``XLCFG_CIDU`` configuration variable
+  - Update ``demo_smpu`` application to remove ``__TEE_PRESENT`` dependency and update error messages to reflect S-Mode requirement
+  - Update ``demo_smode`` RT-Thread application to use ``__SMODE_PRESENT`` instead of ``__TEE_PRESENT`` and add ``XLCFG_SMODE`` configuration variable
   - Add new application :ref:`design_app_demo_eclic_stress` to stress test ECLIC interrupt handling in both M-Mode and S-Mode with vector and non-vector interrupts, nesting, tail-chaining, and M-S mode interactions
   - Add new application :ref:`design_app_demo_eclic_umode` to show how to use U-Mode with ECLIC running in M-Mode
   - For FreeRTOS demo/smpdemo, now default use MSTATUS.MIE to do interrupt masking since default ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` set to 255
@@ -74,6 +82,11 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add :ref:`design_app_demo_smpcc` to demonstrate SMP Cluster Cache feature on Nuclei RISC-V CPU.
   - Probe and show vlenb in ``cpuinfo`` application.
   - Add :ref:`design_app_demo_ecc` to demonstrate ECC error injection feature on Nuclei RISC-V CPU.
+
+* Build System
+
+  - Add ``XLCFG_SMODE``, ``XLCFG_PLIC``, ``XLCFG_CIDU``, and ``XLCFG_SMPU`` configuration variables to various application Makefiles to indicate required CPU extensions
+  - Update ``npk.yml`` files to use ``CFG_HAS_SMODE`` instead of ``CFG_HAS_TEE`` for S-Mode applications
 
 * OS
 

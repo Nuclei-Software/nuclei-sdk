@@ -8,6 +8,9 @@ INCDIRS = . inc
 
 COMMON_FLAGS := -O2
 
+# Require sMPU extension
+XLCFG_SMPU ?= 1
+
 CHK_MODE ?=
 
 ifneq ($(CHK_MODE),)

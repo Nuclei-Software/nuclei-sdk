@@ -2,8 +2,7 @@ TARGET = demo_sstc
 
 NUCLEI_SDK_ROOT = ../../..
 
-# Require TEE & ECLIC & SSTC
-XLCFG_TEE := 1
+# Require ECLIC & SSTC
 XLCFG_SSTC := 1
 
 SRCDIRS = .

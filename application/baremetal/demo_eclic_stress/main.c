@@ -232,7 +232,7 @@ __STATIC_INLINE uint32_t perform_computation(uint32_t iterations, uint32_t mult_
     if (GET_IRQNUM(irq_to_trigger) > 0) {
         if (irq_to_trigger & MMODE_INTERRUPT_MASK) {
             ECLIC_SetPendingIRQ(GET_IRQNUM(irq_to_trigger));
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
         } else {
             ECLIC_SetPendingIRQ_S(GET_IRQNUM(irq_to_trigger));
 #endif
@@ -592,7 +592,7 @@ __INTERRUPT void eclic_int29_handler(void)
     RESTORE_IRQ_CSR_CONTEXT();
 }
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
 
 // S-Mode setup timer
 void setup_timer_smode(void)
@@ -1135,8 +1135,8 @@ int main(int argc, char** argv)
     // Initialize M-Mode interrupts
     initialize_mmode_demo();
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
-    printf("[M] TEE is present, will run both S-Mode and M-Mode demos\r\n");
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+    printf("[M] S-Mode is present, will run both S-Mode and M-Mode demos\r\n");
 
     // Configure PMP to allow S-Mode access to memory
 #if defined(__PMP_PRESENT) && (__PMP_PRESENT == 1)
@@ -1188,7 +1188,7 @@ int main(int argc, char** argv)
     // Enable M-Mode interrupts before jumping to S-Mode
     __enable_irq();
 
-#if defined(__TEE_PRESENT) && (__TEE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     printf("[M] Dropping to S-Mode now\r\n");
     /* Drop to S mode */
     __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);

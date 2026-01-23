@@ -5,9 +5,13 @@ NUCLEI_SDK_ROOT = ../../..
 
 COMMON_FLAGS = -O3 -DSMODE_RTOS
 
-XLCFG_TEE := 1
+# Better with SSTC extension
+# when SSTC extension present, S-Mode present
 # You can change to 0, if SSTC not present
 XLCFG_SSTC ?= 1
+# Require S-Mode
+# set to 1 to enable S-Mode if your CPU has
+XLCFG_SMODE ?=
 
 SRCDIRS = .
 INCDIRS = .
