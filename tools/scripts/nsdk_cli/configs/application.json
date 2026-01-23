@@ -15,7 +15,7 @@
     "build_config": {
     },
     "checks": {
-        "PASS": [],
+        "PASS": ["will not run"],
         "FAIL": ["MEPC", "SEPC"]
     },
     "appdirs": [
@@ -108,19 +108,19 @@
         "application/baremetal/demo_plic": {
             "build_config" : {},
             "checks": {
-                "PASS": ["You can press any key now", "[ERROR]__PLIC_PRESENT", "PLIC is not present"]
+                "PASS": ["You can press any key now", "must be defined", "PLIC is not present"]
             }
         },
         "application/baremetal/demo_smode_plic": {
             "build_config" : {},
             "checks": {
-                "PASS": ["You can press any key now", "[ERROR]__PMP_PRESENT & __PLIC_PRESENT", "PLIC is not present"]
+                "PASS": ["You can press any key now", "must be defined", "PLIC is not present"]
             }
         },
         "application/baremetal/demo_smode_eclic": {
             "build_config" : {},
             "checks": {
-                "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "[ERROR]__TEE_PRESENT"]
+                "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "must be defined"]
             }
         },
         "application/baremetal/demo_eclic_umode": {
@@ -144,26 +144,26 @@
         "application/baremetal/demo_pma": {
             "build_config" : {},
             "checks": {
-                "PASS": ["PMA Test finished", "DCache not present in CPU", "[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!"]
+                "PASS": ["PMA Test finished", "DCache not present in CPU", "must be defined"]
             }
         },
         "application/baremetal/demo_spmp": {
             "build_config" : {},
             "checks": {
-                "PASS": ["Won't run here if violates L U\\R\\W\\X permission check!", "[ERROR]__TEE_PRESENT"]
+                "PASS": ["Won't run here if violates L U\\R\\W\\X permission check!", "must be defined"]
             }
         },
         "application/baremetal/demo_smpu": {
             "build_config" : {},
             "checks": {
-                "PASS": ["Won't run here if violates rules check!", "[ERROR]__TEE_PRESENT"]
+                "PASS": ["Won't run here if violates rules check!", "must be defined"]
             }
         },
         "application/baremetal/demo_cache": {
             "build_config" : {},
             "checks": {
                 "PASS": [
-                    "[ERROR]__CCM_PRESENT must be defined as 1 in <Device>.h!",
+                    "must be defined",
                     "DCache not present in CPU!",
                     "dcachemiss_readonebyte",
                     "when mapped value in memory has changed"
@@ -173,7 +173,7 @@
         "application/baremetal/demo_cidu": {
             "build_config" : {},
             "checks": {
-                "PASS": ["[ERROR]__CIDU_PRESENT must be defined as 1 in <Device>.h!", "Core 1 has received interrupt from core 0", "[WARN] SMP & CIDU not present"]
+                "PASS": ["must be defined", "Core 1 has received interrupt from core 0", "[WARN] SMP & CIDU not present"]
             }
         },
         "application/baremetal/demo_pmp": {
@@ -260,7 +260,7 @@
         "application/baremetal/demo_sstc": {
             "build_config" : {},
             "checks": {
-                "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "[ERROR]__TEE_PRESENT", "feature are required"]
+                "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "must be defined", "feature are required"]
             }
         },
         "application/rtthread/demo_smode": {

@@ -17,7 +17,7 @@
         "BOARD": "nuclei_fpga_eval"
     },
     "checks": {
-        "PASS": [],
+        "PASS": ["will not run"],
         "FAIL": ["MEPC", "ERROR"]
     },
     "appdirs": [

@@ -149,6 +149,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add n100 cpu nsdk_cli configurations for qemu and fpga benchmark
   - Add new ci configuration for ``demo_smpcc`` and ``demo_ecc`` daily ci running
   - Add ``check_cppbuild.sh`` to check the C++ compatibility of NMSIS Core header files and add the corresponding ci job.
+  - Update test validation strings in application config files, replacing specific error messages like ``[ERROR]__TEE_PRESENT`` with generic ``must be defined`` strings for better consistency.
 
 * Components
 

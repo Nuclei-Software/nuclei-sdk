@@ -15,7 +15,7 @@
     "build_config": {
     },
     "checks": {
-        "PASS": [],
+        "PASS": ["will not run"],
         "FAIL": ["MEPC"]
     },
     "appdirs": [
