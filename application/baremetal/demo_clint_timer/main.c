@@ -6,8 +6,8 @@
 #define systimer_irq_handler     core_mtip_handler
 #define systimer_sw_irq_handler  core_msip_handler
 
-static uint32_t int0_cnt = 0;    /* msip timer interrupt test counter */
-static uint32_t int1_cnt = 0;    /* mtip timer interrupt test counter */
+static uint32_t int0_cnt = 0;    /* mtip timer interrupt test counter */
+static uint32_t int1_cnt = 0;    /* msip timer interrupt test counter */
 unsigned int msip_trig_flag = 1; /* sw trigger systimer sw interrupt flag */
 
 void systimer_irq_handler(void)
