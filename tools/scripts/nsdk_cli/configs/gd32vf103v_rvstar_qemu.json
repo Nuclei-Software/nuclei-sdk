@@ -72,6 +72,10 @@
         "application/baremetal/demo_ecc": {
             "run": false,
             "build": false
+        },
+        "application/baremetal/demo_smode_clint": {
+            "run": false,
+            "build": false
         }
     }
 }

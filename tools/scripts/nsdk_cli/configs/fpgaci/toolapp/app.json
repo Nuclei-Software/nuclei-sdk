@@ -256,6 +256,16 @@
                 "PASS": [", 0 failed"],
                 "FAIL": ["[FAIL]", "MEPC"]
             }
+        },
+        "application/baremetal/demo_smode_clint": {
+            "build_config" : {},
+            "checks": {
+                "PASS": [
+                    "test finish and pass",
+                    "must be defined",
+                    "will not run"
+                ]
+            }
         }
     }
 }
