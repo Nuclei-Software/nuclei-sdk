@@ -1058,7 +1058,7 @@ __STATIC_FORCEINLINE void __disable_irq_s(void)
  */
 __STATIC_FORCEINLINE void __enable_ext_irq_s(void)
 {
-    __RV_CSR_SET(CSR_SIE, MIE_SEIE);
+    __RV_CSR_SET(CSR_SIE, SIE_SEIE);
 }
 
 /**
@@ -1069,7 +1069,7 @@ __STATIC_FORCEINLINE void __enable_ext_irq_s(void)
  */
 __STATIC_FORCEINLINE void __disable_ext_irq_s(void)
 {
-    __RV_CSR_CLEAR(CSR_SIE, MIE_SEIE);
+    __RV_CSR_CLEAR(CSR_SIE, SIE_SEIE);
 }
 
 /**
@@ -1080,7 +1080,7 @@ __STATIC_FORCEINLINE void __disable_ext_irq_s(void)
  */
 __STATIC_FORCEINLINE void __enable_timer_irq_s(void)
 {
-    __RV_CSR_SET(CSR_SIE, MIE_STIE);
+    __RV_CSR_SET(CSR_SIE, SIE_STIE);
 }
 
 /**
@@ -1091,7 +1091,7 @@ __STATIC_FORCEINLINE void __enable_timer_irq_s(void)
  */
 __STATIC_FORCEINLINE void __disable_timer_irq_s(void)
 {
-    __RV_CSR_CLEAR(CSR_SIE, MIE_STIE);
+    __RV_CSR_CLEAR(CSR_SIE, SIE_STIE);
 }
 
 /**
@@ -1102,7 +1102,7 @@ __STATIC_FORCEINLINE void __disable_timer_irq_s(void)
  */
 __STATIC_FORCEINLINE void __enable_sw_irq_s(void)
 {
-    __RV_CSR_SET(CSR_SIE, MIE_SSIE);
+    __RV_CSR_SET(CSR_SIE, SIE_SSIE);
 }
 
 /**
@@ -1113,7 +1113,7 @@ __STATIC_FORCEINLINE void __enable_sw_irq_s(void)
  */
 __STATIC_FORCEINLINE void __disable_sw_irq_s(void)
 {
-    __RV_CSR_CLEAR(CSR_SIE, MIE_SSIE);
+    __RV_CSR_CLEAR(CSR_SIE, SIE_SSIE);
 }
 
 /**
