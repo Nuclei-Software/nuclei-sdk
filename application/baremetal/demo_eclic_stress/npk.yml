@@ -1,7 +1,6 @@
 ## Package Base Information
 name: app-nsdk_demo_eclic_stress
 owner: nuclei
-version:
 description: ECLIC Interrupt Stress Test Demo for Nuclei RISC-V processors
 type: app
 keywords:
@@ -18,22 +17,22 @@ dependencies:
 
 ## Package Configurations
 configuration:
+  # place intstack before app_commonflags for better nuclei studio
+  # project wizard rendering
+  intstack:
+    default_value: 0
+    type: checkbox
+    tips: "If enabled, it will enable separated interrupt/exception stack, only valid for ECLICv2"
+    description: Separated Trap Stack
   app_commonflags:
     # require S-Mode and SSTC extension
     value: "-O3 -DCFG_HAS_ISA_SSTC"
     tips: "If you don't have S-Mode or SSTC, you can remove -DCFG_HAS_ISA_SSTC"
     type: text
     description: Application Compile Flags
-  intstack:
-    default_value: 0
-    type: checkbox
-    tips: "If enabled, it will enable separated interrupt/exception stack, only valid for ECLICv2"
-    description: Separated Trap Stack
 
 ## Set Configuration for other packages
 setconfig:
-  - name: sdk-nuclei_sdk
-    config:
 
 ## Source Code Management
 codemanage:
