@@ -164,6 +164,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add new ci configuration for ``demo_smpcc`` and ``demo_ecc`` daily ci running
   - Add ``check_cppbuild.sh`` to check the C++ compatibility of NMSIS Core header files and add the corresponding ci job.
   - Update test validation strings in application config files, replacing specific error messages like ``[ERROR]__TEE_PRESENT`` with generic ``must be defined`` strings for better consistency.
+  - Move and enhance ``update_list_items`` function in ``nsdk_utils.py`` to merge unique elements from one list to another, and update ``dict_merge`` to handle merging of lists by combining unique elements using this function.
 
 * Components
 

@@ -612,12 +612,32 @@ def find_most_possible_serport():
     else:
         return None
 
+def update_list_items(list1, list2):
+    """
+    Merges unique elements from list2 into list1.
+
+    This function appends items from list2 to list1 only if they are not already present in list1.
+    The function modifies list1 in-place and returns the updated list1.
+
+    Args:
+        list1: The destination list to be updated with unique elements
+        list2: The source list containing elements to be added
+
+    Returns:
+        The updated list1 with unique elements from list2 appended
+    """
+    for i in range(0, len(list2)):
+        if list2[i] not in list1:
+            list1.append(list2[i])
+    return list1
+
 # get from https://gist.github.com/angstwad/bf22d1822c38a92ec0a9
 def dict_merge(dct, merge_dct):
     """ Recursive dict merge. Inspired by :meth:``dict.update()``, instead of
     updating only top-level keys, dict_merge recurses down into dicts nested
     to an arbitrary depth, updating keys. The ``merge_dct`` is merged into
     ``dct``.
+    If both values for a key are lists, they are merged by combining unique elements.
     :param dct: dict onto which the merge is executed
     :param merge_dct: dct merged into dct
     :return: None
@@ -626,6 +646,10 @@ def dict_merge(dct, merge_dct):
         if (k in dct and isinstance(dct[k], dict)
                 and isinstance(merge_dct[k], Mapping)):
             dict_merge(dct[k], merge_dct[k])
+        elif (k in dct and isinstance(dct[k], list)
+                and isinstance(merge_dct[k], list)):
+            # Merge lists by combining unique elements
+            dct[k] = update_list_items(dct[k], merge_dct[k])
         else:
             dct[k] = merge_dct[k]
 
@@ -1046,12 +1070,6 @@ def merge_two_config(appcfg, hwcfg):
     merged_appcfg = copy.deepcopy(appcfg)
     dict_merge(merged_appcfg, hwcfg)
     return merged_appcfg
-
-def update_list_items(list1, list2):
-    for i in range(0, len(list2)):
-        if list2[i] not in list1:
-            list1.append(list2[i])
-    return list1
 
 def set_global_variables(config):
     global SDK_GLOBAL_VARIABLES
