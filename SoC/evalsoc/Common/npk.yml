@@ -358,6 +358,11 @@ configuration:
         description: "v1, no hardware context save/restore feature"
       - name: v2
         description: "v2, with hardware context save/restore feature and enabled"
+  eclic_hwctx:
+    default_value: 1
+    global: false
+    type: checkbox
+    description: ECLIC v2 HW Context Auto Save/Restore
   nuclei_smp:
     default_value: 0
     type: spinner
@@ -535,7 +540,7 @@ buildconfig:
       - defines: CFG_HAS_ECLICV2
         condition: $( ${nuclei_eclic} == "v2" )
       - defines: ECLIC_HW_CTX_AUTO
-        condition: $( ${nuclei_eclic} == "v2" )
+        condition: $( ${nuclei_eclic} == "v2" && ${eclic_hwctx} == 1 )
       - defines: CPU_SERIES=${cpu_series}
         condition: $( ${cpu_series} != "" )
       - defines: BOOT_HARTID=${boothartid}

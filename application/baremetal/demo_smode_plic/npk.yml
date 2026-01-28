@@ -25,7 +25,10 @@ configuration:
 
 ## Set Configuration for other packages
 setconfig:
-
+  # Disable ECLIC v2 hardware context auto save and restore
+  # for CLINT/PLIC interrupt mode
+  - config: eclic_hwctx
+    value: 0
 
 ## Source Code Management
 codemanage:

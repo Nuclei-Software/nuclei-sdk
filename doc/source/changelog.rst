@@ -82,6 +82,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add :ref:`design_app_demo_smpcc` to demonstrate SMP Cluster Cache feature on Nuclei RISC-V CPU.
   - Probe and show vlenb in ``cpuinfo`` application.
   - Add :ref:`design_app_demo_ecc` to demonstrate ECC error injection feature on Nuclei RISC-V CPU.
+  - Disable ECLIC v2 hardware context auto save/restore feature in ``demo_clint_timer``, ``demo_plic`` and ``demo_smode_plic`` applications when using CLINT/PLIC interrupt modes to ensure proper interrupt handling
 
 * Build System
 
@@ -141,6 +142,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Update ECLIC interrupt initialization comments in ``system_evalsoc.c`` to refer to S-Mode instead of TEE
   - Update CSR checking logic in ``system_evalsoc.c`` to check supervisor mode implementation via ``CSR_MISA`` instead of relying on TEE presence
   - Enhance evalsoc build system modularization with improved flexibility and reduced customer porting effort, see :ref:`design_soc_evalsoc_build_modularization` for details
+  - Add ``eclic_hwctx`` hidden configuration option in evalsoc Common ``npk.yml`` to control ECLIC v2 hardware context auto-save/restore feature with conditional compilation flag ``ECLIC_HW_CTX_AUTO``
 
 * Documentation
 
