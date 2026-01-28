@@ -1481,6 +1481,9 @@ def gen_runcfg(cpucfg, runcfg, buildconfig=dict()):
     finalruncfg["expecteds"] = merge_two_config(finalruncfg.get("expecteds", dict()), expectedscfg)
     # allow pass core related ignore cases
     finalruncfg["appdirs_ignore"] = update_list_items(finalruncfg.get("appdirs_ignore", []), appdirs_ignore)
+    # if appdirs_ignore is empty, remove the key
+    if not finalruncfg["appdirs_ignore"]:
+        del finalruncfg["appdirs_ignore"]
     if matrixcfgs is None:
         return finalruncfg
     bcfgs = cpucfgdict.get("build_configs", dict())
