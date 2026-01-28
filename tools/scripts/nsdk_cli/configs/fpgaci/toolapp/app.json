@@ -156,7 +156,7 @@
         "application/baremetal/demo_smpu": {
             "build_config" : {},
             "checks": {
-                "PASS": ["Won't run here if violates rules check!", "must be defined"]
+                "PASS": ["TEE/sMPU extension is not present", "Won't run here if violates rules check!", "must be defined"]
             }
         },
         "application/baremetal/demo_cache": {
