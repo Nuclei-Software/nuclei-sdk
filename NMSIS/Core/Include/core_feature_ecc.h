@@ -491,11 +491,12 @@ __STATIC_FORCEINLINE void ECC_ILMErrInject(uint32_t ecc_code, void *addr)
     __RV_CSR_WRITE(CSR_MECC_CODE, ecc_code);
     ECC_DisableILMECCCheck();
     uint32_t val = __LW(addr);
-    __RWMB();
+    __RWMB(); // make sure setting the ECC_INJ_EN bit before any other memory access
     __RV_CSR_SET(CSR_MILM_CTL, MILM_CTL_ILM_ECC_INJ_EN);
     __SW(addr, val);
+    __RWMB(); // make sure the error injection is finished
     __RV_CSR_CLEAR(CSR_MILM_CTL, MILM_CTL_ILM_ECC_INJ_EN);
-    __RWMB();
+    __RWMB(); // make sure clearing the ECC_INJ_EN bit before any other memory access
     ECC_EnableILMECCCheck();
 }
 
@@ -607,11 +608,12 @@ __STATIC_FORCEINLINE void ECC_DLMErrInject(uint32_t ecc_code, void *addr)
     __RV_CSR_WRITE(CSR_MECC_CODE, ecc_code);
     ECC_DisableDLMECCCheck();
     uint32_t val = __LW(addr);
-    __RWMB();
+    __RWMB(); // make sure setting the ECC_INJ_EN bit before any other memory access
     __RV_CSR_SET(CSR_MDLM_CTL, MDLM_CTL_DLM_ECC_INJ_EN);
     __SW(addr, val);
+    __RWMB(); // make sure the error injection is finished
     __RV_CSR_CLEAR(CSR_MDLM_CTL, MDLM_CTL_DLM_ECC_INJ_EN);
-    __RWMB();
+    __RWMB(); // make sure clearing the ECC_INJ_EN bit before any other memory access
     ECC_EnableDLMECCCheck();
 }
 
