@@ -1242,6 +1242,7 @@ int32_t PLIC_Register_IRQ_S(uint32_t source, uint8_t priority, void *handler)
 #endif
 
 #if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
 /**
  * \brief  Initialize a specific IRQ and register the handler for supervisor mode
  * \details
@@ -1281,6 +1282,7 @@ int32_t ECLIC_Register_IRQ_S(IRQn_Type IRQn, uint8_t shv, ECLIC_TRIGGER_Type tri
     ECLIC_EnableIRQ_S(IRQn);
     return 0;
 }
+#endif
 #endif
 
 // NOTE: FALLBACK_DEFAULT_ECLIC_BASE/FALLBACK_DEFAULT_SYSTIMER_BASE macros are removed
