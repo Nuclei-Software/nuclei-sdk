@@ -509,6 +509,13 @@ extern volatile unsigned long CpuIRegionBase;
 #define __CPU_PA_SIZE               32
 #endif
 
+// ECC Configuration
+#ifdef CFG_HAS_ECC
+#define __ECC_PRESENT               1
+#else
+#define __ECC_PRESENT               0
+#endif
+
 /** ECC error injection mode
  * If CFG_ECC_CODE_XOR is defiend, hardware support ECC error XOR injection mode.
  * If CFG_HAS_ECC is defined, but CFG_ECC_CODE_XOR is not defiend, hardware only support ECC error code direct write mode.

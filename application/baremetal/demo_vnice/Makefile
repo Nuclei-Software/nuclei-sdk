@@ -6,6 +6,9 @@ SRCDIRS = .
 
 INCDIRS = .
 
+# REQUIRE: VNICE
+XLCFG_VNICE :=
+
 CORE ?= nx900fd
 
 ARCH_EXT ?= v

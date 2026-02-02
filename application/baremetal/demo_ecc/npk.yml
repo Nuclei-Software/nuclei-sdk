@@ -19,7 +19,9 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value: -O2
+    # REQUIRE: ECC
+    # OPTIONAL: CCM, PMA, ICACHE, DCACHE, SMPCC
+    value: -O2 -DXLCFG_ECC=1 -DXLCFG_CCM=1
     type: text
     description: Application Compile Flags
 

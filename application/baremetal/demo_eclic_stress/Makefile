@@ -4,8 +4,11 @@ NUCLEI_SDK_ROOT = ../../..
 
 COMMON_FLAGS := -O3
 
-# Require TEE & ECLIC & SSTC
-XLCFG_TEE := 1
+# REQUIRE: ECLIC, SYSTIMER
+XLCFG_ECLIC :=
+XLCFG_SYSTIMER :=
+# OPTIONAL: SSTC
+XLCFG_SMODE := 1
 XLCFG_SSTC := 1
 
 # if INTSTACK is 1, will use separated interrupt sp

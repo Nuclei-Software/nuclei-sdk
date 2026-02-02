@@ -7,9 +7,11 @@ NUCLEI_SDK_ROOT = ../../..
 # must be disabled by overriding ECLIC_HWCTX to 0
 override ECLIC_HWCTX := 0
 
-# Require S-Mode and PLIC and PMP extension
+# REQUIRE: SMODE, PLIC, PMP
 # set to 1 if present
 XLCFG_PLIC :=
+XLCFG_SMODE :=
+XLCFG_PMP :=
 
 SRCDIRS = .
 

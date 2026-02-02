@@ -19,6 +19,7 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
+    # REQUIRE: AMO, SYSTIMER, SMPCC
     value: -O2
     type: text
     description: Application Compile Flags

@@ -21,6 +21,7 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
+    # REQUIRE: ECLIC, SYSTIMER
     value: -O3
     type: text
     description: Application Compile Flags

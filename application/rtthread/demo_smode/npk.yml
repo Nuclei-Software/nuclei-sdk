@@ -23,8 +23,10 @@ dependencies:
 configuration:
   app_commonflags:
     # SMODE_RTOS is required and S-Mode is required
-    # CFG_HAS_ISA_SSTC could be optional, but we recommended for tee scenario
-    value: -O3 -DSMODE_RTOS -DCFG_HAS_SMODE -DCFG_HAS_ISA_SSTC
+    # SSTC could be optional, but we recommended for tee scenario
+    # REQUIRE: SMODE, ECLIC, SYSTIMER
+    # OPTIONAL: SSTC
+    value: -O3 -DSMODE_RTOS -DXLCFG_SMODE=1 -DXLCFG_SSTC=1
     type: text
     description: Application Compile Flags
 

@@ -19,8 +19,8 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    # Assume CIDU and SMP present
-    value: -O2 -DCFG_HAS_CIDU
+    # REQUIRE: ECLIC, CIDU, SMPCC
+    value: -O2 -DXLCFG_CIDU=1
     type: text
     description: Application Compile Flags
 

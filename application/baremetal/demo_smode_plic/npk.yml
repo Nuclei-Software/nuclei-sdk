@@ -18,8 +18,8 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    # Require S-Mode and PLIC and PMP extension
-    value: -DCFG_HAS_PLIC
+    # REQUIRE: PLIC, SMODE, PMP
+    value: -DXLCFG_PLIC=1
     type: text
     description: Application Compile Flags
 

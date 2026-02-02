@@ -18,8 +18,8 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    # Require PLIC extension
-    value: -DCFG_HAS_PLIC
+    # REQUIRE: PLIC
+    value: -DXLCFG_PLIC=1
     type: text
     description: Application Compile Flags
 

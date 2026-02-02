@@ -20,8 +20,8 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    # Require S-Mode and PMP extension
-    value: -DCFG_HAS_SMODE
+    # REQUIRE: SMODE, PMP, ECLIC, SYSTIMER
+    value: -DXLCFG_SMODE=1
     type: text
     description: Application Compile Flags
 

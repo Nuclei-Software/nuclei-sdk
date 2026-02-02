@@ -19,7 +19,9 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value: -O2
+    # REQUIRE: SMPCC, HPM-v2
+    # OPTIONAL: CCM
+    value: -O2 -DXLCFG_CCM=1 -DXLCFG_HPM=2
     type: text
     description: Application Compile Flags
   max_l2_size:
@@ -28,7 +30,7 @@ configuration:
     description: Set Max L2 Cache Size
     choices:
       - name: 512KB
-        description: Max L2 Cache Size is 512KB 
+        description: Max L2 Cache Size is 512KB
       - name: 1MB
         description: Max L2 Cache Size is 1MB
       - name: 2MB

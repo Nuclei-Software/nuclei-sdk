@@ -8,6 +8,12 @@ INCDIRS = .
 
 COMMON_FLAGS := -O2
 
+# REQUIRE: SMPCC, HPM-v2
+# OPTIONAL: CCM
+XLCFG_SMPCC :=
+XLCFG_CCM :=
+XLCFG_HPM :=
+
 # Set MAX_L2_SIZE_KB to the max L2 cache size in KB
 # For example: MAX_L2_SIZE_KB=1024 for 1MB
 # The default MAX_L2_SIZE is 1MB

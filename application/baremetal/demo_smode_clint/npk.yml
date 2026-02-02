@@ -19,7 +19,8 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value: -DCFG_HAS_ISA_SSTC
+    # REQUIRE: SSTC, PMP, SYSTIMER
+    value: -DXLCFG_SSTC
     type: text
     description: Application Compile Flags
 

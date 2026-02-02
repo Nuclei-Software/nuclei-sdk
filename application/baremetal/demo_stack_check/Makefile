@@ -2,6 +2,9 @@ TARGET = demo_stack_check
 
 NUCLEI_SDK_ROOT = ../../..
 
+# REQUIRE: STACK_CHECK
+XLCFG_STACK_CHECK :=
+
 SRCDIRS = . src
 
 INCDIRS = . inc

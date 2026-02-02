@@ -8,7 +8,7 @@ INCDIRS = . inc
 
 COMMON_FLAGS := -O2
 
-# Require sMPU extension
+# REQUIRE: SMPU
 XLCFG_SMPU ?= 1
 
 CHK_MODE ?=

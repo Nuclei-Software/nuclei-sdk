@@ -2,6 +2,9 @@ TARGET = demo_nice
 
 NUCLEI_SDK_ROOT = ../../..
 
+# REQUIRE: NICE
+XLCFG_NICE :=
+
 SRCDIRS = .
 
 INCDIRS = .

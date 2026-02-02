@@ -18,6 +18,7 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
+    # REQUIRE: SYSTIMER
     value:
     type: text
     description: Application Compile Flags

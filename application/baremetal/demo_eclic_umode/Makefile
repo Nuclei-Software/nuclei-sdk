@@ -2,7 +2,10 @@ TARGET = demo_eclic_umode
 
 NUCLEI_SDK_ROOT = ../../..
 
-# Assume SMPU present
+# REQUIRE: ECLIC, SYSTIMER, PMP
+# OPTIONAL: SMPU
+XLCFG_ECLIC :=
+XLCFG_SYSTIMER :=
 XLCFG_SMPU := 1
 
 COMMON_FLAGS :=

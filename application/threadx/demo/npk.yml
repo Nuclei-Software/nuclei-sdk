@@ -21,6 +21,7 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
+    # REQUIRE: ECLIC, SYSTIMER
     value: -O2 -DTX_INCLUDE_USER_DEFINE_FILE
     type: text
     description: Application Compile Flags

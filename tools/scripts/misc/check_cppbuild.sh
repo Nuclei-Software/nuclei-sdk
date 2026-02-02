@@ -27,13 +27,13 @@ pushd ${SCRIPTDIR}/../../../ > /dev/null
 echo "Start C++ compatibility check:"
 
 check_cpp_build rv32imafdc_zve32f_xxldspn3x ilp32d
-check_cpp_build rv32imafdc_zve32f_xxldspn3x ilp32d -DCFG_HAS_IOCC=1
-check_cpp_build rv32imafdc_zve32f_xxldspn3x ilp32d -DCFG_HAS_SMP=1
-check_cpp_build rv32imafdc_zve32f_xxldspn3x ilp32d -DCFG_HAS_HPM=1
+check_cpp_build rv32imafdc_zve32f_xxldspn3x ilp32d -DXLCFG_CCM=1
+check_cpp_build rv32imafdc_zve32f_xxldspn3x ilp32d -DXLCFG_SMPCC=1
+check_cpp_build rv32imafdc_zve32f_xxldspn3x ilp32d -DXLCFG_HPM=1
 check_cpp_build rv64imafdcv_xxldsp lp64d
-check_cpp_build rv64imafdcv_xxldsp lp64d -DCFG_HAS_IOCC=1
-check_cpp_build rv64imafdcv_xxldsp lp64d -DCFG_HAS_SMP=1
-check_cpp_build rv64imafdcv_xxldsp lp64d -DCFG_HAS_HPM=1
+check_cpp_build rv64imafdcv_xxldsp lp64d -DXLCFG_CCM=1
+check_cpp_build rv64imafdcv_xxldsp lp64d -DXLCFG_SMPCC=1
+check_cpp_build rv64imafdcv_xxldsp lp64d -DXLCFG_HPM=1
 
 popd > /dev/null
 

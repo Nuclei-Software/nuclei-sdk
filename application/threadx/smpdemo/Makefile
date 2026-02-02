@@ -1,6 +1,11 @@
 TARGET = threadx_smpdemo
 RTOS = ThreadX
 
+# REQUIRE: SMPCC, ECLIC, SYSTIMER
+XLCFG_SYSTIMER :=
+XLCFG_ECLIC :=
+XLCFG_SMPCC :=
+
 SMP ?= 2
 
 CORE ?= nx900fd

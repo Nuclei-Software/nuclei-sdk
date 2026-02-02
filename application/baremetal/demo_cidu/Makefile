@@ -8,11 +8,14 @@ INCDIRS = .
 
 COMMON_FLAGS := -O2
 
-# Require CIDU and SMP feature
+# REQUIRE: CIDU, ECLIC
 # set to 1 to enable CIDU
-# and change the SMP value below
-# to match your cpu smp cnt
 XLCFG_CIDU :=
+XLCFG_ECLIC :=
+# REQUIRE: SMPCC
+# to match your cpu smp cnt
+# SMP CORE Number Settings
+SMP ?= 2
 
 # Per-Core HEAP and STACK Size Settings
 HEAPSZ ?= 2K
@@ -23,7 +26,5 @@ STACKSZ ?= 2K
 # such as external ddr/sram, core local ilm is not ok
 DOWNLOAD ?= sram
 CORE ?= nx900
-# SMP CORE Number Settings
-SMP ?= 2
 
 include $(NUCLEI_SDK_ROOT)/Build/Makefile.base

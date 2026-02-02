@@ -20,8 +20,9 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    # Assume TEE and SMPU and U-Mode present
-    value: -DCFG_HAS_TEE -DCFG_HAS_SMPU
+    # REQUIRE: ECLIC, SYSTIMER, PMP
+    # OPTIONAL: SMPU
+    value: -DXLCFG_SMPU=1
     type: text
     description: Application Compile Flags
 

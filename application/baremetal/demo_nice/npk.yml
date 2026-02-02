@@ -19,6 +19,7 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
+    # REQUIRE: NICE
     value:
     type: text
     description: Application Compile Flags

@@ -2,6 +2,9 @@ TARGET = demo_pmp
 
 NUCLEI_SDK_ROOT = ../../..
 
+# REQUIRE: PMP
+XLCFG_PMP :=
+
 SRCDIRS = . src
 
 INCDIRS = . inc

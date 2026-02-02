@@ -19,7 +19,8 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value: -O0
+    # REQUIRE: STACK_CHECK
+    value: -O0 -DXLCFG_STACK_CHECK=1
     type: text
     description: Application Compile Flags
 

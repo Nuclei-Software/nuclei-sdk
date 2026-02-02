@@ -9,6 +9,10 @@ NUCLEI_SDK_ROOT = ../../..
 # Option 2
 #COMMON_FLAGS := -Os -flto
 
+# REQUIRE: ECLIC, SYSTIMER
+XLCFG_ECLIC :=
+XLCFG_SYSTIMER :=
+
 SRCDIRS = .
 
 INCDIRS = .

@@ -20,7 +20,8 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    value: -O2
+    # REQUIRE: PMA, CCM, DCACHE
+    value: -O2 -DXLCFG_PMA=1 -DXLCFG_CCM=1 -DXLCFG_DCACHE=1
     type: text
     description: Application Compile Flags
 

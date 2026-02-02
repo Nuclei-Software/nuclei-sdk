@@ -2,6 +2,11 @@ TARGET = demo_cache
 
 NUCLEI_SDK_ROOT = ../../..
 
+# REQUIRE: CCM, ICACHE, DCACHE
+XLCFG_CCM := 1
+XLCFG_ICACHE :=
+XLCFG_DCACHE :=
+
 SRCDIRS = . src
 
 INCDIRS = . inc
