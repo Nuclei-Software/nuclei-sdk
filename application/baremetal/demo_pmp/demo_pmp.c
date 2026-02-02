@@ -115,13 +115,13 @@ int main(void)
     pmp_config_x.protection = PMP_L | PMP_R | PMP_W | PMP_X;
 
     /* Remove R permission of protected_data region */
-    pmp_config_rw.protection = PMP_L | PMP_W;
+    pmp_config_rw.protection = PMP_L;
 #elif (STORE_EXCEPTION == TRIGGER_PMP_VIOLATION_MODE)
     /* Retrive X permission of protected_execute region */
     pmp_config_x.protection = PMP_L | PMP_R | PMP_W | PMP_X;
 
     /* Remove W permission of protected_data region */
-    pmp_config_rw.protection = PMP_L | PMP_R ;
+    pmp_config_rw.protection = PMP_L | PMP_R;
 #elif (RUN_WITH_NO_PMP_CHECK == TRIGGER_PMP_VIOLATION_MODE)
     /* Unset Locking bit, any M-mode access matching the PMP entry will succeed */
     pmp_config_x.protection = PMP_R | PMP_W | PMP_X;
