@@ -219,7 +219,7 @@ typedef uint64_t rv_fpu_t;
  * \brief   Save FPU context into variables for interrupt nesting
  * \details
  * This macro is used to declare variables which are used for saving
- * FPU context, and it will store the nessary fpu registers into
+ * FPU context + FCSR, and it will store the nessary fpu registers into
  * these variables, it need to be used in a interrupt when in this
  * interrupt fpu registers are used.
  * \remarks
@@ -246,6 +246,8 @@ typedef uint64_t rv_fpu_t;
  */
 #define SAVE_FPU_CONTEXT()                                                  \
         rv_fpu_t __fpu_context[20];                                         \
+        rv_csr_t __fcsr;                                                    \
+        __fcsr = __get_FCSR();                                             \
         __RV_FSTORE(FREG(0),  __fpu_context, 0  << LOG_FPREGBYTES);         \
         __RV_FSTORE(FREG(1),  __fpu_context, 1  << LOG_FPREGBYTES);         \
         __RV_FSTORE(FREG(2),  __fpu_context, 2  << LOG_FPREGBYTES);         \
@@ -270,7 +272,7 @@ typedef uint64_t rv_fpu_t;
 /**
  * \brief   Restore necessary fpu registers from variables for interrupt nesting
  * \details
- * This macro is used restore necessary fpu registers from pre-defined variables
+ * This macro is used restore necessary fpu registers and FCSR from pre-defined variables
  * in \ref SAVE_FPU_CONTEXT macro.
  * \remarks
  * - It need to be used together with \ref SAVE_FPU_CONTEXT
@@ -295,7 +297,8 @@ typedef uint64_t rv_fpu_t;
         __RV_FLOAD(FREG(28), __fpu_context, 16 << LOG_FPREGBYTES);          \
         __RV_FLOAD(FREG(29), __fpu_context, 17 << LOG_FPREGBYTES);          \
         __RV_FLOAD(FREG(30), __fpu_context, 18 << LOG_FPREGBYTES);          \
-        __RV_FLOAD(FREG(31), __fpu_context, 19 << LOG_FPREGBYTES);
+        __RV_FLOAD(FREG(31), __fpu_context, 19 << LOG_FPREGBYTES);          \
+        __set_FCSR(__fcsr);
 #else
 #define SAVE_FPU_CONTEXT()
 #define RESTORE_FPU_CONTEXT()

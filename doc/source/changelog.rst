@@ -51,6 +51,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add ``core_feature_iinfo.h`` to support IREGION INFO related operations.
   - Rename ``__TEE_PRESENT`` to ``__SMODE_PRESENT`` in ``core_feature_eclic.h`` and ``core_feature_timer.h`` to better reflect S-Mode support without implying TEE functionality
   - Update ECLIC API comments in ``core_feature_eclic.h`` to refer to S-Mode instead of TEE
+  - Add missing FCSR(Floating-Point Control and Status Register) save/restore functionality to FPU context handling macros ``SAVE_FPU_CONTEXT`` and ``RESTORE_FPU_CONTEXT`` in ``core_feature_fpu.h``
 
 * Application
 
