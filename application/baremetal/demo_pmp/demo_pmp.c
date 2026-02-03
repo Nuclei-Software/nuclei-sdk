@@ -9,6 +9,12 @@
 #warning "This example require CPU PMP feature!"
 #endif
 
+// NOTE: This example require exception feature
+// But for different interrupt type such as eclic or plic, interrupt
+// and exception code is different, you need to pass correct interrupt type
+// If you dont have ECLIC present, you **MUST** pass XLCFG_ECLIC=0 to disable
+// ECLIC pushmcause/pushmepc/pushmsubm code used in intexc_evalsoc.S code
+
 /* different trigger condition */
 #define INSTRUCTION_FETCH_EXCEPTION    0
 #define LOAD_EXCEPTION                 1
@@ -76,6 +82,19 @@ typedef void(*__funcpt)(void);
 int main(void)
 {
 #if defined(__PMP_PRESENT) && (__PMP_PRESENT == 1)
+
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT != 0)
+    CSR_MCFGINFO_Type mcfg_info;
+
+    mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+
+    if (mcfg_info.b.clic == 0) {
+        printf("You expect ECLIC present, but ECLIC is not present, will not run this example!\r\n");
+        printf("You can rebuild and run this example with extra make option XLCFG_ECLIC=0 if ECLIC not present!\r\n");
+        return 0;
+    }
+#endif
+
     /* Configuration of execution region*/
     pmp_config pmp_config_x = {
         /*
