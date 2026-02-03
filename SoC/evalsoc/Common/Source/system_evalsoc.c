@@ -1336,7 +1336,7 @@ void __sync_harts(void)
     // pre-condition: interrupt must be disabled, this is done before calling this function
     // BOOT_HARTID is defined <Device.h>
     if (hartid == BOOT_HARTID) { // boot hart
-        // Enaable L2, disable cluster local memory
+        // Enable L2, disable cluster local memory
         if (SMP_CTRLREG(smp_base, 0x4) & 0x1) {
             SMP_CTRLREG(smp_base, 0x10) |= 0x1;
             SMP_CTRLREG(smp_base, 0xd8) = 0x0;
@@ -1520,9 +1520,8 @@ void _premain_init(void)
     }
 #endif
 
-#if defined(RUNMODE_L2_EN)
     if ( (hartid == BOOT_HARTID) && ((mcfginfo & (0x1 << 11)) && (SMP_CTRLREG(__SMPCC_BASEADDR, 0x4) & 0x1)) ) { // L2 Cache present
-#if RUNMODE_L2_EN == 1
+#if !(defined(RUNMODE_L2_EN) && RUNMODE_L2_EN == 0)
         // Enable L2, disable cluster local memory
         SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) |= 0x1;
         SMP_CTRLREG(__SMPCC_BASEADDR, 0xd8) = 0x0;
@@ -1535,7 +1534,6 @@ void _premain_init(void)
         __SMP_RWMB();
 #endif
     }
-#endif
 
     /* Enable prefetch overall */
     IINFO_EnablePrefetchOverall();

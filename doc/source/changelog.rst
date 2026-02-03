@@ -147,6 +147,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Enhance evalsoc build system modularization with improved flexibility and reduced customer porting effort, see :ref:`design_soc_evalsoc_build_modularization` for details
   - Add ``eclic_hwctx`` hidden configuration option in evalsoc Common ``npk.yml`` to control ECLIC v2 hardware context auto-save/restore feature with conditional compilation flag ``ECLIC_HW_CTX_AUTO``
   - Update ``cpufeature.h`` to use a more systematic approach for defining CPU features based on ``XLCFG_xxx`` variables, with clear distinction between features enabled by default versus those disabled by default
+  - Enable L2 Cache for evalsoc when L2 Cache present by default now, previous it is only enabled when ``SMP >= 2``
 
 * Documentation
 
