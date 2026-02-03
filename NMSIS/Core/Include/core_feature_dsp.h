@@ -19455,8 +19455,8 @@ __STATIC_FORCEINLINE unsigned long long __RV_DMSR17(unsigned long a, unsigned lo
  *
  * **Description**:\n
  * For the `DMSR33` instruction, multiply the top 32-bit Q31 content of 64-bit chunks in Rs1 with the top 32-bit Q31 content
- * of 64-bit chunks in Rs2. At the same time, multiply the bottom 32-bit Q31 content of 64bit chunks in Rs1 with the bottom 
- * 32-bit Q31 content of 64-bit. 
+ * of 64-bit chunks in Rs2. At the same time, multiply the bottom 32-bit Q31 content of 64bit chunks in Rs1 with the bottom
+ * 32-bit Q31 content of 64-bit.
  * The Q64 results are then right-shifted 33-bits and clipped to Q31 values. The Q31 results are then written into Rd.
  *
  * **Operations**:\n
@@ -19573,7 +19573,7 @@ __STATIC_FORCEINLINE unsigned long __RV_DREDAS16(unsigned long long a)
  * Do halfs reduced subtraction and halfs reduced addition from a register. The result is written to Rd.
  *
  * **Description**:\n
- * For the `DREDSA16` instruction, add the top 16-bit Q15 element from the bottom 16-bit Q15  element of the bottom 32-bit Q31 content of 64-bit chunks in Rs1. At the same time,  subtract the the top16-bit Q15 element with the bottom16-bit Q15 element of the top 32-bit Q31 content of 64-bit chunks in Rs1. The two Q15 results are then written into Rd. 
+ * For the `DREDSA16` instruction, add the top 16-bit Q15 element from the bottom 16-bit Q15  element of the bottom 32-bit Q31 content of 64-bit chunks in Rs1. At the same time,  subtract the the top16-bit Q15 element with the bottom16-bit Q15 element of the top 32-bit Q31 content of 64-bit chunks in Rs1. The two Q15 results are then written into Rd.
  *
  * **Operations**:\n
  * ~~~
@@ -20449,7 +20449,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DPKBT16(unsigned long long a, unsig
  *
  * **Purpose**:\n
  * Pack 16-bit data from 32-bit chunks in two registers.
- * * PKTT16 top.top 
+ * * PKTT16 top.top
  *
  * **Description**:\n
  * This instruction moves Rs1.W[x] [31:16] to Rd.W[x] [31:16] and moves Rs2.W[x] [31:16] to Rd.W[x] [15:0].
@@ -23983,7 +23983,7 @@ __STATIC_FORCEINLINE long __RV_DMADA32(long long t, unsigned long long a, unsign
  *
  * **Purpose**:\n
  * Multiply the signed 16-bit content of the 32-bit elements of a register with the 16-bit content of the corresponding 32-bit
- * elements of another register and add the results with a 64-bit value of an even/odd pair of registers. The addition result 
+ * elements of another register and add the results with a 64-bit value of an even/odd pair of registers. The addition result
  * is written back to the register-pair.
  * * DSMALBB: rt pair + bottom*bottom (all 32-bit elements)
  *

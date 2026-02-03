@@ -267,7 +267,7 @@ typedef union
         __IOM uint32_t inj_clm:1;               /*!< bit:     2 ECC error injection to clm ram */
         __IOM uint32_t inj_mode:1;              /*!< bit:     3 ECC error injection mode: 0-direct write mode, 1-xor write mode */
         __IM uint32_t _reserved0:20;            /*!< bit:     4..23 reserved */
-        /** \brief 24..32 ECC code for injection 
+        /** \brief 24..32 ECC code for injection
          * \details Write to this bit field may use `sb` instruction (write only one byte),
          * which is not allowed for SMPCC registers. So this bit field is read-only here,
          * but actually it can be written. To write this bit field, you should write the
@@ -793,7 +793,7 @@ __STATIC_FORCEINLINE uint8_t SMPCC_IsCCacheSupportECC(void)
  * \details
  * This function enables snoop functionality for specified client mask.
  * \param [in]    client_msk    Client mask to enable snoop for
- * \sa 
+ * \sa
  * - \ref SMPCC_DisableSnoop
 */
 __STATIC_FORCEINLINE void SMPCC_EnableSnoop(uint16_t client_msk)
@@ -806,7 +806,7 @@ __STATIC_FORCEINLINE void SMPCC_EnableSnoop(uint16_t client_msk)
  * \details
  * This function disables snoop functionality for specified client mask.
  * \param [in]    client_msk    Client mask to disable snoop for
- * \sa 
+ * \sa
  * - \ref SMPCC_EnableSnoop
 */
 __STATIC_FORCEINLINE void SMPCC_DisableSnoop(uint16_t client_msk)
@@ -819,7 +819,7 @@ __STATIC_FORCEINLINE void SMPCC_DisableSnoop(uint16_t client_msk)
  * \details
  * This function enables the cluster cache.
  * \sa
- * - \ref SMPCC_DisableCCache 
+ * - \ref SMPCC_DisableCCache
 */
 __STATIC_FORCEINLINE void SMPCC_EnableCCache(void)
 {
@@ -905,7 +905,7 @@ __STATIC_FORCEINLINE void SMPCC_EnableCLM(void)
  * This function configures the Cluster Local Memory to use all cache ways at the specified address.
  * \param [in]    addr    Base address for Cluster Local Memory.
  * \remarks
- * - Access to the \c CLM_ADDR_BASE register depends on the physical address (PA) size. 
+ * - Access to the \c CLM_ADDR_BASE register depends on the physical address (PA) size.
  *   If the PA size is not larger than 32 bits, only the low 32 bits of the address can be accessed.
  * - Before changing the Cluster Cache to CLM mode, ensure that:
  *   - The Cluster Cache is disabled,
@@ -940,7 +940,7 @@ __STATIC_FORCEINLINE void SMPCC_SetCLMAllWays(uint64_t addr)
  * \param [in]    addr      Base address for Cluster Local Memory
  * \param [in]    way_msk   Way mask to configure
  * \remarks
- * - Access to the \c CLM_ADDR_BASE register depends on the physical address (PA) size. 
+ * - Access to the \c CLM_ADDR_BASE register depends on the physical address (PA) size.
  *   If the PA size is not larger than 32 bits, only the low 32 bits of the address can be accessed.
  * - Before changing the Cluster Cache to CLM mode, ensure that:
  *   - The Cluster Cache is disabled,
@@ -1108,7 +1108,7 @@ __STATIC_FORCEINLINE void SMPCC_DisableRecvErrIrq(void)
  * \details
  * This function enables interrupt generation when fatal error count exceeds the threshold.
  * \sa
- * - \ref SMPCC_DisableFatalErrIrq 
+ * - \ref SMPCC_DisableFatalErrIrq
 */
 __STATIC_FORCEINLINE void SMPCC_EnableFatalErrIrq(void)
 {

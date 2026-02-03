@@ -64,7 +64,7 @@ typedef struct {
     __IOM uint32_t CC_CTRL;         /*!< Offset: 0x10 (R/W) Cluster Cache Control Register */
     __IOM uint32_t CC_mCMD;         /*!< Offset: 0x14 (R/W) Cluster Cache M-mode Command Register */
     __IM uint8_t RESERVED1[168];    /*!< 0x18~0xBF (R) not shown here for these registers are not related with cache operation */
-    __IOM uint32_t CC_sCMD;         /*!< Offset: 0xC0 (R/W) Cluster Cache S-mode Command Register */  
+    __IOM uint32_t CC_sCMD;         /*!< Offset: 0xC0 (R/W) Cluster Cache S-mode Command Register */
     __IOM uint32_t CC_uCMD;         /*!< Offset: 0xC4 (R/W) Cluster Cache U-mode Command Register */
     __IM uint8_t RESERVED2[20];     /*!< 0xC8~0xDB (R) not shown here for these registers are not related with cache operation */
     __IOM uint32_t CC_INVALID_ALL;  /*!< Offset: 0xDC (R/W) Cluster Cache Invalid All Register */
@@ -77,7 +77,7 @@ typedef struct {
 
 #define SMPCC_CMD_CTRL_USE_EN_Pos                   10U                                     /*!< SMPCC_CMD CC_CTRL USE_EN Position */
 #define SMPCC_CMD_CTRL_USE_EN_Msk                   (0x1UL << SMPCC_CMD_CTRL_USE_EN_Pos)    /*!< SMPCC_CMD CC_CTRL USE_EN Mask */
-#define SMPCC_CMD_CTRL_USE_EN_ENABLE                1U                                      /*!< SMPCC_CMD CC_CTRL USE_EN Enable */ 
+#define SMPCC_CMD_CTRL_USE_EN_ENABLE                1U                                      /*!< SMPCC_CMD CC_CTRL USE_EN Enable */
 #define SMPCC_CMD_CTRL_USE_EN_DISABLE               0U                                      /*!< SMPCC_CMD CC_CTRL USE_EN Disable */
 
 #define SMPCC_CMD_xCMD_CMD_Pos                      0U                                      /*!< SMPCC_CMD register xCMD field CMD Position */
@@ -195,7 +195,7 @@ typedef struct CacheInfo {
 __STATIC_FORCEINLINE void EnableSUCCM(void)
 {
     __RV_CSR_SET(CSR_CCM_SUEN, CCM_SUEN_SUEN_Msk);
-#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) 
+#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1)
     SMPCC_CMD->CC_CTRL |= _VAL2FLD(SMPCC_CMD_CTRL_SUP_EN, SMPCC_CMD_CTRL_SUP_EN_ENABLE) |
                           _VAL2FLD(SMPCC_CMD_CTRL_USE_EN, SMPCC_CMD_CTRL_USE_EN_ENABLE);
 #endif /* #if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) */
@@ -216,7 +216,7 @@ __STATIC_FORCEINLINE void EnableSUCCM(void)
 __STATIC_FORCEINLINE void DisableSUCCM(void)
 {
     __RV_CSR_CLEAR(CSR_CCM_SUEN, CCM_SUEN_SUEN_Msk);
-#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) 
+#if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1)
     SMPCC_CMD->CC_CTRL &= ~_VAL2FLD(SMPCC_CMD_CTRL_SUP_EN, SMPCC_CMD_CTRL_SUP_EN_DISABLE) &
                           ~_VAL2FLD(SMPCC_CMD_CTRL_USE_EN, SMPCC_CMD_CTRL_USE_EN_DISABLE);
 #endif /* #if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1) */
