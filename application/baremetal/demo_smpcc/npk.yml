@@ -19,8 +19,8 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    # REQUIRE: SMPCC, HPM-v2
-    # OPTIONAL: CCM
+    # REQUIRE: SMPCC
+    # OPTIONAL: CCM, HPM-v2
     value: -O2 -DXLCFG_CCM=1 -DXLCFG_HPM=2
     type: text
     description: Application Compile Flags
