@@ -368,6 +368,36 @@ typedef union {
 } CIF_IINFO_MCMO_INFO_Type;
 
 /**
+ * \brief  Union type to access SEC_CFG_INFO register.
+ */
+typedef union {
+    struct {
+        uint32_t security:1;                     /*!< bit: 0 security feature support */
+        uint32_t sec_debug:1;                    /*!< bit: 1 secure debug feature support */
+        uint32_t arcg:1;                         /*!< bit: 2 architecture random clock gate feature support */
+        uint32_t remap:1;                        /*!< bit: 3 vector table remap feature support */
+        uint32_t parity_protection:1;            /*!< bit: 4 register parity protection feature support */
+        uint32_t trwb:1;                         /*!< bit: 5 garbage register write-back feature support */
+        uint32_t ppi_lock:1;                     /*!< bit: 6 PPI lock feature support feature support */
+        uint32_t cct:1;                          /*!< bit: 7 instruction execution time consistency feature support */
+        uint32_t cache_froze:1;                  /*!< bit: 8 cache frozen feature support */
+        uint32_t sec_mon_bus:1;                  /*!< bit: 9 security monitor bus feature support */
+        uint32_t exe_monitor:1;                  /*!< bit: 10 execution monitor feature support */
+        uint32_t key_state_clear:1;              /*!< bit: 11 key state clear feature support */
+        uint32_t data_polarity:1;                /*!< bit: 12 data polarity feature support */
+        uint32_t random_ins_insert:1;            /*!< bit: 13 ramdom instruction insert feature support */
+        uint32_t power_disturb:1;                /*!< bit: 14 power scrambling feature support */
+        uint32_t stack_check:1;                  /*!< bit: 15 stack check feature support */
+        uint32_t bjp_random_flush:1;             /*!< bit: 16 BJP instruction can send random flush feature support */
+        uint32_t parity_mode:1;                  /*!< bit: 17 parity mode, only active when parity_protection is enabled */
+        uint32_t :4;                             /*!< bit: 18..21 Reserved 0 */
+        uint32_t mpu_num:5;                      /*!< bit: 22..26 The number of mpu entries */
+        uint32_t bbox_num:5;                     /*!< bit: 27..31 The number of bbox entries  */
+    } b;                                         /*!< Structure used for bit access */
+    uint32_t d;                                  /*!< Type      used for register data access */
+} CIF_IINFO_SEC_CFG_INFO_Type;
+
+/**
  * \brief  Union type to access MVLM_CFG_LO register.
  */
 typedef union {

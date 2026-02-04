@@ -63,6 +63,7 @@ static void show_mcppi_cfg(CIF_IINFO_Type *iinfo);
 static void show_cmo(CIF_IINFO_Type *iinfo);
 static void show_performance_cfg(CIF_IINFO_Type *iinfo);
 static void show_misc_cfg(CIF_IINFO_Type *iinfo);
+static void show_sec_cfg(CIF_IINFO_Type *iinfo);
 
 /**
  * Convert to human readable size with option
@@ -430,6 +431,8 @@ static void show_iregion(const CPU_INFO_Group *cpuinfo)
     show_cmo(cpuinfo->iinfo);
     /* PERFORMANCE_CFG */
     show_performance_cfg(cpuinfo->iinfo);
+    /* SEC_CFG_INFO */
+    show_sec_cfg(cpuinfo->iinfo);
     /* MERGEL1DCTRL and ACCESS_CTRL */
     show_misc_cfg(cpuinfo->iinfo);
 }
@@ -757,6 +760,36 @@ static void show_misc_cfg(CIF_IINFO_Type *iinfo)
     SHOW_VALUE(access_ctrl, pf_access);
     SHOW_VALUE(access_ctrl, cache_csr_access);
     SHOW_VALUE(access_ctrl, pma_csr_access);
+}
+
+static void show_sec_cfg(CIF_IINFO_Type *iinfo)
+{
+    CIF_IINFO_SEC_CFG_INFO_Type sec_cfg;
+    sec_cfg.d = iinfo->sec_cfg_info;
+    if (sec_cfg.b.security) {
+        CIF_PRINTF("                  sec_cfg: present\r\n");
+        SHOW_VALUE(sec_cfg, sec_debug);
+        SHOW_VALUE(sec_cfg, arcg);
+        SHOW_VALUE(sec_cfg, remap);
+        SHOW_VALUE(sec_cfg, parity_protection);
+        SHOW_VALUE(sec_cfg, trwb);
+        SHOW_VALUE(sec_cfg, ppi_lock);
+        SHOW_VALUE(sec_cfg, cct);
+        SHOW_VALUE(sec_cfg, cache_froze);
+        SHOW_VALUE(sec_cfg, sec_mon_bus);
+        SHOW_VALUE(sec_cfg, exe_monitor);
+        SHOW_VALUE(sec_cfg, key_state_clear);
+        SHOW_VALUE(sec_cfg, data_polarity);
+        SHOW_VALUE(sec_cfg, random_ins_insert);
+        SHOW_VALUE(sec_cfg, power_disturb);
+        SHOW_VALUE(sec_cfg, stack_check);
+        SHOW_VALUE(sec_cfg, bjp_random_flush);
+        SHOW_VALUE(sec_cfg, parity_mode);
+        SHOW_VALUE(sec_cfg, mpu_num);
+        SHOW_VALUE(sec_cfg, bbox_num);
+    } else {
+        CIF_PRINTF("                  sec_cfg: absent\r\n");
+    }
 }
 
 static char *cvt_size_opt(uint32_t size, int lite)
