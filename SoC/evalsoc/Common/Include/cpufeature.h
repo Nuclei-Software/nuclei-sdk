@@ -43,15 +43,13 @@ extern "C" {
 #define CFG_CPU_SERIES              0xFFFFFF
 #define CFG_CPU_VER                 0xFFFFFF
 
-#if defined(XLCFG_ECLIC)
+// NOTE: By default enabled features
+
+#if !(defined(XLCFG_ECLIC) && XLCFG_ECLIC == 0)
 #define CFG_HAS_CLIC
 #if XLCFG_ECLIC == 2
 #define CFG_HAS_ECLICV2
-#elif XLCFG_ECLIC == 0
-#undef CFG_HAS_CLIC
 #endif
-#else
-#define CFG_HAS_CLIC
 #endif
 
 // External Interrupt Number
@@ -161,16 +159,12 @@ extern "C" {
 #define CFG_HAS_DDR
 #endif
 
-#if defined(XLCFG_HPM)
-#define CFG_HPM_VER                 1
-#if XLCFG_HPM == 2
-#define CFG_HPM_VER                 2
-#elif XLCFG_HPM == 0
-#undef CFG_HPM_VER
+#if !(defined(XLCFG_HPM) && XLCFG_HPM == 0)
+#define CFG_HAS_HPM
+#define CFG_HPM_VER                 XLCFG_HPM
 #endif
-#else
-#define CFG_HPM_VER                 1
-#endif
+
+// NOTE: By default disabled features
 
 #if defined(XLCFG_CCM) && XLCFG_CCM != 0
 #define CFG_HAS_CCM
