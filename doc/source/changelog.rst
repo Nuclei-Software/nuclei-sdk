@@ -85,6 +85,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add :ref:`design_app_demo_ecc` to demonstrate ECC error injection feature on Nuclei RISC-V CPU.
   - Disable ECLIC v2 hardware context auto save/restore feature in ``demo_clint_timer``, ``demo_plic`` and ``demo_smode_plic`` applications when using CLINT/PLIC interrupt modes to ensure proper interrupt handling
   - Add :ref:`design_app_demo_smode_clint` to demonstrate timer interrupt handling in S-Mode with CLINT interrupt mode.
+  - Remove ``nuclei_cache`` npk configuration from ``demo_cache``, ``demo_cidu``, ``demo_ecc``, ``demo_pma``, ``demo_smpcc``, and ``smphello`` applications ``npk.yml`` since it is now deprecated
 
 * Build System
 
@@ -149,6 +150,8 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add ``eclic_hwctx`` hidden configuration option in evalsoc Common ``npk.yml`` to control ECLIC v2 hardware context auto-save/restore feature with conditional compilation flag ``ECLIC_HW_CTX_AUTO``
   - Update ``cpufeature.h`` to use a more systematic approach for defining CPU features based on ``XLCFG_xxx`` variables, with clear distinction between features enabled by default versus those disabled by default
   - Enable L2 Cache for evalsoc when L2 Cache present by default now, previous it is only enabled when ``SMP >= 2``
+  - The ``nuclei_cache`` configuration option in ``SoC/evalsoc/Common/npk.yml`` is removed and will no longer be effective. L1/L2 Cache will be enabled by default when present, and CCM feature by default not present. To force enable CCM for evalsoc with non-nuclei_gen generated cpufeature.h, pass macro ``-DXLCFG_CCM=1`` in your compiler options.
+  - Remove ``RUNMODE_IC_EN``, ``RUNMODE_DC_EN``, and ``RUNMODE_CCM_EN`` build configurations that were previously tied to ``nuclei_cache`` selections in ``SoC/evalsoc/Common/npk.yml``
 
 * Documentation
 

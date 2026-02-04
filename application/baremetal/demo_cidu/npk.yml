@@ -36,8 +36,6 @@ setconfig:
     value: 2K
   - config: download_mode
     value: sram
-  - config: nuclei_cache
-    value: ["ic", "dc", "ccm"]
 
 ## Source Code Management
 codemanage:

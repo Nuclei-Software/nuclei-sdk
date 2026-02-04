@@ -22,7 +22,7 @@ dependencies:
 ## Package Configurations
 configuration:
   app_commonflags:
-    # REQUIRE: ECLIC, SYSTIMER, SMPCC
+    # REQUIRE: ECLIC, SYSTIMER, SMPCC, CCM
     value:
     type: text
     description: Application Compile Flags
@@ -39,8 +39,6 @@ setconfig:
     value: 2K
   - config: download_mode
     value: sram
-  - config: nuclei_cache
-    value: ["ic", "dc", "ccm"]
 
 ## Source Code Management
 codemanage:

@@ -336,17 +336,9 @@ configuration:
     hints: "_zba_zbb_zbc_zbs_xxldsp"
     global: true
     description: ARCH Extensions(ARCH_EXT=)
-  nuclei_cache:
-    default_value: []
-    type: multicheckbox_v2
-    global: true
-    tips: "Click to enable I/D Cache and CCM to override default settings defined in cpufeature.h"
-    description: Nuclei Cache Extensions
-    param:
-      name:
-        [ic, dc, ccm]
-      description:
-        [ICache, DCache, CCM]
+  # NOTE: nuclei_cache configuration removed from 0.9.0 release, it will not be effective, now L1/L2 Cache will be enabled by default when present,
+  # and CCM feature by default not present, to force enable it for evalsoc with not nuclei_gen generated cpufeature.h,
+  # you need to pass macro -DXLCFG_CCM=1 in your c/asm/cpp compiler options
   nuclei_eclic:
     default_value: v1
     type: choice
@@ -544,12 +536,6 @@ buildconfig:
       - defines: CPU_SERIES=${cpu_series}
         condition: $( ${cpu_series} != "" )
       - defines: BOOT_HARTID=${boothartid}
-      - defines: RUNMODE_IC_EN=1
-        condition: $( contains(${nuclei_cache}, "ic"))
-      - defines: RUNMODE_DC_EN=1
-        condition: $( contains(${nuclei_cache}, "dc"))
-      - defines: RUNMODE_CCM_EN=1
-        condition: $( contains(${nuclei_cache}, "ccm"))
     prebuild_steps: # could be override by app/bsp type
       command:
       description:
