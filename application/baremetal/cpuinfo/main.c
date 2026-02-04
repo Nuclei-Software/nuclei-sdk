@@ -6,6 +6,15 @@
 
 #define BUFSIZE 2048
 
+volatile int ille_ins_flag = 0;
+void illegal_instruction_handler(unsigned long mcause, unsigned long sp) {
+    ille_ins_flag = 1;
+    EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
+    // read csr is a 4 bytes instruction
+    // so we just add 4 to mepc to return to the next instruction
+    exc_frame->epc += 4;
+}
+
 int main(void)
 {
     static char cpufeatbuf[BUFSIZE];
@@ -39,7 +48,6 @@ int main(void)
     // but eclic and iregion present
 #if defined(CPU_SERIES) && CPU_SERIES == 100
     mcfg.d = 0;
-#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT == 1)
     // mirgb_info csr present for n100 with eclic, this csr will not be zero
     if (__RV_CSR_READ(CSR_MIRGB_INFO) != 0) {
         mcfg.b.iregion = 1;
@@ -47,7 +55,6 @@ int main(void)
     } else {
         cpuinfo.mcfg_exist = 0;
     }
-#endif
 #endif
 
     cpuinfo.mcfginfo = mcfg;
@@ -116,6 +123,34 @@ int main(void)
         __RV_CSR_SET(CSR_MSTATUS, MSTATUS_VS_INITIAL);
         cpuinfo.vlenb = __RV_CSR_READ(CSR_VLENB);
     }
+
+    /* Get miscellaneous information */
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    cpuinfo.misc.b.pma_macro = 0;
+    cpuinfo.misc.b.misaligned_access = 1;
+    cpuinfo.misc.b.cidu_exist = 0;
+#else
+    /* Check PMA_MACRO by reading `mmacro_dev_en`, if no exception then PMA_MACRO is supported */
+    unsigned long old_handler = Exception_Get_EXC(IlleIns_EXCn);
+    ille_ins_flag = 0;
+    Exception_Register_EXC(IlleIns_EXCn, (unsigned long)illegal_instruction_handler);
+    rv_csr_t mmacro_dev_en = __RV_CSR_READ(CSR_MMACRO_DEV_EN);
+    /* Restore the default exception handler */
+    Exception_Register_EXC(IlleIns_EXCn, old_handler);
+    cpuinfo.misc.b.pma_macro = !ille_ins_flag;
+
+    /* Check MISALIGNED_ACCESS by reading mmisc_ctl register */
+    CSR_MMISC_CTL_Type mmisc_ctl;
+    mmisc_ctl.d = (uint32_t)__RV_CSR_READ(CSR_MMISC_CTL);
+    cpuinfo.misc.b.misaligned_access = mmisc_ctl.b.misalign;
+
+    /* Check CIDU by CIDU interrupt number */
+    if (mcfg.b.iregion) {
+        unsigned long cidu_addr = (unsigned long)cpuinfo.iregion_base + CPUINFO_IRG_IDU_OFS;
+        const uint32_t *cidu_int_num_addr = (const uint32_t *)(cidu_addr + CIF_CIDU_INT_NUM_OFS);
+        cpuinfo.misc.b.cidu_exist = !!(*cidu_int_num_addr);
+    }
+#endif
 
     if (get_basic_cpuinfo(&cpuinfo, cpufeatbuf, BUFSIZE) > 0) {
         printf("%s\r\n", cpufeatbuf);

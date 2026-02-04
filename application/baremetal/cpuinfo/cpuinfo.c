@@ -43,6 +43,7 @@
 static void show_isa(uint32_t xlen, U32_CSR_MISA_Type misa,
                      U32_CSR_MCFG_INFO_Type mcfg);
 static void show_mcfg(const CPU_INFO_Group *cpuinfo);
+static void show_feature(const CPU_INFO_Group *cpuinfo);
 static void show_micfg_mdcfg(U32_CSR_MCFG_INFO_Type mcfg,
                              U32_CSR_MICFG_INFO_Type micfg,
                              U32_CSR_MDCFG_INFO_Type mdcfg);
@@ -95,6 +96,8 @@ void show_cpuinfo(const CPU_INFO_Group *cpuinfo)
     show_isa(cpuinfo->xlen, cpuinfo->misa, cpuinfo->mcfginfo);
     /* Support */
     show_mcfg(cpuinfo);
+    /* Features */
+    show_feature(cpuinfo);
     /* ILM, DLM, I/D Cache */
     show_micfg_mdcfg(cpuinfo->mcfginfo, cpuinfo->micfginfo, cpuinfo->mdcfginfo);
     /* TLB */
@@ -118,8 +121,6 @@ int get_basic_cpuinfo(const CPU_INFO_Group *cpuinfo, char *str, unsigned long le
         return -1;
     }
 
-    static char buf[BUF_SIZE] = {0}; // features string buffer
-    buf[0] = '\0'; // clear the buffer each time call this function
     char isa[EXTENSION_NUM + 1];
 
     /* construct ISA string */
@@ -131,70 +132,133 @@ int get_basic_cpuinfo(const CPU_INFO_Group *cpuinfo, char *str, unsigned long le
     }
     isa[pos] = '\0';
 
-    if (!cpuinfo->mcfg_exist) {
-        goto simple;
-    }
+    /* get features string */
+    const char *features = get_cpu_feature(cpuinfo);
 
-    /* construct features string */
-    U32_CSR_MCFG_INFO_Type mcfg = cpuinfo->mcfginfo;
-    CHECK_STRCAT_BUF(mcfg, plic, buf, "MMU, PLIC, ");
-    CHECK_STRCAT_BUF(mcfg, eclic, buf, "ECLIC, ");
-    CHECK_STRCAT_BUF(mcfg, fio, buf, "FIO, ");
-    CHECK_STRCAT_BUF(mcfg, ppi, buf, "PPI, ");
-    CHECK_STRCAT_BUF(mcfg, nice, buf, "NICE, ");
-    CHECK_STRCAT_BUF(mcfg, vnice, buf, "VNICE, ");
-    CHECK_STRCAT_BUF(mcfg, etrace, buf, "ETRACE, ");
-    CHECK_STRCAT_BUF(mcfg, ecc, buf, "ECC, ");
-    CHECK_STRCAT_BUF(mcfg, tee, buf, "TEE, ");
-    CHECK_STRCAT_BUF(mcfg, sec_mode, buf, "SMWG, ");
-
-    CIF_IINFO_ISA_SUPPORT0_Type isa_support0;
-    isa_support0.d = cpuinfo->iinfo->isa_support0;
-    CHECK_STRCAT_BUF(isa_support0, svpbmt, buf, "Svpbmt, ");
-
-    CIF_IINFO_MCMO_INFO_Type cmo;
-    cmo.d = cpuinfo->iinfo->cmo_info;
-    CHECK_STRCAT_BUF(cmo, cmo_cfg, buf, "CMO, ");
-
-    if (mcfg.b.smp) {
-        STRCAT_BUF(buf, "SMPx%d, ", cpuinfo->smpcfg.b.smp_core_num + 1);
-    }
-
-    /* show local memory and cache info */
-    U32_CSR_MICFG_INFO_Type micfg = cpuinfo->micfginfo;
-    U32_CSR_MDCFG_INFO_Type mdcfg = cpuinfo->mdcfginfo;
-    CHECK_STRCAT_BUF(mcfg, ilm, buf, "ILM-%s, ",
-                     cvt_size_opt(POW2(micfg.b.lm_size + 7), 1));
-    CHECK_STRCAT_BUF(mcfg, dlm, buf, "DLM-%s, ",
-                     cvt_size_opt(POW2(mdcfg.b.lm_size + 7), 1));
-    CHECK_STRCAT_BUF(
-        mcfg, icache, buf, "IC-%s, ",
-        cvt_size_opt(POW2(micfg.b.set + 3) * POW2(micfg.b.lsize + 2) *
-                         (micfg.b.way + 1),
-                     1));
-    CHECK_STRCAT_BUF(
-        mcfg, dcache, buf, "DC-%s, ",
-        cvt_size_opt(POW2(mdcfg.b.set + 3) * POW2(mdcfg.b.lsize + 2) *
-                         (mdcfg.b.way + 1),
-                     1));
-
-    /* remove the comma at the end */
-    if (strlen(buf) > 0 && buf[strlen(buf) - 2] == ',') {
-        buf[strlen(buf) - 2] = '\0';
-    }
-    /* Feature name must have at least 2 chars */
-    if (strlen(buf) < 2) {
+    if (strlen(features) == 0) {
         goto simple;
     }
 
     return snprintf(str, len, BASIC_CPUINFO_FMT ", Feature: %s", cpuinfo->mhartid,
                     cpuinfo->marchid.d, cpuinfo->mimpid.b.first_vernum,
                     cpuinfo->mimpid.b.mid_vernum, cpuinfo->mimpid.b.last_vernum,
-                    cpuinfo->xlen, isa, buf);
+                    cpuinfo->xlen, isa, features);
 simple:
     return snprintf(str, len, BASIC_CPUINFO_FMT, cpuinfo->mhartid, cpuinfo->marchid.d,
                     cpuinfo->mimpid.b.first_vernum, cpuinfo->mimpid.b.mid_vernum,
                     cpuinfo->mimpid.b.last_vernum, cpuinfo->xlen, isa);
+}
+
+const char *get_cpu_feature(const CPU_INFO_Group *cpuinfo)
+{
+    static char buf[BUF_SIZE] = {0}; // features string buffer
+    buf[0] = '\0'; // clear the buffer each time call this function
+
+    U32_CSR_MCFG_INFO_Type mcfg = cpuinfo->mcfginfo;
+    U32_CSR_MISA_Type misa = cpuinfo->misa;
+    U32_CSR_MARCHID_Type marchid = cpuinfo->marchid;
+    CIF_MISC_Type misc = cpuinfo->misc;
+    const CIF_ECLIC_Type *eclic = cpuinfo->eclic;
+    const CIF_IINFO_Type *iinfo = cpuinfo->iinfo;
+
+    CIF_IINFO_ISA_SUPPORT0_Type isa_support0;
+    CIF_IINFO_SEC_CFG_INFO_Type sec_cfg;
+    CIF_IINFO_PERFORMANCE_CFG1_Type performance_cfg1;
+
+    if (marchid.d == 0x100U) {
+        // N100 has no iregion info registers
+        isa_support0.d = 0;
+        sec_cfg.d = 0;
+        performance_cfg1.d = 0;
+        // eclic present with systimer
+        if (mcfg.b.eclic) {
+            STRCAT_BUF(buf, "ECLIC-v%d, ", eclic->info.b.version);
+            STRCAT_BUF(buf, "SYSTIMER, ");
+            // N100 has EXCP along with eclic
+            STRCAT_BUF(buf, "EXCP, ");
+        } else {
+            STRCAT_BUF(buf, "IRQC, ");
+            STRCAT_BUF(buf, "TIMER, ");
+        }
+        // N100 has no PMA
+    } else {
+        isa_support0.d = iinfo->isa_support0;
+        sec_cfg.d = iinfo->sec_cfg_info;
+        performance_cfg1.d = iinfo->performance_cfg1;
+        // ECLIC v1/v2
+        CHECK_STRCAT_BUF(mcfg, eclic, buf, "ECLIC-v%d, ",
+                         eclic->info.b.version);
+        // SYSTIMER is always present except N100
+        STRCAT_BUF(buf, "SYSTIMER, ");
+        // EXCP is always present except N100
+        STRCAT_BUF(buf, "EXCP, ");
+        // PMA is always present except N100
+        STRCAT_BUF(buf, "PMA, ");
+    }
+
+    // SMPCC
+    CHECK_STRCAT_BUF(mcfg, smp, buf, "SMPCC, ");
+    // PMP
+    if (misa.b.S || misa.b.U) {
+        STRCAT_BUF(buf, "PMP, ");
+    }
+    // SMEPMP
+    if (isa_support0.b.exist) {
+        CHECK_STRCAT_BUF(isa_support0, smepmp, buf, "SMEPMP, ");
+    }
+    // NICE
+    CHECK_STRCAT_BUF(mcfg, nice, buf, "NICE, ");
+    // VNICE
+    CHECK_STRCAT_BUF(mcfg, vnice, buf, "VNICE, ");
+    // ILM
+    CHECK_STRCAT_BUF(mcfg, ilm, buf, "ILM, ");
+    // DLM
+    CHECK_STRCAT_BUF(mcfg, dlm, buf, "DLM, ");
+    // ICACHE
+    CHECK_STRCAT_BUF(mcfg, icache, buf, "ICACHE, ");
+    // DCACHE
+    CHECK_STRCAT_BUF(mcfg, dcache, buf, "DCACHE, ");
+    // UMODE
+    CHECK_STRCAT_BUF(misa, U, buf, "UMODE, ");
+    // STACK_CHECK
+    if (sec_cfg.b.security) {
+        CHECK_STRCAT_BUF(sec_cfg, stack_check, buf, "STACK_CHECK, ");
+    }
+    // AMO
+    CHECK_STRCAT_BUF(misa, A, buf, "AMO, ");
+    // ECC
+    CHECK_STRCAT_BUF(mcfg, ecc, buf, "ECC, ");
+    // HPM v1/v2
+    if (performance_cfg1.b.exist) {
+        CHECK_STRCAT_BUF(performance_cfg1, hpm_ver, buf, "HPM-v%d, ",
+                         performance_cfg1.b.hpm_ver);
+    }
+    // CCM
+    if (mcfg.b.icache || mcfg.b.dcache) {
+        STRCAT_BUF(buf, "CCM, ");
+    }
+    // TEE and SMPU, if TEE is present, SMPU is also present
+    CHECK_STRCAT_BUF(mcfg, tee, buf, "TEE, SMPU, ");
+    // SSTC
+    CHECK_STRCAT_BUF(mcfg, sstc, buf, "SSTC, ");
+    // SMODE
+    CHECK_STRCAT_BUF(misa, S, buf, "SMODE, ");
+    // PLIC
+    CHECK_STRCAT_BUF(mcfg, plic, buf, "PLIC, ");
+    // PMA_MACRO
+    CHECK_STRCAT_BUF(misc, pma_macro, buf, "PMA_MACRO, ");
+    // MISALIGNED_ACCESS
+    CHECK_STRCAT_BUF(misc, misaligned_access, buf, "MISALIGNED_ACCESS, ");
+    // CIDU exist when CIDU interrupt number > 0
+    CHECK_STRCAT_BUF(misc, cidu_exist, buf, "CIDU, ");
+
+    /* remove the comma at the end */
+    size_t buf_len = strlen(buf);
+    if (buf_len > 1 && buf[buf_len - 2] == ',') {
+        buf[buf_len - 2] = '\0';
+    }
+
+    return buf;
 }
 
 static void show_isa(uint32_t xlen, U32_CSR_MISA_Type misa,
@@ -280,6 +344,14 @@ static void show_mcfg(const CPU_INFO_Group *cpuinfo)
         CIF_PRINTF(" VLEN=%u", cpuinfo->vlenb * 8);
     }
     CIF_PRINTF("\r\n");
+}
+
+static void show_feature(const CPU_INFO_Group *cpuinfo)
+{
+    const char *features= get_cpu_feature(cpuinfo);
+    if (strlen(features) > 0) {
+        CIF_PRINTF("         FEATURE: %s\r\n", features);
+    }
 }
 
 static void show_micfg_mdcfg(U32_CSR_MCFG_INFO_Type mcfg,

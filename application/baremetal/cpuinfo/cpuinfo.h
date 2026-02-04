@@ -18,6 +18,9 @@ extern "C" {
 #define CPUINFO_IRG_DPREFETCH_OFS (0x70000)
 #define CPUINFO_IRG_PLIC_OFS (0x4000000)
 
+/* CIDU interrupt number register offset*/
+#define CIF_CIDU_INT_NUM_OFS 0xC090UL
+
 /* NOTE: The CSR register length various between 32-bit and 64-bit
  * but usually the effective data is in the lower 32 bits. So we
  * use 32-bit data type to represent most of these registers. */
@@ -330,6 +333,19 @@ typedef struct {
 } CIF_ECLIC_Type;
 
 /**
+ * \brief This structure is not memory-mapped and serves only as a logical container for related metadata.
+ */
+typedef struct {
+    struct {
+        uint32_t pma_macro:1;                    /*!< bit: 0 whether CFG_HAS_PMA_MACRO exist */
+        uint32_t misaligned_access:1;            /*!< bit: 1 whether CFG_HAS_MISALIGNED_ACCESS exist */
+        uint32_t cidu_exist:1;                   /*!< bit: 2 whether CFG_HAS_IDU exist */
+        uint32_t:29;                             /*!< bit: 3..31 reserved */
+    } b;
+    uint32_t d;
+} CIF_MISC_Type;
+
+/**
  * \brief  CPU INFO Structure
  */
 typedef struct {
@@ -352,6 +368,7 @@ typedef struct {
     uint32_t vlenb;
     CIF_IINFO_Type *iinfo;                           /*!< IREGION INFO memory pointer */
     CIF_ECLIC_Type *eclic;                           /*!< ECLIC memory pointer */
+    CIF_MISC_Type misc;
 } CPU_INFO_Group;
 
 /**
@@ -688,6 +705,14 @@ typedef struct {
  * \param cpuinfo: pointer to CPU_INFO_Group
  */
 void show_cpuinfo(const CPU_INFO_Group *cpuinfo);
+
+/**
+ * \brief Get CPU feature information.
+ * \details This function gets the CPU features supported by the CPU.
+ * \param cpuinfo: pointer to CPU_INFO_Group
+ * \return string of CPU features
+ */
+const char *get_cpu_feature(const CPU_INFO_Group *cpuinfo);
 
 /**
  * \brief Get basic CPU information in a single line.
