@@ -102,7 +102,11 @@ int main(void)
     }
 
     CIF_IINFO_ISA_SUPPORT0_Type isa_support0;
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    isa_support0.d = 0;
+#else
     isa_support0.d = cpuinfo.iinfo->isa_support0;
+#endif
     /* The init value of vlenb is 0, indicating that the vector extension is not supported */
     cpuinfo.vlenb = 0;
     /* misa.V only valid when the full vector extension is supported.
