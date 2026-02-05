@@ -128,6 +128,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
 
 * SoC
 
+  - Implement ``__libc_init_array`` and ``__libc_fini_array`` in ``stubs.c`` for ``libncrt`` to support C++ constructors and GCOV coverage initialization
   - Only enable/disable L2 cache enable bit during pre-main initialization
   - Limit sPMP/sMPU entry numbers to 16 event PMP entries are 64 for evalsoc to match Nuclei CPU design
   - Optimize SMP bringup process, boot hart should wait for other harts software pending bit be set, mainly to be suitable
