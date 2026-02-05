@@ -72,7 +72,8 @@ typedef union {
         u32_csr_t lm_size:5;                     /*!< bit: 16..20 ILM size, need to be 2^n size */
         u32_csr_t lm_xonly:1;                    /*!< bit: 21 ILM Execute only permission or Reserved */
         u32_csr_t lm_ecc:1;                      /*!< bit: 22 ILM ECC support */
-        u32_csr_t :9;                            /*!< bit: 23..31 Reserved */
+        u32_csr_t i_share_dlm:1;                 /*!< bit: 23 Support IFU fetch instructions from DLM */
+        u32_csr_t :8;                            /*!< bit: 24..31 Reserved */
     } b;                                         /*!< Structure used for bit access */
     u32_csr_t d;                                 /*!< Type      used for csr data access */
 } U32_CSR_MICFG_INFO_Type;

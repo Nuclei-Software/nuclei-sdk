@@ -292,6 +292,7 @@ static void show_micfg_mdcfg(U32_CSR_MCFG_INFO_Type mcfg,
         CIF_PRINTF(" %s", cvt_size(POW2(micfg.b.lm_size + 7)));
         CHECK_FIELD(micfg, lm_xonly, "execute-only");
         CHECK_FIELD(micfg, lm_ecc, "has-ecc");
+        CHECK_FIELD(micfg, i_share_dlm, "share-dlm");
         CIF_PRINTF("\r\n");
     }
     /* DLM */

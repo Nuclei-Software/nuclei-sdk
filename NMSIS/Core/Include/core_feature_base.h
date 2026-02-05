@@ -440,7 +440,8 @@ typedef union {
         rv_csr_t lm_size:5;                     /*!< bit: 16..20 ILM size, need to be 2^n size */
         rv_csr_t lm_xonly:1;                    /*!< bit: 21 ILM Execute only permission or Reserved */
         rv_csr_t lm_ecc:1;                      /*!< bit: 22 ILM ECC support */
-        rv_csr_t _reserved1:__RISCV_XLEN-23;    /*!< bit: 23..XLEN-1 Reserved */
+        rv_csr_t i_share_dlm:1;                 /*!< bit: 23 Support IFU fetch instructions from DLM */
+        rv_csr_t _reserved1:__RISCV_XLEN-24;    /*!< bit: 24..XLEN-1 Reserved */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MICFGINFO_Type;
