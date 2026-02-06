@@ -155,6 +155,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - The ``nuclei_cache`` configuration option in ``SoC/evalsoc/Common/npk.yml`` is removed and will no longer be effective. L1/L2 Cache will be enabled by default when present, and CCM feature by default not present. To force enable CCM for evalsoc with non-nuclei_gen generated cpufeature.h, pass macro ``-DXLCFG_CCM=1`` in your compiler options.
   - Remove ``RUNMODE_IC_EN``, ``RUNMODE_DC_EN``, and ``RUNMODE_CCM_EN`` build configurations that were previously tied to ``nuclei_cache`` selections in ``SoC/evalsoc/Common/npk.yml``
   - Add conditional BSS initialization in ``startup_evalsoc.S`` based on ``CFG_SIMULATION_BSSZERO`` C macro to allow skipping BSS initialization during simulation
+  - Add new ``get_system_clock()`` function in ``system_evalsoc.c`` to improve system clock frequency determination by checking performance counters(mcycle) availability, and update ``_premain_init()`` to use this new function
 
 * Documentation
 

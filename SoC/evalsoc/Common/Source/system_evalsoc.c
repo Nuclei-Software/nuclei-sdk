@@ -35,6 +35,8 @@
  *----------------------------------------------------------------------------*/
 /* ToDo: add here your necessary defines for device initialization
          following is an example for different system frequencies */
+// NOTE: SYSTEM_CLOCK can be overwritten by make variable SYSCLK defined in build.mk.
+// eg. make SYSCLK=500000000 clean all
 #ifndef SYSTEM_CLOCK
 #define SYSTEM_CLOCK    (16000000UL)
 #endif
@@ -1381,6 +1383,22 @@ static void Trap_Init(void)
 }
 
 /**
+ * \brief      Get system clock frequency
+ * \details    Determines the system clock frequency by checking if performance counters are available.
+ *             If the mcycle CSR is zero (indicating performance counters are not implemented),
+ *             it returns the default SYSTEM_CLOCK macro value. Otherwise, it returns the CPU frequency
+ *             obtained from get_cpu_freq() implemented in evalsoc_common.c.
+ * \return     System clock frequency in Hz
+ */
+static uint32_t get_system_clock(void)
+{
+    if (__RV_CSR_READ(CSR_MCYCLE) == 0) {
+        return SYSTEM_CLOCK;
+    }
+    return get_cpu_freq();
+}
+
+/**
  * \brief early init function before main
  * \details
  * This function is executed right before main function.
@@ -1521,6 +1539,7 @@ void _premain_init(void)
 #endif
 
     if ( (hartid == BOOT_HARTID) && ((mcfginfo & (0x1 << 11)) && (SMP_CTRLREG(__SMPCC_BASEADDR, 0x4) & 0x1)) ) { // L2 Cache present
+        // NOTE: Enable L2 Cache by default when L2 Cache Present
 #if !(defined(RUNMODE_L2_EN) && RUNMODE_L2_EN == 0)
         // Enable L2, disable cluster local memory
         SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) |= 0x1;
@@ -1555,9 +1574,9 @@ void _premain_init(void)
 #endif
 
     if (hartid == BOOT_HARTID) { // only required for boot hartid
-        // TODO implement get_cpu_freq function to get real cpu clock freq in HZ or directly give the real cpu HZ
+        // TODO implement system_system_clock function to get real cpu clock freq in HZ or directly give the real cpu HZ
         // TODO you can directly give the correct cpu frequency here, if you know it without call get_cpu_freq function
-        SystemCoreClock = get_cpu_freq();
+        SystemCoreClock = get_system_clock();
         uart_init(SOC_DEBUG_UART, 115200);
         /* Display banner after UART initialized */
         SystemBannerPrint();
