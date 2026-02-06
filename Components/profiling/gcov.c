@@ -41,7 +41,10 @@ typedef uint32_t u32;
 #define GCOV_TAG_FOR_COUNTER(count) \
     (GCOV_TAG_COUNTER_BASE + ((unsigned int) (count) << 17))
 
-#if (__GNUC__ >= 14)
+
+#if (__GNUC__ >= 15)
+#define GCOV_COUNTERS               10
+#elif (__GNUC__ >= 14)
 #define GCOV_COUNTERS               9
 #elif (__GNUC__ >= 10)
 #define GCOV_COUNTERS               8
