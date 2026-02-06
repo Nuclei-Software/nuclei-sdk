@@ -59,6 +59,8 @@ fpga_runner.yaml
 *.gcda
 *.gcno
 *.gcov
+*.gmon
+*.out
 
 # IAR Embedded Workbench generated dirs/files
 settings/
