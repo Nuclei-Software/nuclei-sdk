@@ -183,6 +183,13 @@
 #define PRINT_LOOP_COUNT                100
 #endif
 
+// NOTE: SSUBM is introduced from ECLIC v2
+#if __ECLIC_VER == 2
+#define READ_SSUBM()            __RV_CSR_READ(CSR_SSUBM)
+#else
+#define READ_SSUBM()            0
+#endif
+
 #define SMODE_TICK_MS           20
 #define MMODE_TICK_MS           10
 
@@ -613,7 +620,7 @@ void eclic_stip_handler(void)
     int_t_cnt += 1;
     if (int_t_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_stip_handler (level %u) triggered IRQ %d (level %u, trigger counter: %u), ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               SYSTIMER_S_LEVEL, SOC_INT30_IRQn, INT30_LEVEL, int_t_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               SYSTIMER_S_LEVEL, SOC_INT30_IRQn, INT30_LEVEL, int_t_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ5_PARAMS, IRQ5_EXPECTED_RESULT, "eclic_stip_handler", SMODE_IRQNUM(SOC_INT30_IRQn));
 
@@ -642,7 +649,7 @@ __SUPERVISOR_INTERRUPT void eclic_ssip_handler(void)
     int_sw_cnt += 1;
     if (int_sw_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_ssip_handler (level %u) triggered IRQ %d (level %u, trigger counter: %u), ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               SYSTIMER_S_LEVEL, SOC_INT36_IRQn, INT36_LEVEL, int_sw_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               SYSTIMER_S_LEVEL, SOC_INT36_IRQn, INT36_LEVEL, int_sw_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ1_PARAMS, IRQ1_EXPECTED_RESULT, "eclic_ssip_handler", SMODE_IRQNUM(SOC_INT36_IRQn));
     SysTimer_ClearSWIRQ_S();
@@ -666,7 +673,7 @@ void eclic_int30_handler(void)
     int_ext30_cnt += 1;
     if (int_ext30_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_int30_handler (level %u) triggered IRQ %d (level %u, trigger counter: %u), ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               INT30_LEVEL, SOC_INT31_IRQn, INT31_LEVEL, int_ext30_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               INT30_LEVEL, SOC_INT31_IRQn, INT31_LEVEL, int_ext30_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ30_PARAMS, IRQ30_EXPECTED_RESULT, "eclic_int30_handler", SMODE_IRQNUM(SOC_INT31_IRQn));
     ECLIC_ClearPendingIRQ_S(SOC_INT30_IRQn);
@@ -686,7 +693,7 @@ void eclic_int31_handler(void)
     int_ext31_cnt += 1;
     if (int_ext31_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_int31_handler (level %u) triggered IRQ %d (level %u, trigger counter: %u), ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               INT31_LEVEL, SOC_INT32_IRQn, INT32_LEVEL, int_ext31_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               INT31_LEVEL, SOC_INT32_IRQn, INT32_LEVEL, int_ext31_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ31_PARAMS, IRQ31_EXPECTED_RESULT, "eclic_int31_handler", SMODE_IRQNUM(SOC_INT32_IRQn)); // Trigger next interrupt in chain
     ECLIC_ClearPendingIRQ_S(SOC_INT31_IRQn);
@@ -707,7 +714,7 @@ void eclic_int32_handler(void)
     int_ext32_cnt += 1;
     if (int_ext32_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_int32_handler (level %u) triggered IRQ %d (level %u, trigger counter: %u), ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               INT32_LEVEL, SOC_INT32_IRQn, INT32_LEVEL, int_ext32_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               INT32_LEVEL, SOC_INT32_IRQn, INT32_LEVEL, int_ext32_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ32_PARAMS, IRQ32_EXPECTED_RESULT, "eclic_int32_handler", SMODE_IRQNUM(SOC_INT33_IRQn)); // Trigger next interrupt in chain
     ECLIC_ClearPendingIRQ_S(SOC_INT32_IRQn);
@@ -728,7 +735,7 @@ void eclic_int33_handler(void)
     int_ext33_cnt += 1;
     if (int_ext33_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_int33_handler (level %u) triggered IRQ %d (level %u, trigger counter: %u), ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               INT33_LEVEL, SOC_INT34_IRQn, INT34_LEVEL, int_ext33_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               INT33_LEVEL, SOC_INT34_IRQn, INT34_LEVEL, int_ext33_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ33_PARAMS, IRQ33_EXPECTED_RESULT, "eclic_int33_handler", SMODE_IRQNUM(SOC_INT34_IRQn)); // Trigger next interrupt in chain
     ECLIC_ClearPendingIRQ_S(SOC_INT33_IRQn);
@@ -748,7 +755,7 @@ void eclic_int34_handler(void)
     int_ext34_cnt += 1;
     if (int_ext34_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_int34_handler (level %u) triggered IRQ %d (level %u, trigger counter: %u), ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               INT34_LEVEL, SOC_INT35_IRQn, INT35_LEVEL, int_ext34_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               INT34_LEVEL, SOC_INT35_IRQn, INT35_LEVEL, int_ext34_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ34_PARAMS, IRQ34_EXPECTED_RESULT, "eclic_int34_handler", SMODE_IRQNUM(SOC_INT35_IRQn)); // Trigger next interrupt in chain
     ECLIC_ClearPendingIRQ_S(SOC_INT34_IRQn);
@@ -768,7 +775,7 @@ void eclic_int35_handler(void)
     int_ext35_cnt += 1;
     if (int_ext35_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_int35_handler (level %u), run counter: %u, ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               INT35_LEVEL, int_ext35_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               INT35_LEVEL, int_ext35_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ35_PARAMS, IRQ35_EXPECTED_RESULT, "eclic_int35_handler", SMODE_IRQNUM(0)); // No next interrupt in chain
     ECLIC_ClearPendingIRQ_S(SOC_INT35_IRQn);
@@ -791,7 +798,7 @@ __SUPERVISOR_INTERRUPT void eclic_int36_handler(void)
     int_ext36_cnt += 1;
     if (int_ext36_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_int36_handler (level %u) triggered IRQ %d (level %u, trigger counter: %u), ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               INT36_LEVEL, SOC_INT37_IRQn, INT37_LEVEL, int_ext36_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               INT36_LEVEL, SOC_INT37_IRQn, INT37_LEVEL, int_ext36_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ36_PARAMS, IRQ36_EXPECTED_RESULT, "eclic_int36_handler", SMODE_IRQNUM(SOC_INT37_IRQn)); // Trigger next interrupt in chain
     ECLIC_ClearPendingIRQ_S(SOC_INT36_IRQn);
@@ -817,7 +824,7 @@ __SUPERVISOR_INTERRUPT void eclic_int37_handler(void)
     int_ext37_cnt += 1;
     if (int_ext37_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_int37_handler (level %u) triggered IRQ %d (level %u, trigger counter: %u), ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               INT37_LEVEL, SOC_INT38_IRQn, INT38_LEVEL, int_ext37_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               INT37_LEVEL, SOC_INT38_IRQn, INT38_LEVEL, int_ext37_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ37_PARAMS, IRQ37_EXPECTED_RESULT, "eclic_int37_handler", SMODE_IRQNUM(SOC_INT38_IRQn)); // Trigger next interrupt in chain
     ECLIC_ClearPendingIRQ_S(SOC_INT37_IRQn);
@@ -843,7 +850,7 @@ __SUPERVISOR_INTERRUPT void eclic_int38_handler(void)
     int_ext38_cnt += 1;
     if (int_ext38_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_int38_handler (level %u) triggered IRQ %d (level %u, trigger counter: %u), ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               INT38_LEVEL, SOC_INT39_IRQn, INT39_LEVEL, int_ext38_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               INT38_LEVEL, SOC_INT39_IRQn, INT39_LEVEL, int_ext38_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ38_PARAMS, IRQ38_EXPECTED_RESULT, "eclic_int38_handler", SMODE_IRQNUM(SOC_INT39_IRQn)); // Trigger next interrupt in chain
     ECLIC_ClearPendingIRQ_S(SOC_INT38_IRQn);
@@ -869,7 +876,7 @@ __SUPERVISOR_INTERRUPT void eclic_int39_handler(void)
     int_ext39_cnt += 1;
     if (int_ext39_cnt % PRINT_LOOP_COUNT == 0) {
         printf("[S] eclic_int39_handler (level %u), run counter: %u, ssubm 0x%x, scause 0x%x, sintstatus 0x%x\r\n",
-               INT39_LEVEL, int_ext39_cnt, __RV_CSR_READ(CSR_SSUBM), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
+               INT39_LEVEL, int_ext39_cnt, READ_SSUBM(), __RV_CSR_READ(CSR_SCAUSE), __RV_CSR_READ(CSR_SINTSTATUS));
     }
     perform_computation(IRQ39_PARAMS, IRQ39_EXPECTED_RESULT, "eclic_int39_handler", SMODE_IRQNUM(0)); // No next interrupt in chain
     ECLIC_ClearPendingIRQ_S(SOC_INT39_IRQn);
