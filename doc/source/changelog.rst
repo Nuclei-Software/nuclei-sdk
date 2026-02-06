@@ -83,7 +83,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add :ref:`design_app_demo_smpcc` to demonstrate SMP Cluster Cache feature on Nuclei RISC-V CPU.
   - Probe and show vlenb in ``cpuinfo`` application.
   - Add :ref:`design_app_demo_ecc` to demonstrate ECC error injection feature on Nuclei RISC-V CPU.
-  - Disable ECLIC v2 hardware context auto save/restore feature in ``demo_clint_timer``, ``demo_plic`` and ``demo_smode_plic`` applications when using CLINT/PLIC interrupt modes to ensure proper interrupt handling
+  - Disable ECLIC v2 hardware context auto save/restore feature in ``demo_clint_timer``, ``demo_plic``, ``demo_smode_clint`` and ``demo_smode_plic`` applications when using CLINT/PLIC interrupt modes to ensure proper interrupt handling
   - Add :ref:`design_app_demo_smode_clint` to demonstrate timer interrupt handling in S-Mode with CLINT interrupt mode.
   - Remove ``nuclei_cache`` npk configuration from ``demo_cache``, ``demo_cidu``, ``demo_ecc``, ``demo_pma``, ``demo_smpcc``, and ``smphello`` applications ``npk.yml`` since it is now deprecated
 
