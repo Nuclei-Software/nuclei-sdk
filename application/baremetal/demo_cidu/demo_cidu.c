@@ -150,7 +150,7 @@ int main(void)
         __enable_irq();
         // Enable uart0 receive interrupt
         uart_enable_rxint(SOC_DEBUG_UART);
-
+        printf("You can press any key now to trigger uart receive interrupt, and only the first hart claims it\n");
         boothart_ready = 1;
         ret = boot_hart_main(hartid);
     } else { // other harts
