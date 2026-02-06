@@ -221,3 +221,5 @@ endif
 -include $(NUCLEI_SDK_SOC)/qemu.mk
 # NOTE: include nuclei near cycle model run options
 -include $(NUCLEI_SDK_SOC)/xlmodel.mk
+# NOTE: include rtl simulation related options
+-include $(NUCLEI_SDK_SOC)/simulation.mk

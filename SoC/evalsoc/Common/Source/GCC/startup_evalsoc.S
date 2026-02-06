@@ -324,6 +324,7 @@ __init_common:
     addi a0, a0, 4
     addi a1, a1, 4
     bltu a1, a2, 1b
+#if !(defined(CFG_SIMULATION_BSSZERO) && CFG_SIMULATION_BSSZERO == 0)
 2:
     /* Clear bss section */
     la a0, __bss_start
@@ -333,6 +334,7 @@ __init_common:
     sw zero, (a0)
     addi a0, a0, 4
     bltu a0, a1, 1b
+#endif
 2:
 
     .size __init_common, . - __init_common
