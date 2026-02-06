@@ -78,15 +78,11 @@ static void supervisor_mode_entry_point(void)
     uart_enable_rxint(SOC_DEBUG_UART);
     printf("You can press any key now to trigger uart receive interrupt\n");
 
-
-    // Wait uart0 press any key
-    while (1);
-
-
 #ifdef CFG_SIMULATION
     // directly exit if in nuclei internally simulation
     SIMULATION_EXIT(0);
 #endif
+   // Wait uart0 press any key
     while(1);
 }
 #endif
