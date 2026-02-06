@@ -52,10 +52,6 @@ extern "C" {
 #endif
 #endif
 
-#if !(defined(XLCFG_PLIC) && XLCFG_PLIC == 0)
-#define CFG_HAS_PLIC
-#endif
-
 // External Interrupt Number
 #if defined(XLCFG_IRQ_NUM)
 #define CFG_IRQ_NUM                 XLCFG_IRQ_NUM
@@ -176,6 +172,10 @@ extern "C" {
 
 #if defined(XLCFG_CIDU) && XLCFG_CIDU != 0
 #define CFG_HAS_IDU
+#endif
+
+#if defined(XLCFG_PLIC) && XLCFG_PLIC != 0
+#define CFG_HAS_PLIC
 #endif
 
 #if defined(XLCFG_TEE) && XLCFG_TEE != 0
