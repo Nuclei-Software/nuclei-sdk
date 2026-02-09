@@ -1,5 +1,7 @@
 # Profiling and Coverage For Nuclei RISC-V CPU In Nuclei Studio IDE
 
+> **Note:** The profiling middleware uses `%02` format specifier in its printf statements. Ensure your C library supports this format.
+
 Profiling and coverage analysis tools like gprof and gcov play a vital role in identifying performance bottlenecks
 and untested regions within source code, ultimately leading to improved software efficiency and quality. 
 

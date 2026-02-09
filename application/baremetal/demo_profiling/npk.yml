@@ -32,6 +32,8 @@ configuration:
 setconfig:
   - config: download_mode
     value: sram
+  - config: stdclib
+    value: newlib_small
 
 ## Source Code Management
 codemanage:
