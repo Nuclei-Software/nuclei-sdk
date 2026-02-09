@@ -21,7 +21,8 @@ configuration:
   app_commonflags:
     # REQUIRE: ECC
     # OPTIONAL: CCM, PMA, ICACHE, DCACHE, SMPCC
-    value: -O2 -DXLCFG_ECC=1 -DXLCFG_CCM=1
+    # undefine XLCFG_ECC to keep same behavior as Makefile
+    value: -O2 -DXLCFG_CCM=1
     type: text
     description: Application Compile Flags
 

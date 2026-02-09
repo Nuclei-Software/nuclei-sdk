@@ -3,8 +3,13 @@ TARGET = demo_ecc
 NUCLEI_SDK_ROOT = ../../..
 
 # REQUIRE: ECC
-# set to 1 or 2 for different ECC version
-XLCFG_ECC := 1
+# XLCFG_ECC defines the ECC operational or injection mode:
+# [Leave Empty] - Default: No macro defined. Assumes ECC is present using "Direct Write" mode.
+#                 See 'cpufeature.h' in evalsoc for more details.
+# 0             - Disabled: Not support ECC.
+# 1             - Direct Write Mode: Support ECC error injection with Direct Write mode.
+# 2             - XOR Mode: Support ECC error injection with XOR mode.
+XLCFG_ECC :=
 
 # OPTIONAL: CCM, PMA, ICACHE, DCACHE, SMPCC
 XLCFG_CCM := 1

@@ -63,9 +63,9 @@
 
 uint32_t pa_size; /*!< Physical address size */
 typedef enum {
-    ECC_ERR_INJ_MODE_UNKNOWN = 0,  /*!< ECC Error injection mode unknown */
-    ECC_ERR_INJ_MODE_DIRECT_WRITE, /*!< ECC Error injection direct write mode */
-    ECC_ERR_INJ_MODE_XOR,          /*!< ECC Error injection XOR mode */
+    ECC_ERR_INJ_MODE_NOT_EXIST = 0,/*!< ECC not exist */
+    ECC_ERR_INJ_MODE_DIRECT_WRITE, /*!< ECC exist and support error injection direct write mode */
+    ECC_ERR_INJ_MODE_XOR,          /*!< ECC exist and support error injection XOR mode */
     ECC_ERR_INJ_MODE_MAX           /*!< Max of ECC Error injection mode */
 } ECC_ERR_INJ_MODE;
 ECC_ERR_INJ_MODE inj_mode = __ECC_CODE_INJ; /*!< Initialize ECC Error injection mode with CPU CFG */
@@ -744,18 +744,18 @@ int main(void)
         /* Check if the ECC Error Code injection mode from CPU CFG is valid */
         ECC_ERR_INJ_MODE probed_mode = ECC_IsXorErrorInjectMode() ?
             ECC_ERR_INJ_MODE_XOR : ECC_ERR_INJ_MODE_DIRECT_WRITE;
-        if (inj_mode == ECC_ERR_INJ_MODE_UNKNOWN ||
-            inj_mode >= ECC_ERR_INJ_MODE_MAX) {
-            inj_mode = probed_mode;
-        }
 
         /* Run ECC Error Code injection demo */
         if (inj_mode != probed_mode) {
-            printf("[ERROR]: ECC Error Code injection mode missmatch!\r\n");
-            res = EXIT_FAILURE;
-        } else {
-            res = run_ecc_err_inj_demo(cc_ecc_support);
+            printf("[WARNING]: ECC Error Code injection mode mismatch!\r\n");
+            printf("The configured ecc mode is : %s\r\n", inj_mode == ECC_ERR_INJ_MODE_NOT_EXIST ?
+                   "Not exist" : (inj_mode == ECC_ERR_INJ_MODE_XOR ? "XOR" : "Direct Write"));
+            printf("Force run ecc demo with probed ecc mode: %s\r\n",
+                   probed_mode == ECC_ERR_INJ_MODE_XOR ? "XOR"
+                                                       : "Direct Write");
+            inj_mode = probed_mode;
         }
+        res = run_ecc_err_inj_demo(cc_ecc_support);
     } else {
         printf("ECC feature is not supported!\r\n");
     }
