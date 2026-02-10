@@ -27,7 +27,10 @@
  * 1. __SMPCC_PRESENT:  Define whether SMP & Cluster Cache feature is present or not
  *   * 0: Not present
  *   * 1: Present
- * 2. __SMPCC_BASEADDR:  Base address of the SMP & Cluster Cache unit.
+ * 2. __CCM_PRESENT:  Define whether Nuclei Cache Control and Maintainence(CCM) Unit is present or not.
+ *   * 0: Not present
+ *   * 1: Present
+ * 3. __SMPCC_BASEADDR:  Base address of the SMP & Cluster Cache unit.
  *
  */
 #ifdef __cplusplus

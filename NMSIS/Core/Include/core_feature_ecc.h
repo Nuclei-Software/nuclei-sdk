@@ -19,12 +19,30 @@
  * @file     core_feature_ecc.h
  * @brief    ECC feature API header file for Nuclei N/NX Core
  */
+/*
+ * ECC Feature Configuration Macro:
+ *
+ * 1. __ECC_PRESENT:  Define whether Error Correction Code (ECC) feature is present or not
+ *   * 0: Not present
+ *   * 1: Present
+ * 2. __ICACHE_PRESENT:  Define whether I-Cache Unit is present or not.
+ *   * 0: Not present
+ *   * 1: Present
+ * 3. __DCACHE_PRESENT:  Define whether D-Cache Unit is present or not.
+ *   * 0: Not present
+ *   * 1: Present
+ * 4. __CCM_PRESENT:  Define whether Nuclei Cache Control and Maintainence(CCM) Unit is present or not.
+ *   * 0: Not present
+ *   * 1: Present
+ *
+ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "core_feature_base.h"
 
+#if defined(__ECC_PRESENT) && (__ECC_PRESENT == 1)
 /**
  * \defgroup NMSIS_Core_ECC_Functions   ECC Functions
  * \ingroup  NMSIS_Core
@@ -1043,6 +1061,8 @@ static uint8_t ECC_GenerateECCCodeU64(uint64_t a)
                (ecc_bit_3 << 3) | (ecc_bit_2 << 2) | (ecc_bit_1 << 1) | ecc_bit_0;
     return ecc_bits;
 }
+
+#endif /* defined(__ECC_PRESENT) && (__ECC_PRESENT == 1) */
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_ECC_Functions */
 #ifdef __cplusplus
