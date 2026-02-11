@@ -38,6 +38,10 @@ To develop a Nuclei SDK application from scratch, you can do the following steps
 
 4. Follow :ref:`develop_buildsystem` to change your application Makefile.
 
+.. note::
+
+   * Starting from version 0.9.0, you can use :ref:`develop_buildsystem_var_appdirs` to apply compilation flags specifically to your application source code.
+
 .. _develop_appdev_addsrc:
 
 Add Extra Source Code
@@ -153,5 +157,49 @@ Set Local Make Options For Your Application
 If you want to change the application level Make options,
 you can add the :ref:`develop_buildsystem_makefile_local`.
 
+
+.. _develop_appdev_appdirs_usage:
+
+Application-Specific Compilation Flags with APPDIRS
+---------------------------------------------------
+
+Starting from Nuclei SDK version 0.9.0, you can use the :ref:`develop_buildsystem_var_appdirs` variable to apply compilation flags specifically to your application source code, without affecting the SDK library code. This is particularly useful for features like profiling, code coverage, or other application-specific optimizations.
+
+The **APPDIRS** variable allows you to specify directories that need application-specific compilation flags. It can support multiple directories separated by space, e.g. ``APPDIRS = . src``.
+
+If **APPDIRS** is not defined or empty, the **APP_XXXFLAGS** and **APP_COMMON_FLAGS** will be added to global flags and applied to all source files in the project.
+
+If **APPDIRS** is defined, the **APP_XXXFLAGS** and **APP_COMMON_FLAGS** will be applied only to source code located in the directories specified by **APPDIRS**.
+
+The following flags can be used with **APPDIRS**:
+
+* :ref:`develop_buildsystem_var_app_common_flags`: Common flags for C/C++/ASM compilation
+* :ref:`develop_buildsystem_var_app_cflags`: Flags specific to C compilation
+* :ref:`develop_buildsystem_var_app_cxxflags`: Flags specific to C++ compilation
+* :ref:`develop_buildsystem_var_app_asmflags`: Flags specific to ASM compilation
+
+For example, if you want to append specific profiling or coverage flags only to your application source code while keeping the SDK source code compiled with default flags, you can set ``APPDIRS`` to point to your application source directories.
+
+A practical example of this feature can be found in the ``application/baremetal/demo_profiling`` application, which uses ``APPDIRS`` to enable profiling instrumentation only for the application code:
+
+.. code-block:: makefile
+
+    # Application-specific compilation options that can be used for
+    # profiling, coverage, and other app-specific settings
+    # -pg enables profiling instrumentation
+    APP_COMMON_FLAGS := -pg
+
+    # App-specific C compilation flags
+    APP_CFLAGS :=
+    # App-specific C++ compilation flags
+    APP_CXXFLAGS :=
+    # App-specific Assembly compilation flags
+    APP_ASMFLAGS :=
+
+    # Specify directories that need app-specific compilation flags
+    # If left empty, APP_XXXFLAGS will be applied to all source files
+    APPDIRS := . src
+
+This approach allows for fine-grained control of compilation flags for specific parts of an application while maintaining clean separation from SDK source code.
 
 .. _Options That Control Optimization in GCC: https://gcc.gnu.org/onlinedocs/gcc-9.2.0/gcc/Optimize-Options.html#Optimize-Options

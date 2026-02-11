@@ -86,6 +86,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add :ref:`design_app_demo_ecc` to demonstrate ECC error injection feature on Nuclei RISC-V CPU.
   - Disable ECLIC v2 hardware context auto save/restore feature in ``demo_clint_timer``, ``demo_plic``, ``demo_smode_clint`` and ``demo_smode_plic`` applications when using CLINT/PLIC interrupt modes to ensure proper interrupt handling
   - Add :ref:`design_app_demo_smode_clint` to demonstrate timer interrupt handling in S-Mode with CLINT interrupt mode.
+  - Update :ref:`design_app_demo_profiling` to demonstrate the usage of ``APPDIRS`` variable for application-specific compilation flags.
   - Remove ``nuclei_cache`` npk configuration from ``demo_cache``, ``demo_cidu``, ``demo_ecc``, ``demo_pma``, ``demo_smpcc``, and ``smphello`` applications ``npk.yml`` since it is now deprecated
   - Add ``get_cpu_feature`` in ``cpuinfo`` to list CPU features for the future hardware ci testing.
 
@@ -116,6 +117,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
 
 * Build System
 
+  - Add new ``APPDIRS`` variable to apply application-specific compilation flags only to specified source directories. When defined, ``APP_XXXFLAGS`` and ``APP_COMMON_FLAGS`` are applied only to source code in ``APPDIRS`` directories, enabling fine-grained control for profiling, coverage, and other app-specific optimizations. See :ref:`develop_buildsystem_var_appdirs` for details.
   - Add new ``n300e`` CPU core support in build system and npk.yml for evalsoc
   - Add ``-isystem=/include/libncrt`` for nuclei llvm toolchain when using libncrt_xxx library, but ``-isystem=`` feature is not
     the same as gcc, see report here https://github.com/llvm/llvm-project/pull/82084#discussion_r2387373311, so when you use libncrt library with llvm toolchain, the header file could be wrongly included using newlib ones

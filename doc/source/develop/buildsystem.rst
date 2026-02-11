@@ -1510,6 +1510,7 @@ APP_COMMON_FLAGS
 .. note::
 
     * Added in 0.4.0 release.
+    * Behavior changed in 0.9.0 with introduction of APPDIRS - the behavior of this variable now depends on the :ref:`develop_buildsystem_var_appdirs` setting.
 
 This variable is used to define app common compiler flags to all c/asm/cpp compiler.
 You can pass it via make command to define extra flags to compile application.
@@ -1520,6 +1521,10 @@ You can pass it via make command to define extra flags to compile application.
 APP_ASMFLAGS
 ~~~~~~~~~~~~
 
+.. note::
+
+    * Behavior changed in 0.9.0 with introduction of APPDIRS - the behavior of this variable now depends on the :ref:`develop_buildsystem_var_appdirs` setting.
+
 This variable is similiar to **APP_COMMON_FLAGS** but used to pass extra app asm flags.
 
 
@@ -1528,12 +1533,20 @@ This variable is similiar to **APP_COMMON_FLAGS** but used to pass extra app asm
 APP_CFLAGS
 ~~~~~~~~~~
 
+.. note::
+
+    * Behavior changed in 0.9.0 with introduction of APPDIRS - the behavior of this variable now depends on the :ref:`develop_buildsystem_var_appdirs` setting.
+
 This variable is similiar to **APP_COMMON_FLAGS** but used to pass extra app c flags.
 
 .. _develop_buildsystem_var_app_cxxflags:
 
 APP_CXXFLAGS
 ~~~~~~~~~~~~
+
+.. note::
+
+    * Behavior changed in 0.9.0 with introduction of APPDIRS - the behavior of this variable now depends on the :ref:`develop_buildsystem_var_appdirs` setting.
 
 This variable is similiar to **APP_COMMON_FLAGS** but used to pass extra app cxx flags.
 
@@ -1543,6 +1556,36 @@ APP_LDFLAGS
 ~~~~~~~~~~~
 
 This variable is similiar to **APP_COMMON_FLAGS** but used to pass extra app linker flags.
+
+.. _develop_buildsystem_var_appdirs:
+
+APPDIRS
+~~~~~~~
+
+.. note::
+
+    * This variable is introduced in version 0.9.0
+
+This variable is used to specify directories that need application-specific compilation flags.
+It can support multiple directories separated by space, e.g. ``APPDIRS = . src``.
+
+If **APPDIRS** is not defined or empty, the **APP_XXXFLAGS** and **APP_COMMON_FLAGS** will be added to global flags
+and applied to all source files in the project.
+
+If **APPDIRS** is defined, the **APP_XXXFLAGS** and **APP_COMMON_FLAGS** will be applied only to source code
+located in the directories specified by **APPDIRS**. This allows for fine-grained control of compilation flags
+for specific parts of an application.
+
+For example, if you want to apply specific profiling or coverage flags only to your application source code
+while keeping the SDK library code compiled with default flags, you can set ``APPDIRS`` to point to your
+application source directories.
+
+When **APPDIRS** is defined, the following flags will be applied only to source files in those directories:
+
+* **APP_COMMON_FLAGS**: Common flags for C/C++/ASM compilation
+* **APP_CFLAGS**: Flags specific to C compilation
+* **APP_CXXFLAGS**: Flags specific to C++ compilation
+* **APP_ASMFLAGS**: Flags specific to ASM compilation
 
 .. _develop_buildsystem_var_nogc:
 
