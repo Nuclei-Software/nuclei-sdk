@@ -10,11 +10,30 @@ ALL_CXX_OBJS := $(ALL_CXXSRCS:=.o)
 
 ALL_OBJS += $(ALL_ASM_OBJS) $(ALL_C_OBJS) $(ALL_CXX_OBJS)
 
+# Application Specific compilation flags control
+# If APPDIRS is defined, we will collect sources in those directories
+# and apply APP_* flags to them
+ifneq ($(APPDIRS),)
+APP_CSRCS = $(call get_csrcs, $(APPDIRS))
+APP_CXXSRCS = $(call get_cxxsrcs, $(APPDIRS))
+APP_ASMSRCS = $(call get_asmsrcs, $(APPDIRS))
+
+APP_ASM_OBJS := $(APP_ASMSRCS:=.o)
+APP_C_OBJS := $(APP_CSRCS:=.o)
+APP_CXX_OBJS := $(APP_CXXSRCS:=.o)
+
+$(APP_C_OBJS): CFLAGS += $(_REAL_APP_CFLAGS) $(_REAL_APP_COMMON_FLAGS)
+$(APP_CXX_OBJS): CXXFLAGS += $(_REAL_APP_CXXFLAGS) $(_REAL_APP_COMMON_FLAGS)
+$(APP_ASM_OBJS): ASMFLAGS += $(_REAL_APP_ASMFLAGS) $(_REAL_APP_COMMON_FLAGS)
+endif
+
 ALL_DEPS := $(ALL_OBJS:=.d)
 ALL_GCNOS := $(ALL_OBJS:.o=.gcno)
+ALL_GCDAS := $(ALL_OBJS:.o=.gcda)
+ALL_GCOVS := $(ALL_OBJS:.o=.gcov)
 
 CLEAN_OBJS += $(TARGET).elf $(TARGET).map $(TARGET).bin $(TARGET).dump $(TARGET).dasm \
-		$(TARGET).srec $(TARGET).hex $(TARGET).verilog openocd.log $(wildcard $(ALL_OBJS) $(ALL_DEPS) $(ALL_GCNOS))
+		$(TARGET).srec $(TARGET).hex $(TARGET).verilog gmon.out openocd.log $(wildcard $(ALL_OBJS) $(ALL_DEPS) $(ALL_GCNOS) $(ALL_GCDAS) $(ALL_GCOVS))
 REAL_CLEAN_OBJS = $(subst /,$(PS), $(CLEAN_OBJS))
 
 # Default goal, placed before dependency includes
