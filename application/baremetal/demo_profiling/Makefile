@@ -36,7 +36,9 @@ COMMON_FLAGS := -O0
 # -coverage enables coverage analysis (requires more memory)
 # NOTE: when -coverage is passed, then heap will not be enough
 # you need to change DOWNLOAD to ddr
-APP_COMMON_FLAGS := -pg
+# when Zc extension used, -fomit-frame-pointer is passed but
+#  -pg and -fomit-frame-pointer are incompatible
+APP_COMMON_FLAGS :=
 
 # App-specific C compilation flags
 APP_CFLAGS :=
