@@ -583,6 +583,10 @@ __attribute__((weak)) void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTi
         xExpectedIdleTime = xMaximumPossibleSuppressedTicks;
     }
 
+    /* Enter a critical section but don't use the taskENTER_CRITICAL()
+    method as that will mask interrupts that should exit sleep mode. */
+    __disable_irq();
+
     /* Stop the SysTick momentarily.  The time the SysTick is stopped for
     is accounted for as best it can be, but using the tickless mode will
     inevitably result in some tiny drift of the time maintained by the
@@ -596,10 +600,6 @@ __attribute__((weak)) void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTi
     if (ulReloadValue > ulStoppedTimerCompensation) {
         ulReloadValue -= ulStoppedTimerCompensation;
     }
-
-    /* Enter a critical section but don't use the taskENTER_CRITICAL()
-    method as that will mask interrupts that should exit sleep mode. */
-    __disable_irq();
 
     /* If a context switch is pending or a task is waiting for the scheduler
     to be unsuspended then abandon the low power entry. */

@@ -115,6 +115,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Fix FreeRTOS timer setup ``vPortSetupTimerInterrupt`` call location in ``xPortStartScheduler`` function to ensure proper initialization order
   - Update RT-Thread interrupt handling to support ECLICv2 SUBM register handling with ``CSR_PUSHXSUBM`` when ``CFG_HAS_ECLICV2`` is defined
   - Rename ``__TEE_PRESENT`` to ``__SMODE_PRESENT`` in RT-Thread S-Mode implementation to accurately reflect S-Mode support without implying TEE functionality
+  - Fix FreeRTOS tickless sleep implementation by moving ``__disable_irq()`` call to proper location in ``vPortSuppressTicksAndSleep`` function to ensure correct interrupt handling during sleep mode
 
 * Build System
 
