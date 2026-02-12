@@ -60,8 +60,9 @@ fpga_runner.yaml
 *.gcno
 *.gcov
 *.gmon
+*.info
 *.out
-coverage_info
+html_report
 
 # IAR Embedded Workbench generated dirs/files
 settings/

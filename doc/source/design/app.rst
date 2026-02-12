@@ -1976,7 +1976,8 @@ demo_profiling
 ~~~~~~~~~~~~~~
 
 This `demo_profiling application`_ is used to demonstrate how to use gprof or gcov
-in Nuclei Studio.
+for profiling and code coverage analysis. This application can be used both in
+Nuclei Studio IDE and via command line (see :ref:`demo_profiling_cmdline_usage`).
 
 This application itself is modified based on an opensource aes application, we add
 gprof and gcov collection code to ``main.c``, it will dump gprof and gcov data in
@@ -1989,7 +1990,6 @@ console when main part code is executed.
     * Using gprof or gcov introduces instrument code into the original program,
       necessitating additional memory to store the collected data. This results in
       a slight increase in the program's memory footprint compared to its uninstrumented counterpart.
-    * It cannot be directly used in command line mode, you should use it in Nuclei Studio.
     * Please check ``README.md`` about gcov and gprof support in https://github.com/Nuclei-Software/nuclei-sdk/tree/master/Components/profiling
 
 Import or download Nuclei SDK 0.6.0 or later release NPK in Nuclei Studio, and then create a
@@ -2052,6 +2052,69 @@ to learn more.
 
 About Gcov view, please click https://help.eclipse.org/latest/topic/org.eclipse.linuxtools.gcov.docs/Linux_Tools_Project/GCov/User_Guide/Gcov-main-view.html
 to learn more.
+
+.. _demo_profiling_cmdline_usage:
+
+Command Line Usage
+------------------
+
+To use the profiling and code coverage features from the command line:
+
+1. Modify the application's Makefile to enable profiling/coverage:
+
+   - For gprof profiling: Modify ``APP_COMMON_FLAGS :=`` to include ``-pg`` in the Makefile
+   - For gcov coverage: Modify ``APP_COMMON_FLAGS :=`` to include ``-coverage`` in the Makefile
+   - For both profiling and coverage: ``APP_COMMON_FLAGS := -pg -coverage``
+
+   .. note::
+
+      - When using ``-coverage`` flag, the application requires more memory to store coverage data.
+        You may need to change the ``DOWNLOAD`` variable in the Makefile from ``sram`` to ``ddr``
+        to ensure sufficient memory is available.
+
+      - When the Zc extension is used, ``-fomit-frame-pointer`` is passed by default, but
+        ``-pg`` and ``-fomit-frame-pointer`` are incompatible. If you encounter issues, you may
+        need to adjust compiler flags accordingly.
+
+2. Build the application: ``make SOC=<your_soc> CORE=<your_core> clean all``
+
+   Example: ``make SOC=evalsoc CORE=n900fd clean all``
+
+3. Upload and run the application on your target hardware or emulator.
+
+4. Capture the console output containing the profiling/coverage data.
+
+5. Save the console output to a file (e.g., ``prof.log``).
+
+6. Use the parsing script to generate binary files:
+
+   ``python3 Components/profiling/parse.py prof.log``
+
+7. Use RISC-V specific gcov and gprof tools to analyze the generated files:
+
+   - For profiling: ``riscv64-unknown-elf-gprof <elf_file> gmon.out``
+   - For coverage:
+
+     * To view coverage on command line: ``riscv64-unknown-elf-gcov *.gcno``
+     * To generate HTML reports using lcov (recommended):
+
+       ``lcov --gcov-tool riscv64-unknown-elf-gcov -c -d . -o coverage.info``
+
+       ``genhtml coverage.info -o html_report``
+
+   .. note::
+
+      - GCC Version Compatibility: The GCC version used to compile the application with ``-coverage``
+        must be compatible with the host tools. Significant version differences may cause
+        incompatibilities with ``.gcda`` file formats.
+
+      - For best results, use the same major GCC version for both compilation and analysis.
+
+      - If ``genhtml`` reports "no valid records found", this usually indicates a GCC version
+        mismatch. Using ``lcov`` with the ``--gcov-tool`` option (as shown above) often resolves
+        this issue by specifying the correct gcov tool for the target architecture.
+
+      - To use the lcov approach, you need to install lcov from: https://github.com/linux-test-project/lcov
 
 
 .. _design_app_demo_pmp:
