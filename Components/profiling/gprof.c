@@ -499,7 +499,7 @@ long gprof_collect(unsigned long interface)
     }
     if (interface == 0) {
         gprof_data.size = bufptr - gprof_data.buf;
-        printf("Collected gprof data @0x%lx, size %lu bytes\n", gprof_data.buf, gprof_data.size);
+        printf("Collected gprof data @0x%lx, size %u bytes\n", (unsigned long)(gprof_data.buf), gprof_data.size);
     } else if (interface == 1) {
         fclose(fp);
         printf("Write %s done!\n", gmon_out);

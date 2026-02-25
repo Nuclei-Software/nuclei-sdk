@@ -191,6 +191,8 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
 * Components
 
   - Support ``libncrt`` library for profiling component by replacing POSIX I/O with ANSI C I/O, which also fixed header file conflict issues when using ``libncrt`` library such as ``STDCLIB=libncrt_small``
+  - Add LLVM/Clang ``-coverage`` option support in ``gcov.c`` with comprehensive Doxygen-style documentation
+  - Fix printf format specifiers in ``gcov.c`` and ``gprof.c`` for better portability
 
 V0.8.1
 ------
