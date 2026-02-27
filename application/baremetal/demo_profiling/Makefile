@@ -1,5 +1,6 @@
 # This demo is intended for use in Nuclei Studio IDE
 # For more information, visit: https://doc.nucleisys.com/nuclei_sdk/design/app.html#demo-profiling
+# see doc/source/design/app.rst#demo_profiling and Components/profiling/README.md
 # Name of the executable target for this application
 TARGET = demo_profiling
 

@@ -1987,10 +1987,15 @@ console when main part code is executed.
 
     * **WARNING** GCC 14 with nuclei sdk code coverage not working, need to modify ``Components/profiling/gcov.c``, changes need to be made like this https://github.com/Nuclei-Software/nuclei-sdk/commit/5aaae0d5a7
     * Introduced in Nuclei SDK 0.6.0, worked with Nuclei Studio >= 2024.02
+    * **Command line usage** is introduced in Nuclei SDK 0.9.0.
     * Using gprof or gcov introduces instrument code into the original program,
       necessitating additional memory to store the collected data. This results in
       a slight increase in the program's memory footprint compared to its uninstrumented counterpart.
     * Please check ``README.md`` about gcov and gprof support in https://github.com/Nuclei-Software/nuclei-sdk/tree/master/Components/profiling
+    * **Toolchain Compatibility**: Both GCC and LLVM/Clang toolchains support ``-pg`` and ``-coverage`` options,
+      but they generate **incompatible gcov data formats**. Nuclei Studio IDE currently **only supports
+      GCC gcov format coverage visualization**. For detailed toolchain-specific analysis instructions,
+      see the IDE configuration steps below and :ref:`demo_profiling_cmdline_usage`.
 
 Import or download Nuclei SDK 0.6.0 or later release NPK in Nuclei Studio, and then create a
 project called ``demo_profiling`` based on ``app-nsdk_demo_profiling`` using
@@ -2009,6 +2014,13 @@ it is the core algorithm of this example, then you just need to do the following
 
   - If you want to do gprof, you need to add ``-pg`` option.
   - If you want to do gcov, you need to add ``-coverage`` option.
+
+  .. note::
+
+     Nuclei Studio IDE currently only supports GCC gcov format coverage visualization.
+     If you use LLVM/Clang toolchain (``TOOLCHAIN=nuclei_llvm``), you must analyze coverage data
+     using command-line tools (``llvm-cov gcov``) instead of the IDE's Coverage view.
+     For IDE coverage visualization, use GCC toolchain (``TOOLCHAIN=nuclei_gnu``).
 - Open ``main.c``, and find ``TODO`` item, and comment ``gprof_collect(2);`` or ``gcov_collect(2);`` based on
   gprof or gcov you want to collect.
 - If you want to collect gprof data, you also need to modify ``nuclei_sdk/Components/profiling/gprof_stub.c``,
@@ -2056,7 +2068,15 @@ to learn more.
 .. _demo_profiling_cmdline_usage:
 
 Command Line Usage
-------------------
+^^^^^^^^^^^^^^^^^^
+
+.. note::
+
+    This command line profiling and coverage analysis feature depends on the
+    :ref:`develop_buildsystem_var_appdirs` feature introduced in Nuclei SDK 0.9.0.
+    The ``APPDIRS`` variable allows applying profiling/coverage flags (``-pg``/``-coverage``)
+    to specific application source directories while keeping SDK library code compiled
+    with default flags.
 
 To use the profiling and code coverage features from the command line:
 
@@ -2090,21 +2110,63 @@ To use the profiling and code coverage features from the command line:
 
    ``python3 Components/profiling/parse.py prof.log``
 
-7. Use RISC-V specific gcov and gprof tools to analyze the generated files:
+7. Analyze the generated files based on your toolchain:
 
-   - For profiling: ``riscv64-unknown-elf-gprof <elf_file> gmon.out``
-   - For coverage:
+   **GCC Toolchain (TOOLCHAIN=nuclei_gnu):**
 
-     * To view coverage on command line: ``riscv64-unknown-elf-gcov *.gcno``
-     * To generate HTML reports using lcov (recommended):
+   - For profiling:
 
-       ``lcov --gcov-tool riscv64-unknown-elf-gcov -c -d . -o coverage.info``
+     .. code-block:: bash
 
-       ``genhtml coverage.info -o html_report``
+        riscv64-unknown-elf-gprof <elf_file> gmon.out
+
+   - For coverage (command line view):
+
+     .. code-block:: bash
+
+        riscv64-unknown-elf-gcov *.gcda
+
+   - For coverage (HTML report with lcov):
+
+     .. code-block:: bash
+
+        lcov --gcov-tool riscv64-unknown-elf-gcov -c -d . -o coverage.info
+        genhtml coverage.info -o html_report
+
+   **LLVM/Clang Toolchain (TOOLCHAIN=nuclei_llvm):**
+
+   - For profiling (same as GCC):
+
+     .. code-block:: bash
+
+        riscv64-unknown-elf-gprof <elf_file> gmon.out
+
+   - For coverage (command line view):
+
+     .. code-block:: bash
+
+        llvm-cov gcov *.gcda
+
+   - For coverage (HTML report with lcov):
+
+     .. code-block:: bash
+
+        # Create a wrapper script for llvm-cov
+        cat > llvmgcov.sh << 'EOF'
+        #!/bin/bash
+        exec llvm-cov gcov "$@"
+        EOF
+        chmod +x llvmgcov.sh
+
+        # Generate coverage info using the wrapper script
+        lcov --gcov-tool $(pwd)/llvmgcov.sh --capture -d . -o coverage.info
+
+        # Generate HTML report
+        genhtml coverage.info -o html_report
 
    .. note::
 
-      - GCC Version Compatibility: The GCC version used to compile the application with ``-coverage``
+      - **GCC Version Compatibility**: The GCC version used to compile the application with ``-coverage``
         must be compatible with the host tools. Significant version differences may cause
         incompatibilities with ``.gcda`` file formats.
 
@@ -2115,6 +2177,9 @@ To use the profiling and code coverage features from the command line:
         this issue by specifying the correct gcov tool for the target architecture.
 
       - To use the lcov approach, you need to install lcov from: https://github.com/linux-test-project/lcov
+
+      - **Format Incompatibility**: GCC and LLVM/Clang generate incompatible ``.gcda`` files.
+        Always use the corresponding toolchain's gcov tool for analysis.
 
 
 .. _design_app_demo_pmp:
