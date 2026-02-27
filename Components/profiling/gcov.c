@@ -153,14 +153,14 @@ typedef void (*llvm_gcov_callback)(void);
  * during compilation and updated at runtime by LLVM's coverage instrumentation.
  */
 struct gcov_fn_info {
-	struct gcov_fn_info *next;
+    struct gcov_fn_info *next;
 
-	u32 ident;
-	u32 checksum;
-	u32 cfg_checksum;
+    u32 ident;
+    u32 checksum;
+    u32 cfg_checksum;
 
-	u32 num_counters;
-	u64 *counters;
+    u32 num_counters;
+    u64 *counters;
 };
 
 /**
@@ -177,13 +177,13 @@ struct gcov_fn_info {
  * compilation and the counters are updated at runtime.
  */
 struct gcov_info {
-	struct gcov_info *next;
+    struct gcov_info *next;
 
-	const char *filename;
-	unsigned int version;
-	u32 checksum;
+    const char *filename;
+    unsigned int version;
+    u32 checksum;
 
-	struct gcov_fn_info *functions;
+    struct gcov_fn_info *functions;
 };
 
 /* Pointer to currently active gcov_info during LLVM gcov information initialization */
@@ -450,24 +450,24 @@ size_t convert_to_gcda(char *buffer, struct gcov_info *info)
  */
 void llvm_gcov_init(llvm_gcov_callback writeout, llvm_gcov_callback flush)
 {
-	struct gcov_info *info = (struct gcov_info *)malloc(sizeof(*info));
+    struct gcov_info *info = (struct gcov_info *)malloc(sizeof(*info));
 
-	if (!info) {
-		return;
+    if (!info) {
+        return;
     }
 
     info->next = NULL;
     info->functions = NULL;
 
-	current_info = info;
+    current_info = info;
     current_function = NULL;
     if (gcov_info_head == NULL) {
         gcov_info_head = current_info;
     } else {
         gcov_info_head->next = current_info;
     }
-	writeout();
-	current_info = NULL;
+    writeout();
+    current_info = NULL;
 }
 
 /**
@@ -483,9 +483,9 @@ void llvm_gcda_start_file(const char *orig_filename, u32 version, u32 checksum)
     if (!current_info) {
         return;
     }
-	current_info->filename = orig_filename;
-	current_info->version = version;
-	current_info->checksum = checksum;
+    current_info->filename = orig_filename;
+    current_info->version = version;
+    current_info->checksum = checksum;
 }
 
 /**
@@ -498,15 +498,15 @@ void llvm_gcda_start_file(const char *orig_filename, u32 version, u32 checksum)
  */
 void llvm_gcda_emit_function(u32 ident, u32 func_checksum, u32 cfg_checksum)
 {
-	struct gcov_fn_info *info = (struct gcov_fn_info *)malloc(sizeof(*info));
+    struct gcov_fn_info *info = (struct gcov_fn_info *)malloc(sizeof(*info));
 
-	if (!info) {
-		return;
+    if (!info) {
+        return;
     }
 
-	info->ident = ident;
-	info->checksum = func_checksum;
-	info->cfg_checksum = cfg_checksum;
+    info->ident = ident;
+    info->checksum = func_checksum;
+    info->cfg_checksum = cfg_checksum;
     if (current_info->functions == NULL) {
         current_info->functions = info;
     } else {
@@ -525,8 +525,8 @@ void llvm_gcda_emit_function(u32 ident, u32 func_checksum, u32 cfg_checksum)
 void llvm_gcda_emit_arcs(u32 num_counters, u64 *counters)
 {
     if (current_function) {
-	    current_function->num_counters = num_counters;
-	    current_function->counters = counters;
+        current_function->num_counters = num_counters;
+        current_function->counters = counters;
     }
 }
 
@@ -557,30 +557,30 @@ void llvm_gcda_end_file(void)
  */
 size_t convert_to_gcda(char *buffer, struct gcov_info *info)
 {
-	struct gcov_fn_info *fi_ptr;
-	size_t pos = 0;
+    struct gcov_fn_info *fi_ptr;
+    size_t pos = 0;
 
-	/* File header. */
-	pos += store_gcov_u32(buffer, pos, GCOV_DATA_MAGIC);
-	pos += store_gcov_u32(buffer, pos, info->version);
-	pos += store_gcov_u32(buffer, pos, info->checksum);
+    /* File header. */
+    pos += store_gcov_u32(buffer, pos, GCOV_DATA_MAGIC);
+    pos += store_gcov_u32(buffer, pos, info->version);
+    pos += store_gcov_u32(buffer, pos, info->checksum);
 
-	for (fi_ptr = info->functions; fi_ptr != NULL; fi_ptr = fi_ptr->next) {
-		u32 i;
+    for (fi_ptr = info->functions; fi_ptr != NULL; fi_ptr = fi_ptr->next) {
+        u32 i;
 
-		pos += store_gcov_u32(buffer, pos, GCOV_TAG_FUNCTION);
-		pos += store_gcov_u32(buffer, pos, 3);
-		pos += store_gcov_u32(buffer, pos, fi_ptr->ident);
-		pos += store_gcov_u32(buffer, pos, fi_ptr->checksum);
-		pos += store_gcov_u32(buffer, pos, fi_ptr->cfg_checksum);
-		pos += store_gcov_u32(buffer, pos, GCOV_TAG_COUNTER_BASE);
-		pos += store_gcov_u32(buffer, pos, fi_ptr->num_counters * 2);
-		for (i = 0; i < fi_ptr->num_counters; i++) {
-			pos += store_gcov_u64(buffer, pos, fi_ptr->counters[i]);
+        pos += store_gcov_u32(buffer, pos, GCOV_TAG_FUNCTION);
+        pos += store_gcov_u32(buffer, pos, 3);
+        pos += store_gcov_u32(buffer, pos, fi_ptr->ident);
+        pos += store_gcov_u32(buffer, pos, fi_ptr->checksum);
+        pos += store_gcov_u32(buffer, pos, fi_ptr->cfg_checksum);
+        pos += store_gcov_u32(buffer, pos, GCOV_TAG_COUNTER_BASE);
+        pos += store_gcov_u32(buffer, pos, fi_ptr->num_counters * 2);
+        for (i = 0; i < fi_ptr->num_counters; i++) {
+            pos += store_gcov_u64(buffer, pos, fi_ptr->counters[i]);
         }
-	}
+    }
 
-	return pos;
+    return pos;
 }
 #endif
 
@@ -747,7 +747,7 @@ int gcov_collect(unsigned long interface)
         count += 1;
     }
     if (count) {
-        printf("%lu files coverage data collected, see gcov_data_head=0x%lx\n", count, (unsigned long)gcov_data_head);
+        printf("%lu files coverage data collected, see gcov_data_head=0x%lx\n", (unsigned long)count, (unsigned long)gcov_data_head);
     }
 
     return 0;
