@@ -948,6 +948,24 @@ And for qemu 2023.10 verison, you can also use semihosting feature, simple usage
 
 When using semihosting feature with openocd, debug message will print via openocd console.
 
+.. warning::
+
+    **Heap and Stack Collision Risk with semihost**:
+
+    * The newlib semihost implementation of ``_sbrk`` assumes an unlimited heap size
+      (see `semihost-sys_sbrk.c <https://github.com/riscv-mcu/riscv-newlib/blob/0fa5e675553eb0215b296db68812da6aceb27c40/libgloss/riscv/semihost-sys_sbrk.c>`_).
+      When using ``malloc`` functions with semihost enabled, this may cause heap overflow
+      and stack corruption, leading to abnormal program behavior.
+
+    * This issue can also occur even without semihost in Nuclei SDK, because the linker
+      scripts provided by the SDK place the stack at the bottom of memory (growing upward),
+      while in semihost mode the heap can grow without limits, potentially colliding with
+      and overwriting the stack region.
+
+    * **Recommendation**: When using semihost with ``malloc``, carefully monitor heap usage
+      and consider implementing a custom ``_sbrk`` function with proper bounds checking,
+      or avoid using dynamic memory allocation in semihost mode.
+
 You need to use it like this(assume you are run on evalsoc, CORE=n300):
 
 In terminal 1, open openocd and monitor the output:

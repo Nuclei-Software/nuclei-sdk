@@ -172,6 +172,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Update documentation about n100 with eclic is now supported in Nuclei SDK
   - Add ``demo_smpcc`` and ``demo_ecc`` application documentation in ``app.rst``
   - Update :ref:`design_app_demo_profiling` documentation in ``app.rst`` with detailed GCC and LLVM/Clang toolchain-specific instructions for profiling and coverage analysis, IDE limitations for LLVM/Clang gcov format, and command-line workflows using ``lcov``
+  - Add warning note in :ref:`develop_buildsystem_var_semihost` about heap and stack collision risk when using semihosting with ``malloc``, due to newlib semihost ``_sbrk`` implementation assumes unlimited heap size
 
 * Tools
 
