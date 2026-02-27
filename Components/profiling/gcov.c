@@ -188,7 +188,7 @@ struct gcov_info {
 
 /* Pointer to currently active gcov_info during LLVM gcov information initialization */
 static struct gcov_info *current_info;
-/* Pointer to currently active gcov_fn_info during function processing */
+/* Pointer to currently active gcov_fn_info during function processing (also serves as tail pointer) */
 static struct gcov_fn_info *current_function;
 
 #endif
@@ -507,10 +507,11 @@ void llvm_gcda_emit_function(u32 ident, u32 func_checksum, u32 cfg_checksum)
     info->ident = ident;
     info->checksum = func_checksum;
     info->cfg_checksum = cfg_checksum;
+    info->next = NULL;
     if (current_info->functions == NULL) {
         current_info->functions = info;
     } else {
-        current_info->functions->next = info;
+        current_function->next = info;
     }
     current_function = info;
 }
