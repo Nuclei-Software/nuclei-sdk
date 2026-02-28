@@ -1211,9 +1211,9 @@ You can easily find the available middleware components in the **<NUCLEI_SDK_ROO
 
 Currently we provide the following middlewares:
 
-* **profiling**: This middleware is not expected to use in Makefile based build system, you need to use it in
-  Nuclei Studio, it is used to provide code coverage via gcov and profiling via gprof, for details, please refer
-  to the ``README.md`` in this folder.
+* **profiling**: This middleware can be used both in Nuclei Studio IDE and command-line build system.
+  It provides code coverage via gcov and profiling via gprof. For details, please refer to the
+  ``README.md`` in this folder and :ref:`design_app_demo_profiling`.
 
 .. _develop_buildsystem_var_nmsis_lib:
 

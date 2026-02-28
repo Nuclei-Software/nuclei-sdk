@@ -89,6 +89,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Update :ref:`design_app_demo_profiling` to demonstrate the usage of ``APPDIRS`` variable for application-specific compilation flags.
   - Update :ref:`design_app_demo_profiling` documentation to include command-line usage instructions for profiling and code coverage, GCC version compatibility notes, and recommended lcov-based workflow.
   - Update :ref:`design_app_demo_profiling` Makefile to add local documentation reference comments pointing to ``doc/source/design/app.rst#demo_profiling`` and ``Components/profiling/README.md``
+  - Fix documentation to correctly state that Nuclei Studio IDE supports both GCC and LLVM/Clang gcov format coverage visualization
   - Remove ``nuclei_cache`` npk configuration from ``demo_cache``, ``demo_cidu``, ``demo_ecc``, ``demo_pma``, ``demo_smpcc``, and ``smphello`` applications ``npk.yml`` since it is now deprecated
   - Add ``get_cpu_feature`` in ``cpuinfo`` to list CPU features for the future hardware ci testing.
 
@@ -171,7 +172,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Update the expected output of ``cpuinfo`` in ``app.rst``
   - Update documentation about n100 with eclic is now supported in Nuclei SDK
   - Add ``demo_smpcc`` and ``demo_ecc`` application documentation in ``app.rst``
-  - Update :ref:`design_app_demo_profiling` documentation in ``app.rst`` with detailed GCC and LLVM/Clang toolchain-specific instructions for profiling and coverage analysis, IDE limitations for LLVM/Clang gcov format, and command-line workflows using ``lcov``
+  - Update :ref:`design_app_demo_profiling` documentation in ``app.rst`` with detailed GCC and LLVM/Clang toolchain-specific instructions for profiling and coverage analysis, and command-line workflows using ``lcov``
   - Add warning note in :ref:`develop_buildsystem_var_semihost` about heap and stack collision risk when using semihosting with ``malloc``, due to newlib semihost ``_sbrk`` implementation assumes unlimited heap size
 
 * Tools

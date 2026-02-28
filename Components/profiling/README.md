@@ -46,13 +46,15 @@ This profiling component now supports both **GCC** and **LLVM/Clang** toolchains
 >   - For LLVM/Clang-compiled code: use `llvm-cov gcov` to parse coverage information
 >
 > **Nuclei Studio IDE Coverage Support:**
->   - The IDE currently supports GCC gcov format coverage data visualization
->   - **LLVM/Clang gcov format is NOT yet supported in Nuclei Studio IDE**
->   - For LLVM/Clang coverage analysis, you must use the command-line tool:
+>   - Nuclei Studio IDE supports both GCC and LLVM/Clang gcov format coverage data visualization
+>   - For command-line analysis, use the corresponding gcov tool for your toolchain:
 >     ```bash
+>     # For GCC toolchain
+>     riscv64-unknown-elf-gcov <your-compiled-file>.gcda
+>
+>     # For LLVM/Clang toolchain
 >     llvm-cov gcov <your-compiled-file>.gcda
 >     ```
->   - GCC coverage data can still be viewed directly in the IDE's Coverage view
 
 In this directory, we provide utils source code to do profiling and coverage using gcov and gprof
 technology.

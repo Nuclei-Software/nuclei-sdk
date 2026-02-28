@@ -1993,9 +1993,10 @@ console when main part code is executed.
       a slight increase in the program's memory footprint compared to its uninstrumented counterpart.
     * Please check ``README.md`` about gcov and gprof support in https://github.com/Nuclei-Software/nuclei-sdk/tree/master/Components/profiling
     * **Toolchain Compatibility**: Both GCC and LLVM/Clang toolchains support ``-pg`` and ``-coverage`` options,
-      but they generate **incompatible gcov data formats**. Nuclei Studio IDE currently **only supports
-      GCC gcov format coverage visualization**. For detailed toolchain-specific analysis instructions,
-      see the IDE configuration steps below and :ref:`demo_profiling_cmdline_usage`.
+      but they generate **incompatible gcov data formats**. You must use the corresponding gcov tool for analysis.
+      Nuclei Studio IDE supports coverage visualization for both GCC and LLVM/Clang gcov formats.
+      For detailed toolchain-specific command-line analysis instructions, see the IDE configuration steps below
+      and :ref:`demo_profiling_cmdline_usage`.
 
 Import or download Nuclei SDK 0.6.0 or later release NPK in Nuclei Studio, and then create a
 project called ``demo_profiling`` based on ``app-nsdk_demo_profiling`` using
@@ -2017,10 +2018,10 @@ it is the core algorithm of this example, then you just need to do the following
 
   .. note::
 
-     Nuclei Studio IDE currently only supports GCC gcov format coverage visualization.
-     If you use LLVM/Clang toolchain (``TOOLCHAIN=nuclei_llvm``), you must analyze coverage data
-     using command-line tools (``llvm-cov gcov``) instead of the IDE's Coverage view.
-     For IDE coverage visualization, use GCC toolchain (``TOOLCHAIN=nuclei_gnu``).
+     Both GCC and LLVM/Clang toolchains are supported for coverage analysis.
+     Nuclei Studio IDE supports coverage visualization for both GCC and LLVM/Clang gcov formats.
+     For command-line analysis, use the corresponding gcov tool:
+     ``riscv64-unknown-elf-gcov`` for GCC or ``llvm-cov gcov`` for LLVM/Clang.
 - Open ``main.c``, and find ``TODO`` item, and comment ``gprof_collect(2);`` or ``gcov_collect(2);`` based on
   gprof or gcov you want to collect.
 - If you want to collect gprof data, you also need to modify ``nuclei_sdk/Components/profiling/gprof_stub.c``,
@@ -2178,8 +2179,10 @@ To use the profiling and code coverage features from the command line:
 
       - To use the lcov approach, you need to install lcov from: https://github.com/linux-test-project/lcov
 
-      - **Format Incompatibility**: GCC and LLVM/Clang generate incompatible ``.gcda`` files.
-        Always use the corresponding toolchain's gcov tool for analysis.
+      - **Toolchain Correspondence**: GCC and LLVM/Clang generate incompatible ``.gcda`` files.
+        Always use the corresponding toolchain's gcov tool for command-line analysis:
+        ``riscv64-unknown-elf-gcov`` for GCC and ``llvm-cov gcov`` for LLVM/Clang.
+        Nuclei Studio IDE supports coverage visualization for both formats.
 
 
 .. _design_app_demo_pmp:
