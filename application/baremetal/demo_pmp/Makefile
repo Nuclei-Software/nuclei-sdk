@@ -4,17 +4,12 @@ NUCLEI_SDK_ROOT = ../../..
 
 # REQUIRE: PMP
 XLCFG_PMP :=
+XLCFG_SMODE ?= 1
 
 SRCDIRS = . src
 
 INCDIRS = . inc
 
 COMMON_FLAGS := -O2
-
-CHK_MODE ?=
-
-ifneq ($(CHK_MODE),)
-COMMON_FLAGS += -DCHK_MODE=$(CHK_MODE)
-endif
 
 include $(NUCLEI_SDK_ROOT)/Build/Makefile.base
