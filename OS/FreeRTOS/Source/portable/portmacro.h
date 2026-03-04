@@ -122,10 +122,10 @@ typedef uint64_t TickType_t;
 /*-----------------------------------------------------------*/
 
 #if configMAX_SYSCALL_INTERRUPT_PRIORITY >= 255
-#define portSET_INTERRUPT_MASK_FROM_ISR()       __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE)
-#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)    __RV_CSR_WRITE(CSR_MSTATUS, (x))
-#define portDISABLE_INTERRUPTS()                __RV_CSR_CLEAR(CSR_MSTATUS, MSTATUS_MIE)
-#define portENABLE_INTERRUPTS()                 __RV_CSR_SET(CSR_MSTATUS, MSTATUS_MIE)
+#define portSET_INTERRUPT_MASK_FROM_ISR()       ({ BaseType_t _tmpstatus = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE); __RWMB(); _tmpstatus; })
+#define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)    { __RV_CSR_SET(CSR_MSTATUS, ((x) & MSTATUS_MIE)); __RWMB(); }
+#define portDISABLE_INTERRUPTS()                { __RV_CSR_CLEAR(CSR_MSTATUS, MSTATUS_MIE); __RWMB(); }
+#define portENABLE_INTERRUPTS()                 { __RV_CSR_SET(CSR_MSTATUS, MSTATUS_MIE); __RWMB(); }
 #else
 #define portSET_INTERRUPT_MASK_FROM_ISR()       ulPortRaiseBASEPRI()
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(x)    vPortSetBASEPRI(x)
@@ -209,7 +209,7 @@ portFORCE_INLINE static void vPortSetBASEPRI(uint8_t ulNewMaskValue)
 
 /*-----------------------------------------------------------*/
 
-#define portMEMORY_BARRIER()                            __asm volatile( "" ::: "memory" )
+#define portMEMORY_BARRIER()                            __RWMB()
 
 #if ( configNUMBER_OF_CORES == 1 )
     extern UBaseType_t uxCriticalNesting;
