@@ -335,10 +335,13 @@ char rt_hw_console_getchar(void)
 
 rt_base_t rt_hw_interrupt_disable(void)
 {
-    return __RV_CSR_READ_CLEAR(CSR_XSTATUS, XSTATUS_XIE);
+    rt_base_t level = __RV_CSR_READ_CLEAR(CSR_XSTATUS, XSTATUS_XIE);
+    __RWMB();
+    return level;
 }
 
 void rt_hw_interrupt_enable(rt_base_t level)
 {
     __RV_CSR_WRITE(CSR_XSTATUS, level);
+    __RWMB();
 }

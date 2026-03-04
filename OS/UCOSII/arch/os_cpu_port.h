@@ -57,8 +57,8 @@ typedef uint64_t TickType_t;
         __RWMB();                                                                   \
     }
 
-#define portDISABLE_INTERRUPTS()            __RV_CSR_CLEAR(CSR_MSTATUS, MSTATUS_MIE)
-#define portENABLE_INTERRUPTS()             __RV_CSR_SET(CSR_MSTATUS, MSTATUS_MIE)
+#define portDISABLE_INTERRUPTS()            { __RV_CSR_CLEAR(CSR_MSTATUS, MSTATUS_MIE); __RWMB(); }
+#define portENABLE_INTERRUPTS()             { __RV_CSR_SET(CSR_MSTATUS, MSTATUS_MIE); __RWMB(); }
 #define portENTER_CRITICAL()                portDISABLE_INTERRUPTS()
 #define portEXIT_CRITICAL()                 portENABLE_INTERRUPTS()
 
@@ -73,7 +73,7 @@ typedef uint64_t TickType_t;
 #define portFORCE_INLINE                    inline __attribute__(( always_inline))
 #endif
 
-#define portMEMORY_BARRIER()                __asm volatile( "" ::: "memory" )
+#define portMEMORY_BARRIER()                __RWMB()
 
 #ifdef __cplusplus
 }

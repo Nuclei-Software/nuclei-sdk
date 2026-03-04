@@ -119,6 +119,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Rename ``__TEE_PRESENT`` to ``__SMODE_PRESENT`` in RT-Thread S-Mode implementation to accurately reflect S-Mode support without implying TEE functionality
   - Fix FreeRTOS tickless sleep implementation by moving ``__disable_irq()`` call to proper location in ``vPortSuppressTicksAndSleep`` function to ensure correct interrupt handling during sleep mode
   - Fix FreeRTOS port macro interrupt masking implementation in ``portmacro.h`` to ensure pending interrupts are properly handled after enabling interrupts, preventing assertion failures from executing code before interrupt response
+  - Fix RT-Thread and UCOSII interrupt masking implementation in ``cpuport.c`` and ``os_cpu_port.h`` to add memory barriers after CSR operations, ensuring pending interrupts are properly handled after enabling interrupts
 
 * Build System
 
