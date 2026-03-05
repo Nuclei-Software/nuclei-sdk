@@ -898,6 +898,36 @@ __STATIC_INLINE void __switch_mode(uint8_t mode, uintptr_t stack, void(*entry_po
 }
 
 /**
+ * \brief switch privilege from supervisor mode to others.
+ * \details
+ *  Execute into \ref entry_point in \ref mode(user) with given stack
+ * \param mode   privilege mode
+ * \param stack   predefined stack, size should set enough
+ * \param entry_point   a function pointer to execute
+ */
+__STATIC_INLINE void __s_switch_mode(uint8_t mode, uintptr_t stack, void(*entry_point)(void))
+{
+    unsigned long val = 0;
+
+    /* Set SPP to the requested privilege mode */
+    val = __RV_CSR_READ(CSR_SSTATUS);
+    val = __RV_INSERT_FIELD(val, SSTATUS_SPP, mode);
+
+    /* Set previous SIE disabled */
+    val = __RV_INSERT_FIELD(val, SSTATUS_SPIE, 0);
+
+    __RV_CSR_WRITE(CSR_SSTATUS, val);
+
+    /* Set the entry point in SEPC */
+    __RV_CSR_WRITE(CSR_SEPC, (unsigned long)entry_point);
+
+    /* Set the register file */
+    __ASM volatile("mv sp, %0" ::"r"(stack));
+
+    __ASM volatile("sret");
+}
+
+/**
  * \brief   Enable IRQ Interrupts
  * \details Enables IRQ interrupts by setting the MIE-bit in the MSTATUS Register.
  * \remarks
