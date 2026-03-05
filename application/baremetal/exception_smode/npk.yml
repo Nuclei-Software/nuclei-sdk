@@ -1,0 +1,45 @@
+## Package Base Information
+name: app-nsdk_exception_smode
+owner: nuclei
+version:
+description: S mode exception Demo
+type: app
+keywords:
+  - baremetal
+  - get started
+category: baremetal application
+license:
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    # REQUIRE: SMODE
+    value: -O0
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
