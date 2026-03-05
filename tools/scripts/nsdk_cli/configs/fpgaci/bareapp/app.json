@@ -73,6 +73,12 @@
                 "PASS": ["MTimer msip and mtip interrupt test finish and pass"]
             }
         },
+        "application/baremetal/demo_profiling": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Dump profiling data finished"]
+            }
+        },
         "application/baremetal/demo_clint_timer": {
             "build_config" : {},
             "checks": {
@@ -137,6 +143,24 @@
             "build_config" : {},
             "checks": {
                 "PASS": ["TEE/sMPU extension is not present", "Won't run here if violates rules check!", "must be defined"]
+            }
+        },
+        "application/baremetal/exception_mmode": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["must be defined", "exception test finish and pass", "will not run this example"]
+            }
+        },
+        "application/baremetal/exception_smode": {
+            "build_config" : {"XLCFG_SMODE": "1"},
+            "checks": {
+                "PASS": ["must be defined", "exception test finish and pass", "will not run this example"]
+            }
+        },
+        "application/baremetal/exception_umode": {
+            "build_config" : {"XLCFG_SMODE": "1"},
+            "checks": {
+                "PASS": ["must be defined", "exception test finish and pass", "will not run this example"]
             }
         },
         "application/baremetal/demo_cache": {
@@ -291,8 +315,7 @@
             "checks": {
                 "PASS": [
                     "test finish and pass",
-                    "must be defined",
-                    "will not run"
+                    "must be defined"
                 ]
             }
         }

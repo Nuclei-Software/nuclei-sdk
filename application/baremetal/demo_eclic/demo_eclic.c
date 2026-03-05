@@ -85,6 +85,18 @@ int main(int argc, char** argv)
 {
     uint8_t timer_intlevel, swirq_intlevel;
     int32_t returnCode;
+    CSR_MCFGINFO_Type mcfg_info;
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    mcfg_info.b.clic = 1;
+#else
+    mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+#endif
+
+    if (0 == mcfg_info.b.clic) {
+        printf("ECLIC is not present, will not run this example!\r\n");
+        return 0;
+    }
 
     // Set TIMER Interrupt and Software Interrupt Level
     // According to the macro SWIRQ_INTLEVEL_HIGHER setting

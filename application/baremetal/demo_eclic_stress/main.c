@@ -1076,6 +1076,19 @@ void mmode_background_computation(void)
 
 int main(int argc, char** argv)
 {
+    CSR_MCFGINFO_Type mcfg_info;
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    mcfg_info.b.clic = 1;
+#else
+    mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+#endif
+
+    if (0 == mcfg_info.b.clic) {
+        printf("ECLIC is not present, will not run this example!\r\n");
+        return 0;
+    }
+
     printf("[M] Starting ECLIC Stress Test - M-Mode and S-Mode Integration\r\n");
 
     /* Calculate expected computation results */
@@ -1184,11 +1197,11 @@ int main(int argc, char** argv)
         /* Enable CY,TM,IR in CSR_MCOUNTEREN to allow S-mode access cycle,time,instret csr */
         SysTimer_EnableSSTC();
     } else {
-        printf("[M] SSTC extension is not present, so will not run S-Mode demo!\n");
+        printf("[M] SSTC extension is not present, so should not run S-Mode demo!\n");
         goto m_mode_bg;
     }
 #else
-    printf("[M] Warning: SSTC extension is required for S-Mode Timer Interrupt, so will not run S-Mode demo!\n");
+    printf("[M] Warning: SSTC extension is required for S-Mode Timer Interrupt, so should not run S-Mode demo!\n");
     goto m_mode_bg;
 #endif
 #endif

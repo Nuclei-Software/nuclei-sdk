@@ -101,6 +101,24 @@
                 "PASS": ["TEE/sMPU extension is not present", "Won't run here if violates rules check!", "[ERROR]__TEE_PRESENT"]
             }
         },
+        "application/baremetal/exception_mmode": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["must be defined", "exception test finish and pass", "will not run this example"]
+            }
+        },
+        "application/baremetal/exception_smode": {
+            "build_config" : {"XLCFG_SMODE": "1"},
+            "checks": {
+                "PASS": ["must be defined", "exception test finish and pass", "will not run this example"]
+            }
+        },
+        "application/baremetal/exception_umode": {
+            "build_config" : {"XLCFG_SMODE": "1"},
+            "checks": {
+                "PASS": ["must be defined", "exception test finish and pass", "will not run this example"]
+            }
+        },
         "application/baremetal/demo_cache": {
             "build_config" : {},
             "checks": {

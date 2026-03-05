@@ -14,8 +14,8 @@
             "timeout": 1200
         }
     },
-    "build_target": "clean all",
     "parallel" : "-j",
+    "build_target": "clean all",
     "build_config": {
     },
     "checks": {
@@ -85,22 +85,34 @@
                 "PASS": ["test finish and pass"]
             }
         },
-        "application/baremetal/empty": {
-            "build_config" : {},
-            "checks": {
-                "PASS": ["CPU HartID"]
-            }
-        },
         "application/baremetal/helloworld": {
             "build_config" : {},
             "checks": {
                 "PASS": ["19: Hello World From Nuclei RISC-V Processor!"]
             }
         },
+        "application/baremetal/empty": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["CPU HartID"]
+            }
+        },
         "application/baremetal/demo_eclic": {
             "build_config" : {},
             "checks": {
                 "PASS": ["software interrupt hit 5 times"]
+            }
+        },
+        "application/baremetal/demo_plic": {
+            "build_config" : {"XLCFG_PLIC": "1"},
+            "checks": {
+                "PASS": ["You can press any key now", "must be defined", "PLIC is not present"]
+            }
+        },
+        "application/baremetal/demo_smode_plic": {
+            "build_config" : {"XLCFG_PLIC": "1"},
+            "checks": {
+                "PASS": ["You can press any key now", "must be defined", "PLIC is not present"]
             }
         },
         "application/baremetal/demo_smode_eclic": {
@@ -121,18 +133,6 @@
                 "PASS": ["PASS: All"]
             }
         },
-        "application/baremetal/demo_plic": {
-            "build_config" : {"XLCFG_PLIC": "1"},
-            "checks": {
-                "PASS": ["You can press any key now", "must be defined", "PLIC is not present"]
-            }
-        },
-        "application/baremetal/demo_smode_plic": {
-            "build_config" : {"XLCFG_PLIC": "1"},
-            "checks": {
-                "PASS": ["You can press any key now", "must be defined", "PLIC is not present"]
-            }
-        },
         "application/baremetal/demo_spmp": {
             "build_config" : {},
             "checks": {
@@ -145,8 +145,26 @@
                 "PASS": ["TEE/sMPU extension is not present", "Won't run here if violates rules check!", "must be defined"]
             }
         },
+        "application/baremetal/exception_mmode": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["must be defined", "exception test finish and pass", "will not run this example"]
+            }
+        },
+        "application/baremetal/exception_smode": {
+            "build_config" : {"XLCFG_SMODE": "1"},
+            "checks": {
+                "PASS": ["must be defined", "exception test finish and pass", "will not run this example"]
+            }
+        },
+        "application/baremetal/exception_umode": {
+            "build_config" : {"XLCFG_SMODE": "1"},
+            "checks": {
+                "PASS": ["must be defined", "exception test finish and pass", "will not run this example"]
+            }
+        },
         "application/baremetal/demo_cache": {
-            "build_config" : {"XLCFG_CCM": "1", "XLCFG_HPM": "1"},
+            "build_config" : {"XLCFG_CCM": "1", "XLCFG_HPM": "1", "DOWNLOAD": "ddr"},
             "checks": {
                 "PASS": [
                     "must be defined",
@@ -224,6 +242,18 @@
                 "PASS": ["thread 6_7 is running, current is 7, thread 6 counter 9, thread 7 counter 8"]
             }
         },
+        "application/baremetal/demo_sstc": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "must be defined", "feature are required"]
+            }
+        },
+        "application/rtthread/demo_smode": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Main thread count: 3", "feature are required"]
+            }
+        },
         "test/core": {
             "build_config" : {},
             "checks": {
@@ -241,18 +271,6 @@
             "build_config" : {"XLCFG_CCM": "1", "XLCFG_HPM": "1", "DOWNLOAD": "ddr"},
             "checks": {
                 "PASS": ["PMA Test finished", "DCache not present in CPU", "must be defined"]
-            }
-        },
-        "application/baremetal/demo_sstc": {
-            "build_config" : {},
-            "checks": {
-                "PASS": ["[IN S-MODE SOFTWARE INTERRUPT]software interrupt hit 10 times", "must be defined", "feature are required"]
-            }
-        },
-        "application/rtthread/demo_smode": {
-            "build_config" : {},
-            "checks": {
-                "PASS": ["Main thread count: 3", "feature are required"]
             }
         },
         "application/baremetal/cpuinfo": {
@@ -297,8 +315,7 @@
             "checks": {
                 "PASS": [
                     "test finish and pass",
-                    "must be defined",
-                    "will not run"
+                    "must be defined"
                 ]
             }
         }

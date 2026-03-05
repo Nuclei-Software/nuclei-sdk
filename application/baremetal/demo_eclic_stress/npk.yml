@@ -25,7 +25,7 @@ configuration:
     tips: "If enabled, it will enable separated interrupt/exception stack, only valid for ECLICv2"
     description: Separated Trap Stack
   app_commonflags:
-    # REQUIRE: ECLIC. SYSTIMER
+    # REQUIRE: ECLIC, SYSTIMER
     # OPTIONAL: SSTC
     value: -O3 -DXLCFG_SSTC=1
     tips: "If you don't have S-Mode or SSTC, you can remove -DXLCFG_SSTC"

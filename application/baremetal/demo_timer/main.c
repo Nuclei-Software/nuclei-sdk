@@ -54,6 +54,19 @@ int main(void)
 {
     uint32_t returnCode;
 
+    CSR_MCFGINFO_Type mcfg_info;
+
+    #if defined(CPU_SERIES) && CPU_SERIES == 100
+        mcfg_info.b.clic = 1;
+    #else
+        mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+    #endif
+
+    if (0 == mcfg_info.b.clic) {
+        printf("ECLIC is not present, will not run this example!\r\n");
+        return 0;
+    }
+
     returnCode = ECLIC_Register_IRQ(
                      SysTimer_IRQn, ECLIC_NON_VECTOR_INTERRUPT, ECLIC_LEVEL_TRIGGER, 1, 0,
                      (void *)mtimer_irq_handler); /* register system timer interrupt */

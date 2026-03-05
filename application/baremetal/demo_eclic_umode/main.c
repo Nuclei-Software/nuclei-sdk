@@ -90,7 +90,7 @@ int main(int argc, char** argv)
     mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
 #endif
 
-    if (mcfg_info.b.clic == 0) {
+    if (0 == mcfg_info.b.clic) {
         printf("ECLIC is not present, will not run this example!\r\n");
         return 0;
     }

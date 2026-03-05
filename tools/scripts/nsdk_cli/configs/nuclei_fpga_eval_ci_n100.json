@@ -31,6 +31,8 @@
         "application/baremetal/lowpower",
         "application/freertos/smpdemo",
         "application/rtthread/demo_smode",
+        "application/baremetal/exception_smode",
+        "application/baremetal/exception_umode",
         "application/threadx/smpdemo"
     ],
     "build_configs": {

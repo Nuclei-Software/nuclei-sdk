@@ -184,6 +184,14 @@ int main(int argc, char** argv)
 #endif
 
 #if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+    CSR_MCFGINFO_Type mcfg_info;
+
+    mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+
+    if (0 == mcfg_info.b.clic) {
+        printf("ECLIC is not present, will not run this example!\r\n");
+        return 0;
+    }
     // before drop to S Mode, specifies in which privilege mode the interrupt should be taken
     ECLIC_SetModeIRQ(SysTimerSW_IRQn, PRV_S);
     ECLIC_SetModeIRQ(SysTimer_IRQn, PRV_S);
