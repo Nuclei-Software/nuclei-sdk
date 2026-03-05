@@ -103,7 +103,7 @@ static void CCache2CLM(unsigned long addr, uint32_t way_msk)
         printf("MFlushInvalCCache Failed!\r\n");
     }
     SMPCC_SetCLMNWays(addr, way_msk);
-    SMPCC_EnableCLM();
+    SMPCC_EnableCCache(); // Enable the remaining CCache
 }
 
 static void CCachePerformanceMonitorTest()
