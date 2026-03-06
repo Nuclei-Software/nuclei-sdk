@@ -265,9 +265,62 @@ static void monstartup(size_t lowpc, size_t highpc)
     moncontrol(1); /* start */
 }
 
+/**
+ * @brief _mcount function called by compiler instrumentation (-pg flag)
+ *
+ * This function is automatically inserted at the entry of each instrumented function
+ * by the compiler when -pg flag is enabled. It records call graph information for
+ * gprof profiling, tracking which functions call which other functions and how often.
+ *
+ * @param frompcindex On RISC-V GCC: The return address (frompc) passed in a0 register,
+ *                    pointing to the call site in the caller function.
+ *                    On RISC-V LLVM: This parameter is NOT correctly passed due to
+ *                    LLVM bug, so we must use __builtin_return_address(1) instead.
+ *
+ * How it works (RISC-V calling convention):
+ * - The compiler instruments each function to call _mcount at entry
+ * - GCC correctly passes the return address (ra register value) as frompcindex
+ * - selfpc (callee PC): Current function address, obtained via __builtin_return_address(0)
+ * - frompc (caller PC): Return address pointing back to the call site
+ *   - GCC: Correctly passed as the frompcindex parameter
+ *   - LLVM: Bug causes incorrect parameter passing, use __builtin_return_address(1)
+ * - The function records an "arc" from caller (frompc) to callee (selfpc) in the
+ *   profiling data structures (froms[] -> tos[] hash table)
+ * - Each arc maintains a count of how many times this call pair occurred
+ *
+ * Compiler differences (RISC-V specific):
+ * - GCC: Follows RISC-V mcount ABI - passes return address (frompc) in a0 register
+ *   Reference: https://github.com/bminor/glibc/blob/master/sysdeps/riscv/machine-gmon.h
+ * - LLVM/Clang: LLVM bug https://github.com/llvm/llvm-project/issues/121103
+ *   The return address is NOT passed to _mcount on RISC-V/AArch64/LoongArch,
+ *   causing empty/broken gprof call graphs. Workaround: use __builtin_return_address(1)
+ * - Both compilers: __builtin_return_address(0) reliably returns the current function's address
+ *
+ * @note This is a known LLVM miscompilation issue affecting profiling on RISC-V.
+ *       The fix requires modifying LLVM's EntryExitInstrumenter to pass ra to _mcount.
+ */
 void _mcount(uint32_t *frompcindex)
 {
-    register uint32_t *selfpc asm("ra");
+    /* Get current function address (callee PC)
+     *
+     * NOTE: asm("ra") not working as expected for LLVM compiler, but works on GCC compiler.
+     *       __builtin_return_address(0) works for both compilers to get selfpc(callee PC).
+     */
+    register uint32_t *selfpc = __builtin_return_address(0);
+
+    /* Get caller function's return address (from PC)
+     *
+     * RISC-V mcount ABI specifies that frompc (return address) should be passed
+     * as the first argument to _mcount, but LLVM fails to do this.
+     *
+     * LLVM/Clang: Use __builtin_return_address(1) due to LLVM bug
+     *   (https://github.com/llvm/llvm-project/issues/121103)
+     *   The LLVM EntryExitInstrumenter doesn't pass ra to _mcount on RISC-V
+     * GCC: Use the frompcindex parameter directly (correctly passed per RISC-V ABI)
+     */
+#ifdef __clang__
+    frompcindex = __builtin_return_address(1);
+#endif
     register struct tostruct *top;
     register struct tostruct *prevtop;
     register long toindex;
