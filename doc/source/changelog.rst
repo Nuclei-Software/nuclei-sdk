@@ -303,7 +303,7 @@ This is release version ``0.8.0`` of Nuclei SDK.
   - Add new PMU v1 and v2 event macros in ``nmsis_bench.h``
   - Add ``flushpipe`` and ``fence`` in each ccm operation API in ``core_feature_cache.h``
   - Use ``1UL`` instead of ``1`` in NMSIS/Core header files to avoid left shift overflow issue
-  - Refactor demo_pmp to run all the occasions at one time with no-locking entry which could be modified when ecall to Mmode
+  - Add new api ``__s_switch_mode`` to switch from S-mode to U-mode
 
 * Application
 
@@ -325,6 +325,8 @@ This is release version ``0.8.0`` of Nuclei SDK.
   - Add two new benchmark cases :ref:`design_app_dhrystone_v2.2` and :ref:`design_app_whetstone_v1.2` which are the ones used in linux benchmark
   - Update Terapines ZCC dhrystone and coremark options for ZCC v4.0.0 and give better code size
   - ``-Ofast`` is deprecated in clang, use ``-O3 -ffast-math``
+  - Refactor demo_pmp to run all the occasions at one time with no-locking entry which could be modified when ecall to M-mode
+  - Add :ref:`design_app_exception_mmode`, :ref:`design_app_exception_smode`, :ref:`design_app_exception_umode` to show how to register exception handler and delegate exception to S-mode
 
 * SoC
 

@@ -3089,6 +3089,172 @@ This `demo_smode_clint application`_ demonstrates timer interrupt and timer soft
     SysTimer SW IRQ handler 5
     SysTimer STIP and SSIP CLINT interrupt test finish and pass
 
+.. _design_app_exception_mmode:
+
+exception_mmode
+~~~~~~~~~~~~~~~
+
+This `exception_mmode application`_ is used to demonstrate how to register exception handler in M-mode
+
+.. note::
+    * .word 0xffffffff will trigger illegal instruction, and ``ecall`` will trigger environment call
+    * Exception triggerred in M-mode will trap to M-mode handler
+    * ``eclic`` is required
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei ux900 Core RISC-V processor as example
+    # cd to the exception_mmode directory
+    cd application/baremetal/exception_mmode
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+   Nuclei SDK Build Time: Mar  9 2026, 19:10:02
+   Download Mode: ILM
+   CPU Frequency 50011176 Hz
+   CPU HartID: 0
+
+   mmode_exception_handler enters
+   Illegal instruction fault occurs, mcause: 0x30000002, mepc: 0x80001064
+
+   mmode_exception_handler enters
+   Environment call from M-mode, mcause: 0x3000000b, mepc: 0x8000107a
+
+   M mode exception test finish and pass
+
+exception_smode
+~~~~~~~~~~~~~~~
+
+This `exception_smode application`_ is used to demonstrate how to register S-mode's exception handler and delegate exception to S-mode
+
+.. note::
+    * .word 0xffffffff will trigger illegal instruction, and ``ecall`` will trigger environment call
+
+    * Illegal instruction exception triggerred in S-mode will trap to S-mode handler with delegation enabled
+
+    * S-mode's ecall will trap to M-mode handler and disable the delegation, then S-mode's illegal instruction will be handled in mmode
+
+    * ``S-mode`` is required, ``XLCFG_SMODE=1`` should be passed to make
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei ux900 Core RISC-V processor as example
+    # cd to the exception_smode directory
+    cd application/baremetal/exception_smode
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 XLCFG_SMODE=1 clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 XLCFG_SMODE=1 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Mar  9 2026, 22:20:56
+    Download Mode: ILM
+    CPU Frequency 49997414 Hz
+    CPU HartID: 0
+    Drop to S-Mode now
+    [IN S-MODE ENTRY POINT] Hello Supervisor Mode!!!
+    Current sp is 0x90001140, so it is in Supervisor Mode!
+
+    1. The first time, smode's illegal instruction will be delegated to smode's handler
+    smode_exception_handler enters
+    Illegal instruction fault occurs, scause: 0x10000002, sepc: 0x80001e0a
+
+    2. Ecall to mmode to disable the medeleg
+    mmode_exception_handler enters
+    Environment call from S-mode, mcause: 0x10000009, mepc: 0x80001e20, disable the medeleg
+
+    3. Then smode's illegal instruction will be handled in mmode
+    mmode_exception_handler enters
+    Illegal instruction fault occurs, mcause: 0x10000002, mepc: 0x80001e0a
+
+    Back to S mode! S mode exception test finish and pass!
+
+exception_umode
+~~~~~~~~~~~~~~~
+
+This `exception_umode application`_ is used to demonstrate how to delegate U-mode's exception to S-mode and also demonstrate the steps to switch from
+M mode to S mode, then from S mode to U mode
+
+.. note::
+    * .word 0xffffffff will trigger illegal instruction, and ``ecall`` will trigger environment call
+
+    * Illegal instruction exception and ecall triggerred in U-mode will trap to M-mode handler with delegation disabled
+
+    * U-mode's ecall will trap to M-mode handler to enable the delegation, then U-mode's illegal instruction and ecall will be delegated to smode's handler
+
+    * If CPU has no S-mode, then M-mode will switch U-mode entry directly, and no delegation to S-mode will take effect
+
+    * For simplicity to show U mode's exception and delegation to S mode, this demo grant S and U the same permissions with memory range as big as possible, 
+      and can't be used as a practical reference
+
+    * SMPU entries depends on nuclei evalsoc's linker script memory map such as ILM/DLM/SRAM/DDR/FLASH 's base address and rom/ram size, which if modified should be taken into
+      consideration that size should be 2^N(N >= 12) and locates in the SPMU entry's address range
+
+    * SMPU entries will be configured only if the CPU has SMPU
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # Use Nuclei ux900 Core RISC-V processor as example
+    # cd to the exception_umode directory
+    cd application/baremetal/exception_umode
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 XLCFG_SMODE=1 clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval CORE=ux900 XLCFG_SMODE=1 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Mar  9 2026, 22:39:42
+    Download Mode: ILM
+    CPU Frequency 49997414 Hz
+    CPU HartID: 0
+    Drop to S-Mode now
+    [IN S-MODE ENTRY POINT] Hello Supervisor Mode!!!
+    Current sp is 0x900013a0, so it is in Supervisor Mode!
+
+    mmode_exception_handler enters
+    Illegal instruction fault occurs, mcause: 0x2, mepc: 0x8000224e
+
+    From M mode switch into U mode
+    Current sp is 0x90001b90, so it is in User Mode!
+
+    1. The first time, umode's illegal instruction and ecall will be handled in mmode
+    mmode_exception_handler enters
+    Illegal instruction fault occurs, mcause: 0x2, mepc: 0x800021a2
+
+    2. Ecall to mmode
+    mmode_exception_handler enters
+    Environment call from U-mode, mcause: 0x8, mepc: 0x800021b8
+
+    3. Then umode's illegal instruction and ecall will be delegated to smode's handler
+    smode_exception_handler enters
+    Illegal instruction fault occurs, scause: 0x2, sepc: 0x800021a2
+
+    smode_exception_handler enters
+    Environment call from U-mode, scause: 0x8, sepc: 0x800021b8
+
+    Back to U mode! U mode exception test finish and pass!
+
 FreeRTOS applications
 ---------------------
 
@@ -3672,4 +3838,7 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx smpdemo`` applic
 .. _demo_smpcc application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smpcc
 .. _demo_ecc application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_ecc
 .. _demo_smode_clint application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smode_clint
+.. _exception_mmode application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/exception_mmode
+.. _exception_smode application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/exception_smode
+.. _exception_umode application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/exception_umode
 .. _Nuclei User Extended Introduction: https://doc.nucleisys.com/nuclei_spec/isa/nice.html
