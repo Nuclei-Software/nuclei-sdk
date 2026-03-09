@@ -302,6 +302,7 @@ This is release version ``0.8.0`` of Nuclei SDK.
   - Add new PMU v1 and v2 event macros in ``nmsis_bench.h``
   - Add ``flushpipe`` and ``fence`` in each ccm operation API in ``core_feature_cache.h``
   - Use ``1UL`` instead of ``1`` in NMSIS/Core header files to avoid left shift overflow issue
+  - Refactor demo_pmp to run all the occasions at one time with no-locking entry which could be modified when ecall to Mmode
 
 * Application
 

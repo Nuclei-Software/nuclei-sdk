@@ -2198,29 +2198,29 @@ This `demo_pmp application`_ is used to demonstrate how to grant physical memory
     * It doesn't work with gd32vf103 processor.
     * It needs Nuclei CPU configured with PMP feature
     * Need to enable PMP in <Device.h> if PMP present in CPU.
+    * If S-mode is not configured with CPU, then M-mode will switch to U-mode
 
 * ``pmp_violation_fault_handler`` is registered, which is to execute when pmp violation
   exception occurs
-* There're two config structures, ``pmp_config_x`` sets protected executable address range
-  as 2^12 bytes; ``pmp_config_rw`` sets protected readable/writable address range as 2^12
-  bytes, and you can change the ``protection``, ``order``, ``base_addr`` according to your
-  memory assignments
+* There're three config structures, ``pmp_config_x`` sets protected executable address range
+  as 2^14 bytes; ``pmp_config_rw`` sets protected readable/writable address range as 2^13
+  bytes, pmp_config_rw_unprotected sets the address range after pmp_config_rw as always readable/writable,
+  and you can change the ``protection``, ``order``, ``base_addr`` according to your memory assignments
 * When exception occurs, the print info including ``mcause``, ``mepc`` can be observed
   by serial console, which explains the exception cause of PMP permission violation, and
   shows which asm instruction triggers the violation
-* In the application code, there is a macro called ``TRIGGER_PMP_VIOLATION_MODE`` to control the
-  PMP working feature:
 
-  - If **TRIGGER_PMP_VIOLATION_MODE=INSTRUCTION_FETCH_EXCEPTION**, the unallowed memory is to
+
+  - If **INSTRUCTION_FETCH_EXCEPTION** occurs, the unallowed memory is to
     execute, which triggers ``Instruction access fault``, whose mcause.EXCCODE = 1 and mdcause = 1
 
-  - If **TRIGGER_PMP_VIOLATION_MODE=LOAD_EXCEPTION**, the unallowed memory is to read,
+  - If **LOAD_EXCEPTION** occurs, the unallowed memory is to read,
     which triggers ``Load access fault``, whose mcause.EXCODE = 5 and mdcause = 1
 
-  - If **TRIGGER_PMP_VIOLATION_MODE=STORE_EXCEPTION**, the unallowed memory is to write,
+  - If **STORE_EXCEPTION** occurs, the unallowed memory is to write,
     which triggers ``Store/AMO access fault``, whose mcause.EXCODE = 7 and mdcause = 1
 
-  - If **TRIGGER_PMP_VIOLATION_MODE=RUN_WITH_NO_PMP_CHECK**, no violation occurs
+  - If **RUN_WITH_NO_PMP_CHECK** occurs, no violation occurs
 
 **How to run this application:**
 
@@ -2232,96 +2232,113 @@ This `demo_pmp application`_ is used to demonstrate how to grant physical memory
     # MUST: Your CPU configuration must has PMP configured
     # Change macro __PMP_PRESENT to 1 in <Device.h>
     #define __PMP_PRESENT             1
-    # Change macro TRIGGER_PMP_VIOLATION_MODE value in demo_pmp.c
     # to see different working mode of this demo
     # Clean the application first
     make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 clean
     # Build and upload the application
     make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 upload
 
-**Expected output(TRIGGER_PMP_VIOLATION_MODE=INSTRUCTION_FETCH_EXCEPTION) as below:**
+**Expected output as below(with S-mode configured):**
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
+    Nuclei SDK Build Time: Mar 10 2026, 00:02:28
     Download Mode: ILM
-    CPU Frequency 16006184 Hz
-    ------PMP demo with trigger condition 0------
-    Get pmp entry: index 0, prot_out: 0x9b, addr_out: 0x80004000, order_out: 12
-    Get pmp entry: index 1, prot_out: 0x9b, addr_out: 0x90000000, order_out: 12
-    Attempting to fetch instruction from protected address
-    Instruction access fault occurs, cause: 0x30000001, epc: 0x80004000
+    CPU Frequency 49998069 Hz
+    CPU HartID: 0
+    ------PMP demo with trigger common condition------
+    Drop to S-Mode now
+    Current sp is 0xa0015ad0, so it is in Supervisor Mode!
 
-From disassembly code, MEPC refers to
+    From S mode traps into M mode handler
+    Environment call occurs, mcause: 0x9, mepc: 0xa00067ec
+    Get pmp entry: index 0, prot_out: 0x1b, addr_out: 0xa0004000, order_out: 14
+    Get pmp entry: index 1, prot_out: 0x1b, addr_out: 0xa0012000, order_out: 13
 
-.. code-block:: console
+    From S mode traps into M mode handler
+    Instruction access fault occurs, mcause: 0x1, mepc: 0xa00067f0
+    Current sp is 0xa0015ad0, so it is in Supervisor Mode!
 
-    80004000:	90002537          	lui	a0,0x90002
-
-
-**Expected output(TRIGGER_PMP_VIOLATION_MODE=LOAD_EXCEPTION) as below:**
-
-.. code-block:: console
-
-    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
-    Download Mode: ILM
-    CPU Frequency 16006184 Hz
-    ------PMP demo with trigger condition 1------
-    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x80004000, order_out: 12
-    Get pmp entry: index 1, prot_out: 0x9a, addr_out: 0x90000000, order_out: 12
-    Attempting to fetch instruction from protected address
-    ----protected_execute succeed!----
+    From S mode traps into M mode handler
+    Environment call occurs, mcause: 0x9, mepc: 0xa00067ec
+    Get pmp entry: index 0, prot_out: 0x1f, addr_out: 0xa0004000, order_out: 14
+    Get pmp entry: index 1, prot_out: 0x18, addr_out: 0xa0012000, order_out: 13
     Attempting to read protected_data[0]
-    Load access fault occurs, cause: 0x30000005, epc: 0x80004022
 
+    From S mode traps into M mode handler
+    Load access fault occurs, mcause: 0x5, mepc: 0xa000401a
+    Current sp is 0xa0015ad0, so it is in Supervisor Mode!
 
-From disassembly code, MEPC refers to
-
-.. code-block:: console
-
-    80004022:	00044583          	lbu	a1,0(s0) # 90000000 <_sp+0xffff0000>
-
-
-**Expected output(TRIGGER_PMP_VIOLATION_MODE=STORE_EXCEPTION) as below:**
-
-.. code-block:: console
-
-    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
-    Download Mode: ILM
-    CPU Frequency 15998320 Hz
-    ------PMP demo with trigger condition 2------
-    Get pmp entry: index 0, prot_out: 0x9f, addr_out: 0x80004000, order_out: 12
-    Get pmp entry: index 1, prot_out: 0x99, addr_out: 0x90000000, order_out: 12
-    Attempting to fetch instruction from protected address
-    ----protected_execute succeed!----
+    From S mode traps into M mode handler
+    Environment call occurs, mcause: 0x9, mepc: 0xa00067ec
+    Get pmp entry: index 0, prot_out: 0x1f, addr_out: 0xa0004000, order_out: 14
+    Get pmp entry: index 1, prot_out: 0x19, addr_out: 0xa0012000, order_out: 13
     Attempting to read protected_data[0]
     protected_data[0]: 0xAA succeed
     Attempting to write protected_data[0]
-    Store/AMO access fault occurs, cause: 0x30000007, epc: 0x80004044
 
-From disassembly code, MEPC refers to
+    From S mode traps into M mode handler
+    Store/AMO access fault occurs, mcause: 0x7, mepc: 0xa0004038
+    Current sp is 0xa0015ad0, so it is in Supervisor Mode!
 
-.. code-block:: console
-
-    80004044:	00f40023          	sb	a5,0(s0)
-
-
-**(Default)Expected output(TRIGGER_PMP_VIOLATION_MODE=RUN_WITH_NO_PMP_CHECK) as below:**
-
-.. code-block:: console
-
-    Nuclei SDK Build Time: Aug 15 2022, 15:45:57
-    Download Mode: ILM
-    CPU Frequency 16006184 Hz
-    ------PMP demo with trigger condition 3------
-    Get pmp entry: index 0, prot_out: 0x1f, addr_out: 0x80004000, order_out: 12
-    Get pmp entry: index 1, prot_out: 0x1b, addr_out: 0x90000000, order_out: 12
-    Attempting to fetch instruction from protected address
-    ----protected_execute succeed!----
+    From S mode traps into M mode handler
+    Environment call occurs, mcause: 0x9, mepc: 0xa00067ec
+    Get pmp entry: index 0, prot_out: 0x1f, addr_out: 0x0, order_out: 33
+    Get pmp entry: index 1, prot_out: 0x1b, addr_out: 0x0, order_out: 33
     Attempting to read protected_data[0]
     protected_data[0]: 0xAA succeed
     Attempting to write protected_data[0]
     Won't run here if violates L R\W\X permission check!
+
+**Expected output as below(without S-mode configured):**
+    Nuclei SDK Build Time: Mar 16 2026, 17:41:13
+    Download Mode: ILM
+    CPU Frequency 50002329 Hz
+    CPU HartID: 0
+    ------PMP demo with trigger common condition------
+    Drop to U-Mode now
+    Current sp is 0x90005090, so it is in User Mode!
+
+    From U mode traps into M mode handler
+    Environment call occurs, mcause: 0x8, mepc: 0x800067ec
+    Get pmp entry: index 0, prot_out: 0x1b, addr_out: 0x80004000, order_out: 14
+    Get pmp entry: index 1, prot_out: 0x1b, addr_out: 0x90002000, order_out: 13
+
+    From U mode traps into M mode handler
+    Instruction access fault occurs, mcause: 0x1, mepc: 0x800067f0
+    Current sp is 0x90005090, so it is in User Mode!
+
+    From U mode traps into M mode handler
+    Environment call occurs, mcause: 0x8, mepc: 0x800067ec
+    Get pmp entry: index 0, prot_out: 0x1f, addr_out: 0x80004000, order_out: 14
+    Get pmp entry: index 1, prot_out: 0x18, addr_out: 0x90002000, order_out: 13
+    Attempting to read protected_data[0]
+
+    From U mode traps into M mode handler
+    Load access fault occurs, mcause: 0x5, mepc: 0x8000401a
+    Current sp is 0x90005090, so it is in User Mode!
+
+    From U mode traps into M mode handler
+    Environment call occurs, mcause: 0x8, mepc: 0x800067ec
+    Get pmp entry: index 0, prot_out: 0x1f, addr_out: 0x80004000, order_out: 14
+    Get pmp entry: index 1, prot_out: 0x19, addr_out: 0x90002000, order_out: 13
+    Attempting to read protected_data[0]
+    protected_data[0]: 0xAA succeed
+    Attempting to write protected_data[0]
+
+    From U mode traps into M mode handler
+    Store/AMO access fault occurs, mcause: 0x7, mepc: 0x80004038
+    Current sp is 0x90005090, so it is in User Mode!
+
+    From U mode traps into M mode handler
+    Environment call occurs, mcause: 0x8, mepc: 0x800067ec
+    Get pmp entry: index 0, prot_out: 0x1f, addr_out: 0x0, order_out: 33
+    Get pmp entry: index 1, prot_out: 0x1b, addr_out: 0x0, order_out: 33
+    Attempting to read protected_data[0]
+    protected_data[0]: 0xAA succeed
+    Attempting to write protected_data[0]
+    Won't run here if violates L R\W\X permission check!
+
 
 .. _design_app_demo_cidu:
 
