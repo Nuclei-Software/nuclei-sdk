@@ -46,6 +46,10 @@
             "n201": { "build": true, "run": false },
             "n201e" : {"build": true, "run": false}
         },
+        "application/baremetal/demo_pmp" : {
+            "n203": { "build": false, "run": false },
+            "n300fbp": { "build": false, "run": false }
+        },
         "application" : {
             "n201e" : {"build": true, "run": false}
         },

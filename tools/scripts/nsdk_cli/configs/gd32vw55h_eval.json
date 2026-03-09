@@ -23,6 +23,10 @@
             "run": false,
             "build": false
         },
+        "application/baremetal/demo_pmp" : {
+            "run": false,
+            "build": false
+        },
         "application/baremetal/demo_spmp" : {
             "run": false,
             "build": false

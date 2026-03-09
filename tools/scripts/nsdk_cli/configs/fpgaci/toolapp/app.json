@@ -179,7 +179,7 @@
         "application/baremetal/demo_pmp": {
             "build_config" : {},
             "checks": {
-                "PASS": ["Won't run here if violates L R\\W\\X permission check!"]
+                "PASS": ["Won't run here if violates L R\\W\\X permission check!", "will not run", "must be defined"]
             }
         },
         "application/baremetal/demo_nice": {

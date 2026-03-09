@@ -1,0 +1,16 @@
+{
+    "build_config": {
+        "CPU_SERIES": "1000"
+    },
+    "build_configs": {
+        "rv64imac": {"CORE":"ux1000", "ARCH_EXT":""},
+        "rv64imafc": {"CORE":"ux1000f", "ARCH_EXT":""},
+        "rv64imafdc": {"CORE":"ux1000fd", "ARCH_EXT":""},
+        "rv64imacbp": {"CORE":"ux1000", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
+        "rv64imafcbp": {"CORE":"ux1000f", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
+        "rv64imafdcbp": {"CORE":"ux1000fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
+        "rv64imafdcbp_zicond": {"CORE":"ux1000fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldsp", "NMSIS_LIB_ARCH": "rv64imafdc_zba_zbb_zbc_zbs_xxldsp"},
+        "rv64imafdcbpv": { "CORE": "ux1000fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_xxldsp"},
+        "rv64imafdcbpv_zicond": { "CORE": "ux1000fd", "ARCH_EXT": "v_zba_zbb_zbc_zbs_zicond_xxldsp", "NMSIS_LIB_ARCH": "rv64imafdcv_zba_zbb_zbc_zbs_xxldsp"}
+    }
+}

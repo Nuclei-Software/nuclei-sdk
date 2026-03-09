@@ -10,6 +10,7 @@
         "application/baremetal/demo_cidu": {"build": true, "run": false},
         "application/baremetal/demo_cache": {"build": true, "run": false},
         "application/baremetal/demo_pma": {"build": true, "run": false},
+        "application/baremetal/demo_smode_clint": {"build": true, "run": false},
         "test/core": {"build": false, "run": false}
     }
 }
