@@ -15,7 +15,7 @@
     "build_config": {
         "SOC": "evalsoc"
     },
-    "copy_objects": true,
+    "copy_objects": false,
     "checks": {
         "PASS": [],
         "FAIL": ["MEPC"]
