@@ -64,7 +64,7 @@ typedef struct PMP_CONFIG {
     /**
      * Size of memory region as power of 2, it has to be minimum 2 and maxium \ref __RISCV_XLEN according to the
      * hard-wired granularity 2^N bytes, if N = 12, then order has to be at least 12; if not, the order read out
-     * is N though you configure less than N.
+     * is N though you configure less than N. Generally, Nuclei CPU's pmp granularity is 2^12 = 4KBytes, you should refer to the databook.
      */
     unsigned long order;
     /**
