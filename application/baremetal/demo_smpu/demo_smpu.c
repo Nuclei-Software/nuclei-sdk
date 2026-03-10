@@ -115,6 +115,8 @@ int main(void)
         return 0;
     }
 
+    // Generally, Nuclei CPU's pmp/smpu granularity is 2^12 = 4KBytes(order should at least be 12), you should refer to the databook.
+
     /* The SMPU is checked before the PMA checks and PMP checks */
     pmp_config pmp_cfg = {
         /* M mode grants S and U mode with full permission of the whole address range */
@@ -154,7 +156,7 @@ int main(void)
     printf("Get pmp entry: index %d, prot_out: 0x%x, addr_out: 0x%lx, order_out: %lu\r\n", \
         0, pmp_cfg.protection, pmp_cfg.base_addr, pmp_cfg.order);
 
-    /* Enable corresponpding entrie 0 and 1*/
+    /* Enable corresponpding entries 0 and 1 */
     __set_SMPUSWITCHx(0x3);
     /* Corresponding exceptions occurs in S/U-mode will be delegated to S-mode */
     __set_medeleg(FETCH_PAGE_FAULT | LOAD_PAGE_FAULT | STORE_PAGE_FAULT);

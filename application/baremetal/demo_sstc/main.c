@@ -165,6 +165,7 @@ int main(int argc, char** argv)
         return 0;
     }
 #if defined(__PMP_PRESENT) && (__PMP_PRESENT == 1)
+    // Generally, Nuclei CPU's pmp/smpu granularity is 2^12 = 4KBytes(order should at least be 12), you should refer to the databook.
     // set pmp, S mode can access all address range
     pmp_config pmp_cfg = {
         /* M mode grants S and U mode with full permission of the whole address range */
