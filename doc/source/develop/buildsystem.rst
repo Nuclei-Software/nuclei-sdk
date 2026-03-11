@@ -447,6 +447,7 @@ which can be passed via make command.
 * :ref:`develop_buildsystem_var_gdb_port`
 * :ref:`develop_buildsystem_var_v`
 * :ref:`develop_buildsystem_var_silent`
+* :ref:`develop_buildsystem_var_icount_opt`
 
 .. note::
 
@@ -1094,6 +1095,43 @@ SILENT
 If **SILENT=1**, it will not display any compiling messsage.
 
 If you don't want to see any compiling message, you can pass **SILENT=1** in your make command.
+
+.. _develop_buildsystem_var_icount_opt:
+
+ICOUNT_OPT
+~~~~~~~~~~
+
+.. note::
+
+    This variable is added in 0.9.0 release.
+
+**ICOUNT_OPT** variable is used to control QEMU instruction count timing emulation behavior.
+
+This variable sets the QEMU ``-icount`` option for timing emulation when running applications
+on `Nuclei Qemu Evalsoc`_. The default value is ``shift=0``, which means each virtual instruction
+executed equals one host clock cycle.
+
+You can customize this variable to achieve different timing behaviors:
+
+* **Default (shift=0)**: Each virtual instruction = 1 host clock cycle (fastest execution)
+* **shift=1**: Each virtual instruction = 2 host clock cycles (slower execution)
+* **Empty ("")**: Disable icount feature entirely
+
+Example usage:
+
+.. code-block:: shell
+
+    # Run with default icount setting (shift=0)
+    make SOC=evalsoc run_qemu
+
+    # Run with slower timing (shift=1)
+    make SOC=evalsoc ICOUNT_OPT=shift=1 run_qemu
+
+    # Run with icount disabled
+    make SOC=evalsoc ICOUNT_OPT="" run_qemu
+
+For more details about QEMU's icount option, please refer to the
+`QEMU documentation <https://www.qemu.org/docs/master/system/invocation.html>`_.
 
 .. _develop_buildsystem_app_make_vars:
 

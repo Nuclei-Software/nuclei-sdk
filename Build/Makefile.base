@@ -68,6 +68,11 @@ NOGC ?=
 BANNER ?=
 ## If AUTOVEC=0, it will try to disable compiler auto vectorization as much as possible
 AUTOVEC ?=
+## ICOUNT_OPT: QEMU instruction count option for timing emulation
+## Default: shift=0 (each virtual instruction = 1 host clock cycle)
+## Examples: ICOUNT_OPT=shift=1 for slower timing, ICOUNT_OPT="" to disable icount
+## See https://www.qemu.org/docs/master/system/invocation.html
+ICOUNT_OPT ?= shift=0
 
 # Directory variables for NMSIS, SoC/RTOS chosen, Middleware Components
 # NUCLEI_SDK_SOC and NUCLEI_SDK_RTOS variables need to be set deferred

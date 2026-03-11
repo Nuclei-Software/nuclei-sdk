@@ -136,6 +136,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Refactor ``cpuconfig.mk`` to use a generic function mechanism for defining ``XLCFG_xxx`` variables with dependency support, allowing better management of CPU feature configurations and their interdependencies
   - Reorder include statements in ``Build/Makefile.conf`` to ensure proper variable dependency resolution between ``Makefile.soc`` and ``NMSIS/build.mk``, fixing issues with ``LDLIBS := -lm`` assignments
   - Add ``simulation.mk`` to evalsoc build system to support RTL simulation related make options, including a new ``SIMULATION_BSSZERO`` make variable to control whether BSS section is zeroed during startup.
+  - Introduce new :ref:`develop_buildsystem_var_icount_opt` make variable in ``Makefile.base`` to provide flexible QEMU instruction count timing emulation control
 
 * SoC
 
