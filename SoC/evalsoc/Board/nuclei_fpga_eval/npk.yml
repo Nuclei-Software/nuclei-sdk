@@ -50,6 +50,11 @@ configuration:
         description: DDR download mode, program will be downloaded into ddr and run directly in ddr, program lost when poweroff
       - name: sram
         description: SRAM download mode(sram mode use sram for 200/300, ddr for 600/900)
+  icount_opt:
+    default_value: "shift=0"
+    type: text
+    global: false
+    description: QEMU instruction count option for timing emulation
 
 ## Source Code Management
 codemanage:
@@ -113,6 +118,12 @@ debugconfig:
        - key: enableSemihosting
          value: true
          condition: $( ${semihost} == 1 )
+       - key: gdbServerOther
+         value: -serial stdio -nodefaults -S
+         condition: $( ${icount_opt} == "" )
+       - key: gdbServerOther
+         value: -serial stdio -nodefaults -S -icount ${icount_opt}
+         condition: $( ${icount_opt} != "" )
        - key: doDebugInRam
          value: true
 
