@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef BAYES_FUNCTIONS_H_
 #define BAYES_FUNCTIONS_H_
 
@@ -74,8 +74,8 @@ typedef struct
  * @param[out] *pBufferB                points to a temporary buffer of length numberOfClasses
  * @return The predicted class
  */
-uint32_t riscv_gaussian_naive_bayes_predict_f32(const riscv_gaussian_naive_bayes_instance_f32 *S, 
-   const float32_t * in, 
+uint32_t riscv_gaussian_naive_bayes_predict_f32(const riscv_gaussian_naive_bayes_instance_f32 *S,
+   const float32_t * in,
    float32_t *pOutputProbabilities,
    float32_t *pBufferB);
 

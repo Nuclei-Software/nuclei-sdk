@@ -27,7 +27,6 @@
 #define _RISCV_VEC_FILTERING_H_
 
 #include "riscv_math.h"
-#include "riscv_helium_utils.h"
 
 #ifdef   __cplusplus
 extern "C"

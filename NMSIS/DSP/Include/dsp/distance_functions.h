@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef DISTANCE_FUNCTIONS_H_
 #define DISTANCE_FUNCTIONS_H_
 
@@ -193,7 +193,7 @@ float64_t riscv_cosine_distance_f64(const float64_t *pA,const float64_t *pB, uin
  *
  * When the function is computing x log (x / y) with x 0 and y 0,
  * it will compute the right value (0) but a division per zero will occur
- * and shoudl be ignored in client code.
+ * and should be ignored in client code.
  *
  * @param[in]    pA         First vector
  * @param[in]    pB         Second vector
@@ -369,7 +369,7 @@ riscv_status riscv_dtw_distance_f32(const riscv_matrix_instance_f32 *pDistance,
  * @param[in]    pDTW  Cost matrix (Query rows * Template columns)
  * @param[out]   pPath Warping path in cost matrix 2*(nb rows + nb columns)
  * @param[out]   pathLength Length of path in number of points
- * 
+ *
  */
 
 void riscv_dtw_path_f32(const riscv_matrix_instance_f32 *pDTW,

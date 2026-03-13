@@ -32,13 +32,28 @@
 #include "riscv_dsp_config.h"
 #endif
 
-#ifndef RISCV_DSP_ATTRIBUTE 
+#ifndef RISCV_DSP_ATTRIBUTE
 #define RISCV_DSP_ATTRIBUTE
 #endif
 
+#ifndef RISCV_DSP_TABLE_ATTRIBUTE
+#define RISCV_DSP_TABLE_ATTRIBUTE
+#endif
+
 #ifdef   __cplusplus
+#include <cstdint>
+#include <cstring>
+#include <cmath>
+#include <cfloat>
+#include <climits>
 extern "C"
 {
+#else
+#include <stdint.h>
+#include <string.h>
+#include <math.h>
+#include <float.h>
+#include <limits.h>
 #endif
 
 /* Compiler specific diagnostic adjustment */
@@ -59,7 +74,7 @@ extern "C"
   #pragma GCC diagnostic ignored "-Wconversion"
   #pragma GCC diagnostic ignored "-Wunused-parameter"
   // Disable some code having issue with GCC
-  #define RISCV_DSP_BUILT_WITH_GCC 
+  #define RISCV_DSP_BUILT_WITH_GCC
 
 #elif defined ( __TI_RISCV__ )
 
@@ -92,7 +107,7 @@ extern "C"
 #else
 
 #define __NMSIS_GENERIC
-#if (defined (__riscv_dsp))
+#if (defined (__riscv_dsp) || defined (__riscv_xxldsp))
     #undef __DSP_PRESENT
     #define __DSP_PRESENT       1
     #undef __RISCV_FEATURE_DSP
@@ -119,11 +134,6 @@ extern "C"
 #undef __NMSIS_GENERIC
 
 #endif
-
-#include <string.h>
-#include <math.h>
-#include <float.h>
-#include <limits.h>
 
 #include "riscv_math_types_f16.h"
 
@@ -319,6 +329,30 @@ extern "C"
 
   /* Dimension C vector space */
   #define CMPLX_DIM 2
+
+  /**
+   * @ingroup genericTypes
+   */
+  /**
+ * @defgroup bufferSizeTypes Enumerations for transform buffer size functions
+ * @{
+*/
+
+/**
+  * @brief Datatype identifier
+  */
+typedef enum {
+  RISCV_MATH_F16 = 16, /**< f16 datatype identifier */
+  RISCV_MATH_F32 = 32, /**< f32 datatype identifier */
+  RISCV_MATH_F64 = 64, /**< f64 datatype identifier */
+  RISCV_MATH_Q7 = 7, /**< Q7 datatype identifier */
+  RISCV_MATH_Q15 = 15, /**< Q15 datatype identifier */
+  RISCV_MATH_Q31 = 31 /**< Q31 datatype identifier */
+} riscv_math_datatype;
+
+/**
+ * @} // endgroup bufferSizeTypes
+*/
 
 #ifdef   __cplusplus
 }

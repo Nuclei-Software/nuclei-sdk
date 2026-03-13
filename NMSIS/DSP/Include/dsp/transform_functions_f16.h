@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef TRANSFORM_FUNCTIONS_F16_H_
 #define TRANSFORM_FUNCTIONS_F16_H_
 
@@ -33,6 +33,14 @@
 
 #include "dsp/none.h"
 #include "dsp/utils.h"
+
+#if !defined(RISCV_MATH_VECTOR)
+#if defined(RISCV_MFCC_CFFT_BASED)
+#if !defined(RISCV_MFCC_USE_CFFT)
+#define RISCV_MFCC_USE_CFFT
+#endif
+#endif
+#endif
 
 #ifdef   __cplusplus
 extern "C"
@@ -77,6 +85,15 @@ extern "C"
   /**
    * @brief Instance structure for the floating-point CFFT/CIFFT function.
    */
+#if defined(RISCV_MATH_VECTOR_FLOAT16)
+typedef struct
+{
+          uint32_t fftLen;                   /**< length of the FFT. */
+    const float16_t *ptwd_re;                /**< points to the real part of Twiddle factor table. */
+    const float16_t *ptwd_im;                /**< points to the imag part of Twiddle factor table. */
+    const uint16_t *pBitRevTable;            /**< points to the bit reversal table. */
+} riscv_cfft_instance_f16;
+#else
   typedef struct
   {
           uint16_t fftLen;                   /**< length of the FFT. */
@@ -84,7 +101,7 @@ extern "C"
     const uint16_t *pBitRevTable;      /**< points to the bit reversal table. */
           uint16_t bitRevLength;             /**< bit reversal table length. */
   } riscv_cfft_instance_f16;
-
+#endif
 
 riscv_status riscv_cfft_init_4096_f16(riscv_cfft_instance_f16 * S);
 riscv_status riscv_cfft_init_2048_f16(riscv_cfft_instance_f16 * S);
@@ -101,21 +118,42 @@ riscv_status riscv_cfft_init_16_f16(riscv_cfft_instance_f16 * S);
   riscv_cfft_instance_f16 * S,
   uint16_t fftLen);
 
+#if defined(RISCV_MATH_VECTOR_FLOAT16)
+
+riscv_cfft_instance_f16 *riscv_cfft_init_dynamic_f16(uint32_t fftLen);
+
+void riscv_cfft_f16(
+  const riscv_cfft_instance_f16 * S,
+        const float16_t * pIn,
+        float16_t * pOut,
+        float16_t * pBuffer, /* When used, `in` is not modified */
+        uint8_t ifftFlag);
+#else
   void riscv_cfft_f16(
   const riscv_cfft_instance_f16 * S,
         float16_t * p1,
         uint8_t ifftFlag,
         uint8_t bitReverseFlag);
-
+#endif
   /**
    * @brief Instance structure for the floating-point RFFT/RIFFT function.
    */
+#if defined(RISCV_MATH_VECTOR_FLOAT16)
+  typedef struct
+  {
+    riscv_cfft_instance_f16 Sint;           /**< points to the complex FFT instance. */
+    uint32_t fftLenRFFT;                    /**< length of the real FFT. */
+    const float16_t *ptwd_re;               /**< points to the real part of Twiddle factor table. */
+    const float16_t *ptwd_im;               /**< points to the imag part of Twiddle factor table. */
+  } riscv_rfft_fast_instance_f16 ;
+#else
 typedef struct
   {
           riscv_cfft_instance_f16 Sint;      /**< Internal CFFT structure. */
           uint16_t fftLenRFFT;             /**< length of the real sequence */
     const float16_t * pTwiddleRFFT;        /**< Twiddle factors real stage  */
   } riscv_rfft_fast_instance_f16 ;
+#endif
 
 riscv_status riscv_rfft_fast_init_32_f16( riscv_rfft_fast_instance_f16 * S );
 riscv_status riscv_rfft_fast_init_64_f16( riscv_rfft_fast_instance_f16 * S );
@@ -130,11 +168,22 @@ riscv_status riscv_rfft_fast_init_f16 (
          riscv_rfft_fast_instance_f16 * S,
          uint16_t fftLen);
 
+#if defined(RISCV_MATH_VECTOR_FLOAT16)
 
+riscv_rfft_fast_instance_f16 *riscv_rfft_fast_init_dynamic_f16 (uint32_t fftLen);
+
+void riscv_rfft_fast_f16(
+        const riscv_rfft_fast_instance_f16 * S,
+        const float16_t * p,
+        float16_t * pOut,
+        float16_t *tmpbuf,
+        uint8_t ifftFlag);
+#else
   void riscv_rfft_fast_f16(
         const riscv_rfft_fast_instance_f16 * S,
         float16_t * p, float16_t * pOut,
         uint8_t ifftFlag);
+#endif
 
 /* Deprecated */
   riscv_status riscv_cfft_radix4_init_f16(
@@ -174,7 +223,7 @@ typedef struct
      uint32_t fftLen; /**< FFT length */
      uint32_t nbMelFilters; /**< Number of Mel filters */
      uint32_t nbDctOutputs; /**< Number of DCT outputs */
-#if defined(RISCV_MFCC_CFFT_BASED)
+#if defined(RISCV_MFCC_USE_CFFT)
      /* Implementation of the MFCC is using a CFFT */
      riscv_cfft_instance_f16 cfft; /**< Internal CFFT instance */
 #else
@@ -292,14 +341,23 @@ riscv_status riscv_mfcc_init_f16(
   @param[out]     pDst  points to the output MFCC values
   @param[inout]     pTmp  points to a temporary buffer of complex
  */
+#if defined(RISCV_MATH_VECTOR_FLOAT16)
+void riscv_mfcc_f16(
+  const riscv_mfcc_instance_f16 * S,
+  float16_t *pSrc,
+  float16_t *pDst,
+  float16_t *pTmp,
+  float16_t *pTmp2
+  );
+#else
   void riscv_mfcc_f16(
   const riscv_mfcc_instance_f16 * S,
   float16_t *pSrc,
   float16_t *pDst,
   float16_t *pTmp
   );
+#endif
 
-  
 #endif /* defined(RISCV_FLOAT16_SUPPORTED)*/
 
 #ifdef   __cplusplus

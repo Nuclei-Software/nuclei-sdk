@@ -8,6 +8,7 @@
 /*
  * Copyright (c) 2010-2020 Arm Limited or its affiliates. All rights reserved.
  * Copyright (c) 2019 Nuclei Limited. All rights reserved.
+ *
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the License); you may
@@ -23,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef DEBUG_FUNCTIONS_H_
 #define DEBUG_FUNCTIONS_H_
 
@@ -36,11 +37,14 @@
 #include "dsp/matrix_functions.h"
 #include "dsp/matrix_functions_f16.h"
 
-#include <stdio.h>
+
 
 #ifdef   __cplusplus
+#include <cstdio>
 extern "C"
 {
+#else
+#include <stdio.h>
 #endif
 
 #if defined(RISCV_FLOAT16_SUPPORTED)
@@ -75,7 +79,7 @@ extern "C"
     printf("};\n");                                       \
 }
 
-#endif 
+#endif
 
 #define PROW_f32(S,NB)            \
 {                                 \

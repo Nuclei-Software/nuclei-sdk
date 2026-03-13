@@ -64,7 +64,7 @@
  * query a NMSIS release update including new features.
  *
  **/
-#define __NMSIS_VERSION_MINOR            (4U)
+#define __NMSIS_VERSION_MINOR            (5U)
 
 /**
  * \brief   Represent the NMSIS patch version
@@ -72,7 +72,7 @@
  * The NMSIS patch version can be used to
  * show bug fixes in this package.
  **/
-#define __NMSIS_VERSION_PATCH            (2U)
+#define __NMSIS_VERSION_PATCH            (0U)
 /**
  * \brief   Represent the NMSIS Version
  * \details

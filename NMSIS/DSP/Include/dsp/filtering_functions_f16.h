@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef FILTERING_FUNCTIONS_F16_H_
 #define FILTERING_FUNCTIONS_F16_H_
 
@@ -208,7 +208,7 @@ extern "C"
   @param[in]     nbCoefs  number of autoregressive coefficients
  */
 void riscv_levinson_durbin_f16(const float16_t *phi,
-  float16_t *a, 
+  float16_t *a,
   float16_t *err,
   int nbCoefs);
 

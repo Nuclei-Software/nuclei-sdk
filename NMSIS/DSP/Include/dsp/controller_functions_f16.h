@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef CONTROLLER_FUNCTIONS_F16_H_
 #define CONTROLLER_FUNCTIONS_F16_H_
 

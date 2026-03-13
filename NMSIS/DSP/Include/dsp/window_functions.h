@@ -3,7 +3,7 @@
  * @brief    Public header file for NMSIS DSP Library
  * @version  v1.15.0
  * @date     15 December 2022
- * Target Processor: RISC-V cores
+ * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
  * Copyright (c) 2010-2022 Arm Limited or its affiliates. All rights reserved.
@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef WINDOW_FUNCTIONS_H_
 #define WINDOW_FUNCTIONS_H_
 
@@ -50,7 +50,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           21.3 dB  |
@@ -69,7 +69,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           21.3 dB  |
@@ -88,7 +88,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           26.5 dB  |
@@ -107,7 +107,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           26.5 dB  |
@@ -126,7 +126,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           42.7 dB  |
@@ -145,7 +145,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           42.7 dB  |
@@ -164,7 +164,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           31.5 dB  |
@@ -183,7 +183,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           31.5 dB  |
@@ -202,7 +202,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           46.7 dB  |
@@ -221,7 +221,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           46.7 dB  |
@@ -240,7 +240,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           60.9 dB  |
@@ -259,7 +259,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           60.9 dB  |
@@ -278,7 +278,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           64.2 dB  |
@@ -297,7 +297,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           64.2 dB  |
@@ -316,7 +316,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           71.5 dB  |
@@ -335,7 +335,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           71.5 dB  |
@@ -354,7 +354,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           82.6 dB  |
@@ -373,7 +373,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           82.6 dB  |
@@ -392,7 +392,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           92.0 dB  |
@@ -411,7 +411,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           92.0 dB  |
@@ -430,7 +430,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           93.3 dB  |
@@ -449,7 +449,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           93.3 dB  |
@@ -468,7 +468,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           98.1 dB  |
@@ -487,7 +487,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           98.1 dB  |
@@ -506,7 +506,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           90.2 dB  |
@@ -525,7 +525,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           90.2 dB  |
@@ -544,7 +544,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           95.0 dB  |
@@ -563,7 +563,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |           95.0 dB  |
@@ -582,7 +582,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          116.8 dB  |
@@ -601,7 +601,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          116.8 dB  |
@@ -620,7 +620,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          144.1 dB  |
@@ -639,7 +639,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          144.1 dB  |
@@ -658,7 +658,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          169.5 dB  |
@@ -677,7 +677,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          169.5 dB  |
@@ -696,7 +696,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          196.2 dB  |
@@ -715,7 +715,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          196.2 dB  |
@@ -734,7 +734,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          223.0 dB  |
@@ -753,7 +753,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          223.0 dB  |
@@ -772,7 +772,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          248.4 dB  |
@@ -791,7 +791,7 @@ extern "C"
    * @param[in]  blockSize  number of samples in the window
    *
    * @par Parameters of the window
-   * 
+   *
    * | Parameter                             | Value              |
    * | ------------------------------------: | -----------------: |
    * | Peak sidelobe level                   |          248.4 dB  |

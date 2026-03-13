@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef CONTROLLER_FUNCTIONS_H_
 #define CONTROLLER_FUNCTIONS_H_
 
@@ -47,7 +47,7 @@ extern "C"
   /* 1.31(q31) Fixed value of 2/360 */
   /* -1 to +1 is divided into 360 values so total spacing is (2/360) */
 #define INPUT_SPACING         0xB60B61
-  
+
 /**
  * @defgroup groupController Controller Functions
  */
@@ -124,12 +124,12 @@ extern "C"
    * is the input sample value. The functions return the output value.
    *
    * \par Algorithm:
-   * <pre>
+   * \code
    *    y[n] = y[n-1] + A0 * x[n] + A1 * x[n-1] + A2 * x[n-2]
    *    A0 = Kp + Ki + Kd
    *    A1 = (-Kp ) - (2 * Kd )
    *    A2 = Kd
-   * </pre>
+   * \endcode
    *
    * \par
    * where \c Kp is proportional constant, \c Ki is Integral constant and \c Kd is Derivative constant
@@ -390,6 +390,7 @@ __STATIC_FORCEINLINE q15_t riscv_pid_q15(
     acc += (q31_t) S->A2 * S->state[1];
 #endif
 
+    /* Don't remove this nop instruction, or it will cause an error */
     asm volatile("nop");
 
     /* acc += y[n-1] */
@@ -780,7 +781,7 @@ __STATIC_FORCEINLINE void riscv_inv_clarke_q31(
 
 
 
-  
+
 #ifdef   __cplusplus
 }
 #endif

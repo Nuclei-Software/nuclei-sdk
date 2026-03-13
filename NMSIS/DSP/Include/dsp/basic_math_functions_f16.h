@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef BASIC_MATH_FUNCTIONS_F16_H_
 #define BASIC_MATH_FUNCTIONS_F16_H_
 
@@ -151,10 +151,10 @@ extern "C"
   @param[in]     high          higher bound
   @param[in]     numSamples    number of samples to clip
  */
-void riscv_clip_f16(const float16_t * pSrc, 
-  float16_t * pDst, 
-  float16_t low, 
-  float16_t high, 
+void riscv_clip_f16(const float16_t * pSrc,
+  float16_t * pDst,
+  float16_t low,
+  float16_t high,
   uint32_t numSamples);
 
 #endif /* defined(RISCV_FLOAT16_SUPPORTED)*/

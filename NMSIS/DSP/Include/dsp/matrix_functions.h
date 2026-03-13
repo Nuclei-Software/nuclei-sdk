@@ -3,7 +3,7 @@
  * @brief    Public header file for NMSIS DSP Library
  * @version  V1.10.1
  * @date     10 August 2022
- * Target Processor: RISC-V cores
+ * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
  * Copyright (c) 2010-2020 Arm Limited or its affiliates. All rights reserved.
@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef MATRIX_FUNCTIONS_H_
 #define MATRIX_FUNCTIONS_H_
 
@@ -47,23 +47,23 @@ extern "C"
  * the type
  * definition for the floating-point matrix structure is shown
  * below:
- * <pre>
+ * \code
  *     typedef struct
  *     {
  *       uint16_t numRows;     // number of rows of the matrix.
  *       uint16_t numCols;     // number of columns of the matrix.
  *       float32_t *pData;     // points to the data of the matrix.
  *     } riscv_matrix_instance_f32;
- * </pre>
+ * \endcode
  * There are similar definitions for Q15 and Q31 data types.
  *
  * The structure specifies the size of the matrix and then points to
  * an array of data.  The array is of size <code>numRows X numCols</code>
  * and the values are arranged in row order.  That is, the
  * matrix element (i, j) is stored at:
- * <pre>
+ * \code
  *     pData[i*numCols + j]
- * </pre>
+ * \endcode
  *
  * \par Init Functions
  * There is an associated initialization function for each type of matrix
@@ -77,11 +77,11 @@ extern "C"
  * then the instance structure cannot be placed into a const data section.
  * To place the instance structure in a const data
  * section, manually initialize the data structure.  For example:
- * <pre>
+ * \code
  * <code>riscv_matrix_instance_f32 S = {nRows, nColumns, pData};</code>
  * <code>riscv_matrix_instance_q31 S = {nRows, nColumns, pData};</code>
  * <code>riscv_matrix_instance_q15 S = {nRows, nColumns, pData};</code>
- * </pre>
+ * \endcode
  * where <code>nRows</code> specifies the number of rows, <code>nColumns</code>
  * specifies the number of columns, and <code>pData</code> points to the
  * data array.
@@ -91,18 +91,18 @@ extern "C"
  * output matrices. For example, the matrix addition function verifies that the
  * two input matrices and the output matrix all have the same number of rows and
  * columns. If the size check fails the functions return:
- * <pre>
+ * \code
  *     RISCV_MATH_SIZE_MISMATCH
- * </pre>
+ * \endcode
  * Otherwise the functions return
- * <pre>
+ * \code
  *     RISCV_MATH_SUCCESS
- * </pre>
+ * \endcode
  * There is some overhead associated with this matrix size checking.
  * The matrix size checking is enabled via the \#define
- * <pre>
+ * \code
  *     RISCV_MATH_MATRIX_CHECK
- * </pre>
+ * \endcode
  * within the library project settings.  By default this macro is defined
  * and size checking is enabled. By changing the project settings and
  * undefining this macro size checking is eliminated and the functions
@@ -122,7 +122,7 @@ extern "C"
     uint16_t numCols;     /**< number of columns of the matrix.  */
     float32_t *pData;     /**< points to the data of the matrix. */
   } riscv_matrix_instance_f32;
- 
+
  /**
    * @brief Instance structure for the floating-point matrix structure.
    */
@@ -364,8 +364,8 @@ riscv_status riscv_mat_mult_f64(
    * @param[out] pDst     points to output vector
    */
 void riscv_mat_vec_mult_f32(
-  const riscv_matrix_instance_f32 *pSrcMat, 
-  const float32_t *pVec, 
+  const riscv_matrix_instance_f32 *pSrcMat,
+  const float32_t *pVec,
   float32_t *pDst);
 
   /**
@@ -390,8 +390,8 @@ riscv_status riscv_mat_mult_q7(
    * @param[out] pDst     points to output vector
    */
 void riscv_mat_vec_mult_q7(
-  const riscv_matrix_instance_q7 *pSrcMat, 
-  const q7_t *pVec, 
+  const riscv_matrix_instance_q7 *pSrcMat,
+  const q7_t *pVec,
   q7_t *pDst);
 
   /**
@@ -416,8 +416,8 @@ riscv_status riscv_mat_mult_q15(
    * @param[out] pDst     points to output vector
    */
 void riscv_mat_vec_mult_q15(
-  const riscv_matrix_instance_q15 *pSrcMat, 
-  const q15_t *pVec, 
+  const riscv_matrix_instance_q15 *pSrcMat,
+  const q15_t *pVec,
   q15_t *pDst);
 
   /**
@@ -470,8 +470,8 @@ riscv_status riscv_mat_mult_opt_q31(
    * @param[out] pDst     points to output vector
    */
 void riscv_mat_vec_mult_q31(
-  const riscv_matrix_instance_q31 *pSrcMat, 
-  const q31_t *pVec, 
+  const riscv_matrix_instance_q31 *pSrcMat,
+  const q31_t *pVec,
   q31_t *pDst);
 
   /**
@@ -646,6 +646,8 @@ void riscv_mat_init_f64(
       uint16_t nRows,
       uint16_t nColumns,
       float64_t * pData);
+
+
 
 
   /**
@@ -860,6 +862,8 @@ float64_t riscv_householder_f64(
     uint32_t    blockSize,
     float64_t * pOut
     );
+
+
 
 #ifdef   __cplusplus
 }

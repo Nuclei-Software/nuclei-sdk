@@ -40,9 +40,9 @@ extern "C"
    * @param[in]  blockSize  number of samples to process.
    */
   void riscv_bubble_sort_f32(
-    const riscv_sort_instance_f32 * S, 
-          float32_t * pSrc, 
-          float32_t * pDst, 
+    const riscv_sort_instance_f32 * S,
+          float32_t * pSrc,
+          float32_t * pDst,
     uint32_t blockSize);
 
    /**
@@ -52,9 +52,9 @@ extern "C"
    * @param[in]  blockSize  number of samples to process.
    */
   void riscv_heap_sort_f32(
-    const riscv_sort_instance_f32 * S, 
-          float32_t * pSrc, 
-          float32_t * pDst, 
+    const riscv_sort_instance_f32 * S,
+          float32_t * pSrc,
+          float32_t * pDst,
     uint32_t blockSize);
 
   /**
@@ -64,9 +64,9 @@ extern "C"
    * @param[in]  blockSize  number of samples to process.
    */
   void riscv_insertion_sort_f32(
-    const riscv_sort_instance_f32 * S, 
-          float32_t *pSrc, 
-          float32_t* pDst, 
+    const riscv_sort_instance_f32 * S,
+          float32_t *pSrc,
+          float32_t* pDst,
     uint32_t blockSize);
 
   /**
@@ -76,9 +76,9 @@ extern "C"
    * @param[in]  blockSize  number of samples to process.
    */
   void riscv_quick_sort_f32(
-    const riscv_sort_instance_f32 * S, 
-          float32_t * pSrc, 
-          float32_t * pDst, 
+    const riscv_sort_instance_f32 * S,
+          float32_t * pSrc,
+          float32_t * pDst,
     uint32_t blockSize);
 
   /**
@@ -88,11 +88,11 @@ extern "C"
    * @param[in]  blockSize  number of samples to process.
    */
   void riscv_selection_sort_f32(
-    const riscv_sort_instance_f32 * S, 
-          float32_t * pSrc, 
-          float32_t * pDst, 
+    const riscv_sort_instance_f32 * S,
+          float32_t * pSrc,
+          float32_t * pDst,
     uint32_t blockSize);
- 
+
   /**
    * @param[in]  S          points to an instance of the sorting structure.
    * @param[in]  pSrc       points to the block of input data.

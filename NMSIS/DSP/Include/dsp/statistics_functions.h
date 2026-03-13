@@ -3,7 +3,7 @@
  * @brief    Public header file for NMSIS DSP Library
  * @version  V1.10.1
  * @date     14 July 2022
- * Target Processor: RISC-V cores
+ * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
  * Copyright (c) 2010-2020 Arm Limited or its affiliates. All rights reserved.
@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef STATISTICS_FUNCTIONS_H_
 #define STATISTICS_FUNCTIONS_H_
 
@@ -142,8 +142,8 @@ float32_t riscv_kullback_leibler_f32(const float32_t * pSrcA
  * @return Kullback-Leibler  Divergence D(A || B)
  *
  */
-float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA, 
-                const float64_t * pSrcB, 
+float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
+                const float64_t * pSrcB,
                 uint32_t blockSize);
 
 
@@ -399,7 +399,7 @@ float64_t riscv_kullback_leibler_f64(const float64_t * pSrcA,
         q15_t * pResult);
 
 
-  
+
   /**
    * @brief  Minimum value of a Q7 vector.
    * @param[in]  pSrc       is input pointer
@@ -893,7 +893,7 @@ void riscv_min_no_idx_q7(
   @param[in]     blockSize  number of samples in input vector
   @param[out]    pResult    mean square error
 */
-  
+
 void riscv_mse_q7(
   const q7_t * pSrcA,
   const q7_t * pSrcB,
@@ -907,7 +907,7 @@ void riscv_mse_q7(
   @param[in]     blockSize  number of samples in input vector
   @param[out]    pResult    mean square error
 */
-  
+
 void riscv_mse_q15(
   const q15_t * pSrcA,
   const q15_t * pSrcB,
@@ -921,7 +921,7 @@ void riscv_mse_q15(
   @param[in]     blockSize  number of samples in input vector
   @param[out]    pResult    mean square error
 */
-  
+
 void riscv_mse_q31(
   const q31_t * pSrcA,
   const q31_t * pSrcB,
@@ -935,7 +935,7 @@ void riscv_mse_q31(
   @param[in]     blockSize  number of samples in input vector
   @param[out]    pResult    mean square error
 */
-  
+
 void riscv_mse_f32(
   const float32_t * pSrcA,
   const float32_t * pSrcB,
@@ -949,7 +949,7 @@ void riscv_mse_f32(
   @param[in]     blockSize  number of samples in input vector
   @param[out]    pResult    mean square error
 */
-  
+
 void riscv_mse_f64(
   const float64_t * pSrcA,
   const float64_t * pSrcB,

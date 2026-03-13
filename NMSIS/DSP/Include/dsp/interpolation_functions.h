@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef INTERPOLATION_FUNCTIONS_H_
 #define INTERPOLATION_FUNCTIONS_H_
 
@@ -125,12 +125,12 @@ extern "C"
   /**
    * @brief Processing function for the floating-point cubic spline interpolation.
    * @param[in]  S          points to an instance of the floating-point spline structure.
-   * @param[in]  xq         points to the x values ot the interpolated data points.
+   * @param[in]  xq         points to the x values of the interpolated data points.
    * @param[out] pDst       points to the block of output data.
    * @param[in]  blockSize  number of samples of output data.
    */
   void riscv_spline_f32(
-        riscv_spline_instance_f32 * S, 
+        riscv_spline_instance_f32 * S,
   const float32_t * xq,
         float32_t * pDst,
         uint32_t blockSize);
@@ -150,7 +150,7 @@ extern "C"
           riscv_spline_type type,
     const float32_t * x,
     const float32_t * y,
-          uint32_t n, 
+          uint32_t n,
           float32_t * coeffs,
           float32_t * tempBuffer);
 

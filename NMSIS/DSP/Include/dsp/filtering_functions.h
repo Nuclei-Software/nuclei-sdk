@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef FILTERING_FUNCTIONS_H_
 #define FILTERING_FUNCTIONS_H_
 
@@ -50,7 +50,7 @@ extern "C"
 /**
  * @defgroup groupFilters Filtering Functions
  */
-    
+
   /**
    * @brief Instance structure for the Q7 FIR filter.
    */
@@ -122,8 +122,6 @@ extern "C"
    * @param[in]     pState     points to the state buffer.
    * @param[in]     blockSize  number of samples that are processed.
    *
-   * For the MVE version, the coefficient length must be a multiple of 16.
-   * You can pad with zeros if you have less coefficients.
    */
   void riscv_fir_init_q7(
         riscv_fir_instance_q7 * S,
@@ -169,9 +167,6 @@ extern "C"
    * <code>RISCV_MATH_SUCCESS</code> if initialization was successful or
    * <code>RISCV_MATH_ARGUMENT_ERROR</code> if <code>numTaps</code> is not a supported value.
    *
-   * For the MVE version, the coefficient length must be a multiple of 8.
-   * You can pad with zeros if you have less coefficients.
-   *
    */
   riscv_status riscv_fir_init_q15(
         riscv_fir_instance_q15 * S,
@@ -214,8 +209,6 @@ extern "C"
    * @param[in]     pState     points to the state buffer.
    * @param[in]     blockSize  number of samples that are processed at a time.
    *
-   * For the MVE version, the coefficient length must be a multiple of 4.
-   * You can pad with zeros if you have less coefficients.
    */
   void riscv_fir_init_q31(
         riscv_fir_instance_q31 * S,
@@ -413,10 +406,9 @@ extern "C"
    * @param[in,out] S          points to an instance of the floating-point Biquad cascade structure.
    * @param[in]     numStages  number of 2nd order stages in the filter.
    * @param[in]     pCoeffs    points to the filter coefficients.
-   * @param[in]     pCoeffsMod points to the modified filter coefficients (only MVE version).
    * @param[in]     pState     points to the state buffer.
    */
-  
+
   void riscv_biquad_cascade_df1_init_f32(
         riscv_biquad_casd_df1_inst_f32 * S,
         uint8_t numStages,
@@ -1907,7 +1899,6 @@ void riscv_correlate_opt_q15(
   @param[in]     pSrcB      points to the second input sequence
   @param[in]     srcBLen    length of the second input sequence
   @param[out]    pDst       points to the location where the output result is written.  Length 2 * max(srcALen, srcBLen) - 1.
-  @return        none
  */
 void riscv_correlate_fast_q15(
   const q15_t * pSrcA,
@@ -2206,7 +2197,7 @@ void riscv_correlate_fast_q31(
 
 
 
- 
+
 
   /**
    * @brief floating-point Circular write function.
@@ -2517,10 +2508,9 @@ void riscv_correlate_fast_q31(
   @param[out]    a        autoregressive coefficients
   @param[out]    err      prediction error (variance)
   @param[in]     nbCoefs  number of autoregressive coefficients
-  @return        none
  */
 void riscv_levinson_durbin_f32(const float32_t *phi,
-  float32_t *a, 
+  float32_t *a,
   float32_t *err,
   int nbCoefs);
 
@@ -2531,10 +2521,9 @@ void riscv_levinson_durbin_f32(const float32_t *phi,
   @param[out]    a        autoregressive coefficients
   @param[out]    err      prediction error (variance)
   @param[in]     nbCoefs  number of autoregressive coefficients
-  @return        none
  */
 void riscv_levinson_durbin_q31(const q31_t *phi,
-  q31_t *a, 
+  q31_t *a,
   q31_t *err,
   int nbCoefs);
 

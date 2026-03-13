@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef MATRIX_FUNCTIONS_F16_H_
 #define MATRIX_FUNCTIONS_F16_H_
 
@@ -39,10 +39,10 @@ extern "C"
 
 #include "dsp/none.h"
 #include "dsp/utils.h"
-    
+
 #if defined(RISCV_FLOAT16_SUPPORTED)
 
-#define DEFAULT_HOUSEHOLDER_THRESHOLD_F16 (1.0e-3f)
+  #define DEFAULT_HOUSEHOLDER_THRESHOLD_F16 (1.0e-3f)
 
  /**
    * @brief Instance structure for the floating-point matrix structure.
@@ -121,8 +121,8 @@ riscv_status riscv_mat_mult_f16(
    * @param[out] pDst     points to output vector
    */
 void riscv_mat_vec_mult_f16(
-  const riscv_matrix_instance_f16 *pSrcMat, 
-  const float16_t *pVec, 
+  const riscv_matrix_instance_f16 *pSrcMat,
+  const float16_t *pVec,
   float16_t *pDst);
 
   /**
@@ -229,7 +229,6 @@ void riscv_mat_init_f16(
                    - \ref RISCV_MATH_SIZE_MISMATCH : Matrix size check failed
                    - \ref RISCV_MATH_SINGULAR      : Input matrix is found to be singular (non-invertible)
  */
-
 riscv_status riscv_mat_qr_f16(
     const riscv_matrix_instance_f16 * pSrc,
     const float16_t threshold,
@@ -248,7 +247,6 @@ riscv_status riscv_mat_qr_f16(
   @param[outQ]   pOut        points to the output vector.
   @return        beta        return the scaling factor beta
  */
-
 float16_t riscv_householder_f16(
     const float16_t * pSrc,
     const float16_t threshold,

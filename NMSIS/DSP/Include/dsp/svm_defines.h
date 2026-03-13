@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef SVM_DEFINES_H_
 #define SVM_DEFINES_H_
 

@@ -27,7 +27,7 @@
 #ifndef RISCV_MATH_TYPES_F16_H
 #define RISCV_MATH_TYPES_F16_H
 
-//#include "riscv_math_types.h"
+#include "riscv_math_types.h"
 
 #ifdef   __cplusplus
 extern "C"
@@ -49,6 +49,12 @@ won't be built.
   #define RISCV_FLOAT16_SUPPORTED 1
 #endif
 
+/* evaluate RISCV Vector float16 feature */
+#if defined(__riscv_vector) && defined(__riscv_zvfh)
+  #if !defined(RISCV_MATH_VECTOR_FLOAT16)
+    #define RISCV_MATH_VECTOR_FLOAT16                 1
+  #endif
+#endif
 
 
 

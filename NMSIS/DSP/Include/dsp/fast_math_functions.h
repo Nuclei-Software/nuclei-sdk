@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef FAST_MATH_FUNCTIONS_H_
 #define FAST_MATH_FUNCTIONS_H_
 
@@ -36,11 +36,13 @@
 
 #include "dsp/basic_math_functions.h"
 
-#include <math.h>
 
 #ifdef   __cplusplus
+#include <cmath>
 extern "C"
 {
+#else
+#include <math.h>
 #endif
 
   /**
@@ -205,17 +207,17 @@ extern "C"
    * There are separate functions for Q15, Q31, and floating-point data types.
    * The square root function is computed using the Newton-Raphson algorithm.
    * This is an iterative algorithm of the form:
-   * <pre>
+   * \code
    *      x1 = x0 - f(x0)/f'(x0)
-   * </pre>
+   * \endcode
    * where <code>x1</code> is the current estimate,
    * <code>x0</code> is the previous estimate, and
    * <code>f'(x0)</code> is the derivative of <code>f()</code> evaluated at <code>x0</code>.
    * For the square root function, the algorithm reduces to:
-   * <pre>
+   * \code
    *     x0 = in/2                         [initial guess]
    *     x1 = 1/2 * ( x0 + in / x0)        [each iteration]
-   * </pre>
+   * \endcode
    */
 
 

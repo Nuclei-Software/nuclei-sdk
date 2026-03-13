@@ -234,9 +234,9 @@ void riscv_q7_to_q7_no_shift(const q7_t * pSrc, q7_t * pDst, uint32_t blockSize)
  *
  * The equation used for the conversion process is:
  *
- * <pre>
+ * \code
  *  sum = input[0] + input[1] + .. + input[block_size -1]
- * </pre>
+ * \endcode
  *
  * */
 void riscv_nn_add_q7(const q7_t *input, q31_t *output, uint32_t block_size);
@@ -265,9 +265,9 @@ void riscv_q7_to_q7_reordered_no_shift(const q7_t * pSrc, q7_t * pDst, uint32_t 
  * Output elements are ordered.
  * The equation used for the conversion process is:
  *
- * <pre>
+ * \code
  *  dst[n] = (int16_t) src[n] + offset;   0 <= n < block_size.
- * </pre>
+ * \endcode
  *
  */
 void riscv_q7_to_q15_with_offset(const int8_t *src, int16_t *dst, int32_t block_size, int16_t offset);
@@ -287,12 +287,12 @@ void riscv_q7_to_q15_with_offset(const int8_t *src, int16_t *dst, int32_t block_
  * Note this is for processors with DSP extension only.
  * The equation used for the conversion process is:
  *
- * <pre>
+ * \code
  *  dst[n - 0] = (int16_t) src[n - 0] + offset;   0 <= n < block_size.
  *  dst[n - 1] = (int16_t) src[n - 2] + offset;   0 <= n < block_size.
  *  dst[n - 2] = (int16_t) src[n - 1] + offset;   0 <= n < block_size.
  *  dst[n - 3] = (int16_t) src[n - 3] + offset;   0 <= n < block_size.
- * </pre>
+ * \endcode
  *
  */
 void riscv_s8_to_s16_unordered_with_offset(const int8_t *src, int16_t *dst, int32_t block_size, int16_t offset);
@@ -337,9 +337,9 @@ void riscv_q7_to_q15_reordered_with_offset(const q7_t *src, q15_t *dst, uint32_t
  *
  * The equation used for the conversion process is:
  *
- * <pre>
+ * \code
  *  dst[n] += (q15_t) src[n] ;   0 <= n < block_size.
- * </pre>
+ * \endcode
  *
  */
 void riscv_nn_accumulate_q7_to_q15(q15_t *dst, const q7_t *src, uint32_t block_size);
@@ -535,7 +535,7 @@ riscv_nmsis_nn_status riscv_nn_mat_mul_core_1x_s4(int32_t row_elements,
  *
  * @return     The function returns the updated output pointer or NULL if implementation is not available.
  *
- * @details Compliant to TFLM int8 specification. MVE implementation only
+ * @details Compliant to TFLM int8 specification.
  */
 int8_t *riscv_nn_mat_mul_core_4x_s8(const int32_t row_elements,
                                   const int32_t offset,
@@ -715,10 +715,8 @@ riscv_nmsis_nn_status riscv_nn_mat_mult_nt_t_s8(const int8_t *lhs,
  * @param[in]  activation_min     Minimum value to clamp down the output. Range : int16
  * @param[in]  activation_max     Maximum value to clamp up the output. Range : int16
  *
- * @details MVE implementation only.
- *
  * @return     The function returns <code>RISCV_NMSIS_NN_SUCCESS</code> or
- *                                  <code>RISCV_NMSIS_NN_NO_IMPL_ERROR</code> if not for MVE
+ *                                  <code>RISCV_NMSIS_NN_NO_IMPL_ERROR</code>
  *
  */
 riscv_nmsis_nn_status riscv_nn_mat_mult_nt_t_s16(const int16_t *lhs,
@@ -1172,7 +1170,7 @@ riscv_nmsis_nn_status riscv_nn_transpose_conv_row_s8_s32(const int8_t *lhs,
                                                      const int32_t stride_x,
                                                      const int32_t skip_row_top,
                                                      const int32_t skip_row_bottom);
-                                                     
+
 /**
 
  *@brief Matrix-multiplication function for convolution with reordered columns
@@ -2051,8 +2049,7 @@ void riscv_nn_softmax_common_s8(const int8_t *input,
 #define ONE_OVER1(x) riscv_nn_one_over_one_plus_x_for_x_in_0_1((x))
 
 /**
- * @brief           Saturating doubling high multiply. Result matches
- *                  NEON instruction VQRDMULH.
+ * @brief           Saturating doubling high multiply.
  * @param[in]       m1        Multiplicand. Range: {NN_Q31_MIN, NN_Q31_MAX}
  * @param[in]       m2        Multiplier. Range: {NN_Q31_MIN, NN_Q31_MAX}
  * @return          Result of multiplication.
@@ -2089,11 +2086,6 @@ __STATIC_FORCEINLINE int32_t riscv_nn_doubling_high_mult(const int32_t m1, const
  * @param[in]       m1        Multiplicand. Range: {NN_Q31_MIN, NN_Q31_MAX}
  * @param[in]       m2        Multiplier Range: {NN_Q31_MIN, NN_Q31_MAX}
  * @return          Result of multiplication.
- * @note            The result of this matches that of neon instruction
- *                  VQRDMULH for m1 in range {NN_Q31_MIN, NN_Q31_MAX} and m2 in
- *                  range {NN_Q31_MIN + 1, NN_Q31_MAX}. Saturation occurs when
- *                  m1 equals m2 equals NN_Q31_MIN and that is not handled by
- *                  this function.
  *
  */
 __STATIC_FORCEINLINE int32_t riscv_nn_doubling_high_mult_no_sat(const int32_t m1, const int32_t m2)

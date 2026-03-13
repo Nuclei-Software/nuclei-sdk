@@ -1,6 +1,6 @@
 /******************************************************************************
  * @file     none.h
- * @brief    Intrinsincs when no DSP extension available
+ * @brief    Intrinsics when no DSP extension available
  * @version  V1.9.0
  * @date     20. July 2020
  ******************************************************************************/
@@ -34,7 +34,7 @@ But those are not always available or use a restricted set
 of intrinsics.
 
 */
- 
+
 #ifndef NONE_H_
 #define NONE_H_
 
@@ -45,7 +45,7 @@ extern "C"
 {
 #endif
 
- 
+
 
 /*
 
@@ -73,7 +73,7 @@ compiler file in Core or Core_A would not make sense.
         count += 1U;
         mask = mask >> 1U;
       }
-      return count;
+      return ((uint8_t)count);
     }
 
   __STATIC_FORCEINLINE int32_t __SSAT(int32_t val, uint32_t sat)
@@ -223,6 +223,7 @@ __STATIC_FORCEINLINE uint32_t __ROR(uint32_t op1, uint32_t op2)
                                   (((int32_t)(v1) <<  8) & (int32_t)0x0000FF00) | \
                                   (((int32_t)(v2) << 16) & (int32_t)0x00FF0000) | \
                                   (((int32_t)(v3) << 24) & (int32_t)0xFF000000)  )
+
 
 
 /*

@@ -3,7 +3,7 @@
  * @brief    Public header file for NMSIS DSP Library
  * @version  V1.10.1
  * @date     18 August 2022
- * Target Processor: RISC-V cores
+ * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
  * Copyright (c) 2010-2020 Arm Limited or its affiliates. All rights reserved.
@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef SUPPORT_FUNCTIONS_F16_H_
 #define SUPPORT_FUNCTIONS_F16_H_
 
@@ -116,12 +116,12 @@ void riscv_f16_to_float(const float16_t * pSrc, float32_t * pDst, uint32_t block
 /**
  * @brief Weighted average
  * @param[in]    *in           Array of input values.
- * @param[in]    *weigths      Weights
+ * @param[in]    *weights      Weights
  * @param[in]    blockSize     Number of samples in the input array.
  * @return Weighted average
  */
 float16_t riscv_weighted_average_f16(const float16_t *in
-  , const float16_t *weigths
+  , const float16_t *weights
   , uint32_t blockSize);
 
 
@@ -157,7 +157,7 @@ void riscv_barycenter_f16(const float16_t *in
    * @brief  Interpret a f16 as an s16 value
    * @param[in] x  input value.
    * @return  return value.
-   * 
+   *
    * @par    Description
    *            It is a typecast. No conversion of the float to int is done.
    *            The memcpy will be optimized out by the compiler.
@@ -176,7 +176,7 @@ __STATIC_INLINE int16_t riscv_typecast_s16_f16(float16_t x)
    * @brief  Interpret an s16 as an f16 value
    * @param[in] x  input value.
    * @return  return value.
-   * 
+   *
    * @par    Description
    *            It is a typecast. No conversion of the int to float is done.
    *            The memcpy will be optimized out by the compiler.

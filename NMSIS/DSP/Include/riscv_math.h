@@ -53,9 +53,6 @@
    * The library has generally separate functions for operating on 8-bit integers, 16-bit integers,
    * 32-bit integer and 32-bit floating-point values and 64-bit floating-point values.
    *
-   * The library is providing vectorized versions of most algorithms for Helium
-   * and of most f32 algorithms for Neon.
-   *
    * When using a vectorized version, provide a little bit of padding after the end of
    * a buffer (3 words) because the vectorized code may read a little bit after the end
    * of a buffer. You don't have to modify your buffers but just ensure that the
@@ -139,6 +136,9 @@
 #include "riscv_math_f16.h"
 #endif /* defined (RISCV_FLOAT16_SUPPORTED) */
 
+#if defined(RISCV_MATH_VECTOR)
+#include "riscv_vec_math.h"
+#endif /* defined(RISCV_MATH_VECTOR) */
 
 
 #ifdef   __cplusplus

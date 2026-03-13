@@ -3,7 +3,7 @@
  * @brief    Public header file for NMSIS DSP Library
  * @version  V1.10.1
  * @date     18 August 2022
- * Target Processor: RISC-V cores
+ * Target Processor: RISC-V Cores
  ******************************************************************************/
 /*
  * Copyright (c) 2010-2020 Arm Limited or its affiliates. All rights reserved.
@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef SUPPORT_FUNCTIONS_H_
 #define SUPPORT_FUNCTIONS_H_
 
@@ -277,7 +277,7 @@ const q7_t * pSrc,
 
 
 
-  
+
   /**
    * @brief Struct for specifying sorting algorithm
    */
@@ -311,11 +311,11 @@ const q7_t * pSrc,
   /**
    * @brief Instance structure for the sorting algorithms.
    */
-  typedef struct            
+  typedef struct
   {
     riscv_sort_alg alg;        /**< Sorting algorithm selected */
     riscv_sort_dir dir;        /**< Sorting order (direction)  */
-  } riscv_sort_instance_f32;  
+  } riscv_sort_instance_f32;
 
   /**
    * @param[in]  S          points to an instance of the sorting structure.
@@ -324,9 +324,9 @@ const q7_t * pSrc,
    * @param[in]  blockSize  number of samples to process.
    */
   void riscv_sort_f32(
-    const riscv_sort_instance_f32 * S, 
-          float32_t * pSrc, 
-          float32_t * pDst, 
+    const riscv_sort_instance_f32 * S,
+          float32_t * pSrc,
+          float32_t * pDst,
           uint32_t blockSize);
 
   /**
@@ -335,18 +335,18 @@ const q7_t * pSrc,
    * @param[in]      dir          Sorting order.
    */
   void riscv_sort_init_f32(
-    riscv_sort_instance_f32 * S, 
-    riscv_sort_alg alg, 
-    riscv_sort_dir dir); 
+    riscv_sort_instance_f32 * S,
+    riscv_sort_alg alg,
+    riscv_sort_dir dir);
 
   /**
    * @brief Instance structure for the sorting algorithms.
    */
-  typedef struct            
+  typedef struct
   {
     riscv_sort_dir dir;        /**< Sorting order (direction)  */
     float32_t * buffer;      /**< Working buffer */
-  } riscv_merge_sort_instance_f32;  
+  } riscv_merge_sort_instance_f32;
 
   /**
    * @param[in]      S          points to an instance of the sorting structure.
@@ -370,8 +370,8 @@ const q7_t * pSrc,
     riscv_sort_dir dir,
     float32_t * buffer);
 
- 
- 
+
+
   /**
    * @brief  Copies the elements of a floating-point vector.
    * @param[in]  pSrc       input pointer
@@ -383,8 +383,8 @@ const q7_t * pSrc,
         float32_t * pDst,
         uint32_t blockSize);
 
- 
- 
+
+
   /**
    * @brief  Copies the elements of a floating-point vector.
    * @param[in]  pSrc       input pointer
@@ -504,13 +504,13 @@ const q7_t * pSrc,
  *
  *
  * @param[in]    *in           Array of input values.
- * @param[in]    *weigths      Weights
+ * @param[in]    *weights      Weights
  * @param[in]    blockSize     Number of samples in the input array.
  * @return Weighted average
  *
  */
 float32_t riscv_weighted_average_f32(const float32_t *in
-  , const float32_t *weigths
+  , const float32_t *weights
   , uint32_t blockSize);
 
 

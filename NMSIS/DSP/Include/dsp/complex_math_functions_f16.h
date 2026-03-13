@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef COMPLEX_MATH_FUNCTIONS_F16_H_
 #define COMPLEX_MATH_FUNCTIONS_F16_H_
 

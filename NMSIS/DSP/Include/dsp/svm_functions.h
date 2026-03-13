@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef SVM_FUNCTIONS_H_
 #define SVM_FUNCTIONS_H_
 
@@ -49,11 +49,11 @@ extern "C"
  * generated from the scikit-learn object. Some examples are given in
  * DSP/Testing/PatternGeneration/SVM.py
  *
- * If more than 2 classes are needed, the functions in this folder 
+ * If more than 2 classes are needed, the functions in this folder
  * will have to be used, as building blocks, to do multi-class classification.
  *
  * No multi-class classification is provided in this SVM folder.
- * 
+ *
  */
 
 /**
@@ -147,7 +147,7 @@ typedef struct
  * @param[in]    supportVectors         Array of support vectors
  * @param[in]    classes                Array of 2 classes ID
  */
-void riscv_svm_linear_init_f32(riscv_svm_linear_instance_f32 *S, 
+void riscv_svm_linear_init_f32(riscv_svm_linear_instance_f32 *S,
   uint32_t nbOfSupportVectors,
   uint32_t vectorDimension,
   float32_t intercept,
@@ -162,8 +162,8 @@ void riscv_svm_linear_init_f32(riscv_svm_linear_instance_f32 *S,
  * @param[in]    in         Pointer to input vector
  * @param[out]   pResult    Decision value
  */
-void riscv_svm_linear_predict_f32(const riscv_svm_linear_instance_f32 *S, 
-   const float32_t * in, 
+void riscv_svm_linear_predict_f32(const riscv_svm_linear_instance_f32 *S,
+   const float32_t * in,
    int32_t * pResult);
 
 
@@ -180,7 +180,7 @@ void riscv_svm_linear_predict_f32(const riscv_svm_linear_instance_f32 *S,
  * @param[in]    coef0                  coeff0 (scikit-learn terminology)
  * @param[in]    gamma                  gamma (scikit-learn terminology)
  */
-void riscv_svm_polynomial_init_f32(riscv_svm_polynomial_instance_f32 *S, 
+void riscv_svm_polynomial_init_f32(riscv_svm_polynomial_instance_f32 *S,
   uint32_t nbOfSupportVectors,
   uint32_t vectorDimension,
   float32_t intercept,
@@ -199,8 +199,8 @@ void riscv_svm_polynomial_init_f32(riscv_svm_polynomial_instance_f32 *S,
  * @param[in]    in         Pointer to input vector
  * @param[out]   pResult    Decision value
  */
-void riscv_svm_polynomial_predict_f32(const riscv_svm_polynomial_instance_f32 *S, 
-   const float32_t * in, 
+void riscv_svm_polynomial_predict_f32(const riscv_svm_polynomial_instance_f32 *S,
+   const float32_t * in,
    int32_t * pResult);
 
 
@@ -215,7 +215,7 @@ void riscv_svm_polynomial_predict_f32(const riscv_svm_polynomial_instance_f32 *S
  * @param[in]    classes                Array of 2 classes ID
  * @param[in]    gamma                  gamma (scikit-learn terminology)
  */
-void riscv_svm_rbf_init_f32(riscv_svm_rbf_instance_f32 *S, 
+void riscv_svm_rbf_init_f32(riscv_svm_rbf_instance_f32 *S,
   uint32_t nbOfSupportVectors,
   uint32_t vectorDimension,
   float32_t intercept,
@@ -232,8 +232,8 @@ void riscv_svm_rbf_init_f32(riscv_svm_rbf_instance_f32 *S,
  * @param[in]    in        Pointer to input vector
  * @param[out]   pResult   decision value
  */
-void riscv_svm_rbf_predict_f32(const riscv_svm_rbf_instance_f32 *S, 
-   const float32_t * in, 
+void riscv_svm_rbf_predict_f32(const riscv_svm_rbf_instance_f32 *S,
+   const float32_t * in,
    int32_t * pResult);
 
 
@@ -249,7 +249,7 @@ void riscv_svm_rbf_predict_f32(const riscv_svm_rbf_instance_f32 *S,
  * @param[in]    coef0                  coeff0 (scikit-learn terminology)
  * @param[in]    gamma                  gamma (scikit-learn terminology)
  */
-void riscv_svm_sigmoid_init_f32(riscv_svm_sigmoid_instance_f32 *S, 
+void riscv_svm_sigmoid_init_f32(riscv_svm_sigmoid_instance_f32 *S,
   uint32_t nbOfSupportVectors,
   uint32_t vectorDimension,
   float32_t intercept,
@@ -267,8 +267,8 @@ void riscv_svm_sigmoid_init_f32(riscv_svm_sigmoid_instance_f32 *S,
  * @param[in]    in       Pointer to input vector
  * @param[out]   pResult  Decision value
  */
-void riscv_svm_sigmoid_predict_f32(const riscv_svm_sigmoid_instance_f32 *S, 
-   const float32_t * in, 
+void riscv_svm_sigmoid_predict_f32(const riscv_svm_sigmoid_instance_f32 *S,
+   const float32_t * in,
    int32_t * pResult);
 
 

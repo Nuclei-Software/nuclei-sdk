@@ -79,7 +79,7 @@ extern "C" {
 #else
 
 #define __NMSIS_GENERIC
-#if (defined (__riscv_dsp))
+#if (defined (__riscv_dsp) || defined (__riscv_xxldsp))
     #undef __DSP_PRESENT
     #define __DSP_PRESENT       1
     #undef __RISCV_FEATURE_DSP

@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
- 
+
 #ifndef FAST_MATH_FUNCTIONS_F16_H_
 #define FAST_MATH_FUNCTIONS_F16_H_
 
@@ -72,7 +72,7 @@ __STATIC_FORCEINLINE riscv_status riscv_sqrt_f16(
 /**
   @} end of SQRT group
  */
-  
+
 /**
   @brief         Floating-point vector of log values.
   @param[in]     pSrc       points to the input vector
