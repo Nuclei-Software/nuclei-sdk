@@ -168,6 +168,8 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add conditional BSS initialization in ``startup_evalsoc.S`` based on ``CFG_SIMULATION_BSSZERO`` C macro to allow skipping BSS initialization during simulation
   - Add new ``get_system_clock()`` function in ``system_evalsoc.c`` to improve system clock frequency determination by checking performance counters(mcycle) availability, and update ``_premain_init()`` to use this new function
   - Add ``icount_opt`` configuration option in ``SoC/evalsoc/Board/nuclei_fpga_eval/npk.yml`` to support QEMU instruction count timing emulation with flexible shift options
+  - Add fallback to ``CLINT_Interrupt_Init()`` in ``Interrupt_Init`` function when neither ECLIC nor PLIC is present in evalsoc
+  - Add S-mode trap vector base address (``stvec``) initialization in ``ECLIC_Interrupt_Init()`` when ``__SMODE_PRESENT`` is defined to properly set up S-mode exception entry point
 
 * Documentation
 

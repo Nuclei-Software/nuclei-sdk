@@ -972,6 +972,9 @@ void ECLIC_Interrupt_Init(void)
     } else {
         /* Set as CLINT interrupt mode */
         __RV_CSR_WRITE(CSR_MTVEC, (unsigned long)exc_entry);
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+        __RV_CSR_WRITE(CSR_STVEC, (unsigned long)exc_entry_s);
+#endif
     }
 #endif
 }
@@ -1060,6 +1063,8 @@ void Interrupt_Init(void)
     ECLIC_Interrupt_Init();
 #elif defined(__PLIC_PRESENT) && (__PLIC_PRESENT == 1)
     PLIC_Interrupt_Init();
+#else
+    CLINT_Interrupt_Init();
 #endif
 
 #endif
