@@ -648,7 +648,6 @@ __attribute__((weak)) void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTi
 
         /* Make sure interrupt enable is executed */
         __RWMB();
-        __FENCE_I();
         __NOP();
 
         /* Disable interrupts again because the clock is about to be stopped
