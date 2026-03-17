@@ -1528,6 +1528,9 @@ void _premain_init(void)
     }
 #endif
 
+    /* Enable prefetch overall */
+    IINFO_EnablePrefetchOverall();
+
     /* Do fence and fence.i to make sure previous ilm/dlm/icache/dcache control done */
     __RWMB();
     __FENCE_I();
@@ -1558,9 +1561,6 @@ void _premain_init(void)
         __SMP_RWMB();
 #endif
     }
-
-    /* Enable prefetch overall */
-    IINFO_EnablePrefetchOverall();
 
 #if defined(RUNMODE_BPU_EN)
 #if RUNMODE_BPU_EN == 1
