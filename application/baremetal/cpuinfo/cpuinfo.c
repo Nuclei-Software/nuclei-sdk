@@ -55,16 +55,16 @@ static void show_mfiocfg(U32_CSR_MCFG_INFO_Type mcfg,
 static void show_mppicfg(U32_CSR_MCFG_INFO_Type mcfg,
                          U64_CSR_MPPICFG_INFO_Type mppicfg);
 
-static void show_prefetch_cfg(CIF_IINFO_Type *iinfo);
-static void show_isa_support(CIF_IINFO_Type *iinfo);
-static void show_mvlm_cfg(CIF_IINFO_Type *iinfo);
-static void show_flash_bus(CIF_IINFO_Type *iinfo);
-static void show_mem_region_cfg(CIF_IINFO_Type *iinfo);
-static void show_mcppi_cfg(CIF_IINFO_Type *iinfo);
-static void show_cmo(CIF_IINFO_Type *iinfo);
-static void show_performance_cfg(CIF_IINFO_Type *iinfo);
-static void show_misc_cfg(CIF_IINFO_Type *iinfo);
-static void show_sec_cfg(CIF_IINFO_Type *iinfo);
+static void show_prefetch_cfg(const CIF_IINFO_Type *iinfo);
+static void show_isa_support(const CIF_IINFO_Type *iinfo);
+static void show_mvlm_cfg(const CIF_IINFO_Type *iinfo);
+static void show_flash_bus(const CIF_IINFO_Type *iinfo);
+static void show_mem_region_cfg(const CIF_IINFO_Type *iinfo);
+static void show_mcppi_cfg(const CIF_IINFO_Type *iinfo);
+static void show_cmo(const CIF_IINFO_Type *iinfo);
+static void show_performance_cfg(const CIF_IINFO_Type *iinfo);
+static void show_misc_cfg(const CIF_IINFO_Type *iinfo);
+static void show_sec_cfg(const CIF_IINFO_Type *iinfo);
 static void show_mpftctl(const CIF_IINFO_Type *iinfo);
 static void show_etrace_info(const CIF_IINFO_Type *iinfo);
 
@@ -536,7 +536,7 @@ static void show_mppicfg(U32_CSR_MCFG_INFO_Type mcfg,
     }
 }
 
-static void show_prefetch_cfg(CIF_IINFO_Type *iinfo)
+static void show_prefetch_cfg(const CIF_IINFO_Type *iinfo)
 {
     CIF_IINFO_PFL1INFO_Type pfl1info;
     pfl1info.d = iinfo->pfl1info;
@@ -588,7 +588,7 @@ static void show_prefetch_cfg(CIF_IINFO_Type *iinfo)
     }
 }
 
-static void show_isa_support(CIF_IINFO_Type *iinfo)
+static void show_isa_support(const CIF_IINFO_Type *iinfo)
 {
     CIF_IINFO_ISA_SUPPORT0_Type isa_support0;
     CIF_IINFO_ISA_SUPPORT1_Type isa_support1;
@@ -669,7 +669,7 @@ static void show_isa_support(CIF_IINFO_Type *iinfo)
     }
 }
 
-static void show_mvlm_cfg(CIF_IINFO_Type *iinfo)
+static void show_mvlm_cfg(const CIF_IINFO_Type *iinfo)
 {
     CIF_IINFO_MVLM_CFG_LO_Type mvlm_cfg_lo;
     mvlm_cfg_lo.d = iinfo->mvlm_cfg_lo;
@@ -686,7 +686,7 @@ static void show_mvlm_cfg(CIF_IINFO_Type *iinfo)
     }
 }
 
-static void show_flash_bus(CIF_IINFO_Type *iinfo)
+static void show_flash_bus(const CIF_IINFO_Type *iinfo)
 {
     CIF_IINFO_FLASH_BASE_ADDR_LO_Type addr_lo;
     addr_lo.d = iinfo->flash_base_addr_lo;
@@ -703,7 +703,7 @@ static void show_flash_bus(CIF_IINFO_Type *iinfo)
     }
 }
 
-static void show_mem_region_cfg(CIF_IINFO_Type *iinfo)
+static void show_mem_region_cfg(const CIF_IINFO_Type *iinfo)
 {
     CIF_IINFO_MEM_REGION_CFG_LO_Type region_lo;
     uint64_t region_base;
@@ -741,7 +741,7 @@ static void show_mem_region_cfg(CIF_IINFO_Type *iinfo)
     }
 }
 
-static void show_mcppi_cfg(CIF_IINFO_Type *iinfo)
+static void show_mcppi_cfg(const CIF_IINFO_Type *iinfo)
 {
     CIF_IINFO_MCPPI_CFG_LO_Type mcppi_lo;
     mcppi_lo.d = iinfo->mcppi_cfg_lo;
@@ -763,7 +763,7 @@ static void show_mcppi_cfg(CIF_IINFO_Type *iinfo)
     }
 }
 
-static void show_cmo(CIF_IINFO_Type *iinfo)
+static void show_cmo(const CIF_IINFO_Type *iinfo)
 {
     CIF_IINFO_MCMO_INFO_Type cmo_info;
     cmo_info.d = iinfo->cmo_info;
@@ -780,7 +780,7 @@ static void show_cmo(CIF_IINFO_Type *iinfo)
     }
 }
 
-static void show_performance_cfg(CIF_IINFO_Type *iinfo)
+static void show_performance_cfg(const CIF_IINFO_Type *iinfo)
 {
     CIF_IINFO_PERFORMANCE_CFG0_Type performance_cfg0;
     CIF_IINFO_PERFORMANCE_CFG1_Type performance_cfg1;
@@ -823,7 +823,7 @@ static void show_performance_cfg(CIF_IINFO_Type *iinfo)
     }
 }
 
-static void show_misc_cfg(CIF_IINFO_Type *iinfo)
+static void show_misc_cfg(const CIF_IINFO_Type *iinfo)
 {
     CIF_IINFO_MERGEL1DCTRL_Type mergel1dctrl;
     CIF_IINFO_SAFETY_CTRL_Type safety_ctrl;
@@ -841,7 +841,7 @@ static void show_misc_cfg(CIF_IINFO_Type *iinfo)
     SHOW_VALUE(access_ctrl, pma_csr_access);
 }
 
-static void show_sec_cfg(CIF_IINFO_Type *iinfo)
+static void show_sec_cfg(const CIF_IINFO_Type *iinfo)
 {
     CIF_IINFO_SEC_CFG_INFO_Type sec_cfg;
     sec_cfg.d = iinfo->sec_cfg_info;
