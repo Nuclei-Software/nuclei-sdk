@@ -1528,9 +1528,6 @@ void _premain_init(void)
     }
 #endif
 
-    /* Enable prefetch overall */
-    IINFO_EnablePrefetchOverall();
-
     /* Do fence and fence.i to make sure previous ilm/dlm/icache/dcache control done */
     __RWMB();
     __FENCE_I();
@@ -1540,6 +1537,10 @@ void _premain_init(void)
     if (hartid == BOOT_HARTID) { // only done in boot hart
         // IREGION INFO MUST BE AFTER L1/L2 Cache enabled and SMP enabled if SMP present
         CpuIRegionBase = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
+        __RWMB();
+        /* Enable prefetch overall, must be placed after CpuIRegionBase value fetched */
+        IINFO_EnablePrefetchOverall();
+        __RWMB();
     } else {
         // wait for correct iregion base addr is set by boot hart
         while (CpuIRegionBase == 0xFFFFFFFF);
