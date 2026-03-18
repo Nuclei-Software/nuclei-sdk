@@ -66,6 +66,7 @@ static void show_performance_cfg(CIF_IINFO_Type *iinfo);
 static void show_misc_cfg(CIF_IINFO_Type *iinfo);
 static void show_sec_cfg(CIF_IINFO_Type *iinfo);
 static void show_mpftctl(const CIF_IINFO_Type *iinfo);
+static void show_etrace_info(const CIF_IINFO_Type *iinfo);
 
 /**
  * Convert to human readable size with option
@@ -509,6 +510,8 @@ static void show_iregion(const CPU_INFO_Group *cpuinfo)
     show_sec_cfg(cpuinfo->iinfo);
     /* MPFTCTL */
     show_mpftctl(cpuinfo->iinfo);
+    /* ETRACE_INFO */
+    show_etrace_info(cpuinfo->iinfo);
     /* MERGEL1DCTRL and ACCESS_CTRL */
     show_misc_cfg(cpuinfo->iinfo);
 }
@@ -875,6 +878,21 @@ static void show_mpftctl(const CIF_IINFO_Type *iinfo)
     CIF_PRINTF("                  mpftctl: \r\n");
     SHOW_VALUE(mpftctl, mpflvl);
     SHOW_VALUE(mpftctl, mpfena);
+}
+
+static void show_etrace_info(const CIF_IINFO_Type *iinfo)
+{
+    CIF_IINFO_ETRACE_INFO_Type etrace_info;
+    etrace_info.d = iinfo->etrace_info;
+    if (etrace_info.b.exist) {
+        CIF_PRINTF("                  etrace_info: present\r\n");
+        CIF_PRINTF("                      version=%u.%u\r\n",
+                   etrace_info.b.support_version_major,
+                   etrace_info.b.support_version_minor);
+        SHOW_VALUE(etrace_info, data_trace);
+    } else {
+        CIF_PRINTF("                  etrace_info: absent\r\n");
+    }
 }
 
 static char *cvt_size_opt(uint32_t size, int lite)

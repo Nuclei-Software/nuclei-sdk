@@ -275,6 +275,7 @@ typedef struct {
     uint32_t crc_rf0;                            /*!< offset 0x0198 */
     uint32_t crc_rf1;                            /*!< offset 0x019C */
     uint32_t crc_fp0;                            /*!< offset 0x01A0 */
+    uint32_t etrace_info;                        /*!< offset 0x01A4 */
 } CIF_IINFO_Type;
 
 /**
@@ -703,6 +704,21 @@ typedef union {
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
 } CIF_IINFO_MPFTCTL_Type;
+
+/**
+ * \brief  Union type to access ETRACE_INFO register.
+ */
+typedef union {
+    struct {
+        uint32_t exist:1;                        /*!< bit: 0 indicate this register exist */
+        uint32_t support_version_minor:4;        /*!< bit: 1..4 supported minor version */
+        uint32_t support_version_major:4;        /*!< bit: 5..8 supported major version */
+        uint32_t :6;                             /*!< bit: 9..14 reserved */
+        uint32_t data_trace:1;                   /*!< bit: 15 indicate whether support data trace, 0 for not support, 1 for support */
+        uint32_t :16;                            /*!< bit: 16..31 reserved */
+    } b;                                         /*!< Structure used for bit access */
+    uint32_t d;                                  /*!< Type      used for register data access */
+} CIF_IINFO_ETRACE_INFO_Type;
 
 /**
  * \brief  Nuclei CPU INFO Structure For OpenOCD Usage
