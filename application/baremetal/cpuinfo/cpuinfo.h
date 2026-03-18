@@ -256,7 +256,8 @@ typedef struct {
     uint32_t reserved3[2];                       /*!< offset 0x0078 */
     uint32_t mcppi_cfg_lo;                       /*!< offset 0x0080 */
     uint32_t mcppi_cfg_hi;                       /*!< offset 0x0084 */
-    uint32_t reserved4[2];                       /*!< offset 0x0088 */
+    uint32_t mpftctl;                            /*!< offset 0x0088 */
+    uint32_t reserved4;                          /*!< offset 0x008C */
     uint32_t performance_cfg0;                   /*!< offset 0x0090 */
     uint32_t performance_cfg1;                   /*!< offset 0x0094 */
     uint32_t reserved5[26];                      /*!< offset 0x0098 */
@@ -690,6 +691,18 @@ typedef union {
 } CIF_IINFO_MCPPI_CFG_LO_Type;
 
 typedef uint32_t CIF_IINFO_MCPPI_CFG_HI_Type;
+
+/**
+ * \brief  Union type to access MPFTCTL register.
+ */
+typedef union {
+    struct {
+        uint32_t mpflvl:4;                       /*!< bit: 0..3 set the duration of power brake */
+        uint32_t mpfena:1;                       /*!< bit: 4 turn on the power brake when set, and off when clear */
+        uint32_t :27;                            /*!< bit: 5..31 reserved */
+    } b;                                         /*!< Structure used for bit access */
+    uint32_t d;                                  /*!< Type      used for register data access */
+} CIF_IINFO_MPFTCTL_Type;
 
 /**
  * \brief  Nuclei CPU INFO Structure For OpenOCD Usage

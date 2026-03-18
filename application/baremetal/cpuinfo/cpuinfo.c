@@ -65,6 +65,7 @@ static void show_cmo(CIF_IINFO_Type *iinfo);
 static void show_performance_cfg(CIF_IINFO_Type *iinfo);
 static void show_misc_cfg(CIF_IINFO_Type *iinfo);
 static void show_sec_cfg(CIF_IINFO_Type *iinfo);
+static void show_mpftctl(const CIF_IINFO_Type *iinfo);
 
 /**
  * Convert to human readable size with option
@@ -506,6 +507,8 @@ static void show_iregion(const CPU_INFO_Group *cpuinfo)
     show_performance_cfg(cpuinfo->iinfo);
     /* SEC_CFG_INFO */
     show_sec_cfg(cpuinfo->iinfo);
+    /* MPFTCTL */
+    show_mpftctl(cpuinfo->iinfo);
     /* MERGEL1DCTRL and ACCESS_CTRL */
     show_misc_cfg(cpuinfo->iinfo);
 }
@@ -863,6 +866,15 @@ static void show_sec_cfg(CIF_IINFO_Type *iinfo)
     } else {
         CIF_PRINTF("                  sec_cfg: absent\r\n");
     }
+}
+
+static void show_mpftctl(const CIF_IINFO_Type *iinfo)
+{
+    CIF_IINFO_MPFTCTL_Type mpftctl;
+    mpftctl.d = iinfo->mpftctl;
+    CIF_PRINTF("                  mpftctl: \r\n");
+    SHOW_VALUE(mpftctl, mpflvl);
+    SHOW_VALUE(mpftctl, mpfena);
 }
 
 static char *cvt_size_opt(uint32_t size, int lite)
