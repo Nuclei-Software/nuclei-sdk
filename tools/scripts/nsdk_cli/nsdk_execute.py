@@ -167,7 +167,8 @@ class nsdk_executor(nsdk_runner):
                     if merge_global:
                         app_buildcfg.update(appcfg.get("build_config", dict()))
                         app_runcfg.update(appcfg.get("run_config", dict()))
-                        app_checks.update(appcfg.get("checks", dict()))
+                        dict_merge(app_checks, appcfg.get("checks", dict()))
+
                         if "build_target" in appcfg:
                             app_buildtarget = appcfg["build_target"]
                         if "parallel" in appcfg:

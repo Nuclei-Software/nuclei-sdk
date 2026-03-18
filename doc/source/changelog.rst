@@ -199,6 +199,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Update test validation strings in application config files, replacing specific error messages like ``[ERROR]__TEE_PRESENT`` with generic ``must be defined`` strings for better consistency.
   - Move and enhance ``update_list_items`` function in ``nsdk_utils.py`` to merge unique elements from one list to another, and update ``dict_merge`` to handle merging of lists by combining unique elements using this function.
   - Remove ``appdirs_ignore`` key from ``finalruncfg`` in ``merge_app_hw_config`` function when the list is empty.
+  - Fix ``nsdk_bench.py`` and ``nsdk_execute.py`` to use ``dict_merge`` instead of ``dict.update`` for merging ``checks`` configuration (e.g., ``PASS``/``FAIL`` pattern lists), ensuring nested dictionary and list values are properly deep-merged instead of being replaced.
 
 * Components
 
