@@ -122,6 +122,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Fix FreeRTOS port macro interrupt masking implementation in ``portmacro.h`` to ensure pending interrupts are properly handled after enabling interrupts, preventing assertion failures from executing code before interrupt response
   - Fix RT-Thread and UCOSII interrupt masking implementation in ``cpuport.c`` and ``os_cpu_port.h`` to add memory barriers after CSR operations, ensuring pending interrupts are properly handled after enabling interrupts
   - Fix FreeRTOS tickless sleep mode by removing unnecessary ``__FENCE_I()`` call in ``vPortSuppressTicksAndSleep`` function to avoid i-cache misses and reduce interrupt latency. The ``__RWMB()`` memory barrier is sufficient for proper interrupt enable propagation
+  - Upgrade FreeRTOS to v11.2.0 and update porting layer to match new API requirements (critical nesting macros and recursive lock functions now accept core ID parameter for SMP systems)
 
 * Build System
 

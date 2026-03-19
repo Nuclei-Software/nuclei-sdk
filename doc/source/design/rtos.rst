@@ -44,7 +44,7 @@ In our FreeRTOS porting, we also allow FreeRTOS configuration variable
 ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` which can be find in https://www.freertos.org/a00110.html.
 
 The ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` should be set to be a
-absolute interrupt level range from 1 to (2^lvlbits-1) while ``lvlbits = min(nlbits, CLICINTCTLBITS)``.
+absolute interrupt level range from ``1`` to ``(2^lvlbits-1)`` while ``lvlbits = min(nlbits, CLICINTCTLBITS)``.
 
 If you set ``configMAX_SYSCALL_INTERRUPT_PRIORITY`` to value above the accepted
 value range, it will use the max value.
@@ -76,6 +76,7 @@ for details, please check ``OS/FreeRTOS/build.mk``.
 
 .. note::
 
+    * From 0.9.0, FreeRTOS version bumped from 11.1.0 to 11.2.0, FreeRTOS SMP port also updated to match changes.
     * From 0.9.0, when ``configMAX_SYSCALL_INTERRUPT_PRIORITY >= 255``, the FreeRTOS interrupt masking will
       use MSTATUS.MIE to disable/enable interrupts, otherwise it will use ECLIC MTH as before.
     * You can check the ``application\freertos\`` for freertos application reference

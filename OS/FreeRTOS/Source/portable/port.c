@@ -172,7 +172,7 @@ spin_lock_t hw_sync_locks[portRTOS_SPINLOCK_COUNT] = {0, 0};
 /* Note this is a single method with uxAcquire parameter since we have
 * static vars, the method is always called with a compile time constant for
 * uxAcquire, and the compiler should do the right thing! */
-void vPortRecursiveLock(unsigned long ulLockNum, spin_lock_t *pxSpinLock, BaseType_t uxAcquire)
+void vPortRecursiveLock(BaseType_t xCoreID, unsigned long ulLockNum, spin_lock_t *pxSpinLock, BaseType_t uxAcquire)
 {
     /* Track, per-core, which locks this core currently owns.          */
     static volatile uint8_t ucOwnedByCore[portMAX_CORE_COUNT];
@@ -180,7 +180,7 @@ void vPortRecursiveLock(unsigned long ulLockNum, spin_lock_t *pxSpinLock, BaseTy
     static volatile uint8_t ucRecursionCountByLock[portRTOS_SPINLOCK_COUNT];
 
     configASSERT(ulLockNum < portRTOS_SPINLOCK_COUNT);
-    unsigned long ulCoreNum = __get_hart_index();   /* ID of current hart  */
+    unsigned long ulCoreNum = xCoreID;   /* ID of current hart  */
     unsigned long ulLockBit = 1u << ulLockNum;      /* Bit mask for lock   */
     configASSERT(ulLockBit < 256u);
 
@@ -328,7 +328,7 @@ static void prvTaskExitError(void)
 
     Artificially force an assert() to be triggered if configASSERT() is
     defined, then stop here so application writers can catch the error. */
-    configASSERT(portGET_CRITICAL_NESTING_COUNT() == ~0UL);
+    configASSERT(portGET_CRITICAL_NESTING_COUNT( portGET_CORE_ID() ) == ~0UL);
     portDISABLE_INTERRUPTS();
     while (ulDummy == 0) {
         /* This file calls prvTaskExitError() after the scheduler has been
@@ -395,6 +395,7 @@ static uint8_t prvCalcMaxSysCallMTH(uint8_t max_syscall_prio)
  */
 BaseType_t xPortStartScheduler(void)
 {
+    BaseType_t xCoreID = ( BaseType_t ) portGET_CORE_ID();
 #if configMAX_SYSCALL_INTERRUPT_PRIORITY < 255
     /* configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to 0. */
     configASSERT(configMAX_SYSCALL_INTERRUPT_PRIORITY);
@@ -428,7 +429,7 @@ BaseType_t xPortStartScheduler(void)
 #endif
 
     /* Initialise the critical nesting count ready for the first task. */
-    portSET_CRITICAL_NESTING_COUNT(0);
+    portSET_CRITICAL_NESTING_COUNT( xCoreID, 0 );
 
     __RWMB();
 
@@ -452,7 +453,7 @@ BaseType_t xPortStartScheduler(void)
     vTaskSwitchContext() so link time optimisation does not remove the
     symbol. */
 #if ( configNUMBER_OF_CORES > 1 )
-    vTaskSwitchContext( portGET_CORE_ID() );
+    vTaskSwitchContext( xCoreID );
 #else
     vTaskSwitchContext();
 #endif
@@ -467,14 +468,15 @@ void vPortEndScheduler(void)
 {
     /* Not implemented in ports where there is nothing to return to.
     Artificially force an assert. */
-    configASSERT(portGET_CRITICAL_NESTING_COUNT() == 1000UL);
+    configASSERT(portGET_CRITICAL_NESTING_COUNT( portGET_CORE_ID() ) == 1000UL);
 }
 /*-----------------------------------------------------------*/
 
 void vPortEnterCritical(void)
 {
+    BaseType_t xCoreID = ( BaseType_t ) portGET_CORE_ID();
     portDISABLE_INTERRUPTS();
-    portINCREMENT_CRITICAL_NESTING_COUNT();
+    portINCREMENT_CRITICAL_NESTING_COUNT( xCoreID );
 
 #if configMAX_SYSCALL_INTERRUPT_PRIORITY < 255
     /* This is not the interrupt safe version of the enter critical function so
@@ -482,7 +484,7 @@ void vPortEnterCritical(void)
     functions that end in "FromISR" can be used in an interrupt.  Only assert if
     the critical nesting count is 1 to protect against recursive calls if the
     assert function also uses a critical section. */
-    if (portGET_CRITICAL_NESTING_COUNT() == 1) {
+    if (portGET_CRITICAL_NESTING_COUNT( xCoreID ) == 1) {
         configASSERT((__ECLIC_GetMth() & portMTH_MASK) == uxMaxSysCallMTH);
     }
 #endif
@@ -491,9 +493,10 @@ void vPortEnterCritical(void)
 
 void vPortExitCritical(void)
 {
-    configASSERT(portGET_CRITICAL_NESTING_COUNT());
-    portDECREMENT_CRITICAL_NESTING_COUNT();
-    if (portGET_CRITICAL_NESTING_COUNT() == 0) {
+    BaseType_t xCoreID = ( BaseType_t ) portGET_CORE_ID();
+    configASSERT(portGET_CRITICAL_NESTING_COUNT( xCoreID ));
+    portDECREMENT_CRITICAL_NESTING_COUNT( xCoreID );
+    if (portGET_CRITICAL_NESTING_COUNT( xCoreID ) == 0) {
         portENABLE_INTERRUPTS();
     }
 }
