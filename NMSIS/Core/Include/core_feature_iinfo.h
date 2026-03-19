@@ -349,7 +349,8 @@ typedef struct {
     uint32_t reserved3[2];                              /*!< offset 0x0078 */
     __IOM uint32_t mcppi_cfg_lo;                        /*!< offset 0x0080 */
     __IM uint32_t mcppi_cfg_hi;                         /*!< offset 0x0084 */
-    uint32_t reserved4[2];                              /*!< offset 0x0088 */
+    __IOM uint32_t mpftctl;                             /*!< offset 0x0088 */
+    uint32_t reserved4;                                 /*!< offset 0x008C */
     __IM IINFO_PERFORMANCE_CFG0_Type performance_cfg0;  /*!< offset 0x0090 */
     __IM IINFO_PERFORMANCE_CFG1_Type performance_cfg1;  /*!< offset 0x0094 */
     uint32_t reserved5[26];                             /*!< offset 0x0098 */
@@ -364,9 +365,20 @@ typedef struct {
     __IOM IINFO_PFL1DCTRL4_Type pfl1dctrl4;             /*!< offset 0x0124 */
     __IM IINFO_PFL1INFO_Type pfl1info;                  /*!< offset 0x0128 */
     uint32_t reserved8[27];                             /*!< offset 0x012C */
-    __IM uint32_t crc_rf0;                              /*!< offset 0x0198 */
-    __IM uint32_t crc_rf1;                              /*!< offset 0x019C */
-    __IM uint32_t crc_fp0;                              /*!< offset 0x01A0 */
+    __IOM uint32_t crc_rf0;                             /*!< offset 0x0198 */
+    __IOM uint32_t crc_rf1;                             /*!< offset 0x019C */
+    __IOM uint32_t crc_fp0;                             /*!< offset 0x01A0 */
+    __IM uint32_t etrace_info;                          /*!< offset 0x01A4 */
+    __IOM uint32_t ecc_inj_addr_lo;                     /*!< offset 0x01A8 */
+    __IOM uint32_t ecc_inj_addr_hi;                     /*!< offset 0x01AC */
+    __IOM uint32_t ecc_inj_way;                         /*!< offset 0x01B0 */
+    uint32_t reserved9[83];                             /*!< offset 0x01B4 */
+    __IOM uint32_t mem_crc_x22_lo;                      /*!< offset 0x0300 */
+    __IOM uint32_t mem_crc_x22_hi;                      /*!< offset 0x0304 */
+    __IOM uint32_t mem_crc_x23_lo;                      /*!< offset 0x0308 */
+    __IOM uint32_t mem_crc_x23_hi;                      /*!< offset 0x030C */
+    __IOM uint32_t mem_crc_f23_lo;                      /*!< offset 0x0310 */
+    __IOM uint32_t mem_crc_f23_hi;                      /*!< offset 0x0314 */
 } IINFO_Type;
 
 /* IREGION INFO Memory mapping of Device */
