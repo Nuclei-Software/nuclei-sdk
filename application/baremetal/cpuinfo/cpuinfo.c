@@ -839,6 +839,16 @@ static void show_misc_cfg(const CIF_IINFO_Type *iinfo)
     SHOW_VALUE(access_ctrl, pf_access);
     SHOW_VALUE(access_ctrl, cache_csr_access);
     SHOW_VALUE(access_ctrl, pma_csr_access);
+
+    uint32_t ecc_inj_addr_lo = iinfo->ecc_inj_addr_lo;
+    uint32_t ecc_inj_addr_hi = iinfo->ecc_inj_addr_hi;
+    uint64_t ecc_inj_addr = (uint64_t)ecc_inj_addr_hi << 32 | ecc_inj_addr_lo;
+    CIF_PRINTF("                      ecc_inj_addr=0x%" CIF_PRIxADDR "\r\n", (addr_t)ecc_inj_addr);
+    CIF_IINFO_ECC_INJ_WAY_Type ecc_inj_way;
+    ecc_inj_way.d = iinfo->ecc_inj_way;
+    SHOW_VALUE(ecc_inj_way, inject_way);
+    SHOW_VALUE(ecc_inj_way, security_mode);
+    SHOW_VALUE(ecc_inj_way, precise_ecc_inject);
 }
 
 static void show_sec_cfg(const CIF_IINFO_Type *iinfo)

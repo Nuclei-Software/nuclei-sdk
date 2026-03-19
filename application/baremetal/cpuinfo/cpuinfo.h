@@ -276,6 +276,9 @@ typedef struct {
     uint32_t crc_rf1;                            /*!< offset 0x019C */
     uint32_t crc_fp0;                            /*!< offset 0x01A0 */
     uint32_t etrace_info;                        /*!< offset 0x01A4 */
+    uint32_t ecc_inj_addr_lo;                    /*!< offset 0x01A8 */
+    uint32_t ecc_inj_addr_hi;                    /*!< offset 0x01AC */
+    uint32_t ecc_inj_way;                        /*!< offset 0x01B0 */
 } CIF_IINFO_Type;
 
 /**
@@ -719,6 +722,22 @@ typedef union {
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
 } CIF_IINFO_ETRACE_INFO_Type;
+
+/**
+ * \brief  Union type to access ECC_INJ_WAY register.
+ */
+typedef union {
+    struct {
+        uint32_t inject_way:8;                   /*!< bit: 0..7 each bit corresponds to a way, when the bit is set to 1, the corresponding way supports precise ecc inject mode */
+        uint32_t :22;                            /*!< bit: 8..29 reserved */
+        uint32_t security_mode:1;                /*!< bit: 30 indicate the current security mode, 0 for sec mode, 1 for non-sec mode */
+        uint32_t precise_ecc_inject:1;           /*!< bit: 31 rtl support the feature of precise ecc inject */
+    } b;                                         /*!< Structure used for bit access */
+    uint32_t d;                                  /*!< Type      used for register data access */
+} CIF_IINFO_ECC_INJ_WAY_Type;
+
+typedef uint32_t CIF_IINFO_ECC_INJ_ADDR_LO_Type;
+typedef uint32_t CIF_IINFO_ECC_INJ_ADDR_HI_Type;
 
 /**
  * \brief  Nuclei CPU INFO Structure For OpenOCD Usage
