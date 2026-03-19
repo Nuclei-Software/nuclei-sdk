@@ -279,6 +279,13 @@ typedef struct {
     uint32_t ecc_inj_addr_lo;                    /*!< offset 0x01A8 */
     uint32_t ecc_inj_addr_hi;                    /*!< offset 0x01AC */
     uint32_t ecc_inj_way;                        /*!< offset 0x01B0 */
+    uint32_t reserved9[83];                      /*!< offset 0x01B4 */
+    uint32_t mem_crc_x22_lo;                     /*!< offset 0x0300 */
+    uint32_t mem_crc_x22_hi;                     /*!< offset 0x0304 */
+    uint32_t mem_crc_x23_lo;                     /*!< offset 0x0308 */
+    uint32_t mem_crc_x23_hi;                     /*!< offset 0x030C */
+    uint32_t mem_crc_f23_lo;                     /*!< offset 0x0310 */
+    uint32_t mem_crc_f23_hi;                     /*!< offset 0x0314 */
 } CIF_IINFO_Type;
 
 /**
