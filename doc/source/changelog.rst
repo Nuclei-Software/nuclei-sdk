@@ -54,6 +54,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add missing FCSR(Floating-Point Control and Status Register) save/restore functionality to FPU context handling macros ``SAVE_FPU_CONTEXT`` and ``RESTORE_FPU_CONTEXT`` in ``core_feature_fpu.h``
   - Add ``i_share_dlm`` bit field to ``CSR_MICFGINFO_Type`` structure in ``core_feature_base.h`` and display this information in the cpuinfo application.
   - Sync NMSIS 1.5.0 Core/DSP/NN header files, ``build.mk``, ``npk.yml`` and prebuilt DSP and NN libraries; for changes related to DSP/NN libraries, please refer to the NMSIS changelog.
+  - Update ``IINFO_Type`` in ``core_feature_iinfo.h``. Add ``mpfctl``, ``etrace_info``, precise ECC and mem_crc related registers.
 
 * Application
 
@@ -93,6 +94,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Fix documentation to correctly state that Nuclei Studio IDE supports both GCC and LLVM/Clang gcov format coverage visualization
   - Remove ``nuclei_cache`` npk configuration from ``demo_cache``, ``demo_cidu``, ``demo_ecc``, ``demo_pma``, ``demo_smpcc``, and ``smphello`` applications ``npk.yml`` since it is now deprecated
   - Add ``get_cpu_feature`` in ``cpuinfo`` to list CPU features for the future hardware ci testing.
+  - Add register type definitions of ``mpfctl``, ``etrace_info``, precise ECC related registers and show these information in ``cpuinfo``
 
 * Build System
 

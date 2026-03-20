@@ -147,7 +147,7 @@ You can also use openocd to probe the cpu feature, see https://doc.nucleisys.com
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Sep 23 2025, 09:41:30
+    Nuclei SDK Build Time: Mar 20 2026, 12:41:32
     Download Mode: SRAM
     CPU Frequency 50327388 Hz
     CPU HartID: 0
@@ -233,6 +233,13 @@ You can also use openocd to probe the cpu feature, see https://doc.nucleisys.com
                           agu_quick_forward=1
                           cau_fwd=0
                           hpm_ver=2
+                      sec_cfg: absent
+                      mpftctl:
+                          mpflvl=0
+                          mpfena=0
+                      etrace_info: present
+                          version=2.0
+                          data_trace=1
                       misc:
                           ws_tmout_max=767
                           nc_tmout_max=0
@@ -241,6 +248,10 @@ You can also use openocd to probe the cpu feature, see https://doc.nucleisys.com
                           pf_access=0
                           cache_csr_access=0
                           pma_csr_access=0
+                          ecc_inj_addr=0x0
+                          inject_way=0
+                          security_mode=0
+                          precise_ecc_inject=0
     -----End of Nuclei CPU INFO-----
 
 .. _design_app_demo_timer:
