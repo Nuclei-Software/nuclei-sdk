@@ -25,6 +25,7 @@
  ******************************************************************************/
 
 #include "riscv_encoding.h"
+#include "cpufeature.h"
 
 DISABLE_SIE MACRO
   csrci CSR_SSTATUS, MSTATUS_SIE

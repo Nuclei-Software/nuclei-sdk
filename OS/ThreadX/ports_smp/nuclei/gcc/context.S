@@ -1,4 +1,5 @@
 #include "riscv_encoding.h"
+#include "cpufeature.h"
 
 #ifndef __riscv_32e
 #define portRegNum          32

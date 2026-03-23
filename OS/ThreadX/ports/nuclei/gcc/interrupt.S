@@ -1,4 +1,5 @@
 #include "riscv_encoding.h"
+#include "cpufeature.h"
 
 .section    .text.entry
 .align 8

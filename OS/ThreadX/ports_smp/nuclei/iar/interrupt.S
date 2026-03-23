@@ -1,4 +1,5 @@
 #include "riscv_encoding.h"
+#include "cpufeature.h"
 
 DISABLE_MIE MACRO
   csrci CSR_MSTATUS, MSTATUS_MIE

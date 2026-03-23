@@ -9,6 +9,7 @@
  */
 
 #include "riscv_encoding.h"
+#include "cpufeature.h"
 
 /* see https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-cc.adoc */
 #ifndef __riscv_32e
