@@ -176,6 +176,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add ``icount_opt`` configuration option in ``SoC/evalsoc/Board/nuclei_fpga_eval/npk.yml`` to support QEMU instruction count timing emulation with flexible shift options
   - Add fallback to ``CLINT_Interrupt_Init()`` in ``Interrupt_Init`` function when neither ECLIC nor PLIC is present in evalsoc
   - Add S-mode trap vector base address (``stvec``) initialization in ``ECLIC_Interrupt_Init()`` when ``__SMODE_PRESENT`` is defined to properly set up S-mode exception entry point
+  - Update ``Exception_DumpFrame`` function signature in ``gd32vf103`` and ``gd32vw55x`` SoC to add ``mode`` parameter for indicating the privilege mode context, aligning with the ``evalsoc`` implementation
 
 * Documentation
 

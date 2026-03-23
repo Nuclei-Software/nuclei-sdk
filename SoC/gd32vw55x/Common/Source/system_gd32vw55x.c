@@ -647,7 +647,7 @@ static void system_default_exception_handler(unsigned long mcause, unsigned long
     printf("MCAUSE: 0x%lx\r\n", mcause);
     printf("MEPC  : 0x%lx\r\n", __RV_CSR_READ(CSR_MEPC));
     printf("MTVAL : 0x%lx\r\n", __RV_CSR_READ(CSR_MTVAL));
-    Exception_DumpFrame(sp);
+    Exception_DumpFrame(sp, PRV_M);
     while (1);
 }
 
@@ -760,7 +760,7 @@ void ECLIC_Init(void)
  * \details
  * This function provided feature to dump exception frame stored in stack.
  */
-void Exception_DumpFrame(unsigned long sp)
+void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 {
     EXC_Frame_Type *exc_frame = (EXC_Frame_Type *)sp;
 

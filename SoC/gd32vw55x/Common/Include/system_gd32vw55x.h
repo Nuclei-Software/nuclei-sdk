@@ -89,7 +89,7 @@ extern void SystemCoreClockUpdate(void);
 /**
  * \brief Dump Exception Frame
  */
-void Exception_DumpFrame(unsigned long sp);
+void Exception_DumpFrame(unsigned long sp, uint8_t mode);
 
 /**
  * \brief Register an exception handler for exception code EXCn
