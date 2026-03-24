@@ -8,6 +8,13 @@
 #define SMODE_STACK_SIZE        2048
 #define UMODE_STACK_SIZE        SMODE_STACK_SIZE
 
+// Shared code region: Execute only on both S and U mode
+#define S_U_EXECUTE_ONLY        SMPU_S | SMPU_W
+// Shared code region: Execute only on U mode, read/execute on S mode
+#define S_U_EXECUTE_S_READ      SMPU_S | SMPU_W | SMPU_X
+// Shared data region: Read/write for both S and U mode
+#define S_U_READ_WRITE          SMPU_W | SMPU_X
+
 extern char ILM_MEMORY_BASE[], ILM_MEMORY_SIZE[], DLM_MEMORY_BASE[], DLM_MEMORY_SIZE[], DDR_MEMORY_BASE[], DDR_MEMORY_SIZE[], DDR_MEMORY_ROM_SIZE[], FLASH_MEMORY_BASE[],
             FLASH_MEMORY_SIZE[], SRAM_MEMORY_BASE[], SRAM_MEMORY_SIZE[], SRAM_MEMORY_ROM_SIZE[];
 
@@ -168,43 +175,43 @@ int main(void)
         // this demo grant S and U the same permissions with memory range as big as possible, and can't be used as a practical reference
 
         /* Configuration of S and U shared r/w region:0x0 ~ 0x1FFF FFFF, containing peripheral device range like uart*/
-        smpu_config_rw1.protection = SMPU_W | SMPU_X | SMPU_A_NAPOT;
+        smpu_config_rw1.protection = S_U_READ_WRITE | SMPU_A_NAPOT;
         smpu_config_rw1.order = 29;
         smpu_config_rw1.base_addr = 0;
 
         if (DOWNLOAD_MODE == DOWNLOAD_MODE_FLASH || DOWNLOAD_MODE == DOWNLOAD_MODE_ILM) {
             /* Configuration of S and U shared code region: 0x2000 0000 ~ 0x207F FFFF, containing flash */
-            smpu_config_x1.protection = SMPU_S | SMPU_W | SMPU_X | SMPU_A_NAPOT;
+            smpu_config_x1.protection = S_U_EXECUTE_S_READ | SMPU_A_NAPOT;
             smpu_config_x1.order = __CTZ((unsigned long)FLASH_MEMORY_SIZE);
             smpu_config_x1.base_addr = (unsigned long)FLASH_MEMORY_BASE;
 
             /* Configuration of S and U shared code region: 0x8000 0000 ~ 0x8FFF FFFF, containing ilm */
-            smpu_config_x2.protection = SMPU_S | SMPU_W | SMPU_A_NAPOT;
+            smpu_config_x2.protection = S_U_EXECUTE_ONLY | SMPU_A_NAPOT;
             smpu_config_x2.order = __CTZ((unsigned long)ILM_MEMORY_SIZE);
             smpu_config_x2.base_addr = (unsigned long)ILM_MEMORY_BASE;
 
             /* Configuration of S and U shared r/w region:0x9000 0000 ~ 0x9FFF FFFF, containing dlm */
-            smpu_config_rw2.protection = SMPU_W | SMPU_X | SMPU_A_NAPOT;
+            smpu_config_rw2.protection = S_U_READ_WRITE | SMPU_A_NAPOT;
             smpu_config_rw2.order = __CTZ((unsigned long)DLM_MEMORY_SIZE);
             smpu_config_rw2.base_addr = (unsigned long)DLM_MEMORY_BASE;
         } else if (DOWNLOAD_MODE == DOWNLOAD_MODE_SRAM) {
             /* Configuration of S and U shared code region: 0xA000 0000 ~ 0x7FF FFFF, containing sram */
-            smpu_config_x2.protection = SMPU_S | SMPU_W | SMPU_A_NAPOT;
+            smpu_config_x2.protection = S_U_EXECUTE_ONLY | SMPU_A_NAPOT;
             smpu_config_x2.order = __CTZ((unsigned long)SRAM_MEMORY_ROM_SIZE);
             smpu_config_x2.base_addr = (unsigned long)SRAM_MEMORY_BASE;
 
             /* Configuration of S and U shared data region: 0xA800 0000 ~ 0xAFFF FFFF, containing ddr */
-            smpu_config_rw2.protection = SMPU_W | SMPU_X | SMPU_A_NAPOT;
+            smpu_config_rw2.protection = S_U_READ_WRITE | SMPU_A_NAPOT;
             smpu_config_rw2.order = __CTZ((unsigned long)SRAM_MEMORY_SIZE - (unsigned long)SRAM_MEMORY_ROM_SIZE);
             smpu_config_rw2.base_addr = (unsigned long)SRAM_MEMORY_BASE + (unsigned long)SRAM_MEMORY_ROM_SIZE;
         } else if (DOWNLOAD_MODE == DOWNLOAD_MODE_DDR) {
             /* Configuration of S and U shared code region: 0xA000 0000 ~ 0x7FF FFFF, containing ddr */
-            smpu_config_x2.protection = SMPU_S | SMPU_W | SMPU_A_NAPOT;
+            smpu_config_x2.protection = S_U_EXECUTE_ONLY | SMPU_A_NAPOT;
             smpu_config_x2.order = __CTZ((unsigned long)DDR_MEMORY_ROM_SIZE);
             smpu_config_x2.base_addr = (unsigned long)DDR_MEMORY_BASE;
 
             /* Configuration of S and U shared data region: 0xA800 0000 ~ 0xAFFF FFFF, containing ddr */
-            smpu_config_rw2.protection = SMPU_W | SMPU_X | SMPU_A_NAPOT;
+            smpu_config_rw2.protection = S_U_READ_WRITE | SMPU_A_NAPOT;
             smpu_config_rw2.order = __CTZ((unsigned long)DDR_MEMORY_SIZE - (unsigned long)DDR_MEMORY_ROM_SIZE);
             smpu_config_rw2.base_addr = (unsigned long)DDR_MEMORY_BASE + (unsigned long)DDR_MEMORY_ROM_SIZE;
 
