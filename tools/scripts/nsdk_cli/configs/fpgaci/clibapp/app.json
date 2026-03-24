@@ -103,6 +103,13 @@
                 "PASS": ["software interrupt hit 5 times"]
             }
         },
+        "application/baremetal/demo_backtrace": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["Test completed"],
+                "FAIL": ["MEPC", "ERROR"]
+            }
+        },
         "application/baremetal/demo_plic": {
             "build_config" : {"XLCFG_PLIC": "1"},
             "checks": {
