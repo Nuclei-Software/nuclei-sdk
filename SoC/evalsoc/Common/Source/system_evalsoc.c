@@ -303,7 +303,7 @@ static unsigned long SystemSExtInterruptHandlers[__PLIC_INTNUM];
  * \details
  * This function provided feature to dump exception frame stored in stack.
  * \param [in]  sp    stackpoint
- * \param [in]  mode  privileged mode to decide whether to dump msubm CSR
+ * \param [in]  mode  privileged mode
  */
 void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 {
@@ -315,27 +315,23 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 #ifndef __riscv_32e
     NSDK_DEBUG("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx, t3: 0x%lx, t4: 0x%lx, t5: 0x%lx, t6: 0x%lx\n" \
            "a0: 0x%lx, a1: 0x%lx, a2: 0x%lx, a3: 0x%lx, a4: 0x%lx, a5: 0x%lx, a6: 0x%lx, a7: 0x%lx\n" \
-           "cause: 0x%lx, epc: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
+           "cause: 0x%lx, epc: 0x%lx, subm: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
            exc_frame->t1, exc_frame->t2, exc_frame->t3, exc_frame->t4, exc_frame->t5, exc_frame->t6, \
            exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, exc_frame->a4, exc_frame->a5, \
-           exc_frame->a6, exc_frame->a7, exc_frame->cause, exc_frame->epc);
+           exc_frame->a6, exc_frame->a7, exc_frame->cause, exc_frame->epc, exc_frame->subm);
 #else
     NSDK_DEBUG("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx\n" \
            "a0: 0x%lx, a1: 0x%lx, a2: 0x%lx, a3: 0x%lx, a4: 0x%lx, a5: 0x%lx\n" \
-           "cause: 0x%lx, epc: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
+           "cause: 0x%lx, epc: 0x%lx, subm: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
            exc_frame->t1, exc_frame->t2, exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, \
-           exc_frame->a4, exc_frame->a5, exc_frame->cause, exc_frame->epc);
+           exc_frame->a4, exc_frame->a5, exc_frame->cause, exc_frame->epc, exc_frame->subm);
 #endif
 
-    if (PRV_M == mode) {
-        /* msubm is exclusive to machine mode */
-        NSDK_DEBUG("msubm: 0x%lx\n", exc_frame->msubm);
 #if defined(CPU_SERIES) && CPU_SERIES == 100
-        if (__RV_CSR_READ(CSR_MTIME) != 0 && __RV_CSR_READ(CSR_MIRGB_INFO) == 0) {
-            NSDK_DEBUG("ERROR: you are using nuclei sdk for n100 with IRQC controller, please use nuclei n100 sdk!\n");
-        }
-#endif
+    if (__RV_CSR_READ(CSR_MTIME) != 0 && __RV_CSR_READ(CSR_MIRGB_INFO) == 0) {
+        NSDK_DEBUG("ERROR: you are using nuclei sdk for n100 with IRQC controller, please use nuclei n100 sdk!\n");
     }
+#endif
 #endif
 }
 

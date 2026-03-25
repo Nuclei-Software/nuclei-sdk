@@ -178,6 +178,9 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Add fallback to ``CLINT_Interrupt_Init()`` in ``Interrupt_Init`` function when neither ECLIC nor PLIC is present in evalsoc
   - Add S-mode trap vector base address (``stvec``) initialization in ``ECLIC_Interrupt_Init()`` when ``__SMODE_PRESENT`` is defined to properly set up S-mode exception entry point
   - Update ``Exception_DumpFrame`` function signature in ``gd32vf103`` and ``gd32vw55x`` SoC to add ``mode`` parameter for indicating the privilege mode context, aligning with the ``evalsoc`` implementation
+  - Rename ``msubm`` field to ``subm`` in ``EXC_Frame`` structure across ``evalsoc``, ``gd32vf103`` and ``gd32vw55x`` SoC to better reflect it represents SUBM CSR for both machine and supervisor modes
+  - Update ``Exception_DumpFrame`` in ``evalsoc`` to always dump ``subm`` CSR regardless of privilege mode and simplify N100 IRQC detection logic
+  - Update comments in ``EXC_Frame`` structure across all SoC implementations to indicate ``cause``, ``epc`` and ``subm`` fields apply to both machine/supervisor modes
 
 * Documentation
 

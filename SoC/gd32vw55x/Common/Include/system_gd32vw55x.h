@@ -58,9 +58,9 @@ typedef struct EXC_Frame {
     unsigned long a3;                /* a3: x13, function argument 3 */
     unsigned long a4;                /* a4: x14, function argument 4 */
     unsigned long a5;                /* a5: x15, function argument 5 */
-    unsigned long cause;             /* cause: machine cause csr register */
-    unsigned long epc;               /* epc: machine exception program counter csr register */
-    unsigned long msubm;             /* msubm: machine sub-mode csr register, nuclei customized */
+    unsigned long cause;             /* cause: machine/supervisor cause csr register */
+    unsigned long epc;               /* epc: machine/supervisor exception program counter csr register */
+    unsigned long subm;              /* subm: machine/supervisor sub-mode csr register, nuclei customized */
 #ifndef __riscv_32e
     unsigned long a6;                /* a6: x16, function argument 6 */
     unsigned long a7;                /* a7: x17, function argument 7 */

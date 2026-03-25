@@ -1226,16 +1226,16 @@ void Exception_DumpFrame(unsigned long sp, uint8_t mode)
 #ifndef __riscv_32e
     printf("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx, t3: 0x%lx, t4: 0x%lx, t5: 0x%lx, t6: 0x%lx\n" \
            "a0: 0x%lx, a1: 0x%lx, a2: 0x%lx, a3: 0x%lx, a4: 0x%lx, a5: 0x%lx, a6: 0x%lx, a7: 0x%lx\n" \
-           "mcause: 0x%lx, mepc: 0x%lx, msubm: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
+           "cause: 0x%lx, epc: 0x%lx, subm: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
            exc_frame->t1, exc_frame->t2, exc_frame->t3, exc_frame->t4, exc_frame->t5, exc_frame->t6, \
            exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, exc_frame->a4, exc_frame->a5, \
-           exc_frame->a6, exc_frame->a7, exc_frame->cause, exc_frame->epc, exc_frame->msubm);
+           exc_frame->a6, exc_frame->a7, exc_frame->cause, exc_frame->epc, exc_frame->subm);
 #else
     printf("ra: 0x%lx, tp: 0x%lx, t0: 0x%lx, t1: 0x%lx, t2: 0x%lx\n" \
            "a0: 0x%lx, a1: 0x%lx, a2: 0x%lx, a3: 0x%lx, a4: 0x%lx, a5: 0x%lx\n" \
-           "mcause: 0x%lx, mepc: 0x%lx, msubm: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
+           "cause: 0x%lx, epc: 0x%lx, subm: 0x%lx\n", exc_frame->ra, exc_frame->tp, exc_frame->t0, \
            exc_frame->t1, exc_frame->t2, exc_frame->a0, exc_frame->a1, exc_frame->a2, exc_frame->a3, \
-           exc_frame->a4, exc_frame->a5, exc_frame->cause, exc_frame->epc, exc_frame->msubm);
+           exc_frame->a4, exc_frame->a5, exc_frame->cause, exc_frame->epc, exc_frame->subm);
 #endif
 }
 
