@@ -95,6 +95,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Remove ``nuclei_cache`` npk configuration from ``demo_cache``, ``demo_cidu``, ``demo_ecc``, ``demo_pma``, ``demo_smpcc``, and ``smphello`` applications ``npk.yml`` since it is now deprecated
   - Add ``get_cpu_feature`` in ``cpuinfo`` to list CPU features for the future hardware ci testing.
   - Add register type definitions of ``mpfctl``, ``etrace_info``, precise ECC related registers and show these information in ``cpuinfo``
+  - Add new application :ref:`design_app_demo_backtrace` to demonstrate RISC-V frame pointer based stack backtrace via exception handler with detailed frame information and addr2line hints
 
 * Build System
 
@@ -205,6 +206,7 @@ This is release version of ``0.9.0`` of Nuclei SDK, which is still under develop
   - Move and enhance ``update_list_items`` function in ``nsdk_utils.py`` to merge unique elements from one list to another, and update ``dict_merge`` to handle merging of lists by combining unique elements using this function.
   - Remove ``appdirs_ignore`` key from ``finalruncfg`` in ``merge_app_hw_config`` function when the list is empty.
   - Fix ``nsdk_bench.py`` and ``nsdk_execute.py`` to use ``dict_merge`` instead of ``dict.update`` for merging ``checks`` configuration (e.g., ``PASS``/``FAIL`` pattern lists), ensuring nested dictionary and list values are properly deep-merged instead of being replaced.
+  - Add ``demo_backtrace`` to nsdk_cli CI test configurations for both baremetal and FPGA CI test suites
 
 * Components
 

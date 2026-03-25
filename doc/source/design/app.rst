@@ -731,6 +731,194 @@ This `demo_eclic_stress application`_ is used to validate the functionality of t
     [S] eclic_int37_handler - vector (level 1) run 100 times done!
     [S] PASS: All smode_eclic_int_cnt and mmode_eclic_int_cnt values are equal and greater than 100
 
+.. _design_app_demo_backtrace:
+
+demo_backtrace
+~~~~~~~~~~~~~~
+
+This `demo_backtrace application`_ demonstrates RISC-V stack backtrace functionality using frame pointer-based stack unwinding. It provides a lightweight, debug-info-free mechanism for tracing exception call chains in embedded RISC-V systems.
+
+**Key Features:**
+
+- **Frame Pointer-Based Unwinding**: Uses the RISC-V frame pointer (s0/fp) chain to walk the stack, requiring no DWARF debug information
+- **CFA Convention**: Follows the Canonical Frame Address convention where the frame pointer points to the stack pointer value at function entry
+- **Exception Handler Integration**: Automatically prints backtrace when an illegal instruction exception occurs
+- **Addr2Line Support**: Outputs a ready-to-use command for symbol resolution on the host PC
+- **Bounds Checking**: Implements safe stack unwinding with stack bounds validation to prevent memory access violations
+
+**How it Works:**
+
+1. The application registers an illegal instruction exception handler
+2. A call chain is established: ``main()`` → ``level1()`` → ``level2()`` → ``trigger_illegal()``
+3. An illegal instruction (``.word 0``) is deliberately executed to trigger an exception
+4. The exception handler captures the frame pointer and prints the backtrace
+5. The backtrace shows the complete call chain from the exception handler back to ``main()``
+
+**Frame Layout Convention:**
+
+The implementation follows this frame pointer convention (for RV64):
+
+.. code-block:: text
+
+    High Address
+      +------------------+
+      | Caller's stack   |
+      +------------------+  <- CFA (Current fp points here)
+      | saved ra         |  <- CFA - 8 bytes (Return Address)
+      | saved fp (prev)  |  <- CFA - 16 bytes (Previous Frame Pointer)
+      +------------------+
+      | Local variables  |
+      +------------------+  <- sp (current stack pointer)
+    Low Address
+
+The backtrace unwinds by:
+1. Reading RA from ``(fp - 8)``
+2. Reading previous FP from ``(fp - 16)``
+3. Repeating until FP is zero or invalid
+
+.. note::
+
+    - **Compilation Requirement**: This application MUST be compiled with ``-fno-omit-frame-pointer`` to ensure frame pointers are preserved in the stack frames
+    - **Optimization**: The application uses ``-O0`` optimization level to ensure consistent frame pointer behavior
+    - **Noinline Functions**: The test functions use ``__attribute__((noinline))`` to guarantee each function has its own stack frame
+    - **Nested Exception Testing**: The demo re-triggers the illegal instruction multiple times to test nested exception handling
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_backtrace directory
+    cd application/baremetal/demo_backtrace
+    # Clean the application first
+    make SOC=evalsoc CORE=nx900fd clean
+    # Build and upload the application
+    make SOC=evalsoc CORE=nx900fd upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Mar 23 2026, 18:50:45
+    Download Mode: ILM
+    CPU Frequency 50318213 Hz
+    CPU HartID: 0
+    RISC-V Backtrace Test (FP=CFA Convention)
+    Stack Top ( @_sp): 0x90010000
+    Calling chain: level1() -> level2() -> trigger_illegal()...
+    Inside level1, calling level2...
+    Inside level2, calling trigger_illegal...
+    About to execute illegal instruction in trigger_illegal()...
+
+    === ILLEGAL INSTRUCTION EXCEPTION ===
+    mcause = 2 (expected 2), triggered 1 times
+
+    === ILLEGAL INSTRUCTION EXCEPTION ===
+    mcause = 2 (expected 2), triggered 2 times
+
+    --- Starting Backtrace ---
+    === Exception Frame Information ===
+    ra: 0x8000104c, tp: 0x900006a8, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
+    a0: 0x2b, a1: 0xa, a2: 0x2b, a3: 0x2b, a4: 0x800010c0, a5: 0x9000ff20, a6: 0xa, a7: 0x0
+    cause: 0x30000002, epc: 0x8000106c
+    msubm: 0x280
+
+    === Stack Backtrace ===
+    SP (current): 0x9000fd60
+
+    Backtrace:
+    #0  RA=0x80000b90, CFA=0x9000fdf0
+    #1  RA=0x8000037a, CFA=0x9000fe20
+    #2  RA=0x80000b90, CFA=0x9000fef0
+    #3  RA=0x8000037a, CFA=0x9000ff20
+    #4  RA=0x800010e0, CFA=0x9000ffd0
+    #5  RA=0x800010fe, CFA=0x9000ffe0
+    #6  RA=0x80001144, CFA=0x9000fff0
+
+    [Addr2Line Hint] Run the following command on PC:
+    riscv64-unknown-elf-addr2line -pfiaC -e *.elf 0x8000106c 0x80000b90 0x8000037a 0x80000b90 0x8000037a 0x800010e0 0x800010fe 0x80001144
+
+    --- End of Backtrace ---
+    === Test completed. Halting. ===
+
+**Symbol Resolution:**
+
+To resolve the backtrace addresses to source code locations, run the addr2line command shown in the output on your host PC:
+
+.. code-block:: shell
+
+    riscv64-unknown-elf-addr2line -pfiaC -e *.elf 0x8000106c 0x80000b90 0x8000037a 0x80000b90 0x8000037a 0x800010e0 0x800010fe 0x80001144
+
+This will output the function names and source file locations:
+
+.. code-block:: text
+
+   0x000000008000106c: illegal_handler at nuclei-sdk/application/baremetal/demo_backtrace/main.c:106
+   0x0000000080000b90: core_exception_handler at nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/system_evalsoc.c:454
+   0x000000008000037a: exc_entry at nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S:204
+   0x0000000080000b90: core_exception_handler at nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/system_evalsoc.c:454
+   0x000000008000037a: exc_entry at nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S:204
+   0x00000000800010e0: level2 at nuclei-sdk/application/baremetal/demo_backtrace/main.c:145
+   0x00000000800010fe: level1 at nuclei-sdk/application/baremetal/demo_backtrace/main.c:154
+   0x0000000080001144: main at nuclei-sdk/application/baremetal/demo_backtrace/main.c:170
+
+
+The backtrace shows:
+
+**First entry (0x8000106c)**: This is the EPC (Exception Program Counter) value from the exception frame, pointing to the exact location where the illegal instruction occurred (``illegal_handler`` at main.c:106). This address is printed first in the addr2line command to indicate the faulting instruction.
+
+**The following entries show the call chain**:
+
+- **#0-#3**: Exception handler entry (exc_entry → core_exception_handler, repeated for nested exception)
+- **#4**: ``level2()`` function (caller of ``trigger_illegal()``)
+- **#5**: ``level1()`` function (caller of ``level2()``)
+- **#6**: ``main()`` function (entry point)
+
+**API Usage:**
+
+The backtrace functionality is provided by two main functions in ``riscv_backtrace.c``:
+
+.. code-block:: c
+
+    /* Capture stack frames into an array */
+    int riscv_backtrace_frames(unsigned long fp, backtrace_frame_t *frames,
+                               int max_depth, unsigned long stack_top,
+                               size_t stack_size);
+
+    /* Print human-readable backtrace with exception frame info */
+    void riscv_backtrace_print(unsigned long fp, unsigned long stack_top,
+                               size_t stack_size, unsigned long exc_sp,
+                               uint8_t mode);
+
+**Example usage in an exception handler:**
+
+.. code-block:: c
+
+    void exception_handler(unsigned long mcause, unsigned long sp) {
+        unsigned long fp;
+        asm volatile ("mv %0, s0" : "=r"(fp));
+        extern char _sp;  /* Stack top from linker script */
+        size_t stack_size = 2048;
+
+        /* Print backtrace with exception frame information */
+        riscv_backtrace_print(fp, (unsigned long)&_sp, stack_size, sp, PRV_M);
+    }
+
+**Configuration Macros:**
+
+The following macros can be customized in ``riscv_backtrace.h``:
+
+.. list-table:: Backtrace Configuration Macros
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Macro
+     - Description
+   * - ``BACKTRACE_PRINT_FN``
+     - Print function used for output (default: ``printf``). Override to use custom UART printf.
+   * - ``BACKTRACE_MAX_DEPTH``
+     - Maximum number of frames to unwind (default: 16). Reduce to save stack space.
+
 .. _design_app_demo_plic:
 
 demo_plic
@@ -3210,7 +3398,7 @@ M mode to S mode, then from S mode to U mode
 
     * If CPU has no S-mode, then M-mode will switch U-mode entry directly, and no delegation to S-mode will take effect
 
-    * For simplicity to show U mode's exception and delegation to S mode, this demo grant S and U the same permissions with memory range as big as possible, 
+    * For simplicity to show U mode's exception and delegation to S mode, this demo grant S and U the same permissions with memory range as big as possible,
       and can't be used as a practical reference
 
     * SMPU entries depends on nuclei evalsoc's linker script memory map such as ILM/DLM/SRAM/DDR/FLASH 's base address and rom/ram size, which if modified should be taken into
@@ -3815,6 +4003,7 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx smpdemo`` applic
 .. _demo_clint_timer application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_clint_timer
 .. _demo_eclic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic
 .. _demo_eclic_stress application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_eclic_stress
+.. _demo_backtrace application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_backtrace
 .. _demo_plic application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_plic
 .. _demo_dsp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_dsp
 .. _smphello application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/smphello
