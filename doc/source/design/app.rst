@@ -799,47 +799,48 @@ The backtrace unwinds by:
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Mar 23 2026, 18:50:45
-    Download Mode: ILM
-    CPU Frequency 50318213 Hz
-    CPU HartID: 0
-    RISC-V Backtrace Test (FP=CFA Convention)
-    Stack Top ( @_sp): 0x90010000
-    Calling chain: level1() -> level2() -> trigger_illegal()...
-    Inside level1, calling level2...
-    Inside level2, calling trigger_illegal...
-    About to execute illegal instruction in trigger_illegal()...
+   Nuclei SDK Build Time: Mar 26 2026, 10:38:06
+   Download Mode: ILM
+   CPU Frequency 50316574 Hz
+   CPU HartID: 0
+   RISC-V Backtrace Test (FP=CFA Convention)
+   Stack Top (@_sp): 0x90010000
+   Calling chain: level1() -> level2() -> trigger_illegal()...
+   Inside level1, calling level2...
+   Inside level2, calling trigger_illegal...
+   About to execute illegal instruction in trigger_illegal()...
 
-    === ILLEGAL INSTRUCTION EXCEPTION ===
-    mcause = 2 (expected 2), triggered 1 times
+   === ILLEGAL INSTRUCTION EXCEPTION ===
+   mcause = 2 (expected 2), triggered 1 times
 
-    === ILLEGAL INSTRUCTION EXCEPTION ===
-    mcause = 2 (expected 2), triggered 2 times
+   === ILLEGAL INSTRUCTION EXCEPTION ===
+   mcause = 2 (expected 2), triggered 2 times
 
-    --- Starting Backtrace ---
-    === Exception Frame Information ===
-    ra: 0x8000104c, tp: 0x900006a8, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
-    a0: 0x2b, a1: 0xa, a2: 0x2b, a3: 0x2b, a4: 0x800010c0, a5: 0x9000ff20, a6: 0xa, a7: 0x0
-    cause: 0x30000002, epc: 0x8000106c
-    msubm: 0x280
+   --- Starting Backtrace ---
+   === Exception Frame Information ===
+   Mode: M-Mode, Exception: 2 - Illegal instruction, Type: Synchronous
+   ra: 0x8000103c, tp: 0x90000ac8, t0: 0x8, t1: 0xf, t2: 0x0, t3: 0x0, t4: 0x0, t5: 0x0, t6: 0x0
+   a0: 0x2b, a1: 0xa, a2: 0x2b, a3: 0x2b, a4: 0x800010b0, a5: 0x9000ff10, a6: 0xa, a7: 0x0
+   cause: 0x30000002, epc: 0x8000105c, subm: 0x280
 
-    === Stack Backtrace ===
-    SP (current): 0x9000fd60
+   === Stack Backtrace ===
+   SP (current): 0x9000fd40
 
-    Backtrace:
-    #0  RA=0x80000b90, CFA=0x9000fdf0
-    #1  RA=0x8000037a, CFA=0x9000fe20
-    #2  RA=0x80000b90, CFA=0x9000fef0
-    #3  RA=0x8000037a, CFA=0x9000ff20
-    #4  RA=0x800010e0, CFA=0x9000ffd0
-    #5  RA=0x800010fe, CFA=0x9000ffe0
-    #6  RA=0x80001144, CFA=0x9000fff0
+   Backtrace:
+   #0  RA=0x80000b80, CFA=0x9000fde0
+   #1  RA=0x8000037a, CFA=0x9000fe10
+   #2  RA=0x80000b80, CFA=0x9000fee0
+   #3  RA=0x8000037a, CFA=0x9000ff10
+   #4  RA=0x800010d0, CFA=0x9000ffc0
+   #5  RA=0x800010ee, CFA=0x9000ffd0
+   #6  RA=0x80001160, CFA=0x9000ffe0
 
-    [Addr2Line Hint] Run the following command on PC:
-    riscv64-unknown-elf-addr2line -pfiaC -e *.elf 0x8000106c 0x80000b90 0x8000037a 0x80000b90 0x8000037a 0x800010e0 0x800010fe 0x80001144
+   [Addr2Line Hint] Run the following command on PC:
+   riscv64-unknown-elf-addr2line -pfiaC -e *.elf 0x8000105c 0x80000b80 0x8000037a 0x80000b80 0x8000037a 0x800010d0 0x800010ee 0x80001160
 
-    --- End of Backtrace ---
-    === Test completed. Halting. ===
+   --- End of Backtrace ---
+   === Test completed. Halting. ===
+
 
 **Symbol Resolution:**
 
@@ -847,25 +848,24 @@ To resolve the backtrace addresses to source code locations, run the addr2line c
 
 .. code-block:: shell
 
-    riscv64-unknown-elf-addr2line -pfiaC -e *.elf 0x8000106c 0x80000b90 0x8000037a 0x80000b90 0x8000037a 0x800010e0 0x800010fe 0x80001144
+    riscv64-unknown-elf-addr2line -pfiaC -e *.elf 0x8000105c 0x80000b80 0x8000037a 0x80000b80 0x8000037a 0x800010d0 0x800010ee 0x80001160
 
 This will output the function names and source file locations:
 
 .. code-block:: text
 
-   0x000000008000106c: illegal_handler at nuclei-sdk/application/baremetal/demo_backtrace/main.c:106
-   0x0000000080000b90: core_exception_handler at nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/system_evalsoc.c:454
-   0x000000008000037a: exc_entry at nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S:204
-   0x0000000080000b90: core_exception_handler at nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/system_evalsoc.c:454
-   0x000000008000037a: exc_entry at nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S:204
-   0x00000000800010e0: level2 at nuclei-sdk/application/baremetal/demo_backtrace/main.c:145
-   0x00000000800010fe: level1 at nuclei-sdk/application/baremetal/demo_backtrace/main.c:154
-   0x0000000080001144: main at nuclei-sdk/application/baremetal/demo_backtrace/main.c:170
-
+   0x000000008000105c: illegal_handler at /home/riscv/Work/Code/nuclei-sdk/application/baremetal/demo_backtrace/main.c:107
+   0x0000000080000b80: core_exception_handler at /home/riscv/Work/Code/nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/system_evalsoc.c:450
+   0x000000008000037a: exc_entry at /home/riscv/Work/Code/nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S:204
+   0x0000000080000b80: core_exception_handler at /home/riscv/Work/Code/nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/system_evalsoc.c:450
+   0x000000008000037a: exc_entry at /home/riscv/Work/Code/nuclei-sdk/application/baremetal/demo_backtrace/../../../SoC/evalsoc/Common/Source/GCC/intexc_evalsoc.S:204
+   0x00000000800010d0: level2 at /home/riscv/Work/Code/nuclei-sdk/application/baremetal/demo_backtrace/main.c:146
+   0x00000000800010ee: level1 at /home/riscv/Work/Code/nuclei-sdk/application/baremetal/demo_backtrace/main.c:155
+   0x0000000080001134: main at /home/riscv/Work/Code/nuclei-sdk/application/baremetal/demo_backtrace/main.c:177
 
 The backtrace shows:
 
-**First entry (0x8000106c)**: This is the EPC (Exception Program Counter) value from the exception frame, pointing to the exact location where the illegal instruction occurred (``illegal_handler`` at main.c:106). This address is printed first in the addr2line command to indicate the faulting instruction.
+**First entry (0x8000105c)**: This is the EPC (Exception Program Counter) value from the exception frame, pointing to the exact location where the illegal instruction occurred (``illegal_handler`` at main.c:107). This address is printed first in the addr2line command to indicate the faulting instruction.
 
 **The following entries show the call chain**:
 

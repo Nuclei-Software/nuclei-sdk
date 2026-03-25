@@ -44,6 +44,67 @@
 #define XLEN_BYTES (sizeof(unsigned long))
 
 /**
+ * @brief Get exception description and type from cause code.
+ *
+ * @param[in]  cause Exception cause code (lower 12 bits of mcause/scause)
+ * @param[out] desc  Pointer to exception description string
+ * @param[out] type  Pointer to exception type string ("Synchronous" or "Asynchronous")
+ * @return 1 if exception is recognized, 0 if reserved/unknown
+ */
+static int get_exception_info(unsigned long cause, const char **desc, const char **type)
+{
+    switch (cause) {
+        case 0:  *desc = "Instruction address misaligned"; *type = "Synchronous"; break;
+        case 1:  *desc = "Instruction access fault"; *type = "Synchronous"; break;
+        case 2:  *desc = "Illegal instruction"; *type = "Synchronous"; break;
+        case 3:  *desc = "Breakpoint"; *type = "Synchronous"; break;
+        case 4:  *desc = "Load address misaligned"; *type = "Synchronous"; break;
+        case 5:  *desc = "Load access fault"; *type = "Sync/Async"; break;
+        case 6:  *desc = "Store/AMO address misaligned"; *type = "Synchronous"; break;
+        case 7:  *desc = "Store/AMO access fault"; *type = "Sync/Async"; break;
+        case 8:  *desc = "Environment call from U-mode/VU-mode"; *type = "Synchronous"; break;
+        case 9:  *desc = "Environment call from S-mode/HS-mode"; *type = "Synchronous"; break;
+        case 10: *desc = "Environment call from VS-mode"; *type = "Synchronous"; break;
+        case 11: *desc = "Environment call from M-mode"; *type = "Synchronous"; break;
+        case 12: *desc = "Instruction page fault"; *type = "Synchronous"; break;
+        case 13: *desc = "Load page fault"; *type = "Synchronous"; break;
+        case 14: *desc = "Reserved"; *type = "Reserved"; return 0;
+        case 15: *desc = "Store/AMO page fault"; *type = "Synchronous"; break;
+        case 16: *desc = "Double trap"; *type = "Synchronous"; break;
+        case 17: *desc = "Reserved"; *type = "Reserved"; return 0;
+        case 18: *desc = "Software check"; *type = "Synchronous"; break;
+        case 19: *desc = "Hardware error"; *type = "Synchronous"; break;
+        case 20: *desc = "Instruction guest-page fault"; *type = "Synchronous"; break;
+        case 21: *desc = "Load guest-page fault"; *type = "Synchronous"; break;
+        case 22: *desc = "Virtual instruction fault / Store/AMO guest-page fault"; *type = "Synchronous"; break;
+        case 23: *desc = "Reserved"; *type = "Reserved"; return 0;
+        case 24: *desc = "Stack Overflow"; *type = "Asynchronous"; break;
+        case 25: *desc = "Stack Underflow"; *type = "Asynchronous"; break;
+        case 26 ... 0xffe: *desc = "Reserved"; *type = "Reserved"; return 0;
+        case 0xfff: *desc = "NMI Exception"; *type = "Asynchronous"; break;
+        default: *desc = "Unknown"; *type = "Unknown"; return 0;
+    }
+    return 1;
+}
+
+/**
+ * @brief Get privilege mode name from mode number.
+ *
+ * @param[in] mode Privilege mode number (PRV_U/PRV_S/PRV_H/PRV_M)
+ * @return Pointer to mode name string
+ */
+static const char *get_mode_name(uint8_t mode)
+{
+    switch (mode) {
+        case PRV_U: return "U-Mode";
+        case PRV_S: return "S-Mode";
+        case PRV_H: return "H-Mode";
+        case PRV_M: return "M-Mode";
+        default: return "Unknown";
+    }
+}
+
+/**
  * @brief Validates a candidate frame pointer for safe dereferencing.
  *
  * A frame pointer is considered valid if:
@@ -71,7 +132,7 @@ static inline int is_valid_fp(unsigned long fp, unsigned long stack_bottom, unsi
      * Note: We access memory *below* fp, so strict checking might
      * verify (fp - 2*XLEN) >= stack_bottom, but checking fp is usually sufficient.
      */
-    if (fp < stack_bottom || fp >= stack_top) {
+    if ((fp < stack_bottom) || (fp >= stack_top)) {
         return 0;
     }
     return 1;
@@ -85,7 +146,7 @@ int riscv_backtrace_frames(unsigned long fp, backtrace_frame_t *frames, int max_
                            unsigned long stack_top, size_t stack_size)
 {
     /* Input validation */
-    if (!frames || max_depth <= 0 || stack_size == 0) {
+    if ((!frames) || (max_depth <= 0) || (stack_size == 0)) {
         return 0;
     }
     if (max_depth > BACKTRACE_MAX_DEPTH) {
@@ -121,7 +182,7 @@ int riscv_backtrace_frames(unsigned long fp, backtrace_frame_t *frames, int max_
              * If RA is 0, we've likely hit the start of the thread/context.
              * Include this frame and break.
              */
-            count++;
+            count ++;
             break;
         }
 
@@ -131,7 +192,7 @@ int riscv_backtrace_frames(unsigned long fp, backtrace_frame_t *frames, int max_
          */
         const unsigned long prev_fp = *(const unsigned long *)(curr_fp - 2 * XLEN_BYTES);
 
-        count++;
+        count ++;
 
         if (prev_fp == 0) {
             break; /* End of chain */
@@ -158,8 +219,17 @@ void riscv_backtrace_print(unsigned long fp, unsigned long stack_top, size_t sta
 
     /* 1. Print Exception Frame Info if exc_sp is provided */
     if (exc_sp != 0) {
+        const char *exc_desc;
+        const char *exc_type;
+        unsigned long exc_cause = exc_frame->cause & 0xFFF;
+
         BACKTRACE_PRINT_FN("=== Exception Frame Information ===\n");
+        /* Print exception type and privilege mode information */
+        get_exception_info(exc_cause, &exc_desc, &exc_type);
+        BACKTRACE_PRINT_FN("Mode: %s, Exception: %lu - %s, Type: %s\n",
+                           get_mode_name(mode), exc_cause, exc_desc, exc_type);
         Exception_DumpFrame(exc_sp, mode);
+
         BACKTRACE_PRINT_FN("\n");
     }
 

@@ -42,8 +42,8 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <nuclei_sdk_soc.h>
 #include "riscv_backtrace.h"
+#include <nuclei_sdk_soc.h>
 
 /* ================================================================== */
 /* External Dependencies                                              */
@@ -88,7 +88,8 @@ static volatile int illegal_triggered = 0;
  * @param mcause Exception cause (2 for illegal instruction)
  * @param sp     Stack pointer at exception entry (pointing to saved context)
  */
-void illegal_handler(unsigned long mcause, unsigned long sp) {
+void illegal_handler(unsigned long mcause, unsigned long sp)
+{
     unsigned long fp;
     asm volatile ("mv %0, s0" : "=r"(fp));
     if (illegal_triggered >= ILLEGAL_RETRY_COUNT) {
@@ -120,8 +121,8 @@ void illegal_handler(unsigned long mcause, unsigned long sp) {
  *
  * We use 'noinline' to ensure this function has its own stack frame.
  */
-__attribute__((noinline))
-void trigger_illegal(void) {
+__attribute__((noinline)) void trigger_illegal(void)
+{
     printf("About to execute illegal instruction in trigger_illegal()...\n");
 
     /*
@@ -138,8 +139,8 @@ void trigger_illegal(void) {
 /**
  * @brief Level 2 caller in the call chain.
  */
-__attribute__((noinline))
-void level2(void) {
+__attribute__((noinline)) void level2(void)
+{
     printf("Inside level2, calling trigger_illegal...\n");
     trigger_illegal();
 }
@@ -147,21 +148,39 @@ void level2(void) {
 /**
  * @brief Level 1 caller in the call chain.
  */
-__attribute__((noinline))
-void level1(void) {
+__attribute__((noinline)) void level1(void)
+{
     printf("Inside level1, calling level2...\n");
     level2();
 }
 
-int main(void) {
+int main(void)
+{
+    CSR_MCFGINFO_Type mcfg_info;
+
     printf("RISC-V Backtrace Test (FP=CFA Convention)\n");
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    mcfg_info.b.clic = 1;
+#else
+    mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+#endif
+
+#if defined(__ECLIC_PRESENT) && (__ECLIC_PRESENT != 0)
+    if (0 == mcfg_info.b.clic) {
+        printf("You expect ECLIC present, but ECLIC is not present, will not run this example!\r\n");
+        printf("You can rebuild and run this example with extra make option XLCFG_ECLIC=0 if ECLIC not present!\r\n");
+        return 0;
+    }
+#endif
+
     printf("Stack Top (@_sp): %p\n", (void *)&_sp);
 
     /*
      * Register handler for Illegal Instruction exception.
      * Exception ID 2 = MCAUSE_ILLEGAL_INSTRUCTION
      */
-    Exception_Register_EXC(2, (unsigned long)illegal_handler);
+    Exception_Register_EXC(IlleIns_EXCn, (unsigned long)illegal_handler);
 
     printf("Calling chain: level1() -> level2() -> trigger_illegal()...\n");
     level1();
