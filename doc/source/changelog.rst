@@ -3,8 +3,8 @@
 Changelog
 =========
 
-V0.9.0-dev
-----------
+V0.9.0
+------
 
 .. note::
 
@@ -12,7 +12,7 @@ V0.9.0-dev
     - **Nuclei N100 series with ECLIC configured** are supported, see :ref:`N100 support limitation <n100_support_limitation>`
     - ECLIC v2 hardware feature is supported, only can run on Nuclei RISC-V CPU with ECLIC v2, see :ref:`design_soc_evalsoc_eclicv2`
 
-This is release version of ``0.9.0`` of Nuclei SDK, which is still under development.
+This is release version of ``0.9.0`` of Nuclei SDK.
 
 * NMSIS
 
