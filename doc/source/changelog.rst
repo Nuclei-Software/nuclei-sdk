@@ -18,6 +18,9 @@ This is release version ``0.3.0`` of N100 SDK, which is still in development.
 * OS
 
   - Bugfix for correct task stack pointer alignment(16 bytes for non-ilp32e, and 4 bytes for ilp32e) on FreeRTOS/UCOSII/RT-Thread RTOS porting, see https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/301374e92976e298e676e7129a6212926b2299ce/riscv-cc.adoc?plain=1#L245-L259
+  - Fix ``xPortTaskSwitch`` disable/enable IRQ around ``vTaskSwitchContext`` which may cause interrupt nesting during task switch in FreeRTOS
+  - Fix tickless sleep mode may miss interrupts by ensuring global IRQ is disabled before stopping SysTick in FreRTOS
+  - Remove unnecessary ``__FENCE_I`` after re-enabling interrupts in tickless sleep mode in FreeRTOS
 
 * Build
 
