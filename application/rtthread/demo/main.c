@@ -11,6 +11,7 @@
 
 #include "nuclei_sdk_soc.h"
 #include <rtthread.h>
+#include <stdio.h>
 
 #define THREAD_PRIORITY 2
 /* Reserve enough stack if rvv autovectorization enabled,
@@ -57,6 +58,19 @@ int create_thread_demo(void)
 int main(void)
 {
     rt_uint32_t count = 0;
+
+    CSR_MCFGINFO_Type mcfg_info;
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    mcfg_info.b.clic = 1;
+#else
+    mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+#endif
+
+    if (0 == mcfg_info.b.clic) {
+        printf("ECLIC is not present, will not run this example!\r\n");
+        while (1);
+    }
 
     create_thread_demo();
 

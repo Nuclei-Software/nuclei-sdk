@@ -105,6 +105,19 @@ void start_task2(void* pvParameters);
 
 int main(void)
 {
+    CSR_MCFGINFO_Type mcfg_info;
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    mcfg_info.b.clic = 1;
+#else
+    mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+#endif
+
+    if (0 == mcfg_info.b.clic) {
+        printf("ECLIC is not present, will not run this example!\r\n");
+        return 0;
+    }
+
     TimerHandle_t xExampleSoftwareTimer = NULL;
 
     /* Configure the system ready to run the demo.  The clock configuration

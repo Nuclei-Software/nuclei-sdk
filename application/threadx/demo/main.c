@@ -68,6 +68,18 @@ void    thread_6_and_7_entry(ULONG thread_input);
 
 int main()
 {
+    CSR_MCFGINFO_Type mcfg_info;
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    mcfg_info.b.clic = 1;
+#else
+    mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+#endif
+
+    if (0 == mcfg_info.b.clic) {
+        printf("ECLIC is not present, will not run this example!\r\n");
+        return 0;
+    }
 
     /* Enter the ThreadX kernel.  */
     tx_kernel_enter();
