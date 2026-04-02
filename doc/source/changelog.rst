@@ -55,6 +55,7 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Add ``i_share_dlm`` bit field to ``CSR_MICFGINFO_Type`` structure in ``core_feature_base.h`` and display this information in the cpuinfo application.
   - Sync NMSIS 1.5.0 Core/DSP/NN header files, ``build.mk``, ``npk.yml`` and prebuilt DSP and NN libraries; for changes related to DSP/NN libraries, please refer to the NMSIS changelog.
   - Update ``IINFO_Type`` in ``core_feature_iinfo.h``. Add ``mpfctl``, ``etrace_info``, precise ECC and mem_crc related registers.
+  - Add new api ``__s_switch_mode`` to switch from S-mode to U-mode
 
 * Application
 
@@ -95,7 +96,10 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Remove ``nuclei_cache`` npk configuration from ``demo_cache``, ``demo_cidu``, ``demo_ecc``, ``demo_pma``, ``demo_smpcc``, and ``smphello`` applications ``npk.yml`` since it is now deprecated
   - Add ``get_cpu_feature`` in ``cpuinfo`` to list CPU features for the future hardware ci testing.
   - Add register type definitions of ``mpfctl``, ``etrace_info``, precise ECC related registers and show these information in ``cpuinfo``
+  - Refactor demo_pmp to run all the occasions at one time with no-locking entry which could be modified when ecall to M-mode
+  - Add :ref:`design_app_exception_mmode`, :ref:`design_app_exception_smode`, :ref:`design_app_exception_umode` to show how to register exception handler and delegate exception to S-mode
   - Add new application :ref:`design_app_demo_backtrace` to demonstrate RISC-V frame pointer based stack backtrace via exception handler with detailed frame information and addr2line hints
+  - Add eclic presence runtime check to RTOS demo: freertos/rtthread/threadx/ucosii
 
 * Build System
 
@@ -313,7 +317,6 @@ This is release version ``0.8.0`` of Nuclei SDK.
   - Add new PMU v1 and v2 event macros in ``nmsis_bench.h``
   - Add ``flushpipe`` and ``fence`` in each ccm operation API in ``core_feature_cache.h``
   - Use ``1UL`` instead of ``1`` in NMSIS/Core header files to avoid left shift overflow issue
-  - Add new api ``__s_switch_mode`` to switch from S-mode to U-mode
 
 * Application
 
@@ -335,8 +338,6 @@ This is release version ``0.8.0`` of Nuclei SDK.
   - Add two new benchmark cases :ref:`design_app_dhrystone_v2.2` and :ref:`design_app_whetstone_v1.2` which are the ones used in linux benchmark
   - Update Terapines ZCC dhrystone and coremark options for ZCC v4.0.0 and give better code size
   - ``-Ofast`` is deprecated in clang, use ``-O3 -ffast-math``
-  - Refactor demo_pmp to run all the occasions at one time with no-locking entry which could be modified when ecall to M-mode
-  - Add :ref:`design_app_exception_mmode`, :ref:`design_app_exception_smode`, :ref:`design_app_exception_umode` to show how to register exception handler and delegate exception to S-mode
 
 * SoC
 
