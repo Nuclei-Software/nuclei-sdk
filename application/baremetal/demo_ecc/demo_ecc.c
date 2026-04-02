@@ -218,6 +218,7 @@ static void setup_nc_region(void)
 static int32_t __attribute__((aligned(4096))) ic_ecc_err_inj_demo()
 {
     if (!ECC_IsICacheSupportECC()) {
+        printf("ICache not present or ICache not support ECC, will not run ICache ECC demo.\r\n");
         return EXIT_SUCCESS;
     }
     test_mem_type = ECC_MEM_TYPE_ICACHE;
@@ -331,6 +332,7 @@ static int32_t __attribute__((aligned(4096))) ic_ecc_err_inj_demo()
 static int32_t dc_ecc_err_inj_demo()
 {
     if (!ECC_IsDCacheSupportECC()) {
+        printf("DCache not present or DCache not support ECC, will not run DCache ECC demo.\r\n");
         return EXIT_SUCCESS;
     }
     test_mem_type = ECC_MEM_TYPE_DCACHE;
@@ -444,6 +446,7 @@ static int32_t dc_ecc_err_inj_demo()
 static int32_t __attribute__((aligned(4096))) cc_ecc_err_inj_demo()
 {
     if (!SMPCC_IsCCacheSupportECC()) {
+        printf("CCache not support ECC, will not run CCache ECC demo.\r\n");
         return EXIT_SUCCESS;
     }
     test_mem_type = ECC_MEM_TYPE_CCACHE;
