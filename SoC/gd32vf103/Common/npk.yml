@@ -241,9 +241,6 @@ buildconfig:
     common_flags: # flags need to be combined together across all packages
       - flags: -mtune=${nuclei_core.tune}
         condition: $( ${nuclei_core.tune} != "" )
-      # pass extra flags when zc extension enabled
-      - flags: -fomit-frame-pointer -fno-shrink-wrap-separate
-        condition: $( contains(${nuclei_archext}, "zc"))
       - flags: -isystem =/include/libncrt
         condition: $( startswith(${stdclib}, "libncrt") )
     ldflags:

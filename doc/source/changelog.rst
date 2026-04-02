@@ -185,6 +185,7 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Rename ``msubm`` field to ``subm`` in ``EXC_Frame`` structure across ``evalsoc``, ``gd32vf103`` and ``gd32vw55x`` SoC to better reflect it represents SUBM CSR for both machine and supervisor modes
   - Update ``Exception_DumpFrame`` in ``evalsoc`` to always dump ``subm`` CSR regardless of privilege mode and simplify N100 IRQC detection logic
   - Update comments in ``EXC_Frame`` structure across all SoC implementations to indicate ``cause``, ``epc`` and ``subm`` fields apply to both machine/supervisor modes
+  - Remove ``-fomit-frame-pointer -fno-shrink-wrap-separate`` flags for Zc extension from gd32vf103 and gd32vw55x SoC npk.yml files, these flags are now only applied in evalsoc
 
 * Documentation
 

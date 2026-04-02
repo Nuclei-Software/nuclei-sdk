@@ -77,7 +77,6 @@ endif
 ## bp: Bitmanip and Packed SIMD Extension present
 ## bpv: Bitmanip, Packed SIMD and Vector Extension present
 ## bkpv: Bitmanip, Packed SIMD, Scalar Cryptography and Vector Extension present
-### If zc extension passed in ARCH_EXT, remove c in ARCH
 TEMP_RISCV_ARCH := $(word 1, $(CORE_ARCH_ABI))
 RISCV_ARCH ?= $(TEMP_RISCV_ARCH)$(ARCH_EXT)
 RISCV_ABI ?= $(word 2, $(CORE_ARCH_ABI))
