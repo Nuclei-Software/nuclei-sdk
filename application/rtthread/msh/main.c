@@ -12,6 +12,7 @@
 
 #include "nuclei_sdk_soc.h"
 #include <rtthread.h>
+#include <stdio.h>
 
 void nsdk(int argc, char* argv[])
 {
@@ -22,6 +23,19 @@ MSH_CMD_EXPORT(nsdk, msh nuclei sdk demo)
 
 int main(void)
 {
+    CSR_MCFGINFO_Type mcfg_info;
+
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    mcfg_info.b.clic = 1;
+#else
+    mcfg_info.d = __RV_CSR_READ(CSR_MCFG_INFO);
+#endif
+
+    if (0 == mcfg_info.b.clic) {
+        printf("ECLIC is not present, will not run this example!\r\n");
+        while (1);
+    }
+
     rt_kprintf("Hello RT-Thread!\n");
     while (1) {
         rt_thread_mdelay(100);
