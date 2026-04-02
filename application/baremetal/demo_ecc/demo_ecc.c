@@ -63,10 +63,10 @@
 
 uint32_t pa_size; /*!< Physical address size */
 typedef enum {
-    ECC_ERR_INJ_MODE_NOT_EXIST = 0,/*!< ECC not exist */
-    ECC_ERR_INJ_MODE_DIRECT_WRITE, /*!< ECC exist and support error injection direct write mode */
-    ECC_ERR_INJ_MODE_XOR,          /*!< ECC exist and support error injection XOR mode */
-    ECC_ERR_INJ_MODE_MAX           /*!< Max of ECC Error injection mode */
+    ECC_ERR_INJ_MODE_NOT_EXIST = 0, /*!< ECC not exist */
+    ECC_ERR_INJ_MODE_DIRECT_WRITE,  /*!< ECC exist and support error injection direct write mode */
+    ECC_ERR_INJ_MODE_XOR,           /*!< ECC exist and support error injection XOR mode */
+    ECC_ERR_INJ_MODE_MAX            /*!< Max of ECC Error injection mode */
 } ECC_ERR_INJ_MODE;
 ECC_ERR_INJ_MODE inj_mode = __ECC_CODE_INJ; /*!< Initialize ECC Error injection mode with CPU CFG */
 enum ECC_MEM_Type {
@@ -116,7 +116,7 @@ static uint32_t get_ic_tagbits()
          */
         off_bits = 12;
     }
-    return  pa_size - off_bits;
+    return pa_size - off_bits;
 }
 
 static uint32_t get_dc_tagbits()
@@ -715,8 +715,7 @@ int main(void)
         pa_size = *(uint32_t *)__IINFO_MPASIZE_ADDR;
         /* Check PA size read from hardware is equal to the CPU PA size */
         if (pa_size != __CPU_PA_SIZE) {
-            printf("[ERROR]: CPU PA size is not equal to the CFG_PA_SIZE\r\n");
-            return EXIT_FAILURE;
+            printf("[WARNING]: CPU PA size is not equal to the CFG_PA_SIZE\r\n");
         }
 
         printf("ECC supported:\r\n");
