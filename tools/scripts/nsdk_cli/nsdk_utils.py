@@ -1512,7 +1512,7 @@ def gen_coreruncfg_custom(core, runcfg, customcfgdir, buildconfig=dict()):
     cpucfg = os.path.join(customcfgdir, "%s.json" % (core))
     return gen_runcfg(cpucfg, runcfg, buildconfig)
 
-def gen_runyaml(core, locs, fpga_serial, ftdi_serial, cycm, fpgabit, boardtype, ocdcfg, appcfg, hwcfg, board):
+def gen_runyaml(core, locs, fpga_serial, ftdi_serial, cycm, fpgabit, boardtype, ocdcfg, appcfg, hwcfg, board="unknown"):
     runyaml = { "runcfg": {"runner": "fpga"},
                 "fpga_runners": { core: {
                     "board_type": boardtype, "board": board, "fpga_serial": fpga_serial,
@@ -1522,7 +1522,7 @@ def gen_runyaml(core, locs, fpga_serial, ftdi_serial, cycm, fpgabit, boardtype, 
                     "model": cycm if cycm else "" }
                 },
                 "configs": { core: {
-                    "fpga": boardtype, "bitstream": fpgabit, "board": board,
+                    "fpga": boardtype, "bitstream": fpgabit,
                     "ncycm": core, "openocd_cfg": ocdcfg,
                     "appcfg": appcfg, "hwcfg": hwcfg }
                 },

@@ -213,7 +213,7 @@ class nsdk_runner(object):
                 fpgaloc = self.runcfg["environment"]["fpgaloc"]
                 serport = runcfg["fpga"][fpga]["serial_port"]
                 openocdcfg = os.path.join(self.sdk, runcfg["fpga"][fpga]["openocd_cfg"])
-                board= runcfg["fpga"][fpga]["board"]
+                board = runcfg["fpga"][fpga].get("board", "unknown")
                 if fpga_serial == INVAILD_SERNO or ftdi_serial == INVAILD_SERNO:
                     print("Invalid fpga or ftdi serial, please check!")
                     continue
