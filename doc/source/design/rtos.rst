@@ -14,6 +14,11 @@ In Nuclei SDK, we have support four most-used RTOSes in the world,
 Our RTOS port require Nuclei ECLIC interrupt controller, please make sure
 your Nuclei CPU is configured with ECLIC present.
 
+All RTOS ports use the same interrupt assignment:
+
+- ``SysTimer Interrupt`` is used as the RTOS SysTick for periodic tick
+- ``SysTimer Software Interrupt`` is used to do task switch
+
 If you want to use RTOS in your application, you can choose one
 of the supported RTOSes.
 
@@ -24,6 +29,10 @@ of the supported RTOSes.
     - When you want to develop RTOS application in Nuclei SDK, please
       don't reconfigure ``SysTimer`` and ``SysTimer Software Interrupt``,
       since it is already used by RTOS portable code.
+    - In all RTOS ports, ``__RWMB()`` memory barriers are placed after interrupt
+      enable/disable and CSR operations to ensure the CSR write completes before
+      subsequent instructions execute. This is especially important for SMP systems
+      to prevent CPU/compiler reordering issues.
 
 .. _design_rtos_freertos:
 

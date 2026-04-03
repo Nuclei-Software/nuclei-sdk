@@ -192,6 +192,7 @@ This is release version of ``0.9.0`` of Nuclei SDK.
 
 * Documentation
 
+  - Update :ref:`design_rtos` to document common interrupt assignment for all RTOS ports (SysTimer for tick, SysTimer Software Interrupt for task switch) and memory barrier usage in RTOS ports
   - Fix typo ``reuqests`` to ``requires`` in ``app.rst``
   - Update ``rtos.rst`` to mention about recent bugfix for RTOS porting, and other RTOSes supported but not in Nuclei SDK
   - Update the expected output of ``cpuinfo`` in ``app.rst``
