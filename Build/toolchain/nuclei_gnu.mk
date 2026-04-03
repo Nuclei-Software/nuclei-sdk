@@ -125,7 +125,7 @@ COMMON_FLAGS += -mtune=$(RISCV_TUNE)
 endif
 
 # Generate zcmp related asm by passing extra options
-ifneq ($(findstring zc,$(ARCH_EXT)),)
+ifneq ($(findstring zcmp,$(ARCH_EXT)),)
 COMMON_FLAGS += -fomit-frame-pointer -fno-shrink-wrap-separate
 endif
 
