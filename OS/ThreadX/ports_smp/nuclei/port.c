@@ -97,6 +97,7 @@ void PortThreadSwitch(void)
         rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
         rv_csr_t msubm = __RV_CSR_READ(CSR_MSUBM);
         __enable_irq();
+        __RWMB();
         /* If no ready task just go to idle and wait for interrupt */
         while (!_tx_thread_execute_ptr[coreid]) {
             // if wfi here, it may not wakeup even swi is pending, since new swi could happen during eclic_msip_handler
@@ -167,6 +168,7 @@ UINT _tx_thread_interrupt_control(UINT new_posture)
     } else {
         temp = __RV_CSR_SWAP(CSR_MSTATUS, new_posture);
     }
+    __RWMB();
     return (UINT)temp;
 }
 
@@ -188,6 +190,7 @@ void _tx_thread_smp_force_unprotect(UINT new_interrupt_posture)
         }
     }
     __RV_CSR_SET(CSR_MSTATUS, new_interrupt_posture);
+    __RWMB();
 }
 
 extern volatile UINT _tx_thread_preempt_disable;
@@ -234,6 +237,7 @@ ULONG _tx_thread_smp_current_state_get(void)
     current_state =  _tx_thread_system_state[_tx_thread_smp_core_get()];
 
     __RV_CSR_WRITE(CSR_MSTATUS, temp);
+    __RWMB();
 
     /* Now return the state for the core.  */
     return current_state;
@@ -250,6 +254,7 @@ TX_THREAD *_tx_thread_smp_current_thread_get(void)
     current_thread =  _tx_thread_current_ptr[_tx_thread_smp_core_get()];
 
     __RV_CSR_WRITE(CSR_MSTATUS, temp);
+    __RWMB();
 
     /* Now return the current thread for the core.  */
     return current_thread;
@@ -279,6 +284,7 @@ UINT _tx_thread_smp_protect(void)
             return old_posture;      /* lock taken */
         }
         __RV_CSR_SET(CSR_MSTATUS, old_posture);
+        __RWMB();
         while (_tx_thread_smp_protection.tx_thread_smp_protect_in_force == 1) {
             __NOP();
         }
@@ -305,6 +311,7 @@ void _tx_thread_smp_unprotect(UINT new_interrupt_posture)
         }
     }
     __RV_CSR_SET(CSR_MSTATUS, new_interrupt_posture);
+    __RWMB();
 }
 
 /*    This function gets the global time value that is used for debug     */
@@ -403,6 +410,7 @@ void _tx_thread_smp_initialize_wait(void)
     __RV_CSR_SET(CSR_MECLIC_CTL, MECLIC_CTL_TSP_EN);
 #endif
 
+    __RWMB();
     /*
      * 7. Initialize is complete, enter the scheduling loop!
      * Jump to the main thread scheduler to start running tasks.
@@ -438,5 +446,6 @@ VOID _tx_thread_stack_build(TX_THREAD *thread_ptr, VOID (*function_ptr)(VOID))
 
     thread_ptr -> tx_thread_stack_ptr = stk;
     /* Indicate that this thread is now ready for scheduling again by another core.  */
-    thread_ptr -> tx_thread_smp_core_control =  1;
+    thread_ptr -> tx_thread_smp_core_control = 1;
+    __RWMB();
 }

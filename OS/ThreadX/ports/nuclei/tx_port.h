@@ -296,10 +296,10 @@ typedef unsigned short                          USHORT;
 
 #define TX_INTERRUPT_SAVE_AREA                  ULONG interrupt_save;
 /* Atomically read mstatus into interrupt_save and clear bit 3 of mstatus.  */
-#define TX_DISABLE                              {__asm__ volatile ("csrrci %0, mstatus, 0x08" : "=r" (interrupt_save) : : "memory");};
+#define TX_DISABLE                              {__asm__ volatile ("csrrci %0, mstatus, 0x08" : "=r" (interrupt_save) : : "memory"); __RWMB();};
 /* We only care about mstatus.mie (bit 3), so mask interrupt_save and write to mstatus.  */
 #define TX_RESTORE                              {register ULONG __tempmask = interrupt_save & 0x08; \
-                                                __asm__ volatile ("csrrs x0, mstatus, %0 \n\t" : : "r" (__tempmask) : "memory");};
+                                                __asm__ volatile ("csrrs x0, mstatus, %0 \n\t" : : "r" (__tempmask) : "memory"); __RWMB();};
 
 #endif
 

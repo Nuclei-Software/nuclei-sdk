@@ -82,6 +82,7 @@ void PortThreadSwitch(void)
         rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
         rv_csr_t msubm = __RV_CSR_READ(CSR_MSUBM);
         __enable_irq();
+        __RWMB();
         /* If no ready task just go to idle and wait for interrupt */
         while (!_tx_thread_execute_ptr) {
             __WFI();

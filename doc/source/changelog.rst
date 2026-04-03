@@ -133,6 +133,7 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Fix FreeRTOS tickless sleep mode by removing unnecessary ``__FENCE_I()`` call in ``vPortSuppressTicksAndSleep`` function to avoid i-cache misses and reduce interrupt latency. The ``__RWMB()`` memory barrier is sufficient for proper interrupt enable propagation
   - Upgrade FreeRTOS to v11.2.0 and update porting layer to match new API requirements (critical nesting macros and recursive lock functions now accept core ID parameter for SMP systems)
   - Fix ThreadX ``tx_port.h`` interrupt disable/restore macros (``TX_DISABLE``/``TX_RESTORE``) by adding ``volatile`` keyword and ``memory`` clobber to inline assembly to prevent compiler reordering and ensure proper memory barrier semantics
+  - Add memory barriers to ThreadX UP and SMP ports after interrupt control operations (such as ``__enable_irq()`` and ``CSR_MSTATUS`` access) to ensure proper synchronization and prevent potential compiler/CPU reordering issues
 
 * Build System
 
