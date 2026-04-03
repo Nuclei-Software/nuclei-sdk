@@ -2,6 +2,7 @@
 
 import os
 import sys
+from abc import ABC, abstractmethod
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.txt"))
 
@@ -61,6 +62,53 @@ TTY_UNKNOWN_ERR = "tty_unknown_error"
 FILE_LOCK_NAME = "fpga_program.lock"
 
 DATE_FORMATE = "%Y-%m-%d %H:%M:%S"
+
+class BaseChecker(ABC):
+    """
+    This is an abstract base class that defines the standard interface for test result checking.
+    You can implement your own custom checker by inheriting from this class.
+    """
+    @abstractmethod
+    def init(self, appconfig):
+        pass
+    @abstractmethod
+    def check_line(self, line) -> tuple:
+        """
+        Return a tuple of `(check_finished, check_status, check_reason)`.
+        `check_finished` means whether current line already matches a final result.
+        `check_status` is the pass/fail result when `check_finished` is True.
+        `check_reason` records the matched reason string for logging.
+        """
+        return False, False, ""
+
+class DefaultChecker(BaseChecker):
+    """
+    This checker provides a backward compatible default implementation.
+    """
+    def __init__(self):
+        self.pass_checks = []
+        self.fail_checks = []
+
+    def init(self, appconfig):
+        checks = appconfig.get("checks", dict())
+        self.pass_checks = checks.get("PASS", [])
+        self.fail_checks = checks.get("FAIL", [])
+
+    def check_line(self, line):
+        def test_in_check(string, check_items):
+            if isinstance(check_items, list):
+                for check in check_items:
+                    if check in string:
+                        return True
+            return False
+
+        # if the line contains both pass string and fail string,
+        # treat the result as PASS
+        if test_in_check(line, self.pass_checks):
+            return True, True, "PASS line: %s" % (line)
+        if test_in_check(line, self.fail_checks):
+            return True, False, "FAIL line: %s" % (line)
+        return False, False, ""
 
 def get_tmpdir():
     tempdir = tempfile.gettempdir()
@@ -748,6 +796,37 @@ def import_function(func_name, file_path):
         return None
     return getattr(tmpmodule, func_name)
 
+def import_checker(file_path):
+    if isinstance(file_path, str) == False:
+        return None
+    checker_file = os.path.abspath(file_path)
+    module_name = "checker_module_%s" % (random.randint(0, 10000))
+    checker_module = import_module(module_name, checker_file)
+    if checker_module is None:
+        return None
+
+    if "get_checker" in dir(checker_module):
+        try:
+            checker = checker_module.get_checker()
+            if isinstance(checker, BaseChecker):
+                return checker
+        except Exception as exc:
+            print("Warning: get_checker in %s failed with %s" % (checker_file, exc))
+
+    if "CHECKER" in dir(checker_module):
+        checker = getattr(checker_module, "CHECKER")
+        if isinstance(checker, BaseChecker):
+            return checker
+
+    for attr_name in dir(checker_module):
+        attr = getattr(checker_module, attr_name)
+        if isinstance(attr, type) and issubclass(attr, BaseChecker) and attr is not BaseChecker:
+            try:
+                return attr()
+            except Exception as exc:
+                print("Warning: instantiate checker %s from %s failed with %s" % (attr_name, checker_file, exc))
+    return None
+
 COMMAND_RUNOK=0
 COMMAND_INVALID=1
 COMMAND_FAIL=2
@@ -808,7 +887,7 @@ def run_command(command, show_output=True, logfile=None, append=False):
     cmd_elapsed_ticks = time.time() - startticks
     return ret, cmd_elapsed_ticks
 
-async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False, banner_timeout=3):
+async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False, banner_timeout=3, checker=None):
     logfh = None
     ret = COMMAND_FAIL
     cmd_elapsed_ticks = 0
@@ -817,14 +896,7 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     startticks = time.time()
     process = None
     check_status = False
-    pass_checks = checks.get("PASS", [])
-    fail_checks = checks.get("FAIL", [])
-    def test_in_check(string, checks):
-        if type(checks) == list:
-            for check in checks:
-                if check in string:
-                    return True
-        return False
+    checker = checker if isinstance(checker, BaseChecker) else DefaultChecker()
     NSDK_CHECK_TAG = get_sdk_checktag()
     if get_sdk_verb_buildmsg():
         print("Checker used: ", checks)
@@ -887,12 +959,7 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
                 if show_output:
                     print(line, end='')
                 if check_finished == False:
-                    if test_in_check(line, fail_checks):
-                        check_status = False
-                        check_finished = True
-                    if test_in_check(line, pass_checks):
-                        check_status = True
-                        check_finished = True
+                    check_finished, check_status, _ = checker.check_line(line)
                     if check_finished:
                         ret = COMMAND_RUNOK
                         # record another 2 seconds by reset start_time and timeout to 2
@@ -915,11 +982,11 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     cmd_elapsed_ticks = time.time() - startticks
     return check_status, cmd_elapsed_ticks
 
-def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False, banner_timeout=30):
+def run_cmd_and_check(command, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False, banner_timeout=30, checker=None):
     loop = asyncio.get_event_loop()
     try:
         ret, cmd_elapsed_ticks = loop.run_until_complete( \
-            run_cmd_and_check_async(command, timeout, checks, checktime, sdk_check, logfile, show_output, banner_timeout))
+            run_cmd_and_check_async(command, timeout, checks, checktime, sdk_check, logfile, show_output, banner_timeout, checker))
     except KeyboardInterrupt:
         print("Key CTRL-C pressed, command executing stopped!")
         ret, cmd_elapsed_ticks = False, 0
@@ -1023,6 +1090,7 @@ def merge_config_with_args(config, args_dict):
     run_target = args_dict.get("run_target", None)
     timeout = args_dict.get("timeout", None)
     ncycm = args_dict.get("ncycm", None)
+    checker = args_dict.get("checker", None)
     if isinstance(config, dict) == False:
         return None
     new_config = copy.deepcopy(config)
@@ -1045,6 +1113,8 @@ def merge_config_with_args(config, args_dict):
         if "ncycm" not in new_config["run_config"]:
             new_config["run_config"]["ncycm"] = dict()
         new_config["run_config"]["ncycm"]["ncycm"] = os.path.abspath(ncycm)
+    if checker:
+        new_config["checker"] = str(checker)
 
     if timeout: # set timeout
         try:

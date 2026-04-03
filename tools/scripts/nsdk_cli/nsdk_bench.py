@@ -124,6 +124,7 @@ class nsdk_bench(nsdk_runner):
         global_cpobjs = config.get("copy_objects", False)
         global_run_config = config.get("run_config", dict())
         global_checks = config.get("checks", dict())
+        global_checker = config.get("checker", None)
         rootdirs = config.get("appdirs", [])
         ignored_rootdirs = config.get("appdirs_ignore", [])
         if (isinstance(rootdirs, list) and isinstance(ignored_rootdirs, list)) == False:
@@ -168,6 +169,7 @@ class nsdk_bench(nsdk_runner):
                 app_cpobjs = copy.deepcopy(global_cpobjs)
                 app_runcfg = copy.deepcopy(global_run_config)
                 app_checks = copy.deepcopy(global_checks)
+                app_checker = copy.deepcopy(global_checker)
                 found_cfg = find_local_appconfig(appdir, appconfigs)
                 if found_cfg:
                     appcfg = appconfigs[found_cfg]
@@ -185,6 +187,8 @@ class nsdk_bench(nsdk_runner):
                             app_parallel = appcfg["parallel"]
                         if "copy_objects" in appcfg:
                             app_cpobjs = appcfg["copy_objects"]
+                        if "checker" in appcfg:
+                            app_checker = appcfg["checker"]
                     else: # if merge_global is false, then use app config only
                         app_buildcfg = appcfg.get("build_config", dict())
                         app_buildcfgs = appcfg.get("build_configs", dict())
@@ -193,6 +197,7 @@ class nsdk_bench(nsdk_runner):
                         app_runcfg = appcfg.get("run_config", dict())
                         app_checks = appcfg.get("checks", dict())
                         app_cpobjs = appcfg.get("copy_objects", False)
+                        app_checker = appcfg.get("checker", None)
 
                 app_allconfigs = {"configs": {}}
                 if len(app_buildcfgs) == 0:
@@ -208,9 +213,16 @@ class nsdk_bench(nsdk_runner):
                         app_runlogfile = None
                     percfg_appbuildcfg = copy.deepcopy(app_buildcfg)
                     percfg_appbuildcfg.update(app_buildcfgs[cfgname])
-                    app_allconfigs["configs"][cfgname] = {"build_config": percfg_appbuildcfg, "build_target": app_buildtarget, \
-                            "copy_objects": app_cpobjs, "parallel": app_parallel, "run_config": app_runcfg, "checks": app_checks, \
-                            "logs": {"build": app_buildlogfile, "run": app_runlogfile}}
+                    app_allconfigs["configs"][cfgname] = {
+                        "build_config": percfg_appbuildcfg,
+                        "build_target": app_buildtarget,
+                        "copy_objects": app_cpobjs,
+                        "parallel": app_parallel,
+                        "run_config": app_runcfg,
+                        "checks": app_checks,
+                        "checker": app_checker,
+                        "logs": {"build": app_buildlogfile, "run": app_runlogfile},
+                    }
 
                 apps_config[appdir] = copy.deepcopy(app_allconfigs)
 
@@ -240,6 +252,7 @@ if __name__ == '__main__':
     parser.add_argument('--build_target', help="Build target passed to make, to overwrite default build_target defined in configuration file")
     parser.add_argument('--run_target', help="Run target which program will run, such as hardware, qemu or xlspike")
     parser.add_argument('--parallel', help="parallel value, such as -j4 or -j or -j8, default None")
+    parser.add_argument('--checker', help="Custom checker python file path, absolute path or relative to current working directory")
     parser.add_argument('--run', action='store_true', help="If specified, will do run not build process")
     parser.add_argument('--ncycm',  help="If specified, will use cycle model specified here")
     parser.add_argument("--timeout", help="If specified, will use timeout value specified here")

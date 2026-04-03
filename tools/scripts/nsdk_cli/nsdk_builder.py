@@ -298,7 +298,7 @@ class nsdk_builder(object):
         return cmdsts, build_status
 
 class MonitorThread(Thread):
-    def __init__(self, port:str, baudrate:str, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False):
+    def __init__(self, port:str, baudrate:str, timeout:int, checks:dict, checktime=time.time(), sdk_check=False, logfile=None, show_output=False, checker=None):
         super().__init__()
         self.port = port
         self.baudrate = baudrate
@@ -314,6 +314,7 @@ class MonitorThread(Thread):
         self._check_sdk_timeout = 10
         self.result = False
         self.reason = ""
+        self.checker = checker if isinstance(checker, BaseChecker) else DefaultChecker()
         pass
 
     def get_result(self):
@@ -347,14 +348,6 @@ class MonitorThread(Thread):
         serial_log = ""
         check_status = False
         check_reason = ""
-        pass_checks = self.checks.get("PASS", [])
-        fail_checks = self.checks.get("FAIL", [])
-        def test_in_check(string, checks):
-            if type(checks) == list:
-                for check in checks:
-                    if check in string:
-                        return True
-            return False
 
         NSDK_CHECK_TAG = get_sdk_checktag()
         if get_sdk_verb_buildmsg():
@@ -403,14 +396,7 @@ class MonitorThread(Thread):
                     if self.show_output:
                         print(line, end='')
                     if check_finished == False:
-                        if test_in_check(line, fail_checks):
-                            check_reason = "FAIL line: %s" % (line)
-                            check_status = False
-                            check_finished = True
-                        if test_in_check(line, pass_checks):
-                            check_reason = "PASS line: %s" % (line)
-                            check_status = True
-                            check_finished = True
+                        check_finished, check_status, check_reason = self.checker.check_line(line)
                         if check_finished:
                             # record another 2 seconds by reset start_time and timeout to 2
                             start_time = time.time()
@@ -444,12 +430,37 @@ class nsdk_runner(nsdk_builder):
     def __init__(self):
         super().__init__()
         self.hangup_action = None
+        self.checker = DefaultChecker()
         self.ttyerrcnt = 0
         self.fpgaprogramcnt = 0
         self.gdberrcnt = 0
         self.bannertmoutcnt = 0
         self.uploaderrcnt = 0
         pass
+
+    def set_checker(self, checker):
+        if isinstance(checker, BaseChecker):
+            self.checker = checker
+
+    def get_checker(self):
+        return self.checker
+
+    def set_checker_from_appconfig(self, appconfig):
+        checker_file = appconfig.get("checker", None)
+        if isinstance(checker_file, str):
+            checker_file = checker_file.strip()
+        if checker_file == "":
+            checker_file = None
+        if checker_file is None:
+            self.set_checker(DefaultChecker())
+            return
+        checker = import_checker(checker_file)
+        if checker is None:
+            print("Warning: checker file %s is invalid or no BaseChecker implementation found, use DefaultChecker instead!" % (checker_file))
+            self.set_checker(DefaultChecker())
+            return
+        print("Use checker %s from %s" % (checker.__class__.__name__, checker_file))
+        self.set_checker(checker)
 
     @staticmethod
     def find_apps(rootdir):
@@ -570,7 +581,7 @@ class nsdk_runner(nsdk_builder):
                 print("Hardware configuration: serial port %s, baudrate %s, timeout %ds, retry counter %d" % (serport, baudrate, timeout, retry_cnt))
                 if serport: # only monitor serial port when port found
                     ser_thread = MonitorThread(serport, baudrate, timeout, app_runchecks, checktime, \
-                        sdk_check, logfile, show_output)
+                        sdk_check, logfile, show_output, self.checker)
                     ser_thread.start()
                 else:
                     print("Warning: No available serial port found, please check!")
@@ -706,7 +717,7 @@ class nsdk_runner(nsdk_builder):
                     print("Run command: %s" %(command))
                     runner = {"cmd": command, "version": verstr}
                     cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
-                        sdk_check, logfile, show_output)
+                        sdk_check, logfile, show_output, checker=self.checker)
                 else:
                     print("%s doesn't exist in PATH, please check!" % qemu_exe)
             else:
@@ -767,7 +778,7 @@ class nsdk_runner(nsdk_builder):
                     print("Run command: %s" %(command))
                     runner = {"cmd": command, "version": verstr}
                     cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
-                        sdk_check, logfile, show_output)
+                        sdk_check, logfile, show_output, checker=self.checker)
                 else:
                     print("%s doesn't exist in PATH, please check!" % xlmodel_exe)
             else:
@@ -816,7 +827,7 @@ class nsdk_runner(nsdk_builder):
                     print("Run command: %s" %(command))
                     runner = {"cmd": command, "version": verstr}
                     cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
-                        sdk_check, logfile, show_output)
+                        sdk_check, logfile, show_output, checker=self.checker)
                 else:
                     print("%s doesn't exist in PATH, please check!" % xlspike_exe)
             else:
@@ -867,7 +878,7 @@ class nsdk_runner(nsdk_builder):
                         print("Run command: %s" %(command))
                         runner = {"cmd": command, "version": verstr}
                         cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \
-                            sdk_check, logfile, show_output, 480)
+                            sdk_check, logfile, show_output, 480, self.checker)
                     else:
                         print("Unable to run cycle model with %s" % (build_objects["elf"]))
                         cmdsts = False
@@ -1100,6 +1111,11 @@ class nsdk_runner(nsdk_builder):
             app_allconfigs = appconfigs["configs"]
             for cfgname in app_allconfigs:
                 appconfig = app_allconfigs[cfgname] # get configuration for each case for single app
+                # set the default checker or user provided checker
+                self.set_checker_from_appconfig(appconfig)
+                # The default checker need to be initialized with "checks"
+                # User provided checker also need to be initialized but may not use this `appconfig` parameter.
+                self.checker.init(appconfig)
                 # Used to filter application with certain pattern not acceptable
                 filtered, reason = filter_app_config(appconfig)
                 if filtered:
