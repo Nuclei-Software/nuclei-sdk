@@ -453,10 +453,10 @@ codemanage:
 setconfig:
   - config: nuclei_arch
     value: $(subst(${nuclei_core.arch},c,))${nuclei_archext}
-    condition: $( contains(${nuclei_archext}, "zc"))
+    condition: $( contains(${nuclei_archext}, "zcmp") || contains(${nuclei_archext}, "zcmt"))
   - config: nuclei_arch
     value: ${nuclei_core.arch}${nuclei_archext}
-    condition: $( ! contains(${nuclei_archext}, "zc"))
+    condition: $( ! (contains(${nuclei_archext}, "zcmp") || contains(${nuclei_archext}, "zcmt")))
   - config: nmsislibarch
     value: ${nuclei_arch}
   - config: cpu_series
@@ -550,9 +550,9 @@ buildconfig:
     common_flags: # flags need to be combined together across all packages
       - flags: -mtune=${nuclei_core.tune}
         condition: $( ${nuclei_core.tune} != "" )
-      # pass extra flags when zc extension enabled
+      # pass extra flags when zcmp extension enabled
       - flags: -fomit-frame-pointer -fno-shrink-wrap-separate
-        condition: $( contains(${nuclei_archext}, "zc"))
+        condition: $( contains(${nuclei_archext}, "zcmp"))
       - flags: -isystem =/include/libncrt
         condition: $( startswith(${stdclib}, "libncrt") )
       - flags: -fno-tree-vectorize -fno-tree-loop-vectorize -fno-tree-slp-vectorize

@@ -106,6 +106,8 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Add ``XLCFG_SMODE``, ``XLCFG_PLIC``, ``XLCFG_CIDU``, and ``XLCFG_SMPU`` configuration variables to various application Makefiles to indicate required CPU extensions
   - Update ``npk.yml`` files to use ``-DXLCFG_SMODE=1`` instead of ``-DCFG_HAS_TEE`` for S-Mode applications
   - Introduce a new generic function mechanism in ``cpuconfig.mk`` for defining XLCFG variables with automatic dependency management, improving the modularity and maintainability of CPU feature configurations
+  - Fix Zc extension detection: change from matching ``zc`` prefix to explicitly checking for ``zcmp`` and ``zcmt`` separately when removing ``c`` from base ARCH string in ``SoC/evalsoc/build.mk`` and ``SoC/evalsoc/npk.yml``
+  - Update compiler flags ``-fomit-frame-pointer -fno-shrink-wrap-separate`` to only apply for ``zcmp`` extension, required for generating Zc push/pop instructions in ``toolchain/nuclei_gnu.mk`` and ``SoC/evalsoc/npk.yml``
 
 * OS
 
