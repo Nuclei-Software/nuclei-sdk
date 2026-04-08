@@ -90,9 +90,11 @@ void PortThreadSwitch(void)
         if (coreid == 0) {
             /* increase the timer interrupt to higher priority to enable interrupt nesting */
             ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY + 1);
+            __RWMB();
             /* swap task stack to interrupt stack to avoid interrupt nesting on task stack */
         }
         __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
+        __RWMB();
         /* mcause must be saved and restore if interrupt nested */
         rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
         rv_csr_t msubm = __RV_CSR_READ(CSR_MSUBM);
@@ -111,9 +113,11 @@ void PortThreadSwitch(void)
         __RV_CSR_WRITE(CSR_MCAUSE, mcause);
         /* swap interrupt stack back to task stack */
         __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
+        __RWMB();
         /* restore timer interrupt to origin kernel interrupt priority */
         if (coreid == 0) {
             ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
+            __RWMB();
         }
     }
 
