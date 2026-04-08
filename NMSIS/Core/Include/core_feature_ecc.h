@@ -372,7 +372,8 @@ __STATIC_FORCEINLINE void ECC_DCacheTRamErrInject(uint32_t ecc_code, void *addr)
     MFlushInvalDCacheLine((unsigned long)addr);
     __RWMB();
     __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_DC_TRAM_ECC_INJ_EN);
-    MLockDCacheLine((unsigned long)addr);
+    __LW(addr);
+    __RWMB();
     __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_DC_TRAM_ECC_INJ_EN);
     __RWMB();
     ECC_EnableDCacheECCCheck();
@@ -394,7 +395,8 @@ __STATIC_FORCEINLINE void ECC_DCacheDRamErrInject(uint32_t ecc_code, void *addr)
     MFlushInvalDCacheLine((unsigned long)addr);
     __RWMB();
     __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_DC_DRAM_ECC_INJ_EN);
-    MLockDCacheLine((unsigned long)addr);
+    __LW(addr);
+    __RWMB();
     __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_DC_DRAM_ECC_INJ_EN);
     __RWMB();
     ECC_EnableDCacheECCCheck();

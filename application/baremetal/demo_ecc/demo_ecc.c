@@ -396,7 +396,7 @@ static int32_t dc_ecc_err_inj_demo()
     uint32_t tag_bits = DCACHE_TAGBITS;
     uint32_t off_bits = pa_size - tag_bits;
     uint32_t tag_value = ((unsigned long)test_data >> off_bits) |
-                         (5UL << tag_bits); // set valid and lock
+                         (1UL << tag_bits); // set valid only, use `lw` to inject error, don't set 'lock'
     ecc_code_calc = ECC_GenerateECCCodeU32(tag_value);
 
     /* ------------- DCache Tag RAM single bit error test ------------- */
