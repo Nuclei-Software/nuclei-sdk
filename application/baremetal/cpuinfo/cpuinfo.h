@@ -735,7 +735,7 @@ typedef union {
  */
 typedef union {
     struct {
-        uint32_t inject_way:8;                   /*!< bit: 0..7 each bit corresponds to a way, when the bit is set to 1, the corresponding way supports precise ecc inject mode */
+        uint32_t inject_way:8;                   /*!< bit: 0..7 each bit corresponds to a way, one-hot, when inject ecc error, data will fill into the way which is 1 */
         uint32_t :22;                            /*!< bit: 8..29 reserved */
         uint32_t security_mode:1;                /*!< bit: 30 indicate the current security mode, 0 for sec mode, 1 for non-sec mode */
         uint32_t precise_ecc_inject:1;           /*!< bit: 31 rtl support the feature of precise ecc inject */

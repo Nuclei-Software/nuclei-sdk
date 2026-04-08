@@ -325,6 +325,19 @@ typedef union {
     uint32_t d;                                     /*!< Type      used for register data access */
 } IINFO_PFL1INFO_Type;
 
+/**
+ * \brief  Union type to access ECC_INJ_WAY register.
+ */
+typedef union {
+    struct {
+        uint32_t inject_way:8;                      /*!< bit: 0..7 each bit corresponds to a way, one-hot, when inject ecc error, data will fill into the way which is 1 */
+        uint32_t :22;                               /*!< bit: 8..29 reserved */
+        uint32_t security_mode:1;                   /*!< bit: 30 indicate the current security mode, 0 for sec mode, 1 for non-sec mode */
+        uint32_t precise_ecc_inject:1;              /*!< bit: 31 rtl support the feature of precise ecc inject */
+    } b;                                            /*!< Structure used for bit access */
+    uint32_t d;                                     /*!< Type      used for register data access */
+} IINFO_ECC_INJ_WAY_Type;
+
 /* IREGION INFO Memory-Mapped Register Type*/
 typedef struct {
     __IM uint32_t mpasize;                              /*!< offset 0x0000 */
@@ -371,7 +384,7 @@ typedef struct {
     __IM uint32_t etrace_info;                          /*!< offset 0x01A4 */
     __IOM uint32_t ecc_inj_addr_lo;                     /*!< offset 0x01A8 */
     __IOM uint32_t ecc_inj_addr_hi;                     /*!< offset 0x01AC */
-    __IOM uint32_t ecc_inj_way;                         /*!< offset 0x01B0 */
+    __IOM IINFO_ECC_INJ_WAY_Type ecc_inj_way;           /*!< offset 0x01B0 */
     uint32_t reserved9[83];                             /*!< offset 0x01B4 */
     __IOM uint32_t mem_crc_x22_lo;                      /*!< offset 0x0300 */
     __IOM uint32_t mem_crc_x22_hi;                      /*!< offset 0x0304 */
@@ -551,6 +564,32 @@ __STATIC_FORCEINLINE void IINFO_EnablePrefetchOverall(void)
 __STATIC_FORCEINLINE void IINFO_DisablePrefetchOverall(void)
 {
     IINFO->pfl1dctrl4.b.pf_enable = 0;
+}
+
+/**
+ * \brief   Check if precise ECC injection is supported
+ * \details Checks whether the precise ECC injection feature is supported
+ *          by reading the precise_ecc_inject bit from the ECC_INJ_WAY register.
+ * \return  1 if precise ECC injection is supported, 0 otherwise
+ */
+__STATIC_FORCEINLINE int32_t IINFO_IsPreciseECCInjSupported(void)
+{
+    return IINFO->ecc_inj_way.b.precise_ecc_inject;
+}
+
+/**
+ * \brief   Set the address and cache way used for precise ECC injection in ICache, DCache, or CCache
+ * \param   addr  Target address for ECC error injection
+ * \param   way   Target cache way for ECC error injection
+ * \remarks The way value must be one-hot. For example, if the cache has 2 ways, valid values are
+ *   0x01 and 0x02; all other values are invalid.
+ */
+__STATIC_FORCEINLINE void IINFO_SetPreciseECCInjWay(void *addr, uint8_t way)
+{
+    unsigned long rv_addr = (unsigned long)addr;
+    IINFO->ecc_inj_addr_lo = (uint32_t)rv_addr;
+    IINFO->ecc_inj_addr_hi = (uint32_t)((uint64_t)rv_addr >> 32);
+    IINFO->ecc_inj_way.b.inject_way = way;
 }
 
 /** @} */ /* End of Doxygen Group NMSIS_Core_IINFO_Functions */
