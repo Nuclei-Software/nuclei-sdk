@@ -982,7 +982,8 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
                         timeout = 1
             if logfh and linebytes:
                 logfh.write(linebytes)
-            time.sleep(0.01)
+            # Don't sleep here. It will block the event loop
+            # time.sleep(0.01)
     except (KeyboardInterrupt):
         print("Key CTRL-C pressed, command executing stopped!")
         ret = COMMAND_INTERRUPTED
