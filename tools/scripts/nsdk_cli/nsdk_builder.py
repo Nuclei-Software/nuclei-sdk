@@ -536,7 +536,8 @@ class nsdk_runner(nsdk_builder):
         result = {"type": "unknown", "value": {}}
         if os.path.isfile(logfile):
             try:
-                result_lines = open(logfile, "r", errors='ignore').readlines()
+                with open(logfile, "r", errors='ignore') as f:
+                    result_lines = f.readlines()
             except:
                 result_lines = []
             program_found, subtype, result_parsed = parse_benchmark_runlog(result_lines, lgf=logfile)

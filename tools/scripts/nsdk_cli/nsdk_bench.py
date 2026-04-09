@@ -179,7 +179,7 @@ class nsdk_bench(nsdk_runner):
                     if merge_global:
                         app_buildcfg.update(appcfg.get("build_config", dict()))
                         app_buildcfgs.update(appcfg.get("build_configs", dict()))
-                        app_runcfg.update(appcfg.get("run_config", dict()))
+                        dict_merge(app_runcfg, appcfg.get("run_config", dict()))
                         dict_merge(app_checks, appcfg.get("checks", dict()))
                         if "build_target" in appcfg:
                             app_buildtarget = appcfg["build_target"]

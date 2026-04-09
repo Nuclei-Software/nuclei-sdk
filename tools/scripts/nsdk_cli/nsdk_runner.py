@@ -75,7 +75,9 @@ def gen_STATUS(logdir, status):
     pass
 
 class nsdk_runner(object):
-    def __init__(self, sdk, makeopts, runyaml, locations=dict(), verbose=False, timeout=None):
+    def __init__(self, sdk, makeopts, runyaml, locations=None, verbose=False, timeout=None):
+        if locations is None:
+            locations = dict()
         if os.path.isdir(sdk) == False:
             print("Invalid sdk path %s" % (sdk))
             sys.exit(1)

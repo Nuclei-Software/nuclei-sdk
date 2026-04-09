@@ -5,6 +5,7 @@ import sys
 import traceback
 from itertools import combinations
 import random
+import re
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 requirement_file = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "requirements.txt"))
@@ -257,6 +258,7 @@ if __name__ == '__main__':
     tot_cases = []
     start_time = time.time()
     ret = True
+    case = "unknown"
     try:
         print("Prepare to do cases %s on %s, stop on fail %s" % (torun_cases, args.runon, STOPONFAIL))
         index = 0

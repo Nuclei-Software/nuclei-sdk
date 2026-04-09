@@ -168,7 +168,7 @@ class nsdk_executor(nsdk_runner):
                     # Merge global config when merge_global is True
                     if merge_global:
                         app_buildcfg.update(appcfg.get("build_config", dict()))
-                        app_runcfg.update(appcfg.get("run_config", dict()))
+                        dict_merge(app_runcfg, appcfg.get("run_config", dict()))
                         dict_merge(app_checks, appcfg.get("checks", dict()))
 
                         if "build_target" in appcfg:
