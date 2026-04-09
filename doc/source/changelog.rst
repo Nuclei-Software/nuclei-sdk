@@ -222,6 +222,7 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Enhance ``nsdk_cli`` tool result checking mechanism to support customizable validation steps and multi-line output verification.
   - Fix ``nsdk_bench.py`` and ``nsdk_execute.py`` to use ``dict_merge`` instead of ``dict.update`` for merging ``checks`` and ``run_config`` configuration, enabling case-level timeout without losing nested settings.
   - Fix resource leak, missing imports, unbound variables and mutable default arguments in nsdk_cli scripts.
+  - Set hardware timeout to 360 seconds for ``whetstone`` and ``whetstone_v1.2`` benchmark tests in nsdk_cli configuration files to avoid timeout issues on hardware CI
 
 * Components
 

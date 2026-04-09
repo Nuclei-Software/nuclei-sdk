@@ -45,6 +45,11 @@
         },
         "application/baremetal/benchmark/whetstone": {
             "build_config" : {},
+            "run_config": {
+                "hardware": {
+                    "timeout": 360
+                }
+            },
             "checks": {
                 "PASS": ["CSV, Whetstone"]
             }
@@ -57,6 +62,11 @@
         },
         "application/baremetal/benchmark/whetstone_v1.2": {
             "build_config" : {},
+            "run_config": {
+                "hardware": {
+                    "timeout": 360
+                }
+            },
             "checks": {
                 "PASS": ["CSV, Whetstone_v1.2"]
             }
