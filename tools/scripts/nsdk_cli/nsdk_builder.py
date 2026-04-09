@@ -922,6 +922,11 @@ class nsdk_runner(nsdk_builder):
         return appcmdsts, appsts
 
     def run_app_with_config(self, appdir, appconfig:dict, show_output=True, buildlog=None, runlog=None):
+        # set the default checker or user provided checker
+        self.set_checker_from_appconfig(appconfig)
+        # The default checker need to be initialized with "checks"
+        # User provided checker also need to be initialized but may not use this `appconfig` parameter.
+        self.checker.init(appconfig)
         appconfig["build_target"] = "clean dasm"
         # build application
         build_cktime = time.time()
@@ -1111,11 +1116,6 @@ class nsdk_runner(nsdk_builder):
             app_allconfigs = appconfigs["configs"]
             for cfgname in app_allconfigs:
                 appconfig = app_allconfigs[cfgname] # get configuration for each case for single app
-                # set the default checker or user provided checker
-                self.set_checker_from_appconfig(appconfig)
-                # The default checker need to be initialized with "checks"
-                # User provided checker also need to be initialized but may not use this `appconfig` parameter.
-                self.checker.init(appconfig)
                 # Used to filter application with certain pattern not acceptable
                 filtered, reason = filter_app_config(appconfig)
                 if filtered:
