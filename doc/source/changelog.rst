@@ -134,6 +134,7 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Upgrade FreeRTOS to v11.2.0 and update porting layer to match new API requirements (critical nesting macros and recursive lock functions now accept core ID parameter for SMP systems)
   - Fix ThreadX ``tx_port.h`` interrupt disable/restore macros (``TX_DISABLE``/``TX_RESTORE``) by adding ``volatile`` keyword and ``memory`` clobber to inline assembly to prevent compiler reordering and ensure proper memory barrier semantics
   - Add memory barriers to ThreadX UP and SMP ports after interrupt control operations (such as ``__enable_irq()`` and ``CSR_MSTATUS`` access) to ensure proper synchronization and prevent potential compiler/CPU reordering issues
+  - Fix ThreadX SMP port ``PortThreadSwitch`` function by adding memory barriers (``__RWMB()``) around ECLIC IRQ priority changes and stack pointer swaps to ensure proper ordering of memory operations on Nuclei 1000 series out-of-order processors, preventing potential race conditions in multi-core task switching
 
 * Build System
 
