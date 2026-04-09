@@ -38,6 +38,7 @@
 #endif
 
 #include "core_feature_base.h"
+#include "core_feature_iinfo.h"
 
 #if defined(__SMPCC_PRESENT) && (__SMPCC_PRESENT == 1)
 /**
@@ -269,7 +270,8 @@ typedef union
         __IOM uint32_t inj_tag:1;               /*!< bit:     1 ECC error injection to tag ram */
         __IOM uint32_t inj_clm:1;               /*!< bit:     2 ECC error injection to clm ram */
         __IOM uint32_t inj_mode:1;              /*!< bit:     3 ECC error injection mode: 0-direct write mode, 1-xor write mode */
-        __IM uint32_t _reserved0:20;            /*!< bit:     4..23 reserved */
+        __IOM uint32_t cs:1;                    /*!< bit:     4 Precise injection error control and status. Write 1 to start, automatic cleared when finished. */
+        __IM uint32_t _reserved0:19;            /*!< bit:     5..23 reserved */
         /** \brief 24..32 ECC code for injection
          * \details Write to this bit field may use `sb` instruction (write only one byte),
          * which is not allowed for SMPCC registers. So this bit field is read-only here,
@@ -299,6 +301,10 @@ typedef union
 #define SMPCC_ERR_INJ_INJMODE_Msk             (0x1UL << SMPCC_ERR_INJ_INJMODE_Pos)        /*!< SMPCC CC_ERR_INJ INJMODE Mask */
 #define SMPCC_ERR_INJ_INJMODE_DIRECT          0U                                          /*!< SMPCC CC_ERR_INJ INJMODE Direct write mode */
 #define SMPCC_ERR_INJ_INJMODE_XOR             1U                                          /*!< SMPCC CC_ERR_INJ INJMODE XOR write mode */
+
+#define SMPCC_ERR_INJ_CS_Pos                  4U                                          /*!< SMPCC CC_ERR_INJ CS Position */
+#define SMPCC_ERR_INJ_CS_Msk                  (0x1UL << SMPCC_ERR_INJ_CS_Pos)             /*!< SMPCC CC_ERR_INJ CS Mask */
+#define SMPCC_ERR_INJ_CS_START                1U                                          /*!< SMPCC CC_ERR_INJ CS Start */
 
 #define SMPCC_ERR_INJ_INJECCCODE_Pos          24U                                         /*!< SMPCC CC_ERR_INJ INJECCCODE Position */
 #define SMPCC_ERR_INJ_INJECCCODE_Msk          (0xFFUL << SMPCC_ERR_INJ_INJECCCODE_Pos)    /*!< SMPCC CC_ERR_INJ INJECCCODE Mask */
@@ -632,6 +638,65 @@ typedef union
 } CLIENT_WAY_MASK_Type;
 
 /**
+ * \brief  Union type to access CC_INV_RANGE register.
+ */
+typedef union
+{
+    struct {
+        __IOM uint32_t cs:1;                    /*!< bit:     0 Set cs can enable inv range, it clear by hardware */
+        __IM uint32_t _reserved:31;             /*!< bit:     1..31 reserved */
+    } b;                                        /*!< Structure used for bit  access */
+    uint32_t w;                                 /*!< Type      used for word access */
+} CC_INV_RANGE_Type;
+
+/**
+ * \brief  Type to access CC_INV_RANGE_START register.
+ */
+typedef __IO uint64_t CC_INV_RANGE_START_Type;
+
+/**
+ * \brief  Type to access CC_INV_RANGE_END register.
+ */
+typedef __IO uint64_t CC_INV_RANGE_END_Type;
+
+/**
+ * \brief  Union type to access CC_ECC_INJ_WAY register.
+ */
+typedef union
+{
+    struct {
+        __IOM uint32_t num:16;                  /*!< bit:     0..15 Set precise ecc inject way number, one-hot */
+        __IM uint32_t _reserved:16;             /*!< bit:     16..31 reserved */
+    } b;                                        /*!< Structure used for bit  access */
+    uint32_t w;                                 /*!< Type      used for word access */
+} CC_ECC_INJ_WAY_Type;
+
+/**
+ * \brief  Type to access CC_ECC_INJ_ADDR register.
+ */
+typedef __IO uint64_t CC_ECC_INJ_ADDR_Type;
+
+/**
+ * \brief  Type to access CC_ECC_INJ_DATA register.
+ */
+typedef __IO uint32_t CC_ECC_INJ_DATA_Type;
+
+/**
+ * \brief  Union type to access IOCP_ATTR_RMP register.
+ */
+typedef union
+{
+    struct {
+        __IOM uint32_t wr_rmp_en:1;             /*!< bit:     0 Set write trans attribute remap enable */
+        __IOM uint32_t wr_attri:1;              /*!< bit:     1 Remap allocate and non-alloc. 0: Remap non-alloc to alloc, 1: Remap allocate to non-alloc */
+        __IOM uint32_t rd_rmp_en:1;             /*!< bit:     2 Set read trans attribute remap enable */
+        __IOM uint32_t rd_attri:1;              /*!< bit:     3 Remap allocate and non-alloc. 0: Remap non-alloc to allocate, 1: Remap allocate to non-alloc. */
+        __IM uint32_t _reserved:28;             /*!< bit:     4..31 reserved */
+    } b;                                        /*!< Structure used for bit  access */
+    uint32_t w;                                 /*!< Type      used for word access */
+} IOCP_ATTR_RMP_Type;
+
+/**
  * \brief Access to the structure of SMPCC Memory Map
  * \remarks Write to these memory-mapped registers should write with full register width.
  */
@@ -670,6 +735,16 @@ typedef struct {
     __IM uint8_t RESERVED2[64];                         /*!< 0x240~0x27F reserved */
     __IOM CLIENT_ERR_ADDR_Type CLIENT_ERR_ADDR[32];     /*!< Offset: 0x280 (R/W)  The error address register */
     __IOM CLIENT_WAY_MASK_Type CLIENT_WAY_MASK[32];     /*!< Offset: 0x380 (R/W)  CC way mask control register */
+    __IM uint8_t RESERVED3[800];                        /*!< 0x400~0x71F reserved */
+    __IOM CC_INV_RANGE_Type CC_INV_RANGE;               /*!< Offset: 0x720 (R/W) Cluster Cache invalid rage register */
+    __IOM CC_INV_RANGE_START_Type CC_INV_RANGE_START;   /*!< Offset: 0x724 (R/W) Cluster Cache invalid range start address register */
+    __IOM CC_INV_RANGE_END_Type CC_INV_RANGE_END;       /*!< Offset: 0x72C (R/W) Cluster Cache invalid range end address register */
+    __IM uint8_t RESERVED4[12];                         /*!< 0x734~0x73F reserved */
+    __IOM CC_ECC_INJ_WAY_Type CC_ECC_INJ_WAY;           /*!< Offset: 0x740 (R/W) Cluster Cache ECC inject way register */
+    __IOM CC_ECC_INJ_ADDR_Type CC_ECC_INJ_ADDR;         /*!< Offset: 0x744 (R/W) Cluster Cache ECC inject address regsiter */
+    __IOM CC_ECC_INJ_DATA_Type CC_ECC_INJ_DATA;         /*!< Offset: 0x74C (R/W) Cluster Cache ECC inject data register, repeate to fill a cache line */
+    __IOM IOCP_ATTR_RMP_Type IOCP_ATTR_RMP;             /*!< Offset: 0x750 (R/W) IOCP attribute remap register */
+
 } SMPCC_Type;
 #pragma pack()
 
@@ -1816,17 +1891,34 @@ __STATIC_FORCEINLINE void SMPCC_SetECCCode(uint32_t ecc_code)
  * \details This function injects an ECC error into the cluster cache tag RAM at the specified address.
  * \param   ecc_code  ECC code to be injected
  * \param   addr      Address where the error should be injected
+ * \param   way       Cache way number used for precise injection
+ * \remarks The 4-byte data pointed to by addr is used to refill the CCache line. The cache line is larger than 4 bytes, this data is replicated to fill the entire line.
+ * \remarks The way value must be one-hot. For example, if the cache has 2 ways, valid values are
+ *   0x01 and 0x02; all other values are invalid.
  * \return  None
  */
-__STATIC_FORCEINLINE void SMPCC_CCacheTramErrInject(uint32_t ecc_code, void *addr)
+__STATIC_FORCEINLINE void SMPCC_CCacheTramErrInject(uint32_t ecc_code, uint32_t *addr, uint16_t way)
 {
+    if (IINFO_IsPreciseECCInjSupported()) {
+        SMPCC->CC_ECC_INJ_ADDR = (unsigned long)addr;
+        SMPCC->CC_ECC_INJ_WAY.b.num = way;
+        SMPCC->CC_ECC_INJ_DATA = *addr;
+    }
     SMPCC_SetECCCode(ecc_code);
     SMPCC_DisableCCacheECCCheck();
     MInvalICacheLine((unsigned long)addr);
     MFlushInvalDCacheCCacheLine((unsigned long)addr);
     __RWMB();
     SMPCC->CC_ERR_INJ.b.inj_tag = SMPCC_ERR_INJ_INJTAG_ENABLE;
-    MLockCCacheLine((unsigned long)addr);
+
+    if (IINFO_IsPreciseECCInjSupported()) {
+        SMPCC->CC_ERR_INJ.b.cs = SMPCC_ERR_INJ_CS_START;
+        /* Wait for the ECC injection to complete */
+        while (SMPCC->CC_ERR_INJ.b.cs == SMPCC_ERR_INJ_CS_START);
+    } else {
+        MLockCCacheLine((unsigned long)addr);
+    }
+
     SMPCC->CC_ERR_INJ.b.inj_tag = SMPCC_ERR_INJ_INJTAG_DISABLE;
     __RWMB();
     SMPCC_EnableCCacheECCCheck();
@@ -1837,17 +1929,34 @@ __STATIC_FORCEINLINE void SMPCC_CCacheTramErrInject(uint32_t ecc_code, void *add
  * \details This function injects an ECC error into the cluster cache data RAM at the specified address.
  * \param   ecc_code  ECC code to be injected
  * \param   addr      Address where the error should be injected
+ * \param   way       Cache way number used for precise injection
+ * \remarks The 4-byte data pointed to by addr is used to refill the CCache line. The cache line is larger than 4 bytes, this data is replicated to fill the entire line.
+ * \remarks The way value must be one-hot. For example, if the cache has 2 ways, valid values are
+ *   0x01 and 0x02; all other values are invalid.
  * \return  None
  */
-__STATIC_FORCEINLINE void SMPCC_CCacheDramErrInject(uint32_t ecc_code, void *addr)
+__STATIC_FORCEINLINE void SMPCC_CCacheDramErrInject(uint32_t ecc_code, uint32_t *addr, uint16_t way)
 {
+    if (IINFO_IsPreciseECCInjSupported()) {
+        SMPCC->CC_ECC_INJ_ADDR = (unsigned long)addr;
+        SMPCC->CC_ECC_INJ_WAY.b.num = way;
+        SMPCC->CC_ECC_INJ_DATA = *addr;
+    }
     SMPCC_SetECCCode(ecc_code);
     SMPCC_DisableCCacheECCCheck();
     MInvalICacheLine((unsigned long)addr);
     MFlushInvalDCacheCCacheLine((unsigned long)addr);
     __RWMB();
     SMPCC->CC_ERR_INJ.b.inj_data = SMPCC_ERR_INJ_INJDATA_ENABLE;
-    MLockCCacheLine((unsigned long)addr);
+
+    if (IINFO_IsPreciseECCInjSupported()) {
+        SMPCC->CC_ERR_INJ.b.cs = SMPCC_ERR_INJ_CS_START;
+        /* Wait for the ECC injection to complete */
+        while (SMPCC->CC_ERR_INJ.b.cs == SMPCC_ERR_INJ_CS_START);
+    } else {
+        MLockCCacheLine((unsigned long)addr);
+    }
+
     SMPCC->CC_ERR_INJ.b.inj_data = SMPCC_ERR_INJ_INJDATA_DISABLE;
     __RWMB();
     SMPCC_EnableCCacheECCCheck();
