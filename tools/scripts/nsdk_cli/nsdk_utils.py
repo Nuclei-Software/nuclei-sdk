@@ -907,6 +907,20 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
     serial_log = ""
     nsdk_check_timeout = banner_timeout
     sdk_checkstarttime = time.time()
+    line_queue = asyncio.Queue()
+    reader_task = None
+
+    async def cache_line(linebytes):
+        await line_queue.put(linebytes)
+
+    async def read_stdout_lines(process, on_line):
+        while True:
+            linebytes = await process.stdout.readline()
+            await on_line(linebytes)
+            # when the subprocess is done, it will return b'', and the reader task finished
+            if not linebytes:
+                break
+
     try:
         if isinstance(logfile, str):
             logfh = open(logfile, "wb")
@@ -919,9 +933,10 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
         else:
             process = await asyncio.create_subprocess_shell(command, \
                     stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT)
+        reader_task = asyncio.create_task(read_stdout_lines(process, cache_line))
         while (time.time() - start_time) < timeout:
             try:
-                linebytes = await asyncio.wait_for(process.stdout.readline(), 1)
+                linebytes = await asyncio.wait_for(line_queue.get(), 1)
             except asyncio.TimeoutError:
                 if sdk_check == True:
                     linebytes = None
@@ -975,6 +990,12 @@ async def run_cmd_and_check_async(command, timeout:int, checks:dict, checktime=t
         print("Unexpected exception happened: %s" %(str(exc)))
         ret = COMMAND_EXCEPTION
     finally:
+        if reader_task and reader_task.done() == False:
+            # if the reader_task is alive, cancel it
+            reader_task.cancel()
+        if reader_task:
+            # wait for reader_task finished
+            await asyncio.gather(reader_task, return_exceptions=True)
         # kill this process
         kill_async_subprocess(process)
         if logfh:
