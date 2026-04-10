@@ -220,6 +220,7 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Remove ``appdirs_ignore`` key from ``finalruncfg`` in ``merge_app_hw_config`` function when the list is empty.
   - Fix ``nsdk_bench.py`` and ``nsdk_execute.py`` to use ``dict_merge`` instead of ``dict.update`` for merging ``checks`` configuration (e.g., ``PASS``/``FAIL`` pattern lists), ensuring nested dictionary and list values are properly deep-merged instead of being replaced.
   - Add ``demo_backtrace`` to nsdk_cli CI test configurations for both baremetal and FPGA CI test suites
+  - Enhance result checking mechanism to support customizable validation steps and multi-line output verification.
 
 * Components
 
