@@ -20512,7 +20512,8 @@ __STATIC_FORCEINLINE unsigned long long __RV_DPKTT16(unsigned long long a, unsig
 __STATIC_FORCEINLINE unsigned long long __RV_DSRA16(unsigned long long a, unsigned long b)
 {
     unsigned long long result;
-    __ASM volatile("dsra16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    unsigned long long tmpb = (unsigned long long)b;
+    __ASM volatile("dsra16 %0, %1, %2" : "=r"(result) : "r"(a), "r"(tmpb));
     return result;
 }
 /* ===== Inline Function End for DSRA16 ===== */
