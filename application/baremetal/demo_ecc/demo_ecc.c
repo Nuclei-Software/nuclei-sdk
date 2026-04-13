@@ -685,6 +685,10 @@ static int32_t run_ecc_err_inj_demo(int32_t cc_demo)
     switch (DOWNLOAD_MODE) {
         case DOWNLOAD_MODE_SRAM:
         case DOWNLOAD_MODE_DDR:
+            if (IINFO->ecc_inj_way & (1U << 31)) {
+                printf("[WARNING]: Precise ECC injection is not supported!\r\n");
+                break;
+            }
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
             setup_nc_region();
             res |= ic_ecc_err_inj_demo();
