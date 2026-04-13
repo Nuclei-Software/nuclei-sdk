@@ -40,6 +40,11 @@
         },
         "application/freertos/smpdemo": {
             "build_config" : {},
+            "run_config": {
+                "hardware": {
+                    "timeout": 300
+                }
+            },
             "checks": {
                 "PASS": ["timers Callback 500 on hart"]
             }
