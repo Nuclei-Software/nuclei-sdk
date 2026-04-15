@@ -927,11 +927,13 @@ static void supervisor_mode_entry_point(void)
      * The first parameter refers to the shadow register index (SHAD1_CFG, SHAD2_CFG, etc.)
      * The second parameter sets the interrupt level threshold for shadow register group
      */
-    ECLIC_SetShadowLevel_S(0, 3);
     uint32_t shadow_num = ECLIC_GetInfoShadowNum();
-    printf("[S] ECLIC Shadow Register Groups: %u\r\n", shadow_num);
-    uint64_t shadow_reg_val = ECLIC_GetShadowLevelReg_S();
-    printf("[S] Supervisor Shadow Level Register: 0x%08x%08x\r\n", (uint32_t)(shadow_reg_val >> 32), (uint32_t)shadow_reg_val);
+   if (shadow_num > 0) {
+        ECLIC_SetShadowLevel_S(0, 3);
+        printf("[S] ECLIC Shadow Register Groups: %u\r\n", shadow_num);
+        uint64_t shadow_reg_val = ECLIC_GetShadowLevelReg_S();
+        printf("[S] Supervisor Shadow Level Register: 0x%08x%08x\r\n", (uint32_t)(shadow_reg_val >> 32), (uint32_t)shadow_reg_val);
+   }
 #endif
 
 #if defined(__SSTC_PRESENT) && (__SSTC_PRESENT == 1)
@@ -1012,11 +1014,13 @@ int initialize_mmode_demo(void)
      * The first parameter refers to the shadow register index (SHAD1_CFG, SHAD2_CFG, etc.)
      * The second parameter sets the interrupt level threshold for shadow register group
      */
-    ECLIC_SetShadowLevel(0, 2);
     uint32_t shadow_num = ECLIC_GetInfoShadowNum();
-    printf("[M] ECLIC Shadow Register Groups: %u\r\n", shadow_num);
-    uint64_t shadow_reg_val = ECLIC_GetShadowLevelReg();
-    printf("[M] Machine Shadow Level Register: 0x%08x%08x\r\n", (uint32_t)(shadow_reg_val >> 32), (uint32_t)shadow_reg_val);
+   if (shadow_num > 0) {
+        ECLIC_SetShadowLevel(0, 2);
+        printf("[M] ECLIC Shadow Register Groups: %u\r\n", shadow_num);
+        uint64_t shadow_reg_val = ECLIC_GetShadowLevelReg();
+        printf("[M] Machine Shadow Level Register: 0x%08x%08x\r\n", (uint32_t)(shadow_reg_val >> 32), (uint32_t)shadow_reg_val);
+   }
 #endif
 
     // Initialize and start M-Mode timer - moved to end of main function

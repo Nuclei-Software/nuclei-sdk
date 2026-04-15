@@ -136,11 +136,13 @@ static void supervisor_mode_entry_point(void)
 
     printf("ECLIC nlbits configuration: %u\r\n", nlbits);
 #if __ECLIC_VER == 2
-    ECLIC_SetShadowLevel_S(0, timer_intlevel);
     uint32_t shadow_num = ECLIC_GetInfoShadowNum();
-    printf("ECLIC Shadow Register Groups: %u\r\n", shadow_num);
-    uint64_t shadow_reg_val = ECLIC_GetShadowLevelReg_S();
-    printf("Supervisor Shadow Level Register: 0x%08x%08x\r\n", (uint32_t)(shadow_reg_val >> 32), (uint32_t)shadow_reg_val);
+   if (shadow_num > 0) {
+        ECLIC_SetShadowLevel_S(0, timer_intlevel);
+        printf("ECLIC Shadow Register Groups: %u\r\n", shadow_num);
+        uint64_t shadow_reg_val = ECLIC_GetShadowLevelReg_S();
+        printf("Supervisor Shadow Level Register: 0x%08x%08x\r\n", (uint32_t)(shadow_reg_val >> 32), (uint32_t)shadow_reg_val);
+   }
 #endif
 
     // initialize software interrupt as vector interrupt
