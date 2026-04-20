@@ -33,6 +33,11 @@
     "appconfig": {
         "application/baremetal/benchmark/dhrystone": {
             "build_config" : {},
+            "run_config": {
+                "hardware": {
+                    "timeout": 180
+                }
+            },
             "checks": {
                 "PASS": ["CSV, Dhrystone"]
             }

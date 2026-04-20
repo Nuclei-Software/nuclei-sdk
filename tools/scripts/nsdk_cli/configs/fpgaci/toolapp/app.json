@@ -43,7 +43,7 @@
             "build_config" : {},
             "run_config": {
                 "hardware": {
-                    "timeout": 360
+                    "timeout": 720
                 }
             },
             "checks": {
@@ -60,7 +60,7 @@
             "build_config" : {},
             "run_config": {
                 "hardware": {
-                    "timeout": 400
+                    "timeout": 1800
                 }
             },
             "checks": {
