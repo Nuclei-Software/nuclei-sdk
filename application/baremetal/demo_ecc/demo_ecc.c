@@ -61,6 +61,13 @@
 #define CCACHE_TAGBITS  get_cc_tagbits()
 #endif
 
+/* The cache way to inject a precise ECC error. */
+#ifndef PRECISE_INJ_WAY
+#define PRECISE_INJ_WAY 0
+#endif
+/* Convert the way to one-hot mask. */
+#define PRECISE_INJ_MASK (0x1U << PRECISE_INJ_WAY)
+
 uint32_t pa_size; /*!< Physical address size */
 typedef enum {
     ECC_ERR_INJ_MODE_NOT_EXIST = 0, /*!< ECC not exist */
@@ -235,6 +242,11 @@ static int32_t __attribute__((aligned(4096))) ic_ecc_err_inj_demo()
     uint8_t ecc_code_calc = ECC_GenerateECCCodeU64(code);
 #endif
 
+    /* ---------- Check if precise ECC injection is supported ---------- */
+    if (IINFO_IsPreciseECCInjSupported()) {
+        IINFO_SetPreciseECCInjWay(test_code, PRECISE_INJ_MASK);
+    }
+
     /* ------------- ICache Data RAM single bit error test ------------- */
     uint8_t sgl_ecc_code = gen_ecc_err_code(SINGLEBIT_ERROR_MASK, ecc_code_calc);
     ECC_ICacheDRamErrInject(sgl_ecc_code, (void *)test_code);
@@ -343,6 +355,11 @@ static int32_t dc_ecc_err_inj_demo()
     /* ------------- Calculate DCache Data RAM golden ecc code ------------- */
     uint32_t data = *(const uint32_t *)test_data;
     uint8_t ecc_code_calc = ECC_GenerateECCCodeU32(data);
+
+    /* ---------- Check if precise ECC injection is supported ---------- */
+    if (IINFO_IsPreciseECCInjSupported()) {
+        IINFO_SetPreciseECCInjWay(test_data, PRECISE_INJ_MASK);
+    }
 
     /* ------------- DCache Data RAM single bit error test ------------- */
     uint8_t sgl_ecc_code = gen_ecc_err_code(SINGLEBIT_ERROR_MASK, ecc_code_calc);
@@ -461,7 +478,7 @@ static int32_t __attribute__((aligned(4096))) cc_ecc_err_inj_demo()
 
     /* ------------- CCache Data RAM single bit error test ------------- */
     uint8_t sgl_ecc_code = gen_ecc_err_code(SINGLEBIT_ERROR_MASK, ecc_code_calc);
-    SMPCC_CCacheDramErrInject(sgl_ecc_code, test_data);
+    SMPCC_CCacheDramErrInject(sgl_ecc_code, test_data, PRECISE_INJ_MASK);
     __LW(test_data);
     __RWMB();
 
@@ -478,7 +495,7 @@ static int32_t __attribute__((aligned(4096))) cc_ecc_err_inj_demo()
     uint8_t dbl_ecc_code = gen_ecc_err_code(DOUBLEBIT_ERROR_MASK, ecc_code_calc);
     load_fault_flag = 0;
     SMPCC_ClearFatalErrCount();
-    SMPCC_CCacheDramErrInject(dbl_ecc_code, test_data);
+    SMPCC_CCacheDramErrInject(dbl_ecc_code, test_data, PRECISE_INJ_MASK);
     SMPCC_EnableCCacheECCExcp();
     __LW(test_data);
     __RWMB();
@@ -519,7 +536,7 @@ static int32_t __attribute__((aligned(4096))) cc_ecc_err_inj_demo()
     /* ------------- CCache Tag RAM single bit error test ------------- */
     sgl_ecc_code = gen_ecc_err_code(SINGLEBIT_ERROR_MASK, ecc_code_calc);
     SMPCC_ClearRecvErrCount();
-    SMPCC_CCacheTramErrInject(sgl_ecc_code, test_data);
+    SMPCC_CCacheTramErrInject(sgl_ecc_code, test_data, PRECISE_INJ_MASK);
     __LW(test_data);
     __RWMB();
 
@@ -536,7 +553,7 @@ static int32_t __attribute__((aligned(4096))) cc_ecc_err_inj_demo()
     dbl_ecc_code = gen_ecc_err_code(DOUBLEBIT_ERROR_MASK, ecc_code_calc);
     load_fault_flag = 0;
     SMPCC_ClearFatalErrCount();
-    SMPCC_CCacheTramErrInject(dbl_ecc_code, test_data);
+    SMPCC_CCacheTramErrInject(dbl_ecc_code, test_data, PRECISE_INJ_MASK);
     SMPCC_EnableCCacheECCExcp();
     __LW(test_data);
     __RWMB();
@@ -685,10 +702,6 @@ static int32_t run_ecc_err_inj_demo(int32_t cc_demo)
     switch (DOWNLOAD_MODE) {
         case DOWNLOAD_MODE_SRAM:
         case DOWNLOAD_MODE_DDR:
-            if (IINFO->ecc_inj_way & (1U << 31)) {
-                printf("[WARNING]: Precise ECC injection is not supported!\r\n");
-                break;
-            }
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
             setup_nc_region();
             res |= ic_ecc_err_inj_demo();
