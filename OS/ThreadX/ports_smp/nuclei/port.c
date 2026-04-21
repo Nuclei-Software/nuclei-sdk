@@ -133,7 +133,13 @@ void PortThreadSwitch(void)
         rv_csr_t msubm = __RV_CSR_READ(CSR_MSUBM);
         __enable_irq();
         __RWMB();
-        rdy_thread = _tx_find_ready_thread(TX_FALSE);
+        /*
+         * Do not touch the local rdy_thread result here.
+         * After switching to the interrupt stack, let the scheduler helper
+         * finish updating the execute pointer for this core, then reload the
+         * chosen thread after the task stack is restored.
+         */
+        _tx_find_ready_thread(TX_FALSE);
         /* disable interrupt to avoid interrupt nesting since new task handle found */
         __disable_irq();
         __RWMB();
@@ -148,6 +154,9 @@ void PortThreadSwitch(void)
             ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
             __RWMB();
         }
+        __RWMB();
+        /* Now the task stack is restored, so it is safe to reload rdy_thread. */
+        rdy_thread = _tx_thread_execute_ptr[coreid];
     } else {
         rdy_thread = _tx_find_ready_thread(TX_FALSE);
     }
