@@ -49,19 +49,13 @@ void SysTick_Handler(void)
 
     /* See if anything has expired.  */
     if (_tx_timer_expired) {
-        /* Did a timer expire?  */
-        if (_tx_timer_expired) {
-            /* Process timer expiration.  */
-            _tx_timer_expiration_process();
-        }
-        /* Did time slice expire?  */
-        if (_tx_timer_expired_time_slice) {
-            /* Time slice interrupted thread.  */
-            _tx_thread_time_slice();
-        }
+        /* Process timer expiration.  */
+        _tx_timer_expiration_process();
     }
-    /* Increment the system active counter.  */
-    _tx_timer_interrupt_active ++;
+    /* Call time-slice processing to process time-slice for all threads on each core. */
+    _tx_thread_time_slice();
+    /* Decrease the system active counter.  */
+    _tx_timer_interrupt_active --;
     /* Release the protection.  */
     _tx_thread_smp_unprotect(saved_posture);
 }
@@ -185,7 +179,7 @@ void _tx_thread_smp_force_unprotect(UINT new_interrupt_posture)
     __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
     core_id = _tx_thread_smp_core_get();
     if (_tx_thread_smp_protection.tx_thread_smp_protect_core == core_id) {
-        _tx_thread_smp_protection.tx_thread_smp_protect_count == 0;
+        _tx_thread_smp_protection.tx_thread_smp_protect_count = 0;
         if ((_tx_thread_smp_protection.tx_thread_smp_protect_count == 0) && (_tx_thread_preempt_disable == 0)) {
             _tx_thread_smp_protection.tx_thread_smp_protect_core = ((ULONG) 0xFFFFFFFFUL);
             __RWMB();   /* ensure prior stores visible */
@@ -329,7 +323,10 @@ ULONG _tx_thread_smp_time_get(void)
 /*    core.                                                               */
 void _tx_thread_smp_low_level_initialize(UINT number_of_cores)
 {
-
+    // Enable interrupt and task sp swap
+#if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
+    __RV_CSR_SET(CSR_MECLIC_CTL, MECLIC_CTL_TSP_EN);
+#endif
 }
 
 /*    This function is the place where additional cores wait until        */
