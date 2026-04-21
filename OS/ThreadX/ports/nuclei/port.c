@@ -96,6 +96,7 @@ void PortThreadSwitch(void)
         __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
         /* restore timer interrupt to origin kernel interrupt priority */
         ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
+        __RWMB();
     }
     /* Determine if the time-slice is active.  */
     if (_tx_timer_time_slice && _tx_thread_current_ptr) {
@@ -108,6 +109,7 @@ void PortThreadSwitch(void)
     _tx_thread_current_ptr -> tx_thread_run_count++;
     /* Clear Software IRQ, A MUST */
     SysTimer_ClearSWIRQ();
+    __RWMB();
 }
 
 void SetupSysTickInterrupt(void)
@@ -154,10 +156,11 @@ UINT _tx_thread_interrupt_control(UINT new_posture)
 
     if (new_posture == TX_INT_DISABLE) {
         // clear interrupt
-        temp = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
+        temp = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE) & MSTATUS_MIE;
     } else {
-        temp = __RV_CSR_SWAP(CSR_MSTATUS, new_posture);
+        temp = __RV_CSR_READ_SET(CSR_MSTATUS, MSTATUS_MIE) & MSTATUS_MIE;
     }
+    __RWMB();
     return (UINT)temp;
 }
 
