@@ -16,12 +16,6 @@
 // MUST define SysTick_Handler as eclic_mtip_handler, which is registered in vector table
 #define SysTick_Handler     eclic_mtip_handler
 
-#if __RISCV_XLEN == 32
-#define TX_AMOSWAP          __AMOSWAP_W
-#else
-#define TX_AMOSWAP          __AMOSWAP_D
-#endif
-
 /* This is the timer interrupt service routine. */
 void SysTick_Handler(void)
 {
@@ -79,8 +73,12 @@ TX_THREAD* _tx_find_ready_thread(UINT set_current)
             __NOP(); __NOP();
             rdy_thread = _tx_thread_execute_ptr[coreid];
         }
-        /* Atomically claim this ready thread so only one core can schedule it. */
-        if (TX_AMOSWAP(&rdy_thread->tx_thread_smp_core_control, 0) == 1) {
+        /* Atomically claim this ready thread so only one core can schedule it. tx_thread_smp_core_control type is ULONG */
+#if __RISCV_XLEN == 32
+        if (__AMOSWAP_W((volatile uint32_t *)&rdy_thread->tx_thread_smp_core_control, 0) == 1) {
+#else
+        if (__AMOSWAP_D((volatile uint64_t *)&rdy_thread->tx_thread_smp_core_control, 0) == 1) {
+#endif
             break;
         }
     } while (1);
