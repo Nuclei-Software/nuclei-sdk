@@ -16,6 +16,12 @@
 // MUST define SysTick_Handler as eclic_mtip_handler, which is registered in vector table
 #define SysTick_Handler     eclic_mtip_handler
 
+#if __RISCV_XLEN == 32
+#define TX_AMOSWAP          __AMOSWAP_W
+#else
+#define TX_AMOSWAP          __AMOSWAP_D
+#endif
+
 /* This is the timer interrupt service routine. */
 void SysTick_Handler(void)
 {
@@ -60,12 +66,39 @@ void SysTick_Handler(void)
     _tx_thread_smp_unprotect(saved_posture);
 }
 
+/* Find a runnable thread for this core and optionally publish it as current. */
+TX_THREAD* _tx_find_ready_thread(UINT set_current)
+{
+    TX_THREAD *rdy_thread;
+    UINT coreid = _tx_thread_smp_core_get();
+
+    rdy_thread = _tx_thread_execute_ptr[coreid];
+    do {
+        /* If no ready task just go to idle and wait for interrupt */
+        while ((!rdy_thread) || (rdy_thread->tx_thread_smp_core_control != 1)) {
+            __NOP(); __NOP();
+            rdy_thread = _tx_thread_execute_ptr[coreid];
+        }
+        /* Atomically claim this ready thread so only one core can schedule it. */
+        if (TX_AMOSWAP(&rdy_thread->tx_thread_smp_core_control, 0) == 1) {
+            break;
+        }
+    } while (1);
+    if (set_current) {
+        /* First-thread restore needs to populate _tx_thread_current_ptr here. */
+        _tx_thread_current_ptr[coreid] = rdy_thread;
+    }
+    __RWMB();
+    return rdy_thread;
+}
+
 // Task Switch code called in eclic_msip_handler
 void PortThreadSwitch(void)
 {
 #ifdef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
     _tx_execution_thread_exit();
 #endif
+    TX_THREAD *rdy_thread;
     UINT coreid = _tx_thread_smp_core_get();
     /*
      * Magic idle task emulation for threadx
@@ -78,15 +111,21 @@ void PortThreadSwitch(void)
         _tx_thread_current_ptr[coreid] -> tx_thread_time_slice = _tx_timer_time_slice[coreid];
         _tx_timer_time_slice[coreid] =  0;
     }
-    _tx_thread_current_ptr[coreid] =  TX_NULL;
+    if (_tx_thread_current_ptr[coreid]) {
+        /* Current thread context is saved, ready for scheduling */
+        _tx_thread_current_ptr[coreid] -> tx_thread_smp_core_control = 1;
+        _tx_thread_current_ptr[coreid] =  TX_NULL;
+    }
+    __RWMB();
 
-    if (!_tx_thread_execute_ptr[coreid]) {
+    rdy_thread = _tx_thread_execute_ptr[coreid];
+    if ((!rdy_thread) || (rdy_thread -> tx_thread_smp_core_control != 1)) {
         if (coreid == 0) {
             /* increase the timer interrupt to higher priority to enable interrupt nesting */
             ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY + 1);
             __RWMB();
-            /* swap task stack to interrupt stack to avoid interrupt nesting on task stack */
         }
+        /* swap task stack to interrupt stack to avoid interrupt nesting on task stack */
         __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
         __RWMB();
         /* mcause must be saved and restore if interrupt nested */
@@ -94,14 +133,10 @@ void PortThreadSwitch(void)
         rv_csr_t msubm = __RV_CSR_READ(CSR_MSUBM);
         __enable_irq();
         __RWMB();
-        /* If no ready task just go to idle and wait for interrupt */
-        while (!_tx_thread_execute_ptr[coreid]) {
-            // if wfi here, it may not wakeup even swi is pending, since new swi could happen during eclic_msip_handler
-            __NOP();
-            __RWMB();
-        }
+        rdy_thread = _tx_find_ready_thread(TX_FALSE);
         /* disable interrupt to avoid interrupt nesting since new task handle found */
         __disable_irq();
+        __RWMB();
         /* restore mcause which is necessary since interrupt nested manually by us */
         __RV_CSR_WRITE(CSR_MSUBM, msubm);
         __RV_CSR_WRITE(CSR_MCAUSE, mcause);
@@ -113,12 +148,17 @@ void PortThreadSwitch(void)
             ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
             __RWMB();
         }
+    } else {
+        rdy_thread = _tx_find_ready_thread(TX_FALSE);
     }
 
-    _tx_thread_current_ptr[coreid] = _tx_thread_execute_ptr[coreid];
+    /* Clear the execution control flag.  */
+    rdy_thread -> tx_thread_smp_core_control = 0;
+    _tx_thread_current_ptr[coreid] = rdy_thread;
     _tx_thread_current_ptr[coreid] -> tx_thread_run_count ++;
     /* Clear Software IRQ, A MUST */
     SysTimer_ClearSWIRQ();
+    __RWMB();
 }
 
 void SetupSysTickInterrupt(void)
@@ -153,7 +193,7 @@ VOID _tx_initialize_low_level(VOID)
 //    _tx_initialize_unused_memory = s_threadx_heap;
     _tx_initialize_unused_memory = NULL;
     SetupSysTickInterrupt();
-    _tx_thread_interrupt_control(0);
+    _tx_thread_interrupt_control(TX_INT_DISABLE);
 }
 
 UINT _tx_thread_interrupt_control(UINT new_posture)
@@ -162,9 +202,9 @@ UINT _tx_thread_interrupt_control(UINT new_posture)
 
     if (new_posture == TX_INT_DISABLE) {
         // clear interrupt
-        temp = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
+        temp = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE) & MSTATUS_MIE;
     } else {
-        temp = __RV_CSR_SWAP(CSR_MSTATUS, new_posture);
+        temp = __RV_CSR_READ_SET(CSR_MSTATUS, MSTATUS_MIE) & MSTATUS_MIE;
     }
     __RWMB();
     return (UINT)temp;
@@ -196,6 +236,7 @@ extern volatile UINT _tx_thread_preempt_disable;
 void _tx_thread_system_return(void)
 {
     _tx_thread_preempt_disable = 0;
+    __RWMB();
     _tx_thread_smp_force_unprotect(MSTATUS_MIE);
 
     /* Set a software interrupt(SWI) request to request a context switch. */

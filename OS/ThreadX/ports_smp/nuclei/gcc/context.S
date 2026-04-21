@@ -11,6 +11,7 @@
 
     .extern _tx_thread_current_ptr
     .extern _tx_thread_execute_ptr
+    .extern _tx_find_ready_thread
 
 
 .section    .text
@@ -52,38 +53,17 @@ _tx_thread_schedule:
     la t0, _sp // TODO need to consider SMP case
 #endif
     csrw CSR_MSCRATCH, t0
-    /* Enable interrupt to wait _tx_thread_execute_ptr is not null */
-    csrsi CSR_MSTATUS, MSTATUS_MIE
-_tx_thread_schedule_loop:
-#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
-    la a0, _tx_thread_execute_ptr   /* Pick current thread to a0 */
-    csrr t1, CSR_MHARTID
-    slli t1, t1, LOG_REGBYTES
-    add a0, a0, t1
-#else
-    la a0, _tx_thread_execute_ptr   /* Pick current thread to a0 */
-#endif
-    LOAD a0, 0(a0)
-    beqz a0, _tx_thread_schedule_loop
-_tx_thread_schedule_ready:
-    /* Disable interrupt to load first thread */
-    csrci CSR_MSTATUS, MSTATUS_MIE
-#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
-    la a1, _tx_thread_current_ptr   /* _tx_thread_current_ptr[coreid] = _tx_thread_execute_ptr[coreid] */
-    csrr t1, CSR_MHARTID
-    slli t1, t1, LOG_REGBYTES
-    add a1, a1, t1
-#else
-    la a1, _tx_thread_current_ptr   /* _tx_thread_current_ptr = _tx_thread_execute_ptr */
-#endif
-    STORE a0, 0(a1)
+    /* Request _tx_find_ready_thread to set the current thread. */
+    li a0, 1
+    call _tx_find_ready_thread
+
     /* Increment the run count for this thread.  */
     /* _tx_thread_current_ptr[coreid] -> tx_thread_run_count++;  */
-    LOAD  t0, 1  * REGBYTES(a0)
+    LOAD  t0, 1 * REGBYTES(a0)
     addi  t0, t0, 1
     STORE t0, 1 * REGBYTES(a0)
 
-    LOAD sp, 2  * REGBYTES(a0)      /* Read sp from _tx_thread_execute_ptr[coreid] -> tx_thread_stack_ptr */
+    LOAD sp,  2 * REGBYTES(a0)      /* Read sp from _tx_thread_execute_ptr[coreid] -> tx_thread_stack_ptr */
     /* Pop PC from stack and set MEPC */
     LOAD t0,  0  * REGBYTES(sp)
     csrw CSR_MEPC, t0
