@@ -1,6 +1,7 @@
 // See LICENSE for license details.
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "nuclei_sdk_soc.h"
 
@@ -67,6 +68,10 @@
 #endif
 /* Convert the way to one-hot mask. */
 #define PRECISE_INJ_MASK (0x1U << PRECISE_INJ_WAY)
+/* The base address of CLM. */
+#ifndef CLM_BASE_ADDR
+#define CLM_BASE_ADDR (0x30000000)
+#endif
 
 uint32_t pa_size; /*!< Physical address size */
 typedef enum {
@@ -172,6 +177,7 @@ void inst_access_fault_handler(unsigned long mcause, unsigned long sp)
             if (SMPCC_GetFatalErrCount()) {
                 SMPCC_DisableCCacheECCExcp();
                 SMPCC_ClearFatalErrCount();
+                SMPCC_ClearBusErrPending();
             }
         default:
             break;
@@ -198,6 +204,7 @@ void load_fault_handler(unsigned long mcause, unsigned long sp)
             if (SMPCC_GetFatalErrCount()) {
                 SMPCC_DisableCCacheECCExcp();
                 SMPCC_ClearFatalErrCount();
+                SMPCC_ClearBusErrPending();
             }
         default:
             break;
@@ -565,15 +572,89 @@ static int32_t __attribute__((aligned(4096))) cc_ecc_err_inj_demo()
         return EXIT_FAILURE;
     }
 
-    SMPCC_CCacheErrRestore(test_code);
+    SMPCC_CCacheErrRestore(test_data);
     SMPCC_EnableCCacheECCExcp();
-    test_code();
+    __LW(test_data);
+    __RWMB();
 
     if (load_fault_flag == 2) {
         printf("[ERROR]: ECC double bit error occured again on CCache Tag RAM!\r\n");
         return EXIT_FAILURE;
     }
     /* ---------- end of CCache Tag RAM double bit error test ---------- */
+
+    return EXIT_SUCCESS;
+}
+
+static int32_t clm_ecc_err_inj_demo()
+{
+    if (!SMPCC_IsCCacheSupportECC()) {
+        printf("CCache not support ECC, will not run CLM ECC demo.\r\n");
+        return EXIT_SUCCESS;
+    }
+    test_mem_type = ECC_MEM_TYPE_CCACHE;
+
+    SMPCC_EnableCCacheECC();
+    SMPCC_EnableCCacheECCCheck();
+
+    /* ------------- Initialize CLM ------------- */
+    uint64_t *clm_base = (uint64_t *)CLM_BASE_ADDR;
+    SMPCC_DisableCCache();
+    MFlushInvalDCache();
+    int32_t res = MFlushInvalCCache();
+    if (res != SMPCC_CMD_xCMD_RESULT_SUCCESS) {
+        printf("MFlushInvalCCache Failed!\r\n");
+    }
+    SMPCC_SetCLMAllWays((uint64_t)clm_base);
+    memset(clm_base, 0, 128); // Clear 128 Bytes memory space at the beginning of the CLM.
+
+    /* ------------- Calculate CLM golden ecc code ------------- */
+    uint8_t ecc_code_calc = ECC_GenerateECCCodeU64(*clm_base);
+
+    /* ------------- CLM single bit error test ------------- */
+    uint8_t sgl_ecc_code = gen_ecc_err_code(SINGLEBIT_ERROR_MASK, ecc_code_calc);
+    SMPCC_CLMErrInject(sgl_ecc_code, (uint32_t *)clm_base);
+    __LW(clm_base);
+    __RWMB();
+
+    if (SMPCC_GetRecvErrCount()) {
+        SMPCC_ClearRecvErrCount();
+        printf("ECC single bit error has occured on CLM!\r\n");
+    } else {
+        printf("[ERROR]: ECC single bit error hasn't occured on CLM!\r\n");
+        return EXIT_FAILURE;
+    }
+    /* ---------- end of CLM single bit error test ---------- */
+
+    /* ------------- CLM double bit error test ------------- */
+    uint8_t dbl_ecc_code = gen_ecc_err_code(DOUBLEBIT_ERROR_MASK, ecc_code_calc);
+    load_fault_flag = 0;
+    SMPCC_ClearFatalErrCount();
+    SMPCC_CLMErrInject(dbl_ecc_code, (uint32_t *)clm_base);
+    SMPCC_EnableCCacheECCExcp();
+    __LW(clm_base);
+    __RWMB();
+
+    if (load_fault_flag == 1) {
+        printf("ECC double bit error has occured on CLM!\r\n");
+    } else {
+        printf("[ERROR]: ECC double bit error hasn't occured on CLM!\r\n");
+        return EXIT_FAILURE;
+    }
+
+    SMPCC_CCacheErrRestore(test_data);
+    SMPCC_EnableCCacheECCExcp();
+    __LW(test_data);
+    __RWMB();
+
+    if (load_fault_flag == 2) {
+        printf("[ERROR]: ECC double bit error occured again on CLM!\r\n");
+        return EXIT_FAILURE;
+    }
+    /* ---------- end of CLM double bit error test ---------- */
+
+    /* restore CLM to CCache */
+    SMPCC_SetCLMNoWay();
 
     return EXIT_SUCCESS;
 }
@@ -707,6 +788,7 @@ static int32_t run_ecc_err_inj_demo(int32_t cc_demo)
             res |= ic_ecc_err_inj_demo();
             res |= dc_ecc_err_inj_demo();
             if (cc_demo) {
+                res |= clm_ecc_err_inj_demo();
                 res |= cc_ecc_err_inj_demo();
             }
 #else
