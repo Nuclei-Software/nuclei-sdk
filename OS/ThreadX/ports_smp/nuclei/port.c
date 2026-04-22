@@ -93,11 +93,27 @@ TX_THREAD* _tx_find_ready_thread(UINT set_current)
 // Task Switch code called in eclic_msip_handler
 void PortThreadSwitch(void)
 {
+    TX_THREAD *rdy_thread;
+    UINT coreid = _tx_thread_smp_core_get();
+
+    if (_tx_thread_preempt_disable != 0) {
+        if (_tx_thread_smp_protection.tx_thread_smp_protect_core == coreid) {
+            SysTimer_ClearSWIRQ();
+        }
+        __RWMB();
+        return;
+    }
+
 #ifdef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
     _tx_execution_thread_exit();
 #endif
-    TX_THREAD *rdy_thread;
-    UINT coreid = _tx_thread_smp_core_get();
+
+    /* Acknowledge the interrupt that brought us here before scheduling.
+       Any SWI raised after this point represents a new scheduling request
+       and must remain pending for the restored thread. */
+    SysTimer_ClearSWIRQ();
+    __RWMB();
+
     /*
      * Magic idle task emulation for threadx
      * ThreadX don't have idle task, so _tx_thread_execute_ptr could be NULL
@@ -131,13 +147,9 @@ void PortThreadSwitch(void)
         rv_csr_t msubm = __RV_CSR_READ(CSR_MSUBM);
         __enable_irq();
         __RWMB();
-        /*
-         * Do not touch the local rdy_thread result here.
-         * After switching to the interrupt stack, let the scheduler helper
-         * finish updating the execute pointer for this core, then reload the
-         * chosen thread after the task stack is restored.
-         */
-        _tx_find_ready_thread(TX_FALSE);
+        /* Claim the selected thread while on the interrupt stack.  Publish it
+           as current only after switching back to the task stack below. */
+        _tx_find_ready_thread(TX_TRUE);
         /* disable interrupt to avoid interrupt nesting since new task handle found */
         __disable_irq();
         __RWMB();
@@ -152,19 +164,13 @@ void PortThreadSwitch(void)
             ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
             __RWMB();
         }
-        __RWMB();
-        /* Now the task stack is restored, so it is safe to reload rdy_thread. */
-        rdy_thread = _tx_thread_execute_ptr[coreid];
     } else {
-        rdy_thread = _tx_find_ready_thread(TX_FALSE);
+        _tx_find_ready_thread(TX_TRUE);
     }
-
+    rdy_thread = _tx_thread_current_ptr[coreid];
     /* Clear the execution control flag.  */
     rdy_thread -> tx_thread_smp_core_control = 0;
-    _tx_thread_current_ptr[coreid] = rdy_thread;
-    _tx_thread_current_ptr[coreid] -> tx_thread_run_count ++;
-    /* Clear Software IRQ, A MUST */
-    SysTimer_ClearSWIRQ();
+    rdy_thread -> tx_thread_run_count ++;
     __RWMB();
 }
 

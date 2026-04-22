@@ -65,7 +65,7 @@ _per_cpu_init_sp_fin:
     addi  t0, t0, 1
     STORE t0, 1  * REGBYTES(a0)
 
-    LOAD sp,  2  * REGBYTES(a0)      /* Read sp from _tx_thread_execute_ptr[coreid] -> tx_thread_stack_ptr */
+    LOAD sp,  2  * REGBYTES(a0)      /* Read sp from selected thread -> tx_thread_stack_ptr */
     /* Pop PC from stack and set MEPC */
     LOAD t0,  0  * REGBYTES(sp)
     csrw CSR_MEPC, t0
@@ -145,40 +145,45 @@ eclic_msip_handler:
     /* Push mstatus to stack */
     csrr t0, CSR_MSTATUS
     STORE t0,  (portRegNum - 1)  * REGBYTES(sp)
-
-    /* Push additional registers */
-
-    /* If _tx_thread_current_ptr[coreid] is null, no sp need to be saved */
-#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
-    la t0, _tx_thread_current_ptr
-    csrr t1, CSR_MHARTID
-    slli t1, t1, LOG_REGBYTES
-    add t0, t0, t1
-#else
-    la t0, _tx_thread_current_ptr
-#endif
-    LOAD t0, 0(t0)
-    beqz t0, _tx_thread_switch
-    /* Store sp to task stack to _tx_thread_current_ptr -> tx_thread_stack_ptr */
-    STORE sp, 2 * REGBYTES(t0)
     /* Store last pc to thread stack */
     csrr t0, CSR_MEPC
     STORE t0, 0(sp)
 
-_tx_thread_switch:
-    jal PortThreadSwitch
+    /* Push additional registers */
 
-    /* Switch task context to _tx_thread_execute_ptr[coreid] */
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
-    la t0, _tx_thread_execute_ptr
+    la t0, _tx_thread_current_ptr
     csrr t1, CSR_MHARTID
     slli t1, t1, LOG_REGBYTES
     add t0, t0, t1
 #else
-    la t0, _tx_thread_execute_ptr
+    la t0, _tx_thread_current_ptr
 #endif
     LOAD t0, 0(t0)
+    /* If _tx_thread_current_ptr[coreid] is null, no sp need to be saved */
+    beqz t0, _tx_thread_save_switch
+    /* Store sp to task stack to _tx_thread_current_ptr -> tx_thread_stack_ptr */
+    STORE sp, 2 * REGBYTES(t0)
+
+_tx_thread_save_switch:
+    jal PortThreadSwitch
+
+    /* PortThreadSwitch has claimed and published the selected thread in
+       _tx_thread_current_ptr[coreid].  Restore that exact thread instead of
+       reloading _tx_thread_execute_ptr, which may be changed by another hart. */
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
+    la t0, _tx_thread_current_ptr
+    csrr t1, CSR_MHARTID
+    slli t1, t1, LOG_REGBYTES
+    add t0, t0, t1
+#else
+    la t0, _tx_thread_current_ptr
+#endif
+    LOAD t0, 0(t0)
+    /* If _tx_thread_current_ptr[coreid] is null, no sp need to be restored */
+    beqz t0, _tx_thread_restore_switch
     LOAD sp, 2 * REGBYTES(t0)
+_tx_thread_restore_switch:
 
     /* Pop PC from stack and set MEPC */
     LOAD t0,  0  * REGBYTES(sp)

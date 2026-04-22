@@ -5,6 +5,19 @@ DISABLE_MIE MACRO
   csrci CSR_MSTATUS, MSTATUS_MIE
   ENDM
 
+/* Update ThreadX SMP per-core ISR nesting state.
+ * This macro must be called after SAVE_CONTEXT because it clobbers t0-t2.
+ */
+UPDATE_THREADX_SYSTEM_STATE MACRO delta
+    la t0, _tx_thread_system_state
+    csrr t1, CSR_MHARTID
+    slli t1, t1, LOG_REGBYTES
+    add t0, t0, t1
+    LOAD t2, 0(t0)
+    addi t2, t2, delta
+    STORE t2, 0(t0)
+  ENDM
+
 SAVE_CONTEXT MACRO
 #if defined(ECLIC_HW_CTX_AUTO) && defined(CFG_HAS_ECLICV2)
 #else
@@ -97,6 +110,7 @@ RESTORE_CSR_CONTEXT MACRO
     PUBLIC exc_entry, irq_entry, default_intexc_handler
     PUBLIC Undef_Handler
     EXTERN core_exception_handler
+    EXTERN _tx_thread_system_state
     SECTION `.text`:CODE:NOROOT(2)
     CODE
 
@@ -162,6 +176,11 @@ irq_entry:
     /* Save the necessary CSR registers */
     SAVE_CSR_CONTEXT
 
+    /* Mark this core as being in a normal IRQ handler.
+     * eclic_msip_handler is the scheduler SWI path and is handled separately.
+     */
+    UPDATE_THREADX_SYSTEM_STATE 1
+
     /* This special CSR read/write operation, which is actually
      * claim the CLIC to find its pending highest ID, if the ID
      * is not 0, then automatically enable the mstatus.MIE, and
@@ -171,6 +190,11 @@ irq_entry:
 
     /* Critical section with interrupts disabled */
     DISABLE_MIE
+
+    /* All nested IRQ work claimed by JALMNXTI is done; leave ThreadX ISR context
+     * before restoring the interrupted context.
+     */
+    UPDATE_THREADX_SYSTEM_STATE -1
 
     /* Restore the necessary CSR registers */
     RESTORE_CSR_CONTEXT
