@@ -168,7 +168,13 @@ eclic_msip_handler:
     STORE sp, 2 * REGBYTES(t0)
 
 _tx_thread_save_switch:
+    /* Switch from the thread stack to the per-core interrupt stack to avoid
+       corrupting the thread stack during scheduling. */
+    csrrw sp, CSR_MSCRATCHCSWL, sp
     jal PortThreadSwitch
+    csrrw sp, CSR_MSCRATCHCSWL, sp
+    /* Switch back to the saved thread stack for now; a new stack pointer will
+       be loaded for the selected thread below. */
 
     /* PortThreadSwitch has claimed and published the selected thread in
        _tx_thread_current_ptr[coreid].  Restore that exact thread instead of

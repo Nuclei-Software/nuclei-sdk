@@ -135,39 +135,37 @@ void PortThreadSwitch(void)
     rdy_thread = _tx_thread_execute_ptr[coreid];
     if ((!rdy_thread) || (rdy_thread -> tx_thread_smp_core_control != 1)) {
         if (coreid == 0) {
-            /* increase the timer interrupt to higher priority to enable interrupt nesting */
+            /* Raise the timer interrupt priority temporarily so interrupt
+               nesting remains available while searching for a ready thread. */
             ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY + 1);
             __RWMB();
         }
-        /* swap task stack to interrupt stack to avoid interrupt nesting on task stack */
-        __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
         __RWMB();
-        /* mcause must be saved and restore if interrupt nested */
+        /* Save mcause/msubm because they may be overwritten when interrupts
+           are re-enabled and nested here. */
         rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
         rv_csr_t msubm = __RV_CSR_READ(CSR_MSUBM);
         __enable_irq();
         __RWMB();
-        /* Claim the selected thread while on the interrupt stack.  Publish it
-           as current only after switching back to the task stack below. */
-        _tx_find_ready_thread(TX_TRUE);
-        /* disable interrupt to avoid interrupt nesting since new task handle found */
+        rdy_thread = _tx_find_ready_thread(TX_FALSE);
+        /* Disable interrupts again after a candidate thread has been found to
+           prevent further nesting during the handoff. */
         __disable_irq();
         __RWMB();
-        /* restore mcause which is necessary since interrupt nested manually by us */
+        /* Restore mcause/msubm because nested interrupts were allowed
+           explicitly in the search window above. */
         __RV_CSR_WRITE(CSR_MSUBM, msubm);
         __RV_CSR_WRITE(CSR_MCAUSE, mcause);
-        /* swap interrupt stack back to task stack */
-        __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
         __RWMB();
-        /* restore timer interrupt to origin kernel interrupt priority */
+        /* Restore the timer interrupt to its normal kernel priority. */
         if (coreid == 0) {
             ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
             __RWMB();
         }
     } else {
-        _tx_find_ready_thread(TX_TRUE);
+        rdy_thread = _tx_find_ready_thread(TX_FALSE);
     }
-    rdy_thread = _tx_thread_current_ptr[coreid];
+    _tx_thread_current_ptr[coreid] = rdy_thread;
     /* Clear the execution control flag.  */
     rdy_thread -> tx_thread_smp_core_control = 0;
     rdy_thread -> tx_thread_run_count ++;
