@@ -171,6 +171,8 @@ void PortThreadSwitch(void)
     /* Clear the execution control flag.  */
     rdy_thread -> tx_thread_smp_core_control = 0;
     rdy_thread -> tx_thread_run_count ++;
+    /* Setup time-slice, if present.  */
+    _tx_timer_time_slice[coreid] =  rdy_thread -> tx_thread_time_slice;
     __RWMB();
 }
 
