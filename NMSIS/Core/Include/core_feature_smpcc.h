@@ -1169,6 +1169,19 @@ __STATIC_FORCEINLINE void SMPCC_EnableFatalErrIrq(void)
 }
 
 /**
+ * \brief  Clear Bus Error Pending Status
+ * \details
+ * This function clears the pending status for bus errors in cluster cache maintenance operations.
+ * \sa
+ * - \ref SMPCC_EnableBusErrIrq
+ * - \ref SMPCC_DisableBusErrIrq
+*/
+__STATIC_FORCEINLINE void SMPCC_ClearBusErrPending(void)
+{
+    SMPCC->CC_CTRL.b.bus_err_pend = 0;
+}
+
+/**
  * \brief  Disable Fatal Error Interrupt
  * \details
  * This function disables interrupt generation when fatal error count exceeds the threshold.
