@@ -3168,7 +3168,7 @@ error is detected. When error bits are 3 or more, the result is not guaranteed.
 
 This demo tests different memory types based on the ``DOWNLOAD`` parameter in the ``make`` command. When ``DOWNLOAD=ilm``,
 the demo tests ECC error injection on local memory; when ``DOWNLOAD=ddr`` or ``DOWNLOAD=sram``, the demo tests
-ECC error injection on cache memory (L1 I/D Cache and L2 Cache if present).
+ECC error injection on cache memory (L1 I/D Cache and L2 Cache/CLM if present).
 
 **How to run this application:**
 
@@ -3192,9 +3192,9 @@ Here is the result when ``DOWNLOAD=ddr``. (The result of ``DOWNLOAD=sram`` is si
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Jan  8 2026, 15:56:56
+    Nuclei SDK Build Time: Apr 28 2026, 15:42:29
     Download Mode: DDR
-    CPU Frequency 50322800 Hz
+    CPU Frequency 50320670 Hz
     CPU HartID: 0
     ECC supported:
         ICache ECC: yes
@@ -3210,6 +3210,8 @@ Here is the result when ``DOWNLOAD=ddr``. (The result of ``DOWNLOAD=sram`` is si
     ECC double bit error has occured on DCache Data RAM!
     ECC single bit error has occured on DCache Tag RAM!
     ECC double bit error has occured on DCache Tag RAM!
+    ECC single bit error has occured on CLM!
+    ECC double bit error has occured on CLM!
     ECC single bit error has occured on CCache Data RAM!
     ECC double bit error has occured on CCache Data RAM!
     ECC single bit error has occured on CCache Tag RAM!
@@ -3220,9 +3222,9 @@ Here is the result when ``DOWNLOAD=ilm``.
 
 .. code-block:: console
 
-    Nuclei SDK Build Time: Jan  8 2026, 15:56:49
+    Nuclei SDK Build Time: Apr 28 2026, 16:42:48
     Download Mode: ILM
-    CPU Frequency 50322800 Hz
+    CPU Frequency 15999795 Hz
     CPU HartID: 0
     ECC supported:
         ICache ECC: yes

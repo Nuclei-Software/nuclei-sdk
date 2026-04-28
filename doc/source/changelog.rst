@@ -56,6 +56,10 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Sync NMSIS 1.5.0 Core/DSP/NN header files, ``build.mk``, ``npk.yml`` and prebuilt DSP and NN libraries; for changes related to DSP/NN libraries, please refer to the NMSIS changelog.
   - Update ``IINFO_Type`` in ``core_feature_iinfo.h``. Add ``mpfctl``, ``etrace_info``, precise ECC and mem_crc related registers.
   - Add new api ``__s_switch_mode`` to switch from S-mode to U-mode
+  - Update ``core_feature_cache.h`` to clear pending Cluster Cache pending status before issuing ``MFlushCCache``, ``SFlushCCache`` and ``UFlushCCache``.
+  - Update ``core_feature_ecc.h`` to trigger DCache ECC injection with a real load access instead of cache line lock operations.
+  - Extend ``core_feature_iinfo.h`` with precise ECC injection capability detection, and helper APIs to configure precise ECC injection address and cache way.
+  - Extend ``core_feature_smpcc.h`` with additional Cluster Cache register definitions, and precise ECC injection support for CCache tag/data RAM and CLM error injection flows.
 
 * Application
 
@@ -100,6 +104,7 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Add :ref:`design_app_exception_mmode`, :ref:`design_app_exception_smode`, :ref:`design_app_exception_umode` to show how to register exception handler and delegate exception to S-mode
   - Add new application :ref:`design_app_demo_backtrace` to demonstrate RISC-V frame pointer based stack backtrace via exception handler with detailed frame information and addr2line hints
   - Add eclic presence runtime check to RTOS demo: freertos/rtthread/threadx/ucosii
+  - Update ``demo_ecc`` to use precise ECC injection when supported, and add CLM ECC single-bit and double-bit injection demos.
 
 * Build System
 
