@@ -1970,17 +1970,31 @@ __STATIC_FORCEINLINE void SMPCC_CCacheDramErrInject(uint32_t ecc_code, uint32_t 
  * \param   addr      Address where the error should be injected
  * \return  None
  */
-__STATIC_FORCEINLINE void SMPCC_CLMErrInject(uint32_t ecc_code, void *addr)
+__STATIC_FORCEINLINE void SMPCC_CLMErrInject(uint32_t ecc_code, uint32_t *addr)
 {
+    if (IINFO_IsPreciseECCInjSupported()) {
+        SMPCC->CC_ECC_INJ_ADDR = (unsigned long)addr;
+        /* The way number should be one-hot, but not used for CLM error injection. */
+        SMPCC->CC_ECC_INJ_WAY.b.num = 1;
+        SMPCC->CC_ECC_INJ_DATA = *addr;
+    }
     SMPCC_SetECCCode(ecc_code);
-    SMPCC_DisableCLMECCCheck();
-    uint32_t val = __LW(addr);
+    SMPCC_DisableCCacheECCCheck();
+    MFlushInvalDCacheCCacheLine((unsigned long)addr);
     __RWMB();
     SMPCC->CC_ERR_INJ.b.inj_clm = SMPCC_ERR_INJ_INJCLM_ENABLE;
-    __SW(addr, val);
+
+    if (IINFO_IsPreciseECCInjSupported()) {
+        SMPCC->CC_ERR_INJ.b.cs = SMPCC_ERR_INJ_CS_START;
+        /* Wait for the ECC injection to complete */
+        while (SMPCC->CC_ERR_INJ.b.cs == SMPCC_ERR_INJ_CS_START);
+    } else {
+        MLockCCacheLine((unsigned long)addr);
+    }
+
     SMPCC->CC_ERR_INJ.b.inj_clm = SMPCC_ERR_INJ_INJCLM_DISABLE;
     __RWMB();
-    SMPCC_EnableCLMECCCheck();
+    SMPCC_EnableCCacheECCCheck();
 }
 
 /**
