@@ -1920,8 +1920,9 @@ __STATIC_FORCEINLINE void SMPCC_CCacheTramErrInject(uint32_t ecc_code, uint32_t 
     }
 
     SMPCC->CC_ERR_INJ.b.inj_tag = SMPCC_ERR_INJ_INJTAG_DISABLE;
-    __RWMB();
+    __RWMB(); // To ensure the ECC error injection is finished
     SMPCC_EnableCCacheECCCheck();
+    __RWMB(); // To ensure the ECC check is enabled
 }
 
 /**
@@ -1958,8 +1959,9 @@ __STATIC_FORCEINLINE void SMPCC_CCacheDramErrInject(uint32_t ecc_code, uint32_t 
     }
 
     SMPCC->CC_ERR_INJ.b.inj_data = SMPCC_ERR_INJ_INJDATA_DISABLE;
-    __RWMB();
+    __RWMB(); // To ensure the ECC error injection is finished
     SMPCC_EnableCCacheECCCheck();
+    __RWMB(); // To ensure the ECC check is enabled
 }
 
 /**
@@ -1993,8 +1995,9 @@ __STATIC_FORCEINLINE void SMPCC_CLMErrInject(uint32_t ecc_code, uint32_t *addr)
     }
 
     SMPCC->CC_ERR_INJ.b.inj_clm = SMPCC_ERR_INJ_INJCLM_DISABLE;
-    __RWMB();
+    __RWMB(); // To ensure the ECC error injection is finished
     SMPCC_EnableCCacheECCCheck();
+    __RWMB(); // To ensure the ECC check is enabled
 }
 
 /**
