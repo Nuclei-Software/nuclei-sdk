@@ -85,6 +85,9 @@ typedef struct {
 #define SMPCC_CMD_xCMD_CMD_WB_ALL                   0x7U                                    /*!< SMPCC_CMD xCMD CMD WB_ALL */
 #define SMPCC_CMD_xCMD_CMD_WBINVAL_ALL              0x6U                                    /*!< SMPCC_CMD xCMD CMD WBINVAL_ALL */
 
+#define SMPCC_CMD_xCMD_STATUS_Pos                   23U                                     /*!< SMPCC_CMD register xCMD field RESC/FESC/BESC Position */
+#define SMPCC_CMD_xCMD_STATUS_Msk                   (0x7UL << SMPCC_CMD_xCMD_STATUS_Pos)    /*!< SMPCC_CMD register xCMD field RESC/FESC/BESC Mask */
+
 #define SMPCC_CMD_xCMD_RESULT_Pos                   26U                                     /*!< SMPCC_CMD xCMD RESULT Position */
 #define SMPCC_CMD_xCMD_RESULT_Msk                   (0x1FUL << SMPCC_CMD_xCMD_RESULT_Pos)   /*!< SMPCC_CMD xCMD RESULT Mask */
 #define SMPCC_CMD_xCMD_RESULT_SUCCESS               0x0U                                    /*!< SMPCC_CMD xCMD RESULT Success */
@@ -2428,6 +2431,9 @@ __STATIC_INLINE void UFlushInvalDCache(void)
  */
 __STATIC_INLINE int32_t MFlushCCache(void)
 {
+    /* Clear pending error status before issuing the Cluster Cache command.
+     * RESC/FESC/BESC are write-1-to-clear bits, so read the status and write it back. */
+    SMPCC_CMD->CC_mCMD = (SMPCC_CMD->CC_mCMD & SMPCC_CMD_xCMD_STATUS_Msk);
     SMPCC_CMD->CC_mCMD = (SMPCC_CMD->CC_mCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
                          _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_mCMD) == 0);
@@ -2447,6 +2453,9 @@ __STATIC_INLINE int32_t MFlushCCache(void)
  */
 __STATIC_INLINE int32_t SFlushCCache(void)
 {
+    /* Clear pending error status before issuing the Cluster Cache command.
+     * RESC/FESC/BESC are write-1-to-clear bits, so read the status and write it back. */
+    SMPCC_CMD->CC_sCMD = (SMPCC_CMD->CC_sCMD & SMPCC_CMD_xCMD_STATUS_Msk);
     SMPCC_CMD->CC_sCMD = (SMPCC_CMD->CC_sCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
                          _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_sCMD) == 0);
@@ -2466,6 +2475,9 @@ __STATIC_INLINE int32_t SFlushCCache(void)
  */
 __STATIC_INLINE int32_t UFlushCCache(void)
 {
+    /* Clear pending error status before issuing the Cluster Cache command.
+     * RESC/FESC/BESC are write-1-to-clear bits, so read the status and write it back. */
+    SMPCC_CMD->CC_uCMD = (SMPCC_CMD->CC_uCMD & SMPCC_CMD_xCMD_STATUS_Msk);
     SMPCC_CMD->CC_uCMD = (SMPCC_CMD->CC_uCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
                          _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_uCMD) == 0);
