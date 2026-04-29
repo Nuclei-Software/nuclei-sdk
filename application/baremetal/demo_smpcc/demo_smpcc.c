@@ -218,11 +218,11 @@ int main(void)
     int cc_size = show_smpcc_info();
     /* The following demos need L2 cache presence and has a proper size */
     /* L2 cache size should be a power of 2 and larger than 64KB but not larger than MAX_L2_SIZE */
-    if (!CHECK_POWER_OF_2(cc_size)) {
-        printf("L2 cache size is not a power of 2!\r\n");
-        return 0;
-    } else if (cc_size < MIN_L2_SIZE_BYTE) {
+    if (cc_size < MIN_L2_SIZE_BYTE) {
         printf("There is no L2 cache or you may run on QEMU!\r\n");
+        return 0;
+    } else if (!CHECK_POWER_OF_2(cc_size)) {
+        printf("L2 cache size is not a power of 2!\r\n");
         return 0;
     } else if (cc_size > MAX_L2_SIZE_BYTE) {
         printf("L2 cache is larger than %d KB!\r\n", MAX_L2_SIZE_KB);
