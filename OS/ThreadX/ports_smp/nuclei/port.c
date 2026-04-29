@@ -267,6 +267,35 @@ void _tx_thread_smp_core_preempt(UINT core)
     within the specified behaviour for the architecture. */
     __RWMB();
 }
+
+void _tx_thread_irq_exit_schedule_check(void)
+{
+    UINT coreid;
+
+    coreid = _tx_thread_smp_core_get();
+
+    /* Only request scheduling when the IRQ nesting for this core has fully
+       unwound and ThreadX is about to return to normal thread context. */
+    if (_tx_thread_system_state[coreid] != ((ULONG)0)) {
+        return;
+    }
+
+    /* No scheduling request is needed if the current thread already matches
+       the scheduler's execute target for this core. */
+    if (_tx_thread_current_ptr[coreid] == _tx_thread_execute_ptr[coreid]) {
+        return;
+    }
+
+    /* Honor ThreadX global preemption disable state.  If scheduling is
+       deferred here, the normal ThreadX resume/preempt paths are expected
+       to request it later. */
+    if (_tx_thread_preempt_disable != ((UINT)0)) {
+        return;
+    }
+
+    SysTimer_SetSWIRQ();
+    __RWMB();
+}
 #endif
 
 // _tx_thread_schedule function implemented in context.S
