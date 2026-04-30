@@ -13,7 +13,7 @@
         "rv64imafcbp": {"CORE":"nx900f", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
         "rv64imafdc": {"CORE":"nx900fd", "ARCH_EXT":""},
         "rv64imafdcb": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs"},
-        "rv64imafdcb_zicond": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond"},
+        "rv64imafdcb_zicond": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond", "NMSIS_LIB_ARCH": "rv64imafdc_zba_zbb_zbc_zbs"},
         "rv64imafdcp": {"CORE":"nx900fd", "ARCH_EXT":"_xxldsp"},
         "rv64imafdcbp": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_xxldsp"},
         "rv64imafdcbp_zicond": {"CORE":"nx900fd", "ARCH_EXT":"_zba_zbb_zbc_zbs_zicond_xxldsp", "NMSIS_LIB_ARCH": "rv64imafdc_zba_zbb_zbc_zbs_xxldsp"}
