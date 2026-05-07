@@ -8,6 +8,12 @@ V0.9.0
 
 .. note::
 
+    - **Behavior change / bugfix**: AMO intrinsic APIs in ``NMSIS/Core/Include/core_feature_base.h``
+      (``__AMOADD_*``, ``__AMOAND_*``, ``__AMOOR_*``, ``__AMOXOR_*``, ``__AMOMAX*_*``,
+      ``__AMOMIN*_*``) now return the **original memory value** to match the RISC-V AMO
+      instruction semantics. **Previous SDK releases returned the updated memory value via an
+      extra non-atomic load**, which could produce incorrect results in concurrent use cases.
+      **Users relying on the old return value behavior need to update their code accordingly.**
     - Please use ``Nuclei Studio 2025.10`` with v0.9.0 and later version.
     - **Nuclei N100 series with ECLIC configured** are supported, see :ref:`N100 support limitation <n100_support_limitation>`
     - ECLIC v2 hardware feature is supported, only can run on Nuclei RISC-V CPU with ECLIC v2, see :ref:`design_soc_evalsoc_eclicv2`
@@ -16,6 +22,10 @@ This is release version of ``0.9.0`` of Nuclei SDK.
 
 * NMSIS
 
+  - **ATTENTION**: Fix AMO intrinsic APIs in ``core_feature_base.h`` to return the
+    **original memory value** according to RISC-V AMO instruction semantics, and update
+    related AMO API comments. This is a **bugfix** and an **API behavior change** for users
+    that previously depended on the returned updated value.
   - Change ``core_feature_pmp.h`` to support more PMP entries, changed from 16 to 64 now
   - Enable __LD/__SD macro when Zilsd extension present for rv32 in ``core_feature_base.h``
   - Add comments for updating ECLIC threshold MTH setting recommendations in ``core_feature_eclic.h``
@@ -209,6 +219,12 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Add ``demo_smpcc`` and ``demo_ecc`` application documentation in ``app.rst``
   - Update :ref:`design_app_demo_profiling` documentation in ``app.rst`` with detailed GCC and LLVM/Clang toolchain-specific instructions for profiling and coverage analysis, and command-line workflows using ``lcov``
   - Add warning note in :ref:`develop_buildsystem_var_semihost` about heap and stack collision risk when using semihosting with ``malloc``, due to newlib semihost ``_sbrk`` implementation assumes unlimited heap size
+
+* Test
+
+  - Update ``test/core/test_atomic.c`` to match the corrected AMO intrinsic semantics:
+    the AMO API return value is now checked against the **original memory value**, and the
+    **final memory content** is checked separately against the expected post-AMO result.
 
 * Tools
 
