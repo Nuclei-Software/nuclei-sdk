@@ -1090,7 +1090,7 @@ __STATIC_FORCEINLINE void __ECLIC_SetModeIRQ(IRQn_Type IRQn, uint32_t mode)
      * which can't be clear to 0 firstly, then OR it to 1
      */
     ECLIC->CTRL[IRQn].INTATTR = (uint8_t)(mode << CLIC_INTATTR_MODE_Pos) + \
-        (ECLIC->SCTRL[IRQn].INTATTR & (~CLIC_INTATTR_MODE_Msk));
+        (ECLIC->CTRL[IRQn].INTATTR & (~CLIC_INTATTR_MODE_Msk));
 }
 
 /**
