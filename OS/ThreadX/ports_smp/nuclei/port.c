@@ -233,11 +233,14 @@ void _tx_thread_smp_force_unprotect(UINT new_interrupt_posture)
     core_id = _tx_thread_smp_core_get();
     if (_tx_thread_smp_protection.tx_thread_smp_protect_core == core_id) {
         _tx_thread_smp_protection.tx_thread_smp_protect_count = 0;
-        if ((_tx_thread_smp_protection.tx_thread_smp_protect_count == 0) && (_tx_thread_preempt_disable == 0)) {
-            _tx_thread_smp_protection.tx_thread_smp_protect_core = ((ULONG) 0xFFFFFFFFUL);
-            _tx_thread_smp_protection.tx_thread_smp_protect_ticket_owner ++;
-            __RWMB();
-        }
+        /* Publish the owner-clear state before handing the ticket to the
+           next hart. Otherwise ticket_owner can become visible first, let the
+           successor publish itself as owner, and then have this delayed clear
+           overwrite the new owner's protect_core field. */
+        _tx_thread_smp_protection.tx_thread_smp_protect_core = ((ULONG) 0xFFFFFFFFUL);
+        __RWMB(); /* ensure prior stores visible */
+        _tx_thread_smp_protection.tx_thread_smp_protect_ticket_owner ++;
+        __RWMB();
     }
     __RV_CSR_SET(CSR_MSTATUS, new_interrupt_posture);
     __RWMB();
@@ -312,11 +315,13 @@ ULONG _tx_thread_smp_current_state_get(void)
     ULONG temp;
     ULONG current_state;
 
-    temp = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
+    temp = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE) & MSTATUS_MIE;
     /* Pickup the current state.  */
     current_state =  _tx_thread_system_state[_tx_thread_smp_core_get()];
 
-    __RV_CSR_WRITE(CSR_MSTATUS, temp);
+    /* Only restore the saved MIE bit here.  A full CSR write may clobber
+       unrelated MSTATUS state established by nested trap handling. */
+    __RV_CSR_SET(CSR_MSTATUS, temp);
     __RWMB();
 
     /* Now return the state for the core.  */
@@ -329,11 +334,13 @@ TX_THREAD *_tx_thread_smp_current_thread_get(void)
     ULONG temp;
     TX_THREAD *current_thread;
 
-    temp = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
+    temp = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE) & MSTATUS_MIE;
     /* Pickup the current state.  */
     current_thread =  _tx_thread_current_ptr[_tx_thread_smp_core_get()];
 
-    __RV_CSR_WRITE(CSR_MSTATUS, temp);
+    /* Only restore the saved MIE bit here.  A full CSR write may clobber
+       unrelated MSTATUS state established by nested trap handling. */
+    __RV_CSR_SET(CSR_MSTATUS, temp);
     __RWMB();
 
     /* Now return the current thread for the core.  */
@@ -357,6 +364,7 @@ UINT _tx_thread_smp_protect(void)
     }
 
     my_ticket = (UINT)__AMOADD_W((volatile int32_t *)&(_tx_thread_smp_protection.tx_thread_smp_protect_ticket_next), 1);
+
     while (_tx_thread_smp_protection.tx_thread_smp_protect_ticket_owner != my_ticket) {
         __NOP();
     }
@@ -380,7 +388,12 @@ void _tx_thread_smp_unprotect(UINT new_interrupt_posture)
             _tx_thread_smp_protection.tx_thread_smp_protect_count --;
         }
         if ((_tx_thread_smp_protection.tx_thread_smp_protect_count == 0) && (_tx_thread_preempt_disable == 0)) {
+            /* Publish the owner-clear state before advancing the ticket.
+               Otherwise another hart can observe ticket_owner first, acquire
+               the lock, and then get its protect_core update overwritten by
+               this delayed clear from the previous owner. */
             _tx_thread_smp_protection.tx_thread_smp_protect_core = ((ULONG) 0xFFFFFFFFUL);
+            __RWMB(); /* ensure prior stores visible */
             _tx_thread_smp_protection.tx_thread_smp_protect_ticket_owner ++;
             __RWMB();
         }
