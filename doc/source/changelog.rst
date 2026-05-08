@@ -153,6 +153,7 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Fix ThreadX SMP port time-slice processing to run on every tick interrupt, enable trap SP swap setup for the primary hart when ECLICv2 is present, and correct a ``==`` typo in the SMP force-unprotect path ``_tx_thread_smp_force_unprotect``
   - Fix ThreadX SMP port by introducing ``_tx_find_ready_thread`` for shared ready-thread selection in GCC/IAR startup and ``PortThreadSwitch``, using ``tx_thread_smp_core_control`` as the ready-thread claim flag
   - Fix ThreadX Nuclei port interrupt control and task switch ordering in ``port.c`` by preserving the previous ``MSTATUS.MIE`` state and adding ``__RWMB()`` barriers after interrupt priority restore and software interrupt clear
+  - Replace the ThreadX SMP protection spinlock with a FIFO ticket lock in ``OS/ThreadX/ports_smp/nuclei/port.c`` and ``tx_port.h`` to improve fairness across CPUs and prevent slower harts from being starved by tight lock retry loops such as repeated ``tx_thread_identify()`` calls
 
 * Build System
 
