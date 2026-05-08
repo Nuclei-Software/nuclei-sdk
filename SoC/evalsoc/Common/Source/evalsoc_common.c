@@ -65,7 +65,7 @@ uint32_t get_cpu_freq(void)
     measure_cpu_freq(1);
     // measure for real
 #ifdef CFG_SIMULATION
-    cpu_freq = measure_cpu_freq(5);
+    cpu_freq = measure_cpu_freq(20);
 #else
     cpu_freq = measure_cpu_freq(200);
 #endif
