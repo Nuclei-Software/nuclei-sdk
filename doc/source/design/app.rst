@@ -2197,6 +2197,19 @@ console when main part code is executed.
       For detailed toolchain-specific command-line analysis instructions, see the IDE configuration steps below
       and :ref:`demo_profiling_cmdline_usage`.
 
+.. warning::
+
+    To reduce integration issues when using profiling or coverage:
+
+    * Add ``-pg`` or ``-coverage`` only to the application source files you want to analyze.
+      Do not enable these options globally for the whole SDK or unrelated libraries.
+    * Profiling and coverage may require a large heap. In the linker script, ``__HEAP_SIZE``
+      is only the minimum reserved heap size. The actual heap available to ``malloc`` is bounded
+      by ``__heap_start`` and ``__heap_end``, so it also depends on the linker layout, stack placement,
+      and remaining RAM.
+    * If you use console/UART dump mode, the run will not directly create ``gmon.out`` or ``*.gcda``.
+      You must save the dump log and run ``Components/profiling/parse.py`` to reconstruct these files.
+
 Import or download Nuclei SDK 0.6.0 or later release NPK in Nuclei Studio, and then create a
 project called ``demo_profiling`` based on ``app-nsdk_demo_profiling`` using
 ``Create Nuclei RISC-V C/C++ Project`` Wizard as below:
@@ -2291,6 +2304,11 @@ To use the profiling and code coverage features from the command line:
       - When using ``-coverage`` flag, the application requires more memory to store coverage data.
         You may need to change the ``DOWNLOAD`` variable in the Makefile from ``sram`` to ``ddr``
         to ensure sufficient memory is available.
+      - ``__HEAP_SIZE`` in the linker script is only the minimum reserved heap size. The effective
+        heap available to ``malloc`` is determined by ``__heap_start`` and ``__heap_end``, so also
+        check the final linker layout and remaining RAM in your project.
+      - Apply ``APP_COMMON_FLAGS`` together with ``APPDIRS`` so profiling/coverage instrumentation
+        is limited to the target application source directories.
 
       - When the Zc extension is used, ``-fomit-frame-pointer`` is passed by default, but
         ``-pg`` and ``-fomit-frame-pointer`` are incompatible. If you encounter issues, you may

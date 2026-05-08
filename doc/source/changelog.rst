@@ -255,6 +255,7 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Add LLVM/Clang ``-coverage`` option support in ``gcov.c`` with comprehensive Doxygen-style documentation
   - Fix printf format specifiers in ``gcov.c`` and ``gprof.c`` for better portability
   - Enhance profiling component documentation with GCC/LLVM toolchain support matrix, usage guide and result analysis examples
+  - Enhance ``Components/profiling/README.md`` with integration reminders and FAQ entries for common profiling/coverage issues, including limiting ``-pg``/``-coverage`` to target application sources, heap sizing considerations, standalone component reuse, console dump parsing via ``parse.py``, and troubleshooting dump corruption or ``_mcleanup: tos overflow`` errors
   - Improve profiling component ``_mcount`` function documentation in ``Components/profiling/gprof.c`` with detailed RISC-V calling convention explanation and LLVM bug workaround (https://github.com/llvm/llvm-project/issues/121103)
 
 V0.8.1
