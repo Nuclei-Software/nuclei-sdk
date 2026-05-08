@@ -235,8 +235,7 @@ void _tx_thread_smp_force_unprotect(UINT new_interrupt_posture)
         _tx_thread_smp_protection.tx_thread_smp_protect_count = 0;
         if ((_tx_thread_smp_protection.tx_thread_smp_protect_count == 0) && (_tx_thread_preempt_disable == 0)) {
             _tx_thread_smp_protection.tx_thread_smp_protect_core = ((ULONG) 0xFFFFFFFFUL);
-            __RWMB();   /* ensure prior stores visible */
-            _tx_thread_smp_protection.tx_thread_smp_protect_in_force = 0;
+            _tx_thread_smp_protection.tx_thread_smp_protect_ticket_owner ++;
             __RWMB();
         }
     }
@@ -342,34 +341,30 @@ TX_THREAD *_tx_thread_smp_current_thread_get(void)
 }
 
 /*    This function gets protection for running inside the ThreadX        */
-/*    source. This is acomplished by a combination of a test-and-set      */
-/*    flag and periodically disabling interrupts.                         */
+/*    source. This is accomplished by a FIFO ticket lock.                */
 UINT _tx_thread_smp_protect(void)
 {
     UINT old_posture;
     UINT core_id;
+    UINT my_ticket;
 
-    while (1) {
-        old_posture = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE) & MSTATUS_MIE;
-        core_id = _tx_thread_smp_core_get();
-        if (_tx_thread_smp_protection.tx_thread_smp_protect_core == core_id) {
-            _tx_thread_smp_protection.tx_thread_smp_protect_count ++;
-            return old_posture;
-        }
-        /* Atomically attempt to take the lock. */
-        if (__AMOSWAP_W((volatile uint32_t *)(&(_tx_thread_smp_protection.tx_thread_smp_protect_in_force)), 1) == 0) {  /* success */
-            __RWMB();   /* mem-barrier    */
-            _tx_thread_smp_protection.tx_thread_smp_protect_count = 1;
-            _tx_thread_smp_protection.tx_thread_smp_protect_core = core_id;
-            __RWMB();   /* mem-barrier    */
-            return old_posture;      /* lock taken */
-        }
-        __RV_CSR_SET(CSR_MSTATUS, old_posture);
-        __RWMB();
-        while (_tx_thread_smp_protection.tx_thread_smp_protect_in_force == 1) {
-            __NOP();
-        }
+    old_posture = __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE) & MSTATUS_MIE;
+    core_id = _tx_thread_smp_core_get();
+    if (_tx_thread_smp_protection.tx_thread_smp_protect_core == core_id) {
+        _tx_thread_smp_protection.tx_thread_smp_protect_count ++;
+        __RWMB();   /* mem-barrier    */
+        return old_posture;
     }
+
+    my_ticket = (UINT)__AMOADD_W((volatile int32_t *)&(_tx_thread_smp_protection.tx_thread_smp_protect_ticket_next), 1);
+    while (_tx_thread_smp_protection.tx_thread_smp_protect_ticket_owner != my_ticket) {
+        __NOP();
+    }
+
+    _tx_thread_smp_protection.tx_thread_smp_protect_core = core_id;
+    _tx_thread_smp_protection.tx_thread_smp_protect_count = 1;
+    __RWMB();   /* mem-barrier    */
+    return old_posture;
 }
 
 /*    This function releases previously obtained protection. The supplied */
@@ -386,8 +381,7 @@ void _tx_thread_smp_unprotect(UINT new_interrupt_posture)
         }
         if ((_tx_thread_smp_protection.tx_thread_smp_protect_count == 0) && (_tx_thread_preempt_disable == 0)) {
             _tx_thread_smp_protection.tx_thread_smp_protect_core = ((ULONG) 0xFFFFFFFFUL);
-            __RWMB();   /* ensure prior stores visible */
-            _tx_thread_smp_protection.tx_thread_smp_protect_in_force = 0;
+            _tx_thread_smp_protection.tx_thread_smp_protect_ticket_owner ++;
             __RWMB();
         }
     }

@@ -357,8 +357,8 @@ struct TX_THREAD_STRUCT;
 
 typedef struct TX_THREAD_SMP_PROTECT_STRUCT
 {
-    volatile UINT tx_thread_smp_protect_in_force;
-    UINT tx_thread_smp_protect_pad;
+    volatile UINT tx_thread_smp_protect_ticket_next;
+    volatile UINT tx_thread_smp_protect_ticket_owner;
     ULONG tx_thread_smp_protect_core;
     ULONG tx_thread_smp_protect_count;
 } TX_THREAD_SMP_PROTECT;
