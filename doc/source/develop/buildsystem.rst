@@ -1494,15 +1494,58 @@ ld options ``-Wl,--defsym=__STACK_SIZE=$(STACKSZ)`` to overwrite the default val
 **STACKSZ** variable must be a valid value accepted by ld, such as 0x2000, 2K, 4K, 8192.
 
 For SMP version, stack size space need to reserve **STACKSZ** x SMP Core Count size.
+For the default ``evalsoc`` startup implementation, each hart gets its own stack window of
+size ``__STACK_SIZE`` from the reserved stack area.
 
 You can refer to ``SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld`` for smp version.
+
+For the default ``evalsoc`` GCC linker scripts in Nuclei SDK, the stack and heap are arranged
+from opposite directions in the RAM region:
+
+- ``.data/.bss`` and other runtime sections are placed first in RAM
+- the ``.heap`` section starts after these runtime sections from low address to high address
+- the linker script reserves at least ``__HEAP_SIZE`` bytes in ``.heap``
+- the ``.stack`` section is placed at the top of RAM and grows downward logically, while the
+  linker reserves ``__STACK_SIZE * __SMP_CPU_CNT`` bytes for it
+- ``__heap_end`` is defined at the start of the stack section, so the effective heap is bounded
+  by the free space between ``__heap_start`` and the reserved stack area
+
+This means increasing ``STACKSZ`` reduces the remaining room available for heap growth, and
+increasing ``HEAPSZ`` increases the minimum heap space reserved by the linker before the stack
+area. In the default ``evalsoc`` runtime, however, ``malloc`` is bounded by ``__heap_start``
+and ``__heap_end`` rather than by ``__HEAP_SIZE`` alone. So changing ``HEAPSZ`` by itself does
+not necessarily increase the effective heap available at runtime unless the final linker layout
+also leaves more room between the heap start and the reserved stack area. When debugging
+memory-related issues, always consider stack size, heap reservation, actual section usage,
+and total RAM size together.
+
+For single-core layouts, ``STACKSZ`` can be understood as the minimum stack space reserved for
+the current hart, and the runtime only needs to avoid colliding with the heap or other RAM
+sections. For SMP layouts, this interpretation is no longer sufficient: each hart is assigned a
+fixed stack slot of size ``__STACK_SIZE`` from the shared stack area. If one hart uses more than
+its reserved stack slot, it may overwrite the neighboring hart stack instead of only consuming
+more shared free RAM.
+
+This layout keeps the linker script simple and makes memory reservation tuning easier through
+``STACKSZ`` and ``HEAPSZ`` without requiring users to rewrite the linker script structure for
+common adjustments. It also improves RAM utilization, because the heap can continue to use the
+free space below the reserved stack area instead of being limited to a completely fixed-size
+region. This design is especially useful for applications such as profiling and coverage, where
+runtime memory demand can vary significantly between different builds and workloads.
+
+.. note::
+
+    The linker script design in Nuclei SDK may vary by SoC, board, runtime library, or specific
+    memory map requirements. The ``evalsoc`` layout described here is a reference design to help
+    explain how ``STACKSZ`` and ``HEAPSZ`` interact, but it is not guaranteed to match every SoC
+    or every customer integration scenario exactly.
 
 .. _develop_buildsystem_var_heapsz:
 
 HEAPSZ
 ~~~~~~
 
-**HEAPSZ** variable is used to control the heap size reserved in linker script,
+**HEAPSZ** variable is used to control the minimum heap size reserved in linker script,
 this need to cooperate with link script file and linker options.
 
 In link script file, ``__HEAP_SIZE`` symbol need to use ``PROVIDE`` feature of ld
@@ -1511,6 +1554,20 @@ ld options ``-Wl,--defsym=__HEAP_SIZE=$(HEAPSZ)`` to overwrite the default value
 **HEAPSZ** is defined.
 
 **HEAPSZ** variable must be a valid value accepted by ld, such as 0x2000, 2K, 4K, 8192.
+
+For the default C runtime heap implementations used by Nuclei SDK, such as newlib and
+libncrt, the actual heap available to dynamic allocation is bounded by ``__heap_start``
+and ``__heap_end``. In other words, ``__HEAP_SIZE`` is the minimum reserved heap size in
+linker layout, while the effective runtime heap size depends on the final linker layout,
+stack placement, and remaining RAM.
+
+As a result, increasing ``HEAPSZ`` does not directly set the runtime heap size seen by
+``malloc``. It only raises the minimum reservation that the linker must keep for the heap
+region. If the final layout does not leave additional space between ``__heap_start`` and
+``__heap_end``, the effective heap size may stay unchanged even after ``HEAPSZ`` is increased.
+
+This is especially important for features such as profiling and coverage, which may allocate
+large runtime buffers and therefore require a more relaxed memory layout.
 
 .. _develop_buildsystem_var_riscv_arch:
 

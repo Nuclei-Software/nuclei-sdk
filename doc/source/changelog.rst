@@ -219,6 +219,7 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Update documentation about n100 with eclic is now supported in Nuclei SDK
   - Add ``demo_smpcc`` and ``demo_ecc`` application documentation in ``app.rst``
   - Update :ref:`design_app_demo_profiling` documentation in ``app.rst`` with detailed GCC and LLVM/Clang toolchain-specific instructions for profiling and coverage analysis, and command-line workflows using ``lcov``
+  - Clarify :ref:`develop_buildsystem_var_stacksz` and :ref:`develop_buildsystem_var_heapsz` documentation in ``buildsystem.rst`` to explain the default ``evalsoc`` stack/heap layout, per-hart SMP stack reservation, and that ``HEAPSZ`` only controls the minimum linker reservation while the effective runtime heap is bounded by ``__heap_start`` and ``__heap_end``
   - Add warning note in :ref:`develop_buildsystem_var_semihost` about heap and stack collision risk when using semihosting with ``malloc``, due to newlib semihost ``_sbrk`` implementation assumes unlimited heap size
 
 * Test

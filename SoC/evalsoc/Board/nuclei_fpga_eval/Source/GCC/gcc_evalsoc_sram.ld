@@ -43,7 +43,9 @@ REGION_ALIAS("DATA_LMA", ram)
 SECTIONS
 {
   /* To provide symbol __STACK_SIZE, __HEAP_SIZE and __SMP_CPU_CNT */
+  /* __STACK_SIZE is the reserved stack size for each hart. */
   PROVIDE(__STACK_SIZE = 2K);
+  /* __HEAP_SIZE is the minimum heap space reserved in linker layout. */
   PROVIDE(__HEAP_SIZE = 2K);
   PROVIDE(__SMP_CPU_CNT = 1);
   __TOT_STACK_SIZE = __STACK_SIZE * __SMP_CPU_CNT;
@@ -209,11 +211,18 @@ SECTIONS
    * 1. heap need to be align at 16 bytes
    * 2. __heap_start and __heap_end symbol need to be defined
    * 3. reserved at least __HEAP_SIZE space for heap
+   *
+   * Note:
+   * - __HEAP_SIZE defines the minimum reserved heap size in linker layout
+   * - the C runtime heap implementation uses the range [__heap_start, __heap_end)
+   * - therefore actual heap available at runtime can be larger than __HEAP_SIZE
+   *   when there is extra free RAM between .bss/.heap and the stack region
    */
   .heap (NOLOAD)   : ALIGN(16)
   {
     . = ALIGN(16);
     PROVIDE( __heap_start = . );
+    /* Reserve at least __HEAP_SIZE bytes for heap from low address upward. */
     . += __HEAP_SIZE;
     . = ALIGN(16);
     PROVIDE( __heap_limit = . );
@@ -222,11 +231,15 @@ SECTIONS
   .stack ORIGIN(RAM) + LENGTH(RAM) - __TOT_STACK_SIZE (NOLOAD) :
   {
     . = ALIGN(16);
+    /* Heap can grow up to the start of the reserved stack area. */
     PROVIDE( _heap_end = . );
     PROVIDE( __heap_end = . );
     PROVIDE( __stack_start__ = . );
     PROVIDE( __StackLimit = . );
     PROVIDE( __StackBottom = . );
+    /* Reserve per-hart stack slots at the top of RAM. In SMP, overflow may
+     * corrupt a neighboring hart stack.
+     */
     . += __TOT_STACK_SIZE;
     . = ALIGN(16);
     PROVIDE( __StackTop = . );
