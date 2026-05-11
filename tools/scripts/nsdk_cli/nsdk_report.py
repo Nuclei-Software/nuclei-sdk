@@ -499,7 +499,7 @@ def merge_runconfig(all_mergedcfg, config, reldir):
     if "appdirs" not in all_mergedcfg:
         all_mergedcfg["appdirs"] = config.get("appdirs", [])
     if "appdirs_ignore" not in all_mergedcfg:
-        all_mergedcfg["appdirs_ignore"] = config.get("appdirs_ignore", [])
+        all_mergedcfg["appdirs_ignore"] = update_list_items(config.get("appdirs_ignore", []), get_sdk_appdirs_ignore())
     if "appconfig" not in all_mergedcfg:
         all_mergedcfg["appconfig"] = config.get("appconfig", dict())
 
@@ -529,7 +529,7 @@ def merge_runconfig(all_mergedcfg, config, reldir):
     merge_buildcfgs(all_mergedcfg, config, reldir)
 
     all_mergedcfg["appdirs"] = update_list_items(all_mergedcfg.get("appdirs", []), config.get("appdirs", []))
-    all_mergedcfg["appdirs_ignore"] = update_list_items(all_mergedcfg.get("appdirs_ignore", []), config.get("appdirs_ignore", []))
+    all_mergedcfg["appdirs_ignore"] = update_list_items(all_mergedcfg.get("appdirs_ignore", []), update_list_items(config.get("appdirs_ignore", []), get_sdk_appdirs_ignore()))
     appconfigs = config.get("appconfig", dict())
     for app in appconfigs:
         if app not in all_mergedcfg["appconfig"]:

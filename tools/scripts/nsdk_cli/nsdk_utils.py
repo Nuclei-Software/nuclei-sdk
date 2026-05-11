@@ -248,6 +248,21 @@ def get_sdk_uploaderr_maxcnt():
 
     return num
 
+def get_sdk_appdirs_ignore():
+    """Parse SDK_APPDIRS_IGNORE environment variable into a list of ignored app directories.
+
+    The environment variable accepts comma-separated directory paths, e.g.:
+        SDK_APPDIRS_IGNORE="application/baremetal/demo_eclic"
+        SDK_APPDIRS_IGNORE="application/baremetal/demo_eclic,application/baremetal/demo_eclic_umode"
+
+    Returns:
+        list: A list of directory paths to ignore. Empty list if the variable is not set.
+    """
+    ignore_str = os.environ.get("SDK_APPDIRS_IGNORE")
+    if ignore_str is None or ignore_str.strip() == "":
+        return []
+    return [d.strip() for d in ignore_str.split(",") if d.strip()]
+
 
 def parse_riscv_arch(arch_str):
     """Parse RISC-V architecture string to standardized format"""

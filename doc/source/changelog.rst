@@ -231,6 +231,9 @@ This is release version of ``0.9.0`` of Nuclei SDK.
 
 * Tools
 
+  - Add ``SDK_APPDIRS_IGNORE`` environment variable support in ``nsdk_cli`` tools to specify
+    ignored application directories via environment variable, merged with ``appdirs_ignore``
+    from JSON config as a union.
   - Add ``demo_eclic_umode`` nsdk_cli run configuration for daily ci running
   - Support ``matrix`` field in ``appcfg`` or ``hwcfg`` for ``nsdk_bench.py``
   - Add a new utility script, ``gen_config.py``, to automate the generation of ``build_configs`` sections in nsdk_cli config file.
