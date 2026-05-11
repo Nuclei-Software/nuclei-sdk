@@ -35,6 +35,7 @@ This is release version ``0.3.0`` of N100 SDK.
 * Tools
 
   - Support conditional QEMU ``icount`` option via ``ICOUNT_OPT`` in ``nsdk_cli`` tools
+  - Add ``SDK_APPDIRS_IGNORE`` environment variable support in ``nsdk_cli`` tools to specify ignored application directories
 
 * Documentation
 

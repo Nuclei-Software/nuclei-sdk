@@ -26,6 +26,7 @@ class nsdk_executor(nsdk_runner):
         global_parallel = config.get("parallel", "")
         rootdirs = config.get("appdirs", [])
         ignored_rootdirs = config.get("appdirs_ignore", [])
+        ignored_rootdirs = update_list_items(ignored_rootdirs, get_sdk_appdirs_ignore())
         if (isinstance(rootdirs, list) and isinstance(ignored_rootdirs, list)) == False:
             print("appdirs type in config should be list, please check!")
             return False, None
@@ -113,6 +114,7 @@ class nsdk_executor(nsdk_runner):
         global_checks = config.get("checks", dict())
         rootdirs = config.get("appdirs", [])
         ignored_rootdirs = config.get("appdirs_ignore", [])
+        ignored_rootdirs = update_list_items(ignored_rootdirs, get_sdk_appdirs_ignore())
         if (isinstance(rootdirs, list) and isinstance(ignored_rootdirs, list)) == False:
             print("appdirs type in config should be list, please check!")
             return False, None
