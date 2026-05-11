@@ -42,7 +42,7 @@
             "build_config" : {},
             "run_config": {
                 "hardware": {
-                    "timeout": 300
+                    "timeout": 360
                 }
             },
             "checks": {
