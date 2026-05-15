@@ -180,7 +180,7 @@ static void CCachePerformanceMonitorTestWithPMUv2() {
     HPM_END(3, L2_read_count, HPM_EVENT3);
     /* Test again, this time with L2 Cache pre-filled */
     /* Invalidate data in L1 DCache to accurately measure L2 cache miss/hit rates */
-    MInvalDCache();
+    MFlushInvalDCache();
     printf("Test with L2 Cache pre-filled:\r\n");
     HPM_START(3, L2_read_count, HPM_EVENT3);
     HPM_START(4, L2_read_miss, HPM_EVENT4);
