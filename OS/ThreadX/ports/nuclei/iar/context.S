@@ -147,12 +147,22 @@ eclic_msip_handler:
     STORE t0, 0(sp)
 
 _tx_thread_switch:
+    /* Switch from the thread stack to the interrupt stack to avoid
+       corrupting the thread stack during scheduling. */
+    csrrw sp, CSR_MSCRATCHCSWL, sp
     jal PortThreadSwitch
+    csrrw sp, CSR_MSCRATCHCSWL, sp
+    /* Switch back to the saved thread stack; a new stack pointer will
+       be loaded for the selected thread below. */
 
-    /* Switch task context to _tx_thread_execute_ptr */
-    la t0, _tx_thread_execute_ptr
+    /* PortThreadSwitch has selected and published the thread in
+       _tx_thread_current_ptr.  Restore that thread instead of reloading
+       _tx_thread_execute_ptr, which may have been changed by nested interrupts. */
+    la t0, _tx_thread_current_ptr
     LOAD t0, 0(t0)
+    beqz t0, _tx_thread_restore_switch
     LOAD sp, 2 * REGBYTES(t0)
+_tx_thread_restore_switch:
 
     /* Pop PC from stack and set MEPC */
     LOAD t0,  0  * REGBYTES(sp)

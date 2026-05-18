@@ -65,19 +65,35 @@ void SysTick_Handler(void)
 // Task Switch code called in eclic_msip_handler
 void PortThreadSwitch(void)
 {
+    /* Honor ThreadX preemption disable state.  If scheduling is disabled,
+       acknowledge this SWI and return without performing a context switch.
+       ThreadX will request scheduling again when preemption is re-enabled. */
+    if (_tx_thread_preempt_disable != 0) {
+        SysTimer_ClearSWIRQ();
+        __RWMB();
+        return;
+    }
+
 #ifdef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
     _tx_execution_thread_exit();
 #endif
+
+    /* Acknowledge the interrupt that brought us here before scheduling.
+       Any SWI raised after this point represents a new scheduling request
+       and must remain pending for the restored thread. */
+    SysTimer_ClearSWIRQ();
+    __RWMB();
+
     /*
      * Magic idle task emulation for threadx
      * ThreadX don't have idle task, so _tx_thread_execute_ptr could be NULL
-     * If it is NULL, it means it should goto idle state, and wait for interrupt
+     * If it is NULL, it means it should goto idle state, and wait for interrupt.
+     * Note: context.S has already switched to the interrupt stack before calling
+     * PortThreadSwitch, so __enable_irq() nesting uses the interrupt stack here.
      */
     if (!_tx_thread_execute_ptr) {
         /* increase the timer interrupt to higher priority to enable interrupt nesting */
         ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY + 1);
-        /* swap task stack to interrupt stack to avoid interrupt nesting on task stack */
-        __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
         /* mcause and msubm must be saved and restore if interrupt nested */
         rv_csr_t mcause = __RV_CSR_READ(CSR_MCAUSE);
         rv_csr_t msubm = __RV_CSR_READ(CSR_MSUBM);
@@ -92,8 +108,6 @@ void PortThreadSwitch(void)
         /* restore mcause and msubm which is necessary since interrupt nested manually by us */
         __RV_CSR_WRITE(CSR_MSUBM, msubm);
         __RV_CSR_WRITE(CSR_MCAUSE, mcause);
-        /* swap interrupt stack back to task stack */
-        __ASM volatile("csrrw sp, " STRINGIFY(CSR_MSCRATCHCSWL) ", sp");
         /* restore timer interrupt to origin kernel interrupt priority */
         ECLIC_SetLevelIRQ(SysTimer_IRQn, KERNEL_INTERRUPT_PRIORITY);
         __RWMB();
@@ -107,8 +121,8 @@ void PortThreadSwitch(void)
     _tx_thread_current_ptr = _tx_thread_execute_ptr;
     /* Increment the run count for this thread.  */
     _tx_thread_current_ptr -> tx_thread_run_count++;
-    /* Clear Software IRQ, A MUST */
-    SysTimer_ClearSWIRQ();
+    /* Load the selected thread's current time-slice for SysTick accounting. */
+    _tx_timer_time_slice =  _tx_thread_current_ptr -> tx_thread_time_slice;
     __RWMB();
 }
 
@@ -167,6 +181,32 @@ UINT _tx_thread_interrupt_control(UINT new_posture)
 // _tx_thread_schedule function implemented in context.S
 // _tx_thread_system_return implemented in tx_port.h
 
+/* Check if a reschedule is needed when returning from an IRQ handler.
+ * This is called from irq_entry to reduce scheduling latency: if an
+ * IRQ made a higher-priority thread ready, request the scheduler SWI
+ * immediately instead of waiting for the next SysTick.
+ */
+void _tx_thread_irq_exit_schedule_check(void)
+{
+    /* Only schedule when fully out of ISR context. */
+    if (_tx_thread_system_state != ((ULONG)0)) {
+        return;
+    }
+
+    /* No scheduling needed if current thread already matches execute target. */
+    if (_tx_thread_current_ptr == _tx_thread_execute_ptr) {
+        return;
+    }
+
+    /* Honor ThreadX preemption disable state. */
+    if (_tx_thread_preempt_disable != ((UINT)0)) {
+        return;
+    }
+
+    SysTimer_SetSWIRQ();
+    __RWMB();
+}
+
 VOID _tx_thread_exit(VOID)
 {
     while (1) {
@@ -203,4 +243,3 @@ VOID _tx_thread_stack_build(TX_THREAD *thread_ptr, VOID (*function_ptr)(VOID))
 
     thread_ptr -> tx_thread_stack_ptr = stk;
 }
-
