@@ -1,0 +1,7 @@
+# ThreadX regression_up build outputs
+elfs/
+logs/
+*.elf
+*.map
+*.o
+*.o.d

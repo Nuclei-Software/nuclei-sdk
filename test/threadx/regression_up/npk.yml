@@ -1,0 +1,51 @@
+## Package Base Information
+name: app-nsdk_threadx_regression_up
+owner: nuclei
+version:
+description: ThreadX Regression Test for UP (Uniprocessor)
+type: app
+keywords:
+  - threadx
+  - regression test
+  - up
+category: threadx application
+license: MIT
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+  - name: osp-nsdk_threadx
+    version:
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    # REQUIRE: ECLIC, SYSTIMER
+    value: -O2 -DTX_INCLUDE_USER_DEFINE_FILE -DTEST_STACK_SIZE_PRINTF=2048
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
+  - type: gcc
+    common_flags:
+      # -fno-tree-tail-merge is required > O1 optimization level case
+      - flags: -fno-tree-tail-merge
