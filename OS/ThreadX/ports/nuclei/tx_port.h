@@ -366,7 +366,6 @@ struct thread_stack_frame {
 #define TX_QUEUE_DISABLE                        TX_DISABLE
 #define TX_SEMAPHORE_DISABLE                    TX_DISABLE
 
-
 /* Define the version ID of ThreadX.  This may be utilized by the application.  */
 
 #ifdef TX_THREAD_INIT
@@ -374,6 +373,33 @@ CHAR                            _tx_version_id[] =
                                     "Copyright (c) Microsoft Corporation. All rights reserved. * ThreadX Nuclei RISC-V Version 6.4.0 *";
 #else
 extern  CHAR                    _tx_version_id[];
+#endif
+
+
+#ifdef TX_REGRESSION_TEST
+/* Define regression test hooks used by the ThreadX test suite. */
+
+#define TX_MUTEX_PUT_EXTENSION_2                                           \
+    do                                                                     \
+    {                                                                      \
+        if ((test_forced_mutex_timeout) &&                                 \
+            (mutex_ptr -> tx_mutex_suspension_list != TX_NULL))            \
+        {                                                                  \
+            test_forced_mutex_timeout =  0;                                \
+            _tx_thread_timeout((ULONG)                                     \
+                mutex_ptr -> tx_mutex_suspension_list);                    \
+        }                                                                  \
+    } while (0);
+
+typedef unsigned int            TEST_FLAG;
+extern TEST_FLAG                threadx_delete_timer_thread;
+extern TEST_FLAG                test_stack_analyze_flag;
+extern TEST_FLAG                test_initialize_flag;
+extern TEST_FLAG                test_forced_mutex_timeout;
+extern TEST_FLAG                threadx_mutex_suspension_put_test;
+extern TEST_FLAG                threadx_mutex_suspension_priority_test;
+extern TEST_FLAG                threadx_byte_allocate_loop_test;
+extern TEST_FLAG                threadx_byte_release_loop_test;
 #endif
 
 #endif

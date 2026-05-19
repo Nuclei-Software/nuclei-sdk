@@ -5,6 +5,11 @@
 
 #include "nuclei_sdk_soc.h"
 
+#ifdef TX_REGRESSION_TEST
+/* External reference for regression test ISR dispatch. */
+extern void test_interrupt_dispatch(void);
+#endif
+
 // SOC_TIMER_FREQ should be provided in <Device>.h of NMSIS. eg. evalsoc.h
 // TX_TIMER_TICKS_PER_SECOND defined in tx_user.h which can overwrite the default one in tx_api.h if TX_INCLUDE_USER_DEFINE_FILE defined
 #define SYSTICK_TICK_CONST          (SOC_TIMER_FREQ / TX_TIMER_TICKS_PER_SECOND)
@@ -21,6 +26,11 @@ void SysTick_Handler(void)
 
     /* Increment system clock. */
     _tx_timer_system_clock++;
+
+#ifdef TX_REGRESSION_TEST
+    /* Call regression test interrupt dispatch for ISR testing. */
+    test_interrupt_dispatch();
+#endif
 
     /* Test for time-slice expiration. */
     if (_tx_timer_time_slice) {
