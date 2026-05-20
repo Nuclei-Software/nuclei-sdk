@@ -82,6 +82,13 @@
 
 #define INLINE_DECLARE
 
+/* The imported ThreadX SMP regression tests call some internal helpers as
+   external symbols, matching the Linux SMP regression port configuration. */
+#ifdef TX_REGRESSION_TEST
+#include <stdlib.h>
+#define TX_DISABLE_INLINE
+#endif
+
 
 /* Define ThreadX SMP initialization macro.  */
 
@@ -162,6 +169,132 @@ typedef unsigned short                          USHORT;
 
 #define ALIGN_TYPE_DEFINED
 #define ALIGN_TYPE                              ULONG
+
+/* Define automated regression test extensions. These are required by the
+   imported ThreadX SMP regression suite and are enabled with TX_REGRESSION_TEST. */
+
+#ifdef TX_REGRESSION_TEST
+
+typedef unsigned int    TEST_FLAG;
+extern TEST_FLAG        threadx_byte_allocate_loop_test;
+extern TEST_FLAG        threadx_byte_release_loop_test;
+extern TEST_FLAG        threadx_mutex_suspension_put_test;
+extern TEST_FLAG        threadx_mutex_suspension_priority_test;
+#ifndef TX_TIMER_PROCESS_IN_ISR
+extern TEST_FLAG        threadx_delete_timer_thread;
+#endif
+extern TEST_FLAG        test_stack_analyze_flag;
+extern TEST_FLAG        test_initialize_flag;
+extern TEST_FLAG        test_forced_mutex_timeout;
+extern UINT             mutex_priority_change_extension_selection;
+extern UINT             priority_change_extension_selection;
+
+extern void             _tx_thread_smp_rebalance_execute_list(UINT core_index);
+extern void             abort_and_resume_byte_allocating_thread(void);
+extern void             abort_all_threads_suspended_on_mutex(void);
+extern void             suspend_lowest_priority(void);
+#ifndef TX_TIMER_PROCESS_IN_ISR
+extern void             delete_timer_thread(void);
+#endif
+
+#define TX_PORT_SPECIFIC_MEMORY_SYNCHRONIZATION other_core_status =  other_core_status + _tx_thread_system_state[0]; \
+                                                _tx_thread_system_state[0] =  0;
+
+#define TX_BYTE_ALLOCATE_EXTENSION              if (threadx_byte_allocate_loop_test == ((TEST_FLAG) 1))         \
+                                                {                                                               \
+                                                    pool_ptr -> tx_byte_pool_owner =  TX_NULL;                  \
+                                                    threadx_byte_allocate_loop_test = ((TEST_FLAG) 0);          \
+                                                }
+
+#define TX_BYTE_RELEASE_EXTENSION               if (threadx_byte_release_loop_test == ((TEST_FLAG) 1))          \
+                                                {                                                               \
+                                                    threadx_byte_release_loop_test = ((TEST_FLAG) 0);           \
+                                                    abort_and_resume_byte_allocating_thread();                  \
+                                                }
+
+#define TX_MUTEX_PUT_EXTENSION_1                if (threadx_mutex_suspension_put_test == ((TEST_FLAG) 1))       \
+                                                {                                                               \
+                                                    threadx_mutex_suspension_put_test = ((TEST_FLAG) 0);        \
+                                                    abort_all_threads_suspended_on_mutex();                     \
+                                                }
+
+#define TX_MUTEX_PUT_EXTENSION_2                if (test_forced_mutex_timeout == ((TEST_FLAG) 1))               \
+                                                {                                                               \
+                                                    test_forced_mutex_timeout = ((TEST_FLAG) 0);                \
+                                                    _tx_thread_wait_abort(mutex_ptr -> tx_mutex_suspension_list); \
+                                                }
+
+#define TX_MUTEX_PRIORITY_CHANGE_EXTENSION      if (threadx_mutex_suspension_priority_test == ((TEST_FLAG) 1))  \
+                                                {                                                               \
+                                                    threadx_mutex_suspension_priority_test = ((TEST_FLAG) 0);   \
+                                                    if (mutex_priority_change_extension_selection == 2)         \
+                                                        original_priority = new_priority;                       \
+                                                    if (mutex_priority_change_extension_selection == 3)         \
+                                                        original_pt_thread =  thread_ptr;                       \
+                                                    if (mutex_priority_change_extension_selection == 4)         \
+                                                    {                                                           \
+                                                        execute_ptr =  thread_ptr;                              \
+                                                        _tx_thread_preemption__threshold_scheduled = TX_NULL;   \
+                                                    }                                                           \
+                                                    suspend_lowest_priority();                                  \
+                                                }
+
+#define TX_THREAD_PRIORITY_CHANGE_EXTENSION     if (priority_change_extension_selection != ((TEST_FLAG) 0))     \
+                                                {                                                               \
+                                                    if (priority_change_extension_selection == 1)               \
+                                                        thread_ptr -> tx_thread_smp_core_mapped =  TX_THREAD_SMP_MAX_CORES; \
+                                                    else if (priority_change_extension_selection == 2)          \
+                                                    {                                                           \
+                                                        original_priority =  new_priority;                      \
+                                                        _tx_thread_execute_ptr[0] =  TX_NULL;                   \
+                                                    }                                                           \
+                                                    else if (priority_change_extension_selection == 3)          \
+                                                    {                                                           \
+                                                        original_pt_thread =  thread_ptr;                       \
+                                                    }                                                           \
+                                                    else                                                        \
+                                                    {                                                           \
+                                                        _tx_thread_preemption__threshold_scheduled = TX_NULL;   \
+                                                    }                                                           \
+                                                    priority_change_extension_selection =  0;                   \
+                                                }
+
+#ifndef TX_TIMER_PROCESS_IN_ISR
+#define TX_TIMER_INITIALIZE_EXTENSION(a)        if (threadx_delete_timer_thread == ((TEST_FLAG) 1))             \
+                                                {                                                               \
+                                                    threadx_delete_timer_thread = ((TEST_FLAG) 0);              \
+                                                    delete_timer_thread();                                      \
+                                                    (a) =  ((UINT) 1);                                          \
+                                                }
+#endif
+
+#define TX_THREAD_STACK_ANALYZE_EXTENSION       if (test_stack_analyze_flag == ((TEST_FLAG) 1))                 \
+                                                {                                                               \
+                                                    thread_ptr -> tx_thread_id =  ((TEST_FLAG) 0);              \
+                                                    test_stack_analyze_flag =     ((TEST_FLAG) 0);              \
+                                                }                                                               \
+                                                else if (test_stack_analyze_flag == ((TEST_FLAG) 2))            \
+                                                {                                                               \
+                                                    stack_ptr =  thread_ptr -> tx_thread_stack_start;           \
+                                                    test_stack_analyze_flag =     ((TEST_FLAG) 0);              \
+                                                }                                                               \
+                                                else if (test_stack_analyze_flag == ((TEST_FLAG) 3))            \
+                                                {                                                               \
+                                                    *stack_ptr =  TX_STACK_FILL;                                \
+                                                    test_stack_analyze_flag =     ((TEST_FLAG) 0);              \
+                                                }                                                               \
+                                                else                                                            \
+                                                {                                                               \
+                                                    test_stack_analyze_flag =     ((TEST_FLAG) 0);              \
+                                                }
+
+#define TX_INITIALIZE_KERNEL_ENTER_EXTENSION    if (test_initialize_flag == ((TEST_FLAG) 1))                    \
+                                                {                                                               \
+                                                    test_initialize_flag =  ((TEST_FLAG) 0);                    \
+                                                    return;                                                     \
+                                                }
+
+#endif
 
 /* Define the priority levels for ThreadX.  Legal values range
    from 32 to 1024 and MUST be evenly divisible by 32.  */
@@ -386,7 +519,9 @@ static inline UINT  _tx_thread_smp_core_get(void)
 
 /* Define port-specific memory synchronization macro */
 
+#ifndef TX_PORT_SPECIFIC_MEMORY_SYNCHRONIZATION
 #define TX_PORT_SPECIFIC_MEMORY_SYNCHRONIZATION    { __RWMB(); }
+#endif
 
 /************* End ThreadX SMP data type and function prototype definitions.  *************/
 extern void _tx_thread_system_return(void);
