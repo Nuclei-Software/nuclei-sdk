@@ -207,10 +207,10 @@ int main(void)
     /* Inaccessible region */
     smpu_config_x.protection = 0;
     smpu_config_rw.protection = 0;
-#endif
 
-    /* But disable corresponpding entries*/
+    /* disable corresponpding entries */
     __set_SMPUSWITCHx(0x0);
+#endif
 
     __set_SMPUENTRYx(0, &smpu_config_x);
     /* Verify the configuration takes effect */
