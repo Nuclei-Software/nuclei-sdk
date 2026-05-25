@@ -1,0 +1,57 @@
+## Package Base Information
+name: app-nsdk_threadx_regression_smp
+owner: nuclei
+version:
+description: ThreadX SMP Regression Test Suite
+type: app
+keywords:
+  - threadx
+  - smp
+  - regression
+category: threadx application
+license: MIT
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+  - name: osp-nsdk_threadx
+    version:
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    # REQUIRE: SMPCC, ECLIC, SYSTIMER
+    value: -O2 -DBATCH_TEST -DEXTERNAL_MAIN -DEXTERNAL_EXIT -DTEST_STACK_SIZE_PRINTF=4096 -DTX_THREAD_SMP_ONLY_CORE_0_DEFAULT -DTX_REGRESSION_TEST
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+  - config: nuclei_smp
+    value: 2
+  - config: nuclei_core
+    value: nx900fd
+  - config: download_mode
+    value: ddr
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h", "cases/*.c"]
+  incdirs:
+    - path: ["./", "cases"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
+  - type: gcc
+    common_flags:
+      # -fno-tree-tail-merge is required > O1 optimization level case
+      - flags: -fno-tree-tail-merge
