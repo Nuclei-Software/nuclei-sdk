@@ -48,7 +48,7 @@ make GDBREMOTE=whss3:22600 SMP=4 CTEST=cases/threadx_smp_time_slice_test.c uploa
 ```
 
 这里 `CTEST` 指定要运行的 case，`GDBREMOTE` 必须是有效且可达的远端调试地址。
-`Makefile` 也默认把 `CTEST` 设为一个单独 case，方便做 smoke test 和单 case 验证。
+`Makefile` 默认不设置 `CTEST`（即运行全量 regression）。如果需要进行单 case 验证，可以手动指定 `CTEST` 变量（例如指定 `CTEST=cases/threadx_smp_time_slice_test.c`），此时编译系统只会编译并运行所指定的单个测试用例。
 
 ### 3. 批量执行整套 regression
 
@@ -58,7 +58,12 @@ make GDBREMOTE=whss3:22600 SMP=4 CTEST=cases/threadx_smp_time_slice_test.c uploa
 WAIT_SECONDS=15 ./test.sh whss3:22600
 ```
 
-如果需要让 `Makefile` 走全量 `cases`（整合成单个 all-in-one ELF 运行），可以显式设置 `CTEST=`。
+`Makefile` 默认即走全量 `cases`（整合成单个 all-in-one ELF 运行），可以直接执行以下命令编译并下载运行：
+
+```bash
+make GDBREMOTE=whss3:22600 SMP=4 upload
+```
+
 此模式已验证在 n900fd 和 nx900fd SMP=4 场景下稳定运行并全部通过。
 
 也可以只跑指定用例：

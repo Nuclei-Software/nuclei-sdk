@@ -16,10 +16,9 @@ DOWNLOAD ?= ddr
 
 STACKSZ ?= 2K
 
-# Default to a single SMP case for bring-up and smoke testing.
-# Set `CTEST=` explicitly to build/run the whole regression suite as an
-# all-in-one ELF. This has been verified to run and pass reliably.
-CTEST ?= cases/threadx_smp_time_slice_test.c
+# Default to build/run the whole regression suite as an all-in-one ELF.
+# Set `CTEST=<case_path>` explicitly to run a single case, e.g., `CTEST=cases/threadx_smp_time_slice_test.c`
+CTEST ?=
 
 # Build the imported ThreadX SMP regression suite as an all-in-one runner.
 # -DTX_THREAD_ENABLE_PERFORMANCE_INFO
