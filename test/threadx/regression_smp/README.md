@@ -58,9 +58,8 @@ make GDBREMOTE=whss3:22600 SMP=4 CTEST=cases/threadx_smp_time_slice_test.c uploa
 WAIT_SECONDS=15 ./test.sh whss3:22600
 ```
 
-如果需要让 `Makefile` 走全量 `cases`，需要显式设置 `CTEST=`。
-不过当前全量一起跑仍然有已知问题，部分 case 会互相干扰，
-所以这条路径更适合做问题定位，不建议直接当作稳定回归基线。
+如果需要让 `Makefile` 走全量 `cases`（整合成单个 all-in-one ELF 运行），可以显式设置 `CTEST=`。
+此模式已验证在 n900fd 和 nx900fd SMP=4 场景下稳定运行并全部通过。
 
 也可以只跑指定用例：
 
