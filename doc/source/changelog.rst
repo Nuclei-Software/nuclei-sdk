@@ -32,6 +32,10 @@ This is release version ``0.3.0`` of N100 SDK.
   - Fix Zc extension detection: change from matching ``zc`` prefix to explicitly checking for ``zcmp`` and ``zcmt`` separately when removing ``c`` from base ARCH string in ``SoC/evalsoc/build.mk`` and ``SoC/evalsoc/npk.yml``
   - Update compiler flags ``-fomit-frame-pointer -fno-shrink-wrap-separate`` to only apply for ``zcmp`` extension, required for generating Zc push/pop instructions in ``toolchain/nuclei_gnu.mk`` and ``SoC/evalsoc/npk.yml``
 
+* Tools
+
+  - Support conditional QEMU ``icount`` option via ``ICOUNT_OPT`` in ``nsdk_cli`` tools
+
 * Documentation
 
   - Clarify N100 SDK support for IRQC vs ECLIC interrupt controllers
