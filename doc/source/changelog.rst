@@ -229,12 +229,16 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Update ``test/core/test_atomic.c`` to match the corrected AMO intrinsic semantics:
     the AMO API return value is now checked against the **original memory value**, and the
     **final memory content** is checked separately against the expected post-AMO result.
+  - Add ThreadX UP and SMP regression test suites (``regression_up`` and ``regression_smp``) under
+    ``test/threadx/`` to verify ThreadX kernel APIs, scheduling, and multi-core SMP synchronization on Nuclei RISC-V CPUs.
 
 * Tools
 
   - Support conditional QEMU instruction count timing emulation option in ``nsdk_cli`` tools. If
     ``ICOUNT_OPT`` is set to empty in the build configuration, the ``-icount shift=0`` option
     will not be passed to QEMU.
+  - Add ThreadX regression test configurations in ``nsdk_cli`` tools to automate executing the regression
+    test suites.
   - Add ``SDK_APPDIRS_IGNORE`` environment variable support in ``nsdk_cli`` tools to specify
     ignored application directories via environment variable, merged with ``appdirs_ignore``
     from JSON config as a union.
