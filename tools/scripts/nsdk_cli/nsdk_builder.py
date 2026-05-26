@@ -674,6 +674,12 @@ class nsdk_runner(nsdk_builder):
             if build_config.get("SEMIHOST", "") != "":
                 build_semihost = True
 
+            icount_opt = build_config.get("ICOUNT_OPT", "shift=0")
+            if icount_opt is None:
+                icount_opt = ""
+            else:
+                icount_opt = str(icount_opt).strip()
+
             if build_arch_ext == "":
                 build_arch_ext = build_info.get("ARCH_EXT", "")
             if build_smp != "":
@@ -713,8 +719,12 @@ class nsdk_runner(nsdk_builder):
                 verchk = "QEMU emulator version"
                 ret, verstr = check_tool_version(vercmd, verchk)
                 if ret:
-                    command = "%s %s -M %s -cpu %s -nodefaults -nographic -icount shift=0 -serial stdio -kernel %s" \
-                        % (qemu_exe, qemu_extraopt, machine, qemu_sel_cpu, build_objects["elf"])
+                    if icount_opt == "":
+                        icount_str = ""
+                    else:
+                        icount_str = " -icount %s" % (icount_opt)
+                    command = "%s %s -M %s -cpu %s -nodefaults -nographic%s -serial stdio -kernel %s" \
+                        % (qemu_exe, qemu_extraopt, machine, qemu_sel_cpu, icount_str, build_objects["elf"])
                     print("Run command: %s" %(command))
                     runner = {"cmd": command, "version": verstr}
                     cmdsts, _ = run_cmd_and_check(command, timeout, app_runchecks, checktime, \

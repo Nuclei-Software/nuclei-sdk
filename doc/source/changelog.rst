@@ -232,6 +232,9 @@ This is release version of ``0.9.0`` of Nuclei SDK.
 
 * Tools
 
+  - Support conditional QEMU instruction count timing emulation option in ``nsdk_cli`` tools. If
+    ``ICOUNT_OPT`` is set to empty in the build configuration, the ``-icount shift=0`` option
+    will not be passed to QEMU.
   - Add ``SDK_APPDIRS_IGNORE`` environment variable support in ``nsdk_cli`` tools to specify
     ignored application directories via environment variable, merged with ``appdirs_ignore``
     from JSON config as a union.
