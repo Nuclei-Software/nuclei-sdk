@@ -1,0 +1,99 @@
+{
+    "run_config": {
+        "target" : "qemu",
+        "hardware" : {
+            "baudrate": 115200,
+            "timeout": 60
+        },
+        "qemu": {
+            "qemu32": "qemu-system-riscv32",
+            "qemu64": "qemu-system-riscv64",
+            "timeout": 240
+        }
+    },
+    "build_target": "clean all",
+    "build_config": {
+        "SOC": "evalsoc",
+        "BOARD": "nuclei_fpga_eval",
+        "DOWNLOAD": "ddr"
+    },
+    "build_configs": {
+        "n900": {"CORE": "n900"},
+        "n900f": {"CORE": "n900f", "ARCH_EXT": ""},
+        "n900fd": {"CORE": "n900fd", "ARCH_EXT": ""},
+        "nx900": {"CORE": "nx900"},
+        "nx900f": {"CORE": "nx900f", "ARCH_EXT": ""},
+        "nx900fd": {"CORE": "nx900fd", "ARCH_EXT": ""}
+    },
+    "checks": {
+        "PASS": ["will not run"],
+        "FAIL": ["MEPC", "ERROR"]
+    },
+    "appdirs": [
+        "test/threadx/regression_up",
+        "test/threadx/regression_smp"
+    ],
+    "appdirs_ignore": [
+    ],
+    "appconfig": {
+        "test/threadx/regression_up": {
+            "build_config" : {},
+            "checks": {
+                "PASS": [
+                    "Tests Failed:  0    System Errors:   0"
+                ],
+                "FAIL": [
+                    "Tests Failed:  1",
+                    "Tests Failed:  2",
+                    "Tests Failed:  3",
+                    "Tests Failed:  4",
+                    "Tests Failed:  5",
+                    "Tests Failed:  6",
+                    "Tests Failed:  7",
+                    "Tests Failed:  8",
+                    "Tests Failed:  9",
+                    "System Errors:   1",
+                    "System Errors:   2",
+                    "System Errors:   3",
+                    "System Errors:   4",
+                    "System Errors:   5",
+                    "System Errors:   6",
+                    "System Errors:   7",
+                    "System Errors:   8",
+                    "System Errors:   9"
+                ]
+            }
+        },
+        "test/threadx/regression_smp": {
+            "build_config" : {
+                "SMP": "4",
+                "THREADX_CORE0_ONLY": "1"
+            },
+            "checks": {
+                "PASS": [
+                    "Tests Failed:  0    System Errors:   0"
+                ],
+                "FAIL": [
+                    "Tests Failed:  1",
+                    "Tests Failed:  2",
+                    "Tests Failed:  3",
+                    "Tests Failed:  4",
+                    "Tests Failed:  5",
+                    "Tests Failed:  6",
+                    "Tests Failed:  7",
+                    "Tests Failed:  8",
+                    "Tests Failed:  9",
+                    "System Errors:   1",
+                    "System Errors:   2",
+                    "System Errors:   3",
+                    "System Errors:   4",
+                    "System Errors:   5",
+                    "System Errors:   6",
+                    "System Errors:   7",
+                    "System Errors:   8",
+                    "System Errors:   9"
+                ]
+            }
+        }
+    }
+}
