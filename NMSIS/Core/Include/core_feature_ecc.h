@@ -31,7 +31,7 @@
  * 3. __DCACHE_PRESENT:  Define whether D-Cache Unit is present or not.
  *   * 0: Not present
  *   * 1: Present
- * 4. __CCM_PRESENT:  Define whether Nuclei Cache Control and Maintainence(CCM) Unit is present or not.
+ * 4. __CCM_PRESENT:  Define whether Nuclei Cache Control and Maintenance(CCM) Unit is present or not.
  *   * 0: Not present
  *   * 1: Present
  *
@@ -110,18 +110,14 @@ __STATIC_FORCEINLINE int32_t ECC_IsDCacheSupportECC(void)
 /**
  * \brief  Check if TLB supports ECC
  * \details
- * This function checks if both PLIC and TLB ECC are supported in the core.
- * Note: TLB is only present with MMU, and when PLIC is present, MMU will be present.
+ * This function checks if TLB ECC is supported in the core.
  * \return 1 if TLB supports ECC, 0 otherwise
  */
 __STATIC_FORCEINLINE int32_t ECC_IsTLBSupportECC(void)
 {
-    CSR_MCFGINFO_Type mcfginfo;
     CSR_MTLBCFGINFO_Type mtlbcfginfo;
-    mcfginfo.d = __RV_CSR_READ(CSR_MCFG_INFO);
     mtlbcfginfo.d = __RV_CSR_READ(CSR_MTLBCFG_INFO);
-    /* TLB only present with MMU, when PLIC present MMU will present */
-    return mcfginfo.b.plic && mtlbcfginfo.b.ecc;
+    return mtlbcfginfo.b.ecc;
 }
 
 /**
@@ -157,7 +153,7 @@ __STATIC_FORCEINLINE int32_t ECC_IsDLMSupportECC(void)
 /**
  * \brief  Check if XOR error injection mode is supported
  * \details
- * This function reads the machine ECC code CSR and checks if error injection mode is suppported.
+ * This function reads the machine ECC code CSR and checks if error injection mode is supported.
  * \return 1 if XOR error injection mode is enabled, 0 otherwise
  */
 __STATIC_FORCEINLINE int32_t ECC_IsXorErrorInjectMode(void)
@@ -707,7 +703,7 @@ __STATIC_FORCEINLINE int32_t ECC_IsTLBSingleBitErrorOccured(void)
 {
     CSR_MECC_CODE_Type mecc_code;
     mecc_code.d = __RV_CSR_READ(CSR_MECC_CODE);
-    return mecc_code.b.sramid & ECC_ERROR_RAMID_MASK_DLM;
+    return mecc_code.b.sramid & ECC_ERROR_RAMID_MASK_TLB;
 }
 
 /**
@@ -851,7 +847,7 @@ __STATIC_FORCEINLINE int32_t ECC_IsTLBDoubleBitErrorOccured(void)
 {
     CSR_MECC_CODE_Type mecc_code;
     mecc_code.d = __RV_CSR_READ(CSR_MECC_CODE);
-    return mecc_code.b.ramid & ECC_ERROR_RAMID_MASK_DLM;
+    return mecc_code.b.ramid & ECC_ERROR_RAMID_MASK_TLB;
 }
 
 /**
