@@ -139,6 +139,21 @@ extern "C" {
 #if (defined(__riscv_vector))
   /* previous RISCV_VECTOR is replaced by RISCV_MATH_VECTOR  */
   #define RISCV_MATH_VECTOR                 1
+#if (defined(__riscv_zve32x))
+  #define RISCV_MATH_VECTOR_ZVE32X          1
+#endif
+#if (defined(__riscv_zve32f))
+  #define RISCV_MATH_VECTOR_ZVE32F          1
+#endif
+#if (defined(__riscv_zve64x))
+  #define RISCV_MATH_VECTOR_ZVE64X          1
+#endif
+#if (defined(__riscv_zve64f))
+  #define RISCV_MATH_VECTOR_ZVE64F          1
+#endif
+#if (defined(__riscv_zve64d))
+  #define RISCV_MATH_VECTOR_ZVE64D          1
+#endif
 #endif
 
 /* evaluate RISCV Bitmanip feature */

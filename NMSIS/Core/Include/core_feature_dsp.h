@@ -2275,8 +2275,8 @@ __STATIC_FORCEINLINE long __RV_KDMATT(long t, unsigned int a, unsigned int b)
  *   op1t = Rs1.B[x+1]; op2t = Rs2.B[x+1]; // top
  *   op1b = Rs1.B[x]; op2b = Rs2.B[x]; // bottom
  * } else if (is `KHMX8`) {
- *   op1t = Rs1.H[x+1]; op2t = Rs2.H[x]; // Rs1 top
- *   op1b = Rs1.H[x]; op2b = Rs2.H[x+1]; // Rs1 bottom
+ *   op1t = Rs1.B[x+1]; op2t = Rs2.B[x]; // Rs1 top
+ *   op1b = Rs1.B[x]; op2b = Rs2.B[x+1]; // Rs1 bottom
  * }
  * for ((aop,bop,res) in [(op1t,op2t,rest), (op1b,op2b,resb)]) {
  *   if (0x80 != aop | 0x80 != bop) {
@@ -2337,8 +2337,8 @@ __STATIC_FORCEINLINE unsigned long __RV_KHM8(unsigned long a, unsigned long b)
  *   op1t = Rs1.B[x+1]; op2t = Rs2.B[x+1]; // top
  *   op1b = Rs1.B[x]; op2b = Rs2.B[x]; // bottom
  * } else if (is `KHMX8`) {
- *   op1t = Rs1.H[x+1]; op2t = Rs2.H[x]; // Rs1 top
- *   op1b = Rs1.H[x]; op2b = Rs2.H[x+1]; // Rs1 bottom
+ *   op1t = Rs1.B[x+1]; op2t = Rs2.B[x]; // Rs1 top
+ *   op1b = Rs1.B[x]; op2b = Rs2.B[x+1]; // Rs1 bottom
  * }
  * for ((aop,bop,res) in [(op1t,op2t,rest), (op1b,op2b,resb)]) {
  *   if (0x80 != aop | 0x80 != bop) {
@@ -6943,7 +6943,7 @@ __STATIC_FORCEINLINE long __RV_RSUBW(int a, int b)
  *
  * **Description**:\n
  * This instruction limits the 16-bit signed integer elements stored in Rs1 into a signed
- * integer range between 2imm4u-1 and -2imm4u, and writes the limited results to Rd. For example, if
+ * integer range between 2^imm4u-1 and -2^imm4u, and writes the limited results to Rd. For example, if
  * imm4u is 3, the 16-bit input values should be saturated between 7 and -8. If saturation is performed,
  * set OV bit to 1.
  *
@@ -6992,7 +6992,7 @@ __STATIC_FORCEINLINE long __RV_RSUBW(int a, int b)
  *
  * **Description**:\n
  * This instruction limits the 32-bit signed integer elements stored in Rs1 into a signed
- * integer range between 2imm5u-1 and -2imm5u, and writes the limited results to Rd. For example, if
+ * integer range between 2^imm5u-1 and -2^imm5u, and writes the limited results to Rd. For example, if
  * imm5u is 3, the 32-bit input values should be saturated between 7 and -8. If saturation is performed,
  * set OV bit to 1.
  *
@@ -7889,13 +7889,13 @@ __STATIC_FORCEINLINE long long __RV_SMALXDA(long long t, unsigned long a, unsign
  * * RV64:
  * // SMALDS
  * Mres[0][31:0] = (Rs1.W[0].H[1] * Rs2.W[0].H[1]) - (Rs1.W[0].H[0] * Rs2.W[0].H[0]);
- * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[0].H[1]) - (Rs1.W[1].H[0] * Rs2.W[1].H[0]);
+ * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[1].H[1]) - (Rs1.W[1].H[0] * Rs2.W[1].H[0]);
  * // SMALDRS
  * Mres[0][31:0] = (Rs1.W[0].H[0] * Rs2.W[0].H[0]) - (Rs1.W[0].H[1] * Rs2.W[0].H[1]);
- * Mres[1][31:0] = (Rs1.W[1].H[0] * Rs2.W[0].H[0]) - (Rs1.W[1].H[1] * Rs2.W[1].H[1]);
+ * Mres[1][31:0] = (Rs1.W[1].H[0] * Rs2.W[1].H[0]) - (Rs1.W[1].H[1] * Rs2.W[1].H[1]);
  * // SMALXDS
  * Mres[0][31:0] = (Rs1.W[0].H[1] * Rs2.W[0].H[0]) - (Rs1.W[0].H[0] * Rs2.W[0].H[1]);
- * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[0].H[0]) - (Rs1.W[1].H[0] * Rs2.W[1].H[1]);
+ * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[1].H[0]) - (Rs1.W[1].H[0] * Rs2.W[1].H[1]);
  * Rd = Rd + SE64(Mres[0][31:0]) + SE64(Mres[1][31:0]);
  * ~~~
  *
@@ -7980,13 +7980,13 @@ __STATIC_FORCEINLINE long long __RV_SMALDS(long long t, unsigned long a, unsigne
  * * RV64:
  * // SMALDS
  * Mres[0][31:0] = (Rs1.W[0].H[1] * Rs2.W[0].H[1]) - (Rs1.W[0].H[0] * Rs2.W[0].H[0]);
- * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[0].H[1]) - (Rs1.W[1].H[0] * Rs2.W[1].H[0]);
+ * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[1].H[1]) - (Rs1.W[1].H[0] * Rs2.W[1].H[0]);
  * // SMALDRS
  * Mres[0][31:0] = (Rs1.W[0].H[0] * Rs2.W[0].H[0]) - (Rs1.W[0].H[1] * Rs2.W[0].H[1]);
- * Mres[1][31:0] = (Rs1.W[1].H[0] * Rs2.W[0].H[0]) - (Rs1.W[1].H[1] * Rs2.W[1].H[1]);
+ * Mres[1][31:0] = (Rs1.W[1].H[0] * Rs2.W[1].H[0]) - (Rs1.W[1].H[1] * Rs2.W[1].H[1]);
  * // SMALXDS
  * Mres[0][31:0] = (Rs1.W[0].H[1] * Rs2.W[0].H[0]) - (Rs1.W[0].H[0] * Rs2.W[0].H[1]);
- * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[0].H[0]) - (Rs1.W[1].H[0] * Rs2.W[1].H[1]);
+ * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[1].H[0]) - (Rs1.W[1].H[0] * Rs2.W[1].H[1]);
  * Rd = Rd + SE64(Mres[0][31:0]) + SE64(Mres[1][31:0]);
  * ~~~
  *
@@ -8071,13 +8071,13 @@ __STATIC_FORCEINLINE long long __RV_SMALDRS(long long t, unsigned long a, unsign
  * * RV64:
  * // SMALDS
  * Mres[0][31:0] = (Rs1.W[0].H[1] * Rs2.W[0].H[1]) - (Rs1.W[0].H[0] * Rs2.W[0].H[0]);
- * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[0].H[1]) - (Rs1.W[1].H[0] * Rs2.W[1].H[0]);
+ * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[1].H[1]) - (Rs1.W[1].H[0] * Rs2.W[1].H[0]);
  * // SMALDRS
  * Mres[0][31:0] = (Rs1.W[0].H[0] * Rs2.W[0].H[0]) - (Rs1.W[0].H[1] * Rs2.W[0].H[1]);
- * Mres[1][31:0] = (Rs1.W[1].H[0] * Rs2.W[0].H[0]) - (Rs1.W[1].H[1] * Rs2.W[1].H[1]);
+ * Mres[1][31:0] = (Rs1.W[1].H[0] * Rs2.W[1].H[0]) - (Rs1.W[1].H[1] * Rs2.W[1].H[1]);
  * // SMALXDS
  * Mres[0][31:0] = (Rs1.W[0].H[1] * Rs2.W[0].H[0]) - (Rs1.W[0].H[0] * Rs2.W[0].H[1]);
- * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[0].H[0]) - (Rs1.W[1].H[0] * Rs2.W[1].H[1]);
+ * Mres[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[1].H[0]) - (Rs1.W[1].H[0] * Rs2.W[1].H[1]);
  * Rd = Rd + SE64(Mres[0][31:0]) + SE64(Mres[1][31:0]);
  * ~~~
  *
@@ -11141,7 +11141,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SWAP16(unsigned long a)
  *
  * **Description**:\n
  * This instruction limits the 16-bit signed elements stored in Rs1 into an unsigned
- * integer range between 2imm4u-1 and 0, and writes the limited results to Rd. For example, if imm4u is
+ * integer range between 2^imm4u-1 and 0, and writes the limited results to Rd. For example, if imm4u is
  * 3, the 16-bit input values should be saturated between 7 and 0. If saturation is performed, set OV bit
  * to 1.
  *
@@ -11191,7 +11191,7 @@ __STATIC_FORCEINLINE unsigned long __RV_SWAP16(unsigned long a)
  *
  * **Description**:\n
  * This instruction limits the 32-bit signed integer elements stored in Rs1 into an
- * unsigned integer range between 2imm5u-1 and 0, and writes the limited results to Rd. For example, if
+ * unsigned integer range between 2^imm5u-1 and 0, and writes the limited results to Rd. For example, if
  * imm5u is 3, the 32-bit input values should be saturated between 7 and 0. If saturation is performed,
  * set OV bit to 1.
  *
@@ -12140,7 +12140,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_UKSUB64(unsigned long long a, unsig
  * **Description**:\n
  * The unsigned lower 32-bit content of Rs2 is subtracted from the unsigned lower 32-bit
  * content of Rs1. And the result is saturated to the 16-bit unsigned integer range of [0, 2^16-1] and then
- * sign-extended and written to Rd. If saturation happens, this instruction sets the OV flag.
+ * zero-extended and written to Rd. If saturation happens, this instruction sets the OV flag.
  *
  * **Operations**:\n
  * ~~~
@@ -12153,7 +12153,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_UKSUB64(unsigned long long a, unsig
  *   tmp = 0;
  *   OV = 1;
  * }
- * Rd = SE(tmp[15:0]);
+ * Rd = ZE(tmp[15:0]);
  * ~~~
  *
  * \param [in]  a    unsigned int type of value stored in a
@@ -18836,7 +18836,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKHMX16(unsigned long long a, unsig
  * **Description**:\n
  * This instruction multiplies the 32-bit elements of Rs1 with the 32-bit elements of Rs2 and writes the
  * most significant 32-bit multiplication results to the corresponding 32-bit elements of Rd. The 32-bit
- * elements of Rs1 and Rs2 are treated as signed integers. The .u form of the instruction rounds up
+ * elements of Rs1 and Rs2 are treated as signed integers. The `.u` form of the instruction rounds up
  * the most significant 32-bit of the 64-bit multiplication results by adding a 1 to bit 31 of the results.
  *
  * **Operations**:\n
@@ -18865,7 +18865,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DSMMUL(unsigned long long a, unsign
 /* ===== Inline Function Start for DSMMUL.u ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
- * \brief  DSMMUL.u (64-bit MSW 32x32 Unsigned Multiply)
+ * \brief  DSMMUL.u (64-bit MSW 32x32 signed Multiply with Rounding)
  * \details
  * **Type**: SIMD
  *
@@ -18876,12 +18876,12 @@ __STATIC_FORCEINLINE unsigned long long __RV_DSMMUL(unsigned long long a, unsign
  * ~~~
  *
  * **Purpose**:\n
- * Do MSW 32x32 element unsigned multiplications simultaneously. The results are written into Rd.
+ * Do MSW 32x32 element signed multiplications simultaneously. The results are written into Rd.
  *
  * **Description**:\n
  * This instruction multiplies the 32-bit elements of Rs1 with the 32-bit elements of Rs2 and writes the
  * most significant 32-bit multiplication results to the corresponding 32-bit elements of Rd. The 32-bit
- * elements of Rs1 and Rs2 are treated as unsigned integers. The .u form of the instruction rounds up
+ * elements of Rs1 and Rs2 are treated as signed integers. The .u form of the instruction rounds up
  * the most significant 32-bit of the 64-bit multiplication results by adding a 1 to bit 31 of the results.
  *
  * **Operations**:\n
@@ -18957,7 +18957,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKWMMUL(unsigned long long a, unsig
 /* ===== Inline Function Start for DKWMMUL.u ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
- * \brief   DKWMMUL.u (64-bit MSW 32x32 Unsigned Multiply & Double)
+ * \brief   DKWMMUL.u (64-bit MSW 32x32 Unsigned Multiply & Double with Rounding)
  * \details
  * **Type**: SIMD
  *
@@ -19160,7 +19160,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKADD32(unsigned long long a, unsig
  * ~~~
  *
  * **Purpose**:\n
- * Do 32-bit signed integer element saturating subtractions simultaneously.
+ * Do 32-bit signed integer elements saturating subtractions simultaneously.
  *
  * **Description**:\n
  * This instruction subtracts the 32-bit signed integer elements in Rs2 from the 32-bit signed integer elements in Rs1. If
@@ -19701,7 +19701,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKMDA(unsigned long long a, unsigne
  * **Purpose**:\n
  * Do two signed 16-bit multiplications from the 32-bit elements of two registers; and then adds the two 32-bit results together.
  * The addition result may be saturated.
- * * DKMXDA: top*bottom + top*bottom (per 32-bit element)
+ * * DKMXDA: top*bottom + bottom*top (per 32-bit element)
  *
  * **Description**:\n
  * This instruction multiplies the bottom 16-bit content of the 32-bit elements of Rs1 with the top 16-bit content of the 32-bit
@@ -19935,7 +19935,7 @@ __STATIC_FORCEINLINE long long __RV_DSMBB32_SRA32(unsigned long long a, unsigned
 /* ===== Inline Function Start for DSMBT32 ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N2
- * \brief    SMBT32 (Signed Multiply Bottom Word & Top Word)
+ * \brief    DSMBT32 (Signed Multiply Bottom Word & Top Word)
  * \details
  * **Type**: SIMD
  *
@@ -20036,7 +20036,7 @@ __STATIC_FORCEINLINE long long __RV_DSMBT32_SRA14(unsigned long long a, unsigned
  *
  * **Operations**:\n
  * ~~~
- * res = (Rs1.W[0] * Rs2.W[0]) s>> 14;
+ * res = (Rs1.W[0] * Rs2.W[0]) s>> 32;
  * Rd = res;
  * ~~~
  *
@@ -20535,8 +20535,11 @@ __STATIC_FORCEINLINE unsigned long long __RV_DSRA16(unsigned long long a, unsign
  * Do 16-bit integer element additions simultaneously.
  *
  * **Description**:\n
- * This instruction adds the 16-bit unsigned integer elements in Rs1 with the 16-bit unsigned integer elements in Rs2. And
+ * This instruction adds the 16-bit integer elements in Rs1 with the 16-bit integer elements in Rs2. And
  * the results are written to Rd.
+ *
+ * **Note**:\n
+ * This instruction can be used for either signed or unsigned addition.
  *
  * **Operations**:\n
  * ~~~
@@ -20814,13 +20817,13 @@ __STATIC_FORCEINLINE unsigned long long __RV_DRCRSA32(unsigned long long a, unsi
  * ~~~
  *
  * **Purpose**:\n
- * Do 16-bit signed integer element subtraction and 16-bit signed integer element addition in a 32-bit chunk simultaneously.
+ * Do 16-bit signed integer element addition and 16-bit signed integer element subtraction in a 32-bit chunk simultaneously.
  * Operands are from crossed positions in 32-bit chunks. The results are halved to avoid overflow or saturation.
  *
  * **Description**:\n
- * This instruction adds the 16-bit unsigned integer in [31:16] of 32-bit chunks in Rs1 with the 16-bit unsigned integer in
- * [15:0] of 32-bit chunks in Rs2, and subtracts the 16-bit unsigned integer in [31:16] of 32-bit chunks in Rs2 from the 16-bit
- * unsigned integer in [15:0] of 32-bit chunks in Rs1. The element results are first logically right-shifted by 1 bit and then
+ * This instruction adds the 16-bit signed integer in [31:16] of 32-bit chunks in Rs1 with the 16-bit signed integer in
+ * [15:0] of 32-bit chunks in Rs2, and subtracts the 16-bit signed integer in [31:16] of 32-bit chunks in Rs2 from the 16-bit
+ * signed integer in [15:0] of 32-bit chunks in Rs1. The element results are first logically right-shifted by 1 bit and then
  * written to [31:16] of 32-bit chunks in Rd and [15:0] of 32-bit chunks in Rd.
  *
  * **Operations**:\n
@@ -20878,7 +20881,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DRCRAS16(unsigned long long a, unsi
 __STATIC_FORCEINLINE unsigned long long __RV_DRCRAS32(unsigned long long a, unsigned long long b)
 {
     unsigned long long result;
-    __ASM volatile("DRCRAS32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
+    __ASM volatile("drcras32 %0, %1, %2" : "=r"(result) : "r"(a), "r"(b));
     return result;
 }
 /* ===== Inline Function End for DRCRAS32 ===== */
@@ -20905,13 +20908,13 @@ __STATIC_FORCEINLINE unsigned long long __RV_DRCRAS32(unsigned long long a, unsi
  * element in [15:0] of 32-bit chunks in Rs2; at the same time, it subtracts the 16-bit signed integer element in [31:16] of
  * 32-bit chunks in Rs2 from the 16-bit signed integer element in [15:0] of 32-bit chunks in Rs1.
  * If any of the results are beyond the Q15 number range (-2^15 <= Q15 <= 2^15-1), they are saturated to the range and the OV
- * bit is set to 1. The saturated results are written to [31:16] of 32-bit chunks in Rd for subtraction and [15:0] of 32-bit chunks
- * in Rd for addition.
+ * bit is set to 1. The saturated results are written to [31:16] of 32-bit chunks in Rd for addition and [15:0] of 32-bit chunks
+ * in Rd for subtraction.
  *
  * **Operations**:\n
  * ~~~
- * res1 = Rs1.W[x][31:16] - Rs2.W[x][15:0];
- * res2 = Rs1.W[x][15:0] + Rs2.W[x][31:16];
+ * res1 = Rs1.W[x][31:16] + Rs2.W[x][15:0];
+ * res2 = Rs1.W[x][15:0] - Rs2.W[x][31:16];
  * for (res in [res1, res2]) {
  *   if (res > (2^15)-1) {
  *     res = (2^15)-1;
@@ -20960,13 +20963,13 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKCRAS16(unsigned long long a, unsi
  * element in [31:16] of 32-bit chunks in Rs1; at the same time, it adds the 16-bit signed integer element in [31:16] of 32-bit
  * chunks in Rs2 with the 16-bit signed integer element in [15:0] of 32-bit chunks in Rs1.
  * If any of the results are beyond the Q15 number range (-2^15 <= Q15 <= 2^15-1), they are saturated to the range and the OV
- * bit is set to 1. The saturated results are written to [31:16] of 32-bit chunks in Rd for addition and [15:0] of 32-bit chunks
- * in Rd for subtraction.
+ * bit is set to 1. The saturated results are written to [31:16] of 32-bit chunks in Rd for subtraction and [15:0] of 32-bit chunks
+ * in Rd for addition.
  *
  * **Operations**:\n
  * ~~~
- * res1 = Rs1.W[x][31:16] + Rs2.W[x][15:0];
- * res2 = Rs1.W[x][15:0] - Rs2.W[x][31:16];
+ * res1 = Rs1.W[x][31:16] - Rs2.W[x][15:0];
+ * res2 = Rs1.W[x][15:0] + Rs2.W[x][31:16];
  * for (res in [res1, res2]) {
  *   if (res > (2^15)-1) {
  *     res = (2^15)-1;
@@ -22039,7 +22042,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKMMAC(unsigned long long t, unsign
 /* ===== Inline Function Start for DKMMAC.u ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
- * \brief   DKMMAC.u (64-bit MSW 32x32 Unsigned Multiply and Saturating Add)
+ * \brief   DKMMAC.u (64-bit MSW 32x32 Unsigned Multiply and Saturating Add with Rounding)
  * \details
  * **Type**: SIMD
  *
@@ -22050,7 +22053,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKMMAC(unsigned long long t, unsign
  * ~~~
  *
  * **Purpose**:\n
- * Do MSW 32x32 element unsigned multiplications and saturating addition simultaneously. The results are written into Rd.
+ * Do MSW 32x32 element signed multiplications and saturating addition simultaneously. The results are written into Rd.
  *
  * **Description**:\n
  * This instruction multiplies the signed 32-bit elements of Rs1 with the signed 32-bit elements of Rs2
@@ -22133,7 +22136,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKMMSB(unsigned long long t, unsign
 /* ===== Inline Function Start for DKMMSB.u ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
- * \brief   DKMMSB.u (64-bit MSW 32x32 Unsigned Multiply and Saturating Sub)
+ * \brief   DKMMSB.u (64-bit MSW 32x32 Unsigned Multiply and Saturating Sub with Rounding)
  * \details
  * **Type**: SIMD
  *
@@ -22144,7 +22147,7 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKMMSB(unsigned long long t, unsign
  * ~~~
  *
  * **Purpose**:\n
- * Do MSW 32x32 element unsigned multiplications and saturating subtraction simultaneously. The results are written into Rd.
+ * Do MSW 32x32 element signed multiplications and saturating subtraction simultaneously. The results are written into Rd.
  *
  * **Description**:\n
  * This instruction multiplies the signed 32-bit elements of Rs1 with the signed 32-bit elements of Rs2
@@ -22475,6 +22478,10 @@ __STATIC_FORCEINLINE unsigned long long __RV_DKMSDA(unsigned long long t, unsign
  * It multiplies the bottom 16-bit content of the 32-bit elements of Rs1
  * with the top 16-bit content of the 32-bit elements of Rs2 and multiplies the top 16-bit content of the
  * 32-bit elements of Rs1 with the bottom 16-bit content of the 32-bit elements of Rs2.
+ * The two 32-bit multiplication results are then subtracted from the content of the corresponding 32-
+ * bit elements of Rd. If the subtraction result is beyond the Q31 number range (-2^31 <= Q31 <= 2^31-1), it is
+ * saturated to the range and the OV bit is set to 1. The results after saturation are written to Rd. The
+ * 16-bit contents are treated as signed integers.
  *
  * **Operations**:\n
  * ~~~
@@ -22675,8 +22682,9 @@ __STATIC_FORCEINLINE unsigned long long __RV_DUMAQA(unsigned long long t, unsign
  * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
  * t0 = op1b s* op2b;
  * t1 = op1t s* op2t;
- * Rd = concat(rest, resb);
+ * Rd = sat.q63(t0 + t1);
  * x=0
+
  * ~~~
  *
  * \param [in]  a unsigned long long type of value stored in a
@@ -22757,9 +22765,9 @@ __STATIC_FORCEINLINE long long __RV_DKMXDA32(unsigned long long a, unsigned long
  * ~~~
  * op1t = Rs1.W[x+1]; op2t = Rs2.W[x+1]; // top
  * op1b = Rs1.W[x]; op2b = Rs2.W[x]; // bottom
- * t01 = op1b s* op2b;
- * t10 = op1t s* op2t;
- * Rd = sat.q63(t01 + t10);
+ * t0 = op1b s* op2b;
+ * t1 = op1t s* op2t;
+ * Rd = sat.q63(Rd + t0 + t1);
  * x=0
  * ~~~
  *
@@ -23833,7 +23841,7 @@ __STATIC_FORCEINLINE long __RV_DSMS32_U(unsigned long long a, unsigned long long
  * Mres1[0][31:0] = (Rs1.W[0].H[1] * Rs2.W[0].H[1]);
  * Mres0[1][31:0] = (Rs1.W[1].H[0] * Rs2.W[1].H[0]);
  * Mres1[1][31:0] = (Rs1.W[1].H[1] * Rs2.W[1].H[1]);
- * Rd.W = Rd.W + SE32(Mres0[0][31:0]) + SE32(Mres1[0][31:0]) + SE32(Mres0[1][31:0]) + SE32(Mres1[1][31:0]);
+ * Rd = Rd + SE32(Mres0[0][31:0]) + SE32(Mres1[0][31:0]) + SE32(Mres0[1][31:0]) + SE32(Mres1[1][31:0]);
  * ~~~
  *
  * \param [in]  t long long type of value stored in t
@@ -24196,7 +24204,7 @@ __STATIC_FORCEINLINE long long __RV_DKMABT32(long long t, unsigned long long a, 
 /* ===== Inline Function Start for DKMATT32 ===== */
 /**
  * \ingroup  NMSIS_Core_DSP_Intrinsic_NUCLEI_N3
- * \brief    DKMATT32 (Saturating Signed Multiply Bottom & Top Words & Add)
+ * \brief    DKMATT32 (Saturating Signed Multiply Top Words & Add)
  * \details
  * **Type**: SIMD
  *

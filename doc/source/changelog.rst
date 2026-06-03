@@ -64,6 +64,12 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Add missing FCSR(Floating-Point Control and Status Register) save/restore functionality to FPU context handling macros ``SAVE_FPU_CONTEXT`` and ``RESTORE_FPU_CONTEXT`` in ``core_feature_fpu.h``
   - Add ``i_share_dlm`` bit field to ``CSR_MICFGINFO_Type`` structure in ``core_feature_base.h`` and display this information in the cpuinfo application.
   - Sync NMSIS 1.5.0 Core/DSP/NN header files, ``build.mk``, ``npk.yml`` and prebuilt DSP and NN libraries; for changes related to DSP/NN libraries, please refer to the NMSIS changelog.
+  - Bump NMSIS version from 1.5.0 to 1.6.0
+  - Add RVV vector sub-type macros (``RISCV_MATH_VECTOR_ZVE32X``, ``ZVE32F``, ``ZVE64X``, ``ZVE64F``, ``ZVE64D``, ``ZVFH``) in ``riscv_math_types.h``, ``riscv_nn_math_types.h`` and ``riscv_math_types_f16.h`` for fine-grained RVV feature gating
+  - Replace generic ``RISCV_MATH_VECTOR`` guard with specific ZVE sub-type macros across DSP and NN headers for correct conditional compilation
+  - Fix ``riscv_nnsupportfunctions.h`` requantize RVV guard from ``RISCV_MATH_VECTOR`` to ``RISCV_MATH_VECTOR_ZVE32X``
+  - Fix DSP intrinsic documentation errors in ``core_feature_dsp.h``
+  - Sync NMSIS 1.6.0 DSP and NN prebuilt libraries
   - Update ``IINFO_Type`` in ``core_feature_iinfo.h``. Add ``mpfctl``, ``etrace_info``, precise ECC and mem_crc related registers.
   - Add new api ``__s_switch_mode`` to switch from S-mode to U-mode
   - Update ``core_feature_cache.h`` to clear pending Cluster Cache pending status before issuing ``MFlushCCache``, ``SFlushCCache`` and ``UFlushCCache``.

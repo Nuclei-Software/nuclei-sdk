@@ -2163,7 +2163,7 @@ __STATIC_FORCEINLINE int32_t riscv_nn_requantize(const int32_t val, const int32_
                                          RIGHT_SHIFT(shift));
 }
 
-#if defined(RISCV_MATH_VECTOR)
+#if defined(RISCV_MATH_VECTOR_ZVE32X)
 __STATIC_FORCEINLINE vint32m4_t riscv_nn_requantize_m4_rvv(vint32m4_t valm4, size_t l, const q31_t multiplier, const q31_t shift)
 {
     if (shift >= 0) {
@@ -2210,7 +2210,7 @@ __STATIC_FORCEINLINE vint32m8_t riscv_nn_requantize_m8_rvv(vint32m8_t valm8, siz
     return valm8;
 }
 
-#endif
+#endif /* defined(RISCV_MATH_VECTOR_ZVE32X) */
 
 /**
  * @brief           Requantize a given 64 bit value.

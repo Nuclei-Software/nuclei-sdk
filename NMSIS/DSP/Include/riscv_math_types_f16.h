@@ -49,16 +49,16 @@ won't be built.
   #define RISCV_FLOAT16_SUPPORTED 1
 #endif
 
-/* evaluate RISCV Vector float16 feature */
+#if defined(RISCV_FLOAT16_SUPPORTED)
+/*
+ * evaluate RISCV Vector float16 feature
+ * the Zvfh extension depends on the Zve32f and Zfhmin extensions
+ */
 #if defined(__riscv_vector) && defined(__riscv_zvfh)
-  #if !defined(RISCV_MATH_VECTOR_FLOAT16)
-    #define RISCV_MATH_VECTOR_FLOAT16                 1
+  #if !defined(RISCV_MATH_VECTOR_ZVFH)
+    #define RISCV_MATH_VECTOR_ZVFH                 1
   #endif
 #endif
-
-
-
-#if defined(RISCV_FLOAT16_SUPPORTED)
 
 typedef _Float16 float16_t;
 

@@ -40,7 +40,7 @@ extern "C"
 
 
 
-#if defined(RISCV_MATH_VECTOR_FLOAT16) && defined(RISCV_FLOAT16_SUPPORTED)
+#if defined(RISCV_MATH_VECTOR_ZVFH)
 
 
 #define RISCV_RVV_TWIDDLES_16_F16_LEN 24
@@ -120,7 +120,7 @@ extern const uint16_t riscv_rvv_rfft_twdim_8192_f16[RISCV_RVV_RFFT_TWIDDLES_8192
 
 
 
-#endif /* defined(RISCV_MATH_VECTOR_FLOAT16) && defined(RISCV_FLOAT16_SUPPORTED) */
+#endif /* defined(RISCV_MATH_VECTOR_ZVFH) */
 
 
 

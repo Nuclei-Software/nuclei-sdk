@@ -40,7 +40,7 @@ extern "C"
 
 
 
-#if defined(RISCV_MATH_VECTOR)
+#if defined(RISCV_MATH_VECTOR_ZVE32F)
 
 
 #define RISCV_RVV_TWIDDLES_16_F32_LEN 24
@@ -118,9 +118,9 @@ extern const uint32_t riscv_rvv_rfft_twdim_4096_f32[RISCV_RVV_RFFT_TWIDDLES_4096
 extern const uint32_t riscv_rvv_rfft_twdre_8192_f32[RISCV_RVV_RFFT_TWIDDLES_8192_F32_LEN];
 extern const uint32_t riscv_rvv_rfft_twdim_8192_f32[RISCV_RVV_RFFT_TWIDDLES_8192_F32_LEN];
 
-#endif /* #if defined(RISCV_MATH_VECTOR) */
+#endif /* defined(RISCV_MATH_VECTOR_ZVE32F) */
 
-#if defined(RISCV_MATH_VECTOR)
+#if defined(RISCV_MATH_VECTOR_ZVE32X)
 
 #define RISCV_RVV_TWIDDLES_16_Q15_LEN 24
 extern const q15_t riscv_rvv_twdre_16_q15[RISCV_RVV_TWIDDLES_16_Q15_LEN];
@@ -272,7 +272,7 @@ extern const q31_t riscv_rvv_rfft_twdim_4096_q31[RISCV_RVV_RFFT_TWIDDLES_4096_Q3
 extern const q31_t riscv_rvv_rfft_twdre_8192_q31[RISCV_RVV_RFFT_TWIDDLES_8192_Q31_LEN];
 extern const q31_t riscv_rvv_rfft_twdim_8192_q31[RISCV_RVV_RFFT_TWIDDLES_8192_Q31_LEN];
 
-#endif /* defined(RISCV_MATH_VECTOR) */
+#endif /* defined(RISCV_MATH_VECTOR_ZVE32X) */
 
 
 

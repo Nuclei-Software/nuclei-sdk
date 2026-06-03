@@ -30,16 +30,16 @@
 #include "riscv_math_types.h"
 #include "riscv_common_tables.h"
 
-#if defined (RISCV_FLOAT16_SUPPORTED)
+#if defined (RISCV_MATH_VECTOR_ZVFH)
 #include "riscv_vec_math_f16.h"
-#endif /* defined (RISCV_FLOAT16_SUPPORTED) */
+#endif /* defined(RISCV_MATH_VECTOR_ZVFH) */
 
 #ifdef   __cplusplus
 extern "C"
 {
 #endif
 
-#if defined(RISCV_MATH_VECTOR)
+#if defined(RISCV_MATH_VECTOR_ZVE32F)
 
 // Copyright 2021 Tencent
 // SPDX-License-Identifier: BSD-3-Clause
@@ -576,7 +576,7 @@ _RVV_FLOAT32_ERFC_OP(2, 16)
 _RVV_FLOAT32_ERFC_OP(4, 8)
 _RVV_FLOAT32_ERFC_OP(8, 4)
 
-#endif /* defined(RISCV_MATH_VECTOR) */
+#endif /* defined(RISCV_MATH_VECTOR_ZVE32F) */
 
 #ifdef   __cplusplus
 }
