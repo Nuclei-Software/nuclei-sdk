@@ -357,8 +357,18 @@ TX_THREAD *_tx_thread_smp_current_thread_get(void)
     return current_thread;
 }
 
-/*    This function gets protection for running inside the ThreadX        */
-/*    source. This is accomplished by a FIFO ticket lock.                */
+/*    This function gets protection for running inside the ThreadX           */
+/*    source. This is accomplished by a FIFO ticket lock.                    */
+/*    NOTE: _tx_thread_smp_protection is zeroed and configured inside        */
+/*    _tx_thread_smp_high_level_initialize, which is called from             */
+/*    _tx_initialize_kernel_enter (tx_kernel_enter). Until that point the    */
+/*    ticket lock fields are in an undefined state, so protect/unprotect     */
+/*    will misbehave.  Application threads, semaphores, mutexes, and any     */
+/*    other ThreadX services that internally acquire this lock must NOT be   */
+/*    created or initialized before tx_kernel_enter. Defer all such work     */
+/*    to tx_application_define — the standard ThreadX initialization         */
+/*    callback invoked after the kernel is fully started.                    */
+/*    See: https://github.com/eclipse-threadx/rtos-docs-asciidoc/blob/main/rtos-docs/threadx/modules/ROOT/pages/chapter2.adoc#using-threadx */
 UINT _tx_thread_smp_protect(void)
 {
     UINT old_posture;
