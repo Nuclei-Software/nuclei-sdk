@@ -258,6 +258,10 @@ __STATIC_INLINE unsigned long __CTZ(unsigned long data)
 {
     unsigned long ret = 0;
 
+    if (data == 0) {
+        return __RISCV_XLEN;
+    }
+
     while (!(data & 1UL)) {
         ret++;
         data = data >> 1;

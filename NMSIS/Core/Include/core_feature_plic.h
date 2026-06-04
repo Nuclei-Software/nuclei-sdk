@@ -45,21 +45,72 @@
  * @{
  */
 
-/* 32 bits per source */
+/*
+ * PLIC Memory Map (per RISC-V PLIC spec):
+ *
+ *  Interrupt Source Priority (per-source, not per-context):
+ *    base + 0x000000: Source 0 (reserved, not exist)
+ *    base + 0x000004: Source 1 priority
+ *    ...
+ *    base + 0x000FFC: Source 1023 priority
+ *    addr = base + source * 4
+ *
+ *  Interrupt Pending Bits (per-source, not per-context):
+ *    base + 0x001000: Source 0-31 pending
+ *    base + 0x001004: Source 32-63 pending
+ *    ...
+ *    addr = base + 0x1000 + (source / 32) * 4
+ *
+ *  Interrupt Enable Bits (per-context, 0x80 bytes each):
+ *    base + 0x002000: Context 0, Source 0-31 enable
+ *    base + 0x002080: Context 1, Source 0-31 enable
+ *    ...
+ *    addr = base + 0x2000 + ctxid * 0x80 + (source / 32) * 4
+ *
+ *  Priority Threshold (per-context, 0x1000 bytes each):
+ *    base + 0x200000: Context 0 threshold
+ *    base + 0x201000: Context 1 threshold
+ *    ...
+ *    addr = base + 0x200000 + ctxid * 0x1000
+ *
+ *  Claim / Complete (per-context, same 4K block as threshold):
+ *    base + 0x200004: Context 0 claim/complete
+ *    base + 0x201004: Context 1 claim/complete
+ *    ...
+ *    addr = base + 0x200004 + ctxid * 0x1000
+ *    Claim: read returns highest-priority pending interrupt ID
+ *    Complete: write interrupt ID to signal handler completion
+ *
+ *  Context ID to Hart/Mode mapping (Nuclei RISC-V CPU, not in PLIC spec):
+ *    M-mode context ID = hartid * 2     (even: 0, 2, 4, 6, 8)
+ *    S-mode context ID = hartid * 2 + 1 (odd:  1, 3, 5, 7, 9)
+ *
+ *    Hart 0: M=ctxid 0, S=ctxid 1
+ *    Hart 1: M=ctxid 2, S=ctxid 3
+ *    Hart 2: M=ctxid 4, S=ctxid 5
+ *    Hart 3: M=ctxid 6, S=ctxid 7
+ *    Hart 4: M=ctxid 8, S=ctxid 9
+ *
+ * Reference: https://github.com/riscv/riscv-plic-spec
+ */
+
+/* Priority: 32 bits per source, addr = base + source * 4 */
 #define PLIC_PRIORITY_OFFSET                _AC(0x0000,UL)      /*!< PLIC Priority register offset */
-#define PLIC_PRIORITY_SHIFT_PER_SOURCE      2                   /*!< PLIC Priority register offset shift per source */
-/* 1 bit per source (1 address) */
+#define PLIC_PRIORITY_SHIFT_PER_SOURCE      2                   /*!< log2(4), shift per source */
+
+/* Pending: 1 bit per source, packed 32 per 32-bit register */
 #define PLIC_PENDING_OFFSET                 _AC(0x1000,UL)      /*!< PLIC Pending register offset */
-#define PLIC_PENDING_SHIFT_PER_SOURCE       0                   /*!< PLIC Pending register offset shift per source */
+#define PLIC_PENDING_SHIFT_PER_SOURCE       0                   /*!< bit index within word */
 
-/* 0x80 per context */
+/* Enable: 0x80 (128) bytes per context, packed 32 sources per 32-bit word */
 #define PLIC_ENABLE_OFFSET                  _AC(0x2000,UL)      /*!< PLIC Enable register offset */
-#define PLIC_ENABLE_SHIFT_PER_CONTEXT       7                   /*!< PLIC Enable register offset shift per context */
+#define PLIC_ENABLE_SHIFT_PER_CONTEXT       7                   /*!< log2(0x80), shift per context */
 
+/* Threshold: 0x1000 (4096) bytes per context */
 #define PLIC_THRESHOLD_OFFSET               _AC(0x200000,UL)    /*!< PLIC Threshold register offset */
-#define PLIC_CLAIM_OFFSET                   _AC(0x200004,UL)    /*!< PLIC Claim register offset */
-#define PLIC_THRESHOLD_SHIFT_PER_CONTEXT    12                  /*!< PLIC Threshold register offset shift per context */
-#define PLIC_CLAIM_SHIFT_PER_CONTEXT        12                  /*!< PLIC Claim register offset shift per context */
+#define PLIC_CLAIM_OFFSET                   _AC(0x200004,UL)    /*!< PLIC Claim/Complete register offset */
+#define PLIC_THRESHOLD_SHIFT_PER_CONTEXT    12                  /*!< log2(0x1000), shift per context */
+#define PLIC_CLAIM_SHIFT_PER_CONTEXT        12                  /*!< log2(0x1000), shift per context */
 
 #ifndef __PLIC_BASEADDR
 /* Base address of PLIC(__PLIC_BASEADDR) should be defined in <Device.h> */
@@ -84,8 +135,14 @@
 #define PLIC_GetHartID_S()                  (__PLIC_HARTID)
 #endif
 
+/*
+ * Context ID mapping (Nuclei RISC-V CPU convention):
+ *   M-mode: ctxid = hartid * 2   (even: 0, 2, 4, 6, 8)
+ *   S-mode: ctxid = hartid * 2 + 1 (odd:  1, 3, 5, 7, 9)
+ * This is NOT part of the RISC-V PLIC spec.
+ */
 #define PLIC_GetHartMContextID()            (PLIC_GetHartID() << 1)
-// TODO SMODE HARTID need to handle, maybe use a predefined variable of hartid
+// TODO SMODE HARTID need to handle, maybe use CSR shartid defined by Nuclei RISC-V CPU
 #define PLIC_GetHartSContextID()            ((PLIC_GetHartID_S() << 1) + 1)
 
 #define PLIC_PRIORITY_REGADDR(source)       ((PLIC_BASE) + (PLIC_PRIORITY_OFFSET)  + ((source) << PLIC_PRIORITY_SHIFT_PER_SOURCE))
@@ -317,8 +374,7 @@ __STATIC_FORCEINLINE uint32_t PLIC_ClaimContextInterrupt(uint32_t ctxid)
  * \details
  * This function complete interrupt for plic for selected context.
  * \param [in]    ctxid     selected context id
- * \return  the ID of the highest priority pending interrupt or
- *      zero if there is no pending interrupt
+ * \param [in]    source    interrupt source ID to complete
  * \remarks
  * The PLIC signals it has completed executing an interrupt handler by writing
  * the interrupt ID it received from the claim to the claim/complete register.
@@ -380,8 +436,8 @@ __STATIC_INLINE void PLIC_Context_Init(uint32_t ctxid, uint32_t num_sources, uin
 #define PLIC_DisableInterrupt(source)                   PLIC_DisableContextInterrupt(PLIC_GetHartMContextID(), (source))
 #define PLIC_DisableInterrupt_S(source)                 PLIC_DisableContextInterrupt(PLIC_GetHartSContextID(), (source))
 
-#define PLIC_SetThreshold(source, thresh)               PLIC_SetContextThreshold(PLIC_GetHartMContextID(), (source), (thresh))
-#define PLIC_SetThreshold_S(source, thresh)             PLIC_SetContextThreshold(PLIC_GetHartSContextID(), (source), (thresh))
+#define PLIC_SetThreshold(thresh)                       PLIC_SetContextThreshold(PLIC_GetHartMContextID(), (thresh))
+#define PLIC_SetThreshold_S(thresh)                     PLIC_SetContextThreshold(PLIC_GetHartSContextID(), (thresh))
 
 #define PLIC_GetThreshold()                             PLIC_GetContextThreshold(PLIC_GetHartMContextID())
 #define PLIC_GetThreshold_S()                           PLIC_GetContextThreshold(PLIC_GetHartSContextID())

@@ -117,11 +117,11 @@ typedef union {
         rv_csr_t mie:1;                         /*!< bit: 3  machine mode interrupt enable flag */
         rv_csr_t _reserved2:1;                  /*!< bit: 4  Reserved */
         rv_csr_t spie:1;                        /*!< bit: 5  supervisor mode interrupt enable flag */
-        rv_csr_t ube:1;                         /*!< bit: 6  U-mode non-instruction-fetch memory accesse big-endian enable flag */
+        rv_csr_t ube:1;                         /*!< bit: 6  U-mode non-instruction-fetch memory access big-endian enable flag */
         rv_csr_t mpie:1;                        /*!< bit: 7  machine mode previous interrupt enable flag */
-        rv_csr_t spp:1;                         /*!< bit: 8  supervisor previous privilede mode */
+        rv_csr_t spp:1;                         /*!< bit: 8  supervisor previous privilege mode */
         rv_csr_t vs:2;                          /*!< bit: 9..10  vector status flag */
-        rv_csr_t mpp:2;                         /*!< bit: 11..12 machine previous privilede mode  */
+        rv_csr_t mpp:2;                         /*!< bit: 11..12 machine previous privilege mode  */
         rv_csr_t fs:2;                          /*!< bit: 13..14 FS status flag */
         rv_csr_t xs:2;                          /*!< bit: 15..16 XS status flag */
         rv_csr_t mprv:1;                        /*!< bit: 17 Modify PRiVilege */
@@ -136,8 +136,8 @@ typedef union {
         rv_csr_t _reserved3:7;                  /*!< bit: 25..31 Reserved  */
         rv_csr_t uxl:2;                         /*!< bit: 32..33 U-mode XLEN  */
         rv_csr_t sxl:2;                         /*!< bit: 34..35 S-mode XLEN  */
-        rv_csr_t sbe:1;                         /*!< bit: 36 S-mode non-instruction-fetch memory accesse big-endian enable flag */
-        rv_csr_t mbe:1;                         /*!< bit: 37 M-mode non-instruction-fetch memory accesse big-endian enable flag */
+        rv_csr_t sbe:1;                         /*!< bit: 36 S-mode non-instruction-fetch memory access big-endian enable flag */
+        rv_csr_t mbe:1;                         /*!< bit: 37 M-mode non-instruction-fetch memory access big-endian enable flag */
         rv_csr_t gva:1;                         /*!< bit: 38 Guest Virtual Address */
         rv_csr_t mpv:1;                         /*!< bit: 39 Machine Previous Virtualization Mode */
         rv_csr_t _reserved4:1;                  /*!< bit: 40 Reserved  */
@@ -160,8 +160,8 @@ typedef union {
 typedef union {
     struct {
         rv_csr_t _reserved0:4;                  /*!< bit: 0..3  Reserved */
-        rv_csr_t sbe:1;                         /*!< bit: 4 S-mode non-instruction-fetch memory accesse big-endian enable flag */
-        rv_csr_t mbe:1;                         /*!< bit: 5 M-mode non-instruction-fetch memory accesse big-endian enable flag */
+        rv_csr_t sbe:1;                         /*!< bit: 4 S-mode non-instruction-fetch memory access big-endian enable flag */
+        rv_csr_t mbe:1;                         /*!< bit: 5 M-mode non-instruction-fetch memory access big-endian enable flag */
         rv_csr_t gva:1;                         /*!< bit: 6 Guest Virtual Address */
         rv_csr_t mpv:1;                         /*!< bit: 7 Machine Previous Virtualization Mode */
         rv_csr_t _reserved1:1;                  /*!< bit: 8 Reserved  */
@@ -337,14 +337,14 @@ typedef CSR_MCACHECTL_Type CSR_MCACHE_CTL_Type;
  */
 typedef union {
     struct {
-        rv_csr_t mpie1:1;                       /*!< bit: 0     interrupt enable flag of fisrt level NMI/exception nestting */
-        rv_csr_t mpp1:2;                        /*!< bit: 1..2  privilede mode of fisrt level NMI/exception nestting */
+        rv_csr_t mpie1:1;                       /*!< bit: 0     interrupt enable flag of first level NMI/exception nesting */
+        rv_csr_t mpp1:2;                        /*!< bit: 1..2  privilede mode of first level NMI/exception nesting */
         rv_csr_t _reserved0:3;                  /*!< bit: 3..5  Reserved */
-        rv_csr_t ptyp1:2;                       /*!< bit: 6..7  NMI/exception type of before first nestting */
-        rv_csr_t mpie2:1;                       /*!< bit: 8     interrupt enable flag of second level NMI/exception nestting */
-        rv_csr_t mpp2:2;                        /*!< bit: 9..10 privilede mode of second level NMI/exception nestting */
+        rv_csr_t ptyp1:2;                       /*!< bit: 6..7  NMI/exception type of before first nesting */
+        rv_csr_t mpie2:1;                       /*!< bit: 8     interrupt enable flag of second level NMI/exception nesting */
+        rv_csr_t mpp2:2;                        /*!< bit: 9..10 privilede mode of second level NMI/exception nesting */
         rv_csr_t _reserved1:3;                  /*!< bit: 11..13     Reserved */
-        rv_csr_t ptyp2:2;                       /*!< bit: 14..15     NMI/exception type of before second nestting */
+        rv_csr_t ptyp2:2;                       /*!< bit: 14..15     NMI/exception type of before second nesting */
         rv_csr_t _reserved2:__RISCV_XLEN-16;    /*!< bit: 16..XLEN-1 Reserved */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t w;                                 /*!< Type      used for csr data access */

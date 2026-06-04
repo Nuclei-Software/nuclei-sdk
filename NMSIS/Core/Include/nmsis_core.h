@@ -88,7 +88,7 @@
 /* Include core pmp feature header file */
 #include "core_feature_pmp.h"
 /* Include core spmp feature header file */
- #include "core_feature_spmp.h"
+#include "core_feature_spmp.h"
 /* Include core cache feature header file */
 #include "core_feature_cache.h"
 /* Include core cidu feature header file */

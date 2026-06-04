@@ -121,7 +121,7 @@ typedef union {
         __IM uint32_t smcdeleg:1;                   /*!< bit: 9 support Smcdeleg extension */
         __IM uint32_t smmpm:1;                      /*!< bit: 10 support Smmpm extension */
         __IM uint32_t smnpm:1;                      /*!< bit: 11 support Smnpm extension */
-        __IM uint32_t ssnpm:1;                      /*!< bit: 12 support Smnpm extension */
+        __IM uint32_t ssnpm:1;                      /*!< bit: 12 support Ssnpm extension */
         __IM uint32_t smstateen:1;                  /*!< bit: 13 support Smstateen extension */
         __IM uint32_t sstateen:1;                   /*!< bit: 14 support Sstateen extension */
         __IM uint32_t smcsrind:1;                   /*!< bit: 15 support Smcsrind extension */
