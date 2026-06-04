@@ -76,6 +76,20 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Update ``core_feature_ecc.h`` to trigger DCache ECC injection with a real load access instead of cache line lock operations.
   - Extend ``core_feature_iinfo.h`` with precise ECC injection capability detection, and helper APIs to configure precise ECC injection address and cache way.
   - Extend ``core_feature_smpcc.h`` with additional Cluster Cache register definitions, and precise ECC injection support for CCache tag/data RAM and CLM error injection flows.
+  - Fix spelling: ``Maintainence`` -> ``Maintenance`` in CCM description in ``core_feature_ecc.h``
+  - Simplify ``ECC_IsTLBSupportECC()`` to check only TLB ECC register field instead of requiring PLIC presence in ``core_feature_ecc.h``
+  - Fix wrong MACRO ``ECC_ERROR_RAMID_MASK_DLM`` -> ``ECC_ERROR_RAMID_MASK_TLB`` in TLB single-bit and double-bit error detection in ``core_feature_ecc.h``
+  - Fix spelling: ``suppported`` -> ``supported`` in XOR error injection check in ``core_feature_ecc.h``
+  - Fix ``__CTZ`` to correctly handle ``data==0`` by returning ``__RISCV_XLEN`` in ``core_compatiable.h``
+  - Fix typos in mstatus/sstatus comment: ``accesse`` -> ``access``, ``privilede`` -> ``privilege`` in ``core_feature_base.h``
+  - Fix typos in MNSTATUS comment: ``fisrt`` -> ``first``, ``nestting`` -> ``nesting`` in ``core_feature_base.h``
+  - Fix ``ssnpm`` comment: ``Smnpm`` -> ``Ssnpm`` in ``core_feature_iinfo.h``
+  - Fix ``DisableSUCCM`` SMPCC register clear logic in ``core_feature_cache.h``
+  - Add ``__ECLIC_VER`` macro defaulting to 1 for ECLIC versioning in ``core_feature_eclic.h``
+  - Add detailed PLIC memory map documentation with context ID mapping in ``core_feature_plic.h``
+  - Fix ``PLIC_SetThreshold`` convenience macro signature (remove unused ``source`` param) in ``core_feature_plic.h``
+  - Fix ``PLIC_CompleteContextInterrupt`` doxygen param description in ``core_feature_plic.h``
+  - Fix indentation in ``nmsis_core.h`` for spmp include
 
 * Application
 
