@@ -197,7 +197,7 @@
 #define SMODE_TIMER_TICKS       (SOC_TIMER_FREQ / (1000 / (SMODE_TICK_MS)))
 
 /* Create separated interrupt stack M-Mode and S-Mode execution when INTSTACK macro defined */
-#define INTERRUPT_STACK_SIZE        20480
+#define INTERRUPT_STACK_SIZE        10240
 uint8_t mmode_int_stack[INTERRUPT_STACK_SIZE] __attribute__((aligned(16)));
 uintptr_t mmode_int_sp = (uintptr_t)(mmode_int_stack + sizeof(mmode_int_stack));
 
