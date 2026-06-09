@@ -73,7 +73,7 @@ int main(void)
 {
 #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1)
     int32_t ret = 0;
-    int32_t val = 0;
+    volatile int32_t val = 0;
     CacheInfo_Type cacheinfo_type;
     BENCH_INIT();
     if (!DCachePresent()) {
@@ -116,7 +116,7 @@ int main(void)
     HPM_END(3, array_update_by_row_icache_miss, HPM_EVENT3);
 
     printf("\n-------Invalidate all the Dcache-------\n");
-    MInvalDCache();
+    MFlushInvalDCache();
     printf("\n------Update array to all 0xab in cache: array_update_by_col ------\n");
     HPM_START(4, array_update_by_col_dcache_miss, HPM_EVENT4);
     BENCH_START(array_update_by_col_cycle);
@@ -125,13 +125,14 @@ int main(void)
     HPM_END(4, array_update_by_col_dcache_miss, HPM_EVENT4);
 
     printf("Read out array_test[0][0] 0x%x in cache, then disable DCache\n", array_test[0][0]);
+
     DisableDCache();
 
     printf("\n------Init array in memory to all 0x34------\n");
     array_init();
     printf("Read out array_test[0][0] 0x%x in memory, then enable Dcache\n", array_test[0][0]);
     EnableDCache();
-    MFlushDCache();
+    MFlushInvalDCache();
     printf("After cache flushed to memory, array_test[0][0] in memory is 0x%x\n", array_test[0][0]);
 
     printf("\n------Again init array in memory to all 0x34, then enable DCache------\n");
@@ -142,7 +143,7 @@ int main(void)
     EnableDCache();
     printf("Read out array_test[0][0] 0x%x in cache, when mapped value in memory has changed\n", array_test[0][0]);
 
-    MInvalDCache();
+    MFlushInvalDCache();
     HPM_START(4, dcachemiss_readonebyte, HPM_EVENT4);
     /* Read brings in one cache miss */
     val = *(volatile uint8_t*) &array_test[0][0];
