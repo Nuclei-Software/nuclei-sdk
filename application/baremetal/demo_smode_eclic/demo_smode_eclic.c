@@ -26,8 +26,29 @@
 // 100ms
 #define TIMER_TICKS             (SOC_TIMER_FREQ / 10)
 
-// 2048 is enough
-#define SMODE_STACK_SIZE        2048
+/*
+ * NOTE: Vector interrupts decorated with __INTERRUPT or __SUPERVISOR_INTERRUPT
+ * are handled by compiler-generated prologue/epilogue code. When compiled with
+ * RVV (e.g. -march=rv64imafdcv), the compiler may additionally save vector
+ * registers (v0-v31, each taking vlenb bytes) on the current stack.
+ * Vector interrupts do NOT use the separated interrupt stack; they run on the
+ * background task's stack (here smode_stack for S-Mode, or the main/task
+ * stack for M-Mode vector interrupts).
+ *
+ * For non-leaf interrupt handlers (e.g. eclic_ssip_handler which calls
+ * printf), the compiler saves all caller-saved GPR + FP registers + FCSR
+ * (e.g. ra, t0-t6, a0-a7, ft0-ft11, fa0-fa7, fcsr) plus any callee-saved
+ * registers actually used by the handler (e.g. s0 as frame base). For non-
+ * leaf handlers, ALL v0-v31 are also saved (32 * vlenb bytes). For leaf
+ * handlers, only actually-used registers are saved, or none at all if no V
+ * instructions are used in the handler body.
+ *
+ * WARNING: For non-leaf interrupt handlers compiled with RVV, the vector
+ * context alone can consume up to 32 * vlenb bytes (e.g. 16KB for VLEN=4096).
+ * Ensure the stack size is sufficient to avoid stack overflow, especially in
+ * RTOS tasks where stack sizes are typically limited.
+ */
+#define SMODE_STACK_SIZE        20480
 
 // Execute Hart ID
 #define EXECUTE_HARTID          0

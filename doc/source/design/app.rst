@@ -581,6 +581,7 @@ This `demo_eclic_stress application`_ is used to validate the functionality of t
 
     - This demo requires ECLIC, System Timer, and optional TEE (Trusted Execution Environment) and SSTC extension to be present. When TEE and SSTC is present, both M-Mode and S-Mode interrupts are tested. When TEE is not present, only M-Mode interrupts are tested.
     - It can also work with ECLICv2, see :ref:`design_soc_evalsoc_eclicv2`
+    - **Vector interrupt stack behavior**: When compiled with RVV (e.g. ``-march=rv64imafdcv``), `__INTERRUPT` decorated vector interrupt handlers save context on the current stack, NOT on the separated interrupt stack. For non-leaf handlers (which call other functions), the compiler saves all caller-saved GPR + FP registers + FCSR plus any callee-saved registers actually used, and ALL 32 vector registers (v0-v31, each `vlenb` bytes) are also saved (e.g. 512B for VLEN=128, 16KB for VLEN=4096). For leaf handlers, only actually-used registers are saved. In M-Mode or S-Mode, vector interrupts run on the background task stack (main stack for M-Mode, `SMODE_STACK_SIZE` for S-Mode), which must be large enough to accommodate the context.
 
 **How to run this application:**
 
@@ -1701,6 +1702,7 @@ the ECLIC API and Interrupt in supervisor mode with TEE.
     * In this application's Makefile, we provided comments in Makefile about optimization
       for code size, please refer to chapter :ref:`design_app_demo_eclic` for details.
     * Need to enable TEE in <Device.h> if TEE present in CPU.
+    * **Vector interrupt stack behavior**: When compiled with RVV, `__INTERRUPT` or `__SUPERVISOR_INTERRUPT` decorated vector interrupt handlers save context on the current stack, NOT on the separated interrupt stack. For non-leaf handlers, the compiler saves all caller-saved GPR + FP registers + FCSR plus any callee-saved registers actually used, and ALL 32 vector registers are also saved (32 * `vlenb` bytes). For leaf handlers, only actually-used registers are saved. Ensure the background stack (`SMODE_STACK_SIZE`) is large enough to accommodate vector context.
 
 * The timer interrupt and timer software interrupt are used
 * The timer interrupt is registered as non-vector interrupt
@@ -1913,6 +1915,7 @@ This demo is similar with :ref:`design_app_demo_smode_eclic`
 
     * It doesn't work with gd32vf103 processor.
     * It needs Nuclei CPU configured with TEE feature and S-Mode ECLIC and SSTC feature
+    * **Vector interrupt stack behavior**: When compiled with RVV, `__INTERRUPT` decorated vector interrupt handlers (e.g. `eclic_ssip_handler`) save context on the current stack, NOT on the separated interrupt stack. For non-leaf handlers, the compiler saves all caller-saved GPR + FP registers + FCSR plus any callee-saved registers actually used, and ALL 32 vector registers are also saved (32 * `vlenb` bytes). For leaf handlers, only actually-used registers are saved. Non-vector interrupts (e.g. `eclic_stip_handler`) use the separated interrupt stack. In S-Mode, vector interrupts run on `smode_stack`; in M-Mode, they run on the main/task stack. Ensure the background stack is large enough to accommodate vector context.
 
 **How to run this application:**
 

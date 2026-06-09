@@ -96,6 +96,9 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Update ``demo_eclic_stress`` application to use ``__SMODE_PRESENT`` instead of ``__TEE_PRESENT`` and update npk.yml to remove TEE requirement
   - Update ``demo_smode_eclic`` application to use ``__SMODE_PRESENT`` instead of ``__TEE_PRESENT`` and add ``XLCFG_SMODE`` configuration variable
   - Update ``demo_sstc`` application to use ``__SMODE_PRESENT`` instead of ``__TEE_PRESENT`` and remove TEE requirement
+  - Add comments in ``demo_eclic_stress`` to document that ``__INTERRUPT`` vector interrupts save RVV context on the background stack, not on the separated interrupt stack, and increase ``SMODE_STACK_SIZE`` from 10240 to 20480 to accommodate RVV vector register saving overhead
+  - Add comments in ``demo_sstc`` to document RVV vector interrupt stack behavior and increase ``SMODE_STACK_SIZE`` from 2048 to 20480 to accommodate RVV vector register saving overhead
+  - Add comments in ``demo_smode_eclic`` to document RVV vector interrupt stack behavior and increase ``SMODE_STACK_SIZE`` from 2048 to 20480 to accommodate RVV vector register saving overhead
   - Update ``demo_smode_plic`` application to add ``XLCFG_PLIC`` configuration variable
   - Update ``demo_plic`` application to add ``XLCFG_PLIC`` configuration variable
   - Update ``demo_cidu`` application to add ``XLCFG_CIDU`` configuration variable

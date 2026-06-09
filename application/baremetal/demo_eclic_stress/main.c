@@ -204,6 +204,39 @@ uintptr_t mmode_int_sp = (uintptr_t)(mmode_int_stack + sizeof(mmode_int_stack));
 uint8_t smode_int_stack[INTERRUPT_STACK_SIZE] __attribute__((aligned(16)));
 uintptr_t smode_int_sp = (uintptr_t)(smode_int_stack + sizeof(smode_int_stack));
 
+/*
+ * NOTE: Vector interrupts decorated with __INTERRUPT or __SUPERVISOR_INTERRUPT
+ * are handled by compiler-generated prologue/epilogue code. Context saving
+ * (including the extra
+ * RVV vector registers when compiled with e.g. -march=rv64imafdcv) happens on
+ * the current stack, NOT on the separated interrupt stack (mmode_int_stack /
+ * smode_int_stack above). The separated interrupt stack only applies to
+ * non-vector interrupts.
+ *
+ * In M-Mode or S-Mode, vector interrupts therefore run on the background
+ * task's stack (main's stack or RTOS task stack for M-Mode; smode_stack for
+ * S-Mode), which must be large enough to accommodate the full context frame.
+ * See the disassembly of eclic_int37_handler (S-mode vector interrupt) for
+ * reference:
+ *   - All caller-saved GPR + FP registers + FCSR + callee-saved
+ *     registers used by the handler (e.g. s0 as frame base): ~304 bytes
+ *     (ra, t0-t6, a0-a7, ft0-ft11, fa0-fa7, fcsr; may include s0 if used)
+ *   - Vector registers (RVV only):
+ *     - Non-leaf interrupt handlers (e.g. eclic_int37_handler which calls
+ *       printf): ALL v0-v31 saved, 32 * vlenb bytes (e.g. 512B for VLEN=128,
+ *       2048B for VLEN=512)
+ *     - Leaf interrupt handlers: only registers actually used by the handler
+ *       body, or none if no V instructions are used
+ *   Note: scause/sepc/sstatus are NOT part of the compiler-generated context
+ *   frame. They are saved manually in the handler body via
+ *   SAVE_IRQ_CSR_CONTEXT_S() or equivalent code, and use additional local
+ *   stack space.
+ *
+ * WARNING: For non-leaf interrupt handlers compiled with RVV, the vector
+ * context alone can consume up to 32 * vlenb bytes (e.g. 16KB for VLEN=4096).
+ * Ensure the stack size is sufficient to avoid stack overflow, especially in
+ * RTOS tasks where stack sizes are typically limited.
+ */
 /* Create a stack for supervisor mode execution */
 #define SMODE_STACK_SIZE            20480
 uint8_t smode_stack[SMODE_STACK_SIZE] __attribute__((aligned(16)));
