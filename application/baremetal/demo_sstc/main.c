@@ -29,8 +29,8 @@
 // 100ms
 #define TIMER_TICKS             (SOC_TIMER_FREQ / 10)
 
-// 2048 is enough
-#define SMODE_STACK_SIZE        2048
+// 4096 is enough
+#define SMODE_STACK_SIZE        4096
 
 /* Create a stack for supervisor mode execution */
 uint8_t smode_stack[SMODE_STACK_SIZE] __attribute__((aligned(16)));
