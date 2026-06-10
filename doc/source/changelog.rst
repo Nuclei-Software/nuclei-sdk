@@ -21,6 +21,7 @@ This is release version ``0.3.0`` of N100 SDK.
   - Fix ``xPortTaskSwitch`` disable/enable IRQ around ``vTaskSwitchContext`` which may cause interrupt nesting during task switch in FreeRTOS
   - Fix tickless sleep mode may miss interrupts by ensuring global IRQ is disabled before stopping SysTick in FreRTOS
   - Remove unnecessary ``__FENCE_I`` after re-enabling interrupts in tickless sleep mode in FreeRTOS
+  - Fix tick drift caused by wrong elapsed time calculation when WFI wakes up but MTIME has not yet incremented in FreeRTOS tickless idle
 
 * Build
 

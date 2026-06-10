@@ -477,7 +477,11 @@ __attribute__((weak)) void vPortSuppressTicksAndSleep(TickType_t xExpectedIdleTi
             periods (not the ulReload value which accounted for part
             ticks). */
             xModifiableIdleTime = SysTimer_GetLoadValue();
-            if (xModifiableIdleTime > XLastLoadValue) {
+            /* Use >= to handle the case where WFI wakes up but MTIME has not
+               yet incremented (xModifiableIdleTime == XLastLoadValue), in which
+               case elapsed time is 0 instead of wrapping around via the else
+               branch which would produce a bogus large tick count. */
+            if (xModifiableIdleTime >= XLastLoadValue) {
                 ulCompletedSysTickDecrements = (xModifiableIdleTime - XLastLoadValue);
             } else {
                 ulCompletedSysTickDecrements = (xModifiableIdleTime + portMAX_BIT_NUMBER - XLastLoadValue);
