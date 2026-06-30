@@ -1557,6 +1557,12 @@ void _premain_init(void)
         // wait for correct iregion base addr is set by boot hart
         while (CpuIRegionBase == 0xFFFFFFFF);
     }
+#else
+    if (hartid == BOOT_HARTID) {
+        /* Enable prefetch overall, only done in boot hart */
+        IINFO_EnablePrefetchOverall();
+        __RWMB();
+    }
 #endif
 
     if ( (hartid == BOOT_HARTID) && ((mcfginfo & (0x1 << 11)) && (SMP_CTRLREG(__SMPCC_BASEADDR, 0x4) & 0x1)) ) { // L2 Cache present
