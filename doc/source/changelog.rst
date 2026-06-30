@@ -8,6 +8,10 @@ V1.0.0-dev
 
 This is release version of ``1.0.0`` of Nuclei SDK, which is still under development.
 
+* SoC
+
+  - Warn when ``CFG_IREGION_BASE_ADDR`` is defined as ``0`` and document the required compiler option.
+
 V0.9.0
 ------
 
