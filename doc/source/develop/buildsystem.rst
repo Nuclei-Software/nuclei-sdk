@@ -4,7 +4,7 @@ Build System based on Makefile
 ==============================
 
 Nuclei SDK's build system is based on Makefile, user can build,
-run ordebug application in Windows and Linux.
+run or debug application in Windows and Linux.
 
 .. _develop_buildsystem_structure:
 
