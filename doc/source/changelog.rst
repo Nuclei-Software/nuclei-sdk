@@ -12,6 +12,7 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
   - Warn when ``CFG_IREGION_BASE_ADDR`` is defined as ``0`` and document the required compiler option.
   - Fix EvalSoC UART stop-bit and FIFO watermark configuration to update the intended control-register fields.
+  - Enable SMP_ENB register of SMPCC with ``0xFFFFFFFF`` after L2 Cache enable to ensure SMP and IOCP consistency across cluster cores in ``system_evalsoc.c``.
 
 V0.9.0
 ------

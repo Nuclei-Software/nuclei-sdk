@@ -1344,7 +1344,7 @@ void __sync_harts(void)
             SMP_CTRLREG(smp_base, 0x10) |= 0x1;
             SMP_CTRLREG(smp_base, 0xd8) = 0x0;
         }
-        // Enable SMP
+        // Enable SMP and IOCP consistency
         SMP_CTRLREG(smp_base, 0xc) = 0xFFFFFFFF;
         __SMP_RWMB();
         // L1 I/D Cache Enable is done in _premain_init
@@ -1571,14 +1571,15 @@ void _premain_init(void)
         // Enable L2, disable cluster local memory
         SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) |= 0x1;
         SMP_CTRLREG(__SMPCC_BASEADDR, 0xd8) = 0x0;
-        __SMP_RWMB();
 #else
         // Disable L2, enable cluster local memory
         SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) &= ~0x1;
         // use as clm or cache, when l2 disable, the affect to ddr is the same, l2 is really disabled
         SMP_CTRLREG(__SMPCC_BASEADDR, 0xd8) = 0;//0xFFFFFFFF;
-        __SMP_RWMB();
 #endif
+        // Enable SMP and IOCP consistency
+        SMP_CTRLREG(__SMPCC_BASEADDR, 0xC) = 0xFFFFFFFF;
+        __SMP_RWMB();
     }
 
 #if defined(RUNMODE_BPU_EN)
