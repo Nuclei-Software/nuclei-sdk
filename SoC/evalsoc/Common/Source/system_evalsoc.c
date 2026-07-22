@@ -1484,50 +1484,6 @@ void _premain_init(void)
     }
 #endif
 
-#if defined(RUNMODE_LDSPEC_EN)
-#if RUNMODE_LDSPEC_EN == 1
-    __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_LDSPEC_ENABLE);
-#else
-    __RV_CSR_CLEAR(CSR_MMISC_CTL, MMISC_CTL_LDSPEC_ENABLE);
-#endif
-#endif
-
-    /* __ICACHE_PRESENT and __DCACHE_PRESENT are defined in evalsoc.h */
-    // For our internal cpu testing, they want to set evalsoc __ICACHE_PRESENT/__DCACHE_PRESENT to be 1
-    // __CCM_PRESENT is still default to 0 in evalsoc.h, since it is used in core_feature_eclic.h to register interrupt, if set to 1, it might cause exception
-    // but in the cpu, icache or dcache might not exist due to cpu configuration, so here
-    // we need to check whether icache/dcache really exist, if yes, then turn on it
-#if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1)
-    if (ICachePresent()) { // Check whether icache real present or not
-#if defined(RUNMODE_ECC_EN)
-#if RUNMODE_ECC_EN == 0
-        __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_IC_ECC_EN | MCACHE_CTL_IC_ECC_EXCP_EN | MCACHE_CTL_IC_ECC_CHK_EN);
-#else
-        __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_IC_ECC_EN | MCACHE_CTL_IC_ECC_EXCP_EN | MCACHE_CTL_IC_ECC_CHK_EN);
-#endif
-#endif
-        EnableICache();
-        // Enable canceling previous accesses in icache e1 stage when change flow happens
-        __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_IC_PF_EN);
-    }
-#endif
-#if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1)
-    if (DCachePresent()) { // Check whether dcache real present or not
-#if defined(RUNMODE_ECC_EN)
-#if RUNMODE_ECC_EN == 0
-        __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_DC_ECC_EN | MCACHE_CTL_DC_ECC_EXCP_EN | MCACHE_CTL_DC_ECC_CHK_EN);
-#else
-        __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_DC_ECC_EN | MCACHE_CTL_DC_ECC_EXCP_EN | MCACHE_CTL_DC_ECC_CHK_EN);
-#endif
-#endif
-        EnableDCache();
-    }
-#endif
-
-    /* Do fence and fence.i to make sure previous ilm/dlm/icache/dcache control done */
-    __RWMB();
-    __FENCE_I();
-
 #if defined(CFG_IREGION_BASE_ADDR) && (CFG_IREGION_BASE_ADDR == 0)
 /*
  * How to add the compiler option `-fno-delete-null-pointer-checks`:
@@ -1565,6 +1521,7 @@ void _premain_init(void)
     }
 #endif
 
+    /* NOTE: Initialize L2 Cache and SMP/IOCP EN before L1 I/D Cache */
     if ( (hartid == BOOT_HARTID) && ((mcfginfo & (0x1 << 11)) && (SMP_CTRLREG(__SMPCC_BASEADDR, 0x4) & 0x1)) ) { // L2 Cache present
         // NOTE: Enable L2 Cache by default when L2 Cache Present
 #if !(defined(RUNMODE_L2_EN) && RUNMODE_L2_EN == 0)
@@ -1581,6 +1538,50 @@ void _premain_init(void)
         SMP_CTRLREG(__SMPCC_BASEADDR, 0xC) = 0xFFFFFFFF;
         __SMP_RWMB();
     }
+
+#if defined(RUNMODE_LDSPEC_EN)
+#if RUNMODE_LDSPEC_EN == 1
+    __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_LDSPEC_ENABLE);
+#else
+    __RV_CSR_CLEAR(CSR_MMISC_CTL, MMISC_CTL_LDSPEC_ENABLE);
+#endif
+#endif
+
+    /* NOTE: L2 Cache and SMP EN initialized above, now initialize L1 I/D Cache */
+    // For our internal cpu testing, they want to set evalsoc __ICACHE_PRESENT/__DCACHE_PRESENT to be 1
+    // __CCM_PRESENT is still default to 0 in evalsoc.h, since it is used in core_feature_eclic.h to register interrupt, if set to 1, it might cause exception
+    // but in the cpu, icache or dcache might not exist due to cpu configuration, so here
+    // we need to check whether icache/dcache really exist, if yes, then turn on it
+#if defined(__ICACHE_PRESENT) && (__ICACHE_PRESENT == 1)
+    if (ICachePresent()) { // Check whether icache real present or not
+#if defined(RUNMODE_ECC_EN)
+#if RUNMODE_ECC_EN == 0
+        __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_IC_ECC_EN | MCACHE_CTL_IC_ECC_EXCP_EN | MCACHE_CTL_IC_ECC_CHK_EN);
+#else
+        __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_IC_ECC_EN | MCACHE_CTL_IC_ECC_EXCP_EN | MCACHE_CTL_IC_ECC_CHK_EN);
+#endif
+#endif
+        EnableICache();
+        // Enable canceling previous accesses in icache e1 stage when change flow happens
+        __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_IC_PF_EN);
+    }
+#endif
+#if defined(__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1)
+    if (DCachePresent()) { // Check whether dcache real present or not
+#if defined(RUNMODE_ECC_EN)
+#if RUNMODE_ECC_EN == 0
+        __RV_CSR_CLEAR(CSR_MCACHE_CTL, MCACHE_CTL_DC_ECC_EN | MCACHE_CTL_DC_ECC_EXCP_EN | MCACHE_CTL_DC_ECC_CHK_EN);
+#else
+        __RV_CSR_SET(CSR_MCACHE_CTL, MCACHE_CTL_DC_ECC_EN | MCACHE_CTL_DC_ECC_EXCP_EN | MCACHE_CTL_DC_ECC_CHK_EN);
+#endif
+#endif
+        EnableDCache();
+    }
+#endif
+
+    /* Ensure previous L2/SMP/ILM/DLM/I-Cache/D-Cache configurations take effect */
+    __RWMB();
+    __FENCE_I();
 
 #if defined(RUNMODE_BPU_EN)
 #if RUNMODE_BPU_EN == 1
