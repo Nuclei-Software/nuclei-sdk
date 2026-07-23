@@ -14,6 +14,10 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
   - Fix EvalSoC UART stop-bit and FIFO watermark configuration to update the intended control-register fields.
   - Reorder ``_premain_init()`` cache initialization in ``system_evalsoc.c``: L2 Cache and SMP/IOCP EN are now initialized before L1 I/D Cache to ensure correct SMP coherency setup sequence.
 
+* NMSIS
+
+  - Correct performance monitor event definitions in ``nmsis_bench.h``: move ``ICACHE_PREFETCH_MISS`` from Type 3 idx 9 to correct position Type 1 idx 6 per ISA manual errata, and add VPU commit event definitions (Type 2, idx 4-7).
+
 V0.9.0
 ------
 

@@ -289,6 +289,7 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #define EVENT_TYPE_1_ITLB_READ_MISS                                             3
 #define EVENT_TYPE_1_DTLB_RW_MISS                                               4
 #define EVENT_TYPE_1_MAIN_TLB_MISS                                              5
+#define EVENT_TYPE_1_ICACHE_PREFETCH_MISS                                       6
 #define EVENT_TYPE_1_L2_CACHE_ACCESS                                            8
 #define EVENT_TYPE_1_L2_CACHE_MISS                                              9
 #define EVENT_TYPE_1_MEMORY_BUS_REQUEST                                         10
@@ -299,6 +300,10 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 /* Events Type 2 (event sel == 2) event name macros */
 #define EVENT_TYPE_2_BRANCH_INSTRUCTION_COMMIT                                  2
 #define EVENT_TYPE_2_BRANCH_PREDICT_FAIL_COMMIT                                 3
+#define EVENT_TYPE_2_VPU_TOTAL_INSTRUCTION_COMMIT                               4
+#define EVENT_TYPE_2_VPU_LOAD_INSTRUCTION_COMMIT                                5
+#define EVENT_TYPE_2_VPU_STORE_INSTRUCTION_COMMIT                               6
+#define EVENT_TYPE_2_VPU_COMPUTATIONAL_INSTRUCTION_COMMIT                       7
 
 /* Events Type 3 (event sel == 3) event name macros */
 #define EVENT_TYPE_3_DCACHE_READ                                                0
@@ -309,7 +314,6 @@ __STATIC_FORCEINLINE void __prepare_bench_env(void)
 #define EVENT_TYPE_3_DCACHE_PREFETCH_MISS                                       5
 #define EVENT_TYPE_3_ICACHE_READ                                                6
 #define EVENT_TYPE_3_ICACHE_PREFETCH                                            8
-#define EVENT_TYPE_3_ICACHE_PREFETCH_MISS                                       9
 #define EVENT_TYPE_3_L2_CACHE_READ                                              10
 #define EVENT_TYPE_3_L2_CACHE_READ_MISS                                         11
 #define EVENT_TYPE_3_L2_CACHE_WRITE                                             12
