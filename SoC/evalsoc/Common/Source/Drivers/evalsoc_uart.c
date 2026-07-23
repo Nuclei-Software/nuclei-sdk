@@ -18,8 +18,8 @@ int32_t uart_config_stopbit(UART_TypeDef* uart, UART_STOP_BIT stopbit)
         return -1;
     }
     uint32_t stopval = stopbit;
-    stopval = (stopbit << UART_TXCTRL_NSTOP_OFS) & UART_TXCTRL_TXCNT_MASK;
-    uart->TXCTRL &= stopval | (~UART_TXCTRL_TXCNT_MASK);
+    stopval = (stopval << UART_TXCTRL_NSTOP_OFS) & UART_TXCTRL_NSTOP_MASK;
+    uart->TXCTRL = stopval | (~UART_TXCTRL_NSTOP_MASK & uart->TXCTRL);
     return 0;
 }
 
@@ -51,7 +51,7 @@ int32_t uart_set_tx_watermark(UART_TypeDef* uart, uint32_t watermark)
         return -1;
     }
     watermark = (watermark << UART_TXCTRL_TXCNT_OFS) & UART_TXCTRL_TXCNT_MASK;
-    uart->TXCTRL &= watermark | (~UART_TXCTRL_TXCNT_MASK);
+    uart->TXCTRL = watermark | (~UART_TXCTRL_TXCNT_MASK & uart->TXCTRL);
     return 0;
 }
 
@@ -79,7 +79,7 @@ int32_t uart_set_rx_watermark(UART_TypeDef* uart, uint32_t watermark)
         return -1;
     }
     watermark = (watermark << UART_RXCTRL_RXCNT_OFS) & UART_RXCTRL_RXCNT_MASK;
-    uart->RXCTRL &= watermark | (~UART_RXCTRL_RXCNT_MASK);
+    uart->RXCTRL = watermark | (~UART_RXCTRL_RXCNT_MASK & uart->RXCTRL);
     return 0;
 }
 

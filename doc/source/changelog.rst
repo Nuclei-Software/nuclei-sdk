@@ -3,6 +3,15 @@
 Changelog
 =========
 
+V0.4.0-dev
+----------
+
+This is release version of ``0.4.0`` of N100 SDK, which is still under development.
+
+* SoC
+
+  - Fix EvalSoC UART stop-bit and FIFO watermark configuration to update the intended control-register fields.
+
 V0.3.0
 ------
 
