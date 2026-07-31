@@ -13,6 +13,7 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
   - Warn when ``CFG_IREGION_BASE_ADDR`` is defined as ``0`` and document the required compiler option.
   - Fix EvalSoC UART stop-bit and FIFO watermark configuration to update the intended control-register fields.
   - Reorder ``_premain_init()`` cache initialization in ``system_evalsoc.c``: L2 Cache and SMP/IOCP EN are now initialized before L1 I/D Cache to ensure correct SMP coherency setup sequence.
+  - Update correct gd32vw55x SVD file.
 
 * NMSIS
 
