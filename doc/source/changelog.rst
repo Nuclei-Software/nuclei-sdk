@@ -10,6 +10,7 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * SoC
 
+  - Fix EvalSoC UART output in ``CODESIZE=1`` SMP configurations by initializing shared CPU-region, clock, and UART state only on the boot hart.
   - Warn when ``CFG_IREGION_BASE_ADDR`` is defined as ``0`` and document the required compiler option.
   - Fix EvalSoC UART stop-bit and FIFO watermark configuration to update the intended control-register fields.
   - Reorder ``_premain_init()`` cache initialization in ``system_evalsoc.c``: L2 Cache and SMP/IOCP EN are now initialized before L1 I/D Cache to ensure correct SMP coherency setup sequence.

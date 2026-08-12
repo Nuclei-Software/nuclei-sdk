@@ -1409,23 +1409,32 @@ static uint32_t get_system_clock(void)
  */
 void _premain_init(void)
 {
+    // TODO to make it possible for configurable boot hartid
+    unsigned long hartid = __get_hart_id();
+
 #if defined(CODESIZE) && (CODESIZE == 1)
     // TODO to reduce the code size of application
     // No need to do so complex premain initialization steps
     // You just need to initialize the cpu resource you need to use in your
     // application code.
 
-#ifndef CFG_IREGION_BASE_ADDR       // Need to probe the cpu iregion base address
-    // Probe CPUIRegionBase for other cpu internal peripheral to use
-    CpuIRegionBase = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
+#ifndef CFG_IREGION_BASE_ADDR    // Need to probe the cpu iregion base address
+    if (hartid == BOOT_HARTID) { // only done in boot hart
+        // Probe CPUIRegionBase for other cpu internal peripheral to use
+        CpuIRegionBase = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
+        // TODO Still need to initialize uart for other code need to do printf
+        // If you want to reduce more code, you can comment below code `uart_init`.
+        // NOTE: UART initialization depends on SystemCoreClock which is initialized by SYSTEM_CLOCK.
+        // SYSTEM_CLOCK can be overwritten by make variable SYSCLK defined in build.mk.
+        // eg. make SYSCLK=500000000 clean all
+        uart_init(SOC_DEBUG_UART, 115200);
+    } else {
+        // wait for correct iregion base addr is set by boot hart
+        while (CpuIRegionBase == 0xFFFFFFFF);
+    }
 #endif
-    // TODO Still need to initialize uart for other code need to do printf
-    // If you want to reduce more code, you can comment below code
-    uart_init(SOC_DEBUG_UART, 115200);
 
 #else
-    // TODO to make it possible for configurable boot hartid
-    unsigned long hartid = __get_hart_id();
 
 #if defined(CPU_SERIES) && CPU_SERIES == 100
 #ifndef CFG_IREGION_BASE_ADDR       // Need to probe the cpu iregion base address
