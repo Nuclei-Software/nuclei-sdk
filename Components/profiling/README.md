@@ -330,6 +330,50 @@ llvm-cov gcov *.gcda
 
 ## FAQ
 
+### How to interpret error messages during profiling/coverage?
+
+There are two main categories of errors you may encounter. This section helps you quickly identify and resolve them. For specific recurring messages such as `_mcleanup: tos overflow`, see the dedicated [entry below](#what-does-_mcleanup-tos-overflow-usually-mean).
+
+#### Category A: Heap memory (HEAP) insufficient → malloc fails
+
+When the runtime heap is too small, `malloc` returns NULL. The following error messages all indicate this problem:
+
+| Error message | Module | Where it occurs |
+|---|---|---|
+| `monstartup: out of memory` | gprof Initialization | `monstartup()` allocates the histogram / froms / tos arrays |
+| `gprof_collect: unable to malloc enough memory to store gprof data` | gprof Collection | `gprof_collect(0)` allocates the output buffer |
+| `ERROR: Can't allocate gcda buffer for <file>` | gcov Dump | `dump_gcov_info()` allocates the gcda conversion buffer |
+| `Can't allocate gcda buffer for <file>` | gcov Collection | `gcov_collect()` allocates per-file gcda buffers |
+
+Additionally, `mcount: tos overflow` (see below) is often caused by the same root issue — heap too small → `tos[]` capacity too low, or `-pg` instruments too many source files.
+
+**To fix:**
+
+1. **Check the `DOWNLOAD` mode** — use `sram` or `ddr`, avoid `ilm` (too small)
+2. **Verify the actual available heap** — do not rely on `__HEAP_SIZE` alone; check the range between `__heap_start` and `__heap_end`, confirm `_sbrk` is correct, and ensure stack and heap do not overlap
+3. **Narrow the instrumentation scope** — apply `-pg` / `-coverage` only to the target application source files, not globally
+4. **Review `PROGRAM_LOWPC` / `PROGRAM_HIGHPC`** — unreasonably large ranges can cause `monstartup` to request excessive memory
+
+> **Reference:** In practice, a heap of 40 KB may still be insufficient; 80 KB or more is recommended.
+
+#### Category B: File / IO failure → fopen fails
+
+When `gprof_collect(1)` or `gcov_collect(1)` is used, the program tries to write files through the host filesystem. If this fails, you will see:
+
+| Error message | Module | Where it occurs |
+|---|---|---|
+| `Unable to open gmon.out` | gprof | `gprof_collect(1)` tries to write `gmon.out` |
+| `Unable to open <file>.gcda` | gcov | `gcov_collect(1)` tries to write the `.gcda` file |
+
+**To fix:**
+
+There are two possible output paths — check the one you are using:
+
+- **Using semihosting** — Confirm that the semihosting library is linked correctly and semihosting is enabled in the debugger/simulator
+- **Using a target filesystem (e.g. FATFS)** — Confirm the filesystem driver is properly integrated, the target path is mounted, and the storage medium is accessible
+
+**If you do not need file output:** Use `interface 0` (memory buffer + GDB dump scripts) or `interface 2` (console dump + `parse.py`) instead.
+
 ### Why do I see garbled coverage or profiling dump output, or partial dump logs?
 
 In most cases, this means the runtime memory is insufficient, especially heap space used by gcov or gprof internal buffers.

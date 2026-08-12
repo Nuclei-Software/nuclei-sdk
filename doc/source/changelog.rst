@@ -19,6 +19,11 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
   - Correct performance monitor event definitions in ``nmsis_bench.h``: move ``ICACHE_PREFETCH_MISS`` from Type 3 idx 9 to correct position Type 1 idx 6 per ISA manual errata, and add VPU commit event definitions (Type 2, idx 4-7).
 
+* Components
+
+  - Enhance ``Components/profiling/README.md`` to add a FAQ entry explaining how to interpret common gprof/gcov error messages, covering the two main categories: heap memory (HEAP) insufficient leading to ``malloc`` failures, and file/IO failures due to semihosting or filesystem issues, with remediation steps for each.
+  - Add error pattern detection to ``Components/profiling/parse.py`` so that it scans the profiling log for common gprof/gcov error keywords and prints corresponding diagnostic hints before parsing, helping users quickly identify heap-insufficient or file-IO problems.
+
 V0.9.0
 ------
 
