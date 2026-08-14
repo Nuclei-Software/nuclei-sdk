@@ -308,6 +308,10 @@
 #define MCACHE_CTL_DC_ECC_CHK_EN    (1<<21)
 #define MCACHE_CTL_DC_CMO_PF_EN     (1<<22)
 
+#define MTLB_CTL_ECC_EN             (1<<0)
+#define MTLB_CTL_ECC_EXCP_EN        (1<<1)
+#define MTLB_CTL_ECC_CHK_EN         (1<<6)
+
 #define MTVT2_MTVT2EN               (1<<0)
 #define MTVT2_COMMON_CODE_ENTRY     (((1ULL<<((__riscv_xlen)-2))-1)<<2)
 

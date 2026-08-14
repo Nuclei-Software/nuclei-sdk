@@ -1588,6 +1588,18 @@ void _premain_init(void)
     }
 #endif
 
+#if defined(__TLB_PRESENT) && (__TLB_PRESENT == 1)
+    if (mcfginfo & MCFG_INFO_PLIC) { // MMU/TLB is coupled with PLIC
+#if defined(RUNMODE_ECC_EN)
+#if RUNMODE_ECC_EN == 0
+        __RV_CSR_CLEAR(CSR_MTLB_CTL, MTLB_CTL_ECC_EN | MTLB_CTL_ECC_EXCP_EN | MTLB_CTL_ECC_CHK_EN);
+#else
+        __RV_CSR_SET(CSR_MTLB_CTL, MTLB_CTL_ECC_EN | MTLB_CTL_ECC_EXCP_EN | MTLB_CTL_ECC_CHK_EN);
+#endif
+#endif
+    }
+#endif
+
     /* Ensure previous L2/SMP/ILM/DLM/I-Cache/D-Cache configurations take effect */
     __RWMB();
     __FENCE_I();

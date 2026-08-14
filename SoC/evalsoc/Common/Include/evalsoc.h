@@ -345,11 +345,15 @@ extern volatile unsigned long CpuIRegionBase;
 
 // PLIC Configuration
 // To enable PLIC, just define macro CFG_HAS_PLIC/CFG_IRQ_NUM in cpufeature.h
+// PLIC and MMU are coupled in current Nuclei CPU configurations, so PLIC
+// presence also determines MMU/TLB presence.
 #ifdef CFG_HAS_PLIC
 #define __PLIC_PRESENT              1
 #define __PLIC_INTNUM               (CFG_IRQ_NUM + 1)
+#define __TLB_PRESENT               1
 #else
 #define __PLIC_PRESENT              0
+#define __TLB_PRESENT               0
 #endif
 #define __PLIC_BASEADDR             (__IREGION_BASEADDR + IREGION_PLIC_OFS)
 

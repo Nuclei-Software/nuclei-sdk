@@ -10,6 +10,7 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * SoC
 
+  - Reuse EvalSoC PLIC presence for MMU/TLB detection and extend ``ECC_EN`` to configure TLB ECC enable, checking, and exceptions.
   - Fix EvalSoC UART output in ``CODESIZE=1`` SMP configurations by initializing shared CPU-region, clock, and UART state only on the boot hart.
   - Warn when ``CFG_IREGION_BASE_ADDR`` is defined as ``0`` and document the required compiler option.
   - Fix EvalSoC UART stop-bit and FIFO watermark configuration to update the intended control-register fields.

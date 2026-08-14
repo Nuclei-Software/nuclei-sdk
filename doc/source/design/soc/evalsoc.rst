@@ -91,7 +91,7 @@ Extra make variables supported only in this SoC and used internally only by Nucl
   * **L2_EN**: it is used internally by Nuclei, used to control L2 cache enable or disable, introduced in 0.6.0 release.
   * **LDSPEC_EN**: it is used internally by Nuclei, used to control load speculative enable or disable, introduced in 0.6.0 release.
   * **BPU_EN**: it is used internally by Nuclei, used to control branch prediction unit enable or disable, introduced in 0.6.0 release.
-  * **ECC_EN**: it is used internally by Nuclei, used to control (ilm/dlm/L1 I/Dcache)ecc unit enable or disable, introduced in 0.7.0 release.
+  * **ECC_EN**: it is used internally by Nuclei, used to control (ilm/dlm/L1 I/Dcache)ecc unit enable or disable, introduced in 0.7.0 release. It also supports TLB ECC configuration, introduced in the 1.0.0 release.
   * **CODESIZE**: it is used to control whether remove all template routine code for interrupt and exception and banner print code to measure basic code size requirement for evalsoc when ``CODESIZE=1``
   * **SYSCLK**: it is used together with ``CODESIZE=1`` to overwrite default ``SYSTEM_CLOCK`` macro value for different bitstream, eg. ``SYSCLK=50000000 CODESIZE=1``, it will set default SYSTEM_CLOCK to 50000000.
   * **QEMU_MC_EXTOPT** is used to pass extra options to Nuclei Qemu ``-M`` machine options for evalsoc,
