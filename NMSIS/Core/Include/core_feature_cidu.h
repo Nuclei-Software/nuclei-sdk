@@ -211,7 +211,6 @@ __STATIC_INLINE long CIDU_SetFirstClaimMode(uint32_t int_id, uint32_t core_id)
 */
 __STATIC_FORCEINLINE void CIDU_ResetFirstClaimMode(uint32_t int_id)
 {
-    uint32_t val = 0;
     uint32_t* addr = (uint32_t*)CIDU_INT_MASK_ADDR(int_id);
 
     /* clear by writing all 1 */
