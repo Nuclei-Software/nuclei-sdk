@@ -1534,8 +1534,22 @@ void _premain_init(void)
     if ( (hartid == BOOT_HARTID) && ((mcfginfo & (0x1 << 11)) && (SMP_CTRLREG(__SMPCC_BASEADDR, 0x4) & 0x1)) ) { // L2 Cache present
         // NOTE: Enable L2 Cache by default when L2 Cache Present
 #if !(defined(RUNMODE_L2_EN) && RUNMODE_L2_EN == 0)
-        // Enable L2, disable cluster local memory
+        // Some bit fields of CC_CTRL(0x10 offset from SMPCC_BASEADDR)
+        // bit 0  -> L2 enable
+        // bit 1  -> L2 ECC enable
+        // bit 2  -> L2 ECC Exception enable
+        // bit 11 -> L2 ECC Check enable
+#if defined(RUNMODE_ECC_EN)
+#if RUNMODE_ECC_EN == 0
+        SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) |= 0x1;    // Enable L2
+        SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) &= ~0x806; // Disable L2 ECC
+#else
+        SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) |= 0x807;  // Enable L2 and L2 ECC
+#endif
+#else
         SMP_CTRLREG(__SMPCC_BASEADDR, 0x10) |= 0x1;
+#endif
+        // disable cluster local memory
         SMP_CTRLREG(__SMPCC_BASEADDR, 0xd8) = 0x0;
 #else
         // Disable L2, enable cluster local memory
