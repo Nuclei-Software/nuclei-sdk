@@ -159,9 +159,9 @@ const unsigned long vector_table_s[SOC_INT_MAX] __SMODE_VECTOR_ATTR =
     (unsigned long)(default_intexc_handler),        /* 14: Reserved */
     (unsigned long)(default_intexc_handler),        /* 15: Reserved */
 
-    (unsigned long)(default_intexc_handler),        /* 16: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 17: Reserved */
-    (unsigned long)(default_intexc_handler),        /* 18: Reserved */
+    (unsigned long)(default_intexc_handler),        /* 16: CCICI: InterCore - CIDU Inter-processor interrupt */
+    (unsigned long)(default_intexc_handler),        /* 17: CCERR: L2Cache - L2 Cache Bus/ECC Error interrupt */
+    (unsigned long)(default_intexc_handler),        /* 18: BWEI: BusError - Core Bus error interrupt */
 /* TODO other external interrupt handler don't provide default value, if you want to provide default value, please do it by yourself */
 };
 #endif
@@ -258,7 +258,7 @@ static unsigned long SystemExceptionHandlers[MAX_SYSTEM_EXCEPTION_NUM + 1];
 static unsigned long SystemMExtInterruptHandlers[__PLIC_INTNUM];
 #endif
 
-#define SYSTEM_CORE_INTNUM      16 // >=16 Designated for platform use
+#define SYSTEM_CORE_INTNUM      19 // IRQ 0-15: standard RISC-V; IRQ 16-18: nuclei custom (InterCore/L2Cache/BusError)
 
 static void system_mmode_extirq_handler(unsigned long exccode, unsigned long sp);
 static void core_interrupt_handler(unsigned long exccode, unsigned long sp);

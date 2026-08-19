@@ -81,9 +81,9 @@ vector_base:
     DECLARE_INT_HANDLER     default_intexc_handler          /* 14: Reserved */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 15: Reserved */
 
-    DECLARE_INT_HANDLER     eclic_inter_core_int_handler    /* 16: Reserved */
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 17: Reserved */
-    DECLARE_INT_HANDLER     default_intexc_handler          /* 18: Reserved */
+    DECLARE_INT_HANDLER     eclic_inter_core_int_handler    /* 16: CIDU inter-processor interrupt */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 17: L2C interrupt */
+    DECLARE_INT_HANDLER     default_intexc_handler          /* 18: Bus error interrupt */
     /* TODO Below are external interrupt handlers, please define them as your requirements, you need to increase or decrease it, and define correct interrupt handler name */
     DECLARE_INT_HANDLER     default_intexc_handler          /* 19: Interrupt 19 */
 

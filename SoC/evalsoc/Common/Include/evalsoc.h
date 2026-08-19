@@ -95,9 +95,9 @@ typedef enum IRQn {
     Reserved11_IRQn           =  13,              /*!<  Internal reserved */
     Reserved12_IRQn           =  14,              /*!<  Internal reserved */
     Reserved13_IRQn           =  15,              /*!<  Internal reserved */
-    InterCore_IRQn            =  16,              /*!<  CIDU Inter Core Interrupt */
-    Reserved15_IRQn           =  17,              /*!<  Internal reserved */
-    Reserved16_IRQn           =  18,              /*!<  Internal reserved */
+    InterCore_IRQn            =  16,              /*!<  CCICI: CIDU Inter-processor interrupt */
+    L2Cache_IRQn              =  17,              /*!<  CCERR: L2 Cache Bus/ECC Erorr interrupt */
+    BusError_IRQn             =  18,              /*!<  BWEI: Core Bus error interrupt */
 
     /* ===========================================  evalsoc Specific Interrupt Numbers  ========================================= */
     /* ToDo: add here your device specific external interrupt numbers. 19~1023 is reserved number for user. Maxmum interrupt supported
