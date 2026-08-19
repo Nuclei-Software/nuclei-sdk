@@ -442,6 +442,10 @@
 #define IRQ_COP      12
 #define IRQ_HOST     13
 
+/* === Nuclei Custom Core Interrupt Numbers === */
+#define IRQ_CCICI    16    /*!< CIDU Inter-processor interrupt */
+#define IRQ_CCERR    17    /*!< L2C interrupt */
+#define IRQ_BWEI     18    /*!< Bus error interrupt */
 
 /* === FPU FRM Rounding Mode === */
 /** FPU Round to Nearest, ties to Even */
