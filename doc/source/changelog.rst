@@ -10,6 +10,8 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * SoC
 
+  - Increase ``SYSTEM_CORE_INTNUM`` from 16 to 19 in ``system_evalsoc.c`` to support nuclei custom core interrupts (InterCore/L2Cache/BusError).
+  - Add nuclei custom core interrupt definitions in ``evalsoc.h``: ``InterCore_IRQn`` (16, CIDU Inter-processor interrupt), ``L2Cache_IRQn`` (17, L2 Cache Bus/ECC Error interrupt), ``BusError_IRQn`` (18, Core Bus error interrupt).
   - Reuse EvalSoC PLIC presence for MMU/TLB detection and extend ``ECC_EN`` to configure TLB ECC enable, checking, and exceptions.
   - Enable L2 ECC, ECC checking, and ECC exceptions during EvalSoC L2 initialization when ``ECC_EN=1``.
   - Fix EvalSoC UART output in ``CODESIZE=1`` SMP configurations by initializing shared CPU-region, clock, and UART state only on the boot hart.
@@ -19,6 +21,8 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
   - Update correct gd32vw55x SVD file.
 
 * NMSIS
+
+  - Add nuclei custom core interrupt number definitions in ``riscv_encoding.h``: ``IRQ_CCICI`` (16, CIDU Inter-processor interrupt), ``IRQ_CCERR`` (17, L2C interrupt), ``IRQ_BWEI`` (18, Bus error interrupt).
 
   - Correct performance monitor event definitions in ``nmsis_bench.h``: move ``ICACHE_PREFETCH_MISS`` from Type 3 idx 9 to correct position Type 1 idx 6 per ISA manual errata, and add VPU commit event definitions (Type 2, idx 4-7).
 
