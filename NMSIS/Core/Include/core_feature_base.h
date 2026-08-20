@@ -388,7 +388,7 @@ typedef union {
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MDLMCTL_Type;
 
-typedef CSR_MDLMCTL_Type CSR_DILM_CTL_Type;
+typedef CSR_MDLMCTL_Type CSR_MDLM_CTL_Type;
 
 /**
  * \brief  Union type to access MCFG_INFO CSR register.
