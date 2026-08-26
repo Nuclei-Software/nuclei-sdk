@@ -118,6 +118,8 @@ This is release version of ``0.9.0`` of Nuclei SDK.
   - Fix ``PLIC_SetThreshold`` convenience macro signature (remove unused ``source`` param) in ``core_feature_plic.h``
   - Fix ``PLIC_CompleteContextInterrupt`` doxygen param description in ``core_feature_plic.h``
   - Fix indentation in ``nmsis_core.h`` for spmp include
+  - Add comments for the SysTimer CLINT MSIP/SSIP register base macros in ``core_feature_timer.h`` to document that they access the ACLINT MSWI device's ``MSIP*`` registers and the ACLINT SSWI device's ``SETSSIP*`` registers (one per HART)
+  - Update ``SysTimer_ClearHartSWIRQ_S`` in ``core_feature_timer.h`` to also clear the ``SSIP`` bit in the ``mip``/``sip`` CSR, so that the supervisor mode software interrupt pending can be cleared in both ECLIC (auto-clear after taken, write is a no-op) and PLIC (software must clear ``SSIP``) interrupt modes
 
 * Application
 
