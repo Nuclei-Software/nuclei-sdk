@@ -104,10 +104,21 @@ typedef struct {
 
 #define SysTimer_MSFRST_KEY                 (0x80000A5FUL)                              /*!< SysTick Timer Software Reset Request Key */
 
-#define SysTimer_CLINT_MSIP_OFS             (0x1000UL)                                  /*!< Machine Mode Software interrupt register offset of clint mode in SysTick Timer */
+/* SysTimer_CLINT_MSIP_OFS: the ACLINT MSWI device offset in SysTick Timer, its registers
+ * are the MSIP* (one per HART, up to 4095). Each MSIP register is a 32-bit WARL register
+ * with upper 31 bits wired to zero, and the LSB reflected in mip.MSIP: write 1 to pend,
+ * write 0 to clear the machine-level software interrupt (cleared to zero on MSWI reset). */
+#define SysTimer_CLINT_MSIP_OFS             (0x1000UL)                                  /*!< Machine Mode Software interrupt register offset of clint mode in SysTick Timer, actually the ACLINT MSWI device's MSIP* registers */
 #define SysTimer_CLINT_MTIMECMP_OFS         (0x5000UL)                                  /*!< MTIMECMP register offset of clint mode in SysTick Timer */
 #define SysTimer_CLINT_MTIME_OFS            (0xCFF8UL)                                  /*!< MTIME register offset of clint mode in SysTick Timer */
-#define SysTimer_CLINT_SSIP_OFS             (0xD000UL)                                  /*!< Supervisor Mode Software interrupt register offset of clint mode in SysTick Timer */
+/* SysTimer_CLINT_SSIP_OFS: the ACLINT SSWI device offset in SysTick Timer, its registers
+ * are the SETSSIP* (one per HART, up to 4095). Each SETSSIP register is a 32-bit WARL
+ * register with upper 31 bits wired to zero and the LSB always reading 0: writing 1 sends
+ * an edge-sensitive signal causing the HART to set SSIP in the mip CSR (writing 0 has no
+ * effect), and the write is guaranteed to be reflected in SSIP but not necessarily
+ * immediately. The pending SSIP is auto-cleared when the interrupt is taken (ECLIC mode),
+ * or must be cleared by software writing the SSIP bit in the mip or sip CSR (PLIC mode). */
+#define SysTimer_CLINT_SSIP_OFS             (0xD000UL)                                  /*!< Supervisor Mode Software interrupt register offset of clint mode in SysTick Timer, actually the ACLINT SSWI device's SETSSIP* registers */
 
 #ifndef __SYSTIMER_BASEADDR
 /* Base address of SYSTIMER(__SYSTIMER_BASEADDR) should be defined in <Device.h> */
@@ -118,9 +129,15 @@ typedef struct {
 #define SysTimer                            ((SysTimer_Type *) SysTimer_BASE)           /*!< SysTick configuration struct */
 
 /* System Timer Clint register base */
+/* SysTimer_CLINT_MSIP_BASE(hartid): the address of the ACLINT MSWI device's MSIP<hartid>
+ * register. Its LSB is the level-sensitive MSIP bit that is reflected in the MSIP
+ * pending bit of the target HART's mip CSR: write 1 to pend, write 0 to clear. */
 #define SysTimer_CLINT_MSIP_BASE(hartid)        (unsigned long)((SysTimer_BASE) + (SysTimer_CLINT_MSIP_OFS) + ((hartid) << 2))
 #define SysTimer_CLINT_MTIMECMP_BASE(hartid)    (unsigned long)((SysTimer_BASE) + (SysTimer_CLINT_MTIMECMP_OFS) + ((hartid) << 3))
 #define SysTimer_CLINT_MTIME_BASE               (unsigned long)((SysTimer_BASE) + (SysTimer_CLINT_MTIME_OFS))
+/* SysTimer_CLINT_SSIP_BASE(hartid): the address of the ACLINT SSWI device's SETSSIP<hartid>
+ * register. Its LSB is the edge-triggered SETSSIP bit that generates the supervisor-level
+ * IPI and sets the SSIP pending bit in the target HART's mip/sip CSR. */
 #define SysTimer_CLINT_SSIP_BASE(hartid)        (unsigned long)((SysTimer_BASE) + (SysTimer_CLINT_SSIP_OFS) + ((hartid) << 2))
 
 /** @} */ /* end of group NMSIS_Core_SysTimer_Registers */
@@ -643,10 +660,18 @@ __STATIC_FORCEINLINE void SysTimer_SetSWIRQ_S(void)
 /**
  * \brief  Clear system timer supervisor mode software interrupt pending request by hartid
  * \details
- * This function clear the system timer SSIP bit in SSIP register.
+ * This function clear the system timer SSIP bit in SSIP register, and also clear the
+ * SSIP bit in the sip CSR to make sure the supervisor mode software interrupt pending
+ * is cleared in both the ECLIC and PLIC interrupt modes.
  * \param [in]  hartid  hart ID, one hart is required to have a known hart ID of 0, other harts ID can be in 1~1023.
  * \remarks
- * - Clear system timer SSIP bit in SSIP register to clear the supervisor mode software interrupt pending.
+ * - Clear system timer SSIP bit in SSIP register (the ACLINT SSWI SETSSIP register)
+ *   to clear the supervisor mode software interrupt pending.
+ * - Additionally clear the SSIP(bit1) field in the sip CSR:
+ *   In ECLIC interrupt mode, the SSIP in sip is auto-cleared after the interrupt is
+ *   taken and a write to sip is a no-op, so this write has no side effect.
+ *   In PLIC interrupt mode, the SSIP in sip must be manually cleared by software,
+ *   so this write is required to de-assert the supervisor mode software interrupt.
  * - \ref SysTimer_SetHartSWIRQ_S
  * - \ref SysTimer_GetHartSsipValue
  */
@@ -658,6 +683,10 @@ __STATIC_FORCEINLINE void SysTimer_ClearHartSWIRQ_S(unsigned long hartid)
         uint8_t *addr = (uint8_t *)(SysTimer_CLINT_SSIP_BASE(hartid));
         __SW(addr, 0);
     }
+    /* Clear the SSIP bit in the sip CSR, so that the supervisor mode software
+     * interrupt can also be cleared when interrupt mode is PLIC, and it is
+     * harmless when interrupt mode is ECLIC(SSIP auto-clear after taken). */
+    __RV_CSR_CLEAR(CSR_SIP, SIP_SSIP);
 }
 
 /**
