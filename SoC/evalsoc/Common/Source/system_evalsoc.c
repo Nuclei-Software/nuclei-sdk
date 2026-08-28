@@ -1399,6 +1399,13 @@ static uint32_t get_system_clock(void)
     return get_cpu_freq();
 }
 
+#define PREFETCH_LEVEL (IINFO_PFL1DCTRL1_L1D_ENA |              \
+                        IINFO_PFL1DCTRL1_CC_ENA |               \
+                        IINFO_PFL1DCTRL1_SCALAR_ENA |           \
+                        IINFO_PFL1DCTRL1_VECTOR_ENA |           \
+                        IINFO_PFL1DCTRL1_WRITE_PREF_ENA |       \
+                        IINFO_PFL1DCTRL1_CROSS_PAGE_PREF_ENA)
+
 /**
  * \brief early init function before main
  * \details
@@ -1516,6 +1523,7 @@ void _premain_init(void)
         CpuIRegionBase = (__RV_CSR_READ(CSR_MIRGB_INFO) >> 10) << 10;
         __RWMB();
         /* Enable prefetch overall, must be placed after CpuIRegionBase value fetched */
+        IINFO_SetPrefetchLevel(PREFETCH_LEVEL);
         IINFO_EnablePrefetchOverall();
         __RWMB();
     } else {
@@ -1525,6 +1533,7 @@ void _premain_init(void)
 #else
     if (hartid == BOOT_HARTID) {
         /* Enable prefetch overall, only done in boot hart */
+        IINFO_SetPrefetchLevel(PREFETCH_LEVEL);
         IINFO_EnablePrefetchOverall();
         __RWMB();
     }
