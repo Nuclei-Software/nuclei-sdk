@@ -1399,12 +1399,21 @@ static uint32_t get_system_clock(void)
     return get_cpu_freq();
 }
 
+/*
+ * IREGION data-prefetch level bitmask. Set PFL at build time to override
+ * PREFETCH_LEVEL and select features supported by the target, for example:
+ * make SOC=evalsoc PFL=0x1f
+ * The default enables L1 D-cache, cluster-cache, scalar/vector pipeline,
+ * store, and cross-page prefetch.
+ */
+#ifndef PREFETCH_LEVEL
 #define PREFETCH_LEVEL (IINFO_PFL1DCTRL1_L1D_ENA |              \
                         IINFO_PFL1DCTRL1_CC_ENA |               \
                         IINFO_PFL1DCTRL1_SCALAR_ENA |           \
                         IINFO_PFL1DCTRL1_VECTOR_ENA |           \
                         IINFO_PFL1DCTRL1_WRITE_PREF_ENA |       \
                         IINFO_PFL1DCTRL1_CROSS_PAGE_PREF_ENA)
+#endif
 
 /**
  * \brief early init function before main

@@ -448,6 +448,7 @@ which can be passed via make command.
 * :ref:`develop_buildsystem_var_v`
 * :ref:`develop_buildsystem_var_silent`
 * :ref:`develop_buildsystem_var_icount_opt`
+* :ref:`develop_buildsystem_var_pfl`
 
 .. note::
 
@@ -1132,6 +1133,24 @@ Example usage:
 
 For more details about QEMU's icount option, please refer to the
 `QEMU documentation <https://www.qemu.org/docs/master/system/invocation.html>`_.
+
+.. _develop_buildsystem_var_pfl:
+
+PFL
+~~~
+
+**PFL** configures the EvalSoC IREGION data-prefetch level. It is a bitmask
+passed to the application as ``PREFETCH_LEVEL``. By default, bits 0--5 are
+enabled (``0x3f``): L1 D-cache, cluster cache, scalar pipeline, vector pipeline,
+store prefetch, and cross-page prefetch.
+
+Bits 6 and 7 enable MMU and private-L2 prefetch, respectively. Set ``PFL=0`` to
+disable all prefetch, or provide the desired bitmask. For example:
+
+.. code-block:: shell
+
+    # Enable L1 D-cache through store prefetch
+    make SOC=evalsoc PFL=0x1f
 
 .. _develop_buildsystem_app_make_vars:
 

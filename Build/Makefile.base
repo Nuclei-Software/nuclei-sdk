@@ -73,6 +73,11 @@ AUTOVEC ?=
 ## Examples: ICOUNT_OPT=shift=1 for slower timing, ICOUNT_OPT="" to disable icount
 ## See https://www.qemu.org/docs/master/system/invocation.html
 ICOUNT_OPT ?= shift=0
+## PFL: IREGION data-prefetch level bitmask (default: 0x3f)
+## bit 0: L1 D-cache; bit 1: cluster cache; bit 2: scalar pipeline; bit 3: vector pipeline
+## bit 4: store prefetch; bit 5: cross-page prefetch; bits 6-7: MMU and private L2 prefetch
+## Example: PFL=0x1f enables L1 D-cache through store prefetch; PFL=0 disables all prefetch.
+PFL ?=
 
 # Directory variables for NMSIS, SoC/RTOS chosen, Middleware Components
 # NUCLEI_SDK_SOC and NUCLEI_SDK_RTOS variables need to be set deferred
