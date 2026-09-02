@@ -558,7 +558,7 @@ typedef union
     struct {
         __IOM uint32_t cc_l2_err_msk:1;         /*!< bit:     0 mask L2 double bit error output */
         __IOM uint32_t cc_core_err_mask:1;      /*!< bit:     1 mask core double bit error output */
-        __IM uint32_t _reserved:29;             /*!< bit:     2..31 reserved */
+        __IM uint32_t _reserved:30;             /*!< bit:     2..31 reserved */
     } b;                                        /*!< Structure used for bit  access */
     uint32_t w;                                 /*!< Type      used for word access */
 } ECC_ERR_MSK_Type;

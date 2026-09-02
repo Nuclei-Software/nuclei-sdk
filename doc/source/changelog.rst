@@ -23,8 +23,8 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * NMSIS
 
+  - Fix ``ECC_ERR_MSK_Type`` reserved field width in ``core_feature_smpcc.h``: change ``_reserved:29`` to ``_reserved:30`` so the bitfields cover all 32 bits and bit 31 is not left as an undefined padding hole.
   - Add nuclei custom core interrupt number definitions in ``riscv_encoding.h``: ``IRQ_CCICI`` (16, CIDU Inter-processor interrupt), ``IRQ_CCERR`` (17, L2C interrupt), ``IRQ_BWEI`` (18, Bus error interrupt).
-
   - Correct performance monitor event definitions in ``nmsis_bench.h``: move ``ICACHE_PREFETCH_MISS`` from Type 3 idx 9 to correct position Type 1 idx 6 per ISA manual errata, and add VPU commit event definitions (Type 2, idx 4-7).
 
 * Components
