@@ -25,6 +25,12 @@
       <name>ADC</name>
       <description>Analog to digital converter</description>
       <baseAddress>0x40012000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>STAT</name>
@@ -772,6 +778,12 @@
       <name>CAU</name>
       <description>Cryptographic Acceleration Unit</description>
       <baseAddress>0x4C060000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL</name>
@@ -1496,6 +1508,12 @@
       <name>CPU_TIMER</name>
       <description>cpu timer</description>
       <baseAddress>0xD1000000</baseAddress>
+      <!-- addressBlock size estimated: not listed in User Manual Table 1-2 -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>MTIME_LO</name>
@@ -1634,6 +1652,12 @@
       <name>CRC</name>
       <description>Cyclic redundancy checks management unit</description>
       <baseAddress>0x40023000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>DATA</name>
@@ -1692,6 +1716,12 @@
       <name>DBG</name>
       <description>Debug</description>
       <baseAddress>0xE0044000</baseAddress>
+      <!-- addressBlock size estimated: not listed in User Manual Table 1-2 -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>ID</name>
@@ -1844,6 +1874,12 @@
       <name>DMA</name>
       <description>DMA controller</description>
       <baseAddress>0x40026000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>INTF0</name>
@@ -4223,6 +4259,12 @@
       <name>ECLIC</name>
       <description>Enhanced Core Local Interrupt Controller</description>
       <baseAddress>0xD2000000</baseAddress>
+      <!-- addressBlock size estimated: not listed in User Manual Table 1-2 -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x1400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CLICCFG</name>
@@ -12877,6 +12919,12 @@
       <name>EFUSE</name>
       <description>Electronic fuse</description>
       <baseAddress>0x40022800</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CS</name>
@@ -13698,6 +13746,12 @@
       <name>EXTI</name>
       <description>External interrupt/event controller</description>
       <baseAddress>0x40013C00</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>INTEN</name>
@@ -14671,6 +14725,12 @@
       <name>FMC</name>
       <description>Flash memory controller</description>
       <baseAddress>0x40022000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>KEY</name>
@@ -15493,6 +15553,12 @@
       <name>FWDGT</name>
       <description>free watchdog timer</description>
       <baseAddress>0x40003000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL</name>
@@ -15574,6 +15640,12 @@
       <name>GPIOA</name>
       <description>General-purpose I/Os</description>
       <baseAddress>0x40020000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL</name>
@@ -16871,6 +16943,12 @@
       <name>GPIOB</name>
       <description>General-purpose I/Os</description>
       <baseAddress>0x40020400</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL</name>
@@ -18168,6 +18246,12 @@
       <name>GPIOC</name>
       <description>General-purpose I/Os</description>
       <baseAddress>0x40020800</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL</name>
@@ -19465,6 +19549,12 @@
       <name>HAU</name>
       <description>Hash Acceleration Unit</description>
       <baseAddress>0x4C060400</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL</name>
@@ -20709,6 +20799,12 @@
       <name>I2C0</name>
       <description>Inter-integrated circuit interface</description>
       <baseAddress>0x40005400</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -21389,6 +21485,12 @@
       <name>I2C1</name>
       <description>Inter-integrated circuit interface</description>
       <baseAddress>0x40005800</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -22069,6 +22171,12 @@
       <name>PKCAU</name>
       <description>Public Key Cryptographic Acceleration Unit</description>
       <baseAddress>0x4C061000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x2000</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL</name>
@@ -22197,6 +22305,12 @@
       <name>PMU</name>
       <description>Power management unit</description>
       <baseAddress>0x40007000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -22905,6 +23019,12 @@
       <name>QSPI</name>
       <description>Quad-SPI interface</description>
       <baseAddress>0x40025800</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL</name>
@@ -23395,6 +23515,12 @@
       <name>RCU</name>
       <description>Reset and clock unit</description>
       <baseAddress>0x40023800</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL</name>
@@ -24640,6 +24766,12 @@
       <name>RTC</name>
       <description>Real time clock</description>
       <baseAddress>0x40002800</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>TIME</name>
@@ -26045,6 +26177,12 @@
       <name>SPI</name>
       <description>Serial peripheral interface</description>
       <baseAddress>0x40013000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -26353,6 +26491,12 @@
       <name>SYSCFG</name>
       <description>System configuration registers</description>
       <baseAddress>0x40013800</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CFG0</name>
@@ -26785,6 +26929,12 @@
       <name>TIMER0</name>
       <description>Advanced-timers</description>
       <baseAddress>0x40010000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -27807,6 +27957,12 @@
       <name>TIMER1</name>
       <description>General-level0-timer</description>
       <baseAddress>0x40000000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -28639,6 +28795,12 @@
       <name>TIMER15</name>
       <description>General-purpose-timers</description>
       <baseAddress>0x40018000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -29163,6 +29325,12 @@
       <name>TIMER16</name>
       <description>General-purpose-timers</description>
       <baseAddress>0x40018400</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -29687,6 +29855,12 @@
       <name>TIMER2</name>
       <description>General-purpose-timers</description>
       <baseAddress>0x40000400</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -30536,6 +30710,12 @@
       <name>TIMER5</name>
       <description>Basic-timers</description>
       <baseAddress>0x40001000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -30709,6 +30889,12 @@
       <name>TRNG</name>
       <description>True random number generator</description>
       <baseAddress>0x4C060800</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL</name>
@@ -30802,6 +30988,12 @@
       <name>UART1</name>
       <description>Universal asynchronous receiver /transmitter</description>
       <baseAddress>0x40004400</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -31479,6 +31671,12 @@
       <name>UART2</name>
       <description>Universal asynchronous receiver /transmitter</description>
       <baseAddress>0x40011000</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -32156,6 +32354,12 @@
       <name>USART0</name>
       <description>Universal synchronous/asynchronous receiver /transmitter</description>
       <baseAddress>0x40004800</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL0</name>
@@ -33049,6 +33253,12 @@
       <name>WWDGT</name>
       <description>Window watchdog timer</description>
       <baseAddress>0x40002C00</baseAddress>
+      <!-- addressBlock size per GD32VW55x User Manual Table 1-2 (Memory map) -->
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
       <registers>
         <register>
           <name>CTL</name>
