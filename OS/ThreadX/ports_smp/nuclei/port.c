@@ -240,6 +240,12 @@ void _tx_thread_smp_force_unprotect(UINT new_interrupt_posture)
     UINT core_id;
 
     __RV_CSR_READ_CLEAR(CSR_MSTATUS, MSTATUS_MIE);
+    /* Clear preempt_disable only after interrupts are disabled: the generic SMP layer
+       can call this with interrupts re-enabled while the SMP protection is still held,
+       so clearing it earlier would let an IRQ exit trigger scheduling on a core that
+       still owns the protection and deadlock against other cores waiting for it. */
+    _tx_thread_preempt_disable = 0;
+    __RWMB();
     core_id = _tx_thread_smp_core_get();
     if (_tx_thread_smp_protection.tx_thread_smp_protect_core == core_id) {
         _tx_thread_smp_protection.tx_thread_smp_protect_count = 0;
@@ -260,8 +266,6 @@ extern volatile UINT _tx_thread_preempt_disable;
 #ifndef TXM_MODULE
 void _tx_thread_system_return(void)
 {
-    _tx_thread_preempt_disable = 0;
-    __RWMB();
     _tx_thread_smp_force_unprotect(MSTATUS_MIE);
 
     /* Set a software interrupt(SWI) request to request a context switch. */

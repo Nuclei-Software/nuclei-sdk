@@ -32,6 +32,22 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
   - Enhance ``Components/profiling/README.md`` to add a FAQ entry explaining how to interpret common gprof/gcov error messages, covering the two main categories: heap memory (HEAP) insufficient leading to ``malloc`` failures, and file/IO failures due to semihosting or filesystem issues, with remediation steps for each.
   - Add error pattern detection to ``Components/profiling/parse.py`` so that it scans the profiling log for common gprof/gcov error keywords and prints corresponding diagnostic hints before parsing, helping users quickly identify heap-insufficient or file-IO problems.
 
+* OS
+
+  - Fix a multi-core deadlock in the ThreadX SMP port for Nuclei RISC-V CPU. When a thread on a
+    secondary core entered the sleep/suspend flow, the generic ThreadX SMP layer released the
+    interrupt posture (``TX_RESTORE``) before calling ``_tx_thread_system_return``, keeping the
+    SMP protection held with interrupts enabled. The port then cleared ``_tx_thread_preempt_disable``
+    before releasing ``_tx_thread_smp_protection``. An IRQ landing in this window could trigger
+    scheduling from the IRQ exit path (``_tx_thread_irq_exit_schedule_check``) while the core still
+    held the SMP protection: the core found no ready thread and spun forever in the scheduler, while
+    other cores spun forever waiting for the SMP protection, hanging the whole system. Now the
+    ``_tx_thread_preempt_disable = 0`` clearing is moved into ``_tx_thread_smp_force_unprotect`` right
+    after interrupts are disabled (aligned with the ARM SMP port behavior), so no IRQ can trigger
+    scheduling in that window. This issue was reported by a customer who also provided the patch;
+    we reproduced the deadlock and verified the patch on N900FD and NX900FD SMPx4, and confirmed
+    the full ThreadX regression suite still passes.
+
 * Build System
 
   - Add the ``PFL`` variable to configure EvalSoC IREGION data-prefetch levels.
