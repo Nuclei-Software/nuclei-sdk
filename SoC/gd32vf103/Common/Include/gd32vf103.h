@@ -221,6 +221,9 @@ typedef enum EXCn {
 /** @} */ /* End of group Configuration_of_NMSIS */
 
 
+/* NOTE: this socfeature.h header file is introduced to define the SoC level features,
+ * such as the mhartid cluster id bit offset, see socfeature.h for more details */
+#include "socfeature.h"
 
 #include <nmsis_core.h>                         /*!< Nuclei N/NX class processor and core peripherals */
 /* ToDo: include your system_nuclei_soc.h file

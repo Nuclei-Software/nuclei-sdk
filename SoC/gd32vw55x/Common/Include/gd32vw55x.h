@@ -250,6 +250,10 @@ typedef enum EXCn {
 } EXCn_Type;
 
 /* includes */
+/* NOTE: this socfeature.h header file is introduced to define the SoC level features,
+ * such as the mhartid cluster id bit offset, see socfeature.h for more details */
+#include "socfeature.h"
+
 #include <nmsis_core.h>                         /*!< Nuclei N/NX class processor and core peripherals */
 #include "system_gd32vw55x.h"
 #include <stdint.h>

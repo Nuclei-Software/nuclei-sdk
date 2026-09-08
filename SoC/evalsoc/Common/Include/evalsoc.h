@@ -34,6 +34,9 @@ extern "C" {
 
 // NOTE: this cpufeature.h header file is introduced in Nuclei SDK 0.6.0
 #include "cpufeature.h"
+// NOTE: this socfeature.h header file is introduced to define the SoC level features,
+// such as the mhartid cluster id bit offset, see socfeature.h for more details
+#include "socfeature.h"
 
 /** @addtogroup Nuclei
   * @{
@@ -547,9 +550,28 @@ extern volatile unsigned long CpuIRegionBase;
 
 #ifndef __HARTID_OFFSET
 /**
- * If your hart index is different to your hartid, you must define this __HARTID_OFFSET macro.
- * For example, if your cpu has 4 harts, and hartid start from 3, so the __HARTID_OFFSET should set to 3.
- * Which means hartid 3-6 means hart index 0-3, this is useful for the timer software interrupt and timer interrupt trigger register location
+ * If your hart index is different to your local hart id, you must define this __HARTID_OFFSET macro.
+ *
+ * The relationship is defined as:
+ *   hart_index  = local_hart_id - __HARTID_OFFSET
+ *   where local_hart_id = mhartid & CFG_SOC_LOCAL_HARTID_MASK, see socfeature.h (CFG_SOC_CLUSTERID_OFS)
+ *
+ * - local_hart_id : the mhartid low CFG_SOC_CLUSTERID_OFS bits, used to identify a hart in cluster
+ * - hart_index    : used to address the per-hart resources, such as the system timer software
+ *                   interrupt (MSIP) and timer interrupt trigger register location, and the
+ *                   per-core arrays in SMP OS ports. In most SoCs hart_index == local_hart_id.
+ *
+ * For example, if your cluster really has 4 harts whose local hart ids are 3-6 (hart 0-2 are
+ * not implemented in this cluster), then set __HARTID_OFFSET to 3, so local hart id 3-6 will
+ * map to hart index 0-3.
+ * If hart index is the same as local hart id (the common case), just keep it as 0.
+ * NOTE: __HARTID_OFFSET must not be larger than the smallest implemented local hart id of the
+ * harts which run this build, otherwise the hart index calculation would underflow.
+ * NOTE: __HARTID_OFFSET is only meaningful for the AMP/multi-single-hart-cpu use case, it must
+ * be 0 for the SMP case (in a SMP cluster the local hart ids are continuous from 0, and the
+ * SMP OS ports index the per-core arrays with the hart index and assume it is 0..N-1).
+ *
+ * NOTE: BOOT_HARTID is defined as the local hart id (not the hart index), see below.
  */
 #define __HARTID_OFFSET             0
 #endif
@@ -557,8 +579,10 @@ extern volatile unsigned long CpuIRegionBase;
 /* Define boot hart id */
 #ifndef BOOT_HARTID
 /**
- * Choosen boot hart id in current cluster when in soc system, need to align with the value defined in startup_<Device>.S,
- * should start from 0, taken the mhartid bit 0-7 value
+ * Chosen boot hart in current cluster when in soc system, need to align with the value defined in startup_<Device>.S.
+ * It is defined as the **local hart id** inside current cluster, which is the mhartid bit 0-(CFG_SOC_CLUSTERID_OFS-1)
+ * value (see socfeature.h for the mhartid layout and CFG_SOC_CLUSTERID_OFS), so the maximum value is (2^CFG_SOC_CLUSTERID_OFS - 1).
+ * It is NOT the hart index, the hart index is used to address per-hart resources like timer, see __HARTID_OFFSET above.
  */
 #define BOOT_HARTID                 0
 #endif
