@@ -119,6 +119,7 @@ deploy_website:
 ._core_rules: &core_rules
   - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     when: never
+  - when: always
 
 ## Full jobs: only on nightly schedule, manual FULL=true pipeline and release tag pipelines
 ._full_rules: &full_rules
