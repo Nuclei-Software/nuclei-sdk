@@ -97,6 +97,20 @@ Here is the directory structure for this Nuclei SDK.
 
   In each SoC's include directory, *nuclei_sdk_soc.h* must be provided, and include the soc header file, for example, *SoC/evalsoc/Common/Include/nuclei_sdk_soc.h*.
 
+  Besides *nuclei_sdk_soc.h*, each SoC's include directory also provides two companion feature
+  configuration header files, which are included by the SoC ``<Device>.h``:
+
+  - *cpufeature.h*: describes the feature configuration of the **Nuclei CPU** used by the SoC,
+    such as which CPU features (ECLIC, PMP, cache, etc.) are present.
+  - *socfeature.h*: describes the feature configuration of the **SoC** itself, currently it
+    defines ``CFG_SOC_CLUSTERID_OFS`` which tells the ``mhartid`` CSR layout of the SoC (the
+    lower bits are the local hart id inside the cluster, the upper bits are the cluster id),
+    see the *design/soc/evalsoc.rst* "SoC Feature Configuration (socfeature.h)" section for the
+    full explanation.
+
+  The *evalsoc* SoC (in *SoC/evalsoc/*) is the reference implementation, please refer to it when
+  you integrate your own SoC into the Nuclei SDK.
+
   In each SoC Board's include directory, *nuclei_sdk_hal.h* must be provided, and include the board header file, for example, *SoC/evalsoc/Board/nuclei_fpga_eval/Include/nuclei_sdk_hal.h*.
 
 * **Build**

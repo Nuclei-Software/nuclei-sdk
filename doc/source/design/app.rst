@@ -3353,6 +3353,8 @@ This `exception_mmode application`_ is used to demonstrate how to register excep
 
    M mode exception test finish and pass
 
+.. _design_app_exception_smode:
+
 exception_smode
 ~~~~~~~~~~~~~~~
 
@@ -3405,6 +3407,8 @@ This `exception_smode application`_ is used to demonstrate how to register S-mod
     Illegal instruction fault occurs, mcause: 0x10000002, mepc: 0x80001e0a
 
     Back to S mode! S mode exception test finish and pass!
+
+.. _design_app_exception_umode:
 
 exception_umode
 ~~~~~~~~~~~~~~~

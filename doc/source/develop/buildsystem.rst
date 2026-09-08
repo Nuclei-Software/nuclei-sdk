@@ -1432,6 +1432,12 @@ SMP
 
 **SMP** variable is used to control smp cpu core count, valid number must > 1.
 
+.. note::
+
+   The hart related concepts used below (full hart id / cluster id / local hart id / hart
+   index) are explained in the :ref:`design_soc_evalsoc_socfeature` section of the Eval SoC
+   design document.
+
 When **SMP** variable is defined, extra gcc options for ld is passed
 ``-Wl,--defsym=__SMP_CPU_CNT=$(SMP)``, and extra c macro ``-DSMP_CPU_CNT=$(SMP)``
 is defined this is passed in each SoC's build.mk, such as ``SoC/evalsoc/build.mk``.
@@ -1442,7 +1448,8 @@ be passed when run openocd upload or create a openocd server.
 For SMP application, please check ``application/baremetal/smphello``, if you want to implement
 a smp application, you need to reimplement ``smp_main``, which all harts will run to this function
 instead of ``main``, if you don't implement it, a weak ``smp_main`` in ``startup_<Device>.S`` will
-be used, and only boot hartid specified by **BOOT_HARTID** will enter to main, other harts will do wfi.
+be used, and only the boot hart (whose local hart id equals **BOOT_HARTID**, see below) will enter
+to main, other harts will do wfi.
 
 .. _develop_buildsystem_var_boot_hartid:
 
@@ -1452,13 +1459,25 @@ BOOT_HARTID
 .. note::
 
    * This new variable **BOOT_HARTID** is added in ``0.4.0`` release
+   * For the full explanation of the ``mhartid`` layout and the difference between the
+     **full hart id** / **cluster id** / **local hart id** / **hart index** concepts, please
+     see the :ref:`design_soc_evalsoc_socfeature` section in the Eval SoC design document
+     (and the ``socfeature.h``/``core_feature_base.h`` header comments).
 
-This variable is used to control the boot hartid in a multiple core system.
+This variable is used to control the boot hart in a multiple core system.
+**BOOT_HARTID** is defined as the **local hart id** inside the current cluster
+(see ``socfeature.h`` for the ``mhartid`` layout: the local hart id is the
+``mhartid`` bit 0-(CFG_SOC_CLUSTERID_OFS-1) value, so **BOOT_HARTID** ranges
+from 0 to ``(2^CFG_SOC_CLUSTERID_OFS - 1)``). It is compared against the local
+hart id returned by NMSIS API ``__get_local_hart_id()`` (which is the ``mhartid``
+masked by ``CFG_SOC_LOCAL_HARTID_MASK``), it is NOT the full ``mhartid`` value nor
+the hart index (hart index is used to address per-hart resources, see below).
+
 If **SMP** variable is specified, it means this application is expected to be a smp application,
 otherwise it means this application is expected to be a amp application.
 
-For amp application, only the boot hart specified by **BOOT_HARTID** will run, other harts
-will directly do wfi when startup, but for smp application, other hartid will do normal boot
+For amp application, only the boot hart (whose local hart id equals **BOOT_HARTID**) will run, other harts
+will directly do wfi when startup, but for smp application, other harts will do normal boot
 code instead of code/data/bss init, and do sync harts to make sure all harts boots.
 
 For both amp and smp application, the program should execute on a share memory which all
@@ -1475,10 +1494,10 @@ Here is some basic usage for SMP and BOOT_HARTID on UX900 x4, run on external dd
     cd <Nuclei SDK>/application/baremetal/helloworld
     # clean program
     make SOC=evalsoc CORE=ux900 clean
-    # AMP: choose hart 1 as boot hartid, other harts spin
+    # AMP: choose the hart whose local hart id is 1 as boot hart, other harts spin
     make SOC=evalsoc CORE=ux900 BOOT_HARTID=1 DOWNLOAD=ddr clean upload
     cd <Nuclei SDK>/application/baremetal/smphello
-    # SMP: choose hart 2 as boot hartid
+    # SMP: choose the hart whose local hart id is 2 as boot hart
     make SOC=evalsoc CORE=ux900 BOOT_HARTID=2 SMP=4 DOWNLOAD=ddr clean upload
 
 .. _develop_buildsystem_var_hartid_ofs:
@@ -1490,12 +1509,20 @@ HARTID_OFS
 
    * This new variable is added in ``0.5.0`` release
 
-This variable is used to set hartid offset relative to real hart index in a complex AMP SoC system.
+This variable is used to set the hart index offset ``__HARTID_OFFSET``. The hart index is used
+to address the per-hart resources (such as the system timer software interrupt/MSIP and timer
+compare registers, and the per-core arrays in SMP OS ports), and it is calculated from the local
+hart id inside the cluster as below:
 
-eg.
+    hart_index = (mhartid & CFG_SOC_LOCAL_HARTID_MASK) - HARTID_OFS
 
-In a SoC system, it has 2 CPU, CPU 0 has 2 smp core, CPU 1 has 1 core, and CPU 0 hartid is 0, 1,
-and CPU 1 hartid is 2, so for CPU 0, HARTID_OFS is 0, for CPU 1, HARTID_OFS is 2.
+where ``mhartid & CFG_SOC_LOCAL_HARTID_MASK`` is the local hart id (see ``socfeature.h``). In most
+SoCs the local hart id starts from 0 and is continuous, so ``HARTID_OFS`` is 0 (default) and the
+hart index equals the local hart id.
+
+``HARTID_OFS`` is only needed when the real harts in your cluster do not start from local hart
+id 0, eg. if your cluster really has 4 harts whose local hart ids are 3-6 (hart 0-2 are not
+implemented in this cluster), set ``HARTID_OFS=3`` so that local hart id 3-6 maps to hart index 0-3.
 
 .. _develop_buildsystem_var_stacksz:
 

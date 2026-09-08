@@ -10,6 +10,10 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * SoC
 
+  - Add new SoC feature header file ``socfeature.h`` to each SoC (``evalsoc``, ``gd32vf103``, ``gd32vw55x``), companion of ``cpufeature.h``, and include it in the SoC ``<Device>.h`` before ``nmsis_core.h`` (see the :ref:`design_soc_evalsoc_socfeature` section).
+  - Add ``CFG_SOC_CLUSTERID_OFS`` macro in ``socfeature.h`` to describe the mhartid CSR layout (lower ``CFG_SOC_CLUSTERID_OFS`` bits = local hart id, upper bits = cluster id), default value is 8 which is compatible with the previous ``mhartid bit[7:0]`` layout, and it can be overridden via ``-DCFG_SOC_CLUSTERID_OFS=<value>``.
+  - Replace the hardcoded ``mhartid bit 0-7`` based local hart id extraction in ``system_evalsoc.c``, GCC/IAR startup files and ``evalsoc.h`` to use the ``CFG_SOC_CLUSTERID_OFS`` derived macros.
+  - Clarify the ``BOOT_HARTID``/``HARTID_OFS`` semantics in ``evalsoc.h``/``build.mk``: ``BOOT_HARTID`` is the local hart id of the boot hart (compared against ``__get_local_hart_id()``), ``HARTID_OFS`` sets the hart index offset used only for per-hart resource addressing.
   - Increase ``SYSTEM_CORE_INTNUM`` from 16 to 19 in ``system_evalsoc.c`` to support nuclei custom core interrupts (InterCore/L2Cache/BusError).
   - Add nuclei custom core interrupt definitions in ``evalsoc.h``: ``InterCore_IRQn`` (16, CIDU Inter-processor interrupt), ``L2Cache_IRQn`` (17, L2 Cache Bus/ECC Error interrupt), ``BusError_IRQn`` (18, Core Bus error interrupt).
   - Reuse EvalSoC PLIC presence for MMU/TLB detection and extend ``ECC_EN`` to configure TLB ECC enable, checking, and exceptions.
@@ -23,6 +27,8 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * NMSIS
 
+  - Parameterize the mhartid/shartid cluster id bit offset in ``core_feature_base.h`` with ``CFG_SOC_CLUSTERID_OFS`` (default 8): ``__get_cluster_id()/__get_cluster_id_s()`` returns ``mhartid >> CFG_SOC_CLUSTERID_OFS``, ``__get_hart_index()/__get_hart_index_s()`` returns ``(mhartid & CFG_SOC_LOCAL_HARTID_MASK) - __HARTID_OFFSET``, ``__get_hart_id()/__get_hart_id_s()`` still returns the full mhartid/shartid, and add new ``__get_local_hart_id()/__get_local_hart_id_s()`` API returning the local hart id inside the cluster (the value ``BOOT_HARTID`` compares against).
+  - Clarify the hart related concept (full hart id / cluster id / local hart id / hart index) in the header comments, and document that the CIDU/SMPCC ``core_id``/``client_id``, the PLIC context ID mapping and the ``SysTimer_GetHartID()``/``PLIC_GetHartID()`` macros are all based on the **hart index**, not the full mhartid.
   - Fix ``ECC_ERR_MSK_Type`` reserved field width in ``core_feature_smpcc.h``: change ``_reserved:29`` to ``_reserved:30`` so the bitfields cover all 32 bits and bit 31 is not left as an undefined padding hole.
   - Add nuclei custom core interrupt number definitions in ``riscv_encoding.h``: ``IRQ_CCICI`` (16, CIDU Inter-processor interrupt), ``IRQ_CCERR`` (17, L2C interrupt), ``IRQ_BWEI`` (18, Bus error interrupt).
   - Correct performance monitor event definitions in ``nmsis_bench.h``: move ``ICACHE_PREFETCH_MISS`` from Type 3 idx 9 to correct position Type 1 idx 6 per ISA manual errata, and add VPU commit event definitions (Type 2, idx 4-7).
@@ -34,6 +40,9 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * OS
 
+  - Fix RT-Thread ``EXECUTE_HARTID`` in ``cpuport.c``: it is the hart index of the hart which runs the RTOS instance (used by the S-mode non-SSTC timer APIs), now calculated as ``BOOT_HARTID - __HARTID_OFFSET`` instead of feeding ``BOOT_HARTID`` (the local hart id) directly to the timer APIs which expect the hart index; when ``__HARTID_OFFSET`` is undefined it falls back to ``BOOT_HARTID``.
+  - Mask the ``mhartid`` value with ``CFG_SOC_LOCAL_HARTID_MASK`` (from each SoC's ``socfeature.h``) in FreeRTOS GCC/IAR ``portasm.S`` and ThreadX SMP GCC/IAR ``context.S``/``interrupt.S`` before using it as the per-core array index or the per-core stack offset, so that the SMP OS ports work correctly in a multiple cluster SoC where the mhartid also contains the cluster id bits.
+  - Update the FreeRTOS ``port.c`` SMP boot hart checks to compare against the local hart id (``__get_local_hart_id()``) instead of the hart index (``__get_hart_index()``), since ``BOOT_HARTID`` is the local hart id.
   - Fix a multi-core deadlock in the ThreadX SMP port for Nuclei RISC-V CPU. When a thread on a
     secondary core entered the sleep/suspend flow, the generic ThreadX SMP layer released the
     interrupt posture (``TX_RESTORE``) before calling ``_tx_thread_system_return``, keeping the
@@ -48,9 +57,22 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
     we reproduced the deadlock and verified the patch on N900FD and NX900FD SMPx4, and confirmed
     the full ThreadX regression suite still passes.
 
+* Application
+
+  - Update ``helloworld`` (``Cluster/Hart`` display), ``smphello``, ``demo_smpcc`` and the
+    ``smp_main()`` of the FreeRTOS/ThreadX ``smpdemo`` to use the new ``__get_local_hart_id()``
+    NMSIS API for the boot hart gate (compared against ``BOOT_HARTID``) or the local hart display,
+    replacing the previous ``__get_hart_id()``/``__get_hart_index()`` usage; ``demo_cidu`` also uses
+    ``__get_local_hart_id()`` for its boot hart gate and CIDU core id (an SMP demo, so local hart id
+    equals the hart index). Note: the ``smpdemo`` debug ``printf`` still prints the full
+    ``__get_hart_id()`` value for identification.
+
 * Build System
 
   - Add the ``PFL`` variable to configure EvalSoC IREGION data-prefetch levels.
+  - Update the build system document (and ``SoC/evalsoc/build.mk`` comments) for the clarified
+    ``BOOT_HARTID`` (local hart id) / ``HARTID_OFS`` (hart index offset) semantics, see the SoC
+    section above.
 
 V0.9.0
 ------
