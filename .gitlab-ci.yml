@@ -5,17 +5,18 @@ variables:
   SHAREENVLOC: /home/share/devtools
   IMAGE: rego.corp.nucleisys.com/software/sdkbuild
   IMAGE_TAG: "2025.10"
-  JOBCTRL: "RUN"
 
 workflow:
   rules:
     - if: $CI_COMMIT_MESSAGE =~ /draft|wip|stash/i
       when: never
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /master|develop/ && $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: '$FULL == "true"'
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
     - if: $CI_COMMIT_BRANCH =~ /master|develop/
-    - if: $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_TAG
+    - if: '$CI_COMMIT_TAG =~ /^\d+\.\d+\.\d+$/'
+    - if: $CI_PIPELINE_SOURCE == "schedule"
 
 default:
   tags:
@@ -114,13 +115,18 @@ deploy_website:
       - logs
     expire_in: 2 day
 
-.job_ctrl_template: &job_ctrl_template_default
-  <<: *job_template_default
-  rules:
-    - if: $JOBCTRL == "RUN"
+## Core jobs: skipped on merge request pipelines (run on push / nightly / tag / manual FULL)
+._core_rules: &core_rules
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    when: never
+
+## Full jobs: only on nightly schedule, manual FULL=true pipeline and release tag pipelines
+._full_rules: &full_rules
+  - if: '$FULL == "true" || $CI_PIPELINE_SOURCE == "schedule" || $CI_COMMIT_TAG =~ /^\d+\.\d+\.\d+$/'
 
 build_gd32vf103:
   <<: *job_template_default
+  needs: []
   stage: check
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -141,6 +147,7 @@ build_gd32vf103:
 
 build_gd32vw55x:
   <<: *job_template_default
+  needs: []
   stage: check
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -157,6 +164,7 @@ build_gd32vw55x:
 
 build_evalsoc:
   <<: *job_template_default
+  needs: []
   stage: check
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -171,6 +179,8 @@ build_evalsoc:
 
 run_evalsoc_small:
   <<: *job_template_default
+  needs: []
+  rules: *core_rules
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -186,6 +196,8 @@ run_evalsoc_small:
 
 run_evalsoc:
   <<: *job_template_default
+  needs: []
+  rules: *core_rules
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -199,8 +211,25 @@ run_evalsoc:
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
 
+# Quick subset of run_evalsoc for merge request pipelines (5 representative configs: rv32/rv64 x F/D x ilp32e)
+run_evalsoc_smoke:
+  <<: *job_template_default
+  needs: []
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  timeout: 2h
+  variables:
+    APPCFG: tools/scripts/nsdk_cli/configs/application.json
+    HWCFG: tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_smoke.json
+    RUNTARGET: qemu
+  script:
+    - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
+    - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --run --run_target $RUNTARGET
+
 run_libncrt_evalsoc:
   <<: *job_template_default
+  needs: []
+  rules: *full_rules
   timeout: 4h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -218,6 +247,8 @@ run_libncrt_evalsoc:
 
 run_evalsoc_full:
   <<: *job_template_default
+  needs: []
+  rules: *full_rules
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -241,6 +272,8 @@ run_evalsoc_full:
 # Test zc feature
 run_zc_evalsoc:
   <<: *job_template_default
+  needs: []
+  rules: *full_rules
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -258,6 +291,8 @@ run_zc_evalsoc:
 # Test zfinx/zdinx feature
 run_zxinx_evalsoc:
   <<: *job_template_default
+  needs: []
+  rules: *full_rules
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -281,6 +316,8 @@ run_zxinx_evalsoc:
 # Test zcmt feature
 run_zcmp_zcmt_evalsoc:
   <<: *job_template_default
+  needs: []
+  rules: *full_rules
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -306,6 +343,8 @@ run_xxlcz_evalsoc:
   interruptible: true
   # workaround for zcc
   allow_failure: true
+  needs: []
+  rules: *full_rules
   stage: build
   tags:
     - env::shell
@@ -337,6 +376,8 @@ run_xxlcz_evalsoc:
 
 run_libncrt_zc_evalsoc:
   <<: *job_template_default
+  needs: []
+  rules: *full_rules
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -357,6 +398,8 @@ run_libncrt_zc_evalsoc:
 # Test llvm toolchain
 run_llvm_evalsoc:
   <<: *job_template_default
+  needs: []
+  rules: *full_rules
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -373,6 +416,7 @@ run_llvm_evalsoc:
 # Test extra test suites
 run_test_evalsoc:
   <<: *job_template_default
+  needs: []
   stage: check
   timeout: 4h
   variables:
@@ -390,6 +434,7 @@ run_test_evalsoc:
 
 run_rvv_evalsoc:
   <<: *job_template_default
+  needs: []
   stage: check
   timeout: 4h
   variables:
@@ -405,6 +450,7 @@ run_rvv_evalsoc:
 
 run_smp_evalsoc:
   <<: *job_template_default
+  needs: []
   timeout: 4h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/smp_application.json
@@ -421,6 +467,8 @@ run_smp_evalsoc:
 
 run_n100_evalsoc:
   <<: *job_template_default
+  needs: []
+  rules: *core_rules
   stage: build
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -441,6 +489,8 @@ run_n100_evalsoc_zcc:
   interruptible: true
   # workaround for zcc
   allow_failure: true
+  needs: []
+  rules: *full_rules
   stage: build
   tags:
     - env::shell
@@ -472,6 +522,8 @@ run_n100_evalsoc_zcc:
 # random and sanity checks
 run_sanity_check:
   <<: *job_template_default
+  needs: []
+  rules: *full_rules
   timeout: 4h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -486,6 +538,8 @@ run_sanity_check:
 
 run_datalma_inilm:
   <<: *job_template_default
+  needs: []
+  rules: *full_rules
   timeout: 4h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -549,6 +603,7 @@ sdk_gen_benchmark:
 # Job used to check whether xlcz addibne instruction generated
 sdk_check_xlcz:
   <<: *job_template_default
+  needs: []
   stage: check
   script:
     - bash tools/scripts/misc/check_xlcz.sh
@@ -556,6 +611,7 @@ sdk_check_xlcz:
 # Job used to check all the npk.yml in this folder
 sdk_check_npk:
   <<: *job_template_default
+  needs: []
   stage: check
   script:
     - echo "Validate and check npk.yml in this folder"
@@ -565,6 +621,7 @@ sdk_check_npk:
 # Job used to check all the json or yaml config files in this folder
 sdk_check_configfiles:
   <<: *job_template_default
+  needs: []
   stage: check
   script:
     - echo "Validate and check config files in this folder"
@@ -574,6 +631,7 @@ sdk_check_configfiles:
 # Job used to check C++ compatibility
 sdk_check_cpp_build:
   <<: *job_template_default
+  needs: []
   stage: check
   script:
     - echo "Validate C++ compatibility"
@@ -582,9 +640,12 @@ sdk_check_cpp_build:
 
 sdk_sync_tools:
   stage: deploy
+  needs: []
   interruptible: true
   resource_group: deploy
   rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
     - if: $CI_PIPELINE_SOURCE != "merge_request_event" && $CI_COMMIT_BRANCH =~ /master|develop/
   tags:
     - env::native
