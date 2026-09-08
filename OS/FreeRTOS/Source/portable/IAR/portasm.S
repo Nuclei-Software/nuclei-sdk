@@ -28,6 +28,9 @@
 
 #include "riscv_encoding.h"
 #include "cpufeature.h"
+/* Include socfeature.h to get SoC feature macros, such as CFG_SOC_LOCAL_HARTID_MASK
+ * which is used to get the local hart id inside current cluster */
+#include "socfeature.h"
 
 #ifndef __riscv_32e
 #define portRegNum          32
@@ -235,7 +238,7 @@ prvPortStartFirstTask:
     addi t1, t1, %lo(__STACK_SIZE)
     la t0, CSTACK$$Limit
     csrr a0, mhartid
-    andi a0, a0, 0xFF
+    andi a0, a0, CFG_SOC_LOCAL_HARTID_MASK
     li a1, 0
 _per_cpu_init_sp_cont:
     beq a0, a1, _per_cpu_init_sp_fin
@@ -253,6 +256,7 @@ _per_cpu_init_sp_fin:
 #else
     la t0, pxCurrentTCBs            /* Load pxCurrentTCBs[core] */
     csrr t1, CSR_MHARTID
+    andi t1, t1, CFG_SOC_LOCAL_HARTID_MASK
     slli t1, t1, LOG_REGBYTES
     add t0, t0, t1
     LOAD t0, 0(t0)
@@ -347,6 +351,7 @@ eclic_msip_handler:
 #else
     la t0, pxCurrentTCBs            /* Load pxCurrentTCBs[core] */
     csrr t1, CSR_MHARTID
+    andi t1, t1, CFG_SOC_LOCAL_HARTID_MASK
     slli t1, t1, LOG_REGBYTES
     add t0, t0, t1
     LOAD t0, 0(t0)
@@ -363,6 +368,7 @@ eclic_msip_handler:
 #else
     la t0, pxCurrentTCBs            /* Load pxCurrentTCBs[core] */
     csrr t1, CSR_MHARTID
+    andi t1, t1, CFG_SOC_LOCAL_HARTID_MASK
     slli t1, t1, LOG_REGBYTES
     add t0, t0, t1
     LOAD t0, 0(t0)

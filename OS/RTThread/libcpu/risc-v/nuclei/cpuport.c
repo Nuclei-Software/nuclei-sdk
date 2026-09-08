@@ -15,10 +15,26 @@
 
 #include "cpuport.h"
 
+/*
+ * EXECUTE_HARTID is the hart index of the hart which runs this RTOS instance,
+ * it is used by the S-mode non-SSTC path to tell the SysTimer which hart's
+ * M-mode MTIMECMP/MSIP registers to use for the system tick (those registers
+ * are addressed by the hart index, see SysTimer_SetHartSWIRQ/SysTick_HartConfig).
+ *
+ * The hart index = local hart id - __HARTID_OFFSET, where the local hart id of
+ * the boot hart is BOOT_HARTID (see socfeature.h/evalsoc.h for the mhartid layout
+ * and the difference between local hart id and hart index).
+ * When __HARTID_OFFSET is not defined or the local hart ids start from 0 (the
+ * common case), the hart index equals the local hart id, so it is just BOOT_HARTID.
+ */
 #ifndef BOOT_HARTID
 #define EXECUTE_HARTID  0
 #else
+#ifdef __HARTID_OFFSET
+#define EXECUTE_HARTID  (BOOT_HARTID - __HARTID_OFFSET)
+#else
 #define EXECUTE_HARTID  BOOT_HARTID
+#endif
 #endif
 
 

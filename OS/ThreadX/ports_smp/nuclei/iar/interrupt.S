@@ -1,5 +1,8 @@
 #include "riscv_encoding.h"
 #include "cpufeature.h"
+/* Include socfeature.h to get SoC feature macros, such as CFG_SOC_LOCAL_HARTID_MASK
+ * which is used to get the local hart id inside current cluster */
+#include "socfeature.h"
 
 DISABLE_MIE MACRO
   csrci CSR_MSTATUS, MSTATUS_MIE
@@ -11,6 +14,7 @@ DISABLE_MIE MACRO
 UPDATE_THREADX_SYSTEM_STATE MACRO delta
     la t0, _tx_thread_system_state
     csrr t1, CSR_MHARTID
+    andi t1, t1, CFG_SOC_LOCAL_HARTID_MASK
     slli t1, t1, LOG_REGBYTES
     add t0, t0, t1
     LOAD t2, 0(t0)

@@ -420,7 +420,9 @@ BaseType_t xPortStartScheduler(void)
     vPortSetupTimerInterrupt();
 
 #if ( configNUMBER_OF_CORES > 1 )
-    if (__get_hart_index() == BOOT_HARTID) {
+    /* BOOT_HARTID is defined as the local hart id inside current cluster, so compare it with
+     * the local hart id returned by __get_local_hart_id(), not the hart index (__get_hart_index()) */
+    if (__get_local_hart_id() == BOOT_HARTID) {
         ulSchedulerReady = 1;
     } else {
         // other cores wait for scheduler ready signal
@@ -744,7 +746,9 @@ __attribute__((weak)) void vPortSetupTimerInterrupt(void)
     /* Make SWI and SysTick the lowest priority interrupts. */
     /* Stop and clear the SysTimer. SysTimer as Non-Vector Interrupt */
 #if ( configNUMBER_OF_CORES > 1 )
-    if (__get_hart_index() == BOOT_HARTID) {
+    /* BOOT_HARTID is defined as the local hart id inside current cluster, so compare it with
+     * the local hart id returned by __get_local_hart_id(), not the hart index (__get_hart_index()) */
+    if (__get_local_hart_id() == BOOT_HARTID) {
 #else
     if (1) {
 #endif

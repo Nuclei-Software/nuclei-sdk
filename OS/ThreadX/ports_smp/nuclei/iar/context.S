@@ -1,5 +1,8 @@
 #include "riscv_encoding.h"
 #include "cpufeature.h"
+/* Include socfeature.h to get SoC feature macros, such as CFG_SOC_LOCAL_HARTID_MASK
+ * which is used to get the local hart id inside current cluster */
+#include "socfeature.h"
 
 #ifndef __riscv_32e
 #define portRegNum          32
@@ -43,7 +46,7 @@ _tx_thread_schedule:
     addi t1, t1, %lo(__STACK_SIZE)
     la t0, CSTACK$$Limit
     csrr a0, CSR_MHARTID
-    andi a0, a0, 0xFF
+    andi a0, a0, CFG_SOC_LOCAL_HARTID_MASK
     li a1, 0
 _per_cpu_init_sp_cont:
     beq a0, a1, _per_cpu_init_sp_fin
@@ -154,6 +157,7 @@ eclic_msip_handler:
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     la t0, _tx_thread_current_ptr
     csrr t1, CSR_MHARTID
+    andi t1, t1, CFG_SOC_LOCAL_HARTID_MASK
     slli t1, t1, LOG_REGBYTES
     add t0, t0, t1
 #else
@@ -180,6 +184,7 @@ _tx_thread_save_switch:
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     la t0, _tx_thread_current_ptr
     csrr t1, CSR_MHARTID
+    andi t1, t1, CFG_SOC_LOCAL_HARTID_MASK
     slli t1, t1, LOG_REGBYTES
     add t0, t0, t1
 #else
