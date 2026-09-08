@@ -36,11 +36,13 @@ stages:
 build_doc:
   stage: check
   interruptible: true
-  only:
-    changes:
-      - doc/**/**/**/*
-      - .gitlab-ci.yml
   retry: 1
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - changes:
+        - doc/**/*
+        - .gitlab-ci.yml
   artifacts:
     name: "nuclei_sdk_doc-job${CI_JOB_ID}-${CI_COMMIT_SHA::8}"
     paths:
@@ -56,14 +58,12 @@ build_doc:
 ## Job for deploy document to internal server
 deploy_doc:
   stage: deploy
-  when: on_success
   retry: 1
-  only:
-    refs:
-      - master
-    changes:
-      - doc/**/**/**/**/*
-      - .gitlab-ci.yml
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE != "schedule"'
+      changes:
+        - doc/**/*
+        - .gitlab-ci.yml
   script:
     - ssh $DOC_SERVER "rm -rf $DOC_CENTER/nuclei_sdk/*"
     - ssh $DOC_SERVER "mkdir -p $DOC_CENTER/nuclei_sdk/"
@@ -78,13 +78,11 @@ deploy_doc:
 ## Job for deploy document to nuclei website
 deploy_website:
   stage: deploy
-  when: on_success
   retry: 1
-  only:
-    refs:
-      - master
-    changes:
-      - doc/**/**/**/**/*
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE != "schedule"'
+      changes:
+        - doc/**/*
   script:
     - ./.ci/ftp_deploy.sh $FTPUSER $FTPPWD $FTPSERVER doc/build/html nuclei_sdk
   dependencies:
@@ -173,7 +171,6 @@ build_evalsoc:
     matrix:
       - HWCFG:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci.json
-        - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu_llvm.json
   script:
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR
