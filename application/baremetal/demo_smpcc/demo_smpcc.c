@@ -129,7 +129,9 @@ static void CCachePerformanceMonitorTest()
     MFlushInvalDCacheCCache();
     for (int i = 0; i < loop; i++) {
         SMPCC_ClearPMONCount(i);
-        /* Use boot hart ID as SMPCC performance monitor client ID for demo */
+        /* Use boot hart as SMPCC performance monitor client ID for demo.
+         * NOTE: SMPCC client_id is the hart index (see core_feature_smpcc.h), this demo only runs
+         * on the boot hart and __HARTID_OFFSET is 0, so the hart index == local hart id == BOOT_HARTID */
         SMPCC_SetPMONEventSelect(i, BOOT_HARTID, event_list[i].event);
     }
     mem_traverse(ddr_mem);
@@ -145,6 +147,8 @@ static void CCachePerformanceMonitorTest()
     MInvalDCache();
     for (int i = 0; i < pmon_num; i++) {
         SMPCC_ClearPMONCount(i);
+        /* SMPCC client_id is the hart index, this demo only runs on the boot hart and
+         * __HARTID_OFFSET is 0, so the hart index == local hart id == BOOT_HARTID */
         SMPCC_SetPMONEventSelect(i, BOOT_HARTID, event_list[i].event);
     }
     mem_traverse(ddr_mem);
@@ -196,8 +200,9 @@ static void CCachePerformanceMonitorTestWithPMUv2() {
 
 int main(void)
 {
-    /* Only run on BOOT_HARTID */
-    if (BOOT_HARTID != __get_hart_id()) {
+    /* Only run on BOOT_HARTID, BOOT_HARTID is defined as the local hart id inside the current
+     * cluster, compare against the local hart id returned by __get_local_hart_id() */
+    if (BOOT_HARTID != __get_local_hart_id()) {
         return 0;
     }
     CSR_MCFGINFO_Type mcfg;

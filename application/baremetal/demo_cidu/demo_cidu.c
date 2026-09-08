@@ -38,7 +38,9 @@ int smp_main(void)
 void eclic_uart0_int_handler()
 {
     int32_t status = -1;
-    unsigned long hartid = __get_hart_id();
+    // NOTE: This is an SMP demo, the hart index equals the local hart id (__HARTID_OFFSET is 0
+    // in SMP case), and the CIDU core id is addressed by the local hart id of current core
+    unsigned long hartid = __get_local_hart_id();
 
     /* Protect the uart0, in case that other core access */
     CIDU_AcquireSemaphore_Block(UART0_SEMAPHORE, hartid);
@@ -76,7 +78,9 @@ void eclic_uart0_int_handler()
 void eclic_inter_core_int_handler()
 {
     uint32_t sender_id = 0;
-    unsigned long hartid = __get_hart_id();
+    // NOTE: This is an SMP demo, the hart index equals the local hart id (__HARTID_OFFSET is 0
+    // in SMP case), and the CIDU core id is addressed by the local hart id of current core
+    unsigned long hartid = __get_local_hart_id();
 
     uint32_t val = CIDU_QueryCoreIntSenderMask(hartid);
     /* Protect the uart0, in case that other core access */
@@ -128,7 +132,10 @@ int other_harts_main(unsigned long hartid)
 int main(void)
 {
     int ret = 0;
-    unsigned long hartid = __get_hart_id();
+    // NOTE: This is an SMP demo, the hart index equals the local hart id (__HARTID_OFFSET is 0
+    // in SMP case), so we just use __get_local_hart_id() for both the BOOT_HARTID compare and the
+    // CIDU core id (which is addressed by the local hart id of current core in this demo)
+    unsigned long hartid = __get_local_hart_id();
     if ((__RV_CSR_READ(CSR_MCFG_INFO) & MCFG_INFO_SMP) == 0) {
         printf("[WARN] SMP & CIDU not present! Exit now!\n");
         return 0;

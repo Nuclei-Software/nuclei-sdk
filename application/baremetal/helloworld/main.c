@@ -97,8 +97,10 @@ int main(void)
     unsigned long hartid, clusterid;
     rv_csr_t misa;
 
-    // get hart id of current cluster
-    hartid = __get_hart_id();
+    // get local hart id and cluster id of current hart, __get_local_hart_id() returns the local
+    // hart id inside the cluster, __get_hart_id() returns the full mhartid (including cluster id),
+    // __get_hart_index() returns the hart index used for per-hart resources (like timer)
+    hartid = __get_local_hart_id();
     clusterid = __get_cluster_id();
     misa = __RV_CSR_READ(CSR_MISA);
 

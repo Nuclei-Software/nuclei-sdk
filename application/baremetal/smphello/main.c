@@ -68,8 +68,10 @@ int smp_main(void)
 int main(void)
 {
     int ret;
-    // get hart id in current cluster
-    unsigned long hartid = __get_hart_id();
+    // get local hart id inside current cluster, BOOT_HARTID is defined as the local hart id
+    // (returned by __get_local_hart_id(), see core_feature_base.h for the mhartid layout), so
+    // compare against it, not the hart index (hart index is for per-hart resources like timer)
+    unsigned long hartid = __get_local_hart_id();
     if (hartid == BOOT_HARTID) { // boot hart
         spinlock_init((spinlock *)&lock);
         lock_ready = 1;

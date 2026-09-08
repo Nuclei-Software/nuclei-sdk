@@ -83,7 +83,9 @@ extern void _tx_thread_smp_initialize_wait(void);
 
 void smp_main(void)
 {
-    if (__get_hart_id() == 0 ) {
+    /* BOOT_HARTID is defined as the local hart id inside the current cluster, compare against
+     * the local hart id returned by __get_local_hart_id(), not the hart index */
+    if (__get_local_hart_id() == BOOT_HARTID ) {
         main();
     } else {
         _tx_thread_smp_initialize_wait();
