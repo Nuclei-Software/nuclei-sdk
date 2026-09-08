@@ -30,8 +30,13 @@
 
 /* TODO: Require Nuclei SDK >= 0.6.0, which introduced this cpufeature.h */
 #include "cpufeature.h"
+/* NOTE: Include socfeature.h to get SoC feature macros, such as CFG_SOC_LOCAL_HARTID_MASK
+ * which is used to get the local hart id inside current cluster */
+#include "socfeature.h"
 
-/* If BOOT_HARTID is not defined, default value is 0 */
+/* If BOOT_HARTID is not defined, default value is 0
+ * NOTE: BOOT_HARTID is the local hart id inside the current cluster (mhartid bit 0-(CFG_SOC_CLUSTERID_OFS-1)),
+ * see socfeature.h for details, it is compared with the masked local hart id below */
 #ifndef BOOT_HARTID
     .equ BOOT_HARTID,    0
 #endif
@@ -161,13 +166,13 @@ _start:
 
     /* If SMP_CPU_CNT is not defined,
      * assume that only 1 core is allowed to run,
-     * the core hartid is defined via BOOT_HARTID.
+     * the boot hart is identified by its local hart id via BOOT_HARTID.
      * other harts if run to here, just do wfi in __amp_wait
      */
 #ifndef SMP_CPU_CNT
-    /* take bit 0-7 for hart id in a local cluster */
+    /* take bit 0-(CFG_SOC_CLUSTERID_OFS-1) for local hart id in a local cluster */
     csrr a0, CSR_MHARTID
-    andi a0, a0, 0xFF
+    andi a0, a0, CFG_SOC_LOCAL_HARTID_MASK
     /* BOOT_HARTID is configurable in Makefile via BOOT_HARTID variable */
     li a1, BOOT_HARTID
     bne a0, a1, __amp_wait
@@ -193,7 +198,7 @@ _start:
     addi t0, t0, %lo(__STACK_SIZE)
     la sp, _sp
     csrr a0, CSR_MHARTID
-    andi a0, a0, 0xFF
+    andi a0, a0, CFG_SOC_LOCAL_HARTID_MASK
     li a1, 0
 1:
     beq a0, a1, 2f
@@ -280,6 +285,7 @@ _start:
 
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
     csrr a0, CSR_MHARTID
+    andi a0, a0, CFG_SOC_LOCAL_HARTID_MASK
     li a1, BOOT_HARTID
     bne a0, a1, __skip_init
 #endif
@@ -426,6 +432,7 @@ smp_main:
     STORE ra, 0*REGBYTES(sp)
     /* only boot hart goto main, other harts do wfi */
     csrr t0, CSR_MHARTID
+    andi t0, t0, CFG_SOC_LOCAL_HARTID_MASK
     li t1, BOOT_HARTID
     beq t0, t1, 2f
 1:

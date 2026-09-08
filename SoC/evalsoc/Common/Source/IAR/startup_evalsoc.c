@@ -134,7 +134,8 @@ extern void exit(int arg);
 // TODO: for smp you can override this smp_main as your multicore main function entry
 __weak int smp_main(void)
 {
-    unsigned long hartid = __get_hart_id();
+    // BOOT_HARTID is compared with the local hart id inside current cluster, see __get_local_hart_id()
+    unsigned long hartid = __get_local_hart_id();
     int ret = 0;
 
     if (hartid == BOOT_HARTID) {
@@ -158,7 +159,8 @@ __weak int smp_main(void)
 // NOTE: __lower_level_init will directly call main or smp_main and not return
 int __low_level_init(void)
 {
-    unsigned long hartid = __get_hart_id();
+    // BOOT_HARTID is compared with the local hart id inside current cluster, see __get_local_hart_id()
+    unsigned long hartid = __get_local_hart_id();
 
     __disable_interrupt();
 

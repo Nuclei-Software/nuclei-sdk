@@ -9,6 +9,10 @@
 #include "iarMacros.m"
 #include "iarCfi.m"
 
+/* Include socfeature.h to get SoC feature macros, such as CFG_SOC_LOCAL_HARTID_MASK
+ * which is used to get the local hart id inside current cluster */
+#include "socfeature.h"
+
 
         MODULE  ?cstartup
 
@@ -79,7 +83,8 @@ __iar_cstart_init_gp:
         addi t0, t0, %lo(__STACK_SIZE)
         la sp, SFE(CSTACK)
         csrr a0, mhartid
-        andi a0, a0, 0xFF
+        /* take bit 0-(CFG_SOC_CLUSTERID_OFS-1) for local hart id in a local cluster */
+        andi a0, a0, CFG_SOC_LOCAL_HARTID_MASK
         li a1, 0
 _per_cpu_init_sp_cont:
         beq a0, a1, _per_cpu_init_sp_fin

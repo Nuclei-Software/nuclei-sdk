@@ -1317,7 +1317,11 @@ void __sync_harts(void)
 // Only do synchronize when SMP_CPU_CNT is defined and number > 0
 // TODO: If you don't need to support SMP, you can directly remove code in it
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
-    unsigned long hartid = __get_hart_id();
+    // NOTE: hartid is the local hart id inside current cluster (returned by __get_local_hart_id(),
+    // equals mhartid & CFG_SOC_LOCAL_HARTID_MASK), it is compared with BOOT_HARTID to detect the boot
+    // hart; tmr_hartid is the local hart index used to address the per-hart CLINT MSIP register.
+    // When __HARTID_OFFSET is 0 (default) they are the same, see core_feature_base.h for details
+    unsigned long hartid = __get_local_hart_id();
     unsigned long tmr_hartid = __get_hart_index();
     unsigned long clint_base, irgb_base, smp_base;
     unsigned long mcfg_info;
@@ -1426,7 +1430,9 @@ static uint32_t get_system_clock(void)
 void _premain_init(void)
 {
     // TODO to make it possible for configurable boot hartid
-    unsigned long hartid = __get_hart_id();
+    // NOTE: BOOT_HARTID is compared with the local hart id inside current cluster,
+    // which is returned by __get_local_hart_id(), see core_feature_base.h/socfeature.h
+    unsigned long hartid = __get_local_hart_id();
 
 #if defined(CODESIZE) && (CODESIZE == 1)
     // TODO to reduce the code size of application

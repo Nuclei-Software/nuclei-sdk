@@ -43,16 +43,21 @@ include $(NUCLEI_SDK_SOC)/cpufeature.mk
 # it will define c macro SMP_CPU_CNT to be SMP value
 # and define a ld symbol __SMP_CPU_CNT to be used by linker script
 SMP ?=
-# BOOT_HARTID must be a number, and above 0, the hartid is taken the mhartid bit 0-7
+# BOOT_HARTID must be a number and not below 0, it is the local hart id in current cluster,
+# taken the mhartid bit 0-(CFG_SOC_CLUSTERID_OFS-1) value, see socfeature.h (CFG_SOC_CLUSTERID_OFS)
 # it will define a c macro BOOT_HARTID to be boot hart id,
 # other harts other than boot hartid will do wfi when in AMP mode,
 # or run application in smp mode
 BOOT_HARTID ?= 0
-# HARTID_OFS is used to set hartid offset to the cpu hartid to get current hart index
-# for example, cpu hartid maybe 1, but hart index is 0, so the offset is 1
-# This is not neccessary for most cases, only useful in cases such as a multiple cpu
-# system, cpu0 has 1 hart, hartid is 0, cpu1 has 1 hart, hartid is 1, but cpu1
+# HARTID_OFS is used to set the hart index offset, the hart index is used to address the
+# per-hart resources (such as system timer MSIP/compare registers, per-core arrays), and it is
+# defined as: hart_index = (mhartid & CFG_SOC_LOCAL_HARTID_MASK) - HARTID_OFS
+# This is not necessary for most cases, only useful in cases such as a multiple cpu
+# system, cpu0 has 1 hart, local hart id is 0, cpu1 has 1 hart, local hart id is 1, but cpu1
 # hart index is 0, so in this case set this value to 1
+# NOTE: HARTID_OFS is only meaningful for the AMP/multi-single-hart-cpu use case, it MUST be 0
+# for the SMP case, since in a SMP cluster the local hart ids are continuous and start from 0
+# (the SMP OS ports index the per-core arrays with the hart index and assume it is 0..N-1)
 HARTID_OFS ?=
 # JTAGSN must be a jtag serial number
 # If not specified, it will not bind serial number

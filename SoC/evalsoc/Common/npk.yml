@@ -368,7 +368,7 @@ configuration:
     default_value: 0
     type: spinner
     global: true
-    tips: "Select which hart chosen by hartid is the boot hart"
+    tips: "Select the boot hart by its local hart id inside the cluster, see CFG_SOC_CLUSTERID_OFS in socfeature.h"
     description: Boot HartID
     param:
       range: >-
