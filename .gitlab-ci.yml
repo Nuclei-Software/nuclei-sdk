@@ -641,7 +641,7 @@ sdk_check_cpp_build:
 
 sdk_sync_tools:
   stage: deploy
-  needs: []
+  dependencies: []
   interruptible: true
   resource_group: deploy
   rules:
