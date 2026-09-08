@@ -14,7 +14,7 @@ BENCH_DECLARE_VAR();
 
 #ifndef MAX_L2_SIZE_KB
 /** \brief The max size of L2 Cache in KB
- * \remarks Here we assume the L2 Cache size is not larger than 1MB */
+ * \remarks Here we assume the L2 Cache size is not larger than MAX_L2_SIZE */
 #define MAX_L2_SIZE_KB (1 * 1024)
 #endif
 /* The unit of MAX_L2_SIZE_BYTE and MIN_L2_SIZE_BYTE is byte */
