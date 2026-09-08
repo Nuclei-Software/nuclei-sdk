@@ -24,11 +24,62 @@
  */
 /*
  * Core Base Feature Configuration Macro:
- * 1. __HARTID_OFFSET:  Optional, define this macro when your cpu system first hart hartid and hart index is different.
- *    eg. If your cpu system, first hart hartid is 2, hart index is 0, then set this macro to 2
+ * 1. __HARTID_OFFSET:  Optional, define this macro when the hart index is different to the
+ *    local hart id inside the cluster. The hart index (used to address per-hart resources such
+ *    as system timer MSIP/compare registers and per-core arrays) is defined as:
+ *      hart_index = (mhartid/shartid & CFG_SOC_LOCAL_HARTID_MASK) - __HARTID_OFFSET
+ *    where mhartid/shartid is the hart id CSR of the current hart (mhartid in M-mode, shartid in
+ *    S-mode). eg. If local hart ids are 2-5 but hart index should be 0-3, then set __HARTID_OFFSET to 2.
  *
+ * 2. CFG_SOC_CLUSTERID_OFS: Optional, define this macro when the hart id CSR of your cpu system
+ *    (mhartid/shartid) contains both the cluster id and the local hart id inside the cluster.
+ *    The mhartid/shartid CSR layout is (shartid has the same layout as mhartid, and it is only
+ *    available on the cpu which supports S-mode, see the ``_s`` API variants below):
+ *      mhartid/shartid[CFG_SOC_CLUSTERID_OFS-1:0]  : local hart id inside the cluster
+ *      mhartid/shartid[x:CFG_SOC_CLUSTERID_OFS]    : cluster id
+ *    This macro should be defined in <Device> SoC feature header socfeature.h,
+ *    if not defined here, the default value is 8, which is compatible with the
+ *    nuclei subsystem reference design where mhartid[7:0] is local hart id.
+ *
+ * Note the difference between the four hart related concepts (each API has a M-mode variant which
+ * reads the mhartid CSR, and a S-mode variant suffixed with ``_s`` which reads the shartid CSR,
+ * eg. __get_hart_id()/__get_hart_id_s(), the shartid has the same layout as the mhartid):
+ *   - __get_hart_id() / __get_hart_id_s()              : full mhartid/shartid
+ *                                                       (includes cluster id + local hart id)
+ *   - __get_cluster_id() / __get_cluster_id_s()        : cluster id
+ *                                                       = mhartid/shartid >> CFG_SOC_CLUSTERID_OFS
+ *   - __get_local_hart_id() / __get_local_hart_id_s()  : local hart id
+ *                                                       = mhartid/shartid & CFG_SOC_LOCAL_HARTID_MASK,
+ *                                                       the value that BOOT_HARTID (defined in
+ *                                                       <Device>.h) compares against
+ *   - __get_hart_index() / __get_hart_index_s()        : (mhartid/shartid & CFG_SOC_LOCAL_HARTID_MASK)
+ *                                                       - __HARTID_OFFSET, used to address the
+ *                                                       per-hart resources, in most SoCs it equals
+ *                                                       the local hart id
+ * The S-mode variants are only available on the cpu which supports S-mode and provides the shartid
+ * CSR (currently present in 600/900 series from 2024 released version), see the API docs below.
  */
 #include <stdint.h>
+
+/* CFG_SOC_CLUSTERID_OFS/MASK are defined here with a default fallback value so that NMSIS can be
+ * used alone without any SoC header. The real value should be defined in the SoC feature header
+ * socfeature.h (<Device>.h includes it BEFORE nmsis_core.h), if socfeature.h is included after
+ * this file the SoC override will be silently ignored since the fallback already took effect,
+ * so please make sure the SoC socfeature.h is always included before nmsis_core.h.
+ * NOTE: CFG_SOC_CLUSTERID_OFS should be a small value (eg. <= 24) in practice: it is the number
+ * of bits used to encode the local hart id inside one cluster, and the mask macro is calculated
+ * with an int shift (no type suffix, required by the assembly usage), so a value >= 31 would be
+ * undefined behavior in C (1 << OFS). */
+#ifndef CFG_SOC_CLUSTERID_OFS
+#define CFG_SOC_CLUSTERID_OFS       8
+#endif
+
+/* Mask to extract the local hart id inside the cluster from the mhartid/shartid CSR value
+ * Keep it as a plain integer constant (no UL suffix) so that it can be used
+ * directly both in C code and in assembly code */
+#ifndef CFG_SOC_LOCAL_HARTID_MASK
+#define CFG_SOC_LOCAL_HARTID_MASK      ((1 << CFG_SOC_CLUSTERID_OFS) - 1)
+#endif
 
 #ifdef __cplusplus
  extern "C" {
@@ -1386,42 +1437,54 @@ __STATIC_FORCEINLINE unsigned long __read_time_csr(void)
  * \brief   Get cluster id of current cluster
  * \details This function will get cluster id of current cluster in a multiple cluster system
  * \return  The cluster id of current cluster
- * \remarks mhartid bit 15-8 is designed for cluster id in nuclei subsystem reference design
+ * \remarks mhartid bit above CFG_SOC_CLUSTERID_OFS is designed for cluster id,
+ * eg. if CFG_SOC_CLUSTERID_OFS is 8, then mhartid bit 15-8 is cluster id in nuclei subsystem reference design
  * \attention function is allowed in machine mode only
  */
 __STATIC_FORCEINLINE unsigned long __get_cluster_id(void)
 {
     unsigned long id;
 
-    id = (__RV_CSR_READ(CSR_MHARTID) >> 8) & 0xFF;
+    id = __RV_CSR_READ(CSR_MHARTID) >> CFG_SOC_CLUSTERID_OFS;
     return id;
 }
 
 /**
- * \brief   Get hart index of current cluster
- * \details This function will get hart index of current cluster in a multiple cluster system,
- * hart index is hartid - hartid offset, for example if your hartid is 1, and offset is 1, then
- * hart index is 0
- * \return  The hart index of current cluster
+ * \brief   Get hart index of current hart
+ * \details This function will get the hart index of the current hart in a multiple cluster
+ * system, the hart index is used to address the per-hart resources, such as the system timer
+ * software interrupt (MSIP) and timer compare registers, and the per-core arrays in SMP ports.
+ * The hart index is calculated from the local hart id inside the cluster:
+ *   hart_index = (mhartid & CFG_SOC_LOCAL_HARTID_MASK) - __HARTID_OFFSET
+ * where the local hart id is the lower CFG_SOC_CLUSTERID_OFS bits of mhartid.
+ * In most SoCs __HARTID_OFFSET is 0, so the hart index equals the local hart id.
+ * __HARTID_OFFSET is only needed when the real harts in your cluster do not start from local
+ * hart id 0, eg. if your cluster really has 4 harts with local hart id 3-6 (hart 0-2 are not
+ * implemented in this cluster), set __HARTID_OFFSET to 3 to map local hart id 3-6 to index 0-3.
+ * \return  The hart index of current hart
  * \attention function is allowed in machine mode only
  */
 __STATIC_FORCEINLINE unsigned long __get_hart_index(void)
 {
     unsigned long id;
+
+    id = __RV_CSR_READ(CSR_MHARTID) & CFG_SOC_LOCAL_HARTID_MASK;
 #ifdef __HARTID_OFFSET
-    id = __RV_CSR_READ(CSR_MHARTID) - __HARTID_OFFSET;
-#else
-    id = __RV_CSR_READ(CSR_MHARTID);
+    id -= __HARTID_OFFSET;
 #endif
     return id;
 }
 
 /**
- * \brief   Get hart id of current cluster
- * \details This function will get hart id of current cluster in a multiple cluster system
- * \return  The hart id of current cluster
- * \remarks it will return full hartid not part of it for reference subsystem design,
- * if your reference subsystem design has hartid offset, please define __HARTID_OFFSET in
+ * \brief   Get full hart id of current hart
+ * \details This function will get the full mhartid value of the current hart, in a multiple
+ * cluster system, the full mhartid includes both the cluster id and the local hart id inside
+ * the cluster, to get the cluster id please use \ref __get_cluster_id, and to get the local
+ * hart id inside the cluster please use \ref __get_local_hart_id.
+ * \return  The full hart id of current hart, including the cluster id part
+ * \remarks The layout of mhartid is defined by CFG_SOC_CLUSTERID_OFS,
+ * mhartid[CFG_SOC_CLUSTERID_OFS-1:0] is local hart id, the upper bits is cluster id,
+ * if your hart index is different to your local hart id, please define __HARTID_OFFSET in
  * <Device>.h
  * \attention function is allowed in machine mode only
  */
@@ -1432,12 +1495,33 @@ __STATIC_FORCEINLINE unsigned long __get_hart_id(void)
     return id;
 }
 
+/**
+ * \brief   Get local hart id of current hart
+ * \details This function will get the local hart id of the current hart inside the cluster,
+ * it is the lower CFG_SOC_CLUSTERID_OFS bits of the mhartid:
+ *   local_hart_id = mhartid & CFG_SOC_LOCAL_HARTID_MASK
+ * The local hart id identifies a hart inside the current cluster, and it is the value that
+ * BOOT_HARTID (defined in <Device>.h) compares against to select the boot hart.
+ * Note the difference from \ref __get_hart_index, which is the hart index used to address
+ * the per-hart resources (such as system timer MSIP/compare registers) and is calculated as
+ * (mhartid & CFG_SOC_LOCAL_HARTID_MASK) - __HARTID_OFFSET, so when __HARTID_OFFSET is non-zero
+ * the hart index is different from the local hart id.
+ * \return  The local hart id of current hart inside the cluster
+ * \attention function is allowed in machine mode only
+ */
+__STATIC_FORCEINLINE unsigned long __get_local_hart_id(void)
+{
+    unsigned long id;
+    id = __RV_CSR_READ(CSR_MHARTID) & CFG_SOC_LOCAL_HARTID_MASK;
+    return id;
+}
 
 /**
  * \brief   Get cluster id of current cluster in supervisor mode
  * \details This function will get cluster id of current cluster in a multiple cluster system
  * \return  The cluster id of current cluster
- * \remarks hartid bit 15-8 is designed for cluster id in nuclei subsystem reference design
+ * \remarks shartid bit above CFG_SOC_CLUSTERID_OFS is designed for cluster id,
+ * eg. if CFG_SOC_CLUSTERID_OFS is 8, then shartid bit 15-8 is cluster id in nuclei subsystem reference design
  * \attention function is allowed in machine/supervisor mode,
  * currently only present in 600/900 series from 2024 released version
  */
@@ -1445,36 +1529,47 @@ __STATIC_FORCEINLINE unsigned long __get_cluster_id_s(void)
 {
     unsigned long id;
 
-    id = (__RV_CSR_READ(CSR_SHARTID) >> 8) & 0xFF;
+    id = __RV_CSR_READ(CSR_SHARTID) >> CFG_SOC_CLUSTERID_OFS;
     return id;
 }
 
 /**
- * \brief   Get hart index of current cluster in supervisor mode
- * \details This function will get hart index of current cluster in a multiple cluster system,
- * hart index is hartid - hartid offset, for example if your hartid is 1, and offset is 1, then
- * hart index is 0
- * \return  The hart index of current cluster
+ * \brief   Get hart index of current hart in supervisor mode
+ * \details This function will get the hart index of the current hart in a multiple cluster
+ * system, the hart index is used to address the per-hart resources, such as the system timer
+ * software interrupt and timer compare registers, and the per-core arrays in SMP ports.
+ * The hart index is calculated from the local hart id inside the cluster:
+ *   hart_index = (shartid & CFG_SOC_LOCAL_HARTID_MASK) - __HARTID_OFFSET
+ * where the local hart id is the lower CFG_SOC_CLUSTERID_OFS bits of shartid.
+ * In most SoCs __HARTID_OFFSET is 0, so the hart index equals the local hart id.
+ * __HARTID_OFFSET is only needed when the real harts in your cluster do not start from local
+ * hart id 0, eg. if your cluster really has 4 harts with local hart id 3-6 (hart 0-2 are not
+ * implemented in this cluster), set __HARTID_OFFSET to 3 to map local hart id 3-6 to index 0-3.
+ * \return  The hart index of current hart
  * \attention function is allowed in machine/supervisor mode,
  * currently only present in 600/900 series from 2024 released version
  */
 __STATIC_FORCEINLINE unsigned long __get_hart_index_s(void)
 {
     unsigned long id;
+
+    id = __RV_CSR_READ(CSR_SHARTID) & CFG_SOC_LOCAL_HARTID_MASK;
 #ifdef __HARTID_OFFSET
-    id = __RV_CSR_READ(CSR_SHARTID) - __HARTID_OFFSET;
-#else
-    id = __RV_CSR_READ(CSR_SHARTID);
+    id -= __HARTID_OFFSET;
 #endif
     return id;
 }
 
 /**
- * \brief   Get hart id of current cluster in supervisor mode
- * \details This function will get hart id of current cluster in a multiple cluster system
- * \return  The hart id of current cluster
- * \remarks it will return full hartid not part of it for reference subsystem design,
- * if your reference subsystem design has hartid offset, please define __HARTID_OFFSET in
+ * \brief   Get full hart id of current hart in supervisor mode
+ * \details This function will get the full shartid value of the current hart, in a multiple
+ * cluster system, the full shartid includes both the cluster id and the local hart id inside
+ * the cluster, to get the cluster id please use \ref __get_cluster_id_s, and to get the local
+ * hart id inside the cluster please use \ref __get_local_hart_id_s.
+ * \return  The full hart id of current hart, including the cluster id part
+ * \remarks The layout of shartid is defined by CFG_SOC_CLUSTERID_OFS,
+ * shartid[CFG_SOC_CLUSTERID_OFS-1:0] is local hart id, the upper bits is cluster id,
+ * if your hart index is different to your local hart id, please define __HARTID_OFFSET in
  * <Device>.h
  * \attention function is allowed in machine/supervisor mode,
  * currently only present in 600/900 series from 2024 released version
@@ -1483,6 +1578,27 @@ __STATIC_FORCEINLINE unsigned long __get_hart_id_s(void)
 {
     unsigned long id;
     id = __RV_CSR_READ(CSR_SHARTID);
+    return id;
+}
+
+/**
+ * \brief   Get local hart id of current hart in supervisor mode
+ * \details This function will get the local hart id of the current hart inside the cluster,
+ * it is the lower CFG_SOC_CLUSTERID_OFS bits of the shartid:
+ *   local_hart_id = shartid & CFG_SOC_LOCAL_HARTID_MASK
+ * The local hart id identifies a hart inside the current cluster, and it is the value that
+ * BOOT_HARTID (defined in <Device>.h) compares against to select the boot hart.
+ * Note the difference from \ref __get_hart_index_s, which is the hart index used to address
+ * the per-hart resources and is calculated as (shartid & CFG_SOC_LOCAL_HARTID_MASK) - __HARTID_OFFSET,
+ * so when __HARTID_OFFSET is non-zero the hart index is different from the local hart id.
+ * \return  The local hart id of current hart inside the cluster
+ * \attention function is allowed in machine/supervisor mode,
+ * currently only present in 600/900 series from 2024 released version
+ */
+__STATIC_FORCEINLINE unsigned long __get_local_hart_id_s(void)
+{
+    unsigned long id;
+    id = __RV_CSR_READ(CSR_SHARTID) & CFG_SOC_LOCAL_HARTID_MASK;
     return id;
 }
 

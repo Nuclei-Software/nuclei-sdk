@@ -150,11 +150,15 @@ typedef struct {
  */
 
 /**
- * SysTimer_GetHartID() is used to get timer hartid which might not be the same as cpu hart id,
- * for example, cpu hartid may be 1, but timer hartid may be 0, then timer hartid offset is 1.
- * If defined __SYSTIMER_HARTID, it will use __SYSTIMER_HARTID as timer hartid,
- * otherwise, it will use __get_hart_index().
- * The cpu hartid is get by using __get_hart_id function
+ * SysTimer_GetHartID() is used to get the system timer hart index, which is used to address
+ * the per-hart system timer registers (such as the MSIP software interrupt and the timer
+ * compare registers), and it might not be the same as the local hart id of the cpu.
+ * For example, the local hart id may be 1 but the timer hart index may be 0 (when
+ * __HARTID_OFFSET is 1, see core_feature_base.h for the relation between local hart id and
+ * hart index), and in a multiple cluster system the cpu full hart id also contains the
+ * cluster id part which must not be used to address the per-hart timer registers.
+ * If defined __SYSTIMER_HARTID, it will use __SYSTIMER_HARTID as the timer hart index,
+ * otherwise, it will use __get_hart_index() (the hart index of current hart).
  */
 #ifndef __SYSTIMER_HARTID
 #define SysTimer_GetHartID()                    (__get_hart_index())

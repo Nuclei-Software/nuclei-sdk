@@ -82,14 +82,17 @@
  *    Complete: write interrupt ID to signal handler completion
  *
  *  Context ID to Hart/Mode mapping (Nuclei RISC-V CPU, not in PLIC spec):
- *    M-mode context ID = hartid * 2     (even: 0, 2, 4, 6, 8)
- *    S-mode context ID = hartid * 2 + 1 (odd:  1, 3, 5, 7, 9)
+ *  The context ID is calculated from the **hart index** of the hart (see __get_hart_index() /
+ *  PLIC_GetHartID(), the hart index is the local hart id minus the optional __HARTID_OFFSET,
+ *  and in a multiple cluster system the full hart id must NOT be used here):
+ *    M-mode context ID = hart_index * 2     (even: 0, 2, 4, 6, 8)
+ *    S-mode context ID = hart_index * 2 + 1 (odd:  1, 3, 5, 7, 9)
  *
- *    Hart 0: M=ctxid 0, S=ctxid 1
- *    Hart 1: M=ctxid 2, S=ctxid 3
- *    Hart 2: M=ctxid 4, S=ctxid 5
- *    Hart 3: M=ctxid 6, S=ctxid 7
- *    Hart 4: M=ctxid 8, S=ctxid 9
+ *    Hart index 0: M=ctxid 0, S=ctxid 1
+ *    Hart index 1: M=ctxid 2, S=ctxid 3
+ *    Hart index 2: M=ctxid 4, S=ctxid 5
+ *    Hart index 3: M=ctxid 6, S=ctxid 7
+ *    Hart index 4: M=ctxid 8, S=ctxid 9
  *
  * Reference: https://github.com/riscv/riscv-plic-spec
  */
@@ -121,11 +124,14 @@
 #define PLIC_BASE                           __PLIC_BASEADDR     /*!< PLIC Base Address */
 
 /**
- * PLIC_GetHartID() is used to get plic hartid which might not be the same as cpu hart id,
- * for example, cpu hartid may be 1, but plic hartid may be 0, then plic hartid offset is 1.
- * If defined __PLIC_HARTID, it will use __PLIC_HARTID as plic hartid,
- * otherwise, it will use __get_hart_index().
- * The cpu hartid is get by using __get_hart_id function
+ * PLIC_GetHartID() is used to get the PLIC hart/context index, which is used to address the
+ * per-hart PLIC context registers, and it might not be the same as the local hart id of the cpu.
+ * For example, the local hart id may be 1 but the PLIC hart index may be 0 (when
+ * __HARTID_OFFSET is 1, see core_feature_base.h for the relation between local hart id and
+ * hart index), and in a multiple cluster system the cpu full hart id also contains the
+ * cluster id part which must not be used to address the per-hart PLIC context registers.
+ * If defined __PLIC_HARTID, it will use __PLIC_HARTID as the PLIC hart index,
+ * otherwise, it will use __get_hart_index() (the hart index of current hart).
  */
 #ifndef __PLIC_HARTID
 #define PLIC_GetHartID()                    (__get_hart_index())
@@ -136,9 +142,10 @@
 #endif
 
 /*
- * Context ID mapping (Nuclei RISC-V CPU convention):
- *   M-mode: ctxid = hartid * 2   (even: 0, 2, 4, 6, 8)
- *   S-mode: ctxid = hartid * 2 + 1 (odd:  1, 3, 5, 7, 9)
+ * Context ID mapping (Nuclei RISC-V CPU convention), the context ID is calculated from the
+ * hart index returned by PLIC_GetHartID()/PLIC_GetHartID_S() (= __get_hart_index()/_s()):
+ *   M-mode: ctxid = hart_index * 2   (even: 0, 2, 4, 6, 8)
+ *   S-mode: ctxid = hart_index * 2 + 1 (odd:  1, 3, 5, 7, 9)
  * This is NOT part of the RISC-V PLIC spec.
  */
 #define PLIC_GetHartMContextID()            (PLIC_GetHartID() << 1)

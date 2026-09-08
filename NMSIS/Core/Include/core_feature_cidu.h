@@ -53,6 +53,13 @@ extern "C" {
  * * Support up to 16 Inter Core Interrupts
  * * Support 32 Semaphores
  *
+ * NOTE: The \p core_id parameters used by the CIDU APIs are the **hart index** inside the cluster
+ * (a continuous number 0..N-1 used to address the per-core CIDU registers), which is returned by
+ * NMSIS API __get_hart_index() (the local hart id minus the optional __HARTID_OFFSET), it is NOT
+ * the full mhartid value returned by __get_hart_id(), see core_feature_base.h for the difference
+ * between the hart related concepts. In the CIDU SMP use case __HARTID_OFFSET is always 0, so the
+ * hart index equals the local hart id inside the cluster.
+ *
  *   @{
  */
 

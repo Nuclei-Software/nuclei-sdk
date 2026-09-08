@@ -46,6 +46,13 @@
  * \ingroup NMSIS_Core_Registers
  * \brief   Type definitions and defines for smpcc registers.
  *
+ * NOTE: The \p client_id parameters used by the SMPCC APIs are the **hart index** inside the
+ * cluster (a continuous number used to address the per-client SMPCC registers, such as the
+ * CLIENT_ERR_STATUS/CLIENT_WAY_MASK arrays, or the client_sel field in the PMON registers),
+ * which is returned by NMSIS API __get_hart_index() (the local hart id minus the optional
+ * __HARTID_OFFSET), it is NOT the full mhartid value returned by __get_hart_id(), see
+ * core_feature_base.h for the difference between the hart related concepts.
+ *
  * @{
  */
 
