@@ -70,3 +70,6 @@ Debug/
 Release/
 *.dep
 *.ewt
+
+# Nuclei SDK build generated object directories
+_obj_*

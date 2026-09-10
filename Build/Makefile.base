@@ -29,6 +29,11 @@ SIMULATION ?= 0
 V ?=
 ## If SILENT=1, it will not display any compiling messsage
 SILENT ?=
+## Output directory for build generated objects and targets. Empty (the
+## default): targets go to the current directory, objects are grouped in
+## _obj_sdk and _obj_app. Otherwise, e.g. O=build, everything is stored
+## under the given directory
+O ?=
 
 # Variables should be defined in Application Makefile
 ## Available choices:
