@@ -62,6 +62,133 @@ DUP_OBJS = $(foreach obj,$(sort $(ALL_OBJS)),$(if $(filter-out 1,$(words $(filte
 $(error Object path collision detected for: $(DUP_OBJS). "__up__" is a reserved directory name in the output directory for mirroring ../ of the sources outside the application directory, please rename the directory in your application)
 endif
 
+## Build configuration fingerprint.
+## BUILD_CONFIG_VARS lists the variables which change the generated
+## objects or targets. Add any new SDK option defined with "?=" in
+## Makefile.base to this list, then both the change detection and the
+## info target pick it up. Variables defined in the application Makefile
+## (e.g. RTOS, MIDDLEWARE, APPDIRS) are not tracked: editing them
+## already triggers a full rebuild through the makefile prerequisites.
+## NOTE: spaces in values are recorded as underscores
+BUILD_CONFIG_VARS := TOOLCHAIN SOC BOARD CORE ARCH_EXT DOWNLOAD STDCLIB \
+	NCRTHEAP NCRTIO NOGC BANNER AUTOVEC PFL SIMU SEMIHOST \
+	SIMULATION SMP BOOT_HARTID RISCV_ARCH RISCV_ABI RISCV_TUNE RISCV_CMODEL \
+	STACKSZ HEAPSZ
+BUILD_CONFIG = $(foreach v,$(BUILD_CONFIG_VARS),$(v)=$(subst $(space),_,$($(v))))
+BUILD_CONFIG_FILE := $(OUTDIR)/.buildconfig
+
+## Configuration change detection.
+## When the saved fingerprint differs from the current configuration,
+## make stops with an error listing the changed variables, instead of
+## silently linking objects built with different configurations.
+## Recover with "make rebuild" or another "O=" output directory.
+## Skipped when cleaning (clean removes the old objects anyway) and on
+## GNU Make < 4.0 (needs the file function).
+ifneq ($(MAKECMDGOALS),)
+## Goals exempted from the detection: help/info style informational
+## goals, clean/rebuild (they remove the old objects anyway) and the
+## pure OpenOCD servers which need no build artifact
+CONFIG_CHECK_GOALS := $(filter-out clean rebuild help info showflags showtoolver run_openocd run_xlspike_openocd,$(MAKECMDGOALS))
+else
+CONFIG_CHECK_GOALS := all
+endif
+ifneq ($(filter clean rebuild,$(MAKECMDGOALS)),)
+CONFIG_CHECK_GOALS :=
+endif
+
+ifneq ($(filter 4.% 5.%,$(MAKE_VERSION)),)
+SAVED_BUILD_CONFIG := $(strip $(file <$(BUILD_CONFIG_FILE)))
+
+## Saved value of one variable from the fingerprint, and the current
+## value normalized the same way (spaces -> underscores), so both sides
+## are always compared in the same form
+SAVED_VALUE = $(subst $(1)=,,$(filter $(1)=%,$(SAVED_BUILD_CONFIG)))
+CURRENT_VALUE = $(subst $(space),_,$($(1)))
+
+ifneq ($(CONFIG_CHECK_GOALS),)
+ifneq ($(SAVED_BUILD_CONFIG),)
+ifneq ($(SAVED_BUILD_CONFIG),$(strip $(BUILD_CONFIG)))
+## Variables whose saved and current values differ, listed in the
+## BUILD_CONFIG_VARS order and displayed as "variable: old -> new". The
+## two filter-outs make a symmetric difference so added values are also
+## caught (e.g. ARCH_EXT: (empty) -> _zba_zbb_zbc_zbs)
+CONFIG_CHANGED_VARS := $(foreach v,$(BUILD_CONFIG_VARS),$(if $(filter-out $(call CURRENT_VALUE,$(v)),$(call SAVED_VALUE,$(v)))$(filter-out $(call SAVED_VALUE,$(v)),$(call CURRENT_VALUE,$(v))),$(v)))
+## NOTE: a function call argument cannot span multiple physical lines in
+## GNU make (each $(warning)/$(error) below must stay on one physical
+## line), otherwise make reports "unterminated call to function 'warning'"
+$(warning Build configuration changed since last build into "$(OUTDIR)")
+$(foreach v,$(CONFIG_CHANGED_VARS),$(warning   $(v): $(if $(call SAVED_VALUE,$(v)),$(call SAVED_VALUE,$(v)),(empty)) -> $(if $(call CURRENT_VALUE,$(v)),$(call CURRENT_VALUE,$(v)),(empty))))
+## Stop with an error. MAKEOVERRIDES records the variables passed on
+## the make command line, echo them back so the error can suggest a
+## rebuild with exactly the same configuration
+RECOMMENDED_REBUILD := $(strip make $(MAKEOVERRIDES) rebuild)
+$(error Build stopped: the objects in "$(OUTDIR)" were generated with an old configuration. Please run "$(RECOMMENDED_REBUILD)" to clean and rebuild with the new configuration in one step, or use another "O=" output directory)
+endif
+endif
+endif
+
+## The fingerprint is (re)created before the first object compiles
+## (all objects depend on it below), so even an interrupted build
+## leaves it behind and a later make with a different configuration is
+## stopped by the detection above. Recreated when missing or empty
+## (first build, or resuming after an interrupt) or when clean/rebuild
+## runs in the same command line (clean removes it, so it must be
+## regenerated)
+ifeq ($(SAVED_BUILD_CONFIG),)
+BUILD_CONFIG_NEED_WRITE := 1
+else
+BUILD_CONFIG_NEED_WRITE := $(if $(filter clean rebuild,$(MAKECMDGOALS)),1)
+endif
+ifneq ($(BUILD_CONFIG_NEED_WRITE),)
+## NOTE: $(file >$@) opens the file while GNU make pre-expands the whole
+## recipe (before any recipe line is executed), so the output directory
+## must be created at expansion time via $(shell), a plain "mkdir"
+## recipe line would run too late and make reports "open: ...: No such
+## file or directory" for a fresh output directory
+$(BUILD_CONFIG_FILE): FORCE
+	$(Q)$(shell $(MKD) $(@D))
+	$(Q)$(file >$@,$(strip $(BUILD_CONFIG)))
+endif
+
+## Every object depends on the fingerprint: it is written before the
+## first compile, and whenever it is (re)generated the objects are out
+## of date and rebuilt with the current configuration
+$(ALL_OBJS): $(BUILD_CONFIG_FILE)
+
+## Safety net: objects without a fingerprint have an unknown
+## configuration (only possible after an interrupted/failed build of
+## the old after-link fingerprint scheme, or a manually deleted or
+## emptied fingerprint). Continuing could link mixed objects, so stop
+## and ask for a rebuild. Skipped when clean/rebuild is requested
+## (they remove the objects anyway)
+ifeq ($(SAVED_BUILD_CONFIG),)
+ifneq ($(CONFIG_CHECK_GOALS),)
+ifneq ($(wildcard $(ALL_OBJS)),)
+$(error No valid ".buildconfig" fingerprint found in "$(OUTDIR)" but build objects already exist there, their build configuration is unknown (likely left by an interrupted build). Please run "$(strip make $(MAKEOVERRIDES) rebuild)" to clean and rebuild them, or "$(strip make $(MAKEOVERRIDES) clean)" to remove them)
+endif
+endif
+endif
+endif
+
+## Serialize clean with the other build goals when both are requested
+## in one command line ("make -j clean all" or "make rebuild", which
+## depends on clean and all): with parallel make, clean may race with
+## the freshness check and compiling. clean is injected as a
+## prerequisite of the objects, the final target and (when defined)
+## the fingerprint file, so they are remade after clean finishes
+ifneq ($(filter clean rebuild,$(MAKECMDGOALS)),)
+ifneq ($(filter-out clean help info showflags showtoolver,$(MAKECMDGOALS)),)
+$(ALL_OBJS) $(TARGET_ELF): clean
+ifeq ($(BUILD_CONFIG_NEED_WRITE),1)
+$(BUILD_CONFIG_FILE): clean
+endif
+endif
+endif
+
+FORCE:
+
+.PHONY: FORCE
+
 # Application Specific compilation flags control
 # If APPDIRS is defined, we will collect sources in those directories
 # and apply APP_* flags to them
@@ -88,25 +215,36 @@ ALL_APP_TARGETS := $(APP_TARGET_ELF) $(APP_TARGET_MAP) $(APP_TARGET_BIN) \
 	$(APP_TARGET_DUMP) $(APP_TARGET_DASM) $(APP_TARGET_SREC) $(APP_TARGET_HEX) \
 	$(APP_TARGET_VERILOG)
 
-CLEAN_OBJS += $(ALL_APP_TARGETS) gmon.out openocd.log $(wildcard $(ALL_OBJS) $(ALL_DEPS) $(ALL_GCNOS) $(ALL_GCDAS) $(ALL_GCOVS))
+CLEAN_OBJS += $(ALL_APP_TARGETS) gmon.out openocd.log $(BUILD_CONFIG_FILE) $(wildcard $(ALL_OBJS) $(ALL_DEPS) $(ALL_GCNOS) $(ALL_GCDAS) $(ALL_GCOVS))
 REAL_CLEAN_OBJS = $(subst /,$(PS), $(CLEAN_OBJS))
 
 ## Ensure the output directory of the generated target file exist
 ## MKD is defined in Makefile.misc, it works in both linux and windows
 DIR_GUARD = @$(MKD) $(@D)
 
+## Explicit default goal, otherwise the first target of this file
+## (such as FORCE for the build configuration fingerprint) would be
+## chosen as the default goal
+.DEFAULT_GOAL := all
+
 # Default goal, placed before dependency includes
 all: info $(TARGET_ELF)
+
+## rebuild: "make clean all" in one step, exempt from the build
+## configuration change detection, so it can be used to rebuild after
+## a configuration change. The clean is forced to finish before the
+## objects are rebuilt (see the serialization above)
+rebuild: clean all
 
 # include dependency files of application
 ifneq ($(MAKECMDGOALS),clean)
 -include $(ALL_DEPS)
 endif
 
-.PHONY: all info showflags showtoolver help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike run_xlmodel run_qemu_debug run_xlspike_rbb run_xlspike_openocd clean debug
+.PHONY: all info showflags showtoolver help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike run_xlmodel run_qemu_debug run_xlspike_rbb run_xlspike_openocd clean debug rebuild
 
 info:
-	@$(ECHO) Current Configuration: TOOLCHAIN=$(TOOLCHAIN) RISCV_ARCH=$(RISCV_ARCH) RISCV_ABI=$(RISCV_ABI) RISCV_TUNE=$(RISCV_TUNE) RISCV_CMODEL=$(RISCV_CMODEL) SOC=$(SOC) BOARD=$(BOARD) CORE=$(CORE) ARCH_EXT=$(ARCH_EXT) DOWNLOAD=$(DOWNLOAD) STDCLIB=$(STDCLIB) SMP=$(SMP) BOOT_HARTID=$(BOOT_HARTID)
+	@$(ECHO) Current Configuration: $(BUILD_CONFIG)
 
 showflags:
 	@$(ECHO) TARGET: $(TARGET)
@@ -115,6 +253,7 @@ showflags:
 	@$(ECHO) OPENOCD_CFG: $(OPENOCD_CFG)
 	@$(ECHO) LINKER_SCRIPT: $(LINKER_SCRIPT)
 	@$(ECHO) OUTDIR: $(OUTDIR)
+	@$(ECHO) BUILD_CONFIG_FILE: $(BUILD_CONFIG_FILE)
 	@$(ECHO) ASMFLAGS: $(ASMFLAGS)
 	@$(ECHO) CFLAGS: $(CFLAGS)
 	@$(ECHO) CXXFLAGS: $(CXXFLAGS)
@@ -146,6 +285,9 @@ help:
 	@$(ECHO) "1. Build Application:"
 	@$(ECHO) "all [PROGRAM=flash/flashxip/ilm/ddr]"
 	@$(ECHO) "   Build a software program to load with the debugger."
+	@$(ECHO) "rebuild [make variables]"
+	@$(ECHO) "   Clean and rebuild from scratch (make clean all in one step), useful when the build"
+	@$(ECHO) "   configuration is changed, since a changed configuration stops a normal make with an error"
 	@$(ECHO) "2. Upload Application to Board using OpenOCD and GDB:"
 	@$(ECHO) "upload [PROGRAM=flash/flashxip/ilm/ddr]"
 	@$(ECHO) "   Launch OpenOCD to flash your program to the on-board Flash."
@@ -172,6 +314,8 @@ help:
 	@$(ECHO) "4.(Option 2) Debug application: make DOWNLOAD=ilm debug"
 	@$(ECHO) ""
 
+## The fingerprint is already written before the objects compiled (see
+## the configuration change detection above)
 $(TARGET_ELF): $(ALL_OBJS)
 	$(TRACE_LINK)
 	$(Q)$(CC) $(CFLAGS) $(ALL_OBJS) -o $@ $(LDFLAGS)

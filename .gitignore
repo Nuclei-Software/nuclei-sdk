@@ -73,3 +73,5 @@ Release/
 
 # Nuclei SDK build generated object directories
 _obj_*
+# Nuclei SDK build configuration fingerprint
+.buildconfig

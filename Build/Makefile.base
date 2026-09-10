@@ -34,6 +34,12 @@ SILENT ?=
 ## _obj_sdk and _obj_app. Otherwise, e.g. O=build, everything is stored
 ## under the given directory
 O ?=
+## The build configuration (see BUILD_CONFIG_VARS in Makefile.rules) is
+## fingerprinted into $(OUTDIR)/.buildconfig. If it changed since the last
+## build into the output directory, make stops with an error listing the
+## changed variables instead of silently mixing objects built with
+## different configurations; rebuild with "make rebuild" or use another
+## "O=" output directory
 
 # Variables should be defined in Application Makefile
 ## Available choices:
