@@ -581,7 +581,9 @@ extern volatile unsigned long CpuIRegionBase;
 /**
  * Chosen boot hart in current cluster when in soc system, need to align with the value defined in startup_<Device>.S.
  * It is defined as the **local hart id** inside current cluster, which is the mhartid bit 0-(CFG_SOC_CLUSTERID_OFS-1)
- * value (see socfeature.h for the mhartid layout and CFG_SOC_CLUSTERID_OFS), so the maximum value is (2^CFG_SOC_CLUSTERID_OFS - 1).
+ * value (see socfeature.h for the mhartid layout and CFG_SOC_CLUSTERID_OFS), so the maximum value is
+ * min((2^CFG_SOC_CLUSTERID_OFS - 1), CFG_SOC_LOCAL_HARTID_MASK), where CFG_SOC_LOCAL_HARTID_MASK is clamped to 0x7FF
+ * (see socfeature.h), so it is at most 2047 in practice.
  * It is NOT the hart index, the hart index is used to address per-hart resources like timer, see __HARTID_OFFSET above.
  */
 #define BOOT_HARTID                 0

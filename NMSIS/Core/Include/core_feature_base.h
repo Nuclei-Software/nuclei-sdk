@@ -66,19 +66,21 @@
  * socfeature.h (<Device>.h includes it BEFORE nmsis_core.h), if socfeature.h is included after
  * this file the SoC override will be silently ignored since the fallback already took effect,
  * so please make sure the SoC socfeature.h is always included before nmsis_core.h.
- * NOTE: CFG_SOC_CLUSTERID_OFS should be a small value (eg. <= 24) in practice: it is the number
- * of bits used to encode the local hart id inside one cluster, and the mask macro is calculated
- * with an int shift (no type suffix, required by the assembly usage), so a value >= 31 would be
- * undefined behavior in C (1 << OFS). */
+ * CFG_SOC_CLUSTERID_OFS is the bit offset of the cluster id field in the mhartid/shartid CSR, it
+ * is also the number of bits used to encode the local hart id inside one cluster. */
 #ifndef CFG_SOC_CLUSTERID_OFS
 #define CFG_SOC_CLUSTERID_OFS       8
 #endif
 
-/* Mask to extract the local hart id inside the cluster from the mhartid/shartid CSR value
- * Keep it as a plain integer constant (no UL suffix) so that it can be used
- * directly both in C code and in assembly code */
+/* Mask to extract the local hart id inside the cluster from the mhartid/shartid CSR value.
+ * Keep it <= 0x7FF (2047): the actual local hart id of the CPU is never that large, and the mask
+ * is used with the RISC-V `andi` instruction in the SMP startup assembly, which only accepts a
+ * 12-bit signed immediate (max +2047); a larger value would fail to assemble. It can be overridden
+ * via -DCFG_SOC_LOCAL_HARTID_MASK=<value> when needed (the #ifndef below keeps that override).
+ * Keep it a plain integer constant (no UL suffix) so that it can be used directly both in C code
+ * and in assembly code (eg. `andi reg, reg, CFG_SOC_LOCAL_HARTID_MASK`). */
 #ifndef CFG_SOC_LOCAL_HARTID_MASK
-#define CFG_SOC_LOCAL_HARTID_MASK      ((1 << CFG_SOC_CLUSTERID_OFS) - 1)
+#define CFG_SOC_LOCAL_HARTID_MASK      (((1 << CFG_SOC_CLUSTERID_OFS) - 1) & 0x7FF)
 #endif
 
 #ifdef __cplusplus

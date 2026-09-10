@@ -176,12 +176,17 @@ inside the cluster, and ``mhartid[31:8]`` is the cluster id.
 A derived mask macro is also provided to extract the local hart id field from a full
 ``mhartid`` value, which can be used both in C code and in assembly code:
 
-* ``CFG_SOC_LOCAL_HARTID_MASK``: ``((1 << CFG_SOC_CLUSTERID_OFS) - 1)``
+* ``CFG_SOC_LOCAL_HARTID_MASK``: ``(((1 << CFG_SOC_CLUSTERID_OFS) - 1) & 0x7FF)``
   (a plain integer constant without any C type suffix, so that it can be used
   directly both in C code and in assembly code, eg. ``andi reg, reg, CFG_SOC_LOCAL_HARTID_MASK``)
   to get the local hart id you can do ``mhartid & CFG_SOC_LOCAL_HARTID_MASK`` (or call the NMSIS
   API ``__get_local_hart_id()`` which does this internally), to get the cluster id you can do
   ``mhartid >> CFG_SOC_CLUSTERID_OFS`` (or call ``__get_cluster_id()``)
+  This mask is clamped to ``0x7FF`` (``2047``): the mask is used with the RISC-V ``andi``
+  instruction in the SMP startup assembly, which only accepts a 12-bit signed immediate
+  (max ``+2047``), and the actual local hart id of the CPU is never that large, so a larger
+  value would fail to assemble. It can be overridden via ``-DCFG_SOC_LOCAL_HARTID_MASK=<value>``
+  when the default is not suitable (guarded by ``#ifndef``).
 
 ``socfeature.h`` is provided by the SoC vendor together with its SoC support: the evalsoc one is
 created by Nuclei (see the file header comment), and when you integrate your own SoC into Nuclei

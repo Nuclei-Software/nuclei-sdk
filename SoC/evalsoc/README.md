@@ -76,6 +76,10 @@ its header comments when you create your own SoC, especially:
   - Currently defines `CFG_SOC_CLUSTERID_OFS` which tells the mhartid CSR layout:
     `mhartid[CFG_SOC_CLUSTERID_OFS-1:0]` is the local hart id inside the cluster,
     `mhartid[x:CFG_SOC_CLUSTERID_OFS]` is the cluster id (default `8`)
+  - Also defines `CFG_SOC_LOCAL_HARTID_MASK` `(((1 << CFG_SOC_CLUSTERID_OFS) - 1) & 0x7FF)`
+    to extract the local hart id: clamped to `0x7FF` (2047) so it always fits the RISC-V
+    `andi` instruction used in the SMP startup assembly, and can be overridden via
+    `-DCFG_SOC_LOCAL_HARTID_MASK=<value>` if needed
   - Used by `evalsoc.h`, NMSIS `core_feature_base.h`, and the GCC/IAR startup and
     FreeRTOS/ThreadX SMP assembly files to get the local hart id in current cluster
   - Provided by the SoC vendor together with the SoC support (the evalsoc one is created

@@ -85,11 +85,15 @@ extern "C" {
 #endif
 
 // NOTE: Derived macros from CFG_SOC_CLUSTERID_OFS
-// Mask to get the local hart id inside current cluster
-// NOTE: Keep it as a plain integer constant (no UL suffix) so that it can be
-// used directly both in C code and in assembly code (eg. `andi reg, reg, CFG_SOC_LOCAL_HARTID_MASK`)
+// Mask to get the local hart id inside current cluster.
+// Keep it <= 0x7FF (2047): the actual local hart id of the CPU is never that large, and the mask
+// is used with the RISC-V `andi` instruction in the SMP startup assembly, which only accepts a
+// 12-bit signed immediate (max +2047); a larger value would fail to assemble. It can be overridden
+// via -DCFG_SOC_LOCAL_HARTID_MASK=<value> when needed (the #ifndef below keeps that override).
+// Keep it a plain integer constant (no UL suffix) so that it can be used directly both in C code
+// and in assembly code (eg. `andi reg, reg, CFG_SOC_LOCAL_HARTID_MASK`).
 #ifndef CFG_SOC_LOCAL_HARTID_MASK
-#define CFG_SOC_LOCAL_HARTID_MASK      ((1 << CFG_SOC_CLUSTERID_OFS) - 1)
+#define CFG_SOC_LOCAL_HARTID_MASK      (((1 << CFG_SOC_CLUSTERID_OFS) - 1) & 0x7FF)
 #endif
 
 // NOTE: The mhartid/shartid value can be split into the cluster id and the local hart id with
