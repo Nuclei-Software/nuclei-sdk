@@ -72,6 +72,12 @@ SPLITMODE ?=
 # System Clock Frequency
 # eg. 50MHz in pure int value, 50000000
 SYSCLK ?=
+# Options which change the generated objects (compile-time macros) are
+# appended to the build configuration fingerprint (BUILD_CONFIG_VARS in
+# Build/Makefile.rules), so changing them stops the next make with an
+# error until a rebuild. JTAGSN/SPLITMODE only affect the OpenOCD
+# arguments and are not tracked
+EXTRA_BUILD_CONFIG_VARS += SYSCLK HARTID_OFS CODESIZE ECLIC_HWCTX
 
 NUCLEI_SDK_SOC_BOARD := $(NUCLEI_SDK_SOC)/Board/$(BOARD)
 NUCLEI_SDK_SOC_COMMON := $(NUCLEI_SDK_SOC)/Common

@@ -69,11 +69,14 @@ endif
 ## info target pick it up. Variables defined in the application Makefile
 ## (e.g. RTOS, MIDDLEWARE, APPDIRS) are not tracked: editing them
 ## already triggers a full rebuild through the makefile prerequisites.
+## SoC/RTOS/toolchain build.mk files can extend the list with their own
+## options through EXTRA_BUILD_CONFIG_VARS (see SoC/evalsoc/build.mk).
 ## NOTE: spaces in values are recorded as underscores
 BUILD_CONFIG_VARS := TOOLCHAIN SOC BOARD CORE ARCH_EXT DOWNLOAD STDCLIB \
 	NCRTHEAP NCRTIO NOGC BANNER AUTOVEC PFL SIMU SEMIHOST \
 	SIMULATION SMP BOOT_HARTID RISCV_ARCH RISCV_ABI RISCV_TUNE RISCV_CMODEL \
 	STACKSZ HEAPSZ
+BUILD_CONFIG_VARS += $(EXTRA_BUILD_CONFIG_VARS)
 BUILD_CONFIG = $(foreach v,$(BUILD_CONFIG_VARS),$(v)=$(subst $(space),_,$($(v))))
 BUILD_CONFIG_FILE := $(OUTDIR)/.buildconfig
 
