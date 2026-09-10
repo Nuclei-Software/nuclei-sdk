@@ -98,6 +98,11 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * Build System
 
+  - Add the ``O`` variable to build into a dedicated output directory: without ``O`` the final targets are generated in the current directory and the objects are grouped into ``_obj_sdk``/``_obj_app``, with ``O=build`` everything is generated under that directory, which allows several configurations of an application to be built side by side. See :ref:`develop_buildsystem_var_o` and :ref:`develop_buildsystem_build_output`.
+  - Record the effective build configuration into a ``.buildconfig`` fingerprint in the output directory before compiling. When the configuration changed since the last build into the output directory, make now stops with an error listing the changed variables instead of silently linking objects generated with different configurations. See :ref:`develop_buildsystem_build_output`.
+  - Add the ``rebuild`` target (``make clean all`` in one step) to clean and rebuild with the new configuration after a configuration change, it is exempt from the configuration change detection.
+  - Track more options which change the generated objects or targets in the configuration fingerprint: ``NOGC``, ``STACKSZ`` and ``HEAPSZ``, plus a new ``EXTRA_BUILD_CONFIG_VARS`` hook which lets SoC/RTOS/toolchain ``build.mk`` files extend the tracked options (used by evalsoc for ``SYSCLK``/``HARTID_OFS``/``CODESIZE``/``ECLIC_HWCTX``).
+  - Upgrade note: directories built with an older Nuclei SDK have no ``.buildconfig`` fingerprint, so the first ``make`` after upgrading may stop once and ask for a ``make rebuild`` (or ``make clean``); see the upgrade note in :ref:`develop_buildsystem_build_output`.
   - Add the ``PFL`` variable to configure EvalSoC IREGION data-prefetch levels.
   - Update the build system document (and ``SoC/evalsoc/build.mk`` comments) for the clarified
     ``BOOT_HARTID`` (local hart id) / ``HARTID_OFS`` (hart index offset) semantics, see the SoC

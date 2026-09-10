@@ -144,6 +144,8 @@ This **Makefile.rules** file will do the following things:
 * Collect all the sources during compiling
 * Define all the rules used for building, uploading and debugging
 * Print help message for build system
+* Record the build configuration into a fingerprint and stop the build when it is
+  changed, see :ref:`develop_buildsystem_build_output`
 
 
 .. _develop_buildsystem_makefile_files:
@@ -391,6 +393,9 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
      - build application with selected configuration
    * - clean
      - clean application with selected configuration
+   * - rebuild
+     - clean and rebuild application in one step, equivalent to ``make clean all``,
+       see :ref:`develop_buildsystem_build_output`
    * - dasm
      - build and dissemble application with selected configuration
    * - bin
@@ -426,6 +431,93 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
      when do this target, you can pass ``SIMU=xlspike`` to support auto-exit,
      project recompiling is required.
 
+.. _develop_buildsystem_build_output:
+
+Build output directory and configuration fingerprint
+----------------------------------------------------
+
+Build output directory
+~~~~~~~~~~~~~~~~~~~~~~
+
+The build generated objects and targets are stored according to
+:ref:`develop_buildsystem_var_o`. By default (**O** is empty), the final targets
+are generated in the current directory and the objects are grouped into the
+``_obj_sdk`` and ``_obj_app`` directories, so that the application source
+directory is not cluttered with object files:
+
+.. code-block:: text
+
+    application/baremetal/helloworld/
+    |- helloworld.c
+    |- Makefile
+    |- helloworld.elf          <- final target
+    |- _obj_app/               <- objects of the application sources
+    `- _obj_sdk/               <- objects of the Nuclei SDK sources
+
+If **O** is set, all the build generated objects and targets are stored under
+that directory, which also makes it possible to build several configurations
+of the same application at the same time:
+
+.. code-block:: shell
+
+    make O=build-rv32 CORE=n300fd all
+    make O=build-rv64 CORE=nx900fd all
+
+.. note::
+
+   * ``make clean`` only removes the objects and targets of the selected
+     output directory (**O**). Artifacts left in another output directory,
+     or left in the source directory by a build without **O**, need to be
+     cleaned separately, for example ``make O=build clean`` and ``make clean``.
+
+Configuration fingerprint
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Before the objects are compiled, the effective build configuration is recorded
+in the ``.buildconfig`` file inside the output directory
+(``$(OUTDIR)/.buildconfig``). The tracked options are listed in
+``BUILD_CONFIG_VARS`` in **Build/Makefile.rules**, and SoC/RTOS/toolchain
+``build.mk`` files can add their own options through ``EXTRA_BUILD_CONFIG_VARS``.
+
+When the configuration is changed since the last build into the output
+directory, make stops with an error listing the changed variables, instead of
+continuing and silently linking objects generated with different
+configurations:
+
+.. code-block:: text
+
+    Build configuration changed since last build into "."
+      CORE: n300fd -> n900fd
+    *** Build stopped: the objects in "." were generated with an old configuration. ...
+
+To continue, either rebuild with the new configuration using the **rebuild**
+target (``make clean all`` in one step), or keep the old build and use another
+output directory with **O**:
+
+.. code-block:: shell
+
+    # clean and rebuild with the new configuration in one step
+    make CORE=n900fd rebuild
+
+    # or keep the old build and build the new configuration into another directory
+    make O=build-n900fd CORE=n900fd all
+
+.. note::
+
+   * The **rebuild** target is exempt from the change detection, since it
+     removes the old objects first.
+   * ``clean``, ``help``, ``info``, ``showflags``, ``showtoolver`` and the pure
+     OpenOCD server targets are not affected by the change detection.
+   * Targets which consume the generated target, such as ``run_gdb``,
+     ``run_qemu``, ``debug``, ``upload``, ``bin`` and ``dasm``, are still
+     checked, since they may rebuild the target.
+   * **Upgrade note**: directories built with an older Nuclei SDK have no
+     ``.buildconfig`` fingerprint, so the first ``make`` in such a directory may
+     stop once and ask for a ``make rebuild`` (or ``make clean``). If you start
+     building with **O**, the artifacts left by the earlier build in the source
+     directory are not removed automatically, clean them with a plain
+     ``make clean`` when needed.
+
 .. _develop_buildsystem_exposed_make_vars:
 
 Makefile variables passed by make command
@@ -449,6 +541,7 @@ which can be passed via make command.
 * :ref:`develop_buildsystem_var_silent`
 * :ref:`develop_buildsystem_var_icount_opt`
 * :ref:`develop_buildsystem_var_pfl`
+* :ref:`develop_buildsystem_var_o`
 
 .. note::
 
@@ -1151,6 +1244,30 @@ disable all prefetch, or provide the desired bitmask. For example:
 
     # Enable L1 D-cache through store prefetch
     make SOC=evalsoc PFL=0x1f
+
+.. _develop_buildsystem_var_o:
+
+O
+~
+
+**O** is used to set the output directory of the build generated objects and
+targets, it is empty by default.
+
+If **O** is empty, the final targets are generated in the current directory
+and the objects are grouped into the ``_obj_sdk`` and ``_obj_app`` directories.
+If **O** is set, for example ``O=build``, all the build generated objects and
+targets are stored under that directory.
+
+.. code-block:: shell
+
+    # build objects and targets into the build/ directory
+    make O=build all
+
+    # clean only the artifacts of the build/ directory
+    make O=build clean
+
+See :ref:`develop_buildsystem_build_output` for the generated directory layout
+and the build configuration fingerprint.
 
 .. _develop_buildsystem_app_make_vars:
 
