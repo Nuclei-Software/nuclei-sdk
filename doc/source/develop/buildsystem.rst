@@ -524,7 +524,9 @@ output directory with **O**:
    * After the application is generated, the **all** target prints the commands
      which can be run next (``upload``, ``debug``, ``run_qemu``, ``run_xlmodel``,
      ``size``, ``help``) and echoes the make variables passed on the command line,
-     so the suggested commands keep the same configuration. It also prints the
+     so the suggested commands keep the same configuration. ``run_qemu`` and
+     ``run_xlmodel`` are only listed for ``SOC=evalsoc``, since they only support
+     it for now. It also prints the
      SDK/NMSIS versions and, when the SDK is a git checkout, the git version of
      the SDK
      (e.g. ``0.9.0-37-g20e23519-dirty (hqfang/buildtodir)``).

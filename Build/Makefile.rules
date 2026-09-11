@@ -241,6 +241,21 @@ HINT_MAKE = $(strip make $(MAKEOVERRIDES))
 ## commands which can be run next. A define is used because a variable
 ## value containing newlines expands into several recipe lines. Like the
 ## other compiling messages it is suppressed by SILENT=1
+## NOTE: make conditionals cannot be used inside a define, the value is
+## taken literally, so the condition is placed here and only the lines are
+## pulled into the define below
+
+## run_qemu/run_xlmodel only support SOC=evalsoc for now
+ifeq ($(SOC),evalsoc)
+define HINT_SIM
+@$(ECHO) "  $(HINT_MAKE) run_qemu     - run the application on QEMU (SOC=evalsoc only)"
+@$(ECHO) "  $(HINT_MAKE) run_xlmodel  - run the application on Nuclei Near Cycle Model (SOC=evalsoc only)"
+endef
+else
+define HINT_SIM
+endef
+endif
+
 ifeq ($(SILENT),1)
 define TRACE_HINT
 @:
@@ -251,8 +266,7 @@ define TRACE_HINT
 @$(ECHO) "  Nuclei SDK $(NUCLEI_SDK_VERSION)$(if $(NUCLEI_SDK_GIT_DESCRIBE), (git $(NUCLEI_SDK_GIT_DESCRIBE)),), NMSIS $(NMSIS_VERSION)"
 @$(ECHO) "  $(HINT_MAKE) upload       - download and run the application on the board (OpenOCD + GDB)"
 @$(ECHO) "  $(HINT_MAKE) debug        - debug the application on the board (OpenOCD + GDB)"
-@$(ECHO) "  $(HINT_MAKE) run_qemu     - run the application on QEMU (SOC=evalsoc only)"
-@$(ECHO) "  $(HINT_MAKE) run_xlmodel  - run the application on Nuclei Near Cycle Model (SOC=evalsoc only)"
+$(HINT_SIM)
 @$(ECHO) "  $(HINT_MAKE) size         - show the program size"
 @$(ECHO) "  $(HINT_MAKE) help         - show all the supported targets"
 endef
