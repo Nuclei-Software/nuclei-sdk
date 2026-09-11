@@ -89,9 +89,11 @@ BUILD_CONFIG_FILE := $(OUTDIR)/.buildconfig
 ## GNU Make < 4.0 (needs the file function).
 ifneq ($(MAKECMDGOALS),)
 ## Goals exempted from the detection: help/info style informational
-## goals, clean/rebuild (they remove the old objects anyway) and the
-## pure OpenOCD servers which need no build artifact
-CONFIG_CHECK_GOALS := $(filter-out clean rebuild help info showflags showtoolver run_openocd run_xlspike_openocd,$(MAKECMDGOALS))
+## goals (including showtoolver and version, so a version can be reported
+## even when the build configuration changed), clean/rebuild (they remove
+## the old objects anyway) and the pure OpenOCD servers which need no
+## build artifact
+CONFIG_CHECK_GOALS := $(filter-out clean rebuild help info showflags showtoolver version run_openocd run_xlspike_openocd,$(MAKECMDGOALS))
 else
 CONFIG_CHECK_GOALS := all
 endif
@@ -180,7 +182,7 @@ endif
 ## prerequisite of the objects, the final target and (when defined)
 ## the fingerprint file, so they are remade after clean finishes
 ifneq ($(filter clean rebuild,$(MAKECMDGOALS)),)
-ifneq ($(filter-out clean help info showflags showtoolver,$(MAKECMDGOALS)),)
+ifneq ($(filter-out clean help info showflags showtoolver version,$(MAKECMDGOALS)),)
 $(ALL_OBJS) $(TARGET_ELF): clean
 ifeq ($(BUILD_CONFIG_NEED_WRITE),1)
 $(BUILD_CONFIG_FILE): clean
@@ -230,8 +232,34 @@ DIR_GUARD = @$(MKD) $(@D)
 ## chosen as the default goal
 .DEFAULT_GOAL := all
 
+## Prefix of the commands in the build hint. It echoes back the make
+## variables passed on the command line (MAKEOVERRIDES) so that the
+## suggested commands use the very same build configuration
+HINT_MAKE = $(strip make $(MAKEOVERRIDES))
+
+## Message printed after the application is generated, it shows the
+## commands which can be run next. A define is used because a variable
+## value containing newlines expands into several recipe lines. Like the
+## other compiling messages it is suppressed by SILENT=1
+ifeq ($(SILENT),1)
+define TRACE_HINT
+@:
+endef
+else
+define TRACE_HINT
+@$(ECHO) "Build complete: $(TARGET_ELF)"
+@$(ECHO) "  $(HINT_MAKE) upload       - download and run the application on the board (OpenOCD + GDB)"
+@$(ECHO) "  $(HINT_MAKE) debug        - debug the application on the board (OpenOCD + GDB)"
+@$(ECHO) "  $(HINT_MAKE) run_qemu     - run the application on QEMU (SOC=evalsoc only)"
+@$(ECHO) "  $(HINT_MAKE) run_xlmodel  - run the application on Nuclei Near Cycle Model (SOC=evalsoc only)"
+@$(ECHO) "  $(HINT_MAKE) size         - show the program size"
+@$(ECHO) "  $(HINT_MAKE) help         - show all the supported targets"
+endef
+endif
+
 # Default goal, placed before dependency includes
 all: info $(TARGET_ELF)
+	$(TRACE_HINT)
 
 ## rebuild: "make clean all" in one step, exempt from the build
 ## configuration change detection, so it can be used to rebuild after
@@ -244,10 +272,10 @@ ifneq ($(MAKECMDGOALS),clean)
 -include $(ALL_DEPS)
 endif
 
-.PHONY: all info showflags showtoolver help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike run_xlmodel run_qemu_debug run_xlspike_rbb run_xlspike_openocd clean debug rebuild
+.PHONY: all info showflags showtoolver version help bin size dasm upload run_openocd run_gdb run_qemu run_xlspike run_xlmodel run_qemu_debug run_xlspike_rbb run_xlspike_openocd clean debug rebuild
 
 info:
-	@$(ECHO) Current Configuration: $(BUILD_CONFIG)
+	@$(ECHO) Current Configuration: $(BUILD_CONFIG) OUTDIR=$(OUTDIR)
 
 showflags:
 	@$(ECHO) TARGET: $(TARGET)
@@ -265,13 +293,48 @@ showflags:
 	@$(ECHO) CXX: $(CXX)
 	@$(ECHO) GDB: $(GDB)
 
+## Nuclei SDK and NMSIS versions, read from npk.yml (the package metadata
+## also used by Nuclei Studio) and the NMSIS_VERSION file. $(file ...) is
+## used to keep it independent of the host shell, it requires GNU Make
+## >= 4.0 like the configuration fingerprint, otherwise unknown is shown
+ifeq ($(wildcard $(NUCLEI_SDK_ROOT)/npk.yml),)
+NUCLEI_SDK_VERSION := unknown
+else ifneq ($(filter 4.% 5.%,$(MAKE_VERSION)),)
+## The version line of npk.yml is "version: <value>", rewrite it into a
+## single word so the value can be extracted with filter/patsubst
+NUCLEI_SDK_VERSION := $(strip $(patsubst version-%,%,$(filter version-%,$(subst version:$(space),version-,$(file <$(NUCLEI_SDK_ROOT)/npk.yml)))))
+else
+NUCLEI_SDK_VERSION := unknown
+endif
+ifeq ($(wildcard $(NUCLEI_SDK_ROOT)/NMSIS_VERSION),)
+NMSIS_VERSION := unknown
+else ifneq ($(filter 4.% 5.%,$(MAKE_VERSION)),)
+NMSIS_VERSION := $(strip $(file <$(NUCLEI_SDK_ROOT)/NMSIS_VERSION))
+else
+NMSIS_VERSION := unknown
+endif
+
+## Toolchain/qemu/openocd version commands, shared by showtoolver and
+## version. Keep the output format stable, it is parsed by the nsdk_cli
+## scripts (get_build_toolver in tools/scripts/nsdk_cli/nsdk_builder.py)
+define TRACE_TOOLVER
+@$(ECHO) Show $(CC) version
+@$(CC) -v
+@$(ECHO) Show $(OPENOCD) version
+@$(OPENOCD) -v
+@$(ECHO) Show $(QEMU) version
+-@$(QEMU) --version
+endef
+
 showtoolver:
-	@$(ECHO) Show $(CC) version
-	@$(CC) -v
-	@$(ECHO) Show $(OPENOCD) version
-	@$(OPENOCD) -v
-	@$(ECHO) Show $(QEMU) version
-	-@$(QEMU) --version
+	$(TRACE_TOOLVER)
+
+## version: show the Nuclei SDK/NMSIS versions and the toolchain versions,
+## useful when reporting an issue
+version:
+	@$(ECHO) Show Nuclei SDK version: $(NUCLEI_SDK_VERSION)
+	@$(ECHO) Show NMSIS version: $(NMSIS_VERSION)
+	$(TRACE_TOOLVER)
 
 help:
 	@$(ECHO) "Nuclei N/NX-series RISC-V Embedded Processor Software Development Kit "
@@ -388,10 +451,14 @@ dasm: $(TARGET_ELF)
 ifeq ($(TOOLCHAIN),nuclei_gnu)
 	-$(OBJCOPY) $< -O srec $(APP_TARGET_SREC)
 	-$(OBJCOPY) $< -O verilog $(APP_TARGET_VERILOG)
+	@$(ECHO) "Generated: $(APP_TARGET_DUMP) $(APP_TARGET_DASM) $(APP_TARGET_HEX) $(APP_TARGET_SREC) $(APP_TARGET_VERILOG)"
+else
+	@$(ECHO) "Generated: $(APP_TARGET_DUMP) $(APP_TARGET_DASM) $(APP_TARGET_HEX)"
 endif
 
 bin: $(TARGET_ELF)
 	$(OBJCOPY) $< -O binary $(APP_TARGET_BIN)
+	@$(ECHO) "Generated: $(APP_TARGET_BIN)"
 
 size: $(TARGET_ELF)
 	$(Q)$(SIZE) $<

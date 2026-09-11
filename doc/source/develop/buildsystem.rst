@@ -389,6 +389,8 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
      - display asm/c/cxx/ld flags and other info
    * - showtoolver
      - display toolchain/qemu/openocd version
+   * - version
+     - display the Nuclei SDK/NMSIS versions and the toolchain/qemu/openocd versions
    * - all
      - build application with selected configuration
    * - clean
@@ -506,8 +508,9 @@ output directory with **O**:
 
    * The **rebuild** target is exempt from the change detection, since it
      removes the old objects first.
-   * ``clean``, ``help``, ``info``, ``showflags``, ``showtoolver`` and the pure
-     OpenOCD server targets are not affected by the change detection.
+   * ``clean``, ``help``, ``info``, ``showflags``, ``showtoolver``, ``version``
+     and the pure OpenOCD server targets are not affected by the change
+     detection.
    * Targets which consume the generated target, such as ``run_gdb``,
      ``run_qemu``, ``debug``, ``upload``, ``bin`` and ``dasm``, are still
      checked, since they may rebuild the target.
@@ -517,6 +520,13 @@ output directory with **O**:
      building with **O**, the artifacts left by the earlier build in the source
      directory are not removed automatically, clean them with a plain
      ``make clean`` when needed.
+   * After the application is generated, the **all** target prints the commands
+     which can be run next (``upload``, ``debug``, ``run_qemu``, ``run_xlmodel``,
+     ``size``, ``help``) and echoes the make variables passed on the command line,
+     so the suggested commands keep the same configuration. Like the other
+     compiling messages it is suppressed by :ref:`develop_buildsystem_var_silent`.
+   * The **bin** and **dasm** targets print the files they generate, and the
+     **info** target also reports **OUTDIR**.
 
 .. _develop_buildsystem_exposed_make_vars:
 
