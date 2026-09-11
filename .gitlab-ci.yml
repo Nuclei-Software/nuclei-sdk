@@ -73,7 +73,7 @@ deploy_doc:
     - build_doc
   tags:
     - env::native
-    - host::whss1
+    - host::whss9
 
 ## Job for deploy document to nuclei website
 deploy_website:
@@ -89,7 +89,7 @@ deploy_website:
     - build_doc
   tags:
     - env::native
-    - host::whss1
+    - host::whss9
 
 ## Job template
 .job_template: &job_template_default
@@ -347,7 +347,7 @@ run_xxlcz_evalsoc:
   tags:
     - env::shell
     - net::outside
-    - host::whss1
+    - host::whss9
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
@@ -493,7 +493,7 @@ run_n100_evalsoc_zcc:
   tags:
     - env::shell
     - net::outside
-    - host::whss1
+    - host::whss9
   timeout: 5h
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/application.json
