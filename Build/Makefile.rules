@@ -248,6 +248,7 @@ endef
 else
 define TRACE_HINT
 @$(ECHO) "Build complete: $(TARGET_ELF)"
+@$(ECHO) "  Nuclei SDK $(NUCLEI_SDK_VERSION)$(if $(NUCLEI_SDK_GIT_DESCRIBE), (git $(NUCLEI_SDK_GIT_DESCRIBE)),), NMSIS $(NMSIS_VERSION)"
 @$(ECHO) "  $(HINT_MAKE) upload       - download and run the application on the board (OpenOCD + GDB)"
 @$(ECHO) "  $(HINT_MAKE) debug        - debug the application on the board (OpenOCD + GDB)"
 @$(ECHO) "  $(HINT_MAKE) run_qemu     - run the application on QEMU (SOC=evalsoc only)"
@@ -314,6 +315,14 @@ else
 NMSIS_VERSION := unknown
 endif
 
+## Nuclei SDK git version. These are recursive variables, so git is only
+## spawned when the value is shown, and it stays empty when the SDK is not
+## a git checkout (e.g. an official release tarball) or git is not
+## installed, 2>$(NULL) hides the git error in that case ($(NULL) is
+## /dev/null on Linux and NUL on Windows, see Makefile.misc)
+NUCLEI_SDK_GIT_DESCRIBE = $(strip $(shell git -C $(NUCLEI_SDK_ROOT) describe --tags --always --dirty 2>$(NULL)))
+NUCLEI_SDK_GIT_BRANCH = $(strip $(shell git -C $(NUCLEI_SDK_ROOT) rev-parse --abbrev-ref HEAD 2>$(NULL)))
+
 ## Toolchain/qemu/openocd version commands, shared by showtoolver and
 ## version. Keep the output format stable, it is parsed by the nsdk_cli
 ## scripts (get_build_toolver in tools/scripts/nsdk_cli/nsdk_builder.py)
@@ -329,11 +338,12 @@ endef
 showtoolver:
 	$(TRACE_TOOLVER)
 
-## version: show the Nuclei SDK/NMSIS versions and the toolchain versions,
-## useful when reporting an issue
+## version: show the Nuclei SDK/NMSIS versions, the git version of the
+## SDK checkout and the toolchain versions, useful when reporting an issue
 version:
-	@$(ECHO) Show Nuclei SDK version: $(NUCLEI_SDK_VERSION)
-	@$(ECHO) Show NMSIS version: $(NMSIS_VERSION)
+	@$(ECHO) "Show Nuclei SDK version: $(NUCLEI_SDK_VERSION)"
+	@$(ECHO) "Show Nuclei SDK git version: $(if $(NUCLEI_SDK_GIT_DESCRIBE),$(NUCLEI_SDK_GIT_DESCRIBE) ($(NUCLEI_SDK_GIT_BRANCH)),not a git checkout)"
+	@$(ECHO) "Show NMSIS version: $(NMSIS_VERSION)"
 	$(TRACE_TOOLVER)
 
 help:

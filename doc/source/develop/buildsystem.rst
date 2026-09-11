@@ -390,7 +390,8 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
    * - showtoolver
      - display toolchain/qemu/openocd version
    * - version
-     - display the Nuclei SDK/NMSIS versions and the toolchain/qemu/openocd versions
+     - display the Nuclei SDK/NMSIS versions, the git version of the SDK checkout
+       and the toolchain/qemu/openocd versions
    * - all
      - build application with selected configuration
    * - clean
@@ -523,8 +524,14 @@ output directory with **O**:
    * After the application is generated, the **all** target prints the commands
      which can be run next (``upload``, ``debug``, ``run_qemu``, ``run_xlmodel``,
      ``size``, ``help``) and echoes the make variables passed on the command line,
-     so the suggested commands keep the same configuration. Like the other
-     compiling messages it is suppressed by :ref:`develop_buildsystem_var_silent`.
+     so the suggested commands keep the same configuration. It also prints the
+     SDK/NMSIS versions and, when the SDK is a git checkout, the git version of
+     the SDK
+     (e.g. ``0.9.0-37-g20e23519-dirty (hqfang/buildtodir)``).
+     Like the other compiling messages it is suppressed by
+     :ref:`develop_buildsystem_var_silent`. The ``version`` target prints the same
+     information together with the toolchain versions, which is convenient when
+     reporting an issue.
    * The **bin** and **dasm** targets print the files they generate, and the
      **info** target also reports **OUTDIR**.
 
