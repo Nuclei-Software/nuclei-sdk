@@ -373,7 +373,7 @@ __skip_init:
 
     /* do pre-init steps before main */
     /* _premain_init will be called by each cpu
-     * please make sure the implementation of __premain_int
+     * please make sure the implementation of _premain_init
      * considered this
      * it will update mtvec according to eclic present or not
      * mtvec will set to exc_entry
