@@ -430,6 +430,7 @@ Here is a list of the :ref:`table_dev_buildsystem_4`.
    * For ``run_qemu``, only ``SOC=evalsoc`` supported,
      when do this target, you can pass ``SIMU=qemu`` to support auto-exit,
      project recompiling is required.
+   * For ``run_xlmodel``, only ``SOC=evalsoc`` supported.
    * For ``run_xlspike``, only ``SOC=evalsoc`` supported,
      when do this target, you can pass ``SIMU=xlspike`` to support auto-exit,
      project recompiling is required.
