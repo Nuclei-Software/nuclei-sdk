@@ -26,10 +26,14 @@ APP_OBJ_OUTDIR := $(OUTDIR)/_obj_app
 ## Normalize a local object path so the object always lands inside
 ## APP_OBJ_OUTDIR, even for sources referenced outside the application
 ## directory via ../ (e.g. ../lib/foo.c) or by absolute paths (e.g.
-## C:/lib/foo.c, ':' is invalid in Windows filenames)
+## C:/lib/foo.c, ':' is invalid in Windows filenames).
 ## NOTE: __up__ mirrors the ../ of out-of-app sources, it is a reserved
-## directory name inside APP_OBJ_OUTDIR
-SANITIZED_OBJ = $(subst :,_,$(subst ../,__up__/,$(1)))
+## directory name inside APP_OBJ_OUTDIR. The ': -> _' substitution must
+## only touch the source-relative part of the path, never the OUTDIR
+## prefix, which may itself carry a drive letter (e.g. O=C:/out uses an
+## absolute Windows output directory), otherwise the object would be
+## written into a wrong C_/ tree instead of the requested OUTDIR.
+SANITIZED_OBJ = $(APP_OBJ_OUTDIR)/$(subst :,_,$(subst ../,__up__/,$(subst $(APP_OBJ_OUTDIR)/,,$(1))))
 
 LOCAL_ASM_OBJS := $(addprefix $(APP_OBJ_OUTDIR)/,$(filter-out $(NUCLEI_SDK_ROOT)%,$(ALL_ASM_OBJS)))
 LOCAL_C_OBJS := $(addprefix $(APP_OBJ_OUTDIR)/,$(filter-out $(NUCLEI_SDK_ROOT)%,$(ALL_C_OBJS)))
