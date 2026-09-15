@@ -562,6 +562,7 @@ which can be passed via make command.
 * :ref:`develop_buildsystem_var_icount_opt`
 * :ref:`develop_buildsystem_var_pfl`
 * :ref:`develop_buildsystem_var_o`
+* :ref:`develop_buildsystem_var_reuse`
 
 .. note::
 
@@ -1288,6 +1289,36 @@ targets are stored under that directory.
 
 See :ref:`develop_buildsystem_build_output` for the generated directory layout
 and the build configuration fingerprint.
+
+
+.. _develop_buildsystem_var_reuse:
+
+REUSE
+~~~~~
+
+**REUSE** recalls the saved build configuration of the output directory, it is
+empty (disabled) by default.
+
+Before compiling, the effective build configuration is saved in the
+``.buildconfig`` fingerprint of the output directory (see
+:ref:`develop_buildsystem_build_output`). With ``REUSE=1``, the tracked
+configuration options which are not passed on the command line take their saved
+values, so the commands of a workflow do not need to repeat the variables:
+
+.. code-block:: shell
+
+    # initial build, saves CORE=n300fd DOWNLOAD=flash into build/
+    make O=build CORE=n300fd DOWNLOAD=flash all
+
+    # reuse the saved configuration, no need to repeat CORE/DOWNLOAD
+    make O=build REUSE=1 clean
+    make O=build REUSE=1 all
+    make O=build REUSE=1 upload
+
+Variables passed on the command line always win, and if they differ from the
+saved values the configuration change detection reports and stops as usual.
+Only the tracked options are recalled, application-level variables (such as
+``BENCH_FLAGS`` or ``RTOS``) still need to be passed explicitly.
 
 .. _develop_buildsystem_app_make_vars:
 

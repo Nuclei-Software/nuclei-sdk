@@ -66,6 +66,25 @@ DUP_OBJS = $(foreach obj,$(sort $(ALL_OBJS)),$(if $(filter-out 1,$(words $(filte
 $(error Object path collision detected for: $(DUP_OBJS). "__up__" is a reserved directory name in the output directory for mirroring ../ of the sources outside the application directory, please rename the directory in your application)
 endif
 
+## GNU make escapes the spaces inside a MAKEOVERRIDES value with a
+## backslash (e.g. "BENCH_FLAGS=-O2\ -flto"). That form can only be
+## pasted back into a POSIX shell: on Windows cmd the backslash is not
+## an escape character and "-flto" would be parsed as "-f lto". So each
+## override is quoted instead, and the "\ " escaping is undone, giving
+## the portable form: make "BENCH_FLAGS=-O2 -flto" <target>
+## (three textual substitutions: protect the escaped "\ " spaces, turn
+## the plain separator spaces into quote-space-quote, restore the
+## protected spaces inside the quotes, then wrap everything in quotes)
+## e.g. "CORE=n300 BENCH_FLAGS=-O2\ -flto" becomes:
+##   "CORE=n300" "BENCH_FLAGS=-O2 -flto"
+QUOTED_OVERRIDES = $(if $(strip $(MAKEOVERRIDES)),"$(subst @SPC@, ,$(subst $(space)," ",$(subst \ ,@SPC@,$(MAKEOVERRIDES))))")
+
+## Stop with an error. MAKEOVERRIDES records the variables passed on
+## the make command line, echo them back so the error can suggest a
+## rebuild with exactly the same configuration, see QUOTED_OVERRIDES
+RECOMMENDED_REBUILD := $(strip make $(call QUOTED_OVERRIDES) rebuild)
+
+
 ## Build configuration fingerprint.
 ## BUILD_CONFIG_VARS lists the variables which change the generated
 ## objects or targets. Add any new SDK option defined with "?=" in
@@ -83,6 +102,21 @@ BUILD_CONFIG_VARS := TOOLCHAIN SOC BOARD CORE ARCH_EXT DOWNLOAD STDCLIB \
 BUILD_CONFIG_VARS += $(EXTRA_BUILD_CONFIG_VARS)
 BUILD_CONFIG = $(foreach v,$(BUILD_CONFIG_VARS),$(v)=$(subst $(space),_,$($(v))))
 BUILD_CONFIG_FILE := $(OUTDIR)/.buildconfig
+
+## Saved build configuration (the fingerprint content), read for the
+## change detection below. The REUSE recall itself happens in
+## Makefile.base, before the SoC build.mk files derive RISCV_ARCH and
+## friends from CORE
+ifneq ($(filter 4.% 5.%,$(MAKE_VERSION)),)
+SAVED_BUILD_CONFIG := $(strip $(file <$(BUILD_CONFIG_FILE)))
+
+## Saved value of one variable from the fingerprint, and the current
+## value normalized the same way (spaces -> underscores), so both sides
+## are always compared in the same form
+SAVED_VALUE = $(subst $(1)=,,$(filter $(1)=%,$(SAVED_BUILD_CONFIG)))
+CURRENT_VALUE = $(subst $(space),_,$($(1)))
+
+endif
 
 ## Configuration change detection.
 ## When the saved fingerprint differs from the current configuration,
@@ -106,13 +140,6 @@ CONFIG_CHECK_GOALS :=
 endif
 
 ifneq ($(filter 4.% 5.%,$(MAKE_VERSION)),)
-SAVED_BUILD_CONFIG := $(strip $(file <$(BUILD_CONFIG_FILE)))
-
-## Saved value of one variable from the fingerprint, and the current
-## value normalized the same way (spaces -> underscores), so both sides
-## are always compared in the same form
-SAVED_VALUE = $(subst $(1)=,,$(filter $(1)=%,$(SAVED_BUILD_CONFIG)))
-CURRENT_VALUE = $(subst $(space),_,$($(1)))
 
 ifneq ($(CONFIG_CHECK_GOALS),)
 ifneq ($(SAVED_BUILD_CONFIG),)
@@ -127,10 +154,6 @@ CONFIG_CHANGED_VARS := $(foreach v,$(BUILD_CONFIG_VARS),$(if $(filter-out $(call
 ## line), otherwise make reports "unterminated call to function 'warning'"
 $(warning Build configuration changed since last build into "$(OUTDIR)")
 $(foreach v,$(CONFIG_CHANGED_VARS),$(warning   $(v): $(if $(call SAVED_VALUE,$(v)),$(call SAVED_VALUE,$(v)),(empty)) -> $(if $(call CURRENT_VALUE,$(v)),$(call CURRENT_VALUE,$(v)),(empty))))
-## Stop with an error. MAKEOVERRIDES records the variables passed on
-## the make command line, echo them back so the error can suggest a
-## rebuild with exactly the same configuration
-RECOMMENDED_REBUILD := $(strip make $(MAKEOVERRIDES) rebuild)
 $(error Build stopped: the objects in "$(OUTDIR)" were generated with an old configuration. Please run "$(RECOMMENDED_REBUILD)" to clean and rebuild with the new configuration in one step, or use another "O=" output directory)
 endif
 endif
@@ -173,7 +196,7 @@ $(ALL_OBJS): $(BUILD_CONFIG_FILE)
 ifeq ($(SAVED_BUILD_CONFIG),)
 ifneq ($(CONFIG_CHECK_GOALS),)
 ifneq ($(wildcard $(ALL_OBJS)),)
-$(error No valid ".buildconfig" fingerprint found in "$(OUTDIR)" but build objects already exist there, their build configuration is unknown (likely left by an interrupted build). Please run "$(strip make $(MAKEOVERRIDES) rebuild)" to clean and rebuild them, or "$(strip make $(MAKEOVERRIDES) clean)" to remove them)
+$(error No valid ".buildconfig" fingerprint found in "$(OUTDIR)" but build objects already exist there, their build configuration is unknown (likely left by an interrupted build). Please run "$(strip make $(call QUOTED_OVERRIDES) rebuild)" to clean and rebuild them, or "$(strip make $(call QUOTED_OVERRIDES) clean)" to remove them)
 endif
 endif
 endif
@@ -238,8 +261,17 @@ DIR_GUARD = @$(MKD) $(@D)
 
 ## Prefix of the commands in the build hint. It echoes back the make
 ## variables passed on the command line (MAKEOVERRIDES) so that the
-## suggested commands use the very same build configuration
-HINT_MAKE = $(strip make $(MAKEOVERRIDES))
+## suggested commands use the very same build configuration. GNU make
+## escapes the spaces inside a MAKEOVERRIDES value with a backslash
+## (e.g. "BENCH_FLAGS=-O2\ -flto"), and that form only parses again in
+## a POSIX shell: Windows cmd would feed "-flto" to make as "-f lto".
+## Since no quoting survives all the shells which can run the recipes,
+## overrides containing spaces are omitted from the hint, while the
+## space-free overrides are echoed as-is (protect the escaped "\ "
+## spaces with a placeholder, drop every override which still contains
+## the placeholder, then restore the spaces of the kept overrides)
+HINT_OVERRIDES = $(subst @SPC@, ,$(foreach w,$(subst \ ,@SPC@,$(MAKEOVERRIDES)),$(if $(findstring @SPC@,$(w)),,$(w))))
+HINT_MAKE = $(strip make $(HINT_OVERRIDES))
 
 ## Message printed after the application is generated, it shows the
 ## commands which can be run next. A define is used because a variable
@@ -375,6 +407,7 @@ help:
 	@$(ECHO) "ARCH_EXT=              Extra ISA extensions, evalsoc only, such as _zba_zbb_zbc_zbs, requires gcc 13 or later"
 	@$(ECHO) "DOWNLOAD=ilm           Download mode, SoC dependent: ilm/flash/flashxip/sram/ddr"
 	@$(ECHO) "O=build                Output directory, empty means the current directory (objects grouped in _obj_sdk/_obj_app)"
+	@$(ECHO) "REUSE=1                Recall the saved configuration of the output directory, so the variables do not need to be passed again"
 	@$(ECHO) "V=1                    Print the compile options"
 	@$(ECHO) "SILENT=1               Do not print the compile messages"
 	@$(ECHO) ""

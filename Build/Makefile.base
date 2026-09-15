@@ -6,6 +6,37 @@ NUCLEI_SDK_BUILD = $(NUCLEI_SDK_ROOT)/Build
 # Sample content for this Makefile.local or Makefile.global
 # SOC ?= evalsoc
 # DOWNLOAD ?= ilm
+## REUSE=1 recalls the saved build configuration of the output directory
+## (the .buildconfig fingerprint, see Makefile.rules): every configuration
+## option which was not passed on the command line takes its saved value,
+## so "make O=build REUSE=1 clean / all / upload" reuse the configuration
+## of a previous build without re-passing its variables. This must happen
+## before the SoC build.mk files derive RISCV_ARCH/RISCV_ABI from CORE, so
+## the derived options are recomputed from the recalled CORE. Derived
+## options (RISCV_ARCH/RISCV_ABI/RISCV_TUNE/RISCV_CMODEL) and variables
+## passed on the command line are never recalled. Values containing spaces
+## are recalled in their normalized form (spaces recorded as underscores).
+## Needs GNU Make >= 4.0 like the fingerprint; on older make REUSE is
+## silently ignored
+ifeq ($(REUSE),1)
+ifneq ($(filter 4.% 5.%,$(MAKE_VERSION)),)
+SAVED_RECALL_CONFIG := $(strip $(file <$(if $(strip $(O)),$(strip $(O))/.buildconfig,.buildconfig)))
+ifneq ($(strip $(SAVED_RECALL_CONFIG)),)
+define RECALL_VAR
+## skip the derived options, they are recomputed from the recalled CORE
+ifeq ($(filter $(1),RISCV_ARCH RISCV_ABI RISCV_TUNE RISCV_CMODEL),)
+ifneq ($(findstring $(1)=,$(subst \ ,@SPC@,$(MAKEOVERRIDES))),)
+$1 := $($(1))
+else
+$1 := $(subst $(1)=,,$(filter $(1)=%,$(SAVED_RECALL_CONFIG)))
+endif
+endif
+endef
+$(foreach pair,$(SAVED_RECALL_CONFIG),$(eval $(call RECALL_VAR,$(firstword $(subst =, ,$(pair))))))
+endif
+endif
+endif
+
 EXTRA_MKS := $(wildcard Makefile.local $(NUCLEI_SDK_BUILD)/Makefile.global)
 ifneq ("$(strip $(EXTRA_MKS))", "")
 $(info Obtaining addtional make variables from $(realpath $(EXTRA_MKS)))
@@ -40,6 +71,11 @@ O ?=
 ## changed variables instead of silently mixing objects built with
 ## different configurations; rebuild with "make rebuild" or use another
 ## "O=" output directory
+## If REUSE=1, the tracked build configuration options (see BUILD_CONFIG_VARS
+## in Makefile.rules) which are not passed on the command line are recalled
+## from the saved configuration of the output directory, so
+## "make O=build REUSE=1 clean / all / upload" reuse the configuration of a
+## previous build without re-passing its variables
 
 # Variables should be defined in Application Makefile
 ## Available choices:

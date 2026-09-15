@@ -23,6 +23,7 @@ Covers the core behavior of the buildtodir branch, all verified through real mak
  17. Symmetric-difference and non-CORE variable change detection
  18. make -j clean all serialization
  19. Absolute Windows path O= (regression guard)
+ 20. REUSE=1 recall of the saved configuration
 
 Platforms:
   --platform win    : Windows native, invoking make via cmd /c
@@ -468,6 +469,13 @@ include $(NUCLEI_SDK_ROOT)/Build/Makefile.base
         rc, out = pf.make(APP_DIR, ["O=build13", "CORE=n300fd", "all"])
         check("hint contains run_qemu", "matches:run_qemu")
         check("hint contains upload", "matches:upload")
+        # overrides whose value contains spaces cannot be echoed back
+        # safely for every shell (MAKEOVERRIDES escapes their spaces as
+        # "\\ ", which Windows cmd cannot parse), so the hint omits them
+        # while keeping the space-free ones
+        rc, out = pf.make(APP_DIR, ["O=build13", "CORE=n300fd", "BENCH_FLAGS=-O2 -flto", "all"])
+        check("hint omits overrides containing spaces", "BENCH_FLAGS" not in out)
+        check("hint keeps space-free overrides", "matches:make CORE=n300fd")
     tests.append((13, "build hint (SOC=evalsoc)", t13))
 
     # 14. hint suppression with SILENT
@@ -564,6 +572,26 @@ include $(NUCLEI_SDK_ROOT)/Build/Makefile.base
         check("absolute O= SDK objects in OUTDIR/_obj_sdk", "file:%s" % os.path.join(absO, "_obj_sdk", "SoC", "evalsoc", "Common", "Source", "system_evalsoc.c.o"))
         shutil.rmtree(absO, ignore_errors=True)
     tests.append((19, "absolute Windows-path O= (regression guard)", t19))
+
+    # 20. REUSE=1 recall of the saved configuration
+    def t20():
+        O = cleanO("build20")
+        pf.make(APP_DIR, ["O=build20", "CORE=n300fd", "DOWNLOAD=flash", "all"])
+        # without REUSE, dropping the variables is stopped by the change detection
+        rc, out = pf.make(APP_DIR, ["O=build20", "all"])
+        check("no REUSE stopped by change detection", rc != 0 and "Build stopped" in out)
+        # with REUSE=1 the saved configuration is recalled
+        rc, out = pf.make(APP_DIR, ["O=build20", "REUSE=1", "all"])
+        check("REUSE builds without re-passing variables", rc == 0)
+        check("REUSE recalled CORE", "matches: CORE=n300fd")
+        check("REUSE recalled DOWNLOAD", "matches:DOWNLOAD=flash")
+        check("REUSE artifact present", "file:%s" % os.path.join(APP_DIR, "build20", "helloworld.elf"))
+        # an explicit variable which differs from the saved one is still detected
+        rc, out = pf.make(APP_DIR, ["O=build20", "REUSE=1", "CORE=n900fd", "all"])
+        check("explicit change still detected with REUSE", rc != 0 and "Build stopped" in out)
+        rc, out = pf.make(APP_DIR, ["O=build20", "REUSE=1", "CORE=n900fd", "rebuild"])
+        check("REUSE rebuild with new explicit variable", rc == 0)
+    tests.append((20, "REUSE=1 recall of the saved configuration", t20))
 
     for num, name, fn in tests:
         if args.only is not None and num != args.only:
