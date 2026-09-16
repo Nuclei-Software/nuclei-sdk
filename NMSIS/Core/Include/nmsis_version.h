@@ -64,7 +64,8 @@
  * query a NMSIS release update including new features.
  *
  **/
-#define __NMSIS_VERSION_MINOR            (6U)
+// TODO: This is still a development NMSIS version
+#define __NMSIS_VERSION_MINOR            (7U)
 
 /**
  * \brief   Represent the NMSIS patch version
