@@ -60,6 +60,7 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * Application
 
+  - Disable prefetch and CCache short access in ``demo_ecc`` to prevent spurious ECC errors.
   - Update ``helloworld`` (``Cluster/Hart`` display), ``smphello``, ``demo_smpcc`` and the
     ``smp_main()`` of the FreeRTOS/ThreadX ``smpdemo`` to use the new ``__get_local_hart_id()``
     NMSIS API for the boot hart gate (compared against ``BOOT_HARTID``) or the local hart display,

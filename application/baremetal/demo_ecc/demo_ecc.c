@@ -813,6 +813,10 @@ int main(void)
     int32_t res = EXIT_SUCCESS;
     int32_t cc_ecc_support = SMPCC_IsCCachePresent() && SMPCC_IsCCacheSupportECC();
 
+    /* Disable prefetch and cc_short: either may spuriously trigger ECC errors */
+    IINFO_DisablePrefetchOverall();
+    IINFO_DisableCCShort();
+
     if (ECC_IsGlobalSupportECC()) {
         pa_size = *(uint32_t *)__IINFO_MPASIZE_ADDR;
         /* Check PA size read from hardware is equal to the CPU PA size */
