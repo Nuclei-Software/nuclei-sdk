@@ -595,7 +595,7 @@ static int32_t clm_ecc_err_inj_demo()
     test_mem_type = ECC_MEM_TYPE_CCACHE;
 
     SMPCC_EnableCCacheECC();
-    SMPCC_EnableCCacheECCCheck();
+    SMPCC_DisableCCacheECCCheck(); // CCache ECC check should be enabled after CLM initialization
 
     /* ------------- Initialize CLM ------------- */
     uint64_t *clm_base = (uint64_t *)CLM_BASE_ADDR;
@@ -607,6 +607,7 @@ static int32_t clm_ecc_err_inj_demo()
     }
     SMPCC_SetCLMAllWays((uint64_t)clm_base);
     memset(clm_base, 0, 128); // Clear 128 Bytes memory space at the beginning of the CLM.
+    SMPCC_EnableCCacheECCCheck();
 
     /* ------------- Calculate CLM golden ecc code ------------- */
     uint8_t ecc_code_calc = ECC_GenerateECCCodeU64(*clm_base);

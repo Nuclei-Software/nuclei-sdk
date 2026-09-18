@@ -60,6 +60,8 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * Application
 
+  - Disable CCache ECC checking during CLM initialization in ``demo_ecc`` and re-enable it
+    before ECC error-injection tests.
   - Disable prefetch and CCache short access in ``demo_ecc`` to prevent spurious ECC errors.
   - Update ``helloworld`` (``Cluster/Hart`` display), ``smphello``, ``demo_smpcc`` and the
     ``smp_main()`` of the FreeRTOS/ThreadX ``smpdemo`` to use the new ``__get_local_hart_id()``
