@@ -567,6 +567,24 @@ __STATIC_FORCEINLINE void IINFO_DisablePrefetchOverall(void)
 }
 
 /**
+ * \brief   Enable CCache short access
+ * \details Enables the cluster cache short access by setting the cc_short_enable bit in the PFL1DCTRL4 register.
+ */
+__STATIC_FORCEINLINE void IINFO_EnableCCShort(void)
+{
+    IINFO->pfl1dctrl4.b.cc_short_enable = 1;
+}
+
+/**
+ * \brief   Disable CCache short access
+ * \details Disables the cluster cache short access by clearing the cc_short_enable bit in the PFL1DCTRL4 register.
+ */
+__STATIC_FORCEINLINE void IINFO_DisableCCShort(void)
+{
+    IINFO->pfl1dctrl4.b.cc_short_enable = 0;
+}
+
+/**
  * \brief   Check if precise ECC injection is supported
  * \details Checks whether the precise ECC injection feature is supported
  *          by reading the precise_ecc_inject bit from the ECC_INJ_WAY register.

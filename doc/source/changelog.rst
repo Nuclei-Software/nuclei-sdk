@@ -27,6 +27,7 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * NMSIS
 
+  - Add ``IINFO_EnableCCShort()`` and ``IINFO_DisableCCShort()`` APIs in ``core_feature_iinfo.h`` to enable or disable cluster cache short access.
   - Parameterize the mhartid/shartid cluster id bit offset in ``core_feature_base.h`` with ``CFG_SOC_CLUSTERID_OFS`` (default 8): ``__get_cluster_id()/__get_cluster_id_s()`` returns ``mhartid >> CFG_SOC_CLUSTERID_OFS``, ``__get_hart_index()/__get_hart_index_s()`` returns ``(mhartid & CFG_SOC_LOCAL_HARTID_MASK) - __HARTID_OFFSET``, ``__get_hart_id()/__get_hart_id_s()`` still returns the full mhartid/shartid, and add new ``__get_local_hart_id()/__get_local_hart_id_s()`` API returning the local hart id inside the cluster (the value ``BOOT_HARTID`` compares against).
   - Clarify the hart related concept (full hart id / cluster id / local hart id / hart index) in the header comments, and document that the CIDU/SMPCC ``core_id``/``client_id``, the PLIC context ID mapping and the ``SysTimer_GetHartID()``/``PLIC_GetHartID()`` macros are all based on the **hart index**, not the full mhartid.
   - Fix ``ECC_ERR_MSK_Type`` reserved field width in ``core_feature_smpcc.h``: change ``_reserved:29`` to ``_reserved:30`` so the bitfields cover all 32 bits and bit 31 is not left as an undefined padding hole.
