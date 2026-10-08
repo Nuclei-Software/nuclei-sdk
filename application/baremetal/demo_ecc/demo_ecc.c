@@ -68,10 +68,6 @@
 #endif
 /* Convert the way to one-hot mask. */
 #define PRECISE_INJ_MASK (0x1U << PRECISE_INJ_WAY)
-/* The base address of CLM. */
-#ifndef CLM_BASE_ADDR
-#define CLM_BASE_ADDR (0x30000000)
-#endif
 
 uint32_t pa_size; /*!< Physical address size */
 typedef enum {
@@ -592,13 +588,20 @@ static int32_t clm_ecc_err_inj_demo()
         printf("CCache not support ECC, will not run CLM ECC demo.\r\n");
         return EXIT_SUCCESS;
     }
+    size_t ccache_size = (size_t)SMPCC_GetCCacheSetNum() * SMPCC_GetCCacheWayNum() *
+                         SMPCC_GetCCacheLineSize();
+    uint64_t *clm_base = aligned_alloc(ccache_size, ccache_size);
+    if (clm_base == NULL) {
+        printf("[ERROR]: Failed to allocate CLM memory.\r\n");
+        return EXIT_FAILURE;
+    }
+    int32_t result = EXIT_FAILURE;
     test_mem_type = ECC_MEM_TYPE_CCACHE;
 
     SMPCC_EnableCCacheECC();
     SMPCC_DisableCCacheECCCheck(); // CCache ECC check should be enabled after CLM initialization
 
     /* ------------- Initialize CLM ------------- */
-    uint64_t *clm_base = (uint64_t *)CLM_BASE_ADDR;
     SMPCC_DisableCCache();
     MFlushInvalDCache();
     int32_t res = MFlushInvalCCache();
@@ -623,7 +626,7 @@ static int32_t clm_ecc_err_inj_demo()
         printf("ECC single bit error has occured on CLM!\r\n");
     } else {
         printf("[ERROR]: ECC single bit error hasn't occured on CLM!\r\n");
-        return EXIT_FAILURE;
+        goto cleanup;
     }
     /* ---------- end of CLM single bit error test ---------- */
 
@@ -640,24 +643,28 @@ static int32_t clm_ecc_err_inj_demo()
         printf("ECC double bit error has occured on CLM!\r\n");
     } else {
         printf("[ERROR]: ECC double bit error hasn't occured on CLM!\r\n");
-        return EXIT_FAILURE;
+        goto cleanup;
     }
 
-    SMPCC_CCacheErrRestore(test_data);
+    SMPCC_CCacheErrRestore((uint32_t *)clm_base);
     SMPCC_EnableCCacheECCExcp();
-    __LW(test_data);
+    __LW(clm_base);
     __RWMB();
 
     if (load_fault_flag == 2) {
         printf("[ERROR]: ECC double bit error occured again on CLM!\r\n");
-        return EXIT_FAILURE;
+        goto cleanup;
     }
     /* ---------- end of CLM double bit error test ---------- */
 
+    result = EXIT_SUCCESS;
+
+cleanup:
     /* restore CLM to CCache */
     SMPCC_SetCLMNoWay();
+    free(clm_base);
 
-    return EXIT_SUCCESS;
+    return result;
 }
 #endif /* #if defined(__CCM_PRESENT) && (__CCM_PRESENT == 1) */
 

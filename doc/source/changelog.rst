@@ -60,6 +60,8 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
 
 * Application
 
+  - Use ``aligned_alloc()`` with CCache-size alignment for CLM memory in ``demo_ecc``
+    and fix ECC recovery and cleanup.
   - Disable CCache ECC checking during CLM initialization in ``demo_ecc`` and re-enable it
     before ECC error-injection tests.
   - Disable prefetch and CCache short access in ``demo_ecc`` to prevent spurious ECC errors.
