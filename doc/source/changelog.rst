@@ -78,6 +78,9 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
     equals the hart index). Note: the ``smpdemo`` debug ``printf`` still prints the full
     ``__get_hart_id()`` value for identification.
   - Update the FreeRTOS ``demo``/``smpdemo`` license header to the correct MIT license.
+  - Add ``demo_dbltrp`` application to demonstrate the Smrnmi/Smdbltrp M-mode double trap:
+    it triggers a real double trap (a trap taken while ``mstatus.MDT`` is already 1) and
+    recovers through the RNMI handler, see :ref:`design_app_demo_dbltrp`.
 
 * Build System
 

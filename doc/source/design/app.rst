@@ -2560,6 +2560,81 @@ This `demo_pmp application`_ is used to demonstrate how to grant physical memory
     Won't run here if violates L R\W\X permission check!
 
 
+.. _design_app_demo_dbltrp:
+
+demo_dbltrp
+~~~~~~~~~~~
+
+This `demo_dbltrp application`_ is used to demonstrate the M-mode double trap
+handling provided by the **Smrnmi** (resumable non-maskable interrupt) and
+**Smdbltrp** (machine-mode double trap) extensions.
+
+.. note::
+
+    * It needs a Nuclei CPU that really implements the Smrnmi/Smdbltrp extensions,
+      and the application must be built with ``XLCFG_DBLTRP=1`` (already set in the
+      application ``Makefile``) so that ``CFG_HAS_ISA_DBLTRP`` and ``__DBLTRP_PRESENT``
+      are defined.
+    * On a CPU without the extensions the application only prints
+      ``Smdbltrp is not supported in this CPU, will not run this example!`` and exits.
+
+**How it works:**
+
+A double trap happens when a trap is taken while the hart is already inside an
+M-mode trap handler, ie. ``mstatus.MDT`` is already 1. The demo builds the real
+situation instead of pre-setting ``MDT`` by hand:
+
+1. ``main()`` executes an illegal instruction, the first trap is delivered to
+   ``mmode_exception_handler`` and the hardware sets ``mstatus.MDT`` to 1.
+2. ``mmode_exception_handler`` executes a second illegal instruction while
+   ``MDT`` is still 1, so this is an *unexpected trap* and the hart jumps to the
+   RNMI handler installed in ``CSR_MNVEC`` by ``RNMI_Init()``. ``mncause`` holds
+   the cause of the original culprit exception (illegal instruction), **not** the
+   double trap code 16, which belongs to ``mcause`` and is used only when an
+   S-mode double trap is delivered to M-mode.
+3. ``core_rnmi_handler()`` reports the event, skips the faulting instruction and
+   clears ``MDT``, then ``MNRET`` resumes the outer M-mode exception handler.
+4. ``mmode_exception_handler`` skips the first illegal instruction and returns,
+   and ``main()`` resumes normally and checks the counters.
+
+The RNMI handler runs on a dedicated per-hart stack whose top is kept in
+``CSR_MNSCRATCH``, so it does not depend on the (possibly corrupted) stack of the
+interrupted context. Note that this stack is only 2 KB by default, so the
+``printf()`` calls in the demo are only acceptable here; a real RNMI handler
+should avoid buffered console output.
+
+**How to run this application:**
+
+.. code-block:: shell
+
+    # Assume that you can set up the Tools and Nuclei SDK environment
+    # cd to the demo_dbltrp directory
+    cd application/baremetal/demo_dbltrp
+    # Clean the application first
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 XLCFG_DBLTRP=1 clean
+    # Build and upload the application
+    make SOC=evalsoc BOARD=nuclei_fpga_eval DOWNLOAD=ilm CORE=n300 XLCFG_DBLTRP=1 upload
+
+**Expected output as below:**
+
+.. code-block:: console
+
+    Nuclei SDK Build Time: Oct 30 2026, 10:12:34
+    Download Mode: ILM
+    CPU Frequency 999995965 Hz
+    CPU HartID: 0
+
+    Smdbltrp double trap demo
+    before: MDT=0, NMIE=1
+    execute the first illegal instruction in M-mode...
+    [M-mode exc] mcause=0x2 (illegal instruction), mepc=0x80001292, MDT=1
+    [M-mode exc] execute a second illegal instruction while MDT=1, this is a real double trap...
+    [RNMI] double trap caught: mncause=0x2 (interrupt=0, exccode=2), mnepc=0x800011d0, MNPP=3(M), NMIE=0
+    [M-mode exc] resumed after the RNMI handler
+    back in main: exc_count=1, rnmi_count=1, MDT=0, NMIE=1
+    [SUCCESS] Test Smdbltrp double trap passed!
+
+
 .. _design_app_demo_cidu:
 
 demo_cidu
@@ -4057,6 +4132,7 @@ In Nuclei SDK, we provided code and Makefile for this ``threadx smpdemo`` applic
 .. _demo_spmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_spmp
 .. _demo_smpu application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_smpu
 .. _demo_pmp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_pmp
+.. _demo_dbltrp application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_dbltrp
 .. _demo_profiling application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_profiling
 .. _demo_cidu application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cidu
 .. _demo_cache application: https://github.com/Nuclei-Software/nuclei-sdk/tree/master/application/baremetal/demo_cache

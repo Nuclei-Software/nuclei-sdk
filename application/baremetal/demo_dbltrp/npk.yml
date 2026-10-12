@@ -1,0 +1,48 @@
+## Package Base Information
+name: app-nsdk_demo_dbltrp
+owner: nuclei
+version:
+description: Smdbltrp (M-mode Double Trap) Demo
+type: app
+keywords:
+  - baremetal
+  - riscv smrnmi
+  - riscv smdbltrp
+  - double trap
+category: baremetal application
+license:
+homepage:
+
+## Package Dependency
+dependencies:
+  - name: sdk-nuclei_sdk
+    version:
+
+## Package Configurations
+configuration:
+  app_commonflags:
+    # REQUIRE: DBLTRP
+    # WARNING: only enable it when the target CPU really implements the extensions
+    value: -DXLCFG_DBLTRP=1
+    type: text
+    description: Application Compile Flags
+
+## Set Configuration for other packages
+setconfig:
+
+
+## Source Code Management
+codemanage:
+  copyfiles:
+    - path: ["*.c", "*.h"]
+  incdirs:
+    - path: ["./"]
+  libdirs:
+  ldlibs:
+    - libs:
+
+## Build Configuration
+buildconfig:
+  - type: common
+    common_flags: # flags need to be combined together across all packages
+      - flags: ${app_commonflags}
