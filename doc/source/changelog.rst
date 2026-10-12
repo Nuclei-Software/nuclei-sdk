@@ -81,6 +81,7 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
   - Add ``demo_dbltrp`` application to demonstrate the Smrnmi/Smdbltrp M-mode double trap:
     it triggers a real double trap (a trap taken while ``mstatus.MDT`` is already 1) and
     recovers through the RNMI handler, see :ref:`design_app_demo_dbltrp`.
+  - Add ``demo_dbltrp`` to the ``application.json`` and ``fpgaci`` CI configurations.
 
 * Build System
 

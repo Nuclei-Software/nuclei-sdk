@@ -193,6 +193,13 @@
                 "PASS": ["must be defined", "Core 1 has received interrupt from core 0", "[WARN] SMP & CIDU not present"]
             }
         },
+        "application/baremetal/demo_dbltrp": {
+            "build_config" : {},
+            "checks": {
+                "PASS": ["[SUCCESS] Test Smdbltrp double trap passed", "will not run"],
+                "FAIL": ["[FAIL]"]
+            }
+        },
         "application/baremetal/demo_pmp": {
             "build_config" : {},
             "checks": {
