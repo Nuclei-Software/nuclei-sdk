@@ -451,6 +451,47 @@ uint32_t core_exception_handler(unsigned long mcause, unsigned long sp)
 #endif
 }
 
+#if defined(__DBLTRP_PRESENT) && (__DBLTRP_PRESENT == 1)
+/**
+ * \brief     M-Mode Resumable NMI / Double Trap handler entry
+ * \details
+ * This function is called by the RNMI entry (rnmi_entry) when an RNMI
+ * interrupt is taken or when an unexpected (double) trap occurs in M-mode.
+ * \param [in]  mncause   RNMI cause, when bit MXLEN-1 is 1 the cause is an
+ *                        RNMI interrupt, otherwise it is the exception cause
+ *                        code of the double trap
+ * \param [in]  mnepc     PC of the interrupted instruction
+ * \param [in]  mnstatus  mnstatus value at entry
+ * \param [in]  sp        stack pointer
+ * \remarks
+ * - The default (weak) implementation only reports the fault and halts, since
+ *   a double trap means the M-mode trap handler was in a non-reentrant state.
+ *   Applications can override it to implement their own recovery policy;
+ *   returning from this function resumes execution at mnepc via MNRET.
+ * - The handler runs on the dedicated per-hart RNMI stack held in
+ *   CSR_MNSCRATCH, so it MUST NOT modify CSR_MNSCRATCH.
+ */
+__WEAK void core_rnmi_handler(unsigned long mncause, unsigned long mnepc,
+                              unsigned long mnstatus, unsigned long sp);
+void core_rnmi_handler(unsigned long mncause, unsigned long mnepc,
+                       unsigned long mnstatus, unsigned long sp)
+{
+    unsigned long exccode = mncause & MCAUSE_CAUSE;
+    (void)sp;
+    NSDK_DEBUG("%s: mncause=0x%lx (exccode=%lu), mnepc=0x%lx, mnstatus=0x%lx\r\n",
+               (mncause & MCAUSE_INTR) ? "RNMI interrupt" : "Double trap",
+               mncause, exccode, mnepc, mnstatus);
+    NSDK_DEBUG("HARTID  : %u\r\n", (unsigned int)__get_hart_id());
+#if defined(SIMULATION_MODE)
+    // directly exit if in SIMULATION
+    extern void simulation_exit(int status);
+    simulation_exit(1);
+#endif
+    while (1) {
+    }
+}
+#endif /* #if defined(__DBLTRP_PRESENT) && (__DBLTRP_PRESENT == 1) */
+
 /**
  * \brief      M-Mode external interrupt handler common entry for plic interrupt mode
  * \details
@@ -1387,6 +1428,74 @@ static void Trap_Init(void)
 {
 }
 
+#if defined(__DBLTRP_PRESENT) && (__DBLTRP_PRESENT == 1)
+/* Dedicated stack for the resumable NMI / double trap handler, one per hart.
+ * Its top address is kept in CSR_MNSCRATCH so that rnmi_entry can switch to it
+ * without clobbering any general purpose register. */
+#ifndef __RNMI_STACK_SIZE
+#define __RNMI_STACK_SIZE           (2 * 1024)
+#endif
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
+#define __RNMI_STACK_NUM            SMP_CPU_CNT
+#else
+#define __RNMI_STACK_NUM            1
+#endif
+static uint8_t __rnmi_stack[__RNMI_STACK_NUM][__RNMI_STACK_SIZE] __attribute__((aligned(16)));
+
+/**
+ * \brief      Initialize the Smrnmi/Smdbltrp feature for the current hart
+ * \details
+ * - check that the running CPU really implements Smdbltrp, and do nothing when
+ *   it does not, so that a CPU without the extension never gets
+ *   mmisc_ctl.RNMI_DBTR_EN set and never sees a critical-error state
+ * - clear mmisc_ctl.NMI_CAUSE_FFF (bit 9), which the startup code sets to make
+ *   the legacy non-resumable NMI share mtvec. While it is 1, CSR_MNVEC follows
+ *   mtvec and is read-only, so the RNMI entry written below would be ignored
+ * - enable the RNMI and Double Trap extensions via mmisc_ctl.RNMI_DBTR_EN, they
+ *   are disabled by default and behave as not implemented when the switch is 0,
+ *   so this must be done before touching mnscratch/mnepc/mncause/mnstatus or
+ *   mstatus.MDT / sstatus.SDT
+ * - program the dedicated RNMI handler stack pointer into CSR_MNSCRATCH
+ *   (rnmi_entry swaps sp with mnscratch on entry and exit)
+ * - install the resumable NMI/double trap handler into CSR_MNVEC
+ * - clear mstatus.MDT, which resets to 1 and would otherwise block setting
+ *   mstatus.MIE later (see __enable_irq)
+ * - set mnstatus.NMIE, as RNMIs are masked out of reset
+ */
+static void RNMI_Init(void)
+{
+#if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
+    /* Use the local hart id, the same way the startup code picks the per-hart
+     * stack, so that the RNMI stack of each hart is unique in the cluster. */
+    unsigned long idx = __get_local_hart_id();
+    if (idx >= __RNMI_STACK_NUM) {
+        idx = __RNMI_STACK_NUM - 1;
+    }
+#else
+    unsigned long idx = 0;
+#endif
+    extern void rnmi_entry(void);
+
+    /* Only do the real RNMI setup when the running CPU implements the
+     * extension. Otherwise mnscratch/mnepc/mncause/mnstatus are not available
+     * and a double trap would enter the critical-error state instead of being
+     * delivered to the RNMI handler. */
+    if (!IINFO_IsSmdbltrpSupported()) {
+        return;
+    }
+
+    /* Stop the legacy NMI entry from following mtvec, see the notes above. */
+    __RV_CSR_CLEAR(CSR_MMISC_CTL, MMISC_CTL_NMI_CAUSE_FFF);
+    /* Enable the RNMI and Double Trap extensions */
+    __RV_CSR_SET(CSR_MMISC_CTL, MMISC_CTL_RNMI_DBTR_EN);
+
+    __set_MNSCRATCH((rv_csr_t)(uintptr_t)(__rnmi_stack[idx] + __RNMI_STACK_SIZE));
+    __set_nmi_entry((rv_csr_t)rnmi_entry);
+    __clear_MDT();
+    __set_NMIE();
+}
+#endif /* #if defined(__DBLTRP_PRESENT) && (__DBLTRP_PRESENT == 1) */
+
 /**
  * \brief      Get system clock frequency
  * \details    Determines the system clock frequency by checking if performance counters are available.
@@ -1690,6 +1799,27 @@ void _premain_init(void)
         Interrupt_Init();
     }
 
+#endif
+
+#if defined(__DBLTRP_PRESENT) && (__DBLTRP_PRESENT == 1)
+    /* Initialize the Smrnmi/Smdbltrp feature on each hart */
+    RNMI_Init();
+#endif
+
+#if defined(__DBLTRP_PRESENT) && (__DBLTRP_PRESENT == 1) && \
+    defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+    /* Enable Ssdbltrp for S-mode: a trap taken into S-mode while sstatus.SDT
+     * is already 1 is delivered to M-mode as mcause=16 (CAUSE_DOUBLE_TRAP) with
+     * mtval2 set to the original scause value. Note the hardware sets SDT on
+     * trap entry and SRET clears it, software only needs __clear_SDT() when it
+     * wants to make an S-mode handler reentrant.
+     * CFG_HAS_ISA_DBLTRP only tells that the SoC was built with the double trap
+     * support, the S-mode half of it is still checked on the running CPU: writing
+     * menvcfg.DTE is ignored (WARL 0) when Ssdbltrp is not implemented, so skip
+     * the write instead of silently relying on it. */
+    if (IINFO_IsSsdbltrpSupported()) {
+        __set_DTE();
+    }
 #endif
 }
 

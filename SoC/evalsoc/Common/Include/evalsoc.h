@@ -256,6 +256,7 @@ typedef enum EXCn {
     InsPageFault_EXCn        =  12,              /*!<  Instruction page fault */
     LdPageFault_EXCn         =  13,              /*!<  Load page fault */
     StPageFault_EXCn         =  15,              /*!<  Store or AMO page fault */
+    DoubleTrap_EXCn          =  16,              /*!<  Double trap (Smdbltrp/Ssdbltrp) */
     StackOverflow_EXCn       =  24,              /*!<  Stack overflow fault */
     StackUnderflow_EXCn      =  25,              /*!<  Stack underflow fault */
     NMI_EXCn                 =  0xfff,           /*!<  NMI interrupt */
@@ -379,6 +380,16 @@ extern volatile unsigned long CpuIRegionBase;
 #define __SSTC_PRESENT              1
 #else
 #define __SSTC_PRESENT              0
+#endif
+
+// Smrnmi/Smdbltrp (Resumable NMI and M-mode Double Trap) Configuration
+// To enable it, define macro CFG_HAS_ISA_DBLTRP in cpufeature.h or pass XLCFG_DBLTRP=1
+// NOTE: the same CFG_HAS_ISA_DBLTRP also covers Ssdbltrp (S-mode double trap),
+// the S-mode presence is checked separately with __SMODE_PRESENT.
+#if defined(CFG_HAS_ISA_DBLTRP)
+#define __DBLTRP_PRESENT            1
+#else
+#define __DBLTRP_PRESENT            0
 #endif
 
 // CIDU Configuration

@@ -122,6 +122,97 @@
 .endm
 
 /**
+ * \brief  Macro for context save in the RNMI/double trap handler
+ * \details
+ * Switch to the dedicated RNMI stack kept in CSR_MNSCRATCH (so the handler
+ * does not rely on the possibly corrupted stack of the interrupted context)
+ * and then save the caller saved registers.
+ * \remarks
+ * - The handler must NOT modify CSR_MNSCRATCH, otherwise the swap back in
+ *   \ref RESTORE_RNMI_CONTEXT would not restore the interrupted sp.
+ * - The GPR context is saved unconditionally instead of reusing
+ *   \ref SAVE_CONTEXT, which becomes a no-op when the ECLIC hardware auto
+ *   context save is enabled (ECLIC_HW_CTX_AUTO && CFG_HAS_ECLICV2). That
+ *   hardware feature only saves/restores the context on the mtvec path via
+ *   CSR_MTSP/CSR_POPXRET, and an RNMI is taken through CSR_MNVEC and returns
+ *   with MNRET, so the hardware never saves nor restores anything here.
+ */
+.macro SAVE_RNMI_CONTEXT
+    csrrw sp, CSR_MNSCRATCH, sp
+#ifndef __riscv_32e
+    addi sp, sp, -20*REGBYTES
+#else
+    addi sp, sp, -14*REGBYTES
+#endif /* __riscv_32e */
+
+    STORE x1, 0*REGBYTES(sp)
+    STORE x4, 1*REGBYTES(sp)
+    STORE x5, 2*REGBYTES(sp)
+    STORE x6, 3*REGBYTES(sp)
+    STORE x7, 4*REGBYTES(sp)
+    STORE x10, 5*REGBYTES(sp)
+    STORE x11, 6*REGBYTES(sp)
+    STORE x12, 7*REGBYTES(sp)
+    STORE x13, 8*REGBYTES(sp)
+    STORE x14, 9*REGBYTES(sp)
+    STORE x15, 10*REGBYTES(sp)
+#ifndef __riscv_32e
+    STORE x16, 14*REGBYTES(sp)
+    STORE x17, 15*REGBYTES(sp)
+    STORE x28, 16*REGBYTES(sp)
+    STORE x29, 17*REGBYTES(sp)
+    STORE x30, 18*REGBYTES(sp)
+    STORE x31, 19*REGBYTES(sp)
+#endif /* __riscv_32e */
+.endm
+
+/**
+ * \brief  Macro for context restore in the RNMI/double trap handler
+ * \details
+ * Restore the caller saved registers and then swap the interrupted sp back,
+ * leaving the dedicated RNMI stack pointer in CSR_MNSCRATCH again.
+ */
+.macro RESTORE_RNMI_CONTEXT
+    LOAD x1, 0*REGBYTES(sp)
+    LOAD x4, 1*REGBYTES(sp)
+    LOAD x5, 2*REGBYTES(sp)
+    LOAD x6, 3*REGBYTES(sp)
+    LOAD x7, 4*REGBYTES(sp)
+    LOAD x10, 5*REGBYTES(sp)
+    LOAD x11, 6*REGBYTES(sp)
+    LOAD x12, 7*REGBYTES(sp)
+    LOAD x13, 8*REGBYTES(sp)
+    LOAD x14, 9*REGBYTES(sp)
+    LOAD x15, 10*REGBYTES(sp)
+#ifndef __riscv_32e
+    LOAD x16, 14*REGBYTES(sp)
+    LOAD x17, 15*REGBYTES(sp)
+    LOAD x28, 16*REGBYTES(sp)
+    LOAD x29, 17*REGBYTES(sp)
+    LOAD x30, 18*REGBYTES(sp)
+    LOAD x31, 19*REGBYTES(sp)
+
+    /* De-allocate the stack space */
+    addi sp, sp, 20*REGBYTES
+#else
+    /* De-allocate the stack space */
+    addi sp, sp, 14*REGBYTES
+#endif /* __riscv_32e */
+    csrrw sp, CSR_MNSCRATCH, sp
+.endm
+
+/**
+ * \brief  MNRET instruction
+ * \details Return from an RNMI handler: restores the PC from CSR_MNEPC, the
+ * privilege mode from mnstatus and sets mnstatus.NMIE.
+ * \remarks The raw instruction encoding is used because the mnret mnemonic is
+ * not supported by all toolchains.
+ */
+.macro MNRET
+    .word 0x70200073
+.endm
+
+/**
  * \brief  Macro for save necessary CSRs to stack
  * \details
  * This macro store MCAUSE, MEPC, MSUBM to stack.
@@ -260,6 +351,70 @@ irq_entry:
     mret
 #endif
     .size irq_entry, . - irq_entry
+
+#if defined(CFG_HAS_ISA_DBLTRP)
+/**
+ * \brief  Resumable NMI / Double Trap Entry
+ * \details
+ * This function provides the default entry for a resumable NMI (RNMI) and for
+ * an unexpected/double trap in M-mode. The address of this entry is programmed
+ * into CSR_MNVEC by \ref _premain_init when the Smrnmi/Smdbltrp feature is
+ * implemented.
+ * \remarks
+ * - On entry the CPU has saved the interrupted state into mnepc/mncause and
+ *   mnstatus, and has cleared mnstatus.NMIE. The handler must return with the
+ *   MNRET instruction, which restores the PC from mnepc, the privilege mode
+ *   from mnstatus and sets mnstatus.NMIE back to 1.
+ * - A dedicated per-hart RNMI stack is used: its top address is preloaded into
+ *   CSR_MNSCRATCH by RNMI_Init() and sp is swapped with mnscratch on entry and
+ *   exit, so the handler does not rely on the (possibly corrupted) stack of
+ *   the interrupted context. The handler must NOT modify CSR_MNSCRATCH.
+ * - The GPR context is always saved in software, even when the ECLIC hardware
+ *   auto context save is enabled: that hardware feature is tied to the mtvec
+ *   path, which an RNMI taken through CSR_MNVEC does not go through.
+ * - The MNRET encoding (0x70200073) is used instead of the mnret mnemonic
+ *   because mnret is not supported by all toolchains.
+ */
+.section .text.rnmi
+.align 2
+# gnu let .weak override .globl, but llvm will show warning
+# see https://reviews.llvm.org/D90108
+.weak rnmi_entry
+.type rnmi_entry, @function
+rnmi_entry:
+    /* Switch to the dedicated RNMI stack and save the context */
+    SAVE_RNMI_CONTEXT
+
+    /*
+     * Set the RNMI handler function arguments
+     * argument 1: mncause value
+     * argument 2: mnepc value
+     * argument 3: mnstatus value
+     * argument 4: current stack point(SP) value
+     */
+    csrr a0, CSR_MNCAUSE
+    csrr a1, CSR_MNEPC
+    csrr a2, CSR_MNSTATUS
+    mv   a3, sp
+    /*
+     * TODO: Call the RNMI handler function
+     * By default, the function template is provided in
+     * system_Device.c, you can adjust it as you want
+     */
+    call core_rnmi_handler
+
+    /* Restore the context and switch back to the interrupted stack */
+    RESTORE_RNMI_CONTEXT
+
+    /* Return to the interrupted context using MNRET */
+    MNRET
+
+    .size rnmi_entry, . - rnmi_entry
+#endif /* #if defined(CFG_HAS_ISA_DBLTRP) */
+
+/* Restore the default section, the code below belongs to the irq entry as
+ * before the rnmi entry was introduced */
+.section .text.irq
 
 /* Default Handler for Exceptions / Interrupts */
 # gnu let .weak override .globl, but llvm will show warning

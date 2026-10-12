@@ -23,6 +23,9 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
   - Fix EvalSoC UART stop-bit and FIFO watermark configuration to update the intended control-register fields.
   - Reorder ``_premain_init()`` cache initialization in ``system_evalsoc.c``: L2 Cache and SMP/IOCP EN are now initialized before L1 I/D Cache to ensure correct SMP coherency setup sequence.
   - Configure prefetch levels before enabling EvalSoC prefetch in ``system_evalsoc.c``.
+  - Add Smrnmi/Smdbltrp (resumable NMI and M-mode double trap) support to ``evalsoc``, gated by the new ``XLCFG_DBLTRP``/``CFG_HAS_ISA_DBLTRP``/``__DBLTRP_PRESENT`` macros: ``RNMI_Init()`` clears ``mmisc_ctl.NMI_CAUSE_FFF`` so ``CSR_MNVEC`` becomes writable, enables ``mmisc_ctl.RNMI_DBTR_EN``, installs a per-hart RNMI stack into ``CSR_MNSCRATCH`` and the ``rnmi_entry`` handler into ``CSR_MNVEC``, then clears ``mstatus.MDT`` and sets ``mnstatus.NMIE``; ``menvcfg.DTE`` is enabled for Ssdbltrp when the running CPU reports it.
+  - Add the ``rnmi_entry`` (GCC and IAR) RNMI/double trap entry in ``intexc_evalsoc.S``. The GPR context is always saved in software, because the ECLIC hardware auto context save (``ECLIC_HWCTX=1``) only applies to the mtvec path and an RNMI is taken through ``CSR_MNVEC``.
+  - Add ``DoubleTrap_EXCn`` (16) to the ``EXCn`` enum in ``evalsoc.h``.
   - Update correct gd32vw55x SVD file.
 
 * NMSIS

@@ -32,7 +32,7 @@ extern "C" {
 //   "STACK_CHECK", "AMO", "ECC", "MISALIGNED_ACCESS", "SRAM", "DDR", "HPM-v1"
 // ]
 // DISABLED_BY_DEFAULT = [
-//   "CCM", "CIDU", "TEE", "SMPU", "SPMP", "SSTC", "SMODE", "PLIC"
+//   "CCM", "CIDU", "TEE", "SMPU", "SPMP", "SSTC", "SMODE", "PLIC", "DBLTRP"
 // ]
 //
 // The CFG_IREGION_BASE_ADDR is only defined in generated cpufeature.h or if you know the
@@ -198,6 +198,10 @@ extern "C" {
 
 #if defined(XLCFG_SSTC) && XLCFG_SSTC != 0
 #define CFG_HAS_ISA_SSTC
+#endif
+
+#if defined(XLCFG_DBLTRP) && XLCFG_DBLTRP != 0
+#define CFG_HAS_ISA_DBLTRP
 #endif
 
 #if defined(XLCFG_SMODE) && XLCFG_SMODE != 0
