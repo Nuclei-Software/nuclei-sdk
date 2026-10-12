@@ -258,6 +258,48 @@ typedef union {
 } CSR_MCAUSE_Type;
 
 /**
+ * \brief  Union type to access MNSTATUS CSR register (Smrnmi extension).
+ *
+ * Bit fields::
+ *   - MNPP[12:11]  : privilege mode of the interrupted context, same encoding as mstatus.MPP
+ *   - MNPELP[9]    : previous ELP state, only implemented with the Zicfilp extension
+ *   - MNPV[7]      : virtualization mode of the interrupted context, same encoding as mstatus.MPV
+ *   - NMIE[3]      : RNMI global enable, 1 enables RNMIs, reset to 0, software can only set it to 1
+ */
+typedef union {
+    struct {
+        rv_csr_t _reserved0:3;                  /*!< bit: 0..2    Reserved 0 */
+        rv_csr_t nmie:1;                        /*!< bit: 3       RNMI global enable */
+        rv_csr_t _reserved1:3;                  /*!< bit: 4..6    Reserved 0 */
+        rv_csr_t mnpv:1;                        /*!< bit: 7       virtualization mode of interrupted context */
+        rv_csr_t _reserved2:1;                  /*!< bit: 8       Reserved 0 */
+        rv_csr_t mnpelp:1;                      /*!< bit: 9       previous ELP state */
+        rv_csr_t _reserved3:1;                  /*!< bit: 10      Reserved 0 */
+        rv_csr_t mnpp:2;                        /*!< bit: 11..12  privilege mode of interrupted context */
+        rv_csr_t _reserved4:__RISCV_XLEN-13;    /*!< bit: 13..XLEN-1 Reserved 0 */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MNSTATUS_Type;
+
+/**
+ * \brief  Union type to access MNCAUSE CSR register (Smrnmi extension).
+ *
+ * When bit MXLEN-1 (interrupt) is 1 the cause is an RNMI interrupt, and the
+ * low bits encode the RNMI cause (0xFFF when MMISC_CTL[9] is set). Otherwise it
+ * is the cause code of the *original* exception that precipitated the double
+ * trap (eg. 2 for illegal instruction), NOT the double-trap code 16 which
+ * belongs to mcause (used when an S-mode double trap is delivered to M-mode).
+ */
+typedef union {
+    struct {
+        rv_csr_t exccode:12;                    /*!< bit: 0..11   exception or RNMI cause code */
+        rv_csr_t _reserved0:__RISCV_XLEN-13;    /*!< bit: 12..XLEN-2 Reserved */
+        rv_csr_t interrupt:1;                   /*!< bit: XLEN-1  trap type, 1 means interrupt */
+    } b;                                        /*!< Structure used for bit  access */
+    rv_csr_t d;                                 /*!< Type      used for csr data access */
+} CSR_MNCAUSE_Type;
+
+/**
  * \brief  Union type to access MCOUNTINHIBIT CSR register.
  */
 typedef union {
@@ -328,7 +370,9 @@ typedef union {
         rv_csr_t _reserved5:2;                  /*!< bit: 18..19 Reserved */
         rv_csr_t lsu_allow_diff_en:1;           /*!< bit: 20    LSU access allows the next operation can outstanding transactions when the current transaction has not been completed */
         rv_csr_t hw_auto_context:1;             /*!< bit: 21    Hardware auto context saving and restoring enable */
-        rv_csr_t _reserved6:__RISCV_XLEN-22;    /*!< bit: 22..XLEN-1 Reserved */
+        rv_csr_t _reserved6:3;                  /*!< bit: 22..24 Reserved */
+        rv_csr_t rnmi_dbtr_en:1;                /*!< bit: 25    RNMI and Double Trap Extension enable */
+        rv_csr_t _reserved7:__RISCV_XLEN-26;    /*!< bit: 26..XLEN-1 Reserved */
     } b;                                        /*!< Structure used for bit  access */
     rv_csr_t d;                                 /*!< Type      used for csr data access */
 } CSR_MMISCCTRL_Type;
@@ -981,10 +1025,230 @@ __STATIC_INLINE void __s_switch_mode(uint8_t mode, uintptr_t stack, void(*entry_
 }
 
 /**
+ * \brief   Get the Smdbltrp M-mode-disable-trap (MDT) bit
+ * \details Reads mstatus.MDT on RV64 or mstatush.MDT on RV32.
+ * \return  1 when MDT is set, 0 otherwise
+ * \remarks Available only when the Smdbltrp extension is implemented, on
+ *          other CPUs the bit is WARL 0 and this function returns 0.
+ */
+__STATIC_FORCEINLINE rv_csr_t __get_MDT(void)
+{
+#if defined(__RISCV_XLEN) && (__RISCV_XLEN == 32)
+    return (__RV_CSR_READ(CSR_MSTATUSH) & MSTATUSH_MDT) ? 1 : 0;
+#else
+    return (__RV_CSR_READ(CSR_MSTATUS) & MSTATUS_MDT) ? 1 : 0;
+#endif
+}
+
+/**
+ * \brief   Set the Smdbltrp MDT bit
+ * \details Sets mstatus.MDT (mstatush.MDT on RV32) to 1. Per the Smdbltrp
+ *          extension this also clears mstatus.MIE.
+ */
+__STATIC_FORCEINLINE void __set_MDT(void)
+{
+#if defined(__RISCV_XLEN) && (__RISCV_XLEN == 32)
+    __RV_CSR_SET(CSR_MSTATUSH, MSTATUSH_MDT);
+#else
+    __RV_CSR_SET(CSR_MSTATUS, MSTATUS_MDT);
+#endif
+}
+
+/**
+ * \brief   Clear the Smdbltrp MDT bit
+ * \details Clears mstatus.MDT (mstatush.MDT on RV32) to 0. Required before
+ *          mstatus.MIE can be set again.
+ */
+__STATIC_FORCEINLINE void __clear_MDT(void)
+{
+#if defined(__RISCV_XLEN) && (__RISCV_XLEN == 32)
+    __RV_CSR_CLEAR(CSR_MSTATUSH, MSTATUSH_MDT);
+#else
+    __RV_CSR_CLEAR(CSR_MSTATUS, MSTATUS_MDT);
+#endif
+}
+
+/**
+ * \brief   Get the Ssdbltrp S-mode-disable-trap (SDT) bit
+ * \details Reads sstatus.SDT, which is the same bit as mstatus.SDT.
+ * \return  1 when SDT is set, 0 otherwise
+ * \remarks Ssdbltrp is enabled by menvcfg.DTE (see \ref __set_DTE), when DTE=0
+ *          sstatus.SDT is read-only 0.
+ */
+__STATIC_FORCEINLINE rv_csr_t __get_SDT(void)
+{
+    return (__RV_CSR_READ(CSR_SSTATUS) & SSTATUS_SDT) ? 1 : 0;
+}
+
+/**
+ * \brief   Set the Ssdbltrp SDT bit
+ * \details Sets sstatus.SDT to 1. Per the Ssdbltrp extension this also clears
+ *          sstatus.SIE, so that a trap during the non-reentrant phase of an
+ *          S-mode trap handler is detected as a double trap.
+ */
+__STATIC_FORCEINLINE void __set_SDT(void)
+{
+    __RV_CSR_SET(CSR_SSTATUS, SSTATUS_SDT);
+}
+
+/**
+ * \brief   Clear the Ssdbltrp SDT bit
+ * \details Clears sstatus.SDT to 0, allowing nested traps in the S-mode trap
+ *          handler (ie. the handler is reentrant). An SRET instruction also
+ *          clears SDT.
+ */
+__STATIC_FORCEINLINE void __clear_SDT(void)
+{
+    __RV_CSR_CLEAR(CSR_SSTATUS, SSTATUS_SDT);
+}
+
+/**
+ * \brief   Get the menvcfg.DTE (Double Trap Enable) bit
+ * \return  1 when Ssdbltrp is enabled for S-mode, 0 otherwise
+ * \remarks Only meaningful in M-mode, DTE controls whether sstatus.SDT is
+ *          writable.
+ */
+__STATIC_FORCEINLINE rv_csr_t __get_DTE(void)
+{
+#if defined(__RISCV_XLEN) && (__RISCV_XLEN == 32)
+    return (__RV_CSR_READ(CSR_MENVCFGH) & MENVCFGH_DTE) ? 1 : 0;
+#else
+    return (__RV_CSR_READ(CSR_MENVCFG) & MENVCFG_DTE) ? 1 : 0;
+#endif
+}
+
+/**
+ * \brief   Set the menvcfg.DTE bit to enable Ssdbltrp
+ * \remarks Must be executed in M-mode. When enabled, a trap taken into S-mode
+ *          with sstatus.SDT already 1 is delivered to M-mode with mcause=16
+ *          (CAUSE_DOUBLE_TRAP) and mtval2 holding the original scause value.
+ */
+__STATIC_FORCEINLINE void __set_DTE(void)
+{
+#if defined(__RISCV_XLEN) && (__RISCV_XLEN == 32)
+    __RV_CSR_SET(CSR_MENVCFGH, MENVCFGH_DTE);
+#else
+    __RV_CSR_SET(CSR_MENVCFG, MENVCFG_DTE);
+#endif
+}
+
+/**
+ * \brief   Clear the menvcfg.DTE bit to disable Ssdbltrp
+ * \remarks Must be executed in M-mode.
+ */
+__STATIC_FORCEINLINE void __clear_DTE(void)
+{
+#if defined(__RISCV_XLEN) && (__RISCV_XLEN == 32)
+    __RV_CSR_CLEAR(CSR_MENVCFGH, MENVCFGH_DTE);
+#else
+    __RV_CSR_CLEAR(CSR_MENVCFG, MENVCFG_DTE);
+#endif
+}
+
+/**
+ * \brief   Read the RNMI scratch register (CSR_MNSCRATCH)
+ * \return  Current value of CSR_MNSCRATCH
+ */
+__STATIC_FORCEINLINE rv_csr_t __get_MNSCRATCH(void)
+{
+    return __RV_CSR_READ(CSR_MNSCRATCH);
+}
+
+/**
+ * \brief   Write the RNMI scratch register (CSR_MNSCRATCH)
+ * \param [in]  val  Value to write
+ */
+__STATIC_FORCEINLINE void __set_MNSCRATCH(rv_csr_t val)
+{
+    __RV_CSR_WRITE(CSR_MNSCRATCH, val);
+}
+
+/**
+ * \brief   Read the RNMI exception PC (CSR_MNEPC)
+ * \return  PC of the instruction interrupted by the RNMI, or the PC of the
+ *          instruction that caused the double trap
+ */
+__STATIC_FORCEINLINE rv_csr_t __get_MNEPC(void)
+{
+    return __RV_CSR_READ(CSR_MNEPC);
+}
+
+/**
+ * \brief   Write the RNMI exception PC (CSR_MNEPC)
+ * \param [in]  val  Value to write
+ */
+__STATIC_FORCEINLINE void __set_MNEPC(rv_csr_t val)
+{
+    __RV_CSR_WRITE(CSR_MNEPC, val);
+}
+
+/**
+ * \brief   Read the RNMI cause (CSR_MNCAUSE)
+ * \return  Current value of CSR_MNCAUSE
+ * \remarks When bit MXLEN-1 is 1 the cause is an RNMI interrupt, otherwise it
+ *          is the cause code of the original exception that precipitated the
+ *          double trap (NOT the double-trap code 16, which belongs to mcause).
+ */
+__STATIC_FORCEINLINE rv_csr_t __get_MNCAUSE(void)
+{
+    return __RV_CSR_READ(CSR_MNCAUSE);
+}
+
+/**
+ * \brief   Write the RNMI cause (CSR_MNCAUSE)
+ * \param [in]  val  Value to write
+ */
+__STATIC_FORCEINLINE void __set_MNCAUSE(rv_csr_t val)
+{
+    __RV_CSR_WRITE(CSR_MNCAUSE, val);
+}
+
+/**
+ * \brief   Read the RNMI status register (CSR_MNSTATUS)
+ * \return  Current value of CSR_MNSTATUS
+ */
+__STATIC_FORCEINLINE rv_csr_t __get_MNSTATUS(void)
+{
+    return __RV_CSR_READ(CSR_MNSTATUS);
+}
+
+/**
+ * \brief   Write the RNMI status register (CSR_MNSTATUS)
+ * \param [in]  val  Value to write
+ */
+__STATIC_FORCEINLINE void __set_MNSTATUS(rv_csr_t val)
+{
+    __RV_CSR_WRITE(CSR_MNSTATUS, val);
+}
+
+/**
+ * \brief   Get the mnstatus.NMIE enable flag
+ * \return  1 if RNMIs are enabled, 0 otherwise
+ */
+__STATIC_FORCEINLINE rv_csr_t __get_NMIE(void)
+{
+    return (__RV_CSR_READ(CSR_MNSTATUS) & MNSTATUS_NMIE) ? 1 : 0;
+}
+
+/**
+ * \brief   Set the mnstatus.NMIE enable flag
+ * \details Enables RNMIs. RNMIs are masked out of reset, so software must set
+ *          NMIE before it can receive an RNMI.
+ * \remarks Clearing NMIE has no effect (NMIE is not writable to 0), so no
+ *          corresponding clear function is provided.
+ */
+__STATIC_FORCEINLINE void __set_NMIE(void)
+{
+    __RV_CSR_SET(CSR_MNSTATUS, MNSTATUS_NMIE);
+}
+
+/**
  * \brief   Enable IRQ Interrupts
  * \details Enables IRQ interrupts by setting the MIE-bit in the MSTATUS Register.
  * \remarks
  *          Can only be executed in Privileged modes.
+ *          mstatus.MDT is cleared by the startup code (see RNMI_Init), so MIE can
+ *          be set here even on a CPU implementing the Smdbltrp extension.
  */
 __STATIC_FORCEINLINE void __enable_irq(void)
 {

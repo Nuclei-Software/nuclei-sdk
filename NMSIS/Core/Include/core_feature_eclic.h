@@ -1838,11 +1838,37 @@ __STATIC_INLINE rv_csr_t __get_nonvec_entry(void)
  * \remarks
  * - This function use to get NMI interrupt handler address from 'CSR_MNVEC'. If CSR_MMISC_CTL[9] = 1 'CSR_MNVEC'
  * - will be equal as mtvec. If CSR_MMISC_CTL[9] = 0 'CSR_MNVEC' will be equal as reset vector.
- * - NMI entry is defined via \ref CSR_MMISC_CTL, writing to \ref CSR_MNVEC will be ignored.
+ * - The NMI entry is shared with mtvec while CSR_MMISC_CTL[9] (NMI_CAUSE_FFF) is 1,
+ *   and in that case writing to \ref CSR_MNVEC is ignored.
+ * - When the RNMI (Smrnmi/Smdbltrp) feature is implemented, clear
+ *   CSR_MMISC_CTL[9] first: CSR_MNVEC then becomes a read-write CSR and this
+ *   function returns the address the RNMI/exception trap handler jumps to.
  */
 __STATIC_FORCEINLINE rv_csr_t __get_nmi_entry(void)
 {
     return __RV_CSR_READ(CSR_MNVEC);
+}
+
+/**
+ * \brief  Set NMI/RNMI interrupt entry to 'CSR_MNVEC'
+ * \details
+ * This function sets the NMI/RNMI interrupt handler address via 'CSR_MNVEC'.
+ * \param [in]  addr  RNMI interrupt handler address
+ * \remarks
+ * - Only effective when the RNMI (Smrnmi/Smdbltrp) feature is implemented,
+ *   on other CPUs writing to \ref CSR_MNVEC is ignored.
+ * - CSR_MMISC_CTL[9] (NMI_CAUSE_FFF) must be cleared by the caller first,
+ *   otherwise CSR_MNVEC keeps following mtvec and the written address is
+ *   ignored. The SoC startup code sets that bit and the RNMI setup is
+ *   responsible for clearing it.
+ * - This allows software to install an independent resumable NMI handler instead
+ *   of sharing the exception entry configured via \ref CSR_MMISC_CTL.
+ * \sa
+ * - \ref __get_nmi_entry
+ */
+__STATIC_FORCEINLINE void __set_nmi_entry(rv_csr_t addr)
+{
+    __RV_CSR_WRITE(CSR_MNVEC, addr);
 }
 
 /* NOTE: SSUBM CSR is introduced in ECLIC v2, without this the S_Mode vector interrupt nesting

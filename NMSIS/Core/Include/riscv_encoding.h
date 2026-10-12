@@ -60,6 +60,8 @@
 #define MSTATUS_MBE         0x0000002000000000
 #define MSTATUS_GVA         0x0000004000000000
 #define MSTATUS_MPV         0x0000008000000000
+#define MSTATUS_SDT         0x0000000001000000
+#define MSTATUS_MDT         0x0000040000000000
 #define MSTATUS64_SD        0x8000000000000000
 
 #define MSTATUS_FS_INITIAL  0x00002000
@@ -74,6 +76,20 @@
 #define MSTATUSH_MBE        0x00000020
 #define MSTATUSH_GVA        0x00000040
 #define MSTATUSH_MPV        0x00000080
+#define MSTATUSH_MDT        0x00000400
+
+/* === Smrnmi (Resumable NMI) mnstatus bit definitions ===
+ * Single bit fields are named after the spec and used directly, multi bit
+ * fields get the _Pos/_Msk/_Width naming used by the other CSR definitions. */
+#define MNSTATUS_NMIE_Pos    (3)
+#define MNSTATUS_NMIE        (1UL << MNSTATUS_NMIE_Pos)
+#define MNSTATUS_MNPV_Pos    (7)
+#define MNSTATUS_MNPV        (1UL << MNSTATUS_MNPV_Pos)
+#define MNSTATUS_MNPELP_Pos  (9)
+#define MNSTATUS_MNPELP      (1UL << MNSTATUS_MNPELP_Pos)
+#define MNSTATUS_MNPP_Pos    (11)
+#define MNSTATUS_MNPP_Width  (2)
+#define MNSTATUS_MNPP_Msk    (3UL << MNSTATUS_MNPP_Pos)
 
 #define SSTATUS_UIE         0x00000001
 #define SSTATUS_SIE         0x00000002
@@ -86,6 +102,7 @@
 #define SSTATUS_XS          0x00018000
 #define SSTATUS_SUM         0x00040000
 #define SSTATUS_MXR         0x00080000
+#define SSTATUS_SDT         0x0000000001000000
 #define SSTATUS32_SD        0x80000000
 #define SSTATUS_UXL         0x0000000300000000
 #define SSTATUS64_SD        0x8000000000000000
@@ -269,6 +286,7 @@
 #define MDCAUSE_MDCAUSE             (0x7)
 
 #define MMISC_CTL_HW_AUTO_CONTEXT   (1<<21)
+#define MMISC_CTL_RNMI_DBTR_EN      (1<<25)
 #define MMISC_CTL_LDSPEC_ENABLE     (1<<12)
 #define MMISC_CTL_SIJUMP_ENABLE     (1<<11)
 #define MMISC_CTL_IMRETURN_ENABLE   (1<<10)
@@ -694,6 +712,11 @@
 #define CSR_MIP 0x344
 #define CSR_MTINST 0x34a
 #define CSR_MTVAL2 0x34b
+/* === RISC-V Smrnmi (Resumable NMI) CSRs === */
+#define CSR_MNSCRATCH 0x740
+#define CSR_MNEPC 0x741
+#define CSR_MNCAUSE 0x742
+#define CSR_MNSTATUS 0x744
 #define CSR_PMPCFG0 0x3a0
 #define CSR_PMPCFG1 0x3a1
 #define CSR_PMPCFG2 0x3a2
@@ -1181,6 +1204,8 @@
 #define CAUSE_FETCH_PAGE_FAULT 0xc
 #define CAUSE_LOAD_PAGE_FAULT 0xd
 #define CAUSE_STORE_PAGE_FAULT 0xf
+/* Double trap exception cause code, defined by the Smdbltrp extension */
+#define CAUSE_DOUBLE_TRAP 0x10
 
 /* Delegatable Exception Code Mask in MCAUSE CSR*/
 #define MISALIGNED_FETCH            (1 << CAUSE_MISALIGNED_FETCH)
@@ -1195,6 +1220,11 @@
 #define FETCH_PAGE_FAULT            (1 << CAUSE_FETCH_PAGE_FAULT)
 #define LOAD_PAGE_FAULT             (1 << CAUSE_LOAD_PAGE_FAULT)
 #define STORE_PAGE_FAULT            (1 << CAUSE_STORE_PAGE_FAULT)
+
+/* Non-delegatable Exception Code Mask in MCAUSE CSR.
+ * The double trap (Smdbltrp/Ssdbltrp) is delivered to M-mode and can never be
+ * delegated, so it must not be grouped with the delegatable mask above. */
+#define DOUBLE_TRAP_FAULT           (1 << CAUSE_DOUBLE_TRAP)
 
 /* Exception Subcode in MDCAUSE CSR */
 #define DCAUSE_FAULT_FETCH_PMP      0x1
