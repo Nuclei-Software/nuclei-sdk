@@ -127,7 +127,14 @@ typedef union {
         __IM uint32_t smcsrind:1;                   /*!< bit: 15 support Smcsrind extension */
         __IM uint32_t sscsrind:1;                   /*!< bit: 16 support Sscsrind extension */
         __IM uint32_t svadu:1;                      /*!< bit: 17 support Svadu extension */
-        uint32_t :14;                               /*!< bit: 18..31 reserved */
+        __IM uint32_t rva23:1;                      /*!< bit: 18 support RVA23 profile */
+        __IM uint32_t zibi:1;                       /*!< bit: 19 support Zibi extension */
+        __IM uint32_t zfinx:1;                      /*!< bit: 20 support Zfinx extension */
+        __IM uint32_t zdinx:1;                      /*!< bit: 21 support Zdinx extension */
+        __IM uint32_t zhinx:1;                      /*!< bit: 22 support Zhinx extension */
+        __IM uint32_t zba_zbb_zbs:1;                /*!< bit: 23 support Zba/Zbb/Zbs extensions */
+        __IM uint32_t zbc:1;                        /*!< bit: 24 support Zbc extension */
+        uint32_t :7;                                /*!< bit: 25..31 reserved */
     } b;                                            /*!< Structure used for bit access */
     uint32_t d;                                     /*!< Type      used for register data access */
 } IINFO_ISA_SUPPORT1_Type;
@@ -438,6 +445,42 @@ __STATIC_FORCEINLINE int32_t IINFO_IsCMOSupported(void)
 __STATIC_FORCEINLINE int32_t IINFO_IsCMOPrefetchSupported(void)
 {
     return IINFO->cmo_info.b.cmo_cfg && IINFO->cmo_info.b.cmo_pft;
+}
+
+/**
+ * \brief   Check if the Smrnmi extension is supported
+ * \details Checks whether the resumable non-maskable interrupt (Smrnmi)
+ *          extension is supported, by reading the smrnmi bit of the
+ *          ISA_SUPPORT0 register.
+ * \return  1 if Smrnmi is supported, 0 otherwise
+ */
+__STATIC_FORCEINLINE int32_t IINFO_IsSmrnmiSupported(void)
+{
+    return IINFO->isa_support0.b.exist && IINFO->isa_support0.b.smrnmi;
+}
+
+/**
+ * \brief   Check if the Smdbltrp extension is supported
+ * \details Checks whether the machine-mode double trap (Smdbltrp)
+ *          extension is supported, by reading the smdbltrp bit of the
+ *          ISA_SUPPORT1 register.
+ * \return  1 if Smdbltrp is supported, 0 otherwise
+ */
+__STATIC_FORCEINLINE int32_t IINFO_IsSmdbltrpSupported(void)
+{
+    return IINFO->isa_support1.b.exist && IINFO->isa_support1.b.smdbltrp;
+}
+
+/**
+ * \brief   Check if the Ssdbltrp extension is supported
+ * \details Checks whether the supervisor-mode double trap (Ssdbltrp)
+ *          extension is supported, by reading the ssdbltrp bit of the
+ *          ISA_SUPPORT1 register.
+ * \return  1 if Ssdbltrp is supported, 0 otherwise
+ */
+__STATIC_FORCEINLINE int32_t IINFO_IsSsdbltrpSupported(void)
+{
+    return IINFO->isa_support1.b.exist && IINFO->isa_support1.b.ssdbltrp;
 }
 
 /**
