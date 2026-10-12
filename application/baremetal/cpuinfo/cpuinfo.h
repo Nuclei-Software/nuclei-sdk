@@ -499,13 +499,20 @@ typedef union {
         uint32_t smcdeleg:1;                     /*!< bit: 9 support Smcdeleg extension */
         uint32_t smmpm:1;                        /*!< bit: 10 support Smmpm extension */
         uint32_t smnpm:1;                        /*!< bit: 11 support Smnpm extension */
-        uint32_t ssnpm:1;                        /*!< bit: 12 support Smnpm extension */
+        uint32_t ssnpm:1;                        /*!< bit: 12 support Ssnpm extension */
         uint32_t smstateen:1;                    /*!< bit: 13 support Smstateen extension */
         uint32_t sstateen:1;                     /*!< bit: 14 support Sstateen extension */
         uint32_t smcsrind:1;                     /*!< bit: 15 support Smcsrind extension */
         uint32_t sscsrind:1;                     /*!< bit: 16 support Sscsrind extension */
         uint32_t svadu:1;                        /*!< bit: 17 support Svadu extension */
-        uint32_t :14;                            /*!< bit: 18..31 reserved */
+        uint32_t rva23:1;                        /*!< bit: 18 support RVA23 profile */
+        uint32_t zibi:1;                         /*!< bit: 19 support Zibi extension */
+        uint32_t zfinx:1;                        /*!< bit: 20 support Zfinx extension */
+        uint32_t zdinx:1;                        /*!< bit: 21 support Zdinx extension */
+        uint32_t zhinx:1;                        /*!< bit: 22 support Zhinx extension */
+        uint32_t zba_zbb_zbs:1;                  /*!< bit: 23 support Zba/Zbb/Zbs extensions */
+        uint32_t zbc:1;                          /*!< bit: 24 support Zbc extension */
+        uint32_t :7;                             /*!< bit: 25..31 reserved */
     } b;                                         /*!< Structure used for bit access */
     uint32_t d;                                  /*!< Type      used for register data access */
 } CIF_IINFO_ISA_SUPPORT1_Type;

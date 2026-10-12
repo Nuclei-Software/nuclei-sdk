@@ -638,6 +638,13 @@ static void show_isa_support(const CIF_IINFO_Type *iinfo)
             CHECK_FIELD_DFT(isa_support1, smcsrind);
             CHECK_FIELD_DFT(isa_support1, sscsrind);
             CHECK_FIELD_DFT(isa_support1, svadu);
+            CHECK_FIELD_DFT(isa_support1, rva23);
+            CHECK_FIELD_DFT(isa_support1, zibi);
+            CHECK_FIELD_DFT(isa_support1, zfinx);
+            CHECK_FIELD_DFT(isa_support1, zdinx);
+            CHECK_FIELD_DFT(isa_support1, zhinx);
+            CHECK_FIELD_DFT(isa_support1, zba_zbb_zbs);
+            CHECK_FIELD_DFT(isa_support1, zbc);
         }
         CIF_PRINTF("\r\n");
     } else {
