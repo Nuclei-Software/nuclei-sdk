@@ -72,6 +72,7 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
     ``__get_local_hart_id()`` for its boot hart gate and CIDU core id (an SMP demo, so local hart id
     equals the hart index). Note: the ``smpdemo`` debug ``printf`` still prints the full
     ``__get_hart_id()`` value for identification.
+  - Update the FreeRTOS ``demo``/``smpdemo`` license header to the correct MIT license.
 
 * Build System
 
