@@ -2,6 +2,10 @@ prettytable>=2.1.0
 psutil>=5.8.0
 pyserial>=3.5
 markdown
+markdown-it-py
+mdit-py-plugins
+pygments
+docutils
 pyusb
 yamale
 pyyaml

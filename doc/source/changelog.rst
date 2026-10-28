@@ -81,6 +81,14 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
     ``BOOT_HARTID`` (local hart id) / ``HARTID_OFS`` (hart index offset) semantics, see the SoC
     section above.
 
+* Tools
+
+  - Rework ``tools/scripts/nsdk_cli/httpserver.py`` into a documentation preview server: render
+    Markdown, reStructuredText, CSV and plain text files as HTML with syntax highlighting, add a
+    port registry so each directory keeps its port, and improve the directory listing. ``?raw=1``
+    still returns the original file.
+  - Add ``mdit-py-plugins`` and ``pygments`` to ``tools/scripts/requirements.txt``.
+
 V0.9.0
 ------
 
