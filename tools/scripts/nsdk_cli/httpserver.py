@@ -883,6 +883,23 @@ def is_known_text(fspath):
             or os.path.splitext(fspath)[1] in KNOWN_TEXT_EXTS)
 
 
+# extensions served with their own MIME type (so a site keeps working) but
+# still readable through the viewer when '?raw=1' is asked for
+VIEWABLE_EXTS = {'.js', '.mjs', '.cjs', '.css', '.json', '.map',
+                 '.svg', '.xml', '.wasm'}
+
+
+def is_viewable_text(fspath):
+    if os.path.splitext(fspath)[1].lower() not in VIEWABLE_EXTS:
+        return False
+    try:
+        if os.path.getsize(fspath) > INLINE_MAX_BYTES:
+            return False
+    except OSError:
+        return False
+    return text_encoding(fspath) is not None
+
+
 def clean_line(line):
     """Replace bytes that would not render with a visible marker.
 
@@ -1563,30 +1580,33 @@ class NSDKHandler(http.server.SimpleHTTPRequestHandler):
         return ctype
 
     def is_plain_text(self, fspath):
-        """True when this file is text and we should render it as a page.
+        """True when this file should be wrapped in the line numbered viewer.
 
-        Images, pdfs and other formats the browser renders natively are left
-        alone; only files whose Content-Type would be text/plain are wrapped,
-        which is exactly the set that previously had no styling at all.
+        Only text/plain files are wrapped. Anything with a real type of its
+        own, such as css, javascript, json or an image, keeps that type so the
+        browser can still load it: a docs build needs its _static/*.js and
+        *.css served as what they are, not as an HTML page. Add '?raw=1' to
+        see such a file through the viewer instead.
 
         The size check comes first on purpose: a large .txt is still served as
         text/plain by guess_type (it is a known extension, not an unknown one
         rescued by the octet-stream path), so without this limit a 100MB log
         would be pushed through the renderer.
         """
-        if is_known_text(fspath):
-            # a .log/.txt holding a few binary bytes must still open in the
-            # viewer: refusing here is what used to turn it into a download
-            return not (self.inline_max
-                        and os.path.getsize(fspath) > self.inline_max)
         try:
             if self.inline_max and os.path.getsize(fspath) > self.inline_max:
                 return False
-            ctype = self.guess_type(fspath)
-            # js and json are served with an application/* type but are still
-            # source the browser shows inline, so they belong in the viewer
-            return (ctype.startswith('text/plain')
-                    or ctype in ('application/x-javascript', 'application/json'))
+        except OSError:
+            return False
+        ext = os.path.splitext(fspath)[1].lower()
+        if ext in ('.js', '.mjs', '.cjs', '.css', '.json', '.map'):
+            return False
+        if is_known_text(fspath):
+            # a .log/.txt holding a few binary bytes must still open in the
+            # viewer: refusing here is what used to turn it into a download
+            return True
+        try:
+            return self.guess_type(fspath).startswith('text/plain')
         except OSError:
             return False
 
@@ -1748,6 +1768,13 @@ class NSDKHandler(http.server.SimpleHTTPRequestHandler):
                     notice = ("this file contains bytes that are not valid text, "
                               "they are shown as �, append '%s' to the url "
                               "to download the original" % RAW_LINK)
+            elif raw and is_viewable_text(fspath):
+                # '?raw=1' on a css/js/json file: normally served with its own
+                # type so a docs build keeps working, this is the way in to
+                # read the source instead
+                body, notice = render_plain(fspath)
+                if body is None:
+                    return False
             else:
                 return False
             relpath = os.path.relpath(fspath, self.directory).replace(os.sep, '/')
@@ -1793,7 +1820,8 @@ class NSDKHandler(http.server.SimpleHTTPRequestHandler):
             mtime = time.strftime('%Y-%m-%d %H:%M', time.localtime(stat.st_mtime))
             # html renders as a page; 'src' is a shortcut to the source view
             src = ''
-            if not isdir and os.path.splitext(name)[1].lower() in ('.html', '.htm'):
+            if not isdir and (os.path.splitext(name)[1].lower()
+                              in {'.html', '.htm'} | VIEWABLE_EXTS):
                 srchref = urllib.parse.quote(name, errors='surrogatepass') + RAW_LINK
                 src = ' <a class="nsdk-src" href="%s">src</a>' % html.escape(srchref, quote=True)
             # data-* lets the browser sort and filter without a round trip;
