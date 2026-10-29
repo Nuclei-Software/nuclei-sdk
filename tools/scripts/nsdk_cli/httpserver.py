@@ -1554,6 +1554,7 @@ class NSDKHandler(http.server.SimpleHTTPRequestHandler):
     max_rows = MAX_CSV_ROWS
     inline_max = INLINE_MAX_BYTES
     quiet = False
+    plain = False                       # --plain: old behaviour, no rendering
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=self.directory_root, **kwargs)
@@ -1567,7 +1568,7 @@ class NSDKHandler(http.server.SimpleHTTPRequestHandler):
         it inline and the user can still right-click to save it.
         """
         ctype = super().guess_type(path)
-        if ctype != OCTET:
+        if self.plain or ctype != OCTET:
             return ctype
         try:
             if self.inline_max and os.path.getsize(path) > self.inline_max:
@@ -1677,6 +1678,8 @@ class NSDKHandler(http.server.SimpleHTTPRequestHandler):
         Only answers for a directory url, so a stray query on a file never
         turns into a search of the whole tree.
         """
+        if self.plain:
+            return False
         parsed = urllib.parse.urlsplit(self.path)
         # keep_blank_values so '?search=' is answered with an empty result
         # instead of falling through to the directory listing
@@ -1712,6 +1715,8 @@ class NSDKHandler(http.server.SimpleHTTPRequestHandler):
 
     def serve_builtin(self, head_only=False):
         """Serve the embedded favicon, unless a real file exists in the tree."""
+        if self.plain:
+            return False
         urlpath = urllib.parse.urlsplit(self.path).path
         if urlpath not in ('/favicon.ico', '/favicon.svg'):
             return False
@@ -1736,7 +1741,12 @@ class NSDKHandler(http.server.SimpleHTTPRequestHandler):
         *.html/*.htm are the exception: they are the output of a documentation
         build, so they render as web pages by default, and '?raw=1' shows the
         source through the same viewer as any other text file.
+
+        With --plain nothing is rendered at all and every request falls through
+        to the stock SimpleHTTPRequestHandler behaviour.
         """
+        if self.plain:
+            return False
         try:
             parsed = urllib.parse.urlsplit(self.path)
             fspath = self.translate_path(parsed.path)
@@ -1792,6 +1802,9 @@ class NSDKHandler(http.server.SimpleHTTPRequestHandler):
 
     def list_directory(self, path):
         """Styled directory listing with the same favicon and navigation."""
+        if self.plain:
+            # stock listing, exactly what the tool served before
+            return super().list_directory(path)
         try:
             names = os.listdir(path)
         except OSError:
@@ -1915,6 +1928,9 @@ def parse_args(argv=None):
                         help='unknown extensions up to this size are shown as text '
                              'instead of downloaded, 0 disables it (default: %(default)s)')
     parser.add_argument('--quiet', action='store_true', help='do not log http requests')
+    parser.add_argument('--plain', action='store_true',
+                        help='behave like the old version: no rendering and no '
+                             'directory listing changes, the remembered port is kept')
     return parser.parse_args(argv)
 
 
@@ -1937,7 +1953,10 @@ def main(argv=None):
     NSDKHandler.max_rows = max(0, args.max_rows)
     NSDKHandler.inline_max = max(0, args.inline_max)
     NSDKHandler.quiet = args.quiet
+    NSDKHandler.plain = args.plain
 
+    # the port registry is independent of --plain: a stable port is useful in
+    # both modes, only the rendering and the page chrome are switched off
     registry = PortRegistry(config_path(args.config))
 
     server = None
