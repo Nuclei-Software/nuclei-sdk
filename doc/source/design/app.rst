@@ -2577,6 +2577,9 @@ handling provided by the **Smrnmi** (resumable non-maskable interrupt) and
       are defined.
     * On a CPU without the extensions the application only prints
       ``Smdbltrp is not supported in this CPU, will not run this example!`` and exits.
+    * The double trap feature can **not** coexist with ECLICv2, so this application
+      must not be built with ``XLCFG_ECLIC=2`` either. See
+      :ref:`design_soc_evalsoc_eclicv2`.
 
 **How it works:**
 

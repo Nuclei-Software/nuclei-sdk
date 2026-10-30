@@ -386,6 +386,9 @@ extern volatile unsigned long CpuIRegionBase;
 // To enable it, define macro CFG_HAS_ISA_DBLTRP in cpufeature.h or pass XLCFG_DBLTRP=1
 // NOTE: the same CFG_HAS_ISA_DBLTRP also covers Ssdbltrp (S-mode double trap),
 // the S-mode presence is checked separately with __SMODE_PRESENT.
+// WARNING: the double trap feature can NOT coexist with ECLICv2, so
+// CFG_HAS_ISA_DBLTRP must not be defined together with CFG_HAS_ECLICV2
+// (XLCFG_ECLIC=2). cpufeature.h raises a compile warning for that combination.
 #if defined(CFG_HAS_ISA_DBLTRP)
 #define __DBLTRP_PRESENT            1
 #else

@@ -295,6 +295,13 @@ ECLICv2 Support
 
 Starting from version 0.9.0, Nuclei EvalSoC provides support for ECLICv2 with hardware context auto-save feature.
 
+.. warning::
+
+    ECLICv2 and the double trap feature (Smrnmi/Smdbltrp, see
+    :ref:`design_app_demo_dbltrp`) **can not coexist** in the same CPU. Do not
+    build with ``XLCFG_ECLIC=2`` together with ``XLCFG_DBLTRP=1``, the
+    combination triggers a compile warning in ``cpufeature.h``.
+
 **Features:**
 
 * Hardware context auto-save/restore for non-vector interrupt and exception handlers

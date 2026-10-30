@@ -52,6 +52,14 @@ extern "C" {
 #endif
 #endif
 
+// NOTE: ECLICv2 (CFG_HAS_ECLICV2) and the double trap feature
+// (CFG_HAS_ISA_DBLTRP) can not coexist in the same CPU, so do not enable both
+// XLCFG_ECLIC=2 and XLCFG_DBLTRP=1 when building an application. See the
+// design_soc_evalsoc_eclicv2 section of the documentation for details.
+#if defined(CFG_HAS_ECLICV2) && defined(XLCFG_DBLTRP) && (XLCFG_DBLTRP != 0)
+#warning "ECLICv2 (XLCFG_ECLIC=2) and double trap (XLCFG_DBLTRP=1) can not coexist, the build may not behave as expected"
+#endif
+
 // External Interrupt Number
 #if defined(XLCFG_IRQ_NUM)
 #define CFG_IRQ_NUM                 XLCFG_IRQ_NUM
