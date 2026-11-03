@@ -16,6 +16,9 @@ NUCLEI_SDK_BUILD = $(NUCLEI_SDK_ROOT)/Build
 ## options (RISCV_ARCH/RISCV_ABI/RISCV_TUNE/RISCV_CMODEL) and variables
 ## passed on the command line are never recalled. Values containing spaces
 ## are recalled in their normalized form (spaces recorded as underscores).
+## clean keeps the fingerprint when REUSE=1 is requested (see
+## BUILD_CONFIG_KEEP_ON_CLEAN in Makefile.rules), so the clean step of the
+## workflow above does not lose the configuration for the next command.
 ## Needs GNU Make >= 4.0 like the fingerprint; on older make REUSE is
 ## silently ignored
 ifeq ($(REUSE),1)
@@ -33,6 +36,8 @@ endif
 endif
 endef
 $(foreach pair,$(SAVED_RECALL_CONFIG),$(eval $(call RECALL_VAR,$(firstword $(subst =, ,$(pair))))))
+else
+$(warning REUSE=1 requested but no saved build configuration was found in "$(if $(strip $(O)),$(strip $(O)),.)", the current configuration is used (the output directory is new, or it was cleaned without REUSE=1))
 endif
 endif
 endif

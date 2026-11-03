@@ -10,7 +10,7 @@ the `rebuild` target, the `version` target, build hints, etc.).
 
 | File | Description |
 |------|-------------|
-| `buildtodir_regression.py` | Main regression script, 19 cases / 60+ checks, covering all core behavior of the buildtodir branch |
+| `buildtodir_regression.py` | Main regression script, 21 cases / 70+ checks, covering all core behavior of the buildtodir branch |
 
 The script supports `--platform win|linux` with consistent logic; no
 absolute tool paths are hardcoded — required tools (make /

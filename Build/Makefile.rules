@@ -102,6 +102,11 @@ BUILD_CONFIG_VARS := TOOLCHAIN SOC BOARD CORE ARCH_EXT DOWNLOAD STDCLIB \
 BUILD_CONFIG_VARS += $(EXTRA_BUILD_CONFIG_VARS)
 BUILD_CONFIG = $(foreach v,$(BUILD_CONFIG_VARS),$(v)=$(subst $(space),_,$($(v))))
 BUILD_CONFIG_FILE := $(OUTDIR)/.buildconfig
+## clean keeps the fingerprint when REUSE=1 recalled it from the output
+## directory (see CLEAN_OBJS below): deleting the recalled fingerprint
+## would lose the saved configuration and the next REUSE command would
+## silently fall back to the default configuration
+BUILD_CONFIG_KEEP_ON_CLEAN := $(if $(filter 1,$(REUSE)),1)
 
 ## Saved build configuration (the fingerprint content), read for the
 ## change detection below. The REUSE recall itself happens in
@@ -149,6 +154,12 @@ ifneq ($(SAVED_BUILD_CONFIG),$(strip $(BUILD_CONFIG)))
 ## two filter-outs make a symmetric difference so added values are also
 ## caught (e.g. ARCH_EXT: (empty) -> _zba_zbb_zbc_zbs)
 CONFIG_CHANGED_VARS := $(foreach v,$(BUILD_CONFIG_VARS),$(if $(filter-out $(call CURRENT_VALUE,$(v)),$(call SAVED_VALUE,$(v)))$(filter-out $(call SAVED_VALUE,$(v)),$(call CURRENT_VALUE,$(v))),$(v)))
+## Only stop when objects were generated into the output directory: an
+## empty output directory (e.g. right after "make O=... REUSE=1 clean",
+## which keeps the fingerprint, see CLEAN_OBJS below) holds no object
+## built with the old configuration, the fingerprint is simply refreshed
+## with the current configuration then (see BUILD_CONFIG_NEED_WRITE)
+ifneq ($(wildcard $(ALL_OBJS)),)
 ## NOTE: a function call argument cannot span multiple physical lines in
 ## GNU make (each $(warning)/$(error) below must stay on one physical
 ## line), otherwise make reports "unterminated call to function 'warning'"
@@ -158,16 +169,25 @@ $(error Build stopped: the objects in "$(OUTDIR)" were generated with an old con
 endif
 endif
 endif
+endif
 
 ## The fingerprint is (re)created before the first object compiles
 ## (all objects depend on it below), so even an interrupted build
 ## leaves it behind and a later make with a different configuration is
 ## stopped by the detection above. Recreated when missing or empty
-## (first build, or resuming after an interrupt) or when clean/rebuild
-## runs in the same command line (clean removes it, so it must be
-## regenerated)
+## (first build, or resuming after an interrupt), when clean/rebuild
+## runs in the same command line (clean removes it unless REUSE=1 keeps
+## it, either way it is regenerated with the current configuration), and
+## when the saved configuration differs but no object
+## is left to conflict with it (e.g. after a clean with REUSE=1)
 ifeq ($(SAVED_BUILD_CONFIG),)
 BUILD_CONFIG_NEED_WRITE := 1
+else ifneq ($(strip $(SAVED_BUILD_CONFIG)),$(strip $(BUILD_CONFIG)))
+## The saved configuration differs: refresh the fingerprint when no
+## object is left which could conflict with it, that is a clean/rebuild
+## (which removes the objects anyway) or an output directory without
+## objects (e.g. cleaned with REUSE=1, which keeps the fingerprint)
+BUILD_CONFIG_NEED_WRITE := $(if $(filter clean rebuild,$(MAKECMDGOALS)),1,$(if $(wildcard $(ALL_OBJS)),,1))
 else
 BUILD_CONFIG_NEED_WRITE := $(if $(filter clean rebuild,$(MAKECMDGOALS)),1)
 endif
@@ -247,7 +267,14 @@ ALL_APP_TARGETS := $(APP_TARGET_ELF) $(APP_TARGET_MAP) $(APP_TARGET_BIN) \
 	$(APP_TARGET_DUMP) $(APP_TARGET_DASM) $(APP_TARGET_SREC) $(APP_TARGET_HEX) \
 	$(APP_TARGET_VERILOG)
 
-CLEAN_OBJS += $(ALL_APP_TARGETS) gmon.out openocd.log $(BUILD_CONFIG_FILE) $(wildcard $(ALL_OBJS) $(ALL_DEPS) $(ALL_GCNOS) $(ALL_GCDAS) $(ALL_GCOVS))
+CLEAN_OBJS += $(ALL_APP_TARGETS) gmon.out openocd.log
+## Keep the recalled fingerprint when REUSE=1: "make O=build REUSE=1
+## clean all/upload" must still know the configuration afterwards,
+## otherwise the next REUSE command silently falls back to the defaults
+ifeq ($(BUILD_CONFIG_KEEP_ON_CLEAN),)
+CLEAN_OBJS += $(BUILD_CONFIG_FILE)
+endif
+CLEAN_OBJS += $(wildcard $(ALL_OBJS) $(ALL_DEPS) $(ALL_GCNOS) $(ALL_GCDAS) $(ALL_GCOVS))
 REAL_CLEAN_OBJS = $(subst /,$(PS), $(CLEAN_OBJS))
 
 ## Ensure the output directory of the generated target file exist
@@ -408,6 +435,7 @@ help:
 	@$(ECHO) "DOWNLOAD=ilm           Download mode, SoC dependent: ilm/flash/flashxip/sram/ddr"
 	@$(ECHO) "O=build                Output directory, empty means the current directory (objects grouped in _obj_sdk/_obj_app)"
 	@$(ECHO) "REUSE=1                Recall the saved configuration of the output directory, so the variables do not need to be passed again"
+	@$(ECHO) "                       clean and rebuild keep the saved configuration when REUSE=1 is given"
 	@$(ECHO) "V=1                    Print the compile options"
 	@$(ECHO) "SILENT=1               Do not print the compile messages"
 	@$(ECHO) ""
@@ -420,7 +448,7 @@ help:
 	@$(ECHO) "debug                  Download and debug the application on the board (OpenOCD + GDB)"
 	@$(ECHO) "run_openocd, run_gdb   Start the OpenOCD server, then connect GDB to it and debug"
 	@$(ECHO) "run_qemu, run_xlmodel  Run on QEMU / Nuclei Near Cycle Model, evalsoc only"
-	@$(ECHO) "clean                  Remove the generated objects and targets of the selected O="
+	@$(ECHO) "clean                  Remove the generated objects and targets of the selected O= (REUSE=1 keeps the saved configuration)"
 	@$(ECHO) "info                   Show the selected configuration"
 	@$(ECHO) "showflags              Show the compile and link flags"
 	@$(ECHO) "showtoolver, version   Show the toolchain / the SDK, NMSIS and toolchain versions"

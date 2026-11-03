@@ -24,6 +24,7 @@ Covers the core behavior of the buildtodir branch, all verified through real mak
  18. make -j clean all serialization
  19. Absolute Windows path O= (regression guard)
  20. REUSE=1 recall of the saved configuration
+ 21. REUSE=1 keeps the saved configuration across clean (no false positives)
 
 Platforms:
   --platform win    : Windows native, invoking make via cmd /c
@@ -592,6 +593,49 @@ include $(NUCLEI_SDK_ROOT)/Build/Makefile.base
         rc, out = pf.make(APP_DIR, ["O=build20", "REUSE=1", "CORE=n900fd", "rebuild"])
         check("REUSE rebuild with new explicit variable", rc == 0)
     tests.append((20, "REUSE=1 recall of the saved configuration", t20))
+
+    # 21. REUSE=1 keeps the saved configuration across clean and an empty
+    # output directory does not trigger a false configuration-change stop
+    def t21():
+        O = cleanO("build21")
+        pf.make(APP_DIR, ["O=build21", "CORE=n300fd", "DOWNLOAD=flash", "all"])
+        rc, out = pf.make(APP_DIR, ["O=build21", "REUSE=1", "clean"])
+        check("REUSE clean succeeds", rc == 0 and "Clean all build objects" in out)
+        check("REUSE clean keeps the fingerprint", "file:%s" % os.path.join(O, ".buildconfig"))
+        check("REUSE clean removes the objects", "no:%s" % os.path.join(O, "_obj_app"))
+        # documented workflow: clean then build without re-passing the variables
+        rc, out = pf.make(APP_DIR, ["O=build21", "REUSE=1", "all"])
+        check("REUSE build after clean succeeds", rc == 0)
+        check("REUSE after clean recalled CORE", "matches: CORE=n300fd")
+        check("REUSE after clean recalled DOWNLOAD", "matches:DOWNLOAD=flash")
+        check("REUSE after clean not blocked by change detection", "Build stopped" not in out)
+        # clean and all in one parallel invocation keeps the recalled configuration
+        rc, out = pf.make(APP_DIR, ["-j4", "O=build21", "REUSE=1", "clean", "all"])
+        check("-j4 REUSE=1 clean all succeeds", rc == 0 and "Build stopped" not in out)
+        fp = os.path.join(O, ".buildconfig")
+        content = open(fp, encoding="utf-8", errors="replace").read() if os.path.isfile(fp) else ""
+        check("fingerprint keeps the recalled configuration after -j4 clean all",
+              "CORE=n300fd" in content and "DOWNLOAD=flash" in content)
+        # a plain clean still removes the fingerprint
+        rc, out = pf.make(APP_DIR, ["O=build21", "clean"])
+        check("plain clean still removes the fingerprint", "no:%s" % os.path.join(O, ".buildconfig"))
+        # REUSE=1 without a saved configuration warns instead of silently defaulting
+        rc, out = pf.make(APP_DIR, ["O=build21", "REUSE=1", "info"])
+        check("REUSE=1 without saved configuration warns",
+              "no saved build configuration" in out)
+        # an empty output directory does not conflict with a new configuration
+        pf.make(APP_DIR, ["O=build21", "CORE=n300fd", "DOWNLOAD=flash", "all"])
+        pf.make(APP_DIR, ["O=build21", "REUSE=1", "clean"])
+        rc, out = pf.make(APP_DIR, ["O=build21", "CORE=n900fd", "all"])
+        check("no false change detection in an empty output directory",
+              rc == 0 and "Build stopped" not in out)
+        fp = os.path.join(O, ".buildconfig")
+        content = open(fp, encoding="utf-8", errors="replace").read() if os.path.isfile(fp) else ""
+        check("fingerprint refreshed to the new configuration after clean", "CORE=n900fd" in content)
+        # with the objects back, the change detection works again
+        rc, out = pf.make(APP_DIR, ["O=build21", "CORE=n300fd", "all"])
+        check("change detection works again with objects present", rc != 0 and "Build stopped" in out)
+    tests.append((21, "REUSE=1 clean keeps the configuration", t21))
 
     for num, name, fn in tests:
         if args.only is not None and num != args.only:

@@ -473,6 +473,10 @@ of the same application at the same time:
      output directory (**O**). Artifacts left in another output directory,
      or left in the source directory by a build without **O**, need to be
      cleaned separately, for example ``make O=build clean`` and ``make clean``.
+   * A plain ``make clean`` also removes the ``.buildconfig`` fingerprint, but
+     ``clean`` keeps it when **REUSE=1** recalled it, so the following command
+     of a REUSE workflow still knows the saved configuration, see
+     :ref:`develop_buildsystem_var_reuse`.
 
 Configuration fingerprint
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -486,7 +490,12 @@ in the ``.buildconfig`` file inside the output directory
 When the configuration is changed since the last build into the output
 directory, make stops with an error listing the changed variables, instead of
 continuing and silently linking objects generated with different
-configurations:
+configurations. The fingerprint describes the objects stored in the output
+directory, so the check is skipped when there is no object left to conflict
+with: after a ``clean`` the output directory is empty, and a build with another
+configuration just refreshes the fingerprint.
+
+When objects are present, the build stops like this:
 
 .. code-block:: text
 
@@ -1315,10 +1324,23 @@ values, so the commands of a workflow do not need to repeat the variables:
     make O=build REUSE=1 all
     make O=build REUSE=1 upload
 
+The ``clean`` step keeps the fingerprint when ``REUSE=1`` recalled it, so the
+next command still knows the saved configuration. A plain
+``make O=build clean`` (without **REUSE=1**) removes the fingerprint together
+with the objects. When there is no saved configuration to recall (the output
+directory is new, or was cleaned without **REUSE=1**), make prints a warning
+and uses the current configuration.
+
 Variables passed on the command line always win, and if they differ from the
-saved values the configuration change detection reports and stops as usual.
-Only the tracked options are recalled, application-level variables (such as
-``BENCH_FLAGS`` or ``RTOS``) still need to be passed explicitly.
+saved values while objects built with the old configuration are present, the
+configuration change detection reports and stops as usual; in an empty output
+directory (for example right after a ``clean``) the new configuration is used
+and the fingerprint is refreshed. Only the tracked options are recalled,
+application-level variables (such as ``BENCH_FLAGS`` or ``RTOS``) still need
+to be passed explicitly.
+
+``clean`` never changes the saved configuration: to change it, rebuild with the
+new values, for example ``make O=build REUSE=1 CORE=n900fd rebuild``.
 
 .. _develop_buildsystem_app_make_vars:
 
