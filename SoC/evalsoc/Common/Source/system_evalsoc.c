@@ -1339,7 +1339,39 @@ volatile unsigned long CpuIRegionBase = 0xFFFFFFFF;
 
 #define CLINT_MSIP(base, hartid)    (*(volatile uint32_t *)((uintptr_t)((base) + ((hartid) * 4))))
 #define SMP_CTRLREG(base, ofs)      (*(volatile uint32_t *)((uintptr_t)((base) + (ofs))))
-#define MAX_SYNC_HARTS_WAITCNT      10000
+
+/**
+ * Timeout guard of the handshake in \ref __sync_harts, measured with CSR_CYCLE
+ * so that it does not depend on a plain loop count.
+ *
+ * This value is only a SAFETY NET, it is not what makes the handshake work.
+ * The handshake is deadlock free on its own: each side waits for the peer BUT
+ * gives up on the timeout and then clears its own pending bit, so whoever runs
+ * late can never be blocked forever (see the "self clear" in the peer branch).
+ *
+ * Keep the value small. The boot hart waits for every peer before it clears
+ * that peer's pending bit, and it does so sequentially, so the worst case cost
+ * of one boot is about SMP_CPU_CNT * timeout. In qemu under icount the counter
+ * read by CSR_CYCLE is the global instruction counter, so the value is really
+ * an instruction budget and a large value makes EVERY multi-hart boot sit in
+ * this loop for that long. Measured on evalsoc with SMP=8 and -icount shift=0:
+ * 0x1000 -> 0.8s, 0x10000 -> 0.86s, 0x100000 -> 2.2s, 0x300000 -> 4.9s,
+ * 0x8000000 -> 7.1s, 0x40000000 -> 7.0s and a real timeout on the older qemu.
+ * 0x10000 keeps the boot at about the same cost as no guard at all while
+ * still absorbing the normal skew between the harts.
+ *
+ * NOTE: on qemu this handshake is mostly a formality, all harts pass even
+ * with the waits removed, because qemu does not model the data/bss init race
+ * that this function exists to protect against. It is kept for real hardware,
+ * where a hart that reaches __skip_init early would read uninitialized data.
+ */
+#ifndef __SMP_SYNC_TIMEOUT_CYCLES
+#define __SMP_SYNC_TIMEOUT_CYCLES   0x10000UL
+#endif
+
+/* NOTE: use a macro instead of a function, __sync_harts must not call any other
+ * function because it runs before the sections are initialized */
+#define __SMP_SYNC_TIMEDOUT(start)  ((__RV_CSR_READ(CSR_CYCLE) - (start)) > __SMP_SYNC_TIMEOUT_CYCLES)
 
 void __sync_harts(void) __attribute__((section(".text.init")));
 /**
@@ -1366,7 +1398,6 @@ void __sync_harts(void)
     unsigned long tmr_hartid = __get_hart_index();
     unsigned long clint_base, irgb_base, smp_base;
     unsigned long mcfg_info;
-    volatile unsigned long cnt = 0;
 
     // NOTE: we should avoid to use global variable such as CpuIRegionBase before smp cpu are configured
     mcfg_info = __RV_CSR_READ(CSR_MCFG_INFO);
@@ -1395,17 +1426,20 @@ void __sync_harts(void)
         // L1 I/D Cache Enable is done in _premain_init
         // clear msip pending
         for (int i = 0; i < SMP_CPU_CNT; i ++) {
-            // NOTE: Here you must make sure other harts are bringup, otherwise main
-            // hart will wait it here, so banner will be print
-            cnt = 0;
-            if (i != hartid) { // wait for other harts software pending bit set
-                do {
-                    cnt += 1;
-                    if (cnt > MAX_SYNC_HARTS_WAITCNT) {
-                        __NOP();
+            if (i != tmr_hartid) { // wait for other harts software pending bit set
+                // NOTE: the boot hart must not clear the pending bit before the peer hart
+                // has set it, otherwise the pending bit is lost and the peer hart spins
+                // forever in the "wait for pending bit cleared" loop below.
+                // Wait with a cycle based timeout, because the peer hart is allowed to
+                // be far behind the boot hart (see __SMP_SYNC_TIMEOUT_CYCLES).
+                unsigned long start = __RV_CSR_READ(CSR_CYCLE);
+                while (CLINT_MSIP(clint_base, i) == 0) {
+                    if (__SMP_SYNC_TIMEDOUT(start)) {
+                        // The peer hart never showed up, clear the pending bit anyway so
+                        // that a late peer hart still finds MSIP == 0 and does not hang.
                         break;
                     }
-                } while (CLINT_MSIP(clint_base, i) == 0);
+                }
             }
             CLINT_MSIP(clint_base, i) = 0;
         }
@@ -1414,8 +1448,17 @@ void __sync_harts(void)
         // Set machine software interrupt pending to 1
         CLINT_MSIP(clint_base, tmr_hartid) = 1;
         __SMP_RWMB();
-        // wait for pending bit cleared by boot hart
-        while (CLINT_MSIP(clint_base, tmr_hartid) == 1);
+        // wait for pending bit cleared by boot hart, with the same timeout so that a
+        // boot hart which did not wait for us can never hang this hart
+        unsigned long start = __RV_CSR_READ(CSR_CYCLE);
+        while (CLINT_MSIP(clint_base, tmr_hartid) == 1) {
+            if (__SMP_SYNC_TIMEDOUT(start)) {
+                break;
+            }
+        }
+        // Self clear, in case the boot hart cleared its pending bit before we set it
+        CLINT_MSIP(clint_base, tmr_hartid) = 0;
+        __SMP_RWMB();
     }
 #endif
 }
