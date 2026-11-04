@@ -22,6 +22,8 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
   - Warn when ``CFG_IREGION_BASE_ADDR`` is defined as ``0`` and document the required compiler option.
   - Fix EvalSoC UART stop-bit and FIFO watermark configuration to update the intended control-register fields.
   - Reorder ``_premain_init()`` cache initialization in ``system_evalsoc.c``: L2 Cache and SMP/IOCP EN are now initialized before L1 I/D Cache to ensure correct SMP coherency setup sequence.
+  - Fix the SMP hart synchronization in ``__sync_harts()`` for the flash/flashxip download modes and make it work under ``qemu -icount``. A non boot hart skips ``__init_common``, so it must not run from ``.text`` before the boot hart copied ``.text``/``.data`` and zeroed ``.bss``; it now waits in ``__sync_harts()`` (which lives in ``.init``, executed in place, so it is safe before the copy) for the boot hart MSIP used as the "code is ready" flag. The previous implementation gave up waiting after a cycle based timeout and cleared the peer MSIP anyway, so a peer arriving later spun forever on a bit that had already been cleared and deadlocked the boot; that escape hatch is removed. The per hart MSIP is also addressed with the hart index instead of the local hart id now.
+  - Note in ``__sync_harts()`` that the CLINT MSIP model in Nuclei qemu 2025.10 is broken for this usage (the same image hangs there and boots fine on 2026.10), and that ``SMP_CPU_CNT`` must match the real hart count.
   - Configure prefetch levels before enabling EvalSoC prefetch in ``system_evalsoc.c``.
   - Add Smrnmi/Smdbltrp (resumable NMI and M-mode double trap) support to ``evalsoc``, gated by the new ``XLCFG_DBLTRP``/``CFG_HAS_ISA_DBLTRP``/``__DBLTRP_PRESENT`` macros: ``RNMI_Init()`` clears ``mmisc_ctl.NMI_CAUSE_FFF`` so ``CSR_MNVEC`` becomes writable, enables ``mmisc_ctl.RNMI_DBTR_EN``, installs a per-hart RNMI stack into ``CSR_MNSCRATCH`` and the ``rnmi_entry`` handler into ``CSR_MNVEC``, then clears ``mstatus.MDT`` and sets ``mnstatus.NMIE``; ``menvcfg.DTE`` is enabled for Ssdbltrp when the running CPU reports it.
   - Add the ``rnmi_entry`` (GCC and IAR) RNMI/double trap entry in ``intexc_evalsoc.S``. The GPR context is always saved in software, because the ECLIC hardware auto context save (``ECLIC_HWCTX=1``) only applies to the mtvec path and an RNMI is taken through ``CSR_MNVEC``.
@@ -78,6 +80,15 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
     equals the hart index). Note: the ``smpdemo`` debug ``printf`` still prints the full
     ``__get_hart_id()`` value for identification.
   - Update the FreeRTOS ``demo``/``smpdemo`` license header to the correct MIT license.
+  - Rewrite the ``smphello`` spinlock to poll with a plain load before attempting the atomic
+    access, following the FreeRTOS SMP port: the spin path no longer issues ``lr.w``/``sc.w`` on
+    every retry, so N harts spinning do not fight over the cache line, and the backoff loop is no
+    longer needed. ``spinlock_unlock()`` now issues a release fence and ``spinlock_lock()`` an
+    acquire fence, the previous version had no barrier at all. ``amoswap.w`` is the default atomic
+    primitive, the ``SPINLOCK_CAS`` switch keeps the ``lr.w``/``sc.w`` variant for comparison.
+  - Fix ``demo_cidu`` SMP startup: add release/acquire fences around the ``boothart_ready`` flag so
+    the ECLIC, UART and CIDU setup done by the boot hart is visible to the peers that start using
+    them right after.
   - Add ``demo_dbltrp`` application to demonstrate the Smrnmi/Smdbltrp M-mode double trap:
     it triggers a real double trap (a trap taken while ``mstatus.MDT`` is already 1) and
     recovers through the RNMI handler, see :ref:`design_app_demo_dbltrp`.
