@@ -86,7 +86,7 @@ void vnice_case(uint32_t *addr_in1, uint32_t *addr_in2, uint32_t vnice_addr, uin
         vbool1_t vm = __riscv_vlm_v_b1(vmgroup, l);
         vin1 = __riscv_vle8_v_i8m8(pin1, l);
         vin2 = __riscv_vle8_v_i8m8(pin2, l);
-        vtemp = __riscv_vadd_vv_i8m8_m(vm, vin2, vin1, l);  // just mv vm to v0 in order to use v0 as mask vector reg for vnice mask instruction
+        vtemp = __riscv_vadd_vv_i8m8_mu(vm, vtemp, vin2, vin1, l);  // just mv vm to v0 in order to use v0 as mask vector reg for vnice mask instruction, and vsetvli use mu
         vmult = __custom_vnice_cmpx_mult_mask_v_i8m8(vin1, vin2);
         __riscv_vse8_v_i8m8(pin1, vmult, l);
         pin1 += l;
