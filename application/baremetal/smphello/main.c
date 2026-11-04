@@ -20,38 +20,48 @@ volatile uint32_t lock_ready = 0;
 volatile uint32_t cpu_count = 0;
 volatile uint32_t finished = 0;
 
-// comment SPINLOCK_CAS to use AMOSWAP as spinlock
-#define SPINLOCK_CAS
+/* Define SPINLOCK_CAS to use the lr.w/sc.w compare and swap instead of the
+ * single amoswap.w, only useful to compare the two atomic primitives */
+// #define SPINLOCK_CAS
 
 __STATIC_FORCEINLINE void spinlock_init(spinlock *lock)
 {
     lock->state = 0;
+    __RWMB();
 }
 
 __STATIC_FORCEINLINE void spinlock_lock(spinlock *lock)
 {
-    uint32_t old;
-    uint32_t backoff = 10;
     do {
-#ifndef SPINLOCK_CAS
-        // Use amoswap as spinlock
-        old = __AMOSWAP_W((&(lock->state)), 1);
-#else
-        // use lr.w & sc.w to do CAS as spinlock
-        old = __CAS_W((&(lock->state)), 0, 1);
-#endif
-        if (old == 0) {
-            break;
-        }
-        for (volatile int i = 0; i < backoff; i ++) {
+        /* Poll with a plain load first: while the lock is taken this loop only
+         * issues loads and does not touch the reservation/first claim of the
+         * cache line, so N harts spinning here do not fight each other on the
+         * bus. Only once the lock looks free do we pay for an atomic access. */
+        while (lock->state != 0) {
             __NOP();
         }
-        backoff += 10;
+#ifdef SPINLOCK_CAS
+        /* lr.w/sc.w: the sc.w may fail if another hart wrote the line in
+         * between, in that case spin again from the top */
+        if (__CAS_W(&lock->state, 0, 1) == 0) {
+#else
+        /* amoswap.w: unconditional, it either takes the lock or returns the
+         * value the other hart just stored */
+        if (__AMOSWAP_W(&lock->state, 1) == 0) {
+#endif
+            /* Make the acquire visible: no load/store inside the critical
+             * section may be reordered before this point */
+            __RWMB();
+            break;
+        }
     } while (1);
 }
 
 __STATIC_FORCEINLINE void spinlock_unlock(spinlock *lock)
 {
+    /* Make the stores done inside the critical section visible to the next
+     * hart that takes the lock, before handing the lock back */
+    __RWMB();
     lock->state = 0;
 }
 

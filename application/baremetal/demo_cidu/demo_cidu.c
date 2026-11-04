@@ -158,10 +158,16 @@ int main(void)
         // Enable uart0 receive interrupt
         uart_enable_rxint(SOC_DEBUG_UART);
         printf("You can press any key now to trigger uart receive interrupt, and only the first hart claims it\n");
+        /* Make everything set up above visible before the flag is raised, the
+         * peers rely on it and start using the UART and ECLIC right after */
+        __SMP_RWMB();
         boothart_ready = 1;
+        __SMP_RWMB();
         ret = boot_hart_main(hartid);
     } else { // other harts
         while (boothart_ready == 0);
+        /* Make the flag load complete before doing anything else */
+        __SMP_RWMB();
 
         ret = other_harts_main(hartid);
     }
