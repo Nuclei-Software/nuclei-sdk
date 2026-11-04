@@ -1340,60 +1340,57 @@ volatile unsigned long CpuIRegionBase = 0xFFFFFFFF;
 #define CLINT_MSIP(base, hartid)    (*(volatile uint32_t *)((uintptr_t)((base) + ((hartid) * 4))))
 #define SMP_CTRLREG(base, ofs)      (*(volatile uint32_t *)((uintptr_t)((base) + (ofs))))
 
-/**
- * Timeout guard of the handshake in \ref __sync_harts, measured with CSR_CYCLE
- * so that it does not depend on a plain loop count.
- *
- * This value is only a SAFETY NET, it is not what makes the handshake work.
- * The handshake is deadlock free on its own: each side waits for the peer BUT
- * gives up on the timeout and then clears its own pending bit, so whoever runs
- * late can never be blocked forever (see the "self clear" in the peer branch).
- *
- * Keep the value small. The boot hart waits for every peer before it clears
- * that peer's pending bit, and it does so sequentially, so the worst case cost
- * of one boot is about SMP_CPU_CNT * timeout. In qemu under icount the counter
- * read by CSR_CYCLE is the global instruction counter, so the value is really
- * an instruction budget and a large value makes EVERY multi-hart boot sit in
- * this loop for that long. Measured on evalsoc with SMP=8 and -icount shift=0:
- * 0x1000 -> 0.8s, 0x10000 -> 0.86s, 0x100000 -> 2.2s, 0x300000 -> 4.9s,
- * 0x8000000 -> 7.1s, 0x40000000 -> 7.0s and a real timeout on the older qemu.
- * 0x10000 keeps the boot at about the same cost as no guard at all while
- * still absorbing the normal skew between the harts.
- *
- * NOTE: on qemu this handshake is mostly a formality, all harts pass even
- * with the waits removed, because qemu does not model the data/bss init race
- * that this function exists to protect against. It is kept for real hardware,
- * where a hart that reaches __skip_init early would read uninitialized data.
- */
-#ifndef __SMP_SYNC_TIMEOUT_CYCLES
-#define __SMP_SYNC_TIMEOUT_CYCLES   0x10000UL
-#endif
-
-/* NOTE: use a macro instead of a function, __sync_harts must not call any other
- * function because it runs before the sections are initialized */
-#define __SMP_SYNC_TIMEDOUT(start)  ((__RV_CSR_READ(CSR_CYCLE) - (start)) > __SMP_SYNC_TIMEOUT_CYCLES)
-
 void __sync_harts(void) __attribute__((section(".text.init")));
 /**
- * \brief Synchronize all harts
+ * \brief Synchronize all harts before they run from .text
  * \details
- * This function is used to synchronize all the harts,
- * especially to wait the boot hart finish initialization of
- * data section, bss section and c runtines initialization
- * This function must be placed in .text.init section, since
- * section initialization is not ready, global variable
- * and static variable should be avoid to use in this function,
- * and avoid to call other functions
+ * Uses the per hart CLINT MSIP bit as the only shared memory, because it is
+ * the single thing that is writable, reachable by every hart and usable
+ * before .data/.bss are initialized.
+ *
+ * Protocol, the boot hart MSIP doubles as the "code is ready" flag:
+ * - boot hart: raise its own MSIP, announcing that the section copy and the C
+ *   runtime init are done; wait for each peer to arrive; clear that peer's
+ *   MSIP to release it; finally clear its own MSIP.
+ * - peer hart: wait for the boot hart MSIP; raise its own MSIP to report in;
+ *   wait for the boot hart to clear it.
+ *
+ * Why the boot hart MSIP exists: only the boot hart runs __init_common, which
+ * copies .text (LMA -> VMA), copies .data and zeroes .bss. A peer skips all of
+ * that (it jumps straight to __skip_init), so it must not proceed before the
+ * boot hart finished. Two different failures otherwise:
+ * - .text not copied yet: the peer executes half copied instructions, observed
+ *   in the flash/flashxip download modes as a store access fault inside ILM
+ * - .data/.bss not ready yet: the peer reads stale or zero data, which shows
+ *   up later as random behaviour instead of a clean fault
+ * A hart reaches this function via .init, which runs in place from flash
+ * (LMA == VMA), so waiting here is safe even before the copy.
+ *
+ * Why there is no timeout: a bailout would have to clear the peer MSIP before
+ * the peer ever set it, leaving that peer spinning on a bit that is already
+ * clear, which deadlocks. In a SMP build all SMP_CPU_CNT harts exist and run
+ * this code, so the barrier always completes and needs no escape hatch.
+ * NOTE: SMP_CPU_CNT must equal the real hart count, otherwise the barrier waits
+ * for a hart that never runs. It also works under qemu -icount, which time
+ * slices the harts by instruction count, because a spin loop only relies on
+ * every hart being able to make progress, not on how fast it does.
+ *
+ * Known qemu issue: the CLINT MSIP model in Nuclei qemu 2025.10 is broken for
+ * this usage, smphello hangs on it while the very same image runs fine on
+ * 2026.10 (verified with sram SMP=4: 2025.10 never prints, 2026.10 boots all
+ * 4 harts). Use 2026.10 or later when running SMP examples.
+ *
+ * This function must be placed in .text.init and must not touch .data/.bss nor
+ * call any function, because those are not initialized yet when it runs.
  */
 void __sync_harts(void)
 {
 // Only do synchronize when SMP_CPU_CNT is defined and number > 0
 // TODO: If you don't need to support SMP, you can directly remove code in it
 #if defined(SMP_CPU_CNT) && (SMP_CPU_CNT > 1)
-    // NOTE: hartid is the local hart id inside current cluster (returned by __get_local_hart_id(),
-    // equals mhartid & CFG_SOC_LOCAL_HARTID_MASK), it is compared with BOOT_HARTID to detect the boot
-    // hart; tmr_hartid is the local hart index used to address the per-hart CLINT MSIP register.
-    // When __HARTID_OFFSET is 0 (default) they are the same, see core_feature_base.h for details
+    // hartid is the local hart id, compared against BOOT_HARTID to find the boot
+    // hart; tmr_hartid is the hart index used to address the per hart MSIP.
+    // They differ only when __HARTID_OFFSET is non zero, see core_feature_base.h
     unsigned long hartid = __get_local_hart_id();
     unsigned long tmr_hartid = __get_hart_index();
     unsigned long clint_base, irgb_base, smp_base;
@@ -1424,41 +1421,28 @@ void __sync_harts(void)
         SMP_CTRLREG(smp_base, 0xc) = 0xFFFFFFFF;
         __SMP_RWMB();
         // L1 I/D Cache Enable is done in _premain_init
-        // clear msip pending
+        // The copy is done at this point, announce it, see the protocol above
+        CLINT_MSIP(clint_base, BOOT_HARTID - __HARTID_OFFSET) = 1;
+        __SMP_RWMB();
+        // Wait for each peer to report in, then release it
         for (int i = 0; i < SMP_CPU_CNT; i ++) {
-            if (i != tmr_hartid) { // wait for other harts software pending bit set
-                // NOTE: the boot hart must not clear the pending bit before the peer hart
-                // has set it, otherwise the pending bit is lost and the peer hart spins
-                // forever in the "wait for pending bit cleared" loop below.
-                // Wait with a cycle based timeout, because the peer hart is allowed to
-                // be far behind the boot hart (see __SMP_SYNC_TIMEOUT_CYCLES).
-                unsigned long start = __RV_CSR_READ(CSR_CYCLE);
-                while (CLINT_MSIP(clint_base, i) == 0) {
-                    if (__SMP_SYNC_TIMEDOUT(start)) {
-                        // The peer hart never showed up, clear the pending bit anyway so
-                        // that a late peer hart still finds MSIP == 0 and does not hang.
-                        break;
-                    }
-                }
+            if (i != tmr_hartid) {
+                while (CLINT_MSIP(clint_base, i) == 0);
+                CLINT_MSIP(clint_base, i) = 0;
             }
-            CLINT_MSIP(clint_base, i) = 0;
         }
+        __SMP_RWMB();
+        // Every peer has left its wait, drop the flag so it does not stay
+        // pending after interrupts get enabled in main
+        CLINT_MSIP(clint_base, BOOT_HARTID - __HARTID_OFFSET) = 0;
         __SMP_RWMB();
     } else {
-        // Set machine software interrupt pending to 1
+        // Do not run into .text before the boot hart finished copying it
+        while (CLINT_MSIP(clint_base, BOOT_HARTID - __HARTID_OFFSET) == 0);
+        // Report in, the boot hart releases us by clearing this bit
         CLINT_MSIP(clint_base, tmr_hartid) = 1;
         __SMP_RWMB();
-        // wait for pending bit cleared by boot hart, with the same timeout so that a
-        // boot hart which did not wait for us can never hang this hart
-        unsigned long start = __RV_CSR_READ(CSR_CYCLE);
-        while (CLINT_MSIP(clint_base, tmr_hartid) == 1) {
-            if (__SMP_SYNC_TIMEDOUT(start)) {
-                break;
-            }
-        }
-        // Self clear, in case the boot hart cleared its pending bit before we set it
-        CLINT_MSIP(clint_base, tmr_hartid) = 0;
-        __SMP_RWMB();
+        while (CLINT_MSIP(clint_base, tmr_hartid) == 1);
     }
 #endif
 }
