@@ -252,6 +252,9 @@ typedef union
 
 /**
  * \brief  Union type to access CC_CMD register. This type is suitable for all m/s/u mode registers.
+ * \details Command execution and interrupt status clearing are independent operations.
+ * When cmd is nonzero, reisc, feisc and besc must all be zero; when writing a nonzero
+ * value to any of these three status-clear fields, cmd must be zero.
  */
 typedef union
 {

@@ -2430,11 +2430,7 @@ __STATIC_INLINE void UFlushInvalDCache(void)
  */
 __STATIC_INLINE int32_t MFlushCCache(void)
 {
-    /* Clear pending error status before issuing the Cluster Cache command.
-     * RESC/FESC/BESC are write-1-to-clear bits, so read the status and write it back. */
-    SMPCC_CMD->CC_mCMD = (SMPCC_CMD->CC_mCMD & SMPCC_CMD_xCMD_STATUS_Msk);
-    SMPCC_CMD->CC_mCMD = (SMPCC_CMD->CC_mCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    SMPCC_CMD->CC_mCMD = SMPCC_CMD_xCMD_CMD_WB_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_mCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_mCMD);
     __RWMB();
@@ -2452,11 +2448,7 @@ __STATIC_INLINE int32_t MFlushCCache(void)
  */
 __STATIC_INLINE int32_t SFlushCCache(void)
 {
-    /* Clear pending error status before issuing the Cluster Cache command.
-     * RESC/FESC/BESC are write-1-to-clear bits, so read the status and write it back. */
-    SMPCC_CMD->CC_sCMD = (SMPCC_CMD->CC_sCMD & SMPCC_CMD_xCMD_STATUS_Msk);
-    SMPCC_CMD->CC_sCMD = (SMPCC_CMD->CC_sCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    SMPCC_CMD->CC_sCMD = SMPCC_CMD_xCMD_CMD_WB_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_sCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_sCMD);
     __RWMB();
@@ -2474,11 +2466,7 @@ __STATIC_INLINE int32_t SFlushCCache(void)
  */
 __STATIC_INLINE int32_t UFlushCCache(void)
 {
-    /* Clear pending error status before issuing the Cluster Cache command.
-     * RESC/FESC/BESC are write-1-to-clear bits, so read the status and write it back. */
-    SMPCC_CMD->CC_uCMD = (SMPCC_CMD->CC_uCMD & SMPCC_CMD_xCMD_STATUS_Msk);
-    SMPCC_CMD->CC_uCMD = (SMPCC_CMD->CC_uCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    SMPCC_CMD->CC_uCMD = SMPCC_CMD_xCMD_CMD_WB_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_uCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_uCMD);
     __RWMB();
@@ -2496,8 +2484,7 @@ __STATIC_INLINE int32_t UFlushCCache(void)
  */
 __STATIC_INLINE int32_t MFlushInvalCCache(void)
 {
-    SMPCC_CMD->CC_mCMD = (SMPCC_CMD->CC_mCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    SMPCC_CMD->CC_mCMD = SMPCC_CMD_xCMD_CMD_WBINVAL_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_mCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_mCMD);
     __RWMB();
@@ -2515,8 +2502,7 @@ __STATIC_INLINE int32_t MFlushInvalCCache(void)
  */
 __STATIC_INLINE int32_t SFlushInvalCCache(void)
 {
-    SMPCC_CMD->CC_sCMD = (SMPCC_CMD->CC_sCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    SMPCC_CMD->CC_sCMD = SMPCC_CMD_xCMD_CMD_WBINVAL_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_sCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_sCMD);
     __RWMB();
@@ -2534,8 +2520,7 @@ __STATIC_INLINE int32_t SFlushInvalCCache(void)
  */
 __STATIC_INLINE int32_t UFlushInvalCCache(void)
 {
-    SMPCC_CMD->CC_uCMD = (SMPCC_CMD->CC_uCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    SMPCC_CMD->CC_uCMD = SMPCC_CMD_xCMD_CMD_WBINVAL_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_uCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_uCMD);
     __RWMB();
@@ -2606,8 +2591,7 @@ __STATIC_INLINE int32_t MFlushDCacheCCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WB_ALL);
     FlushPipeCCM();
-    SMPCC_CMD->CC_mCMD = (SMPCC_CMD->CC_mCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    SMPCC_CMD->CC_mCMD = SMPCC_CMD_xCMD_CMD_WB_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_mCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_mCMD);
     __RWMB();
@@ -2627,8 +2611,7 @@ __STATIC_INLINE int32_t SFlushDCacheCCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WB_ALL);
     FlushPipeCCM();
-    SMPCC_CMD->CC_sCMD = (SMPCC_CMD->CC_sCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    SMPCC_CMD->CC_sCMD = SMPCC_CMD_xCMD_CMD_WB_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_sCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_sCMD);
     __RWMB();
@@ -2648,8 +2631,7 @@ __STATIC_INLINE int32_t UFlushDCacheCCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WB_ALL);
     FlushPipeCCM();
-    SMPCC_CMD->CC_uCMD = (SMPCC_CMD->CC_uCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WB_ALL);
+    SMPCC_CMD->CC_uCMD = SMPCC_CMD_xCMD_CMD_WB_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_uCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_uCMD);
     __RWMB();
@@ -2669,8 +2651,7 @@ __STATIC_INLINE int32_t MFlushInvalDCacheCCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_MCOMMAND, CCM_DC_WBINVAL_ALL);
     FlushPipeCCM();
-    SMPCC_CMD->CC_mCMD = (SMPCC_CMD->CC_mCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    SMPCC_CMD->CC_mCMD = SMPCC_CMD_xCMD_CMD_WBINVAL_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_mCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_mCMD);
     __RWMB();
@@ -2690,8 +2671,7 @@ __STATIC_INLINE int32_t SFlushInvalDCacheCCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_SCOMMAND, CCM_DC_WBINVAL_ALL);
     FlushPipeCCM();
-    SMPCC_CMD->CC_sCMD = (SMPCC_CMD->CC_sCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    SMPCC_CMD->CC_sCMD = SMPCC_CMD_xCMD_CMD_WBINVAL_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_sCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_sCMD);
     __RWMB();
@@ -2711,8 +2691,7 @@ __STATIC_INLINE int32_t UFlushInvalDCacheCCache(void)
 {
     __RV_CSR_WRITE(CSR_CCM_UCOMMAND, CCM_DC_WBINVAL_ALL);
     FlushPipeCCM();
-    SMPCC_CMD->CC_uCMD = (SMPCC_CMD->CC_uCMD & ~SMPCC_CMD_xCMD_CMD_Msk) |
-                         _VAL2FLD(SMPCC_CMD_xCMD_CMD, SMPCC_CMD_xCMD_CMD_WBINVAL_ALL);
+    SMPCC_CMD->CC_uCMD = SMPCC_CMD_xCMD_CMD_WBINVAL_ALL;
     while(_FLD2VAL(SMPCC_CMD_xCMD_COMPLETE, SMPCC_CMD->CC_uCMD) == 0);
     int32_t res = _FLD2VAL(SMPCC_CMD_xCMD_RESULT, SMPCC_CMD->CC_uCMD);
     __RWMB();
