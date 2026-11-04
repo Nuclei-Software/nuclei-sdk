@@ -450,6 +450,11 @@ run_smp_evalsoc:
   <<: *job_template_default
   needs: []
   timeout: 4h
+  tags:
+    - env::docker
+    - net::outside
+    # mount /home/share NFS to use the qemu from the share instead of the image one
+    - env::nfs
   variables:
     APPCFG: tools/scripts/nsdk_cli/configs/smp_application.json
     RUNTARGET: qemu
@@ -459,6 +464,20 @@ run_smp_evalsoc:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_qemu.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_libncrt.json
+  before_script:
+    # SMP boot needs a qemu with a working CLINT MSIP model, the one builtin the
+    # image is too old (see the known qemu issue in __sync_harts), so use the
+    # version from the NFS share and fail fast when the share is not mounted.
+    - 'test -x /home/share/devtools/qemu/linux64/2026.11.02/bin/qemu-system-riscv32 || (echo "ERROR: /home/share/devtools NFS is not mounted in this container, make sure the job runs on runners with the env::nfs tag" && exit 1)'
+    - export PATH=/home/share/devtools/qemu/linux64/2026.11.02/bin/:$PATH
+    - which riscv64-unknown-elf-gcc && riscv64-unknown-elf-gcc --version
+    - which riscv64-unknown-elf-clang && riscv64-unknown-elf-clang --version
+    - which qemu-system-riscv32 && qemu-system-riscv32 --version
+    - which make && make --version
+    - which python3 && python3 --version
+    - rm -rf logs
+    - export CI_JOB_NAME_SHORT=${CI_JOB_NAME/[\[ :\/ ]*}
+    - echo "CI_JOB_NAME_SHORT=${CI_JOB_NAME_SHORT}"
   script:
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/nsdk_cli/nsdk_bench.py --appcfg $APPCFG --hwcfg $HWCFG --parallel="-j" --logdir $LOGDIR --make_options "SIMU=$RUNTARGET" --run --run_target $RUNTARGET
