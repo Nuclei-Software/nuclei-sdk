@@ -50,6 +50,10 @@ SECTIONS
 
   .init           :
   {
+    /* The core starts executing at the ROM base on reset, so _start must be
+     * the first thing here. KEEP it explicitly instead of relying on the
+     * object order on the link command line. */
+    KEEP (*(.text.init.startup))
     *(.text.init)
     KEEP (*(SORT_NONE(.init)))
     . = ALIGN(4);

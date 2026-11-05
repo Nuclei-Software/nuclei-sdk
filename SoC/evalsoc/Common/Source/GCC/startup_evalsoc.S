@@ -152,7 +152,16 @@ vector_base:
     .size vector_base, . - vector_base
 #endif
 
-    .section .text.init
+/* _start must be the very first thing in .init, because the core starts
+ * executing at the flash base on reset. The whole file goes to a dedicated
+ * section that the linker scripts place with KEEP before any other
+ * .text.init input (e.g. __sync_harts of system_evalsoc.c), so the reset
+ * vector no longer depends on the object order on the link command line nor
+ * on what LTO does to the objects. It has to be the whole file and not just
+ * _start: the startup chain falls through from _start into __init_common,
+ * _start_premain and __skip_init without an explicit jump, so splitting it
+ * across two sections would insert linker fill between them. */
+    .section .text.init.startup
     .globl _start
     .type _start, @function
 

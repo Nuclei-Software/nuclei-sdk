@@ -1382,6 +1382,9 @@ void __sync_harts(void) __attribute__((section(".text.init")));
  *
  * This function must be placed in .text.init and must not touch .data/.bss nor
  * call any function, because those are not initialized yet when it runs.
+ * NOTE: .text.init is laid out after the startup section (.text.init.startup,
+ * see startup_evalsoc.S), so this function never lands on the reset vector,
+ * which stays _start whatever the object order on the link command line is.
  */
 void __sync_harts(void)
 {

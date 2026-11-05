@@ -53,6 +53,9 @@ SECTIONS
   {
     *(.text.vtable)
     *(.text.vtable_s)
+    /* _start is the reset entry, keep it explicitly ahead of the other
+     * .text.init input instead of relying on the object order */
+    KEEP (*(.text.init.startup))
     *(.text.init)
     KEEP (*(SORT_NONE(.init)))
     . = ALIGN(4);
