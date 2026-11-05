@@ -288,6 +288,295 @@ cluster (returned by ``__get_local_hart_id()``), so its valid range is
       per-hart resource (SysTimer, PLIC context, CIDU/SMPCC core/client arrays, per-core arrays in
       SMP OS ports).
 
+.. _design_soc_evalsoc_startup:
+
+Startup Code and Reset Vector
+-----------------------------
+
+The EvalSoC startup has to do two things that pull in opposite directions: run code **before**
+``.data``/``.bss`` exist (so it can not rely on initialized globals or on a C runtime), and
+eventually hand control to the C runtime, whose code and data may live somewhere else than the
+ROM the core is executing from, and which in ``flash`` mode has to be copied into place first.
+This section describes how the startup is laid out to do both.
+
+Where the core starts
+~~~~~~~~~~~~~~~~~~~~~
+
+On reset the core starts executing at a fixed address, the base of the ROM region, and it has no
+idea that a linker script exists. Which memory that is depends on the download mode, and the
+linker scripts express it with the ``ROM`` region alias:
+
+.. list-table::
+   :header-rows: 1
+
+   * - ``DOWNLOAD``
+     - ``ROM`` region
+     - ``.text`` placement
+     - copied by the startup
+   * - ``flash``
+     - flash (``0x20000000``)
+     - ILM
+     - yes
+   * - ``flashxip``
+     - flash (``0x20000000``)
+     - flash, in place
+     - no
+   * - ``sram``
+     - SRAM ROM window
+     - SRAM, in place
+     - no
+   * - ``ddr``
+     - DDR ROM window
+     - DDR, in place
+     - no
+   * - ``ilm``
+     - ILM
+     - ILM, in place
+     - no
+
+The ``.init`` output section is always allocated at ``ROM`` with ``>ROM AT>ROM`` (VMA == LMA), so
+it is executed in place from the ROM region and never copied, in every mode. That is the one
+property the startup relies on: its own code is executable from the first instruction after reset.
+The startup itself is the ``.text.init.startup`` input collected into ``.init``, and C code that
+needs the same property (``__sync_harts()``) uses the plain ``.text.init`` input.
+
+Note that ``.text`` is not the only thing that may be copied: in ``flash`` and ``flashxip`` the
+``.data`` section has a load address in flash and a run address in RAM/DLM (``_data_lma != _data``),
+so ``__init_common`` copies it as well. In ``sram``/``ddr``, which place ``.text`` and ``.data`` in
+the same region, and in ``ilm``, whose ``DATA_LMA`` is the DLM the data already runs from, the
+copy is skipped.
+
+Why the vector table skips slot 0 in flash mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``.init`` does not necessarily start with ``_start``: when ``CFG_HAS_CLIC`` is set, the vector
+table ``.text.vtable`` is placed first. That is why the reset behaviour differs between download
+modes, and why the two groups of linker scripts disagree about where ``.text.vtable`` goes:
+
+* In ``flashxip``/``ilm``/``sram``/``ddr``, ``.text.vtable`` is collected **inside ``.init``**,
+  i.e. at the ROM base before the startup. On reset the core therefore lands on **slot 0 of the
+  vector table**, not on ``_start``, and slot 0 has to be an actual instruction that transfers
+  control: ``j _start``.
+* In ``flash``, ``.text.vtable`` is collected **inside ``.text``**, which is linked to ILM
+  (``CODERAM``) and only populated by ``__init_common`` later. The ROM base therefore holds
+  ``_start`` itself, the reset never goes through the vector table, and slot 0 is free to be a
+  normal vector entry pointing at ``default_intexc_handler``.
+
+When ``CFG_HAS_CLIC`` is not set the vector table is not emitted at all, ``.init`` starts with the
+startup in every mode, and ``VECTOR_TABLE_REMAPPED`` has no effect.
+
+The two behaviours are selected at compile time by ``VECTOR_TABLE_REMAPPED``, which
+``SoC/evalsoc/build.mk`` defines **only** for ``DOWNLOAD=flash``::
+
+    ifeq ($(DOWNLOAD), flash)
+    COMMON_FLAGS += -DVECTOR_TABLE_REMAPPED
+    endif
+
+``startup_evalsoc.S`` uses it to emit the right thing in slot 0::
+
+    vector_base:
+    #ifndef VECTOR_TABLE_REMAPPED
+        j _start                    /* 0: Reserved, jump to _start for the reset */
+        .align LOG_REGBYTES
+    #else
+        DECLARE_INT_HANDLER default_intexc_handler
+    #endif
+
+The table is a pointer array with one ``REGBYTES`` sized slot per interrupt, so entry *n* must sit
+at ``vector_base + n * REGBYTES``. Slot 0 holds a 4 byte ``j`` instead of a pointer, and
+``.align LOG_REGBYTES`` pads it up to a full slot: on RV32 ``REGBYTES`` is 4 and no padding is
+needed, on RV64 it is 8 and the assembler inserts a 4 byte ``nop``.
+
+Slot 0 is a reset-time concern only, never an interrupt dispatch path. Straight after reset stage
+1 points ``mtvec`` at ``early_exc_entry``, and the real handlers are installed later, from
+``_premain_init()``: it calls ``Interrupt_Init()``, which routes to ``ECLIC_Interrupt_Init()`` when
+ECLIC is present, and that writes ``mtvec`` = ``exc_entry`` and ``mtvt`` = ``vector_base``. So the
+``j _start`` in slot 0 is only ever executed as the very first instruction after reset.
+
+The startup stages
+~~~~~~~~~~~~~~~~~~
+
+``startup_evalsoc.S`` is organised as three stages inside ``_start`` plus a tail, and the
+important design property is that **control flows by falling through from one block into the
+next, not by jumping** (when ``SMP_CPU_CNT`` is not set):
+
+.. code-block:: text
+
+    _start:
+        Stage 1            disable interrupts, set up gp/tp/sp, mmisc_ctl, mtvec
+                           = early_exc_entry
+        Stage 2            enable FPU/VPU state, enable I/D caches, mcountinhibit
+                           (in SMP builds, also gates the non boot harts)
+        |                  (falls through)
+        v
+    __init_common:         copy .text (LMA -> VMA) when they differ,
+                           copy .data, zero .bss                 [boot hart only]
+        |                  (falls through)
+        v
+    _start_premain:        SystemInit, __libc_init_array          [boot hart only]
+        |                  (falls through)
+        v
+    __skip_init:           __sync_harts, _premain_init, main()/smp_main()
+
+Stages 1 and 2 are the part that runs before anything is initialised, and they are both inside
+``_start``. Stage 3 is the first one to touch memory sections, and in the source it sits in
+``__init_common``. In an SMP build the gate that sends the non boot harts away is at the end of
+``_start``: they branch straight to ``__skip_init``, where ``__sync_harts()`` parks them until the
+boot hart has finished the copies, so that no hart executes half copied code or reads
+uninitialised data.
+
+Note that the blocks that fall through also ``call`` into ``.text``: ``_start_premain`` calls
+``SystemInit()`` and ``__libc_init_array()``, ``__skip_init`` calls ``_premain_init()`` and
+``main()``. Falling through only describes how control moves between the blocks inside ``.init``;
+what they call is already copied and runnable by then.
+
+.. _design_soc_evalsoc_startup_debug:
+
+Debugging the startup in flash mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``.text`` copy has a consequence for the debugger that is easy to trip over: **a software
+breakpoint set on a function in ``.text`` can be silently wiped out by the copy**, because the
+copy writes over the very memory the breakpoint lives in.
+
+``__init_common`` copies ``.text`` from its load address ``_text_lma`` (flash) to its run address
+``_text`` (ILM) with a plain ``lw``/``sw`` loop:
+
+.. code-block:: text
+
+    la a0, _text_lma
+    la a1, _text
+    beq a0, a1, 2f          /* no copy when LMA == VMA */
+      ...
+    1:
+      lw t0, (a0)
+      sw t0, (a1)           /* overwrites whatever is at the VMA */
+      ...
+
+A software breakpoint works by having the debugger replace the instruction at the target address
+with ``ebreak``. If that address is in ``.text`` (``0x80000000`` and up, i.e. ILM), and the
+breakpoint is already in place when ``__init_common`` runs, the ``sw`` stores the original
+instruction back over the ``ebreak``. The breakpoint is gone and execution runs straight past it,
+with no error to tell you it happened.
+
+This is specific to the modes that copy ``.text``. In ``flash`` mode ``_text_lma`` is in flash
+while ``_text`` is ILM, so ``_text_lma != _text`` and the copy always runs. In
+``flashxip``/``ilm``/``sram``/``ddr`` the two are equal and the ``beq`` skips it, so software
+breakpoints in ``.text`` are unaffected there.
+
+.. code-block:: text
+
+    # .text not yet copied          # after the copy
+    0x800006ea: 0xdeadbeef           0x800006ea: 0xf14027f3   <- csrr a5,mhartid
+
+The ``.data`` copy does not destroy breakpoints, it only overwrites data: in ``flash`` and
+``flashxip`` the section is copied from flash into RAM as well, so a value you poke into an
+initialised variable before the copy is silently replaced too.
+
+Where the breakpoint survives
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Anything that lives in ``.init`` is executed in place from flash and never copied, so software
+breakpoints there are safe. That is the practical way to get control early:
+
+* ``_start`` and ``_start_premain`` are in ``.init``. ``_start_premain`` is the last block in
+  ``.init``, i.e. it runs **after** the ``.text``/``.data`` copy and before anything in ``.text``
+  is reached, which makes it the natural place to stop first.
+* Every function in ``.text`` is subject to the copy, ``main()``, ``_premain_init()``,
+  ``SystemInit()`` and ``ECLIC_Interrupt_Init()`` included.
+
+Stop at ``_start_premain`` with a software breakpoint (safe, it is in ``.init``), then set the
+``.text`` breakpoint once you are there.
+
+Because GDB inserts software breakpoints when it resumes, not when you type ``break``, the order
+you do things matters:
+
+* **Set the ``.text`` breakpoint after the copy has happened.** Stop at ``_start_premain`` first,
+  then set the breakpoint on ``main``. By then the copy is done, so nothing overwrites it, and
+  ``continue`` lands on it normally. This is the "break at ``_start_premain``, then break at
+  ``main``" recipe.
+* **Or use a hardware breakpoint on ``.text``**, with ``hbreak`` instead of ``break``. A hardware
+  breakpoint is kept in a trigger register, not in memory, so the copy cannot erase it and you can
+  set it before reset. Note the number of hardware triggers is limited by the core.
+
+.. note::
+
+    Do not conclude from a working setup that the problem does not exist: whether a ``.text``
+    software breakpoint survives depends on whether it was inserted before or after the copy, and
+    the debugger re-inserts breakpoints on every resume. The failure mode is a silently skipped
+    breakpoint, not an error, so a run that seems fine may simply have re-inserted the breakpoint
+    after the copy had already happened.
+
+Section layout
+~~~~~~~~~~~~~~
+
+The startup code and the few C functions that need the same property, such as ``__sync_harts()``
+in ``system_evalsoc.c``, all have to end up in ``.init``, with ``_start`` first. The design gives
+each source its own input section name and lets the linker script impose the order, instead of
+relying on the order of the objects on the link command line:
+
+.. code-block:: text
+
+    .init                                   (VMA == LMA == ORIGIN(ROM))
+    +-----------------------------------+
+    | .text.vtable / .text.vtable_s     |   vector table, when CFG_HAS_CLIC
+    | .text.init.startup                |   <-- the startup_evalsoc.S code
+    |   _start <-- reset vector         |
+    |   __init_common, _start_premain,  |
+    |   __skip_init, __amp_wait,        |
+    |   smp_main, early_exc_entry       |
+    | .text.init                        |   <-- __sync_harts() and friends
+    | .init                             |
+    +-----------------------------------+
+
+``startup_evalsoc.S`` puts its code in ``.section .text.init.startup``; its vector table keeps its
+own ``.text.vtable`` section (see above), so the startup assembly feeds two of the inputs shown
+here. The five evalsoc GCC linker scripts place the startup input with ``KEEP`` ahead of
+``*(.text.init)``::
+
+  .init :
+  {
+    *(.text.vtable)
+    *(.text.vtable_s)
+    KEEP (*(.text.init.startup))
+    *(.text.init)
+    KEEP (*(SORT_NONE(.init)))
+    . = ALIGN(4);
+  } >ROM AT>ROM
+
+Why a separate section, and why the whole file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Two alternatives were considered and rejected:
+
+* **Rely on the object order, with all assembly objects ahead of the C/C++ ones on the link
+  command line.** This is what the build system did before, and it is fragile: ``ld`` collects
+  ``*(.text.init)`` in command line order, so the reset vector silently depends on the build
+  system keeping that ordering forever. It broke as soon as the output directory rework
+  (``O=`` support) regrouped the objects. The failure is also easy to miss, because it only shows
+  up when a *C* object lands in ``.text.init`` ahead of the assembly startup: with ``-flto`` the
+  whole ``system_evalsoc.c`` is folded into the LTO object, so ``application/baremetal/benchmark/dhrystone``
+  in ``DOWNLOAD=flash`` mode got ``__sync_harts()`` - an empty ``ret`` when ``SMP_CPU_CNT`` is not
+  set, 2 bytes - at the ROM base, executed that ``ret`` on reset and jumped to ``0``.
+* **Give only ``_start`` its own section.** Wrong, for the reason given above: the blocks fall
+  through into each other, so a section boundary between ``_start`` and ``__init_common`` makes
+  ``ld`` insert fill in between and the core runs into that fill right after ``_start``.
+
+If you add code that must run before ``.data``/``.bss`` are initialized, put it in ``.text.init``
+(the plain one) and make sure it does not touch those sections. Do not add a second section
+between ``.text.init.startup`` and ``.text.init``, and do not remove the ``KEEP``: without it
+``--gc-sections`` or a reordered link can drop or move the reset vector again.
+
+.. note::
+
+    The IAR projects do not use ``.text.init`` at all. There the reset entry comes from IAR's own
+    ``cstartup.s`` runtime code, which lands in ``.cstartup``, and the ``*.icf`` files pin it with
+    ``"CSTARTUP32" : place at start of ROM_region32 { ro section .alias.hwreset,
+    ro section .cstartup }``. ``SoC/evalsoc/Common/Source/IAR/startup_evalsoc.c`` only provides the
+    vector table (``.mintvec``), ``__low_level_init()`` and ``smp_main()``, and ``__sync_harts()``
+    is reached from the IAR startup path as well. The effect - the reset entry is pinned to the
+    start of the ROM region - is the same, reached through a different mechanism.
+
 .. _design_soc_evalsoc_eclicv2:
 
 ECLICv2 Support
