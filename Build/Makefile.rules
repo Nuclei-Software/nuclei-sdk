@@ -55,8 +55,15 @@ SDK_ASM_OBJS := $(addprefix $(SDK_OBJ_OUTDIR)/,$(subst $(NUCLEI_SDK_ROOT)/,,$(fi
 SDK_C_OBJS := $(addprefix $(SDK_OBJ_OUTDIR)/,$(subst $(NUCLEI_SDK_ROOT)/,,$(filter $(NUCLEI_SDK_ROOT)%,$(ALL_C_OBJS))))
 SDK_CXX_OBJS := $(addprefix $(SDK_OBJ_OUTDIR)/,$(subst $(NUCLEI_SDK_ROOT)/,,$(filter $(NUCLEI_SDK_ROOT)%,$(ALL_CXX_OBJS))))
 
-ALL_OBJS := $(LOCAL_ASM_OBJS_OUT) $(LOCAL_C_OBJS_OUT) $(LOCAL_CXX_OBJS_OUT)
-ALL_OBJS += $(SDK_ASM_OBJS) $(SDK_C_OBJS) $(SDK_CXX_OBJS)
+## The link order matters: ld lays out *(.text.init) in command line order,
+## so the assembly startup must come first, otherwise the reset entry (_start)
+## is no longer at the beginning of .init. That happens as soon as a C object
+## also lands in .text.init and sorts ahead of the startup, e.g. __sync_harts
+## of SoC/evalsoc under LTO, which then occupies the reset vector and the core
+## jumps to 0 on reset. Keep all assembly objects ahead of the C/C++ ones.
+ALL_OBJS := $(LOCAL_ASM_OBJS_OUT) $(SDK_ASM_OBJS)
+ALL_OBJS += $(LOCAL_C_OBJS_OUT) $(SDK_C_OBJS)
+ALL_OBJS += $(LOCAL_CXX_OBJS_OUT) $(SDK_CXX_OBJS)
 
 ## Guard against object path collision, which can happen when the
 ## application contains a directory named __up__ and also references
