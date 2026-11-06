@@ -1348,14 +1348,12 @@ void __sync_harts(void) __attribute__((section(".text.init")));
  * the single thing that is writable, reachable by every hart and usable
  * before .data/.bss are initialized.
  *
- * Protocol, the boot hart MSIP doubles as the "code is ready" flag:
- * - boot hart: raise its own MSIP, announcing that the section copy and the C
- *   runtime init are done; wait for each peer to arrive; clear that peer's
- *   MSIP to release it; finally clear its own MSIP.
- * - peer hart: wait for the boot hart MSIP; raise its own MSIP to report in;
- *   wait for the boot hart to clear it.
+ * Protocol, one MSIP bit per hart, driven by the boot hart only:
+ * - boot hart: once the section copy and the C runtime init are done, set the
+ *   MSIP bit of every peer hart and go on.
+ * - peer hart: wait for its own MSIP bit, clear it, and go on.
  *
- * Why the boot hart MSIP exists: only the boot hart runs __init_common, which
+ * Why the boot hart drives it: only the boot hart runs __init_common, which
  * copies .text (LMA -> VMA), copies .data and zeroes .bss. A peer skips all of
  * that (it jumps straight to __skip_init), so it must not proceed before the
  * boot hart finished. Two different failures otherwise:
@@ -1366,19 +1364,29 @@ void __sync_harts(void) __attribute__((section(".text.init")));
  * A hart reaches this function via .init, which runs in place from flash
  * (LMA == VMA), so waiting here is safe even before the copy.
  *
- * Why there is no timeout: a bailout would have to clear the peer MSIP before
- * the peer ever set it, leaving that peer spinning on a bit that is already
- * clear, which deadlocks. In a SMP build all SMP_CPU_CNT harts exist and run
- * this code, so the barrier always completes and needs no escape hatch.
- * NOTE: SMP_CPU_CNT must equal the real hart count, otherwise the barrier waits
- * for a hart that never runs. It also works under qemu -icount, which time
- * slices the harts by instruction count, because a spin loop only relies on
- * every hart being able to make progress, not on how fast it does.
+ * Why one bit per hart and not a shared broadcast flag: a single bit shared by
+ * all peers would have to stay set until the last peer consumed it, so the boot
+ * hart would have to wait for every peer to report in before it could clear the
+ * flag, and a peer arriving after that would spin on a cleared bit forever. The
+ * per hart bit stays set until its own peer consumes it, so the boot hart never
+ * waits, a late peer still finds its bit set, and no peer has to report in.
+ * It also means SMP_CPU_CNT larger than the real hart count leaves a bit set
+ * for a hart that never runs instead of deadlocking the boot.
  *
- * Known qemu issue: the CLINT MSIP model in Nuclei qemu 2025.10 is broken for
- * this usage, smphello hangs on it while the very same image runs fine on
- * 2026.10 (verified with sram SMP=4: 2025.10 never prints, 2026.10 boots all
- * 4 harts). Use 2026.10 or later when running SMP examples.
+ * Why there is no timeout: with the per hart bit a native timeout is not needed,
+ * the boot hart never blocks and a peer only waits for a bit that is guaranteed
+ * to be set. A spin loop only relies on every hart being able to make progress,
+ * not on how fast it does, so this also works under qemu -icount, which time
+ * slices the harts by instruction count.
+ *
+ * Known qemu issue: the CLINT MSIP model in Nuclei qemu 2025.10 is broken, the
+ * write to a MSIP bit done by one hart is not reliably observed by another hart
+ * polling that bit, so smphello hangs with the peers stuck here waiting for a
+ * bit that the boot hart has already set. The same image boots all the harts on
+ * Nuclei qemu 2026.10 or later. Use 2026.10 or later to run the SMP examples on
+ * qemu; this is a limitation of that qemu version, not of the handshake above.
+ * The CI job run_smp_evalsoc pins such a qemu from the NFS share for this
+ * reason, see .gitlab-ci.yml.
  *
  * This function must be placed in .text.init and must not touch .data/.bss nor
  * call any function, because those are not initialized yet when it runs.
@@ -1424,28 +1432,21 @@ void __sync_harts(void)
         SMP_CTRLREG(smp_base, 0xc) = 0xFFFFFFFF;
         __SMP_RWMB();
         // L1 I/D Cache Enable is done in _premain_init
-        // The copy is done at this point, announce it, see the protocol above
-        CLINT_MSIP(clint_base, BOOT_HARTID - __HARTID_OFFSET) = 1;
-        __SMP_RWMB();
-        // Wait for each peer to report in, then release it
+        // The copy is done at this point. Release every peer with its own MSIP
+        // bit, which doubles as the "code is ready" flag for that peer only.
         for (int i = 0; i < SMP_CPU_CNT; i ++) {
             if (i != tmr_hartid) {
-                while (CLINT_MSIP(clint_base, i) == 0);
-                CLINT_MSIP(clint_base, i) = 0;
+                CLINT_MSIP(clint_base, i) = 1;
             }
         }
         __SMP_RWMB();
-        // Every peer has left its wait, drop the flag so it does not stay
-        // pending after interrupts get enabled in main
-        CLINT_MSIP(clint_base, BOOT_HARTID - __HARTID_OFFSET) = 0;
-        __SMP_RWMB();
     } else {
-        // Do not run into .text before the boot hart finished copying it
-        while (CLINT_MSIP(clint_base, BOOT_HARTID - __HARTID_OFFSET) == 0);
-        // Report in, the boot hart releases us by clearing this bit
-        CLINT_MSIP(clint_base, tmr_hartid) = 1;
+        // Do not run into .text before the boot hart finished copying it.
+        // The boot hart set our own MSIP bit; clear it so it does not stay
+        // pending after interrupts get enabled in main.
+        while (CLINT_MSIP(clint_base, tmr_hartid) == 0);
+        CLINT_MSIP(clint_base, tmr_hartid) = 0;
         __SMP_RWMB();
-        while (CLINT_MSIP(clint_base, tmr_hartid) == 1);
     }
 #endif
 }

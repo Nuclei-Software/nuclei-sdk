@@ -465,8 +465,8 @@ run_smp_evalsoc:
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_bpv.json
         - tools/scripts/nsdk_cli/configs/nuclei_fpga_eval_ci_libncrt.json
   before_script:
-    # SMP boot needs a qemu with a working CLINT MSIP model, the one builtin the
-    # image is too old (see the known qemu issue in __sync_harts), so use the
+    # SMP boot needs a qemu with a working CLINT MSIP model, the one built into
+    # the image is too old (see the known qemu issue in __sync_harts), so use the
     # version from the NFS share and fail fast when the share is not mounted.
     - 'test -x /home/share/devtools/qemu/linux64/2026.11.02/bin/qemu-system-riscv32 || (echo "ERROR: /home/share/devtools NFS is not mounted in this container, make sure the job runs on runners with the env::nfs tag" && exit 1)'
     - export PATH=/home/share/devtools/qemu/linux64/2026.11.02/bin/:$PATH

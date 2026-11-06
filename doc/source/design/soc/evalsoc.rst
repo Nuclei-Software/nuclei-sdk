@@ -421,9 +421,9 @@ next, not by jumping** (when ``SMP_CPU_CNT`` is not set):
 Stages 1 and 2 are the part that runs before anything is initialised, and they are both inside
 ``_start``. Stage 3 is the first one to touch memory sections, and in the source it sits in
 ``__init_common``. In an SMP build the gate that sends the non boot harts away is at the end of
-``_start``: they branch straight to ``__skip_init``, where ``__sync_harts()`` parks them until the
+``_start``: they branch straight to ``__skip_init``, where ``__sync_harts()`` holds them until the
 boot hart has finished the copies, so that no hart executes half copied code or reads
-uninitialised data.
+uninitialised data. See :ref:`design_soc_evalsoc_startup_smp` for the handshake itself.
 
 Note that the blocks that fall through also ``call`` into ``.text``: ``_start_premain`` calls
 ``SystemInit()`` and ``__libc_init_array()``, ``__skip_init`` calls ``_premain_init()`` and
@@ -576,6 +576,70 @@ between ``.text.init.startup`` and ``.text.init``, and do not remove the ``KEEP`
     vector table (``.mintvec``), ``__low_level_init()`` and ``smp_main()``, and ``__sync_harts()``
     is reached from the IAR startup path as well. The effect - the reset entry is pinned to the
     start of the ROM region - is the same, reached through a different mechanism.
+
+.. _design_soc_evalsoc_startup_smp:
+
+SMP startup synchronization
+---------------------------
+
+In an SMP build the harts do not all run the same startup path. Only the boot hart runs
+``__init_common`` (the ``.text``/``.data`` copy and the ``.bss`` zeroing) and
+``_start_premain``. A non boot hart is sent away at the end of ``_start`` straight to
+``__skip_init``, so it reaches ``__sync_harts()`` with nothing copied yet. It must not go on
+until the boot hart is done: running half copied code is a store access fault inside ILM, and
+reading ``.data``/``.bss`` that is not ready shows up later as random behaviour instead of a
+clean fault.
+
+The handshake uses the CLINT MSIP bits, one per hart. They are the only shared state available
+at that point: writable, reachable from every hart, and usable before ``.data``/``.bss`` exist,
+which is why ``__sync_harts()`` can not use a plain C variable or a semaphore. The function
+itself lives in ``.init``, executed in place from ROM, so it runs and can spin even before the
+copy.
+
+The protocol, driven entirely by the boot hart
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: text
+
+    boot hart                                  peer hart
+    ----------                                 ----------
+    copy .text/.data, zero .bss
+    enable L2 / SMP / IOCP
+    __SMP_RWMB()                               (spinning on its own MSIP)
+    for each peer i:
+        CLINT_MSIP[i] = 1
+    __SMP_RWMB()
+    ... continues with no wait ...             while (CLINT_MSIP[me] == 0);
+                                               CLINT_MSIP[me] = 0;
+                                               __SMP_RWMB();
+                                               ... continues
+
+The peer's own MSIP bit is the "code is ready" flag for that peer. The boot hart sets every
+peer bit once the copies are done and then carries on immediately, it never waits for anybody.
+A peer spins on its own bit, clears it, and continues. No peer has to report back.
+
+Giving each hart a bit of its own is what makes the boot hart non blocking. A bit shared by all
+peers would have to stay set until the last one had observed it, so the boot hart would have to
+wait for every peer before dropping it, and a peer arriving after that would spin on a cleared
+bit forever. With a dedicated bit per hart, each bit stays set until its own consumer takes it,
+so a slow or late peer never delays the boot hart, and a bit left set for a hart that never runs
+is simply never consumed. This is also why ``SMP_CPU_CNT`` does not have to match the real hart
+count exactly.
+
+There is no timeout and none should be added. The boot hart never blocks, so it can not time out,
+and a peer only waits for a bit that the boot hart is guaranteed to set once the copies finish, so
+a timeout there would only mask a real bug. A spin loop also depends only on every hart being able
+to make progress, not on how fast it does, which is why this works under ``qemu -icount`` where
+the harts are time sliced by instruction count.
+
+.. warning::
+
+    The CLINT MSIP model in Nuclei qemu 2025.10 is broken: a write to a MSIP bit by one hart is
+    not reliably observed by another hart polling that bit. With that qemu the SMP examples hang,
+    with the peers stuck in ``__sync_harts()`` waiting for a bit the boot hart has already set.
+    The same image boots all the harts on Nuclei qemu 2026.10 and later, so use 2026.10 or later
+    to run the SMP examples on qemu. This is a limitation of that qemu version, not of the
+    handshake described here.
 
 .. _design_soc_evalsoc_eclicv2:
 
