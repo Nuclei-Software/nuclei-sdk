@@ -330,6 +330,14 @@
                 "FAIL": ["MEPC", "[ERROR]", "ECC demo failed."]
             }
         },
+        "application/baremetal/demo_dbltr": {
+            "checks": {
+                "PASS": [
+                   "[SUCCESS] Test Smdbltrp double trap passed", "will not run this example"
+                ],
+                "FAIL": ["[FAIL] exc_count="]
+            }
+        },
         "application/baremetal/demo_smode_clint": {
             "build_config" : {},
             "checks": {
