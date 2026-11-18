@@ -97,6 +97,11 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
   - Add ``demo_dbltrp`` to the ``application.json`` and ``fpgaci`` CI configurations.
   - Change ``demo_vnice`` masked vadd policy from ``ma`` to ``mu`` so masked-off elements keep
     old values, since the RTL now forces 1s for them under ``ma``.
+  - Do not drop to S-mode on Nuclei 100 series CPU: ``demo_smode_clint``, ``demo_smode_eclic``,
+    ``demo_smode_plic``, ``demo_sstc``, ``exception_smode`` and the RT-Thread ``demo_smode`` now print a
+    message and exit instead, since the 100 series does not support S-mode; ``demo_eclic_stress``
+    keeps running its M-mode part and skips the S-mode part, and ``demo_pmp`` verifies the M-mode
+    side of the PMP entries, a non-locked entry does not restrict M-mode accesses.
 
 * Build System
 

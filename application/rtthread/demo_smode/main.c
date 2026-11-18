@@ -103,6 +103,11 @@ uintptr_t smode_sp = (uintptr_t) (smode_stack + sizeof(smode_stack));
 
 int main_entry(void)
 {
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    printf("Nuclei 100 series CPU does not support S-mode, will not run this example!\r\n");
+    return 0;
+#endif
+
     CSR_MCFGINFO_Type mcfg;
     CSR_MISA_Type misa;
 

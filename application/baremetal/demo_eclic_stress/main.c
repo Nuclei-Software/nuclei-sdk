@@ -1192,7 +1192,7 @@ int main(int argc, char** argv)
     // Initialize M-Mode interrupts
     initialize_mmode_demo();
 
-#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1) && !(defined(CPU_SERIES) && CPU_SERIES == 100)
     printf("[M] S-Mode is present, will run both S-Mode and M-Mode demos\r\n");
 
     // Configure PMP to allow S-Mode access to memory
@@ -1245,7 +1245,7 @@ int main(int argc, char** argv)
     // Enable M-Mode interrupts before jumping to S-Mode
     __enable_irq();
 
-#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1) && !(defined(CPU_SERIES) && CPU_SERIES == 100)
     printf("[M] Dropping to S-Mode now\r\n");
     /* Drop to S mode */
     __switch_mode(PRV_S, smode_sp, supervisor_mode_entry_point);

@@ -100,6 +100,11 @@ static void supervisor_mode_entry_point(void)
 
 int main(void)
 {
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    printf("Nuclei 100 series CPU does not support S-mode, will not run this example!\r\n");
+    return 0;
+#endif
+
 
 #if defined(__PMP_PRESENT) && (__PMP_PRESENT == 1) && defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     CSR_MCFGINFO_Type mcfg_info;

@@ -285,7 +285,15 @@ int main(void)
     Exception_Register_EXC(LdFault_EXCn, (unsigned long)pmp_violation_fault_handler);
     Exception_Register_EXC(StAccessFault_EXCn, (unsigned long)pmp_violation_fault_handler);
 
-#if defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    /* Nuclei 100 series CPU has no S-mode, so only verify the M-mode side here:
+     * a non-locked PMP entry (PMP_L = 0) does not restrict M-mode accesses, so
+     * the protected execute region and the protected data are still usable. */
+    printf("------PMP demo in M-mode only (Nuclei 100 series)------\r\n");
+    set_pmp_entry();
+    fncptr();
+    printf("M-mode PMP check finished and pass\r\n");
+#elif defined(__SMODE_PRESENT) && (__SMODE_PRESENT == 1)
     if (0 == misa.b.s) {
         printf("You expect SMODE present, but SMODE is not present, will not run this example!\r\n");
         printf("You can rebuild and run this example with extra make option XLCFG_SMODE=0 if SMODE not present!\r\n");

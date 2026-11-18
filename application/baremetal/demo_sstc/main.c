@@ -183,6 +183,11 @@ static void supervisor_mode_entry_point(void)
 
 int main(int argc, char** argv)
 {
+#if defined(CPU_SERIES) && CPU_SERIES == 100
+    printf("Nuclei 100 series CPU does not support S-mode, will not run this example!\r\n");
+    return 0;
+#endif
+
     CSR_MCFGINFO_Type mcfg;
     mcfg.d = __RV_CSR_READ(CSR_MCFG_INFO);
     if ((mcfg.b.clic & mcfg.b.sstc) == 0) {
