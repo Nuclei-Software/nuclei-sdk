@@ -123,6 +123,7 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
   - Add ``mdit-py-plugins`` and ``pygments`` to ``tools/scripts/requirements.txt``.
   - Enlarge the simulated ILM to 256KB in the ``run_sanity_check``/``run_datalma_inilm`` CI jobs, which load ``.data`` into ILM.
   - Bump the ``sdkbuild`` image to 2026.10 and drop the NFS qemu workaround of ``run_smp_evalsoc``.
+  - Bump the Nuclei toolchain and qemu downloaded by the GitHub action workflow to 2026.10.
 
 V0.9.0
 ------
