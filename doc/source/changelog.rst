@@ -15,6 +15,7 @@ This is release version of ``0.4.0`` of N100 SDK, which is still under developme
 * Tools
 
   - Bump the ``sdkbuild`` image to 2026.10.
+  - Bump the Nuclei toolchain and qemu downloaded by the GitHub action workflow to 2026.10.
 
 V0.3.0
 ------
