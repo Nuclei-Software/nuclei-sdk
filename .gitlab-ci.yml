@@ -549,6 +549,10 @@ run_sanity_check:
     RANDTIMES: 4
   script:
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
+    # DATA_LMA-in-ILM layout test only: enlarge the simulated ILM to 256KB, the
+    # real evalsoc ILM (64KB) is too small for cases like demo_pmp, see issue #608
+    - sed -i -e 's/^ILM_MEMORY_SIZE = 0x10000/ILM_MEMORY_SIZE = 0x40000/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/evalsoc.memory
+    - grep -q 'ILM_MEMORY_SIZE = 0x40000' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/evalsoc.memory
     - git diff
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes ${RANDTIMES} --run_target ${RUNTARGET} --toolchains "nuclei_gnu"
@@ -566,6 +570,10 @@ run_datalma_inilm:
   script:
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", ilm)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ilm.ld
     - sed -i -e 's/REGION_ALIAS("DATA_LMA", ram)/REGION_ALIAS("DATA_LMA", rom)/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/gcc_evalsoc_ddr.ld
+    # DATA_LMA-in-ILM layout test only: enlarge the simulated ILM to 256KB, the
+    # real evalsoc ILM (64KB) is too small for cases like demo_pmp, see issue #608
+    - sed -i -e 's/^ILM_MEMORY_SIZE = 0x10000/ILM_MEMORY_SIZE = 0x40000/' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/evalsoc.memory
+    - grep -q 'ILM_MEMORY_SIZE = 0x40000' SoC/evalsoc/Board/nuclei_fpga_eval/Source/GCC/evalsoc.memory
     - git diff
     - export LOGDIR=logs/${CI_JOB_NAME_SHORT}/$(basename ${HWCFG%.json})
     - python3 tools/scripts/misc/random_sanity.py --appcfg $APPCFG --hwcfg $HWCFG --logdir $LOGDIR --randtimes 2 --run_target ${RUNTARGET} --socs ${SOCS} --downloads "ilm,ddr" --toolchains "nuclei_gnu"

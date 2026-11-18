@@ -120,6 +120,7 @@ This is release version of ``1.0.0`` of Nuclei SDK, which is still under develop
     port registry so each directory keeps its port, and improve the directory listing. ``?raw=1``
     still returns the original file.
   - Add ``mdit-py-plugins`` and ``pygments`` to ``tools/scripts/requirements.txt``.
+  - Enlarge the simulated ILM to 256KB in the ``run_sanity_check``/``run_datalma_inilm`` CI jobs, which load ``.data`` into ILM.
 
 V0.9.0
 ------
