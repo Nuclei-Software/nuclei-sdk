@@ -16,6 +16,7 @@ This is release version of ``0.4.0`` of N100 SDK, which is still under developme
 
   - Bump the ``sdkbuild`` image to 2026.10.
   - Bump the Nuclei toolchain and qemu downloaded by the GitHub action workflow to 2026.10.
+  - Update the GitHub action workflow to ``actions/checkout@v7``, ``actions/cache@v6`` and ``actions/upload-artifact@v7`` for the Node.js 24 runtime.
 
 V0.3.0
 ------
