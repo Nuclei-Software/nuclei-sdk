@@ -1147,6 +1147,7 @@ __STATIC_FORCEINLINE void __clear_DTE(void)
 
 /**
  * \brief  Get NMI interrupt entry from 'CSR_MNVEC'
+ * \ingroup NMSIS_Core_IntExc
  * \details
  * This function get NMI interrupt address from 'CSR_MNVEC'.
  * \return      NMI interrupt handler address
@@ -1166,6 +1167,7 @@ __STATIC_FORCEINLINE rv_csr_t __get_nmi_entry(void)
 
 /**
  * \brief  Set NMI/RNMI interrupt entry to 'CSR_MNVEC'
+ * \ingroup NMSIS_Core_IntExc
  * \details
  * This function sets the NMI/RNMI interrupt handler address via 'CSR_MNVEC'.
  * \param [in]  addr  RNMI interrupt handler address
